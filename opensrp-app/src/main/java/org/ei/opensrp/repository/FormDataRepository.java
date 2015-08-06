@@ -48,6 +48,9 @@ public class FormDataRepository extends DrishtiRepository {
     private static final String FORM_NAME_PARAM = "formName";
     private Map<String, String[]> TABLE_COLUMN_MAP;
 
+
+    //private static  FormSubmissionReplicationModel sFormSubmissionReplicationModel;
+
     public FormDataRepository() {
         TABLE_COLUMN_MAP = new HashMap<String, String[]>();
         TABLE_COLUMN_MAP.put(EligibleCoupleRepository.EC_TABLE_NAME, EligibleCoupleRepository.EC_TABLE_COLUMNS);
@@ -59,6 +62,10 @@ public class FormDataRepository extends DrishtiRepository {
             TABLE_COLUMN_MAP.put(Context.bindtypes.get(i).getBindtypename(), Context.getInstance().commonrepository(Context.bindtypes.get(i).getBindtypename()).common_TABLE_COLUMNS);
         }
 //        TABLE_COLUMN_MAP.put("user",PersonRepository.person_TABLE_COLUMNS);
+
+        //android.content.Context context = org.ei.opensrp.Context.getInstance().applicationContext();
+        //this.sFormSubmissionReplicationModel = FormSubmissionReplicationModel.getInstance(context.getApplicationContext());
+
     }
 
     @Override
@@ -98,6 +105,22 @@ public class FormDataRepository extends DrishtiRepository {
         Map<String, String> params = new Gson().fromJson(paramsJSON, new TypeToken<Map<String, String>>() {
         }.getType());
         database.insert(FORM_SUBMISSION_TABLE_NAME, null, createValuesForFormSubmission(params, data, formDataDefinitionVersion));
+
+        //----------------------------------------------------------
+        String instanceId = params.get(INSTANCE_ID_PARAM);
+        String entityId = params.get(ENTITY_ID_PARAM);
+        String formName = params.get(FORM_NAME_PARAM);
+        String instance = data;
+        String clientVersion = String.valueOf(currentTimeMillis());
+        String syncStatusString = params.containsKey(SYNC_STATUS) ? (String) params.get(SYNC_STATUS) : PENDING.value();
+        SyncStatus syncStatus = syncStatusString.equalsIgnoreCase("SYNCED") ? SYNCED : PENDING;
+        String dataDefinitionVersion = formDataDefinitionVersion;
+
+        FormSubmission formSubmission = new FormSubmission(instanceId, entityId, formName, instance, clientVersion, syncStatus, formDataDefinitionVersion);
+        //sFormSubmissionReplicationModel.createDocument(formSubmission);
+
+        //----------------------------------------------------------
+
         return params.get(INSTANCE_ID_PARAM);
     }
 
@@ -105,6 +128,9 @@ public class FormDataRepository extends DrishtiRepository {
     public void saveFormSubmission(FormSubmission formSubmission) {
         SQLiteDatabase database = masterRepository.getWritableDatabase();
         database.insert(FORM_SUBMISSION_TABLE_NAME, null, createValuesForFormSubmission(formSubmission));
+
+        //sFormSubmissionReplicationModel.createDocument(formSubmission);
+
     }
 
     public FormSubmission fetchFromSubmission(String instanceId) {

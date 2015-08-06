@@ -1,9 +1,14 @@
 package org.ei.opensrp.domain;
 
+import com.cloudant.sync.datastore.BasicDocumentRevision;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.ei.drishti.dto.AlertStatus;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.ei.drishti.dto.AlertStatus.complete;
 
@@ -15,6 +20,12 @@ public class Alert {
     private String startDate;
     private String expiryDate;
     private String completionDate;
+
+    // this is the revision in the database representing this task
+    private BasicDocumentRevision rev;
+    public BasicDocumentRevision getDocumentRevision() {
+        return rev;
+    }
 
     public Alert(String caseID, String scheduleName, String visitCode, AlertStatus status, String startDate, String expiryDate) {
         this.caseID = caseID;
@@ -76,4 +87,35 @@ public class Alert {
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
     }
+
+    public static Alert fromRevision(BasicDocumentRevision rev) {
+        // this could also be done by a fancy object mapper
+        Map<String, Object> map = rev.asMap();
+        if(map.containsKey("caseID") && map.containsKey("visitCode") && map.containsKey("status") &&
+                map.containsKey("startDate") && map.containsKey("expiryDate") && map.containsKey("scheduleName")) {
+            String caseID = (String) map.get("caseID");
+            String visitCode = (String) map.get("visitCode");
+            String statusStr = (String) map.get("status");
+            AlertStatus status = AlertStatus.from(statusStr);
+            String startDate = (String) map.get("startDate");
+            String expiryDate = (String) map.get("expiryDate");
+            String scheduleName = (String) map.get("scheduleName");
+            Alert a = new Alert(caseID, scheduleName, visitCode, status, startDate, expiryDate);
+            return a;
+        }
+        return null;
+    }
+
+    public Map<String, Object> asMap() {
+        // this could also be done by a fancy object mapper
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put("caseID", caseID);
+        map.put("visitCode", visitCode);
+        map.put("status", status);
+        map.put("startDate", startDate);
+        map.put("expiryDate", expiryDate);
+        map.put("scheduleName", scheduleName);
+        return map;
+    }
+
 }

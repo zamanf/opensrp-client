@@ -27,17 +27,21 @@ public class FormSubmissionService {
 
     public void processSubmissions(List<FormSubmission> formSubmissions) {
         for (FormSubmission submission : formSubmissions) {
-            if (!formDataRepository.submissionExists(submission.instanceId())) {
-                try {
-                    ziggyService.saveForm(getParams(submission), submission.instance());
-                } catch (Exception e) {
-                    logError(format("Form submission processing failed, with instanceId: {0}. Exception: {1}, StackTrace: {2}",
-                            submission.instanceId(), e.getMessage(), ExceptionUtils.getStackTrace(e)));
-                }
-            }
-            formDataRepository.updateServerVersion(submission.instanceId(), submission.serverVersion());
-            allSettings.savePreviousFormSyncIndex(submission.serverVersion());
+            processSubmissions(submission);
         }
+    }
+
+    public void processSubmissions(FormSubmission formSubmission) {
+        if (!formDataRepository.submissionExists(formSubmission.instanceId())) {
+            try {
+                ziggyService.saveForm(getParams(formSubmission), formSubmission.instance());
+            } catch (Exception e) {
+                logError(format("Form submission processing failed, with instanceId: {0}. Exception: {1}, StackTrace: {2}",
+                        formSubmission.instanceId(), e.getMessage(), ExceptionUtils.getStackTrace(e)));
+            }
+        }
+        formDataRepository.updateServerVersion(formSubmission.instanceId(), formSubmission.serverVersion());
+        allSettings.savePreviousFormSyncIndex(formSubmission.serverVersion());
     }
 
     private String getParams(FormSubmission submission) {

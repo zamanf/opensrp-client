@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="default_user">onadevtestaccount</string>
+    <string name="default_dbname">opensrp_qa</string>
+    <string name="default_api_key">youstimserywintsenallook</string>
+    <string name="default_api_password">Tjnce2CepSjjKjBkkgXYF2KE</string>
+
+</resources>

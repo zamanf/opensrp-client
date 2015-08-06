@@ -1,4 +1,8 @@
 rootProject.name = 'opensrp-app-parent'
-include ':opensrp-app', ':opensrp-drishti', ':opensrp-mcare'
+include ':opensrp-app', ':opensrp-drishti', ':opensrp-mcare',':sync-android',':sync-core',':sync-javase',':sync-android-encryption'
 
 project(':opensrp-app').projectDir = "$rootDir/opensrp-app" as File
+project(':sync-android').projectDir = "$rootDir/Libraries/sync-android" as File
+project(':sync-core').projectDir = "$rootDir/Libraries/sync-core" as File
+project(':sync-javase').projectDir = "$rootDir/Libraries/sync-javase" as File
+project(':sync-android-encryption').projectDir = "$rootDir/Libraries/sync-android-encryption" as File

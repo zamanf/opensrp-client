@@ -1,5 +1,7 @@
 package org.ei.opensrp.service;
 
+import android.content.Context;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.ei.opensrp.DristhiConfiguration;
@@ -29,6 +31,9 @@ public class FormSubmissionSyncService {
     private FormSubmissionService formSubmissionService;
     private DristhiConfiguration configuration;
 
+    //private static FormSubmissionReplicationModel sFormSubmissionReplicationModel;
+
+
     public FormSubmissionSyncService(FormSubmissionService formSubmissionService, HTTPAgent httpAgent,
                                      FormDataRepository formDataRepository, AllSettings allSettings,
                                      AllSharedPreferences allSharedPreferences, DristhiConfiguration configuration) {
@@ -38,9 +43,21 @@ public class FormSubmissionSyncService {
         this.allSettings = allSettings;
         this.allSharedPreferences = allSharedPreferences;
         this.configuration = configuration;
+
+        Context context = org.ei.opensrp.Context.getInstance().applicationContext();
+
+       /* // Protect creation of static variable.
+        if (sFormSubmissionReplicationModel == null) {
+            // Model needs to stay in existence for lifetime of app.
+            this.sFormSubmissionReplicationModel = FormSubmissionReplicationModel.getInstance(context.getApplicationContext());
+        }*/
+
     }
 
     public FetchStatus sync() {
+        //sFormSubmissionReplicationModel.startPullReplication();
+        //sFormSubmissionReplicationModel.startPushReplication();
+
         pushToServer();
         return pullFromServer();
     }

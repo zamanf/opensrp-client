@@ -104,10 +104,11 @@ task copyTestResources() {
 assembleDebug.dependsOn(copyTestResources)
 
 configurations.all {
-    resolutionStrategy.force 'commons-codec:commons-codec:1.6'
+    resolutionStrategy.force 'commons-codec:commons-codec:1.10'
 }
 
 dependencies {
+    compile 'com.google.guava:guava:15.0'
     compile 'org.ei.drishti:drishti-interface:0.1-SNAPSHOT'
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'commons-io:commons-io:2.1'
@@ -120,7 +121,9 @@ dependencies {
     compile 'com.github.johnkil.print:print:1.2.3'
     compile 'ch.acra:acra:4.5.0'
     compile fileTree(include: ['*.jar'], dir: 'libs')
-
+    compile project(':sync-core')
+    compile project(':sync-android')
+    compile project(':sync-javase')
 }
 
 dependencies {

@@ -8,6 +8,8 @@ public class FormInstance {
     private String form_data_definition_version;
     private FormData form;
 
+    public FormInstance(){}
+
     public FormInstance(FormData form, String formDataDefinitionVersion) {
         this.form = form;
         this.form_data_definition_version = formDataDefinitionVersion;
