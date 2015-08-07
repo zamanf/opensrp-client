@@ -10,6 +10,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.cloudant.sync.datastore.BasicDocumentRevision;
+import com.cloudant.sync.datastore.ConflictException;
 import com.cloudant.sync.datastore.Datastore;
 import com.cloudant.sync.datastore.DatastoreManager;
 import com.cloudant.sync.datastore.DatastoreNotCreatedException;
@@ -19,6 +20,7 @@ import com.cloudant.sync.datastore.DocumentRevision;
 import com.cloudant.sync.datastore.MutableDocumentRevision;
 import com.cloudant.sync.notifications.ReplicationCompleted;
 import com.cloudant.sync.notifications.ReplicationErrored;
+import com.cloudant.sync.query.IndexManager;
 import com.cloudant.sync.query.QueryResult;
 import com.cloudant.sync.replication.PullReplication;
 import com.cloudant.sync.replication.PushReplication;
@@ -36,6 +38,7 @@ import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,8 +55,6 @@ import static org.ei.drishti.dto.AlertStatus.inProcess;
  */
 public class AlertsModel extends BaseItemsModel{
 
-    String tableName = "alerts";
-
     private static final String ALERTS_TABLE_NAME = "alerts";
     public static final String ALERTS_CASEID_COLUMN = "caseID";
     public static final String ALERTS_SCHEDULE_NAME_COLUMN = "scheduleName";
@@ -67,7 +68,22 @@ public class AlertsModel extends BaseItemsModel{
 
 
     public AlertsModel(Context context) {
-        super(context);
+        super(context, ALERTS_TABLE_NAME);
+
+        //setup the indexManeger
+        if(mIndexManager != null){
+            if (mIndexManager.isTextSearchEnabled()) {
+                // Create an index over the searchable text fields
+                String name = mIndexManager.ensureIndexed(Arrays.<Object>asList(ALERTS_CASEID_COLUMN, ALERTS_SCHEDULE_NAME_COLUMN, ALERTS_VISIT_CODE_COLUMN,
+                                ALERTS_STATUS_COLUMN, ALERTS_STARTDATE_COLUMN, ALERTS_EXPIRYDATE_COLUMN, ALERTS_COMPLETIONDATE_COLUMN),
+                        "basic");
+                if (name == null) {
+                    Log.e(LOG_TAG, "there was an error creating the index");
+                }
+            }else{
+                Log.e(LOG_TAG, "there was an error creating the index");
+            }
+        }
     }
 
     public List<Alert> allAlerts() {
@@ -86,21 +102,44 @@ public class AlertsModel extends BaseItemsModel{
         return alerts;
     }
 
-    //TODO: use query to do filtering
+    /**
+     * Updates an Alert document within the datastore.
+     * @param alert Alert to update
+     * @return the updated revision of the Alert
+     * @throws ConflictException if the task passed in has a rev which doesn't
+     *      match the current rev in the datastore.
+     */
+    public Alert updateDocument(Alert alert) throws ConflictException {
+        MutableDocumentRevision rev = alert.getDocumentRevision().mutableCopy();
+        rev.body = DocumentBodyFactory.create(alert.asMap());
+        try {
+            BasicDocumentRevision updated = this.mDatastore.updateDocumentFromRevision(rev);
+            return Alert.fromRevision(updated);
+        } catch (DocumentException de) {
+            return null;
+        }
+    }
+
     public List<Alert> allActiveAlertsForCase(String caseId) {
-        int nDocs = this.mDatastore.getDocumentCount();
-        List<BasicDocumentRevision> all = this.mDatastore.getAllDocuments(0, nDocs, true);
+        Map<String, Object> query = new HashMap<String, Object>();
+        query.put(ALERTS_CASEID_COLUMN, caseId);
+
         List<Alert> alerts = new ArrayList<Alert>();
 
-        // Filter all documents down to those of type Task.
-        for(BasicDocumentRevision rev : all) {
-            Alert t = Alert.fromRevision(rev);
-            if (t != null) {
-                alerts.add(t);
+        QueryResult result = mIndexManager.find(query);
+        if(result != null){
+            for (DocumentRevision rev : result) {
+                if(rev instanceof BasicDocumentRevision){
+                    BasicDocumentRevision brev = (BasicDocumentRevision)rev;
+                    Alert t = Alert.fromRevision(brev);
+                    if (t != null) {
+                        alerts.add(t);
+                    }
+                }
             }
         }
 
-        return alerts;
+        return filterActiveAlerts(alerts);
     }
 
     public void createAlert(Alert alert) {
@@ -113,17 +152,66 @@ public class AlertsModel extends BaseItemsModel{
         }
     }
 
-    //TODO:
     public void markAlertAsClosed(String caseId, String visitCode, String completionDate) {
+        try {
+            Map<String, Object> query = new HashMap<String, Object>();
+            query.put(ALERTS_CASEID_COLUMN, caseId);
+            query.put(ALERTS_VISIT_CODE_COLUMN, visitCode);
+
+            QueryResult result = mIndexManager.find(query);
+            if(result != null){
+                for (DocumentRevision rev : result) {
+                    if(rev instanceof BasicDocumentRevision){
+                        BasicDocumentRevision brev = (BasicDocumentRevision)rev;
+                        Alert alert = Alert.fromRevision(brev);
+                        alert.setStatus(complete);
+                        alert.setCompletionDate(completionDate);
+                        updateDocument(alert);
+                    }
+                }
+            }
+        } catch (ConflictException e) {
+            e.printStackTrace();
+        }
     }
 
-    //TODO:
     public void deleteAllAlertsForEntity(String caseId) {
+        try {
+            Map<String, Object> query = new HashMap<String, Object>();
+            query.put(ALERTS_CASEID_COLUMN, caseId);
 
+            QueryResult result = mIndexManager.find(query);
+            if(result != null){
+                for (DocumentRevision rev : result) {
+                    if(rev instanceof BasicDocumentRevision){
+                        BasicDocumentRevision brev = (BasicDocumentRevision)rev;
+                        Alert alert = Alert.fromRevision(brev);
+                        alert.setStatus(complete);
+                        deleteDocument(alert);
+                    }
+                }
+            }
+        } catch (ConflictException e) {
+            e.printStackTrace();
+        }
     }
 
     //TODO:
     public void deleteAllAlerts() {
+        try {
+            int nDocs = this.mDatastore.getDocumentCount();
+            List<BasicDocumentRevision> all = this.mDatastore.getAllDocuments(0, nDocs, true);
+
+            // Filter all documents down to those of type Task.
+            for(BasicDocumentRevision rev : all) {
+                Alert t = Alert.fromRevision(rev);
+                if (t != null) {
+                    deleteDocument(t);
+                }
+            }
+        } catch (ConflictException e) {
+            e.printStackTrace();
+        }
     }
 
     private List<Alert> readAllAlerts(Cursor cursor) {
@@ -167,7 +255,7 @@ public class AlertsModel extends BaseItemsModel{
         return values;
     }
 
-    //TODO: use queries to do filtering
+    //TODO: complex querying required will revisit this later
     public List<Alert> findByEntityIdAndAlertNames(String entityId, String... names) {
         int nDocs = this.mDatastore.getDocumentCount();
         List<BasicDocumentRevision> all = this.mDatastore.getAllDocuments(0, nDocs, true);
@@ -188,11 +276,35 @@ public class AlertsModel extends BaseItemsModel{
         return repeat("?", ",", length);
     }
 
-    //TODO:
     public void changeAlertStatusToInProcess(String entityId, String alertName) {
+        try {
+            Map<String, Object> query = new HashMap<String, Object>();
+            query.put(ALERTS_CASEID_COLUMN, entityId);
+            query.put(ALERTS_VISIT_CODE_COLUMN, alertName);
+
+            QueryResult result = mIndexManager.find(query);
+            if(result != null){
+                for (DocumentRevision rev : result) {
+                    if(rev instanceof BasicDocumentRevision){
+                        BasicDocumentRevision brev = (BasicDocumentRevision)rev;
+                        Alert alert = Alert.fromRevision(brev);
+                        alert.setStatus(inProcess);
+                        updateDocument(alert);
+                    }
+                }
+            }
+        } catch (ConflictException e) {
+            e.printStackTrace();
+        }
     }
 
-
-
-
+    /**
+     * Deletes a Alert document within the datastore.
+     * @param alert Alert to delete
+     * @throws ConflictException if the task passed in has a rev which doesn't
+     *      match the current rev in the datastore.
+     */
+    public void deleteDocument(Alert alert) throws ConflictException {
+        this.mDatastore.deleteDocumentFromRevision(alert.getDocumentRevision()); //We should have db column rather than actualy deleting the entity
+    }
 }

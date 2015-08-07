@@ -1,11 +1,14 @@
 package org.ei.opensrp.domain;
 
+import com.cloudant.sync.datastore.BasicDocumentRevision;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
@@ -25,6 +28,12 @@ public class EligibleCouple {
     private Boolean isOutOfArea;
     private Boolean isClosed;
     private String photoPath;
+
+    // this is the revision in the database representing this task
+    private BasicDocumentRevision rev;
+    public BasicDocumentRevision getDocumentRevision() {
+        return rev;
+    }
 
     public EligibleCouple(String caseId, String wifeName, String husbandName, String ecNumber, String village, String subcenter, Map<String, String> details) {
         this.caseId = caseId;
@@ -146,5 +155,39 @@ public class EligibleCouple {
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
+    }
+
+    public static EligibleCouple fromRevision(BasicDocumentRevision rev) {
+        // this could also be done by a fancy object mapper
+        Map<String, Object> map = rev.asMap();
+        if(map.containsKey("caseId") && map.containsKey("wifeName") && map.containsKey("ecNumber") &&
+                map.containsKey("village") && map.containsKey("subcenter") && map.containsKey("details")) {
+            String caseId = (String) map.get("caseId");
+            String wifeName = (String) map.get("wifeName");
+            String husbandName = (String) map.get("husbandName");
+            String ecNumber = (String) map.get("ecNumber");
+            String village = (String) map.get("village");
+            String subcenter = (String) map.get("subcenter");
+            Map<String, String> details = (Map<String, String>) map.get("details");
+            EligibleCouple a = new EligibleCouple(caseId, wifeName, husbandName, ecNumber, village, subcenter, details);
+            return a;
+        }
+        return null;
+    }
+
+    public Map<String, Object> asMap() {
+        // this could also be done by a fancy object mapper
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put("caseId", caseId);
+        map.put("wifeName", wifeName);
+        map.put("husbandName", husbandName);
+        map.put("ecNumber", ecNumber);
+        map.put("village", village);
+        map.put("subcenter", subcenter);
+        map.put("details", details);
+        map.put("isOutOfArea", isOutOfArea);
+        map.put("isClosed", isClosed);
+        map.put("photoPath", photoPath);
+        return map;
     }
 }

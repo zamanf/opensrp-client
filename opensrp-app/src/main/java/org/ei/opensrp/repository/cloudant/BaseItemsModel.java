@@ -35,7 +35,6 @@ public class BaseItemsModel {
     static final String SETTINGS_CLOUDANT_API_SECRET = "pref_key_api_password";
 
     static final String DATASTORE_MANGER_DIR = "data";
-    protected  String tableName;
 
     Datastore mDatastore;
     IndexManager mIndexManager;
@@ -47,7 +46,7 @@ public class BaseItemsModel {
     final Handler mHandler;
 
 
-    public BaseItemsModel(Context context){
+    public BaseItemsModel(Context context, String tableName){
         this.mContext = context;
         // Set up our tasks datastore within its own folder in the applications
         // data directory.
@@ -57,11 +56,12 @@ public class BaseItemsModel {
         );
         DatastoreManager datastoreManager = new DatastoreManager(path.getAbsolutePath());
         try {
-            this.mDatastore = datastoreManager.openDatastore(getTableName());
+            this.mDatastore = datastoreManager.openDatastore(tableName);
+            mIndexManager = new IndexManager(mDatastore);
         } catch (DatastoreNotCreatedException dnce) {
             Log.e(LOG_TAG, "Unable to open Datastore", dnce);
         }
-        mIndexManager = new IndexManager(mDatastore);
+
 
         Log.d(LOG_TAG, "Set up database at " + path.getAbsolutePath());
 
@@ -216,11 +216,4 @@ public class BaseItemsModel {
         });
     }
 
-    public String getTableName() {
-        return tableName;
-    }
-
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
-    }
 }

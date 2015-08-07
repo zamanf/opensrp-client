@@ -1,11 +1,15 @@
 package org.ei.opensrp.domain;
 
+import com.cloudant.sync.datastore.BasicDocumentRevision;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.ei.drishti.dto.AlertStatus;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
@@ -20,11 +24,17 @@ public class Child {
     private String thayiCardNumber;
     private String dateOfBirth;
     private final String gender;
-    private final Map<String, String> details;
+    private Map<String, String> details;
     private boolean isClosed;
     private Mother mother;
     private EligibleCouple eligibleCouple;
     private String photoPath;
+
+    // this is the revision in the database representing this task
+    private BasicDocumentRevision rev;
+    public BasicDocumentRevision getDocumentRevision() {
+        return rev;
+    }
 
     public Child(String caseId, String motherCaseId, String thayiCardNumber, String dateOfBirth, String gender, Map<String, String> details) {
         this.caseId = caseId;
@@ -73,6 +83,10 @@ public class Child {
 
     public Map<String, String> details() {
         return details;
+    }
+
+    public void setDetails(Map<String, String> details) {
+        this.details = details;
     }
 
     public boolean isHighRisk() {
@@ -144,5 +158,42 @@ public class Child {
     public Child withDateOfBirth(String dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
         return this;
+    }
+
+    public static Child fromRevision(BasicDocumentRevision rev) {
+        // this could also be done by a fancy object mapper
+        Map<String, Object> map = rev.asMap();
+        if(map.containsKey("caseId") && map.containsKey("motherCaseId") && map.containsKey("thayiCardNumber") &&
+                map.containsKey("dateOfBirth") && map.containsKey("gender") && map.containsKey("details")) {
+            String caseId = (String) map.get("caseId");
+            String motherCaseId = (String) map.get("motherCaseId");
+            String thayiCardNumber = (String) map.get("thayiCardNumber");
+            String dateOfBirth = (String) map.get("dateOfBirth");
+            String gender = (String) map.get("gender");
+            Map<String, String> details = (Map<String, String>) map.get("details");
+            String isClosed = (String) map.get("isClosed");
+            String photoPath = (String) map.get("photoPath");
+            Child a = new Child(caseId, motherCaseId, thayiCardNumber, dateOfBirth, gender, details);
+            return a;
+        }
+        return null;
+    }
+
+    public Map<String, Object> asMap() {
+        // this could also be done by a fancy object mapper
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put("caseId", caseId);
+        map.put("motherCaseId", motherCaseId);
+        map.put("thayiCardNumber", thayiCardNumber);
+        map.put("dateOfBirth", dateOfBirth);
+        map.put("gender", gender);
+        map.put("details", details);
+        map.put("isClosed", isClosed);
+        map.put("photoPath", photoPath);
+        return map;
+    }
+
+    public void setPhotoPath(String photoPath) {
+        this.photoPath = photoPath;
     }
 }

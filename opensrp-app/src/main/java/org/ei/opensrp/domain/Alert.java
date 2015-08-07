@@ -118,4 +118,32 @@ public class Alert {
         return map;
     }
 
+    //Setters used while updating the alert
+    public void setCaseID(String caseID) {
+        this.caseID = caseID;
+    }
+
+    public void setVisitCode(String visitCode) {
+        this.visitCode = visitCode;
+    }
+
+    public void setStatus(AlertStatus status) {
+        this.status = status;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public void setExpiryDate(String expiryDate) {
+        this.expiryDate = expiryDate;
+    }
+
+    public void setCompletionDate(String completionDate) {
+        this.completionDate = completionDate;
+    }
+
+    public void setRev(BasicDocumentRevision rev) {
+        this.rev = rev;
+    }
 }
