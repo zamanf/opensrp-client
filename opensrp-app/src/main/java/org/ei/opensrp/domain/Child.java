@@ -6,7 +6,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.ei.drishti.dto.AlertStatus;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -31,9 +30,9 @@ public class Child {
     private String photoPath;
 
     // this is the revision in the database representing this task
-    private BasicDocumentRevision rev;
+    private BasicDocumentRevision revision;
     public BasicDocumentRevision getDocumentRevision() {
-        return rev;
+        return revision;
     }
 
     public Child(String caseId, String motherCaseId, String thayiCardNumber, String dateOfBirth, String gender, Map<String, String> details) {
@@ -160,9 +159,9 @@ public class Child {
         return this;
     }
 
-    public static Child fromRevision(BasicDocumentRevision rev) {
+    public static Child fromRevision(BasicDocumentRevision revision) {
         // this could also be done by a fancy object mapper
-        Map<String, Object> map = rev.asMap();
+        Map<String, Object> map = revision.asMap();
         if(map.containsKey("caseId") && map.containsKey("motherCaseId") && map.containsKey("thayiCardNumber") &&
                 map.containsKey("dateOfBirth") && map.containsKey("gender") && map.containsKey("details")) {
             String caseId = (String) map.get("caseId");
@@ -173,8 +172,9 @@ public class Child {
             Map<String, String> details = (Map<String, String>) map.get("details");
             String isClosed = (String) map.get("isClosed");
             String photoPath = (String) map.get("photoPath");
-            Child a = new Child(caseId, motherCaseId, thayiCardNumber, dateOfBirth, gender, details);
-            return a;
+            Child child = new Child(caseId, motherCaseId, thayiCardNumber, dateOfBirth, gender, details);
+            child.revision = revision;
+            return child;
         }
         return null;
     }

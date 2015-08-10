@@ -74,6 +74,7 @@ public class EligibleCouplesModel extends BaseItemsModel{
         rev.body = DocumentBodyFactory.create(eligibleCouple.asMap());
         try {
             BasicDocumentRevision created = this.mDatastore.createDocumentFromRevision(rev);
+            EligibleCouple.fromRevision(created);
         } catch (DocumentException de) {
             Log.e(LOG_TAG, de.toString());
         }

@@ -30,9 +30,9 @@ public class EligibleCouple {
     private String photoPath;
 
     // this is the revision in the database representing this task
-    private BasicDocumentRevision rev;
+    private BasicDocumentRevision revision;
     public BasicDocumentRevision getDocumentRevision() {
-        return rev;
+        return revision;
     }
 
     public EligibleCouple(String caseId, String wifeName, String husbandName, String ecNumber, String village, String subcenter, Map<String, String> details) {
@@ -169,8 +169,9 @@ public class EligibleCouple {
             String village = (String) map.get("village");
             String subcenter = (String) map.get("subcenter");
             Map<String, String> details = (Map<String, String>) map.get("details");
-            EligibleCouple a = new EligibleCouple(caseId, wifeName, husbandName, ecNumber, village, subcenter, details);
-            return a;
+            EligibleCouple eligibleCouple = new EligibleCouple(caseId, wifeName, husbandName, ecNumber, village, subcenter, details);
+            eligibleCouple.revision = rev;
+            return eligibleCouple;
         }
         return null;
     }

@@ -79,6 +79,7 @@ public class ChildsModel extends BaseItemsModel{
         rev.body = DocumentBodyFactory.create(child.asMap());
         try {
             BasicDocumentRevision created = this.mDatastore.createDocumentFromRevision(rev);
+            Child.fromRevision(created);
         } catch (DocumentException de) {
             Log.e(LOG_TAG, de.toString());
         }
@@ -110,7 +111,6 @@ public class ChildsModel extends BaseItemsModel{
         return children;
     }
 
-    //TODO:
     public Child find(String caseId) {
         Map<String, Object> query = new HashMap<String, Object>();
         query.put(ID_COLUMN, caseId);
@@ -314,16 +314,16 @@ public class ChildsModel extends BaseItemsModel{
     /**
      * Updates an Child document within the datastore.
      * @param child Child to update
-     * @return the updated revision of the Alert
+     * @return the updated revision of the Child
      * @throws ConflictException if the task passed in has a rev which doesn't
      *      match the current rev in the datastore.
      */
-    public Alert updateDocument(Child child) throws ConflictException {
+    public Child updateDocument(Child child) throws ConflictException {
         MutableDocumentRevision rev = child.getDocumentRevision().mutableCopy();
         rev.body = DocumentBodyFactory.create(child.asMap());
         try {
             BasicDocumentRevision updated = this.mDatastore.updateDocumentFromRevision(rev);
-            return Alert.fromRevision(updated);
+            return Child.fromRevision(updated);
         } catch (DocumentException de) {
             return null;
         }

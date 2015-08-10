@@ -147,6 +147,7 @@ public class AlertsModel extends BaseItemsModel{
         rev.body = DocumentBodyFactory.create(alert.asMap());
         try {
             BasicDocumentRevision created = this.mDatastore.createDocumentFromRevision(rev);
+            Alert.fromRevision(created);
         } catch (DocumentException de) {
             Log.e(LOG_TAG, de.toString());
         }

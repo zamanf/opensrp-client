@@ -1,9 +1,6 @@
 package org.ei.opensrp.domain.form;
 
-import android.content.Context;
-
 import com.cloudant.sync.datastore.BasicDocumentRevision;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -28,9 +25,9 @@ public class FormSubmission {
     private FormInstance formInstance;
 
     // this is the revision in the database representing this task
-    private BasicDocumentRevision rev;
+    private BasicDocumentRevision revision;
     public BasicDocumentRevision getDocumentRevision() {
-        return rev;
+        return revision;
     }
 
 
@@ -87,6 +84,10 @@ public class FormSubmission {
         return formDataDefinitionVersion;
     }
 
+    public void setFormDataDefinitionVersion(String formDataDefinitionVersion) {
+        this.formDataDefinitionVersion = formDataDefinitionVersion;
+    }
+
     public FormSubmission setSyncStatus(SyncStatus syncStatus) {
         this.syncStatus = syncStatus;
         return this;
@@ -134,9 +135,9 @@ public class FormSubmission {
         return props;
     }
 
-    public static FormSubmission fromRevision(BasicDocumentRevision rev) {
+    public static FormSubmission fromRevision(BasicDocumentRevision revision) {
         // this could also be done by a fancy object mapper
-        Map<String, Object> map = rev.asMap();
+        Map<String, Object> map = revision.asMap();
         String instanceId = map.containsKey("instanceId") ? (String) map.get("instanceId") : null;
         String entityId = map.containsKey("entityId") ? (String) map.get("entityId") : null;
         String formName = map.containsKey("formName") ? (String) map.get("formName") : null;
@@ -148,7 +149,7 @@ public class FormSubmission {
         String serverVersion = map.containsKey("serverVersion") ? (String) map.get("serverVersion") : null;
 
         FormSubmission formSubmission = new FormSubmission(instanceId, entityId, formName, instance, clientVersion, syncStatus, formDataDefinitionVersion, serverVersion);
-        formSubmission.rev = rev;
+        formSubmission.revision = revision;
         return formSubmission;
     }
 }

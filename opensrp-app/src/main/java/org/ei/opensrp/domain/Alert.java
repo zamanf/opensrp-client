@@ -22,9 +22,9 @@ public class Alert {
     private String completionDate;
 
     // this is the revision in the database representing this task
-    private BasicDocumentRevision rev;
+    private BasicDocumentRevision revision;
     public BasicDocumentRevision getDocumentRevision() {
-        return rev;
+        return revision;
     }
 
     public Alert(String caseID, String scheduleName, String visitCode, AlertStatus status, String startDate, String expiryDate) {
@@ -100,8 +100,9 @@ public class Alert {
             String startDate = (String) map.get("startDate");
             String expiryDate = (String) map.get("expiryDate");
             String scheduleName = (String) map.get("scheduleName");
-            Alert a = new Alert(caseID, scheduleName, visitCode, status, startDate, expiryDate);
-            return a;
+            Alert alert = new Alert(caseID, scheduleName, visitCode, status, startDate, expiryDate);
+            alert.revision = rev;
+            return alert;
         }
         return null;
     }
@@ -143,7 +144,7 @@ public class Alert {
         this.completionDate = completionDate;
     }
 
-    public void setRev(BasicDocumentRevision rev) {
-        this.rev = rev;
+    public void setRevision(BasicDocumentRevision rev) {
+        this.revision = rev;
     }
 }

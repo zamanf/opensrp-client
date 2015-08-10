@@ -3,13 +3,23 @@ package org.ei.opensrp.repository.cloudant;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 import android.webkit.JavascriptInterface;
 
+import com.cloudant.sync.datastore.BasicDocumentRevision;
+import com.cloudant.sync.datastore.ConflictException;
+import com.cloudant.sync.datastore.DocumentBodyFactory;
+import com.cloudant.sync.datastore.DocumentException;
+import com.cloudant.sync.datastore.DocumentRevision;
+import com.cloudant.sync.datastore.MutableDocumentRevision;
+import com.cloudant.sync.query.QueryResult;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
+import org.ei.opensrp.domain.Alert;
+import org.ei.opensrp.domain.Child;
 import org.ei.opensrp.domain.SyncStatus;
 import org.ei.opensrp.domain.form.FormSubmission;
 import org.ei.opensrp.repository.ChildRepository;
@@ -17,6 +27,7 @@ import org.ei.opensrp.repository.EligibleCoupleRepository;
 import org.ei.opensrp.repository.MotherRepository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +36,7 @@ import static java.lang.System.currentTimeMillis;
 import static java.util.Arrays.asList;
 import static java.util.UUID.randomUUID;
 import static net.sqlcipher.DatabaseUtils.longForQuery;
+import static org.ei.drishti.dto.AlertStatus.complete;
 import static org.ei.opensrp.AllConstants.ENTITY_ID_FIELD_NAME;
 import static org.ei.opensrp.AllConstants.ENTITY_ID_PARAM;
 import static org.ei.opensrp.AllConstants.INSTANCE_ID_PARAM;
@@ -37,8 +49,8 @@ import static org.ei.opensrp.domain.SyncStatus.SYNCED;
  */
 public class FormDataModel extends BaseItemsModel{
 
-    private static final String FORM_SUBMISSION_SQL = "CREATE TABLE form_submission(instanceId VARCHAR PRIMARY KEY, entityId VARCHAR, " +
-            "formName VARCHAR, instance VARCHAR, version VARCHAR, serverVersion VARCHAR, formDataDefinitionVersion VARCHAR, syncStatus VARCHAR)";
+    private static final String FORM_SUBMISSION_TABLE_NAME = "form_submission";
+
     public static final String INSTANCE_ID_COLUMN = "instanceId";
     public static final String ENTITY_ID_COLUMN = "entityId";
     private static final String FORM_NAME_COLUMN = "formName";
@@ -47,9 +59,7 @@ public class FormDataModel extends BaseItemsModel{
     private static final String SERVER_VERSION_COLUMN = "serverVersion";
     private static final String SYNC_STATUS_COLUMN = "syncStatus";
     private static final String FORM_DATA_DEFINITION_VERSION_COLUMN = "formDataDefinitionVersion";
-    private static final String FORM_SUBMISSION_TABLE_NAME = "form_submission";
-    public static final String[] FORM_SUBMISSION_TABLE_COLUMNS = new String[]{INSTANCE_ID_COLUMN, ENTITY_ID_COLUMN, FORM_NAME_COLUMN,
-            INSTANCE_COLUMN, VERSION_COLUMN, SERVER_VERSION_COLUMN, FORM_DATA_DEFINITION_VERSION_COLUMN, SYNC_STATUS_COLUMN};
+
     public static final String ID_COLUMN = "id";
     private static final String DETAILS_COLUMN_NAME = "details";
     private static final String FORM_NAME_PARAM = "formName";
@@ -57,6 +67,21 @@ public class FormDataModel extends BaseItemsModel{
 
     public  FormDataModel(Context context){
         super(context, FORM_SUBMISSION_TABLE_NAME);
+
+        //setup the indexManeger
+        if(mIndexManager != null) {
+            if (mIndexManager.isTextSearchEnabled()) {
+                // Create an index over the searchable text fields
+                String name = mIndexManager.ensureIndexed(Arrays.<Object>asList(ID_COLUMN, INSTANCE_ID_COLUMN, ENTITY_ID_COLUMN,
+                                FORM_NAME_COLUMN, INSTANCE_COLUMN, VERSION_COLUMN, SERVER_VERSION_COLUMN, SYNC_STATUS_COLUMN),
+                        "basic");
+                if (name == null) {
+                    Log.e(LOG_TAG, "there was an error creating the index");
+                }
+            } else {
+                Log.e(LOG_TAG, "there was an error creating the index");
+            }
+        }
     }
 
     @JavascriptInterface
@@ -73,51 +98,139 @@ public class FormDataModel extends BaseItemsModel{
 
     @JavascriptInterface
     public String saveFormSubmission(String paramsJSON, String data, String formDataDefinitionVersion) {
-        //TODO:
-        return null;
+        Map<String, String> params = new Gson().fromJson(paramsJSON, new TypeToken<Map<String, String>>() {
+        }.getType());
+
+        MutableDocumentRevision rev = new MutableDocumentRevision();
+        rev.body = DocumentBodyFactory.create(createValuesForFormSubmission(params, data, formDataDefinitionVersion));
+        try {
+            BasicDocumentRevision created = this.mDatastore.createDocumentFromRevision(rev);
+            FormSubmission.fromRevision(created);
+        } catch (DocumentException de) {
+            Log.e(LOG_TAG, de.toString());
+        }
+
+        return params.get(INSTANCE_ID_PARAM);
     }
 
     @JavascriptInterface
     public void saveFormSubmission(FormSubmission formSubmission) {
-        //TODO:
+        MutableDocumentRevision rev = new MutableDocumentRevision();
+        rev.body = DocumentBodyFactory.create(createValuesForFormSubmission(formSubmission));
+        try {
+            BasicDocumentRevision created = this.mDatastore.createDocumentFromRevision(rev);
+            FormSubmission.fromRevision(created);
+        } catch (DocumentException de) {
+            Log.e(LOG_TAG, de.toString());
+        }
     }
 
     public FormSubmission fetchFromSubmission(String instanceId) {
-        //TODO:
+        Map<String, Object> query = new HashMap<String, Object>();
+        query.put(INSTANCE_ID_COLUMN, instanceId);
+        QueryResult result = mIndexManager.find(query);
+        if(result != null){
+            for (DocumentRevision rev : result) {
+                if(rev instanceof BasicDocumentRevision){
+                    BasicDocumentRevision brev = (BasicDocumentRevision)rev;
+                    FormSubmission formSubmission = FormSubmission.fromRevision(brev);
+                    if (formSubmission != null) {
+                        return formSubmission;
+                    }
+                }
+            }
+        }
         return null;
     }
 
     public List<FormSubmission> getPendingFormSubmissions() {
-        //TODO:
-        return  null;
+        List<FormSubmission> formSubmissions = new ArrayList<FormSubmission>();
+        Map<String, Object> query = new HashMap<String, Object>();
+        query.put(SYNC_STATUS_COLUMN, PENDING.value());
+        QueryResult result = mIndexManager.find(query);
+        if(result != null){
+            for (DocumentRevision rev : result) {
+                if(rev instanceof BasicDocumentRevision){
+                    BasicDocumentRevision brev = (BasicDocumentRevision)rev;
+                    FormSubmission formSubmission = FormSubmission.fromRevision(brev);
+                    if (formSubmission != null) {
+                        formSubmissions.add(formSubmission);
+                    }
+                }
+            }
+        }
+        return formSubmissions;
     }
 
     public long getPendingFormSubmissionsCount() {
-        //TODO:
-        return this.mDatastore.getDocumentCount();
+        Map<String, Object> query = new HashMap<String, Object>();
+        query.put(SYNC_STATUS_COLUMN, PENDING.value());
+        QueryResult result = mIndexManager.find(query);
+        if(result != null){
+            return  result.size();
+        }
+        return 0;
     }
 
     public void markFormSubmissionsAsSynced(List<FormSubmission> formSubmissions) {
-        //TODO:
+        try {
+            for(FormSubmission formSubmission : formSubmissions){
+                formSubmission.setSyncStatus(SYNCED);
+                formSubmission.setFormDataDefinitionVersion("1");
+                updateDocument(formSubmission);
+            }
+        } catch (ConflictException e) {
+            e.printStackTrace();
+        }
     }
 
     public void updateServerVersion(String instanceId, String serverVersion) {
-        //TODO:
+        try {
+            Map<String, Object> query = new HashMap<String, Object>();
+            query.put(INSTANCE_ID_COLUMN, instanceId);
+            QueryResult result = mIndexManager.find(query);
+            if(result != null){
+                for (DocumentRevision rev : result) {
+                    if(rev instanceof BasicDocumentRevision){
+                        BasicDocumentRevision brev = (BasicDocumentRevision)rev;
+                        FormSubmission formSubmission = FormSubmission.fromRevision(brev);
+                        if (formSubmission != null) {
+                            formSubmission.setServerVersion(serverVersion);
+                            updateDocument(formSubmission);
+                        }
+                    }
+                }
+            }
+        } catch (ConflictException e) {
+            e.printStackTrace();
+        }
     }
 
     public boolean submissionExists(String instanceId) {
-        //TODO:
+        Map<String, Object> query = new HashMap<String, Object>();
+        query.put(INSTANCE_ID_COLUMN, instanceId);
+        QueryResult result = mIndexManager.find(query);
+        if(result != null){
+            return  result.size() > 0;
+        }
         return false;
     }
 
     @JavascriptInterface
     public String saveEntity(String entityType, String fields) {
-        //TODO:
-        return null;
+        Map<String, String> updatedFieldsMap = new Gson().fromJson(fields, new TypeToken<Map<String, String>>() {
+        }.getType());
+
+        String entityId = updatedFieldsMap.get(ENTITY_ID_FIELD_NAME);
+//        Map<String, String> entityMap = loadEntityMap(entityType, database, entityId);
+//
+//        ContentValues contentValues = getContentValues(updatedFieldsMap, entityType, entityMap);
+//        database.replace(entityType, null, contentValues);
+        return entityId;
     }
 
-    private ContentValues createValuesForFormSubmission(FormSubmission submission) {
-        ContentValues values = new ContentValues();
+    private Map<String,Object> createValuesForFormSubmission(FormSubmission submission) {
+        Map<String,Object> values = new HashMap<String,Object>();
         values.put(INSTANCE_ID_COLUMN, submission.instanceId());
         values.put(ENTITY_ID_COLUMN, submission.entityId());
         values.put(FORM_NAME_COLUMN, submission.formName());
@@ -129,8 +242,8 @@ public class FormDataModel extends BaseItemsModel{
         return values;
     }
 
-    private ContentValues createValuesForFormSubmission(Map<String, String> params, String data, String formDataDefinitionVersion) {
-        ContentValues values = new ContentValues();
+    private Map<String,Object> createValuesForFormSubmission(Map<String, String> params, String data, String formDataDefinitionVersion) {
+        Map<String,Object> values = new HashMap<String,Object>();
         values.put(INSTANCE_ID_COLUMN, params.get(INSTANCE_ID_PARAM));
         values.put(ENTITY_ID_COLUMN, params.get(ENTITY_ID_PARAM));
         values.put(FORM_NAME_COLUMN, params.get(FORM_NAME_PARAM));
@@ -210,4 +323,21 @@ public class FormDataModel extends BaseItemsModel{
         return randomUUID().toString();
     }
 
+    /**
+     * Updates an FormSubmission document within the datastore.
+     * @param formSubmission FormSubmission to update
+     * @return the updated revision of the FormSubmission
+     * @throws ConflictException if the formSubmission passed in has a rev which doesn't
+     *      match the current rev in the datastore.
+     */
+    public FormSubmission updateDocument(FormSubmission formSubmission) throws ConflictException {
+        MutableDocumentRevision rev = formSubmission.getDocumentRevision().mutableCopy();
+        rev.body = DocumentBodyFactory.create(formSubmission.asMap());
+        try {
+            BasicDocumentRevision updated = this.mDatastore.updateDocumentFromRevision(rev);
+            return FormSubmission.fromRevision(updated);
+        } catch (DocumentException de) {
+            return null;
+        }
+    }
 }
