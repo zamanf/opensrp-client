@@ -26,7 +26,7 @@ import java.net.URISyntaxException;
 /**
  * Created by Geoffrey Koros on 8/6/2015.
  */
-public class BaseItemsModel {
+public abstract class BaseItemsModel {
 
     static final String LOG_TAG = "BaseItemsModel";
     static final String SETTINGS_CLOUDANT_USER = "pref_key_username";
@@ -168,14 +168,18 @@ public class BaseItemsModel {
         // you might want to use something more secure.
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this.mContext);
         String username = sharedPref.getString(SETTINGS_CLOUDANT_USER, "");
-        String dbName = sharedPref.getString(SETTINGS_CLOUDANT_DB, "");
-        String apiKey = sharedPref.getString(SETTINGS_CLOUDANT_API_KEY, "");
-        String apiSecret = sharedPref.getString(SETTINGS_CLOUDANT_API_SECRET, "");
+        String dbName = sharedPref.getString(getCloudantDatabaseName(), "");
+        String apiKey = sharedPref.getString(getCloudantApiKey(), "");
+        String apiSecret = sharedPref.getString(getCloudantApiSecret(), "");
         String host = username + ".cloudant.com";
 
         // We recommend always using HTTPS to talk to Cloudant.
         return new URI("https", apiKey + ":" + apiSecret, host, 443, "/" + dbName, null, null);
     }
+
+    public abstract String getCloudantDatabaseName();
+    public abstract String getCloudantApiKey();
+    public abstract String getCloudantApiSecret();
 
     //
     // REPLICATIONLISTENER IMPLEMENTATION

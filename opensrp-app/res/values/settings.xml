@@ -2,8 +2,18 @@
 <resources>
 
     <string name="default_user">onadevtestaccount</string>
-    <string name="default_dbname">opensrp_qa</string>
-    <string name="default_api_key">youstimserywintsenallook</string>
-    <string name="default_api_password">Tjnce2CepSjjKjBkkgXYF2KE</string>
+    <string name="default_api_key">waseentingtherecteressiz</string>
+    <string name="default_api_password">qRLwGdJcHBblXovFayjA74qv</string>
+
+    <string name="alerts_dbname">alerts</string>
+    <string name="child_dbname">child</string>
+    <string name="eligible_couple_dbname">eligible_couple</string>
+    <string name="form_submission_dbname">form_submission</string>
+    <string name="mother_dbname">mother</string>
+    <string name="report_dbname">report</string>
+    <string name="settings_dbname">settings</string>
+    <string name="timeline_event_dbname">timeline_event</string>
+    <string name="all_forms_version_dbname">all_forms_version</string>
+    <string name="service_provided_dbname">service_provided</string>
 
 </resources>

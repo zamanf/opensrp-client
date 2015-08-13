@@ -31,6 +31,7 @@ import com.google.common.eventbus.Subscribe;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
+import org.ei.opensrp.R;
 import org.ei.opensrp.domain.Alert;
 import org.joda.time.LocalDate;
 
@@ -307,5 +308,20 @@ public class AlertsModel extends BaseItemsModel{
      */
     public void deleteDocument(Alert alert) throws ConflictException {
         this.mDatastore.deleteDocumentFromRevision(alert.getDocumentRevision()); //We should have db column rather than actualy deleting the entity
+    }
+
+    @Override
+    public String getCloudantApiKey() {
+        return mContext.getString(R.string.default_api_key);
+    }
+
+    @Override
+    public String getCloudantDatabaseName() {
+        return mContext.getString(R.string.alerts_dbname);
+    }
+
+    @Override
+    public String getCloudantApiSecret() {
+        return mContext.getString(R.string.default_api_password);
     }
 }

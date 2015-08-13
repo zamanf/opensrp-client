@@ -15,6 +15,7 @@ import com.cloudant.sync.query.QueryResult;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
+import org.ei.opensrp.R;
 import org.ei.opensrp.domain.Alert;
 import org.ei.opensrp.domain.FormDefinitionVersion;
 import org.ei.opensrp.domain.SyncStatus;
@@ -374,5 +375,20 @@ public class FormsVersionsModel extends BaseItemsModel{
         } catch (DocumentException de) {
             return null;
         }
+    }
+
+    @Override
+    public String getCloudantApiKey() {
+        return mContext.getString(R.string.default_api_key);
+    }
+
+    @Override
+    public String getCloudantDatabaseName() {
+        return mContext.getString(R.string.all_forms_version_dbname);
+    }
+
+    @Override
+    public String getCloudantApiSecret() {
+        return mContext.getString(R.string.default_api_password);
     }
 }

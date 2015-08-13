@@ -18,6 +18,7 @@ import com.google.gson.reflect.TypeToken;
 import net.sqlcipher.database.SQLiteDatabase;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.ei.opensrp.R;
 import org.ei.opensrp.domain.Alert;
 import org.ei.opensrp.domain.EligibleCouple;
 import org.ei.opensrp.domain.FormDefinitionVersion;
@@ -87,7 +88,6 @@ public class MothersModel extends BaseItemsModel{
         } catch (DocumentException de) {
             Log.e(LOG_TAG, de.toString());
         }
-
     }
 
     public void switchToPNC(String caseId) {
@@ -237,7 +237,6 @@ public class MothersModel extends BaseItemsModel{
         return null;
     }
 
-    //TODO: implement
     public List<Pair<Mother, EligibleCouple>> allMothersOfATypeWithEC(String type) {
 //        SQLiteDatabase database = masterRepository.getReadableDatabase();
 //        Cursor cursor = database.rawQuery("SELECT " + tableColumnsForQuery(MOTHER_TABLE_NAME, MOTHER_TABLE_COLUMNS) + ", " + tableColumnsForQuery(EC_TABLE_NAME, EC_TABLE_COLUMNS) +
@@ -246,6 +245,7 @@ public class MothersModel extends BaseItemsModel{
 //                "' AND " + MOTHER_TABLE_NAME + "." + IS_CLOSED_COLUMN + "= '" + NOT_CLOSED + "' AND " +
 //                MOTHER_TABLE_NAME + "." + EC_CASEID_COLUMN + " = " + EC_TABLE_NAME + "." + EligibleCoupleRepository.ID_COLUMN, null);
 //        return readAllMothersWithEC(cursor);
+
         return null;
     }
 
@@ -256,15 +256,30 @@ public class MothersModel extends BaseItemsModel{
         }
     }
 
-    //TODO: implement
     public void close(String caseId) {
-//        ContentValues values = new ContentValues();
-//        values.put(IS_CLOSED_COLUMN, TRUE.toString());
-//        masterRepository.getWritableDatabase().update(MOTHER_TABLE_NAME, values, ID_COLUMN + " = ?", new String[]{caseId});
+        try {
+            Map<String, Object> query = new HashMap<String, Object>();
+            query.put(ID_COLUMN, caseId);//TODO: potential caveat, the id column isn't initialized most probably; probably use document id
+            QueryResult result = mIndexManager.find(query);
+            if(result != null){
+                for (DocumentRevision rev : result) {
+                    if(rev instanceof BasicDocumentRevision){
+                        BasicDocumentRevision brev = (BasicDocumentRevision)rev;
+                        Mother mother = Mother.fromRevision(brev);
+                        if (mother != null) {
+                            mother.setIsClosed(true);
+                            updateDocument(mother);
+                        }
+                    }
+                }
+            }
+        } catch (ConflictException e) {
+            e.printStackTrace();
+        }
     }
 
-    private ContentValues createValuesFor(Mother mother, String type) {
-        ContentValues values = new ContentValues();
+    private Map<String,Object> createValuesFor(Mother mother, String type) {
+        Map<String,Object> values = new HashMap<String,Object>();
         values.put(ID_COLUMN, mother.caseId());
         values.put(EC_CASEID_COLUMN, mother.ecCaseId());
         values.put(THAYI_CARD_NUMBER_COLUMN, mother.thayiCardNumber());
@@ -376,5 +391,20 @@ public class MothersModel extends BaseItemsModel{
         } catch (DocumentException de) {
             return null;
         }
+    }
+
+    @Override
+    public String getCloudantApiKey() {
+        return mContext.getString(R.string.default_api_key);
+    }
+
+    @Override
+    public String getCloudantDatabaseName() {
+        return mContext.getString(R.string.mother_dbname);
+    }
+
+    @Override
+    public String getCloudantApiSecret() {
+        return mContext.getString(R.string.default_api_password);
     }
 }

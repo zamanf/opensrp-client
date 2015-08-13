@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.lang3.StringUtils;
+import org.ei.opensrp.R;
 import org.ei.opensrp.domain.Alert;
 import org.ei.opensrp.domain.Child;
 import org.ei.opensrp.domain.EligibleCouple;
@@ -327,5 +328,20 @@ public class ChildsModel extends BaseItemsModel{
         } catch (DocumentException de) {
             return null;
         }
+    }
+
+    @Override
+    public String getCloudantApiKey() {
+        return mContext.getString(R.string.default_api_key);
+    }
+
+    @Override
+    public String getCloudantDatabaseName() {
+        return mContext.getString(R.string.child_dbname);
+    }
+
+    @Override
+    public String getCloudantApiSecret() {
+        return mContext.getString(R.string.default_api_password);
     }
 }

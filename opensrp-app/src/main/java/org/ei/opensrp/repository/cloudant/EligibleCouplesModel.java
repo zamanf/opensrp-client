@@ -15,6 +15,7 @@ import com.google.gson.reflect.TypeToken;
 import net.sqlcipher.database.SQLiteDatabase;
 
 import org.ei.opensrp.AllConstants;
+import org.ei.opensrp.R;
 import org.ei.opensrp.domain.Child;
 import org.ei.opensrp.domain.EligibleCouple;
 
@@ -160,5 +161,20 @@ public class EligibleCouplesModel extends BaseItemsModel{
         }
         cursor.close();
         return detailsList;
+    }
+
+    @Override
+    public String getCloudantApiKey() {
+        return mContext.getString(R.string.default_api_key);
+    }
+
+    @Override
+    public String getCloudantDatabaseName() {
+        return mContext.getString(R.string.eligible_couple_dbname);
+    }
+
+    @Override
+    public String getCloudantApiSecret() {
+        return mContext.getString(R.string.default_api_password);
     }
 }

@@ -1,5 +1,7 @@
 package org.ei.opensrp.domain;
 
+import com.cloudant.sync.datastore.BasicDocumentRevision;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -7,6 +9,7 @@ import org.ei.opensrp.util.DateUtil;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -21,6 +24,11 @@ public class TimelineEvent {
     private String title;
     private String detail1;
     private String detail2;
+
+    private BasicDocumentRevision revision;
+    public BasicDocumentRevision getDocumentRevision() {
+        return revision;
+    }
 
     public TimelineEvent(String caseId, String type, LocalDate referenceDate, String title, String detail1, String detail2) {
         this.caseId = caseId;
@@ -335,4 +343,34 @@ public class TimelineEvent {
         return ToStringBuilder.reflectionToString(this);
     }
 
+
+    public static TimelineEvent fromRevision(BasicDocumentRevision revision) {
+        // this could also be done by a fancy object mapper
+        Map<String, Object> map = revision.asMap();
+        if(map.containsKey("caseId") && map.containsKey("type") && map.containsKey("referenceDate") &&
+                map.containsKey("title") && map.containsKey("detail1") && map.containsKey("detail2") ) {
+            String caseId = (String) map.get("caseId");
+            String type = (String) map.get("type");
+            LocalDate referenceDate = (LocalDate) map.get("referenceDate");
+            String title = (String) map.get("title");
+            String detail1 = (String) map.get("detail1");
+            String detail2 = (String) map.get("detail2");
+            TimelineEvent timelineEvent = new TimelineEvent(caseId, type, referenceDate, title, detail1, detail2);
+            timelineEvent.revision = revision;
+            return timelineEvent;
+        }
+        return null;
+    }
+
+    public Map<String, Object> asMap() {
+        // this could also be done by a fancy object mapper
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put("caseId", caseId);
+        map.put("type", type);
+        map.put("referenceDate", referenceDate);
+        map.put("title", title);
+        map.put("detail1", detail1);
+        map.put("detail2", detail2);
+        return map;
+    }
 }

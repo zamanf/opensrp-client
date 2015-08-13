@@ -1,10 +1,13 @@
 package org.ei.opensrp.domain;
 
+import com.cloudant.sync.datastore.BasicDocumentRevision;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.ei.opensrp.domain.mapper.TTMapper;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.ei.opensrp.AllConstants.ANCVisitFields.*;
@@ -34,6 +37,11 @@ public class ServiceProvided {
     private final String name;
     private final String date;
     private final Map<String, String> data;
+
+    private BasicDocumentRevision revision;
+    public BasicDocumentRevision getDocumentRevision() {
+        return revision;
+    }
 
     public ServiceProvided(String entityId, String name, String date, Map<String, String> data) {
         this.name = name;
@@ -129,5 +137,31 @@ public class ServiceProvided {
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
+    }
+
+    public static ServiceProvided fromRevision(BasicDocumentRevision revision) {
+        // this could also be done by a fancy object mapper
+        Map<String, Object> map = revision.asMap();
+        if(map.containsKey("entityId") && map.containsKey("name") && map.containsKey("date") &&
+                map.containsKey("data")) {
+            String entityId = (String) map.get("entityId");
+            String name = (String) map.get("name");
+            String date = (String) map.get("date");
+            Map<String, String> data = (Map<String, String>) map.get("data");
+            ServiceProvided serviceProvided = new ServiceProvided(entityId, name, date, data);
+            serviceProvided.revision = revision;
+            return serviceProvided;
+        }
+        return null;
+    }
+
+    public Map<String, Object> asMap() {
+        // this could also be done by a fancy object mapper
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put("entityId", entityId);
+        map.put("name", name);
+        map.put("date", date);
+        map.put("data", data);
+        return map;
     }
 }
