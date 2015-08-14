@@ -123,7 +123,6 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':sync-core')
     compile project(':sync-android')
-    compile project(':sync-javase')
 }
 
 dependencies {
