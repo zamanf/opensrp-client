@@ -1,6 +1,5 @@
 package org.ei.opensrp.repository.cloudant;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
@@ -12,11 +11,7 @@ import com.cloudant.sync.datastore.MutableDocumentRevision;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import net.sqlcipher.database.SQLiteDatabase;
-
 import org.ei.opensrp.R;
-import org.ei.opensrp.domain.Child;
-import org.ei.opensrp.domain.Mother;
 import org.ei.opensrp.domain.ServiceProvided;
 
 import java.util.ArrayList;
@@ -24,9 +19,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static java.lang.String.format;
-import static org.apache.commons.lang3.ArrayUtils.addAll;
 
 /**
  * Created by Geoffrey Koros on 8/11/2015.

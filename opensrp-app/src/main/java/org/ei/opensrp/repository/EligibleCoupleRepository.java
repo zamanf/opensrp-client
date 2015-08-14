@@ -6,7 +6,9 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import net.sqlcipher.database.SQLiteDatabase;
 import org.ei.opensrp.AllConstants;
+import org.ei.opensrp.Context;
 import org.ei.opensrp.domain.EligibleCouple;
+import org.ei.opensrp.repository.cloudant.EligibleCouplesModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -203,5 +205,13 @@ public class EligibleCoupleRepository extends DrishtiRepository {
         }
         cursor.close();
         return detailsList;
+    }
+
+    public void migrateAllDataToCloudantModels(){
+        EligibleCouplesModel eligibleCouplesModel = Context.getInstance().eligibleCouplesModel();
+        List<EligibleCouple> eligibleCouples = allEligibleCouples();
+        for(EligibleCouple eligibleCouple : eligibleCouples){
+            eligibleCouplesModel.add(eligibleCouple);
+        }
     }
 }

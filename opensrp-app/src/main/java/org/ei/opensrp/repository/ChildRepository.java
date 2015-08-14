@@ -6,9 +6,11 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import net.sqlcipher.database.SQLiteDatabase;
 import org.apache.commons.lang3.StringUtils;
+import org.ei.opensrp.Context;
 import org.ei.opensrp.domain.Child;
 import org.ei.opensrp.domain.EligibleCouple;
 import org.ei.opensrp.domain.Mother;
+import org.ei.opensrp.repository.cloudant.ChildsModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -250,4 +252,13 @@ public class ChildRepository extends DrishtiRepository {
         SQLiteDatabase database = masterRepository.getWritableDatabase();
         database.delete(CHILD_TABLE_NAME, ID_COLUMN + "= ?", new String[]{childId});
     }
+
+    public void migrateAllDataToCloudantModels(){
+        ChildsModel childsModel = Context.getInstance().childsModel();
+        List<Child> children = all();
+        for(Child child : children){
+            childsModel.add(child);
+        }
+    }
+
 }

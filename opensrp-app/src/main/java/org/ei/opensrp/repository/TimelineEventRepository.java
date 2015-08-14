@@ -3,7 +3,11 @@ package org.ei.opensrp.repository;
 import android.content.ContentValues;
 import android.database.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
+
+import org.ei.opensrp.Context;
+import org.ei.opensrp.domain.Mother;
 import org.ei.opensrp.domain.TimelineEvent;
+import org.ei.opensrp.repository.cloudant.TimelineEventsModel;
 import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
@@ -64,4 +68,19 @@ public class TimelineEventRepository extends DrishtiRepository {
         values.put(DETAIL2_COLUMN, timelineEvent.detail2());
         return values;
     }
+
+    public List<TimelineEvent> allTimelineEvents() {
+        SQLiteDatabase database = masterRepository.getReadableDatabase();
+        Cursor cursor = database.query(TIMELINEEVENT_TABLE_NAME, TIMELINEEVENT_TABLE_COLUMNS, null, null, null, null, null, null);
+        return readAllTimelineEvents(cursor);
+    }
+
+    public void migrateAllDataToCloudantModels(){
+        TimelineEventsModel timelineEventsModel = Context.getInstance().timelineEventsModel();
+        List<TimelineEvent> timelineEvents = allTimelineEvents();
+        for(TimelineEvent timelineEvent : timelineEvents){
+            timelineEventsModel.add(timelineEvent);
+        }
+    }
+
 }

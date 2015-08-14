@@ -1,6 +1,5 @@
 package org.ei.opensrp.repository.cloudant;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
@@ -13,11 +12,7 @@ import com.cloudant.sync.datastore.DocumentRevision;
 import com.cloudant.sync.datastore.MutableDocumentRevision;
 import com.cloudant.sync.query.QueryResult;
 
-import net.sqlcipher.database.SQLiteDatabase;
-
 import org.ei.opensrp.R;
-import org.ei.opensrp.domain.Alert;
-import org.ei.opensrp.domain.Mother;
 import org.ei.opensrp.domain.TimelineEvent;
 import org.ei.opensrp.domain.form.FormSubmission;
 import org.joda.time.LocalDate;

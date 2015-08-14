@@ -3,7 +3,10 @@ package org.ei.opensrp.repository;
 import android.content.ContentValues;
 import android.database.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
+
+import org.ei.opensrp.Context;
 import org.ei.opensrp.domain.Alert;
+import org.ei.opensrp.repository.cloudant.AlertsModel;
 import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
@@ -149,6 +152,7 @@ public class AlertRepository extends DrishtiRepository {
         valuesToBeUpdated.put(ALERTS_STATUS_COLUMN, inProcess.value());
         database.update(ALERTS_TABLE_NAME, valuesToBeUpdated, CASE_AND_VISIT_CODE_COLUMN_SELECTIONS, caseAndVisitCodeColumnValues);
     }
+
     public void changeAlertStatusToComplete(String entityId, String alertName) {
         SQLiteDatabase database = masterRepository.getWritableDatabase();
         String[] caseAndVisitCodeColumnValues = {entityId, alertName};
@@ -156,5 +160,13 @@ public class AlertRepository extends DrishtiRepository {
         ContentValues valuesToBeUpdated = new ContentValues();
         valuesToBeUpdated.put(ALERTS_STATUS_COLUMN, complete.value());
         database.update(ALERTS_TABLE_NAME, valuesToBeUpdated, CASE_AND_VISIT_CODE_COLUMN_SELECTIONS, caseAndVisitCodeColumnValues);
+	}
+
+    public void migrateAllDataToCloudantModels(){
+        AlertsModel alertsModel = Context.getInstance().alertsModel();
+        List<Alert> alerts = allAlerts();
+        for(Alert alert : alerts){
+            alertsModel.createAlert(alert);
+        }
     }
 }

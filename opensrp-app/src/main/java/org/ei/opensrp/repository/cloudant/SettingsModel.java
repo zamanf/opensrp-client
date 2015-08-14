@@ -1,8 +1,6 @@
 package org.ei.opensrp.repository.cloudant;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.util.Log;
 
 import com.cloudant.sync.datastore.BasicDocumentRevision;
@@ -13,15 +11,10 @@ import com.cloudant.sync.datastore.DocumentRevision;
 import com.cloudant.sync.datastore.MutableDocumentRevision;
 import com.cloudant.sync.query.QueryResult;
 
-import net.sqlcipher.database.SQLiteDatabase;
-
 import org.ei.opensrp.R;
-import org.ei.opensrp.domain.Mother;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -118,6 +111,25 @@ public class SettingsModel extends BaseItemsModel{
         return null;
     }
 
+    public void saveSetting(String key, String value){
+        if(querySetting(key, null) == null && queryBLOB(key) == null){
+            // the key doesn't exist so lets add it
+            SettingsItem s = new SettingsItem(key, value);
+            add(s);
+        }
+    }
+
+    public SettingsItem add(SettingsItem settingsItem) {
+        MutableDocumentRevision revision = new MutableDocumentRevision();
+        revision.body = DocumentBodyFactory.create(settingsItem.asMap());
+        try {
+            BasicDocumentRevision created = this.mDatastore.createDocumentFromRevision(revision);
+            return SettingsItem.fromRevision(created);
+        } catch (DocumentException de) {
+            Log.e(LOG_TAG, de.toString());
+        }
+        return null;
+    }
 
     /**
      * Updates an Mother document within the datastore.
@@ -144,19 +156,21 @@ public class SettingsModel extends BaseItemsModel{
         String key;
         Object value;
 
+        public SettingsItem(String key, Object value){
+            this.key = key;
+            this.value = value;
+        }
+
         private BasicDocumentRevision rev;
         public BasicDocumentRevision getDocumentRevision() {
             return rev;
         }
         public static SettingsItem fromRevision(BasicDocumentRevision rev) {
-            SettingsItem r = new SettingsItem();
-            r.rev = rev;
-            // this could also be done by a fancy object mapper
             Map<String, Object> map = rev.asMap();
             if(map.containsKey("key")) {
-                r.setKey((String) map.get("key"));
-                r.setValue(map.get("value"));
-                return r;
+                SettingsItem s = new SettingsItem((String) map.get("key"), map.get("value"));
+                s.rev = rev;
+                return s;
             }
             return null;
         }

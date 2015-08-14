@@ -1,6 +1,5 @@
 package org.ei.opensrp.repository.cloudant;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
@@ -15,13 +14,9 @@ import com.cloudant.sync.query.QueryResult;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import net.sqlcipher.database.SQLiteDatabase;
-
 import org.apache.commons.lang3.tuple.Pair;
 import org.ei.opensrp.R;
-import org.ei.opensrp.domain.Alert;
 import org.ei.opensrp.domain.EligibleCouple;
-import org.ei.opensrp.domain.FormDefinitionVersion;
 import org.ei.opensrp.domain.Mother;
 import org.ei.opensrp.repository.EligibleCoupleRepository;
 
@@ -31,12 +26,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static java.lang.Boolean.TRUE;
-import static net.sqlcipher.DatabaseUtils.longForQuery;
 import static org.apache.commons.lang3.StringUtils.join;
 import static org.apache.commons.lang3.StringUtils.repeat;
-import static org.ei.opensrp.repository.EligibleCoupleRepository.EC_TABLE_COLUMNS;
-import static org.ei.opensrp.repository.EligibleCoupleRepository.EC_TABLE_NAME;
 import static org.ei.opensrp.repository.EligibleCoupleRepository.IS_OUT_OF_AREA_COLUMN;
 
 /**
@@ -232,11 +223,36 @@ public class MothersModel extends BaseItemsModel{
 
     }
 
-    //TODO: implement
     public List<Mother> findByCaseIds(String... caseIds) {
-        return null;
+        Map<String, Object> query = new HashMap<String, Object>();
+        List<Object> qList = new ArrayList<Object>();
+        for(String str : caseIds){
+            Map<String, Object> eqClause = new HashMap<String, Object>();
+            Map<String, Object> orClause = new HashMap<String, Object>();
+            eqClause.put("$eq", str);
+            query.put(ID_COLUMN, eqClause);
+            qList.add(orClause);
+        }
+        query.put("$or", qList);
+
+        List<Mother> mothers = new ArrayList<Mother>();
+
+        QueryResult result = mIndexManager.find(query);
+        if(result != null){
+            for (DocumentRevision rev : result) {
+                if(rev instanceof BasicDocumentRevision){
+                    BasicDocumentRevision brev = (BasicDocumentRevision)rev;
+                    Mother mother = Mother.fromRevision(brev);
+                    if (mother != null) {
+                        mothers.add(mother);
+                    }
+                }
+            }
+        }
+        return mothers;
     }
 
+    //TODO:
     public List<Pair<Mother, EligibleCouple>> allMothersOfATypeWithEC(String type) {
 //        SQLiteDatabase database = masterRepository.getReadableDatabase();
 //        Cursor cursor = database.rawQuery("SELECT " + tableColumnsForQuery(MOTHER_TABLE_NAME, MOTHER_TABLE_COLUMNS) + ", " + tableColumnsForQuery(EC_TABLE_NAME, EC_TABLE_COLUMNS) +

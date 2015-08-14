@@ -2,50 +2,27 @@ package org.ei.opensrp.repository.cloudant;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.os.Handler;
-import android.os.Looper;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.cloudant.sync.datastore.BasicDocumentRevision;
 import com.cloudant.sync.datastore.ConflictException;
-import com.cloudant.sync.datastore.Datastore;
-import com.cloudant.sync.datastore.DatastoreManager;
-import com.cloudant.sync.datastore.DatastoreNotCreatedException;
 import com.cloudant.sync.datastore.DocumentBodyFactory;
 import com.cloudant.sync.datastore.DocumentException;
 import com.cloudant.sync.datastore.DocumentRevision;
 import com.cloudant.sync.datastore.MutableDocumentRevision;
-import com.cloudant.sync.notifications.ReplicationCompleted;
-import com.cloudant.sync.notifications.ReplicationErrored;
-import com.cloudant.sync.query.IndexManager;
 import com.cloudant.sync.query.QueryResult;
-import com.cloudant.sync.replication.PullReplication;
-import com.cloudant.sync.replication.PushReplication;
-import com.cloudant.sync.replication.Replicator;
-import com.cloudant.sync.replication.ReplicatorFactory;
-import com.fasterxml.jackson.databind.deser.Deserializers;
-import com.google.common.eventbus.Subscribe;
-
-import net.sqlcipher.database.SQLiteDatabase;
 
 import org.ei.opensrp.R;
 import org.ei.opensrp.domain.Alert;
 import org.joda.time.LocalDate;
 
-import java.io.File;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static java.lang.String.format;
-import static org.apache.commons.lang3.ArrayUtils.addAll;
 import static org.apache.commons.lang3.StringUtils.repeat;
 import static org.ei.drishti.dto.AlertStatus.complete;
 import static org.ei.drishti.dto.AlertStatus.from;
@@ -198,7 +175,6 @@ public class AlertsModel extends BaseItemsModel{
         }
     }
 
-    //TODO:
     public void deleteAllAlerts() {
         try {
             int nDocs = this.mDatastore.getDocumentCount();

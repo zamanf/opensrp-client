@@ -17,7 +17,6 @@ import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ei.opensrp.R;
-import org.ei.opensrp.domain.Alert;
 import org.ei.opensrp.domain.Child;
 import org.ei.opensrp.domain.EligibleCouple;
 import org.ei.opensrp.domain.Mother;
@@ -30,13 +29,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static java.lang.Boolean.TRUE;
-import static net.sqlcipher.DatabaseUtils.longForQuery;
 import static org.apache.commons.lang3.StringUtils.repeat;
-import static org.ei.drishti.dto.AlertStatus.complete;
-import static org.ei.opensrp.repository.EligibleCoupleRepository.EC_TABLE_COLUMNS;
 import static org.ei.opensrp.repository.EligibleCoupleRepository.EC_TABLE_NAME;
-import static org.ei.opensrp.repository.MotherRepository.MOTHER_TABLE_COLUMNS;
 import static org.ei.opensrp.repository.MotherRepository.MOTHER_TABLE_NAME;
 
 /**
@@ -132,7 +126,33 @@ public class ChildsModel extends BaseItemsModel{
 
     //TODO:
     public List<Child> findChildrenByCaseIds(String... caseIds) {
-        return null;
+        Map<String, Object> query = new HashMap<String, Object>();
+        List<Object> qList = new ArrayList<Object>();
+        for(String str : caseIds){
+            Map<String, Object> eqClause = new HashMap<String, Object>();
+            Map<String, Object> orClause = new HashMap<String, Object>();
+            eqClause.put("$eq", str);
+            query.put(ID_COLUMN, eqClause);
+            qList.add(orClause);
+        }
+        query.put("$or", qList);
+
+        List<Child> children = new ArrayList<Child>();
+
+        QueryResult result = mIndexManager.find(query);
+        if(result != null){
+            for (DocumentRevision rev : result) {
+                if(rev instanceof BasicDocumentRevision){
+                    BasicDocumentRevision brev = (BasicDocumentRevision)rev;
+                    Child child = Child.fromRevision(brev);
+                    if (child != null) {
+                        children.add(child);
+                    }
+                }
+            }
+        }
+
+        return children;
     }
 
     public void updateDetails(String caseId, Map<String, String> details) {
@@ -303,6 +323,7 @@ public class ChildsModel extends BaseItemsModel{
         }
     }
 
+    //TODO:
     public List<Child> findAllChildrenByECId(String ecId) {
         return null;
     }

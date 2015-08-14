@@ -16,16 +16,9 @@ import com.cloudant.sync.query.QueryResult;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import net.sqlcipher.database.SQLiteDatabase;
-
 import org.ei.opensrp.R;
-import org.ei.opensrp.domain.Alert;
-import org.ei.opensrp.domain.Child;
 import org.ei.opensrp.domain.SyncStatus;
 import org.ei.opensrp.domain.form.FormSubmission;
-import org.ei.opensrp.repository.ChildRepository;
-import org.ei.opensrp.repository.EligibleCoupleRepository;
-import org.ei.opensrp.repository.MotherRepository;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,10 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import static java.lang.System.currentTimeMillis;
-import static java.util.Arrays.asList;
 import static java.util.UUID.randomUUID;
-import static net.sqlcipher.DatabaseUtils.longForQuery;
-import static org.ei.drishti.dto.AlertStatus.complete;
 import static org.ei.opensrp.AllConstants.ENTITY_ID_FIELD_NAME;
 import static org.ei.opensrp.AllConstants.ENTITY_ID_PARAM;
 import static org.ei.opensrp.AllConstants.INSTANCE_ID_PARAM;

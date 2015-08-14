@@ -6,8 +6,10 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import net.sqlcipher.database.SQLiteDatabase;
 import org.apache.commons.lang3.tuple.Pair;
+import org.ei.opensrp.Context;
 import org.ei.opensrp.domain.EligibleCouple;
 import org.ei.opensrp.domain.Mother;
+import org.ei.opensrp.repository.cloudant.MothersModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -214,5 +216,19 @@ public class MotherRepository extends DrishtiRepository {
     public void update(Mother mother) {
         SQLiteDatabase database = masterRepository.getWritableDatabase();
         database.update(MOTHER_TABLE_NAME, createValuesFor(mother, TYPE_ANC), ID_COLUMN + " = ?", new String[]{mother.caseId()});
+    }
+
+    public List<Mother> allMothers() {
+        SQLiteDatabase database = masterRepository.getReadableDatabase();
+        Cursor cursor = database.query(MOTHER_TABLE_NAME, MOTHER_TABLE_COLUMNS, null, null, null, null, null, null);
+        return readAll(cursor);
+    }
+
+    public void migrateAllDataToCloudantModels(){
+        MothersModel mothersModel = Context.getInstance().mothersModel();
+        List<Mother> mothers = allMothers();
+        for(Mother mother : mothers){
+            mothersModel.add(mother);
+        }
     }
 }

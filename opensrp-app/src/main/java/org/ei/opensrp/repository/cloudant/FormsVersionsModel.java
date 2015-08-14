@@ -1,6 +1,5 @@
 package org.ei.opensrp.repository.cloudant;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
@@ -13,13 +12,9 @@ import com.cloudant.sync.datastore.DocumentRevision;
 import com.cloudant.sync.datastore.MutableDocumentRevision;
 import com.cloudant.sync.query.QueryResult;
 
-import net.sqlcipher.database.SQLiteDatabase;
-
 import org.ei.opensrp.R;
-import org.ei.opensrp.domain.Alert;
 import org.ei.opensrp.domain.FormDefinitionVersion;
 import org.ei.opensrp.domain.SyncStatus;
-import org.ei.opensrp.domain.form.FormSubmission;
 import org.ei.opensrp.util.EasyMap;
 
 import java.util.ArrayList;
@@ -27,11 +22,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
-import static net.sqlcipher.DatabaseUtils.longForQuery;
-import static org.ei.drishti.dto.AlertStatus.inProcess;
-import static org.ei.opensrp.domain.SyncStatus.PENDING;
 import static org.ei.opensrp.domain.SyncStatus.SYNCED;
 
 /**

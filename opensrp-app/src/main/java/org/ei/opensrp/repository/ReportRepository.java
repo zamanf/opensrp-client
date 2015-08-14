@@ -3,7 +3,10 @@ package org.ei.opensrp.repository;
 import android.content.ContentValues;
 import android.database.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
+
+import org.ei.opensrp.Context;
 import org.ei.opensrp.domain.Report;
+import org.ei.opensrp.repository.cloudant.ReportsModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,5 +70,13 @@ public class ReportRepository extends DrishtiRepository {
 
     private String insertPlaceholdersForInClause(int length) {
         return repeat("?", ",", length);
+    }
+
+    public void migrateAllDataToCloudantModels(){
+        ReportsModel reportsModel = org.ei.opensrp.Context.getInstance().reportsModel();
+        List<Report> reports = all();
+        for(Report report : reports){
+            reportsModel.add(report);
+        }
     }
 }

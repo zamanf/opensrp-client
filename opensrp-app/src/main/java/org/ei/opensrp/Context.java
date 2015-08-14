@@ -30,6 +30,16 @@ import org.ei.opensrp.repository.Repository;
 import org.ei.opensrp.repository.ServiceProvidedRepository;
 import org.ei.opensrp.repository.SettingsRepository;
 import org.ei.opensrp.repository.TimelineEventRepository;
+import org.ei.opensrp.repository.cloudant.AlertsModel;
+import org.ei.opensrp.repository.cloudant.ChildsModel;
+import org.ei.opensrp.repository.cloudant.EligibleCouplesModel;
+import org.ei.opensrp.repository.cloudant.FormDataModel;
+import org.ei.opensrp.repository.cloudant.FormsVersionsModel;
+import org.ei.opensrp.repository.cloudant.MothersModel;
+import org.ei.opensrp.repository.cloudant.ReportsModel;
+import org.ei.opensrp.repository.cloudant.ServiceProvidedModel;
+import org.ei.opensrp.repository.cloudant.SettingsModel;
+import org.ei.opensrp.repository.cloudant.TimelineEventsModel;
 import org.ei.opensrp.service.ANMService;
 import org.ei.opensrp.service.ActionService;
 import org.ei.opensrp.service.AlertService;
@@ -188,6 +198,17 @@ public class Context {
     private ANMLocationController anmLocationController;
 
     private DristhiConfiguration configuration;
+
+    private AlertsModel alertsModel;
+    private ChildsModel childsModel;
+    private EligibleCouplesModel eligibleCouplesModel;
+    private FormDataModel formDataModel;
+    private FormsVersionsModel formsVersionsModel;
+    private MothersModel mothersModel;
+    private ServiceProvidedModel serviceProvidedModel;
+    private SettingsModel settingsModel;
+    private TimelineEventsModel timelineEventsModel;
+    private ReportsModel reportsModel;
 
     ///////////////////common bindtypes///////////////
     public static ArrayList<CommonRepositoryInformationHolder> bindtypes;
@@ -563,7 +584,7 @@ public class Context {
         return eligibleCoupleRepository;
     }
 
-    private AlertRepository alertRepository() {
+    public AlertRepository alertRepository() {
         if (alertRepository == null) {
             alertRepository = new AlertRepository();
         }
@@ -904,6 +925,75 @@ public class Context {
         return returnString.toString();
     }
 
+
+    public AlertsModel alertsModel() {
+        if (alertsModel == null) {
+            alertsModel = new AlertsModel(applicationContext());
+        }
+        return alertsModel;
+    }
+
+    public ChildsModel childsModel() {
+        if (childsModel == null) {
+            childsModel = new ChildsModel(applicationContext());
+        }
+        return childsModel;
+    }
+
+    public EligibleCouplesModel eligibleCouplesModel() {
+        if (eligibleCouplesModel == null) {
+            eligibleCouplesModel = new EligibleCouplesModel(applicationContext());
+        }
+        return eligibleCouplesModel;
+    }
+    public FormDataModel formDataModel() {
+        if (formDataModel == null) {
+            formDataModel = new FormDataModel(applicationContext());
+        }
+        return formDataModel;
+    }
+
+    public MothersModel mothersModel() {
+        if (mothersModel == null) {
+            mothersModel = new MothersModel(applicationContext());
+        }
+        return mothersModel;
+    }
+
+    public ServiceProvidedModel serviceProvidedModel() {
+        if (serviceProvidedModel == null) {
+            serviceProvidedModel = new ServiceProvidedModel(applicationContext());
+        }
+        return serviceProvidedModel;
+    }
+
+    public SettingsModel settingsModel() {
+        if (settingsModel == null) {
+            settingsModel = new SettingsModel(applicationContext());
+        }
+        return settingsModel;
+    }
+
+    public TimelineEventsModel timelineEventsModel() {
+        if (timelineEventsModel == null) {
+            timelineEventsModel = new TimelineEventsModel(applicationContext());
+        }
+        return timelineEventsModel;
+    }
+
+    public FormsVersionsModel formsVersionsModel() {
+        if (formsVersionsModel == null) {
+            formsVersionsModel = new FormsVersionsModel(applicationContext());
+        }
+        return formsVersionsModel;
+    }
+
+    public ReportsModel reportsModel() {
+        if (reportsModel == null) {
+            reportsModel = new ReportsModel(applicationContext());
+        }
+        return reportsModel;
+    }
 
     ///////////////////////////////////////////////////////////////////////////////
 }

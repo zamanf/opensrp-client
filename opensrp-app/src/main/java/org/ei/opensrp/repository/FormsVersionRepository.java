@@ -8,8 +8,10 @@ import com.google.gson.reflect.TypeToken;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
+import org.ei.opensrp.Context;
 import org.ei.opensrp.domain.FormDefinitionVersion;
 import org.ei.opensrp.domain.SyncStatus;
+import org.ei.opensrp.repository.cloudant.FormsVersionsModel;
 import org.ei.opensrp.util.EasyMap;
 
 import java.util.ArrayList;
@@ -125,7 +127,7 @@ public class FormsVersionRepository extends DrishtiRepository {
         SQLiteDatabase database = masterRepository.getReadableDatabase();
         Cursor cursor = database.query(FORM_VERSION_TABLE_NAME, new String[]{FORM_DIR_NAME_COLUMN},
                 FORM_DIR_NAME_COLUMN
-                + " = ?", new String[]{formDirName}, null, null, null);
+                        + " = ?", new String[]{formDirName}, null, null, null);
         boolean isThere = cursor.moveToFirst();
         cursor.close();
         return isThere;
@@ -189,6 +191,20 @@ public class FormsVersionRepository extends DrishtiRepository {
         }
         cursor.close();
         return submissions;
+    }
+
+    public List<FormDefinitionVersion> allFormDefinitionVersions() {
+        SQLiteDatabase database = masterRepository.getReadableDatabase();
+        Cursor cursor = database.query(FORM_VERSION_TABLE_NAME, FORM_VERSION_TABLE_COLUMNS, null, null, null, null, null, null);
+        return readFormVersion(cursor);
+    }
+
+    public void migrateAllDataToCloudantModels(){
+        FormsVersionsModel formsVersionsModel = Context.getInstance().formsVersionsModel();
+        List<FormDefinitionVersion> formDefinitionVersions = allFormDefinitionVersions();
+        for(FormDefinitionVersion formDefinitionVersion : formDefinitionVersions){
+            formsVersionsModel.addFormVersionFromObject(formDefinitionVersion);
+        }
     }
 
 }

@@ -5,7 +5,10 @@ import android.database.Cursor;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import net.sqlcipher.database.SQLiteDatabase;
+
+import org.ei.opensrp.Context;
 import org.ei.opensrp.domain.ServiceProvided;
+import org.ei.opensrp.repository.cloudant.ServiceProvidedModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,5 +85,13 @@ public class ServiceProvidedRepository extends DrishtiRepository {
 
     private String insertPlaceholdersForInClause(int length) {
         return repeat("?", ",", length);
+    }
+
+    public void migrateAllDataToCloudantModels(){
+        ServiceProvidedModel serviceProvidedModel = Context.getInstance().serviceProvidedModel();
+        List<ServiceProvided> servicesProvided = all();
+        for(ServiceProvided serviceProvided : servicesProvided){
+            serviceProvidedModel.add(serviceProvided);
+        }
     }
 }
