@@ -15,6 +15,8 @@ import com.cloudant.sync.query.QueryResult;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import net.sqlcipher.database.SQLiteDatabase;
+
 import org.apache.commons.lang3.StringUtils;
 import org.ei.opensrp.R;
 import org.ei.opensrp.domain.Child;
@@ -30,7 +32,9 @@ import java.util.List;
 import java.util.Map;
 
 import static org.apache.commons.lang3.StringUtils.repeat;
+import static org.ei.opensrp.repository.EligibleCoupleRepository.EC_TABLE_COLUMNS;
 import static org.ei.opensrp.repository.EligibleCoupleRepository.EC_TABLE_NAME;
+import static org.ei.opensrp.repository.MotherRepository.MOTHER_TABLE_COLUMNS;
 import static org.ei.opensrp.repository.MotherRepository.MOTHER_TABLE_NAME;
 
 /**
@@ -51,8 +55,12 @@ public class ChildsModel extends BaseItemsModel{
     public static final String[] CHILD_TABLE_COLUMNS = {ID_COLUMN, MOTHER_ID_COLUMN, THAYI_CARD_COLUMN, DATE_OF_BIRTH_COLUMN, GENDER_COLUMN, DETAILS_COLUMN, IS_CLOSED_COLUMN, PHOTO_PATH_COLUMN};
     public static final String NOT_CLOSED = "false";
 
+    private EligibleCouplesModel mEligibleCouplesModel;
+    private MothersModel mMothersModel;
+
     public ChildsModel(Context context) {
         super(context, CHILD_TABLE_NAME);
+
         //setup the indexManeger
         if(mIndexManager != null){
             if (mIndexManager.isTextSearchEnabled()) {
@@ -67,6 +75,9 @@ public class ChildsModel extends BaseItemsModel{
                 Log.e(LOG_TAG, "there was an error creating the index");
             }
         }
+
+        mEligibleCouplesModel = org.ei.opensrp.Context.getInstance().eligibleCouplesModel();
+        mMothersModel = org.ei.opensrp.Context.getInstance().mothersModel();
     }
 
     public void add(Child child) {
@@ -124,7 +135,6 @@ public class ChildsModel extends BaseItemsModel{
         return null;
     }
 
-    //TODO:
     public List<Child> findChildrenByCaseIds(String... caseIds) {
         Map<String, Object> query = new HashMap<String, Object>();
         List<Object> qList = new ArrayList<Object>();
@@ -204,9 +214,20 @@ public class ChildsModel extends BaseItemsModel{
         markAsClosed(caseId);
     }
 
-    //TODO:
     public List<Child> allChildrenWithMotherAndEC() {
-        return  null;
+        List<EligibleCouple> eligibleCouples = mEligibleCouplesModel.allEligibleCouples();
+        List<Child> children = new ArrayList<Child>();
+        for(EligibleCouple eligibleCouple : eligibleCouples){
+            List<Mother> mothers = mMothersModel.findAllCasesForEC(eligibleCouple.caseId());
+            for(Mother mother : mothers){
+                for(Child child : findByMotherCaseId(mother.caseId())){
+                    children.add(child
+                            .withMother(mother)
+                            .withEC(eligibleCouple));
+                }
+            }
+        }
+        return children;
     }
 
     private String tableColumnsForQuery(String tableName, String[] tableColumns) {
@@ -323,14 +344,44 @@ public class ChildsModel extends BaseItemsModel{
         }
     }
 
-    //TODO:
     public List<Child> findAllChildrenByECId(String ecId) {
-        return null;
+        List<Child> children = new ArrayList<Child>();
+        EligibleCouple eligibleCouple  = mEligibleCouplesModel.findByCaseID(ecId);
+        List<Mother> mothers = mMothersModel.findAllCasesForEC(eligibleCouple.caseId());
+        for(Mother mother : mothers){
+            Map<String, Object> query = new HashMap<String, Object>();
+            query.put(MOTHER_ID_COLUMN, mother.caseId());
+            QueryResult result = mIndexManager.find(query);
+            if(result != null){
+                for (DocumentRevision rev : result) {
+                    if(rev instanceof BasicDocumentRevision){
+                        BasicDocumentRevision brev = (BasicDocumentRevision)rev;
+                        Child child = Child.fromRevision(brev);
+                        children.add(child);
+                    }
+                }
+            }
+        }
+        return children;
     }
 
-    //TODO:
     public void delete(String childId) {
-
+        try {
+            Map<String, Object> query = new HashMap<String, Object>();
+            query.put(ID_COLUMN, childId);
+            QueryResult result = mIndexManager.find(query);
+            if(result != null){
+                for (DocumentRevision rev : result) {
+                    if(rev instanceof BasicDocumentRevision){
+                        BasicDocumentRevision brev = (BasicDocumentRevision)rev;
+                        Child child = Child.fromRevision(brev);
+                        deleteDocument(child);
+                    }
+                }
+            }
+        } catch (ConflictException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -349,6 +400,16 @@ public class ChildsModel extends BaseItemsModel{
         } catch (DocumentException de) {
             return null;
         }
+    }
+
+    /**
+     * Deletes a Child document within the datastore.
+     * @param child Child to delete
+     * @throws ConflictException if the Child passed in has a rev which doesn't
+     *      match the current rev in the datastore.
+     */
+    public void deleteDocument(Child child) throws ConflictException {
+        this.mDatastore.deleteDocumentFromRevision(child.getDocumentRevision()); //We should have db column rather than actualy deleting the entity
     }
 
     @Override
