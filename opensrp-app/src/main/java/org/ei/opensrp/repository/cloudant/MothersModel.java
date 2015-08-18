@@ -51,6 +51,8 @@ public class MothersModel extends BaseItemsModel{
     public static final String TYPE_PNC = "PNC";
     private static final String NOT_CLOSED = "false";
 
+    private EligibleCouplesModel mEligibleCouplesModel;
+
     public MothersModel(Context context){
         super(context, MOTHER_TABLE_NAME);
 
@@ -68,6 +70,8 @@ public class MothersModel extends BaseItemsModel{
                 Log.e(LOG_TAG, "there was an error creating the index");
             }
         }
+
+        mEligibleCouplesModel = org.ei.opensrp.Context.getInstance().eligibleCouplesModel();
     }
 
     public void add(Mother mother) {
@@ -220,7 +224,6 @@ public class MothersModel extends BaseItemsModel{
             }
         }
         return mothers;
-
     }
 
     public List<Mother> findByCaseIds(String... caseIds) {
@@ -252,17 +255,25 @@ public class MothersModel extends BaseItemsModel{
         return mothers;
     }
 
-    //TODO:
     public List<Pair<Mother, EligibleCouple>> allMothersOfATypeWithEC(String type) {
-//        SQLiteDatabase database = masterRepository.getReadableDatabase();
-//        Cursor cursor = database.rawQuery("SELECT " + tableColumnsForQuery(MOTHER_TABLE_NAME, MOTHER_TABLE_COLUMNS) + ", " + tableColumnsForQuery(EC_TABLE_NAME, EC_TABLE_COLUMNS) +
-//                " FROM " + MOTHER_TABLE_NAME + ", " + EC_TABLE_NAME +
-//                " WHERE " + TYPE_COLUMN + "='" + type +
-//                "' AND " + MOTHER_TABLE_NAME + "." + IS_CLOSED_COLUMN + "= '" + NOT_CLOSED + "' AND " +
-//                MOTHER_TABLE_NAME + "." + EC_CASEID_COLUMN + " = " + EC_TABLE_NAME + "." + EligibleCoupleRepository.ID_COLUMN, null);
-//        return readAllMothersWithEC(cursor);
-
-        return null;
+        List<Pair<Mother, EligibleCouple>> ancsWithEC = new ArrayList<Pair<Mother, EligibleCouple>>();
+        Map<String, Object> query = new HashMap<String, Object>();
+        query.put(TYPE_COLUMN, type);
+        query.put(IS_CLOSED_COLUMN, NOT_CLOSED);
+        QueryResult result = mIndexManager.find(query);
+        if(result != null){
+            for (DocumentRevision rev : result) {
+                if(rev instanceof BasicDocumentRevision){
+                    BasicDocumentRevision brev = (BasicDocumentRevision)rev;
+                    Mother mother = Mother.fromRevision(brev);
+                    if (mother != null) {
+                        EligibleCouple eligibleCouple = mEligibleCouplesModel.findByCaseID(mother.ecCaseId());
+                        ancsWithEC.add(Pair.of(mother, eligibleCouple));
+                    }
+                }
+            }
+        }
+        return ancsWithEC;
     }
 
     public void closeAllCasesForEC(String ecCaseId) {
@@ -364,10 +375,21 @@ public class MothersModel extends BaseItemsModel{
 
 
     public Mother findMotherWithOpenStatusByECId(String ecId) {
-//        SQLiteDatabase database = masterRepository.getReadableDatabase();
-//        Cursor cursor = database.query(MOTHER_TABLE_NAME, MOTHER_TABLE_COLUMNS, EC_CASEID_COLUMN + " = ? AND " + IS_CLOSED_COLUMN + " = ?", new String[]{ecId, NOT_CLOSED}, null, null, null, null);
-//        List<Mother> mothers = readAll(cursor);
-//        return mothers.isEmpty() ? null : mothers.get(0);
+        Map<String, Object> query = new HashMap<String, Object>();
+        query.put(EC_CASEID_COLUMN, ecId);
+        query.put(IS_CLOSED_COLUMN, NOT_CLOSED);
+        QueryResult result = mIndexManager.find(query);
+        if(result != null){
+            for (DocumentRevision rev : result) {
+                if(rev instanceof BasicDocumentRevision){
+                    BasicDocumentRevision brev = (BasicDocumentRevision)rev;
+                    Mother mother = Mother.fromRevision(brev);
+                    if (mother != null) {
+                        return mother;
+                    }
+                }
+            }
+        }
         return null;
     }
 

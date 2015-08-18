@@ -1,19 +1,27 @@
 package org.ei.opensrp.repository.cloudant;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
 
 import com.cloudant.sync.datastore.BasicDocumentRevision;
+import com.cloudant.sync.datastore.ConflictException;
 import com.cloudant.sync.datastore.DocumentBodyFactory;
 import com.cloudant.sync.datastore.DocumentException;
+import com.cloudant.sync.datastore.DocumentRevision;
 import com.cloudant.sync.datastore.MutableDocumentRevision;
+import com.cloudant.sync.query.QueryResult;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import net.sqlcipher.database.SQLiteDatabase;
+
 import org.ei.opensrp.AllConstants;
 import org.ei.opensrp.R;
+import org.ei.opensrp.domain.Child;
 import org.ei.opensrp.domain.EligibleCouple;
+import org.ei.opensrp.domain.Mother;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -75,11 +83,49 @@ public class EligibleCouplesModel extends BaseItemsModel{
     }
 
     public void updateDetails(String caseId, Map<String, String> details) {
-        //TODO:
+        try {
+            Map<String, Object> query = new HashMap<String, Object>();
+            query.put(ID_COLUMN, caseId);
+            QueryResult result = mIndexManager.find(query);
+            if(result != null){
+                for (DocumentRevision rev : result) {
+                    if(rev instanceof BasicDocumentRevision){
+                        BasicDocumentRevision brev = (BasicDocumentRevision)rev;
+                        EligibleCouple eligibleCouple = EligibleCouple.fromRevision(brev);
+                        if (eligibleCouple != null) {
+                            eligibleCouple.setDetails(details);
+                            updateDocument(eligibleCouple);
+                        }
+                    }
+                }
+            }
+        } catch (ConflictException e) {
+            e.printStackTrace();
+        }
     }
 
     public void mergeDetails(String caseId, Map<String, String> details) {
-        //TODO:
+        try {
+            Map<String, Object> query = new HashMap<String, Object>();
+            query.put(ID_COLUMN, caseId);
+            QueryResult result = mIndexManager.find(query);
+            if(result != null){
+                for (DocumentRevision rev : result) {
+                    if(rev instanceof BasicDocumentRevision){
+                        BasicDocumentRevision brev = (BasicDocumentRevision)rev;
+                        EligibleCouple couple = EligibleCouple.fromRevision(brev);
+                        if (couple != null) {
+                            Map<String, String> mergedDetails = new HashMap<String, String>(couple.details());
+                            mergedDetails.putAll(details);
+                            couple.setDetails(mergedDetails);
+                            updateDocument(couple);
+                        }
+                    }
+                }
+            }
+        } catch (ConflictException e) {
+            e.printStackTrace();
+        }
     }
 
     public List<EligibleCouple> allEligibleCouples() {
@@ -99,12 +145,53 @@ public class EligibleCouplesModel extends BaseItemsModel{
     }
 
     public List<EligibleCouple> findByCaseIDs(String... caseIds) {
-        //TODO:
-        return null;
+        Map<String, Object> query = new HashMap<String, Object>();
+        List<Object> qList = new ArrayList<Object>();
+        for(String str : caseIds){
+            Map<String, Object> eqClause = new HashMap<String, Object>();
+            Map<String, Object> orClause = new HashMap<String, Object>();
+            eqClause.put("$eq", str);
+            query.put(ID_COLUMN, eqClause);
+            qList.add(orClause);
+        }
+        query.put("$or", qList);
+
+        List<EligibleCouple> eligibleCouples = new ArrayList<EligibleCouple>();
+
+        QueryResult result = mIndexManager.find(query);
+        if(result != null){
+            for (DocumentRevision rev : result) {
+                if(rev instanceof BasicDocumentRevision){
+                    BasicDocumentRevision brev = (BasicDocumentRevision)rev;
+                    EligibleCouple eligibleCouple = EligibleCouple.fromRevision(brev);
+                    if (eligibleCouple != null) {
+                        eligibleCouples.add(eligibleCouple);
+                    }
+                }
+            }
+        }
+        return eligibleCouples;
     }
 
     public EligibleCouple findByCaseID(String caseId) {
-        //TODO
+        try {
+            Map<String, Object> query = new HashMap<String, Object>();
+            query.put(ID_COLUMN, caseId);
+            QueryResult result = mIndexManager.find(query);
+            if(result != null){
+                for (DocumentRevision rev : result) {
+                    if(rev instanceof BasicDocumentRevision){
+                        BasicDocumentRevision brev = (BasicDocumentRevision)rev;
+                        EligibleCouple eligibleCouple = EligibleCouple.fromRevision(brev);
+                        if (eligibleCouple != null) {
+                            return eligibleCouple;
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
@@ -113,16 +200,72 @@ public class EligibleCouplesModel extends BaseItemsModel{
     }
 
     public List<String> villages() {
-        //TODO:
-        return null;
+        List<String> vilages = new ArrayList<String>();
+        try {
+            Map<String, Object> query = new HashMap<String, Object>();
+            query.put(IS_OUT_OF_AREA_COLUMN, IN_AREA);
+            query.put(IS_CLOSED_COLUMN, NOT_CLOSED);
+            QueryResult result = mIndexManager.find(query);
+
+            if(result != null){
+                for (DocumentRevision rev : result) {
+                    if(rev instanceof BasicDocumentRevision){
+                        BasicDocumentRevision brev = (BasicDocumentRevision)rev;
+                        EligibleCouple eligibleCouple = EligibleCouple.fromRevision(brev);
+                        if (eligibleCouple != null) {
+                            vilages.add(eligibleCouple.village());
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return vilages;
     }
 
     public void updatePhotoPath(String caseId, String imagePath) {
-        //TODO:
+        try {
+            Map<String, Object> query = new HashMap<String, Object>();
+            query.put(ID_COLUMN, caseId);
+            QueryResult result = mIndexManager.find(query);
+            if(result != null){
+                for (DocumentRevision rev : result) {
+                    if(rev instanceof BasicDocumentRevision){
+                        BasicDocumentRevision brev = (BasicDocumentRevision)rev;
+                        EligibleCouple eligibleCouple = EligibleCouple.fromRevision(brev);
+                        if (eligibleCouple != null) {
+                            eligibleCouple.withPhotoPath(imagePath);
+                            updateDocument(eligibleCouple);
+                        }
+                    }
+                }
+            }
+        } catch (ConflictException e) {
+            e.printStackTrace();
+        }
     }
 
     public void close(String caseId) {
-        //
+        try {
+            Map<String, Object> query = new HashMap<String, Object>();
+            query.put(ID_COLUMN, caseId);
+            QueryResult result = mIndexManager.find(query);
+            if(result != null){
+                for (DocumentRevision rev : result) {
+                    if(rev instanceof BasicDocumentRevision){
+                        BasicDocumentRevision brev = (BasicDocumentRevision)rev;
+                        EligibleCouple eligibleCouple = EligibleCouple.fromRevision(brev);
+                        if (eligibleCouple != null) {
+                            eligibleCouple.setIsClosed(true);
+                            updateDocument(eligibleCouple);
+                        }
+                    }
+                }
+            }
+        } catch (ConflictException e) {
+            e.printStackTrace();
+        }
     }
 
     private String insertPlaceholdersForInClause(int length) {
@@ -170,4 +313,23 @@ public class EligibleCouplesModel extends BaseItemsModel{
     public String getCloudantApiSecret() {
         return mContext.getString(R.string.default_api_password);
     }
+
+    /**
+     * Updates an EligibleCouple document within the datastore.
+     * @param eligibleCouple EligibleCouple to update
+     * @return the updated revision of the EligibleCouple
+     * @throws ConflictException if the EligibleCouple passed in has a rev which doesn't
+     *      match the current rev in the datastore.
+     */
+    public EligibleCouple updateDocument(EligibleCouple eligibleCouple) throws ConflictException {
+        MutableDocumentRevision rev = eligibleCouple.getDocumentRevision().mutableCopy();
+        rev.body = DocumentBodyFactory.create(eligibleCouple.asMap());
+        try {
+            BasicDocumentRevision updated = this.mDatastore.updateDocumentFromRevision(rev);
+            return EligibleCouple.fromRevision(updated);
+        } catch (DocumentException de) {
+            return null;
+        }
+    }
+
 }

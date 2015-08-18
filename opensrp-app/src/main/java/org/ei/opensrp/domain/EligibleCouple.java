@@ -142,6 +142,10 @@ public class EligibleCouple {
         return isNotBlank(fpMethod) && !"none".equalsIgnoreCase(fpMethod);
     }
 
+    public void setDetails(Map<String, String> details) {
+        this.details = details;
+    }
+
     @Override
     public boolean equals(Object o) {
         return EqualsBuilder.reflectionEquals(this, o);
