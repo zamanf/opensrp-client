@@ -43,23 +43,14 @@ public class FormSubmissionSyncService {
         this.allSettings = allSettings;
         this.allSharedPreferences = allSharedPreferences;
         this.configuration = configuration;
-
-        Context context = org.ei.opensrp.Context.getInstance().applicationContext();
-
-       /* // Protect creation of static variable.
-        if (sFormSubmissionReplicationModel == null) {
-            // Model needs to stay in existence for lifetime of app.
-            this.sFormSubmissionReplicationModel = FormSubmissionReplicationModel.getInstance(context.getApplicationContext());
-        }*/
-
     }
 
     public FetchStatus sync() {
-        //sFormSubmissionReplicationModel.startPullReplication();
-        //sFormSubmissionReplicationModel.startPushReplication();
-
-        pushToServer();
-        return pullFromServer();
+        //pushToServer();
+        FetchStatus fetchStatus = pullFromServer();
+        org.ei.opensrp.Context.getInstance().pullAllDataFromCloudant();
+        org.ei.opensrp.Context.getInstance().pushAllDataToCloudant();
+        return fetched;
     }
 
     public void pushToServer() {

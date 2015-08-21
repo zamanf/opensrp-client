@@ -177,6 +177,7 @@ public class FormsVersionsModel extends BaseItemsModel{
         rev.body = DocumentBodyFactory.create(createValuesFormVersions(dataJSON, rev));
         try {
             BasicDocumentRevision created = this.mDatastore.createDocumentFromRevision(rev);
+            FormDefinitionVersion.fromRevision(created);
         } catch (DocumentException de) {
             Log.e(LOG_TAG, de.toString());
         }
@@ -187,6 +188,7 @@ public class FormsVersionsModel extends BaseItemsModel{
         rev.body = DocumentBodyFactory.create(createValuesFromObject(formDefinitionVersion, rev));
         try {
             BasicDocumentRevision created = this.mDatastore.createDocumentFromRevision(rev);
+            FormDefinitionVersion.fromRevision(created);
         } catch (DocumentException de) {
             Log.e(LOG_TAG, de.toString());
         }
@@ -338,14 +340,18 @@ public class FormsVersionsModel extends BaseItemsModel{
     private List<Map<String, String>> readFormVersionToMap(List<FormDefinitionVersion>  formDefinitionVersions) {
         List<Map<String, String>> submissions = new ArrayList<Map<String, String>>();
         for (FormDefinitionVersion formDefinitionVersion : formDefinitionVersions) {
-            Map<String, String> _formDefinitionVersion = EasyMap.create(FORM_NAME_COLUMN, formDefinitionVersion.getFormName())
-                    .put(FORM_DIR_NAME_COLUMN, formDefinitionVersion.getFormDirName())
-                    .put(VERSION_COLUMN, formDefinitionVersion.getVersion())
-                    .put(ID_COLUMN, formDefinitionVersion.getEntityId())
-                    .put(SYNC_STATUS_COLUMN, formDefinitionVersion.getSyncStatus().value())
-                    .map();
+            try {
+                Map<String, String> _formDefinitionVersion = EasyMap.create(FORM_NAME_COLUMN, formDefinitionVersion.getFormName())
+                        .put(FORM_DIR_NAME_COLUMN, formDefinitionVersion.getFormDirName())
+                        .put(VERSION_COLUMN, formDefinitionVersion.getVersion())
+                        .put(ID_COLUMN, formDefinitionVersion.getEntityId())
+                        .put(SYNC_STATUS_COLUMN, formDefinitionVersion.getSyncStatus().value())
+                        .map();
 
-            submissions.add(_formDefinitionVersion);
+                submissions.add(_formDefinitionVersion);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return submissions;
     }

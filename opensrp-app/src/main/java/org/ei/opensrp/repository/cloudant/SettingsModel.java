@@ -58,7 +58,7 @@ public class SettingsModel extends BaseItemsModel{
             Map<String, Object> query = new HashMap<String, Object>();
             query.put(SETTINGS_KEY_COLUMN, key);
             QueryResult result = mIndexManager.find(query);
-            if(result != null){
+            if(result != null && result.size() > 0){ // the query isnt empty
                 for (DocumentRevision rev : result) {
                     if(rev instanceof BasicDocumentRevision){
                         BasicDocumentRevision brev = (BasicDocumentRevision)rev;
@@ -69,6 +69,8 @@ public class SettingsModel extends BaseItemsModel{
                         }
                     }
                 }
+            }else{// the key value pair doesn't exist save it
+                saveSetting(key, value);
             }
         } catch (ConflictException e) {
             e.printStackTrace();
@@ -111,7 +113,7 @@ public class SettingsModel extends BaseItemsModel{
         return null;
     }
 
-    public void saveSetting(String key, String value){
+    public void saveSetting(String key, Object value){
         if(querySetting(key, null) == null && queryBLOB(key) == null){
             // the key doesn't exist so lets add it
             SettingsItem s = new SettingsItem(key, value);

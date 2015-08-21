@@ -314,6 +314,19 @@ public class FormDataModel extends BaseItemsModel{
         return randomUUID().toString();
     }
 
+    public List<FormSubmission> all() {
+        int nDocs = this.mDatastore.getDocumentCount();
+        List<BasicDocumentRevision> all = this.mDatastore.getAllDocuments(0, nDocs, true);
+        List<FormSubmission> formSubmissions = new ArrayList<FormSubmission>();
+        for(BasicDocumentRevision rev : all) {
+            FormSubmission formSubmission = FormSubmission.fromRevision(rev);
+            if (formSubmission != null) {
+                formSubmissions.add(formSubmission);
+            }
+        }
+        return formSubmissions;
+    }
+
     /**
      * Updates an FormSubmission document within the datastore.
      * @param formSubmission FormSubmission to update

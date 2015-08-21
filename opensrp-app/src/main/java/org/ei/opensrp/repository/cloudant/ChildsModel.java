@@ -91,13 +91,17 @@ public class ChildsModel extends BaseItemsModel{
         }
     }
 
-    public void update(Child child) throws ConflictException {
-        MutableDocumentRevision rev = child.getDocumentRevision().mutableCopy();
-        rev.body = DocumentBodyFactory.create(child.asMap());
+    public void update(Child child) {
         try {
-            BasicDocumentRevision updated = this.mDatastore.updateDocumentFromRevision(rev);
-        } catch (DocumentException de) {
-            Log.e(LOG_TAG, de.toString());
+            MutableDocumentRevision rev = child.getDocumentRevision().mutableCopy();
+            rev.body = DocumentBodyFactory.create(child.asMap());
+            try {
+                BasicDocumentRevision updated = this.mDatastore.updateDocumentFromRevision(rev);
+            } catch (DocumentException de) {
+                Log.e(LOG_TAG, de.toString());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

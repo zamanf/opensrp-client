@@ -49,6 +49,7 @@ public class FormDataRepository extends DrishtiRepository {
     private static final String FORM_NAME_PARAM = "formName";
     private Map<String, String[]> TABLE_COLUMN_MAP;
 
+    FormDataModel mFormDataModel = org.ei.opensrp.Context.getInstance().formDataModel();
 
     public FormDataRepository() {
         TABLE_COLUMN_MAP = new HashMap<String, String[]>();
@@ -61,10 +62,6 @@ public class FormDataRepository extends DrishtiRepository {
             TABLE_COLUMN_MAP.put(Context.bindtypes.get(i).getBindtypename(), Context.getInstance().commonrepository(Context.bindtypes.get(i).getBindtypename()).common_TABLE_COLUMNS);
         }
 //        TABLE_COLUMN_MAP.put("user",PersonRepository.person_TABLE_COLUMNS);
-
-        //android.content.Context context = org.ei.opensrp.Context.getInstance().applicationContext();
-        //this.sFormSubmissionReplicationModel = FormSubmissionReplicationModel.getInstance(context.getApplicationContext());
-
     }
 
     @Override
@@ -105,7 +102,10 @@ public class FormDataRepository extends DrishtiRepository {
         }.getType());
         database.insert(FORM_SUBMISSION_TABLE_NAME, null, createValuesForFormSubmission(params, data, formDataDefinitionVersion));
 
+        mFormDataModel.saveFormSubmission(paramsJSON, data, formDataDefinitionVersion);
+
         return params.get(INSTANCE_ID_PARAM);
+
     }
 
     @JavascriptInterface
@@ -113,7 +113,7 @@ public class FormDataRepository extends DrishtiRepository {
         SQLiteDatabase database = masterRepository.getWritableDatabase();
         database.insert(FORM_SUBMISSION_TABLE_NAME, null, createValuesForFormSubmission(formSubmission));
 
-        //sFormSubmissionReplicationModel.createDocument(formSubmission);
+        mFormDataModel.saveFormSubmission(formSubmission);
 
     }
 
@@ -121,18 +121,23 @@ public class FormDataRepository extends DrishtiRepository {
         SQLiteDatabase database = masterRepository.getReadableDatabase();
         Cursor cursor = database.query(FORM_SUBMISSION_TABLE_NAME, FORM_SUBMISSION_TABLE_COLUMNS, INSTANCE_ID_COLUMN + " = ?", new String[]{instanceId}, null, null, null);
         return readFormSubmission(cursor).get(0);
+
+        //return mFormDataModel.fetchFromSubmission(instanceId);
     }
 
     public List<FormSubmission> getPendingFormSubmissions() {
-        SQLiteDatabase database = masterRepository.getReadableDatabase();
-        Cursor cursor = database.query(FORM_SUBMISSION_TABLE_NAME, FORM_SUBMISSION_TABLE_COLUMNS, SYNC_STATUS_COLUMN + " = ?", new String[]{PENDING.value()}, null, null, null);
-        return readFormSubmission(cursor);
+//        SQLiteDatabase database = masterRepository.getReadableDatabase();
+//        Cursor cursor = database.query(FORM_SUBMISSION_TABLE_NAME, FORM_SUBMISSION_TABLE_COLUMNS, SYNC_STATUS_COLUMN + " = ?", new String[]{PENDING.value()}, null, null, null);
+//        return readFormSubmission(cursor);
+        return mFormDataModel.getPendingFormSubmissions();
     }
 
     public long getPendingFormSubmissionsCount() {
-        return longForQuery(masterRepository.getReadableDatabase(), "SELECT COUNT(1) FROM " + FORM_SUBMISSION_TABLE_NAME
-                        + " WHERE " + SYNC_STATUS_COLUMN + " = ? ",
-                new String[]{PENDING.value()});
+//        return longForQuery(masterRepository.getReadableDatabase(), "SELECT COUNT(1) FROM " + FORM_SUBMISSION_TABLE_NAME
+//                        + " WHERE " + SYNC_STATUS_COLUMN + " = ? ",
+//                new String[]{PENDING.value()});
+        //return mFormDataModel.getPendingFormSubmissionsCount();
+        return 0;
     }
 
     public void markFormSubmissionsAsSynced(List<FormSubmission> formSubmissions) {
@@ -141,6 +146,8 @@ public class FormDataRepository extends DrishtiRepository {
             FormSubmission updatedSubmission = new FormSubmission(submission.instanceId(), submission.entityId(), submission.formName(), submission.instance(), submission.version(), SYNCED, "1");
             database.update(FORM_SUBMISSION_TABLE_NAME, createValuesForFormSubmission(updatedSubmission), INSTANCE_ID_COLUMN + " = ?", new String[]{updatedSubmission.instanceId()});
         }
+
+        mFormDataModel.markFormSubmissionsAsSynced(formSubmissions);
     }
 
     public void updateServerVersion(String instanceId, String serverVersion) {
@@ -148,14 +155,17 @@ public class FormDataRepository extends DrishtiRepository {
         ContentValues values = new ContentValues();
         values.put(SERVER_VERSION_COLUMN, serverVersion);
         database.update(FORM_SUBMISSION_TABLE_NAME, values, INSTANCE_ID_COLUMN + " = ?", new String[]{instanceId});
+        mFormDataModel.updateServerVersion(instanceId, serverVersion);
     }
 
     public boolean submissionExists(String instanceId) {
-        SQLiteDatabase database = masterRepository.getReadableDatabase();
-        Cursor cursor = database.query(FORM_SUBMISSION_TABLE_NAME, new String[]{INSTANCE_ID_COLUMN}, INSTANCE_ID_COLUMN + " = ?", new String[]{instanceId}, null, null, null);
-        boolean isThere = cursor.moveToFirst();
-        cursor.close();
-        return isThere;
+//        SQLiteDatabase database = masterRepository.getReadableDatabase();
+//        Cursor cursor = database.query(FORM_SUBMISSION_TABLE_NAME, new String[]{INSTANCE_ID_COLUMN}, INSTANCE_ID_COLUMN + " = ?", new String[]{instanceId}, null, null, null);
+//        boolean isThere = cursor.moveToFirst();
+//        cursor.close();
+//        return isThere;
+
+        return mFormDataModel.submissionExists(instanceId);
     }
 
     @JavascriptInterface
@@ -169,7 +179,8 @@ public class FormDataRepository extends DrishtiRepository {
 
         ContentValues contentValues = getContentValues(updatedFieldsMap, entityType, entityMap);
         database.replace(entityType, null, contentValues);
-        return entityId;
+        //return entityId;
+        return mFormDataModel.saveEntity(entityType, fields);
     }
 
     private ContentValues createValuesForFormSubmission(FormSubmission submission) {

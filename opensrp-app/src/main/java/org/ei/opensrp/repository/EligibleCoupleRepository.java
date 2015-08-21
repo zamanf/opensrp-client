@@ -2,9 +2,12 @@ package org.ei.opensrp.repository;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
 import net.sqlcipher.database.SQLiteDatabase;
+
 import org.ei.opensrp.AllConstants;
 import org.ei.opensrp.Context;
 import org.ei.opensrp.domain.EligibleCouple;
@@ -15,9 +18,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static java.lang.Boolean.TRUE;
-import static java.text.MessageFormat.format;
-import static net.sqlcipher.DatabaseUtils.longForQuery;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.repeat;
 
@@ -42,100 +42,113 @@ public class EligibleCoupleRepository extends DrishtiRepository {
     public static final String NOT_CLOSED = "false";
     private static final String IN_AREA = "false";
 
+    EligibleCouplesModel mEligibleCouplesModel = org.ei.opensrp.Context.getInstance().eligibleCouplesModel();
+
     @Override
     protected void onCreate(SQLiteDatabase database) {
         database.execSQL(EC_SQL);
     }
 
     public void add(EligibleCouple eligibleCouple) {
-        SQLiteDatabase database = masterRepository.getWritableDatabase();
-        database.insert(EC_TABLE_NAME, null, createValuesFor(eligibleCouple));
+//        SQLiteDatabase database = masterRepository.getWritableDatabase();
+//        database.insert(EC_TABLE_NAME, null, createValuesFor(eligibleCouple));
+        mEligibleCouplesModel.add(eligibleCouple);
     }
 
     public void updateDetails(String caseId, Map<String, String> details) {
-        SQLiteDatabase database = masterRepository.getWritableDatabase();
-
-        EligibleCouple couple = findByCaseID(caseId);
-        if (couple == null) {
-            return;
-        }
-
-        ContentValues valuesToUpdate = new ContentValues();
-        valuesToUpdate.put(DETAILS_COLUMN, new Gson().toJson(details));
-        database.update(EC_TABLE_NAME, valuesToUpdate, ID_COLUMN + " = ?", new String[]{caseId});
+//        SQLiteDatabase database = masterRepository.getWritableDatabase();
+//
+//        EligibleCouple couple = findByCaseID(caseId);
+//        if (couple == null) {
+//            return;
+//        }
+//
+//        ContentValues valuesToUpdate = new ContentValues();
+//        valuesToUpdate.put(DETAILS_COLUMN, new Gson().toJson(details));
+//        database.update(EC_TABLE_NAME, valuesToUpdate, ID_COLUMN + " = ?", new String[]{caseId});
+        mEligibleCouplesModel.updateDetails(caseId, details);
     }
 
     public void mergeDetails(String caseId, Map<String, String> details) {
-        SQLiteDatabase database = masterRepository.getWritableDatabase();
-
-        EligibleCouple couple = findByCaseID(caseId);
-        if (couple == null) {
-            return;
-        }
-
-        Map<String, String> mergedDetails = new HashMap<String, String>(couple.details());
-        mergedDetails.putAll(details);
-        ContentValues valuesToUpdate = new ContentValues();
-        valuesToUpdate.put(DETAILS_COLUMN, new Gson().toJson(mergedDetails));
-        database.update(EC_TABLE_NAME, valuesToUpdate, ID_COLUMN + " = ?", new String[]{caseId});
+//        SQLiteDatabase database = masterRepository.getWritableDatabase();
+//
+//        EligibleCouple couple = findByCaseID(caseId);
+//        if (couple == null) {
+//            return;
+//        }
+//
+//        Map<String, String> mergedDetails = new HashMap<String, String>(couple.details());
+//        mergedDetails.putAll(details);
+//        ContentValues valuesToUpdate = new ContentValues();
+//        valuesToUpdate.put(DETAILS_COLUMN, new Gson().toJson(mergedDetails));
+//        database.update(EC_TABLE_NAME, valuesToUpdate, ID_COLUMN + " = ?", new String[]{caseId});
+        mEligibleCouplesModel.mergeDetails(caseId, details);
     }
 
     public List<EligibleCouple> allEligibleCouples() {
-        SQLiteDatabase database = masterRepository.getReadableDatabase();
-        Cursor cursor = database.query(EC_TABLE_NAME, EC_TABLE_COLUMNS, IS_OUT_OF_AREA_COLUMN + " = ? AND " +
-                IS_CLOSED_COLUMN + " = ?", new String[]{IN_AREA, NOT_CLOSED}, null, null, null, null);
-        return readAllEligibleCouples(cursor);
+//        SQLiteDatabase database = masterRepository.getReadableDatabase();
+//        Cursor cursor = database.query(EC_TABLE_NAME, EC_TABLE_COLUMNS, IS_OUT_OF_AREA_COLUMN + " = ? AND " +
+//                IS_CLOSED_COLUMN + " = ?", new String[]{IN_AREA, NOT_CLOSED}, null, null, null, null);
+//        return readAllEligibleCouples(cursor);
+        return mEligibleCouplesModel.allEligibleCouples();
     }
 
     public List<EligibleCouple> findByCaseIDs(String... caseIds) {
-        SQLiteDatabase database = masterRepository.getReadableDatabase();
-        Cursor cursor = database.rawQuery(String.format("SELECT * FROM %s WHERE %s IN (%s)", EC_TABLE_NAME, ID_COLUMN,
-                insertPlaceholdersForInClause(caseIds.length)), caseIds);
-        return readAllEligibleCouples(cursor);
+//        SQLiteDatabase database = masterRepository.getReadableDatabase();
+//        Cursor cursor = database.rawQuery(String.format("SELECT * FROM %s WHERE %s IN (%s)", EC_TABLE_NAME, ID_COLUMN,
+//                insertPlaceholdersForInClause(caseIds.length)), caseIds);
+//        return readAllEligibleCouples(cursor);
+
+        return mEligibleCouplesModel.findByCaseIDs(caseIds);
     }
 
     public EligibleCouple findByCaseID(String caseId) {
-        SQLiteDatabase database = masterRepository.getReadableDatabase();
-        Cursor cursor = database.query(EC_TABLE_NAME, EC_TABLE_COLUMNS, ID_COLUMN + " = ?", new String[]{caseId},
-                null, null, null, null);
-        List<EligibleCouple> couples = readAllEligibleCouples(cursor);
-        if (couples.isEmpty()) {
-            return null;
-        }
-        return couples.get(0);
+//        SQLiteDatabase database = masterRepository.getReadableDatabase();
+//        Cursor cursor = database.query(EC_TABLE_NAME, EC_TABLE_COLUMNS, ID_COLUMN + " = ?", new String[]{caseId},
+//                null, null, null, null);
+//        List<EligibleCouple> couples = readAllEligibleCouples(cursor);
+//        if (couples.isEmpty()) {
+//            return null;
+//        }
+//        return couples.get(0);
+        return mEligibleCouplesModel.findByCaseID(caseId);
     }
 
     public long count() {
-        return longForQuery(masterRepository.getReadableDatabase(), "SELECT COUNT(1) FROM " + EC_TABLE_NAME
-                + " WHERE " + IS_OUT_OF_AREA_COLUMN + " = '" + IN_AREA + "' and " +
-                IS_CLOSED_COLUMN + " = '" + NOT_CLOSED + "'", new String[0]);
+//        return longForQuery(masterRepository.getReadableDatabase(), "SELECT COUNT(1) FROM " + EC_TABLE_NAME
+//                + " WHERE " + IS_OUT_OF_AREA_COLUMN + " = '" + IN_AREA + "' and " +
+//                IS_CLOSED_COLUMN + " = '" + NOT_CLOSED + "'", new String[0]);
+        return mEligibleCouplesModel.count();
     }
 
     public List<String> villages() {
-        SQLiteDatabase database = masterRepository.getReadableDatabase();
-        Cursor cursor = database.query(true, EC_TABLE_NAME, new String[]{VILLAGE_NAME_COLUMN}, IS_OUT_OF_AREA_COLUMN +
-                " = ? AND " + IS_CLOSED_COLUMN + " = ?", new String[]{IN_AREA, NOT_CLOSED}, null, null, null, null);
-        cursor.moveToFirst();
-        List<String> villages = new ArrayList<String>();
-        while (!cursor.isAfterLast()) {
-            villages.add(cursor.getString(0));
-            cursor.moveToNext();
-        }
-        cursor.close();
-        return villages;
+//        SQLiteDatabase database = masterRepository.getReadableDatabase();
+//        Cursor cursor = database.query(true, EC_TABLE_NAME, new String[]{VILLAGE_NAME_COLUMN}, IS_OUT_OF_AREA_COLUMN +
+//                " = ? AND " + IS_CLOSED_COLUMN + " = ?", new String[]{IN_AREA, NOT_CLOSED}, null, null, null, null);
+//        cursor.moveToFirst();
+//        List<String> villages = new ArrayList<String>();
+//        while (!cursor.isAfterLast()) {
+//            villages.add(cursor.getString(0));
+//            cursor.moveToNext();
+//        }
+//        cursor.close();
+//        return villages;
+        return mEligibleCouplesModel.villages();
     }
 
     public void updatePhotoPath(String caseId, String imagePath) {
-        SQLiteDatabase database = masterRepository.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(PHOTO_PATH_COLUMN, imagePath);
-        database.update(EC_TABLE_NAME, values, ID_COLUMN + " = ?", new String[]{caseId});
+//        SQLiteDatabase database = masterRepository.getWritableDatabase();
+//        ContentValues values = new ContentValues();
+//        values.put(PHOTO_PATH_COLUMN, imagePath);
+//        database.update(EC_TABLE_NAME, values, ID_COLUMN + " = ?", new String[]{caseId});
+        mEligibleCouplesModel.updatePhotoPath(caseId, imagePath);
     }
 
     public void close(String caseId) {
-        ContentValues values = new ContentValues();
-        values.put(IS_CLOSED_COLUMN, TRUE.toString());
-        masterRepository.getWritableDatabase().update(EC_TABLE_NAME, values, ID_COLUMN + " = ?", new String[]{caseId});
+//        ContentValues values = new ContentValues();
+//        values.put(IS_CLOSED_COLUMN, TRUE.toString());
+//        masterRepository.getWritableDatabase().update(EC_TABLE_NAME, values, ID_COLUMN + " = ?", new String[]{caseId});
+        mEligibleCouplesModel.close(caseId);
     }
 
     private ContentValues createValuesFor(EligibleCouple eligibleCouple) {
@@ -177,11 +190,12 @@ public class EligibleCoupleRepository extends DrishtiRepository {
     }
 
     public long fpCount() {
-        SQLiteDatabase database = masterRepository.getReadableDatabase();
-        Cursor cursor = database.rawQuery(format("SELECT details FROM {0} WHERE {1} = ''{2}'' and {3} = ''{4}''",
-                EC_TABLE_NAME, IS_OUT_OF_AREA_COLUMN, IN_AREA, IS_CLOSED_COLUMN, NOT_CLOSED), new String[0]);
-        List<Map<String, String>> detailsList = readDetailsList(cursor);
-        return getECsUsingFPMethod(detailsList);
+//        SQLiteDatabase database = masterRepository.getReadableDatabase();
+//        Cursor cursor = database.rawQuery(format("SELECT details FROM {0} WHERE {1} = ''{2}'' and {3} = ''{4}''",
+//                EC_TABLE_NAME, IS_OUT_OF_AREA_COLUMN, IN_AREA, IS_CLOSED_COLUMN, NOT_CLOSED), new String[0]);
+//        List<Map<String, String>> detailsList = readDetailsList(cursor);
+//        return getECsUsingFPMethod(detailsList);
+        return mEligibleCouplesModel.fpCount();
     }
 
     private long getECsUsingFPMethod(List<Map<String, String>> detailsList) {

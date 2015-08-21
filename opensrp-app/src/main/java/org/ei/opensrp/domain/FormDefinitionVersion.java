@@ -55,7 +55,7 @@ public class FormDefinitionVersion {
         return syncStatus;
     }
 
-    public String getEntityId() { return entityId; }
+    public String getEntityId() { return entityId != null ? entityId : rev.getId(); }
 
     public void setFormName(String formName) {
         this.formName = formName;
@@ -91,9 +91,12 @@ public class FormDefinitionVersion {
             String formName = (String) map.get("formName");
             String formDataDefinitionVersion = (String) map.get("formDataDefinitionVersion");
             String formDirName = (String) map.get("formDirName");
-            String entityId = map.containsKey("entityId") ? (String) map.get("entityId") : null;
-            String syncStatus = map.containsKey("syncStatus") ? (String) map.get("syncStatus") : null;
+            String entityId = map.containsKey("entityId") ? (String) map.get("entityId") : rev.getId();
+            String syncStatus = map.containsKey("syncStatus") ? (String) map.get("syncStatus") : SyncStatus.PENDING.value();
             FormDefinitionVersion formDefinitionVersion = new FormDefinitionVersion(formName, formDirName, formDataDefinitionVersion);
+            formDefinitionVersion.rev = rev;
+            formDefinitionVersion.entityId = entityId;
+            formDefinitionVersion.syncStatus = SyncStatus.valueOf(syncStatus);
             return formDefinitionVersion;
         }
         return null;

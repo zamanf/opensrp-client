@@ -119,7 +119,7 @@ public class Alert {
         return map;
     }
 
-    //Setters used while updating the alert
+    //setters used while updating the alert
     public void setCaseID(String caseID) {
         this.caseID = caseID;
     }

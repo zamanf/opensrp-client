@@ -36,6 +36,9 @@ public class AlertRepository extends DrishtiRepository {
             ALERTS_EXPIRYDATE_COLUMN,
             ALERTS_COMPLETIONDATE_COLUMN
     };
+
+    AlertsModel mAlertsModel = org.ei.opensrp.Context.getInstance().alertsModel();
+
     public static final String CASE_AND_VISIT_CODE_COLUMN_SELECTIONS = ALERTS_CASEID_COLUMN + " = ? AND " + ALERTS_VISIT_CODE_COLUMN + " = ?";
 
     @Override
@@ -44,51 +47,61 @@ public class AlertRepository extends DrishtiRepository {
     }
 
     public List<Alert> allAlerts() {
-        SQLiteDatabase database = masterRepository.getReadableDatabase();
-        Cursor cursor = database.query(ALERTS_TABLE_NAME, ALERTS_TABLE_COLUMNS, null, null, null, null, null, null);
-        return readAllAlerts(cursor);
+//        SQLiteDatabase database = masterRepository.getReadableDatabase();
+//        Cursor cursor = database.query(ALERTS_TABLE_NAME, ALERTS_TABLE_COLUMNS, null, null, null, null, null, null);
+//        return readAllAlerts(cursor);
+//
+        return mAlertsModel.allAlerts();
     }
 
     public List<Alert> allActiveAlertsForCase(String caseId) {
-        SQLiteDatabase database = masterRepository.getReadableDatabase();
-        Cursor cursor = database.query(ALERTS_TABLE_NAME, ALERTS_TABLE_COLUMNS, ALERTS_CASEID_COLUMN + " = ?", new String[]{caseId}, null, null, null, null);
-        return filterActiveAlerts(readAllAlerts(cursor));
+//        SQLiteDatabase database = masterRepository.getReadableDatabase();
+//        Cursor cursor = database.query(ALERTS_TABLE_NAME, ALERTS_TABLE_COLUMNS, ALERTS_CASEID_COLUMN + " = ?", new String[]{caseId}, null, null, null, null);
+//        return filterActiveAlerts(readAllAlerts(cursor));
+        return mAlertsModel.allActiveAlertsForCase(caseId);
     }
 
     public void createAlert(Alert alert) {
-        SQLiteDatabase database = masterRepository.getWritableDatabase();
-        String[] caseAndScheduleNameColumnValues = {alert.caseId(), alert.scheduleName()};
-
-        String caseAndScheduleNameColumnSelections = ALERTS_CASEID_COLUMN + " = ? AND " + ALERTS_SCHEDULE_NAME_COLUMN + " = ?";
-        Cursor cursor = database.query(ALERTS_TABLE_NAME, ALERTS_TABLE_COLUMNS, caseAndScheduleNameColumnSelections, caseAndScheduleNameColumnValues, null, null, null, null);
-        List<Alert> existingAlerts = readAllAlerts(cursor);
-
-        ContentValues values = createValuesFor(alert);
-        if (existingAlerts.isEmpty()) {
-            database.insert(ALERTS_TABLE_NAME, null, values);
-        } else {
-            database.update(ALERTS_TABLE_NAME, values, caseAndScheduleNameColumnSelections, caseAndScheduleNameColumnValues);
-        }
+//        SQLiteDatabase database = masterRepository.getWritableDatabase();
+//        String[] caseAndScheduleNameColumnValues = {alert.caseId(), alert.scheduleName()};
+//
+//        String caseAndScheduleNameColumnSelections = ALERTS_CASEID_COLUMN + " = ? AND " + ALERTS_SCHEDULE_NAME_COLUMN + " = ?";
+//        Cursor cursor = database.query(ALERTS_TABLE_NAME, ALERTS_TABLE_COLUMNS, caseAndScheduleNameColumnSelections, caseAndScheduleNameColumnValues, null, null, null, null);
+//        List<Alert> existingAlerts = readAllAlerts(cursor);
+//
+//        ContentValues values = createValuesFor(alert);
+//        if (existingAlerts.isEmpty()) {
+//            database.insert(ALERTS_TABLE_NAME, null, values);
+//        } else {
+//            database.update(ALERTS_TABLE_NAME, values, caseAndScheduleNameColumnSelections, caseAndScheduleNameColumnValues);
+//        }
+        mAlertsModel.createAlert(alert);
     }
 
     public void markAlertAsClosed(String caseId, String visitCode, String completionDate) {
-        SQLiteDatabase database = masterRepository.getWritableDatabase();
-        String[] caseAndVisitCodeColumnValues = {caseId, visitCode};
+//        SQLiteDatabase database = masterRepository.getWritableDatabase();
+//        String[] caseAndVisitCodeColumnValues = {caseId, visitCode};
+//
+//        ContentValues valuesToBeUpdated = new ContentValues();
+//        valuesToBeUpdated.put(ALERTS_STATUS_COLUMN, complete.value());
+//        valuesToBeUpdated.put(ALERTS_COMPLETIONDATE_COLUMN, completionDate);
+//        database.update(ALERTS_TABLE_NAME, valuesToBeUpdated, CASE_AND_VISIT_CODE_COLUMN_SELECTIONS, caseAndVisitCodeColumnValues);
 
-        ContentValues valuesToBeUpdated = new ContentValues();
-        valuesToBeUpdated.put(ALERTS_STATUS_COLUMN, complete.value());
-        valuesToBeUpdated.put(ALERTS_COMPLETIONDATE_COLUMN, completionDate);
-        database.update(ALERTS_TABLE_NAME, valuesToBeUpdated, CASE_AND_VISIT_CODE_COLUMN_SELECTIONS, caseAndVisitCodeColumnValues);
+        mAlertsModel.markAlertAsClosed(caseId, visitCode, completionDate);
     }
 
     public void deleteAllAlertsForEntity(String caseId) {
-        SQLiteDatabase database = masterRepository.getWritableDatabase();
-        database.delete(ALERTS_TABLE_NAME, ALERTS_CASEID_COLUMN + "= ?", new String[]{caseId});
+//        SQLiteDatabase database = masterRepository.getWritableDatabase();
+//        database.delete(ALERTS_TABLE_NAME, ALERTS_CASEID_COLUMN + "= ?", new String[]{caseId});
+
+        mAlertsModel.deleteAllAlertsForEntity(caseId);
     }
 
     public void deleteAllAlerts() {
-        SQLiteDatabase database = masterRepository.getWritableDatabase();
-        database.delete(ALERTS_TABLE_NAME, null, null);
+//        SQLiteDatabase database = masterRepository.getWritableDatabase();
+//        database.delete(ALERTS_TABLE_NAME, null, null);
+
+        mAlertsModel.deleteAllAlerts();
     }
 
     private List<Alert> readAllAlerts(Cursor cursor) {
@@ -133,11 +146,12 @@ public class AlertRepository extends DrishtiRepository {
     }
 
     public List<Alert> findByEntityIdAndAlertNames(String entityId, String... names) {
-        SQLiteDatabase database = masterRepository.getReadableDatabase();
-        Cursor cursor = database.rawQuery(format("SELECT * FROM %s WHERE %s = ? AND %s IN (%s) ORDER BY DATE(%s)",
-                ALERTS_TABLE_NAME, ALERTS_CASEID_COLUMN, ALERTS_VISIT_CODE_COLUMN,
-                insertPlaceholdersForInClause(names.length), ALERTS_STARTDATE_COLUMN), addAll(new String[]{entityId}, names));
-        return readAllAlerts(cursor);
+//        SQLiteDatabase database = masterRepository.getReadableDatabase();
+//        Cursor cursor = database.rawQuery(format("SELECT * FROM %s WHERE %s = ? AND %s IN (%s) ORDER BY DATE(%s)",
+//                ALERTS_TABLE_NAME, ALERTS_CASEID_COLUMN, ALERTS_VISIT_CODE_COLUMN,
+//                insertPlaceholdersForInClause(names.length), ALERTS_STARTDATE_COLUMN), addAll(new String[]{entityId}, names));
+//        return readAllAlerts(cursor);
+        return mAlertsModel.findByEntityIdAndAlertNames(entityId, names);
     }
 
     private String insertPlaceholdersForInClause(int length) {
@@ -145,21 +159,26 @@ public class AlertRepository extends DrishtiRepository {
     }
 
     public void changeAlertStatusToInProcess(String entityId, String alertName) {
-        SQLiteDatabase database = masterRepository.getWritableDatabase();
-        String[] caseAndVisitCodeColumnValues = {entityId, alertName};
+//        SQLiteDatabase database = masterRepository.getWritableDatabase();
+//        String[] caseAndVisitCodeColumnValues = {entityId, alertName};
+//
+//        ContentValues valuesToBeUpdated = new ContentValues();
+//        valuesToBeUpdated.put(ALERTS_STATUS_COLUMN, inProcess.value());
+//        database.update(ALERTS_TABLE_NAME, valuesToBeUpdated, CASE_AND_VISIT_CODE_COLUMN_SELECTIONS, caseAndVisitCodeColumnValues);
 
-        ContentValues valuesToBeUpdated = new ContentValues();
-        valuesToBeUpdated.put(ALERTS_STATUS_COLUMN, inProcess.value());
-        database.update(ALERTS_TABLE_NAME, valuesToBeUpdated, CASE_AND_VISIT_CODE_COLUMN_SELECTIONS, caseAndVisitCodeColumnValues);
+        changeAlertStatusToInProcess(entityId, alertName);
+
     }
 
     public void changeAlertStatusToComplete(String entityId, String alertName) {
-        SQLiteDatabase database = masterRepository.getWritableDatabase();
-        String[] caseAndVisitCodeColumnValues = {entityId, alertName};
+//        SQLiteDatabase database = masterRepository.getWritableDatabase();
+//        String[] caseAndVisitCodeColumnValues = {entityId, alertName};
+//
+//        ContentValues valuesToBeUpdated = new ContentValues();
+//        valuesToBeUpdated.put(ALERTS_STATUS_COLUMN, complete.value());
+//        database.update(ALERTS_TABLE_NAME, valuesToBeUpdated, CASE_AND_VISIT_CODE_COLUMN_SELECTIONS, caseAndVisitCodeColumnValues);
 
-        ContentValues valuesToBeUpdated = new ContentValues();
-        valuesToBeUpdated.put(ALERTS_STATUS_COLUMN, complete.value());
-        database.update(ALERTS_TABLE_NAME, valuesToBeUpdated, CASE_AND_VISIT_CODE_COLUMN_SELECTIONS, caseAndVisitCodeColumnValues);
+        changeAlertStatusToComplete(entityId, alertName);
 	}
 
     public void migrateAllDataToCloudantModels(){

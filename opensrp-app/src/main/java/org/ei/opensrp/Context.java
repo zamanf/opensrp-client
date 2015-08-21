@@ -10,6 +10,7 @@ import org.ei.opensrp.commonregistry.AllCommonsRepository;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClients;
 import org.ei.opensrp.commonregistry.CommonRepository;
 import org.ei.opensrp.commonregistry.CommonRepositoryInformationHolder;
+import org.ei.opensrp.domain.form.FormSubmission;
 import org.ei.opensrp.repository.AlertRepository;
 import org.ei.opensrp.repository.AllAlerts;
 import org.ei.opensrp.repository.AllBeneficiaries;
@@ -104,6 +105,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 import static android.preference.PreferenceManager.setDefaultValues;
@@ -996,4 +998,48 @@ public class Context {
     }
 
     ///////////////////////////////////////////////////////////////////////////////
+    public void migrateAllTheDataToCloudant(){
+        eligibleCoupleRepository.migrateAllDataToCloudantModels();
+        alertRepository.migrateAllDataToCloudantModels();
+        formsVersionRepository.migrateAllDataToCloudantModels();
+        serviceProvidedRepository.migrateAllDataToCloudantModels();
+        formDataRepository.migrateAllDataToCloudantModels();
+        reportRepository.migrateAllDataToCloudantModels();
+        timelineEventRepository.migrateAllDataToCloudantModels();
+        motherRepository.migrateAllDataToCloudantModels();
+        childRepository.migrateAllDataToCloudantModels();
+        settingsRepository.migrateAllDataToCloudantModels();
+    }
+
+    public void pushAllDataToCloudant(){
+        alertsModel().startPushReplication();
+        childsModel().startPushReplication();
+        eligibleCouplesModel().startPushReplication();
+        formDataModel().startPushReplication();
+        formsVersionsModel().startPushReplication();
+        mothersModel().startPushReplication();
+        serviceProvidedModel().startPushReplication();
+        settingsModel().startPushReplication();
+        timelineEventsModel().startPushReplication();
+        reportsModel().startPushReplication();
+    }
+
+    public void pullAllDataFromCloudant(){
+        alertsModel().startPullReplication();
+        childsModel().startPullReplication();
+        eligibleCouplesModel().startPullReplication();
+        formDataModel().startPullReplication();
+        formsVersionsModel().startPullReplication();
+        mothersModel().startPullReplication();
+        serviceProvidedModel().startPullReplication();
+        settingsModel().startPullReplication();
+        timelineEventsModel().startPullReplication();
+        reportsModel().startPullReplication();
+
+        // we cant perform ad hoc queries to cloudant models so lets use the cloudant models to populate form submissions model
+//        List<FormSubmission> formSubmissions = formDataModel().all();
+//        formSubmissionService().processSubmissions(formSubmissions);
+
+    }
+
 }

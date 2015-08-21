@@ -22,6 +22,8 @@ public class ReportRepository extends DrishtiRepository {
     private static final String MONTHLY_SUMMARIES_COLUMN = "monthlySummaries";
     private static final String[] REPORT_TABLE_COLUMNS = {INDICATOR_COLUMN, ANNUAL_TARGET_COLUMN, MONTHLY_SUMMARIES_COLUMN};
 
+    ReportsModel mReportsModel = org.ei.opensrp.Context.getInstance().reportsModel();
+
     @Override
     protected void onCreate(SQLiteDatabase database) {
         database.execSQL(REPORT_SQL);
@@ -34,15 +36,17 @@ public class ReportRepository extends DrishtiRepository {
     }
 
     public List<Report> allFor(String... indicators) {
-        SQLiteDatabase database = masterRepository.getReadableDatabase();
-        Cursor cursor = database.rawQuery(String.format("SELECT * FROM %s WHERE %s IN (%s)", REPORT_TABLE_NAME, INDICATOR_COLUMN, insertPlaceholdersForInClause(indicators.length)), indicators);
-        return readAll(cursor);
+//        SQLiteDatabase database = masterRepository.getReadableDatabase();
+//        Cursor cursor = database.rawQuery(String.format("SELECT * FROM %s WHERE %s IN (%s)", REPORT_TABLE_NAME, INDICATOR_COLUMN, insertPlaceholdersForInClause(indicators.length)), indicators);
+//        return readAll(cursor);
+        return mReportsModel.allFor(indicators);
     }
 
     public List<Report> all() {
-        SQLiteDatabase database = masterRepository.getReadableDatabase();
-        Cursor cursor = database.query(REPORT_TABLE_NAME, REPORT_TABLE_COLUMNS, null, null, null, null, null);
-        return readAll(cursor);
+//        SQLiteDatabase database = masterRepository.getReadableDatabase();
+//        Cursor cursor = database.query(REPORT_TABLE_NAME, REPORT_TABLE_COLUMNS, null, null, null, null, null);
+//        return readAll(cursor);
+        return mReportsModel.all();
     }
 
     private ContentValues createValuesFor(Report report) {

@@ -1,6 +1,9 @@
 package org.ei.opensrp.repository;
 
 import org.ei.opensrp.domain.EligibleCouple;
+import org.ei.opensrp.repository.cloudant.AlertsModel;
+import org.ei.opensrp.repository.cloudant.EligibleCouplesModel;
+import org.ei.opensrp.repository.cloudant.TimelineEventsModel;
 
 import java.util.List;
 import java.util.Map;
@@ -10,6 +13,10 @@ public class AllEligibleCouples {
     private final TimelineEventRepository timelineEventRepository;
     private final AlertRepository alertRepository;
 
+    EligibleCouplesModel mEligibleCouplesModel = org.ei.opensrp.Context.getInstance().eligibleCouplesModel();
+    AlertsModel mAlertsModel = org.ei.opensrp.Context.getInstance().alertsModel();
+    TimelineEventsModel mTimelineEventsModel = org.ei.opensrp.Context.getInstance().timelineEventsModel();
+
     public AllEligibleCouples(EligibleCoupleRepository eligibleCoupleRepository, AlertRepository alertRepository, TimelineEventRepository timelineEventRepository) {
         this.eligibleCoupleRepository = eligibleCoupleRepository;
         this.timelineEventRepository = timelineEventRepository;
@@ -17,40 +24,43 @@ public class AllEligibleCouples {
     }
 
     public List<EligibleCouple> all() {
-        return eligibleCoupleRepository.allEligibleCouples();
+        //return eligibleCoupleRepository.allEligibleCouples();
+        return mEligibleCouplesModel.allEligibleCouples();
     }
 
     public EligibleCouple findByCaseID(String caseId) {
-        return eligibleCoupleRepository.findByCaseID(caseId);
+        //return eligibleCoupleRepository.findByCaseID(caseId);
+        return mEligibleCouplesModel.findByCaseID(caseId);
     }
 
     public long count() {
-        return eligibleCoupleRepository.count();
+        //return eligibleCoupleRepository.count();
+        return mEligibleCouplesModel.count();
     }
 
     public long fpCount() {
-        return eligibleCoupleRepository.fpCount();
+        return mEligibleCouplesModel.fpCount();
     }
 
     public List<String> villages() {
-        return eligibleCoupleRepository.villages();
+        return mEligibleCouplesModel.villages();
     }
 
     public List<EligibleCouple> findByCaseIDs(List<String> caseIds) {
-        return eligibleCoupleRepository.findByCaseIDs(caseIds.toArray(new String[caseIds.size()]));
+        return mEligibleCouplesModel.findByCaseIDs(caseIds.toArray(new String[caseIds.size()]));
     }
 
     public void updatePhotoPath(String caseId, String imagePath) {
-        eligibleCoupleRepository.updatePhotoPath(caseId, imagePath);
+        mEligibleCouplesModel.updatePhotoPath(caseId, imagePath);
     }
 
     public void close(String entityId) {
-        alertRepository.deleteAllAlertsForEntity(entityId);
-        timelineEventRepository.deleteAllTimelineEventsForEntity(entityId);
-        eligibleCoupleRepository.close(entityId);
+        mAlertsModel.deleteAllAlertsForEntity(entityId);
+        mTimelineEventsModel.deleteAllTimelineEventsForEntity(entityId);
+        mEligibleCouplesModel.close(entityId);
     }
 
     public void mergeDetails(String entityId, Map<String, String> details) {
-        eligibleCoupleRepository.mergeDetails(entityId, details);
+        mEligibleCouplesModel.mergeDetails(entityId, details);
     }
 }

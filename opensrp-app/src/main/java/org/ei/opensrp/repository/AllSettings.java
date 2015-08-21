@@ -1,5 +1,8 @@
 package org.ei.opensrp.repository;
 
+import org.ei.opensrp.repository.cloudant.ServiceProvidedModel;
+import org.ei.opensrp.repository.cloudant.SettingsModel;
+
 public class AllSettings {
     public static final String APPLIED_VILLAGE_FILTER_SETTING_KEY = "appliedVillageFilter";
     public static final String PREVIOUS_FETCH_INDEX_SETTING_KEY = "previousFetchIndex";
@@ -11,6 +14,8 @@ public class AllSettings {
     private AllSharedPreferences preferences;
     private SettingsRepository settingsRepository;
 
+    SettingsModel mSettingsModel = org.ei.opensrp.Context.getInstance().settingsModel();
+
     public AllSettings(AllSharedPreferences preferences, SettingsRepository settingsRepository) {
         this.preferences = preferences;
         this.settingsRepository = settingsRepository;
@@ -18,48 +23,48 @@ public class AllSettings {
 
     public void registerANM(String userName, String password) {
         preferences.updateANMUserName(userName);
-        settingsRepository.updateSetting(ANM_PASSWORD_PREFERENCE_KEY, password);
+        mSettingsModel.updateSetting(ANM_PASSWORD_PREFERENCE_KEY, password);
     }
 
     public void savePreviousFetchIndex(String value) {
-        settingsRepository.updateSetting(PREVIOUS_FETCH_INDEX_SETTING_KEY, value);
+        mSettingsModel.updateSetting(PREVIOUS_FETCH_INDEX_SETTING_KEY, value);
     }
 
     public String fetchPreviousFetchIndex() {
-        return settingsRepository.querySetting(PREVIOUS_FETCH_INDEX_SETTING_KEY, "0");
+        return mSettingsModel.querySetting(PREVIOUS_FETCH_INDEX_SETTING_KEY, "0");
     }
 
     public void saveAppliedVillageFilter(String village) {
-        settingsRepository.updateSetting(APPLIED_VILLAGE_FILTER_SETTING_KEY, village);
+        mSettingsModel.updateSetting(APPLIED_VILLAGE_FILTER_SETTING_KEY, village);
     }
 
     public String appliedVillageFilter(String defaultFilterValue) {
-        return settingsRepository.querySetting(APPLIED_VILLAGE_FILTER_SETTING_KEY, defaultFilterValue);
+        return mSettingsModel.querySetting(APPLIED_VILLAGE_FILTER_SETTING_KEY, defaultFilterValue);
     }
 
     public String fetchANMPassword() {
-        return settingsRepository.querySetting(ANM_PASSWORD_PREFERENCE_KEY, "");
+        return mSettingsModel.querySetting(ANM_PASSWORD_PREFERENCE_KEY, "");
     }
 
     public String fetchPreviousFormSyncIndex() {
-        return settingsRepository.querySetting(PREVIOUS_FORM_SYNC_INDEX_SETTING_KEY, "0");
+        return mSettingsModel.querySetting(PREVIOUS_FORM_SYNC_INDEX_SETTING_KEY, "0");
     }
 
     public void savePreviousFormSyncIndex(String value) {
-        settingsRepository.updateSetting(PREVIOUS_FORM_SYNC_INDEX_SETTING_KEY, value);
+        mSettingsModel.updateSetting(PREVIOUS_FORM_SYNC_INDEX_SETTING_KEY, value);
     }
 
     public void saveANMLocation(String anmLocation) {
-        settingsRepository.updateSetting(ANM_LOCATION, anmLocation);
+        mSettingsModel.updateSetting(ANM_LOCATION, anmLocation);
     }
 
     public String fetchANMLocation() {
-        return settingsRepository.querySetting(ANM_LOCATION, "");
+        return mSettingsModel.querySetting(ANM_LOCATION, "");
     }
 
     public void saveUserInformation(String userInformation) {
-        settingsRepository.updateSetting(USER_INFORMATION, userInformation);
+        mSettingsModel.updateSetting(USER_INFORMATION, userInformation);
     }
 
-    public String fetchUserInformation() { return settingsRepository.querySetting(USER_INFORMATION, "");}
+    public String fetchUserInformation() { return mSettingsModel.querySetting(USER_INFORMATION, "");}
 }

@@ -168,9 +168,9 @@ public abstract class BaseItemsModel {
         // you might want to use something more secure.
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this.mContext);
         String username = sharedPref.getString(SETTINGS_CLOUDANT_USER, "");
-        String dbName = sharedPref.getString(getCloudantDatabaseName(), "");
-        String apiKey = sharedPref.getString(getCloudantApiKey(), "");
-        String apiSecret = sharedPref.getString(getCloudantApiSecret(), "");
+        String dbName = getCloudantDatabaseName();
+        String apiKey = getCloudantApiKey();
+        String apiSecret = getCloudantApiSecret();
         String host = username + ".cloudant.com";
 
         // We recommend always using HTTPS to talk to Cloudant.

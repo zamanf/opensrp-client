@@ -14,7 +14,6 @@ import com.cloudant.sync.query.QueryResult;
 
 import org.ei.opensrp.R;
 import org.ei.opensrp.domain.TimelineEvent;
-import org.ei.opensrp.domain.form.FormSubmission;
 import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
@@ -58,7 +57,7 @@ public class TimelineEventsModel extends BaseItemsModel {
         rev.body = DocumentBodyFactory.create(createValuesFor(timelineEvent));
         try {
             BasicDocumentRevision created = this.mDatastore.createDocumentFromRevision(rev);
-            FormSubmission.fromRevision(created);
+            TimelineEvent.fromRevision(created);
         } catch (DocumentException de) {
             Log.e(LOG_TAG, de.toString());
         }

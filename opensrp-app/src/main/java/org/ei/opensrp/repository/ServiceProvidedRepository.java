@@ -30,6 +30,7 @@ public class ServiceProvidedRepository extends DrishtiRepository {
 
     public static final String[] SERVICE_PROVIDED_TABLE_COLUMNS = new String[]{ENTITY_ID_COLUMN, NAME_ID_COLUMN, DATE_ID_COLUMN, DATA_ID_COLUMN};
 
+    ServiceProvidedModel mServiceProvidedModel = org.ei.opensrp.Context.getInstance().serviceProvidedModel();
 
     @Override
     protected void onCreate(SQLiteDatabase database) {
@@ -42,19 +43,21 @@ public class ServiceProvidedRepository extends DrishtiRepository {
     }
 
     public List<ServiceProvided> findByEntityIdAndServiceNames(String entityId, String... names) {
-        SQLiteDatabase database = masterRepository.getReadableDatabase();
-        Cursor cursor = database.rawQuery(
-                format("SELECT * FROM %s WHERE %s = ? AND %s IN (%s) ORDER BY DATE(%s)",
-                        SERVICE_PROVIDED_TABLE_NAME, ENTITY_ID_COLUMN, NAME_ID_COLUMN,
-                        insertPlaceholdersForInClause(names.length), DATE_ID_COLUMN),
-                addAll(new String[]{entityId}, names));
-        return readAllServicesProvided(cursor);
+//        SQLiteDatabase database = masterRepository.getReadableDatabase();
+//        Cursor cursor = database.rawQuery(
+//                format("SELECT * FROM %s WHERE %s = ? AND %s IN (%s) ORDER BY DATE(%s)",
+//                        SERVICE_PROVIDED_TABLE_NAME, ENTITY_ID_COLUMN, NAME_ID_COLUMN,
+//                        insertPlaceholdersForInClause(names.length), DATE_ID_COLUMN),
+//                addAll(new String[]{entityId}, names));
+//        return readAllServicesProvided(cursor);
+        return mServiceProvidedModel.findByEntityIdAndServiceNames(entityId, names);
     }
 
     public List<ServiceProvided> all() {
-        SQLiteDatabase database = masterRepository.getReadableDatabase();
-        Cursor cursor = database.query(SERVICE_PROVIDED_TABLE_NAME, SERVICE_PROVIDED_TABLE_COLUMNS, null, null, null, null, DATE_ID_COLUMN);
-        return readAllServicesProvided(cursor);
+//        SQLiteDatabase database = masterRepository.getReadableDatabase();
+//        Cursor cursor = database.query(SERVICE_PROVIDED_TABLE_NAME, SERVICE_PROVIDED_TABLE_COLUMNS, null, null, null, null, DATE_ID_COLUMN);
+//        return readAllServicesProvided(cursor);
+        return mServiceProvidedModel.all();
     }
 
     private ContentValues createValuesFor(ServiceProvided serviceProvided) {

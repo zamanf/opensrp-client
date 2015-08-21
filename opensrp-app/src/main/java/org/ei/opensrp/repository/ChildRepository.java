@@ -11,6 +11,7 @@ import org.ei.opensrp.domain.Child;
 import org.ei.opensrp.domain.EligibleCouple;
 import org.ei.opensrp.domain.Mother;
 import org.ei.opensrp.repository.cloudant.ChildsModel;
+import org.ei.opensrp.repository.cloudant.TimelineEventsModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,77 +39,90 @@ public class ChildRepository extends DrishtiRepository {
     public static final String[] CHILD_TABLE_COLUMNS = {ID_COLUMN, MOTHER_ID_COLUMN, THAYI_CARD_COLUMN, DATE_OF_BIRTH_COLUMN, GENDER_COLUMN, DETAILS_COLUMN, IS_CLOSED_COLUMN, PHOTO_PATH_COLUMN};
     public static final String NOT_CLOSED = "false";
 
+    ChildsModel mChildsModel = org.ei.opensrp.Context.getInstance().childsModel();
+
     @Override
     protected void onCreate(SQLiteDatabase database) {
         database.execSQL(CHILD_SQL);
     }
 
     public void add(Child child) {
-        SQLiteDatabase database = masterRepository.getWritableDatabase();
-        database.insert(CHILD_TABLE_NAME, null, createValuesFor(child));
+//        SQLiteDatabase database = masterRepository.getWritableDatabase();
+//        database.insert(CHILD_TABLE_NAME, null, createValuesFor(child));
+        mChildsModel.add(child);
     }
 
     public void update(Child child) {
-        SQLiteDatabase database = masterRepository.getWritableDatabase();
-        database.update(CHILD_TABLE_NAME, createValuesFor(child), ID_COLUMN + " = ?", new String[]{child.caseId()});
+//        SQLiteDatabase database = masterRepository.getWritableDatabase();
+//        database.update(CHILD_TABLE_NAME, createValuesFor(child), ID_COLUMN + " = ?", new String[]{child.caseId()});
+        mChildsModel.update(child);
     }
 
     public List<Child> all() {
-        SQLiteDatabase database = masterRepository.getReadableDatabase();
-        Cursor cursor = database.query(CHILD_TABLE_NAME, CHILD_TABLE_COLUMNS, IS_CLOSED_COLUMN + " = ?", new String[]{NOT_CLOSED}, null, null, null, null);
-        return readAll(cursor);
+//        SQLiteDatabase database = masterRepository.getReadableDatabase();
+//        Cursor cursor = database.query(CHILD_TABLE_NAME, CHILD_TABLE_COLUMNS, IS_CLOSED_COLUMN + " = ?", new String[]{NOT_CLOSED}, null, null, null, null);
+//        return readAll(cursor);
+        return  mChildsModel.all();
     }
 
     public Child find(String caseId) {
-        SQLiteDatabase database = masterRepository.getReadableDatabase();
-        Cursor cursor = database.query(CHILD_TABLE_NAME, CHILD_TABLE_COLUMNS, ID_COLUMN + " = ?", new String[]{caseId}, null, null, null, null);
-        List<Child> children = readAll(cursor);
-
-        if (children.isEmpty()) {
-            return null;
-        }
-        return children.get(0);
+//        SQLiteDatabase database = masterRepository.getReadableDatabase();
+//        Cursor cursor = database.query(CHILD_TABLE_NAME, CHILD_TABLE_COLUMNS, ID_COLUMN + " = ?", new String[]{caseId}, null, null, null, null);
+//        List<Child> children = readAll(cursor);
+//
+//        if (children.isEmpty()) {
+//            return null;
+//        }
+//        return children.get(0);
+        return  mChildsModel.find(caseId);
     }
 
     public List<Child> findChildrenByCaseIds(String... caseIds) {
-        SQLiteDatabase database = masterRepository.getReadableDatabase();
-        Cursor cursor = database.rawQuery(String.format("SELECT * FROM %s WHERE %s IN (%s)", CHILD_TABLE_NAME, ID_COLUMN, insertPlaceholdersForInClause(caseIds.length)), caseIds);
-        return readAll(cursor);
+//        SQLiteDatabase database = masterRepository.getReadableDatabase();
+//        Cursor cursor = database.rawQuery(String.format("SELECT * FROM %s WHERE %s IN (%s)", CHILD_TABLE_NAME, ID_COLUMN, insertPlaceholdersForInClause(caseIds.length)), caseIds);
+//        return readAll(cursor);
+        return  mChildsModel.findChildrenByCaseIds(caseIds);
     }
 
     public void updateDetails(String caseId, Map<String, String> details) {
-        SQLiteDatabase database = masterRepository.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(DETAILS_COLUMN, new Gson().toJson(details));
-        database.update(CHILD_TABLE_NAME, values, ID_COLUMN + " = ?", new String[]{caseId});
+//        SQLiteDatabase database = masterRepository.getWritableDatabase();
+//        ContentValues values = new ContentValues();
+//        values.put(DETAILS_COLUMN, new Gson().toJson(details));
+//        database.update(CHILD_TABLE_NAME, values, ID_COLUMN + " = ?", new String[]{caseId});
+        mChildsModel.updateDetails(caseId, details);
     }
 
     public List<Child> findByMotherCaseId(String caseId) {
-        SQLiteDatabase database = masterRepository.getReadableDatabase();
-        Cursor cursor = database.query(CHILD_TABLE_NAME, CHILD_TABLE_COLUMNS, MOTHER_ID_COLUMN + " = ?", new String[]{caseId}, null, null, null, null);
-        return readAll(cursor);
+//        SQLiteDatabase database = masterRepository.getReadableDatabase();
+//        Cursor cursor = database.query(CHILD_TABLE_NAME, CHILD_TABLE_COLUMNS, MOTHER_ID_COLUMN + " = ?", new String[]{caseId}, null, null, null, null);
+//        return readAll(cursor);
+        return  mChildsModel.findByMotherCaseId(caseId);
     }
 
     public long count() {
-        return longForQuery(masterRepository.getReadableDatabase(), "SELECT COUNT(1) FROM " + CHILD_TABLE_NAME + " WHERE " + IS_CLOSED_COLUMN + " = '" + NOT_CLOSED + "'", new String[0]);
+        //return longForQuery(masterRepository.getReadableDatabase(), "SELECT COUNT(1) FROM " + CHILD_TABLE_NAME + " WHERE " + IS_CLOSED_COLUMN + " = '" + NOT_CLOSED + "'", new String[0]);
+        return  mChildsModel.count();
     }
 
     public void close(String caseId) {
-        markAsClosed(caseId);
+        //markAsClosed(caseId);
+        mChildsModel.close(caseId);
     }
 
     public List<Child> allChildrenWithMotherAndEC() {
-        SQLiteDatabase database = masterRepository.getReadableDatabase();
-        Cursor cursor = database.rawQuery("SELECT " +
-                tableColumnsForQuery(CHILD_TABLE_NAME, CHILD_TABLE_COLUMNS) + ", " +
-                tableColumnsForQuery(MOTHER_TABLE_NAME, MOTHER_TABLE_COLUMNS) + ", " +
-                tableColumnsForQuery(EC_TABLE_NAME, EC_TABLE_COLUMNS) +
-                " FROM " + CHILD_TABLE_NAME + ", " + MOTHER_TABLE_NAME + ", " + EC_TABLE_NAME +
-                " WHERE " + CHILD_TABLE_NAME + "." + IS_CLOSED_COLUMN + "= '" + NOT_CLOSED + "' AND " +
-                CHILD_TABLE_NAME + "." + MOTHER_ID_COLUMN + " = " + MOTHER_TABLE_NAME + "." + MotherRepository.ID_COLUMN
-                + " AND " + MOTHER_TABLE_NAME + "." + MotherRepository.EC_CASEID_COLUMN + " = " + EC_TABLE_NAME + "." + EligibleCoupleRepository.ID_COLUMN,
-                null);
-        return readAllChildrenWithMotherAndEC(cursor);
+//        SQLiteDatabase database = masterRepository.getReadableDatabase();
+//        Cursor cursor = database.rawQuery("SELECT " +
+//                tableColumnsForQuery(CHILD_TABLE_NAME, CHILD_TABLE_COLUMNS) + ", " +
+//                tableColumnsForQuery(MOTHER_TABLE_NAME, MOTHER_TABLE_COLUMNS) + ", " +
+//                tableColumnsForQuery(EC_TABLE_NAME, EC_TABLE_COLUMNS) +
+//                " FROM " + CHILD_TABLE_NAME + ", " + MOTHER_TABLE_NAME + ", " + EC_TABLE_NAME +
+//                " WHERE " + CHILD_TABLE_NAME + "." + IS_CLOSED_COLUMN + "= '" + NOT_CLOSED + "' AND " +
+//                CHILD_TABLE_NAME + "." + MOTHER_ID_COLUMN + " = " + MOTHER_TABLE_NAME + "." + MotherRepository.ID_COLUMN
+//                + " AND " + MOTHER_TABLE_NAME + "." + MotherRepository.EC_CASEID_COLUMN + " = " + EC_TABLE_NAME + "." + EligibleCoupleRepository.ID_COLUMN,
+//                null);
+//        return readAllChildrenWithMotherAndEC(cursor);
+
+        return  mChildsModel.allChildrenWithMotherAndEC();
     }
 
     private String tableColumnsForQuery(String tableName, String[] tableColumns) {
@@ -229,28 +243,31 @@ public class ChildRepository extends DrishtiRepository {
     }
 
     public void updatePhotoPath(String caseId, String imagePath) {
-        SQLiteDatabase database = masterRepository.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(PHOTO_PATH_COLUMN, imagePath);
-        database.update(CHILD_TABLE_NAME, values, ID_COLUMN + " = ?", new String[]{caseId});
+//        SQLiteDatabase database = masterRepository.getWritableDatabase();
+//        ContentValues values = new ContentValues();
+//        values.put(PHOTO_PATH_COLUMN, imagePath);
+//        database.update(CHILD_TABLE_NAME, values, ID_COLUMN + " = ?", new String[]{caseId});
+        mChildsModel.updatePhotoPath(caseId, imagePath);
     }
 
     public List<Child> findAllChildrenByECId(String ecId) {
-        SQLiteDatabase database = masterRepository.getReadableDatabase();
-        Cursor cursor = database.rawQuery("SELECT " +
-                tableColumnsForQuery(CHILD_TABLE_NAME, CHILD_TABLE_COLUMNS) +
-                " FROM " + CHILD_TABLE_NAME + ", " + MOTHER_TABLE_NAME + ", " + EC_TABLE_NAME +
-                " WHERE " + CHILD_TABLE_NAME + "." + IS_CLOSED_COLUMN + "= '" + NOT_CLOSED + "' AND " +
-                CHILD_TABLE_NAME + "." + MOTHER_ID_COLUMN + " = " + MOTHER_TABLE_NAME + "." + MotherRepository.ID_COLUMN
-                + " AND " + MOTHER_TABLE_NAME + "." + MotherRepository.EC_CASEID_COLUMN + " = " + EC_TABLE_NAME + "." +
-                EligibleCoupleRepository.ID_COLUMN + " AND " + EC_TABLE_NAME + "." + EligibleCoupleRepository.ID_COLUMN +
-                "= ? ", new String[]{ecId});
-        return readAllChildren(cursor);
+//        SQLiteDatabase database = masterRepository.getReadableDatabase();
+//        Cursor cursor = database.rawQuery("SELECT " +
+//                tableColumnsForQuery(CHILD_TABLE_NAME, CHILD_TABLE_COLUMNS) +
+//                " FROM " + CHILD_TABLE_NAME + ", " + MOTHER_TABLE_NAME + ", " + EC_TABLE_NAME +
+//                " WHERE " + CHILD_TABLE_NAME + "." + IS_CLOSED_COLUMN + "= '" + NOT_CLOSED + "' AND " +
+//                CHILD_TABLE_NAME + "." + MOTHER_ID_COLUMN + " = " + MOTHER_TABLE_NAME + "." + MotherRepository.ID_COLUMN
+//                + " AND " + MOTHER_TABLE_NAME + "." + MotherRepository.EC_CASEID_COLUMN + " = " + EC_TABLE_NAME + "." +
+//                EligibleCoupleRepository.ID_COLUMN + " AND " + EC_TABLE_NAME + "." + EligibleCoupleRepository.ID_COLUMN +
+//                "= ? ", new String[]{ecId});
+//        return readAllChildren(cursor);
+        return mChildsModel.findAllChildrenByECId(ecId);
     }
 
     public void delete(String childId) {
-        SQLiteDatabase database = masterRepository.getWritableDatabase();
-        database.delete(CHILD_TABLE_NAME, ID_COLUMN + "= ?", new String[]{childId});
+//        SQLiteDatabase database = masterRepository.getWritableDatabase();
+//        database.delete(CHILD_TABLE_NAME, ID_COLUMN + "= ?", new String[]{childId});
+        mChildsModel.delete(childId);
     }
 
     public void migrateAllDataToCloudantModels(){

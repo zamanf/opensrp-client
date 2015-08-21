@@ -138,18 +138,22 @@ public class FormSubmission {
     public static FormSubmission fromRevision(BasicDocumentRevision revision) {
         // this could also be done by a fancy object mapper
         Map<String, Object> map = revision.asMap();
-        String instanceId = map.containsKey("instanceId") ? (String) map.get("instanceId") : null;
-        String entityId = map.containsKey("entityId") ? (String) map.get("entityId") : null;
-        String formName = map.containsKey("formName") ? (String) map.get("formName") : null;
-        String instance = map.containsKey("instance") ? (String) map.get("instance") : null;
-        String clientVersion = map.containsKey("clientVersion") ? (String) map.get("clientVersion") : null;
-        String syncStatusString = map.containsKey("syncStatus") ? (String) map.get("syncStatus") : null;
-        SyncStatus syncStatus = syncStatusString.equalsIgnoreCase("SYNCED") ? SYNCED : PENDING;
-        String formDataDefinitionVersion = map.containsKey("formDataDefinitionVersion") ? (String) map.get("formDataDefinitionVersion") : null;
-        String serverVersion = map.containsKey("serverVersion") ? (String) map.get("serverVersion") : null;
+        if (map.containsKey("instanceId") && map.containsKey("entityId") && map.containsKey("formName") && map.containsKey("instance") &&
+                map.containsKey("clientVersion") && map.containsKey("syncStatus") && map.containsKey("formDataDefinitionVersion") && map.containsKey("serverVersion") ){
+            String instanceId = (String) map.get("instanceId");
+            String entityId =   (String) map.get("entityId") ;
+            String formName =  (String) map.get("formName");
+            String instance =  (String) map.get("instance");
+            String clientVersion =  (String) map.get("clientVersion");
+            String syncStatusString =  (String) map.get("syncStatus") ;
+            SyncStatus syncStatus = syncStatusString.equalsIgnoreCase("SYNCED") ? SYNCED : PENDING;
+            String formDataDefinitionVersion =  (String) map.get("formDataDefinitionVersion");
+            String serverVersion =  (String) map.get("serverVersion");
 
-        FormSubmission formSubmission = new FormSubmission(instanceId, entityId, formName, instance, clientVersion, syncStatus, formDataDefinitionVersion, serverVersion);
-        formSubmission.revision = revision;
-        return formSubmission;
+            FormSubmission formSubmission = new FormSubmission(instanceId, entityId, formName, instance, clientVersion, syncStatus, formDataDefinitionVersion, serverVersion);
+            formSubmission.revision = revision;
+            return formSubmission;
+        }
+        return null;
     }
 }

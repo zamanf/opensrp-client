@@ -102,10 +102,14 @@ public class SettingsRepository extends DrishtiRepository {
     }
 
     public void migrateAllDataToCloudantModels(){
-        SettingsModel serviceProvidedModel = Context.getInstance().settingsModel();
-        List<SettingsModel.SettingsItem> settingsItems = allSettings();
-        for(SettingsModel.SettingsItem settingsItem : settingsItems){
-            serviceProvidedModel.add(settingsItem);
+        try {
+            SettingsModel serviceProvidedModel = Context.getInstance().settingsModel();
+            List<SettingsModel.SettingsItem> settingsItems = allSettings();
+            for(SettingsModel.SettingsItem settingsItem : settingsItems){
+                serviceProvidedModel.add(settingsItem);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
