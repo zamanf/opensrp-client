@@ -128,7 +128,7 @@ public class FormSubmission {
         props.put("entityId", entityId);
         props.put("formName", formName);
         props.put("instance", instance);
-        props.put("clientVersion", clientVersion);
+        props.put("version", clientVersion);
         props.put("syncStatus", syncStatus);
         props.put("formDataDefinitionVersion", formDataDefinitionVersion);
         props.put("serverVersion", serverVersion);
@@ -139,16 +139,16 @@ public class FormSubmission {
         // this could also be done by a fancy object mapper
         Map<String, Object> map = revision.asMap();
         if (map.containsKey("instanceId") && map.containsKey("entityId") && map.containsKey("formName") && map.containsKey("instance") &&
-                map.containsKey("clientVersion") && map.containsKey("syncStatus") && map.containsKey("formDataDefinitionVersion") && map.containsKey("serverVersion") ){
+                map.containsKey("version") && map.containsKey("syncStatus") && map.containsKey("formDataDefinitionVersion") ){
             String instanceId = (String) map.get("instanceId");
-            String entityId =   (String) map.get("entityId") ;
+            String entityId =   (String) map.get("entityId");
             String formName =  (String) map.get("formName");
             String instance =  (String) map.get("instance");
-            String clientVersion =  (String) map.get("clientVersion");
-            String syncStatusString =  (String) map.get("syncStatus") ;
+            String clientVersion =  String.valueOf(map.get("version"));
+            String syncStatusString =  (String) map.get("syncStatus");
             SyncStatus syncStatus = syncStatusString.equalsIgnoreCase("SYNCED") ? SYNCED : PENDING;
             String formDataDefinitionVersion =  (String) map.get("formDataDefinitionVersion");
-            String serverVersion =  (String) map.get("serverVersion");
+            String serverVersion =  map.containsKey("serverVersion") ? (String) map.get("serverVersion") : null;
 
             FormSubmission formSubmission = new FormSubmission(instanceId, entityId, formName, instance, clientVersion, syncStatus, formDataDefinitionVersion, serverVersion);
             formSubmission.revision = revision;

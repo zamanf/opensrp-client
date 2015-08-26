@@ -16,6 +16,7 @@ import com.cloudant.sync.query.QueryResult;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.ei.opensrp.R;
 import org.ei.opensrp.domain.SyncStatus;
 import org.ei.opensrp.domain.form.FormSubmission;
@@ -27,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 import static java.lang.System.currentTimeMillis;
+import static java.text.MessageFormat.format;
 import static java.util.UUID.randomUUID;
 import static org.ei.opensrp.AllConstants.ENTITY_ID_FIELD_NAME;
 import static org.ei.opensrp.AllConstants.ENTITY_ID_PARAM;
@@ -34,6 +36,7 @@ import static org.ei.opensrp.AllConstants.INSTANCE_ID_PARAM;
 import static org.ei.opensrp.AllConstants.SYNC_STATUS;
 import static org.ei.opensrp.domain.SyncStatus.PENDING;
 import static org.ei.opensrp.domain.SyncStatus.SYNCED;
+import static org.ei.opensrp.util.Log.logError;
 
 /**
  * Created by Geoffrey Koros on 8/7/2015.
@@ -92,27 +95,33 @@ public class FormDataModel extends BaseItemsModel{
         Map<String, String> params = new Gson().fromJson(paramsJSON, new TypeToken<Map<String, String>>() {
         }.getType());
 
-        MutableDocumentRevision rev = new MutableDocumentRevision();
-        rev.body = DocumentBodyFactory.create(createValuesForFormSubmission(params, data, formDataDefinitionVersion));
-        try {
-            BasicDocumentRevision created = this.mDatastore.createDocumentFromRevision(rev);
-            FormSubmission.fromRevision(created);
-        } catch (DocumentException de) {
-            Log.e(LOG_TAG, de.toString());
+        if (params.containsKey("instanceId") && !submissionExists(params.get("instanceId"))){
+            MutableDocumentRevision rev = new MutableDocumentRevision();
+            rev.body = DocumentBodyFactory.create(createValuesForFormSubmission(params, data, formDataDefinitionVersion));
+            try {
+                BasicDocumentRevision created = this.mDatastore.createDocumentFromRevision(rev);
+                FormSubmission.fromRevision(created);
+            } catch (DocumentException de) {
+                Log.e(LOG_TAG, de.toString());
+            }
+
+            return params.get(INSTANCE_ID_PARAM);
         }
 
-        return params.get(INSTANCE_ID_PARAM);
+        return  null;
     }
 
     @JavascriptInterface
     public void saveFormSubmission(FormSubmission formSubmission) {
-        MutableDocumentRevision rev = new MutableDocumentRevision();
-        rev.body = DocumentBodyFactory.create(createValuesForFormSubmission(formSubmission));
-        try {
-            BasicDocumentRevision created = this.mDatastore.createDocumentFromRevision(rev);
-            FormSubmission.fromRevision(created);
-        } catch (DocumentException de) {
-            Log.e(LOG_TAG, de.toString());
+        if (!submissionExists(formSubmission.instanceId())){
+            MutableDocumentRevision rev = new MutableDocumentRevision();
+            rev.body = DocumentBodyFactory.create(createValuesForFormSubmission(formSubmission));
+            try {
+                BasicDocumentRevision created = this.mDatastore.createDocumentFromRevision(rev);
+                FormSubmission.fromRevision(created);
+            } catch (DocumentException de) {
+                Log.e(LOG_TAG, de.toString());
+            }
         }
     }
 
@@ -342,6 +351,14 @@ public class FormDataModel extends BaseItemsModel{
             return FormSubmission.fromRevision(updated);
         } catch (DocumentException de) {
             return null;
+        }
+    }
+
+    @Override
+    public void replicationSuccessful(){
+        List<FormSubmission> formSubmissions = all();
+        for (FormSubmission formSubmission : formSubmissions){
+            Log.e(LOG_TAG, formSubmission.getDocumentRevision().toString());
         }
     }
 

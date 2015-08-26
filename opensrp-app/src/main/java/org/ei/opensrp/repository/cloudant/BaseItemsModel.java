@@ -19,6 +19,12 @@ import com.cloudant.sync.replication.Replicator;
 import com.cloudant.sync.replication.ReplicatorFactory;
 import com.google.common.eventbus.Subscribe;
 
+import com.google.common.eventbus.Subscribe;
+import java.util.concurrent.CountDownLatch;
+import com.cloudant.sync.notifications.ReplicationCompleted;
+import com.cloudant.sync.notifications.ReplicationErrored;
+import com.cloudant.sync.replication.ErrorInfo;
+
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -198,6 +204,7 @@ public abstract class BaseItemsModel {
 //                if (mListener != null) {
 //                    mListener.replicationComplete();
 //                }
+                replicationSuccessful();
             }
         });
     }
@@ -218,6 +225,10 @@ public abstract class BaseItemsModel {
 //                }
             }
         });
+    }
+
+    public void replicationSuccessful(){
+
     }
 
 }

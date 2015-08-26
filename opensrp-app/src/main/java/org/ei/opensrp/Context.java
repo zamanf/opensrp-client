@@ -6,6 +6,9 @@ import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.google.gson.Gson;
+
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.ei.opensrp.commonregistry.AllCommonsRepository;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClients;
 import org.ei.opensrp.commonregistry.CommonRepository;
@@ -109,6 +112,15 @@ import java.util.List;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 import static android.preference.PreferenceManager.setDefaultValues;
+import static java.text.MessageFormat.format;
+import static org.ei.opensrp.AllConstants.ENTITY_ID_PARAM;
+import static org.ei.opensrp.AllConstants.FORM_NAME_PARAM;
+import static org.ei.opensrp.AllConstants.INSTANCE_ID_PARAM;
+import static org.ei.opensrp.AllConstants.SYNC_STATUS;
+import static org.ei.opensrp.AllConstants.VERSION_PARAM;
+import static org.ei.opensrp.domain.SyncStatus.SYNCED;
+import static org.ei.opensrp.util.EasyMap.create;
+import static org.ei.opensrp.util.Log.logError;
 
 public class Context {
     private android.content.Context applicationContext;
@@ -1019,7 +1031,7 @@ public class Context {
         formsVersionsModel().startPushReplication();
         mothersModel().startPushReplication();
         serviceProvidedModel().startPushReplication();
-        settingsModel().startPushReplication();
+        //settingsModel().startPushReplication();
         timelineEventsModel().startPushReplication();
         reportsModel().startPushReplication();
     }
@@ -1029,17 +1041,37 @@ public class Context {
         childsModel().startPullReplication();
         eligibleCouplesModel().startPullReplication();
         formDataModel().startPullReplication();
-        formsVersionsModel().startPullReplication();
+        //formsVersionsModel().startPullReplication();
         mothersModel().startPullReplication();
         serviceProvidedModel().startPullReplication();
-        settingsModel().startPullReplication();
+        //settingsModel().startPullReplication();
         timelineEventsModel().startPullReplication();
         reportsModel().startPullReplication();
 
-        // we cant perform ad hoc queries to cloudant models so lets use the cloudant models to populate form submissions model
-//        List<FormSubmission> formSubmissions = formDataModel().all();
-//        formSubmissionService().processSubmissions(formSubmissions);
+        // hack! ziggy service still holds some logic that cloudant models would bypass
+        List<FormSubmission> formSubmissions = formDataModel().all();
+        for (FormSubmission formSubmission : formSubmissions){
+            try {
+                ziggyService.saveForm(getParams(formSubmission), formSubmission.instance());
+            } catch (Exception e) {
+                logError(format("Form submission processing failed, with instanceId: {0}. Exception: {1}, StackTrace: {2}",
+                        formSubmission.instanceId(), e.getMessage(), ExceptionUtils.getStackTrace(e)));
+            }
+            formDataRepository.updateServerVersion(formSubmission.instanceId(), formSubmission.serverVersion());
+            allSettings.savePreviousFormSyncIndex(formSubmission.serverVersion());
+        }
 
+    }
+
+    //TODO: remove this
+    private String getParams(FormSubmission submission) {
+        return new Gson().toJson(
+                create(INSTANCE_ID_PARAM, submission.instanceId())
+                        .put(ENTITY_ID_PARAM, submission.entityId())
+                        .put(FORM_NAME_PARAM, submission.formName())
+                        .put(VERSION_PARAM, submission.version())
+                        .put(SYNC_STATUS, SYNCED.value())
+                        .map());
     }
 
 }

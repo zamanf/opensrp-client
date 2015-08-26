@@ -47,7 +47,7 @@ public class FormSubmissionSyncService {
 
     public FetchStatus sync() {
         //pushToServer();
-        FetchStatus fetchStatus = pullFromServer();
+        //FetchStatus fetchStatus = pullFromServer();
         org.ei.opensrp.Context.getInstance().pullAllDataFromCloudant();
         org.ei.opensrp.Context.getInstance().pushAllDataToCloudant();
         return fetched;
