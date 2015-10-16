@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">opensrp-vaccinator</string>
+    <string name="home_women_label">woman</string>
+    <string name="home_field_monitor_label">Field And Monitor</string>
+    <string name="child_entries" >All Child Entries</string>
+    <string name="child_profile" >Child Profile</string>
+    <string name="child_DOB" >Date Of Birth</string>
+    <string name="child_last_vaccine" >Last Vaccine given </string>
+    <string name="child_next_vaacine" >Next Vaccine Due</string>
+    <string name="register_search_hint" >Search</string>
+    <string name="child_title" >Child</string>
+    <string name="child_alphabetical_sort">Alphabetical (Child Name)</string>
+    <string name="child_id_sort">Program Id </string>
+    <string name="child_search_hint">Search Child</string>
+</resources>

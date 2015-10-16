@@ -1,0 +1,13 @@
+{
+    "bindobjects":
+ [
+    {
+      "name": "vaccine_woman",
+      "columns" : [ ]
+    },
+   {
+   "name":"vaccine_child",
+   "columns":[]
+   }
+ ]
+}

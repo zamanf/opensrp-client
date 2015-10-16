@@ -1,0 +1,35 @@
+[
+  {
+    "parent": "vaccine_woman",
+    "child": "vaccines_w",
+    "field": "wife",
+    "kind": "one_to_many",
+    "from": "vaccine_woman.id",
+    "to": "vaccines_w.woman_id"
+  },
+  {
+    "parent": "vaccine_child",
+    "child": "vaccines_c",
+    "field": "child",
+    "kind": "one_to_many",
+    "from": "vaccine_child.id",
+    "to": "vaccines_c.child_id"
+  },
+
+  {
+    "parent": "eligible_couple",
+    "child": "mother",
+    "field": "wife",
+    "kind": "one_to_one",
+    "from": "eligible_couple.id",
+    "to": "mother.ecCaseId"
+  },
+  {
+    "parent": "wife",
+    "child": "child",
+    "field": "children",
+    "kind": "one_to_many",
+    "from": "wife.id",
+    "to": "child.motherCaseId"
+  }
+]
