@@ -31,7 +31,7 @@ import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.Scroller;
 
-import org.ei.opensrp.mcare.R;
+import org.ei.opensrp.vaccinator.R;
 
 import java.util.EnumSet;
 import java.util.LinkedList;
@@ -126,10 +126,10 @@ public class ViewFlow extends AdapterView<Adapter> {
 
 	public ViewFlow(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		TypedArray styledAttrs = context.obtainStyledAttributes(attrs,
+		/*TypedArray styledAttrs = context.obtainStyledAttributes(attrs,
 				R.styleable.ViewFlow);
 		mSideBuffer = styledAttrs.getInt(R.styleable.ViewFlow_sidebuffer, 3);
-		init();
+		init();*/
 	}
 
 	private void init() {

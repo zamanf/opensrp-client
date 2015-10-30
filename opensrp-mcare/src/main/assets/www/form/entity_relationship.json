@@ -1,11 +1,11 @@
 [
   {
-    "parent": "household",
-    "child": "elco",
+    "parent": "client",
+    "child": "client",
     "field": "wife",
     "kind": "one_to_many",
-    "from": "household.id",
-    "to": "elco.relationalid"
+    "from": "client.id",
+    "to": "client.relationalid"
   },
   {
     "parent": "elco",

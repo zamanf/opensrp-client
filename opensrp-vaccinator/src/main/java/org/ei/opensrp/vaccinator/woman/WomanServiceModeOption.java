@@ -1,6 +1,5 @@
-package org.ei.opensrp.vaccinator.child;
+package org.ei.opensrp.vaccinator.woman;
 
-import android.util.Log;
 import android.view.View;
 
 import org.ei.opensrp.Context;
@@ -18,14 +17,14 @@ import org.ei.opensrp.view.viewHolder.NativeFPSmartRegisterViewHolder;
 import org.ei.opensrp.view.viewHolder.NativePNCSmartRegisterViewHolder;
 
 /**
- * Created by Ahmed on 13-Oct-15.
+ * Created by Ahmed on 19-Oct-15.
  */
-public class ChildServiceModeOption extends ServiceModeOption {
+public class WomanServiceModeOption  extends ServiceModeOption {
 
-   public ChildServiceModeOption(SmartRegisterClientsProvider provider){
-       super(provider);
+    public WomanServiceModeOption(SmartRegisterClientsProvider provider){
+        super(provider);
 
-   }
+    }
 
     @Override
     public String name() {
@@ -52,9 +51,9 @@ public class ChildServiceModeOption extends ServiceModeOption {
             @Override
             public int[] headerTextResourceIds() {
                 return new int[]{
-                        R.string.child_profile
-                        , R.string.child_DOB, R.string.child_last_vaccine,
-                        R.string.child_next_vaacine
+                        R.string.woman_profile
+                        , R.string.woman_edd, R.string.woman_last_vaccine,
+                        R.string.woman_next_vaacine
                 };
             }
         };
@@ -62,7 +61,7 @@ public class ChildServiceModeOption extends ServiceModeOption {
 
     @Override
     public void setupListView(ChildSmartRegisterClient client, NativeChildSmartRegisterViewHolder viewHolder, View.OnClickListener clientSectionClickListener) {
-       /// Log.d("child View : ", client.dateOfBirth());
+        /// Log.d("child View : ", client.dateOfBirth());
     }
 
     @Override

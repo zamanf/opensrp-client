@@ -2,11 +2,9 @@
     "bindobjects":
  [
     {
-      "name": "household",
-      "columns" : [ ]
-    },{
-            "name": "elco",
-            "columns" : [ ]
-          }
+      "name": "client",
+      "columns" : [{"name": "type"} , {"name": "photopath"}]
+    }
+
  ]
 }

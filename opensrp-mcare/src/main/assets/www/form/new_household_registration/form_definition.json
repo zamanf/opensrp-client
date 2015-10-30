@@ -2,7 +2,7 @@
   "form_data_definition_version": "8",
   "form": {
     "default_bind_path": "/model/instance/FWNewHH",
-    "bind_type": "household",
+    "bind_type": "client",
     "fields": [
       {
         "name": "id",
@@ -80,91 +80,7 @@
         "name": "MWRA",
         "bind": "/model/instance/FWNewHH/MWRA"
       }
-    ],
-    "sub_forms": [
-      {
-        "name": "elco_registration",
-        "bind_type": "elco",
-        "default_bind_path": "/model/instance/FWNewHH/woman",
-        "fields": [
-          {
-            "name": "id",
-            "shouldLoadValue": true
-          },
-          {
-            "name": "relationalid",
-            "shouldLoadValue": true
-          },
-          {
-            "name": "WomanREGDATE",
-            "bind": "/model/instance/FWNewHH/woman/REGDATE"
-          },
-          {
-            "name": "GOBHHID",
-            "bind": "/model/instance/FWNewHH/woman/GOBHHID"
-          },
-          {
-            "name": "JiVitAHHID",
-            "bind": "/model/instance/FWNewHH/woman/JiVitAHHID"
-          },
-          {
-            "name": "FWWOMFNAME",
-            "bind": "/model/instance/FWNewHH/woman/FWWOMFNAME"
-          },
-          {
-            "name": "FWWOMLNAME",
-            "bind": "/model/instance/FWNewHH/woman/FWWOMLNAME"
-          },
-          {
-            "name": "FWWOMNID",
-            "bind": "/model/instance/FWNewHH/woman/FWWOMNID"
-          },
-          {
-            "name": "FWWOMBID",
-            "bind": "/model/instance/FWNewHH/woman/FWWOMBID"
-          },
-          {
-            "name": "FWHUSNAME",
-            "bind": "/model/instance/FWNewHH/woman/FWHUSNAME"
-          },
-          {
-            "name": "FWBIRTHDATE",
-            "bind": "/model/instance/FWNewHH/woman/FWBIRTHDATE"
-          },
-          {
-            "name": "FWGENDER",
-            "bind": "/model/instance/FWNewHH/woman/FWGENDER"
-          },
-          {
-            "name": "FWWOMAGE",
-            "bind": "/model/instance/FWNewHH/woman/FWWOMAGE"
-          },
-          {
-            "name": "display_age",
-            "bind": "/model/instance/FWNewHH/woman/display_age"
-          },
-          {
-            "name": "FWNHWOMSTRMEN",
-            "bind": "/model/instance/FWNewHH/woman/FWNHWOMSTRMEN"
-          },
-          {
-            "name": "FWNHWOMHUSALV",
-            "bind": "/model/instance/FWNewHH/woman/FWNHWOMHUSALV"
-          },
-          {
-            "name": "FWNHWOMHUSLIV",
-            "bind": "/model/instance/FWNewHH/woman/FWNHWOMHUSLIV"
-          },
-          {
-            "name": "FWNHWOMHUSSTR",
-            "bind": "/model/instance/FWNewHH/woman/FWNHWOMHUSSTR"
-          },
-          {
-            "name": "FWELIGIBLE",
-            "bind": "/model/instance/FWNewHH/woman/FWELIGIBLE"
-          }
-        ]
-      }
     ]
+      }
+
   }
-}

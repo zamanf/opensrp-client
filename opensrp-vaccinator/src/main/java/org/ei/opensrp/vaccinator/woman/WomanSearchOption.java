@@ -1,4 +1,4 @@
-package org.ei.opensrp.vaccinator.child;
+package org.ei.opensrp.vaccinator.woman;
 
 import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
@@ -7,11 +7,11 @@ import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.dialog.FilterOption;
 
 /**
- * Created by Ahmed on 15-Oct-15.
+ * Created by Ahmed on 19-Oct-15.
  */
-public class ChildSearchOption implements FilterOption {
+public class WomanSearchOption implements FilterOption {
     private final String criteria;
-    public ChildSearchOption(String criteria){
+    public WomanSearchOption(String criteria){
         this.criteria=criteria;
     }
     @Override
@@ -26,24 +26,24 @@ public class ChildSearchOption implements FilterOption {
             }
         }
         if(!result) {
-            if(currentclient.getDetails().get("existing_program_client_id") != null) {
-                if (currentclient.getDetails().get("existing_program_client_id").contains(criteria)) {
+            if(currentclient.getDetails().get("program_client_id") != null) {
+                if (currentclient.getDetails().get("program_client_id").contains(criteria)) {
                     result = true;
                 }
             }
         }
-        if(!result) {
+     /*   if(!result) {
             if(currentclient.getDetails().get("father_name") != null) {
                 if (currentclient.getDetails().get("father_name").contains(criteria)) {
                     result = true;
                 }
             }
-        }
+        }*/
         return result;
     }
 
     @Override
     public String name() {
-        return Context.getInstance().applicationContext().getResources().getString(R.string.str_child_search_hint);
+        return Context.getInstance().applicationContext().getResources().getString(R.string.str_woman_search_hint);
     }
 }

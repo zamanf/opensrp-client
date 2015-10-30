@@ -26,7 +26,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
 
-import org.ei.opensrp.mcare.R;
+import org.ei.opensrp.vaccinator.R;
 
 import java.util.ArrayList;
 
@@ -89,6 +89,7 @@ public class TitleFlowIndicator extends TextView implements FlowIndicator {
 	public TitleFlowIndicator(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		// Retrieve styles attributs
+/*
 
 		int typefaceIndex = attrs.getAttributeIntValue("http://schemas.android.com/apk/res/android", "typeface", 0);
 		int textStyleIndex = attrs.getAttributeIntValue("http://schemas.android.com/apk/res/android", "textStyle", 0);
@@ -113,6 +114,7 @@ public class TitleFlowIndicator extends TextView implements FlowIndicator {
 		else
 			typeface = getTypefaceByIndex(typefaceIndex);
 		typeface = Typeface.create(typeface, textStyleIndex);
+*/
 
 	}
 

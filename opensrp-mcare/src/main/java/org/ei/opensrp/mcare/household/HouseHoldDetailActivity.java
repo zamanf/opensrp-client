@@ -100,7 +100,7 @@ public class HouseHoldDetailActivity extends Activity {
         householdview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bindobject = "household";
+                bindobject = "client";
                 entityid = householdclient.entityId();
                 dispatchTakePictureIntent(householdview);
 
@@ -112,7 +112,7 @@ public class HouseHoldDetailActivity extends Activity {
         paginationViewHandler.addPagination(Clientsview);
 
         householdcontroller = new CommonPersonObjectController(Context.getInstance().allCommonsRepositoryobjects("elco"), Context.getInstance().allBeneficiaries(),context.listCache(),
-                context.personObjectClientsCache(),"FWWOMFNAME","elco","relationalid",householdclient.entityId(), CommonPersonObjectController.ByColumnAndByDetails.byrelationalid,"FWWOMFNAME", CommonPersonObjectController.ByColumnAndByDetails.byDetails);
+                context.personObjectClientsCache(),"FWWOMFNAME","client","relationalid",householdclient.entityId(), CommonPersonObjectController.ByColumnAndByDetails.byrelationalid,"FWWOMFNAME", CommonPersonObjectController.ByColumnAndByDetails.byDetails);
                 clientsAdapter = adapter();
         clientsAdapter.registerDataSetObserver(new DataSetObserver() {
             @Override
@@ -187,7 +187,7 @@ public class HouseHoldDetailActivity extends Activity {
                     break;
                 case R.id.profilepic:
                     entityid = ((CommonPersonObjectClient)view.getTag()).entityId();
-                    bindobject = "elco";
+                    bindobject = "client";
                     mImageView = (ImageView)view;
                     dispatchTakePictureIntent((ImageView)view);
                     break;

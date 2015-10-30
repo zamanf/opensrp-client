@@ -8,6 +8,15 @@
    {
    "name":"vaccine_child",
    "columns":[]
+   },
+   {
+     "name":"vaccines_w",
+     "columns":[]
+   },
+   {
+     "name":"vaccines_c",
+     "columns":[]
    }
+
  ]
 }

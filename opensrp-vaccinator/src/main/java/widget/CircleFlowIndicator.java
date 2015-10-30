@@ -27,7 +27,7 @@ import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 
-import org.ei.opensrp.mcare.R;
+import org.ei.opensrp.vaccinator.R;
 
 
 /**
@@ -101,7 +101,7 @@ public class CircleFlowIndicator extends View implements FlowIndicator,
 	 */
 	public CircleFlowIndicator(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		// Retrieve styles attributs
+	/*	// Retrieve styles attributs
 		TypedArray a = context.obtainStyledAttributes(attrs,
 				R.styleable.CircleFlowIndicator);
 
@@ -143,7 +143,7 @@ public class CircleFlowIndicator extends View implements FlowIndicator,
 
 		mSnap = a.getBoolean(R.styleable.CircleFlowIndicator_snap, false);
 		
-		initColors(activeColor, inactiveColor, activeType, inactiveType);
+		initColors(activeColor, inactiveColor, activeType, inactiveType);*/
 	}
 
 	private void initColors(int activeColor, int inactiveColor, int activeType,

@@ -19,11 +19,17 @@
                 android:orientation="horizontal"
             android:layout_gravity="center_vertical"
             android:layout_marginBottom="30dp">
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"></FrameLayout>
 
             <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
-                android:layout_weight="1">
+                android:layout_weight="1" >
+
+
 
                 <ImageButton
                     android:id="@+id/btn_woman_register"
@@ -48,9 +54,15 @@
                     android:id="@+id/txt_woman_register_client_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/CustomFontTextViewStyle.Badge"/>
+
+
+
+                    style="@style/CustomFontTextViewStyle.Badge"
+
+                    />
 
             </FrameLayout>
+
 
             <FrameLayout
                 android:layout_width="0dp"
@@ -84,6 +96,7 @@
 
             </FrameLayout>
 
+
             <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
@@ -99,25 +112,30 @@
                 <org.ei.opensrp.view.customControls.CustomFontTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:height="115dp"
                     android:text="@string/home_field_monitor_label"
 
-                    style="@style/CustomFontTextViewStyle.Home.RegisterName"/>
+                    style="@style/CustomFontTextViewStyle.Home.RegisterNameCustom"/>
 
                 <org.ei.opensrp.view.customControls.CustomFontTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/register_label"
-                    style="@style/CustomFontTextViewStyle.Home.RegisterLabel"/>
+                    style="@style/CustomFontTextViewStyle.Home.RegisterLabelCustom"/>
 
                 <org.ei.opensrp.view.customControls.CustomFontTextView
                     android:id="@+id/txt_field_register_client_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+
                     style="@style/CustomFontTextViewStyle.Badge"/>
 
             </FrameLayout>
 
-
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"></FrameLayout>
 
         </LinearLayout>
 

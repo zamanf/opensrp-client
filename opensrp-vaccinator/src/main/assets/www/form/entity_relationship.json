@@ -5,7 +5,7 @@
     "field": "wife",
     "kind": "one_to_many",
     "from": "vaccine_woman.id",
-    "to": "vaccines_w.woman_id"
+    "to": "vaccines_w.relationalid"
   },
   {
     "parent": "vaccine_child",
@@ -13,7 +13,7 @@
     "field": "child",
     "kind": "one_to_many",
     "from": "vaccine_child.id",
-    "to": "vaccines_c.child_id"
+    "to": "vaccines_c.relationalid"
   },
 
   {

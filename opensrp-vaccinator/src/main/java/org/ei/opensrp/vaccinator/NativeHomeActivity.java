@@ -2,6 +2,7 @@ package org.ei.opensrp.vaccinator;
 
 import android.app.ActionBar;
 import android.media.Image;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -137,16 +138,17 @@ public class NativeHomeActivity extends SecuredActivity {
     }
 
     private void updateRegisterCounts(HomeContext homeContext) {
-        CommonPersonObjectController childController = new CommonPersonObjectController(context.allCommonsRepositoryobjects("child"),
+        CommonPersonObjectController childController = new CommonPersonObjectController(context.allCommonsRepositoryobjects("vaccine_child"),
                 context.allBeneficiaries(), context.listCache(),
-                context.personObjectClientsCache(),"first_name","child","program_client_id", CommonPersonObjectController.ByColumnAndByDetails.byDetails);
-
+                context.personObjectClientsCache(), "first_name", "vaccine_child", "child_reg_date",
+                CommonPersonObjectController.ByColumnAndByDetails.byDetails );
 
        // ecRegisterClientCountView.setText(valueOf(hhcontroller.getClients().size()));
     //    ancRegisterClientCountView.setText(valueOf(homeContext.ancCount()));
      //   pncRegisterClientCountView.setText(valueOf(homeContext.pncCount()));
      //   fpRegisterClientCountView.setText(valueOf(elcocontroller.getClients().size()));
-        childRegisterClientCountView.setText(valueOf(homeContext.childCount()));
+        Log.d("child count cin ", childController.getClients().size()+"");
+        childRegisterClientCountView.setText(valueOf(childController.getClients().size()));
     }
 
     @Override
