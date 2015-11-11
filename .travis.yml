@@ -30,5 +30,4 @@ script:
   - ls -la
   # Enable the line below once we get all the test passing, currently most of the tests are failing 
   # so we'll just if the project compiles 
-  #- ./gradlew connectedAndroidTest
-  - ./gradlew clean assembleDebug
+  - ./gradlew connectedAndroidTest
