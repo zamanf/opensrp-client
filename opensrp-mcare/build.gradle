@@ -18,6 +18,7 @@ android {
     buildToolsVersion "22.0.1"
 
     defaultConfig {
+        multiDexEnabled = true
         applicationId "org.ei.opensrp.mcare"
         minSdkVersion 16
         targetSdkVersion 22
