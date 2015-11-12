@@ -27,7 +27,7 @@ android {
         versionName "1.0"
     }
     lintOptions {
-        abortOnError false
+        disable 'InvalidPackage'
     }
     buildTypes {
         release {
