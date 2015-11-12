@@ -38,4 +38,4 @@ script:
   - echo $ADB_INSTALL_TIMEOUT
   - android list target
   - chmod 755 gradlew
-  - ./gradlew build connectedCheck --debug
+  - ./gradlew build connectedCheck
