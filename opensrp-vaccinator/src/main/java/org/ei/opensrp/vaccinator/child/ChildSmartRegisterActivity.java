@@ -195,11 +195,16 @@ private  HashMap<String,String> overrides;
             //    new CommonPersonObjectController()
             controller = new CommonPersonObjectController(context.allCommonsRepositoryobjects("vaccine_child"),
                     context.allBeneficiaries(), context.listCache(),
-                    context.personObjectClientsCache(), "first_name", "vaccine_child", "child_reg_date",
+                    context.personObjectClientsCache(), "first_name", "vaccine_child","type","child",
+                    CommonPersonObjectController.ByColumnAndByDetails.byColumn
+                    , "child_reg_date",
                     CommonPersonObjectController.ByColumnAndByDetails.byDetails.byDetails );
-
-
-              Log.d("Child count :", context.commonrepository("vaccine_child").count() + "");
+       /*controller= new CommonPersonObjectController(context.allCommonsRepositoryobjects("client"),
+                context.allBeneficiaries(), context.listCache(),
+                context.personObjectClientsCache(), "first_name", "client", "child_reg_date",
+                CommonPersonObjectController.ByColumnAndByDetails.byDetails );
+*/
+              //Log.d("Child count :", context.commonrepository("vaccine_child").count() + "");
 
                 //context.
          /*   controller = new CommonPersonObjectController(context.allCommonsRepositoryobjects("elco"),
@@ -210,7 +215,20 @@ private  HashMap<String,String> overrides;
                     "FWWOMFNAME", CommonPersonObjectController.ByColumnAndByDetails.byDetails,
                     new ElcoPSRFDueDateSort());
 */
+        String locationjson = context.anmLocationController().get();
+        Log.d("ANM LOCATION : ", locationjson);
 
+        LocationTree locationTree = EntityUtils.fromJson(locationjson, LocationTree.class);
+//      Location l=  locationTree.findLocation("Country");
+
+
+
+        Map<String,TreeNode<String, Location>> locationMap =
+                locationTree.getLocationsHierarchy();
+        Log.d("location json label : ", locationMap.entrySet().toString());
+     //   Log.d("location json id: ", locationMap.get("country").getId());
+
+    //    Log.d("ANM LOCATION JSON : ", l.getName());
         context.formSubmissionRouter().getHandlerMap().put("child_followup_form",new ChildFollowupHandler(new ChildService(context.allBeneficiaries(),context.allTimelineEvents())));
         dialogOptionMapper = new DialogOptionMapper();
 
@@ -251,23 +269,26 @@ private  HashMap<String,String> overrides;
        */
                 //controller.getClients().
                 String locationjson = context.anmLocationController().get();
-
+              //  Log.d("ANM LOCATION : ", locationjson);
                 LocationTree locationTree = EntityUtils.fromJson(locationjson, LocationTree.class);
                 //locationTree.
                 Map<String,TreeNode<String, Location>> locationMap =
                         locationTree.getLocationsHierarchy();
               //  locationMap.get("province")
 
-              /*  for (String s : locationMap.keySet()){
+                for (String s : locationMap.keySet()){
                     TreeNode<String, Location> locations= locationMap.get(s);
-                    for(locations.getChildren()){
+                   if(locations.getChildren()==null) {
 
-
-                    }
-                }*/
+                    Log.d("Location Label",locations.getLabel());
+                   }
+                }
+            //    addChildToList(locationMap);
 
                // Log.d("location json : ", locationjson);
 
+               // Log.d("location json label : ", locationMap.get("country").getLabel());
+             //   Log.d("location json id: ", locationMap.get("country").getId());
              if(getfilteredClients(qrcode)<= 0){
                     HashMap<String , String> map=new HashMap<String,String>();
                    map.put("provider_uc","korangi");
@@ -311,7 +332,7 @@ private  HashMap<String,String> overrides;
         return new DialogOption[]{
 
                 new ClientlessOpenFormOption("Enrollment", "child_enrollment_form", formController,overridemap, ClientlessOpenFormOption.ByColumnAndByDetails.bydefault),
-                new ClientlessOpenFormOption("Followup", "child_followup_fake_form", formController,overridemap, ClientlessOpenFormOption.ByColumnAndByDetails.byDetails)
+            //    new ClientlessOpenFormOption("Followup", "child_followup_fake_form", formController,overridemap, ClientlessOpenFormOption.ByColumnAndByDetails.byDetails)
         };
     }
 
@@ -470,6 +491,24 @@ private  HashMap<String,String> overrides;
                 String name = StringUtil.humanize(entry.getValue().getLabel());
                 Log.d("ANM Details", "location name :" + name);
                 dialogOptionslist.add(new CommonObjectFilterOption(name.replace(" ","_"),"location_name", CommonObjectFilterOption.ByColumnAndByDetails.byDetails,name));
+
+            }
+        }
+    }
+
+
+    public void addChildToList(Map<String,TreeNode<String, Location>> locationMap){
+        for(Map.Entry<String, TreeNode<String, Location>> entry : locationMap.entrySet()) {
+
+            if(entry.getValue().getChildren() != null) {
+                addChildToList(entry.getValue().getChildren());
+
+            }else{
+                StringUtil.humanize(entry.getValue().getLabel());
+                String name = StringUtil.humanize(entry.getValue().getLabel());
+                Log.d("ANM Details", "location name :" + name);
+
+               // dialogOptionslist.add(new CommonObjectFilterOption(name.replace(" ","_"),"location_name", CommonObjectFilterOption.ByColumnAndByDetails.byDetails,name));
 
             }
         }

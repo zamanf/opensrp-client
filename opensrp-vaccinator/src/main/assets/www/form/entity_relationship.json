@@ -1,5 +1,5 @@
 [
-  {
+/*  {
     "parent": "vaccine_woman",
     "child": "vaccines_w",
     "field": "wife",
@@ -14,7 +14,7 @@
     "kind": "one_to_many",
     "from": "vaccine_child.id",
     "to": "vaccines_c.relationalid"
-  },
+  },*/
 
   {
     "parent": "eligible_couple",

@@ -1,11 +1,14 @@
 package org.ei.opensrp.vaccinator.woman;
 
+import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.CommonObjectSort;
@@ -24,6 +27,15 @@ import org.ei.opensrp.view.dialog.DialogOptionMapper;
 import org.ei.opensrp.view.dialog.FilterOption;
 import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
+import org.opensrp.api.domain.Location;
+import org.opensrp.api.util.EntityUtils;
+import org.opensrp.api.util.LocationTree;
+import org.opensrp.api.util.TreeNode;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import util.barcode.Barcode;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
@@ -41,6 +53,8 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
     private VillageController villageController;
     private DialogOptionMapper dialogOptionMapper;
     private final ClientActionHandler clientActionHandler = new ClientActionHandler();
+    private  HashMap<String,String> overrides;
+
 
     @Override
     protected DefaultOptionsProvider getDefaultOptionsProvider() {
@@ -67,7 +81,7 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
                 return Context.getInstance().getStringResource(R.string.woman_title);
             }
         };
-    }
+    }//end of method
 
 
     @Override
@@ -104,7 +118,7 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
                 return getResources().getString(R.string.woman_search_hint);
             }
         };
-    }
+    }//end of method
 
     @Override
     protected SmartRegisterClientsProvider clientsProvider() {
@@ -113,18 +127,18 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
                     this,clientActionHandler , controller,context.alertService());
         }
         return clientProvider;
-    }
+    }//end of method
 
     @Override
     protected void onInitialization() {
         if(controller==null) {
-            controller = new CommonPersonObjectController(context.allCommonsRepositoryobjects("woman_child"),
+            controller = new CommonPersonObjectController(context.allCommonsRepositoryobjects("vaccine_woman"),
                     context.allBeneficiaries(), context.listCache(),
-                    context.personObjectClientsCache(), "first_name", "woman_child", "program_client_id",
+                    context.personObjectClientsCache(), "first_name", "vaccine_woman", "program_client_id",
                     CommonPersonObjectController.ByColumnAndByDetails.byDetails.byDetails );
 
 
-            Log.d("Child count :", context.commonrepository("vaccine_child").toString() + "");
+          //  Log.d("Child count :", context.commonrepository("vaccine_child").toString() + "");
 
             //context.
          /*   controller = new CommonPersonObjectController(context.allCommonsRepositoryobjects("elco"),
@@ -138,7 +152,7 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
 
         }
         dialogOptionMapper = new DialogOptionMapper();
-    }
+    }//end of method
 
     @Override
     protected void onCreation() {
@@ -152,12 +166,14 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
         navBarOptionsProvider = getNavBarOptionsProvider();
 
         setupViews();
-    }
+    }//end of method
 
     @Override
     protected void startRegistration() {
-
-    }
+        Intent intent = new Intent(Barcode.BARCODE_INTENT);
+        intent.putExtra(Barcode.SCAN_MODE, Barcode.QR_MODE);
+        startActivityForResult(intent, Barcode.BARCODE_REQUEST_CODE);
+    }//end of method
 
     @Override
     public void setupViews() {
@@ -167,14 +183,14 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
 
         setServiceModeViewDrawableRight(null);
         updateSearchView();
-    }
+    }//end of method
 
     @Override
     protected void onResumption() {
         super.onResumption();
         getDefaultOptionsProvider();
         updateSearchView();
-    }
+    }//end of method
 
 
 
@@ -195,7 +211,7 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
             }
         }
 
-    }
+    }//end of method
 
     public void updateSearchView(){
         getSearchView().addTextChangedListener(new TextWatcher() {
@@ -246,6 +262,92 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
 
             }
         });
-    }
+    }//end of method
 
+    private int getfilteredClients(String filterString){
+        int i=0;
+        setCurrentSearchFilter(new ChildSearchOption(filterString));
+        SmartRegisterClients  filteredClients = getClientsAdapter().getListItemProvider()
+                .updateClients(getCurrentVillageFilter(), getCurrentServiceModeOption(),
+                        getCurrentSearchFilter(), getCurrentSortOption());
+        i=filteredClients.size();
+
+        return i;
+    }//end of method
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode==RESULT_OK)
+        {
+
+            Bundle extras =data.getExtras();
+            String qrcode= (String)    extras.get(Barcode.SCAN_RESULT);
+
+
+        //    Toast.makeText(this, "QrCode is : " + qrcode, Toast.LENGTH_LONG).show();
+       /*
+       #TODO:after reading the code , app first search for that id in database if he it is there , that client appears  on register only . if it doesnt then it shows two options
+
+       */
+            //controller.getClients().
+            String locationjson = context.anmLocationController().get();
+                 //   Log.d("ANM LOCATION : ", locationjson);
+            LocationTree locationTree = EntityUtils.fromJson(locationjson, LocationTree.class);
+            //locationTree.
+            Map<String,TreeNode<String, Location>> locationMap =
+                    locationTree.getLocationsHierarchy();
+            //  locationMap.get("province")
+
+              /*  for (String s : locationMap.keySet()){
+                    TreeNode<String, Location> locations= locationMap.get(s);
+                    for(locations.getChildren()){
+
+
+                    }
+                }*/
+
+          /*   Log.d("location json label : ", locationMap.get("country").getLabel());
+            Log.d("location json id: ", locationMap.get("country").getId());*/
+
+            if(getfilteredClients(qrcode)<= 0){
+                HashMap<String , String> map=new HashMap<String,String>();
+                map.put("provider_uc","korangi");
+                map.put("provider_town","korangi");
+                map.put("provider_city","karachi");
+                map.put("provider_province","sindh");
+                map.put("existing_program_client_id",qrcode);
+                map.put("provider_location_id","korangi");
+                map.put("provider_location_name", "korangi");
+                //map.put("","");
+                setOverrides(map);
+
+                //  map.put("provider_id", anmController.get());
+                //  map.put("program_client_id",qrcode);
+                //showFragmentDialog(new EditDialogOptionModel(getOverrides()));
+
+             //   showFragmentDialog(new EditDialogOptionModel(map),null);
+            }else {
+                getSearchView().setText(qrcode);
+
+            }
+
+
+            //          controller.getClients();
+
+
+
+        }
+
+
+    }//end of the method
+
+
+    public HashMap<String,String> getOverrides() {
+        return overrides;
+    }//end of method
+    public void setOverrides(HashMap<String,String>  overrides ){
+
+        this.overrides=overrides;
+    }//end of method
 }

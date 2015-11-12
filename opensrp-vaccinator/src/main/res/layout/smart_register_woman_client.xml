@@ -86,7 +86,7 @@
             <org.ei.opensrp.view.customControls.CustomFontTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Date Of Birth"
+                android:text="EDD Number"
                 android:id="@+id/woman_dob"
                 style="@style/CustomFontTextViewStyle.ListView.Medium"
                 android:layout_marginLeft="5dp" />

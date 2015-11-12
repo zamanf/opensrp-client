@@ -1,6 +1,8 @@
 package org.ei.opensrp.vaccinator;
 
 import android.app.ActionBar;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.media.Image;
 import android.util.Log;
 import android.view.Menu;
@@ -19,8 +21,16 @@ import org.ei.opensrp.sync.SyncProgressIndicator;
 import org.ei.opensrp.sync.UpdateActionsTask;
 import org.ei.opensrp.view.activity.SecuredActivity;
 import org.ei.opensrp.view.contract.HomeContext;
+import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.controller.NativeAfterANMDetailsFetchListener;
 import org.ei.opensrp.view.controller.NativeUpdateANMDetailsTask;
+import org.ei.opensrp.view.dialog.DialogOption;
+import org.ei.opensrp.view.dialog.DialogOptionModel;
+import org.ei.opensrp.view.dialog.EditOption;
+import org.ei.opensrp.view.dialog.LocationSelectorDialogFragment;
+import org.ei.opensrp.view.dialog.OpenFormOption;
+
+import java.util.HashMap;
 
 import static android.widget.Toast.LENGTH_SHORT;
 import static java.lang.String.valueOf;
@@ -32,6 +42,7 @@ import static org.ei.opensrp.event.Event.SYNC_STARTED;
 public class NativeHomeActivity extends SecuredActivity {
     private MenuItem updateMenuItem;
     private MenuItem remainingFormsToSyncMenuItem;
+    private String locationDialogTAG = "locationDialogTAG";
     private PendingFormSubmissionService pendingFormSubmissionService;
 
     private Listener<Boolean> onSyncStartListener = new Listener<Boolean>() {
@@ -81,7 +92,21 @@ public class NativeHomeActivity extends SecuredActivity {
         navigationController = new VaccinatorNavigationController(this,anmController);
         setupViews();
         initialize();
+
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment prev = getFragmentManager().findFragmentByTag(locationDialogTAG);
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+      /*  LocationSelectorDialogFragment
+                .newInstance(this, new EditDialogOptionModel(), context.anmLocationController().get(), "new_household_registration")
+                .show(ft, locationDialogTAG);*/
     }
+
+
+
+
 
     private void setupViews() {
      //  findViewById(R.id.btn_ec_register).setOnClickListener(onRegisterStartListener);
@@ -147,7 +172,7 @@ public class NativeHomeActivity extends SecuredActivity {
     //    ancRegisterClientCountView.setText(valueOf(homeContext.ancCount()));
      //   pncRegisterClientCountView.setText(valueOf(homeContext.pncCount()));
      //   fpRegisterClientCountView.setText(valueOf(elcocontroller.getClients().size()));
-        Log.d("child count cin ", childController.getClients().size()+"");
+//        Log.d("child count cin ", childController.getClients().size()+"");
         childRegisterClientCountView.setText(valueOf(childController.getClients().size()));
     }
 

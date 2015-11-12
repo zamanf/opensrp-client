@@ -51,7 +51,7 @@ android {
         // multiDexEnabled = true
         //applicationId "org.ei.opensrp"
         minSdkVersion 16
-        targetSdkVersion 21
+        targetSdkVersion 22
         versionCode 1
         versionName "3.0.1"
         testInstrumentationRunner "android.test.InstrumentationTestRunner"

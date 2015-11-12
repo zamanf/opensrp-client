@@ -94,8 +94,8 @@ public class WomanSmartClientsProvider implements SmartRegisterClientsProvider {
         viewHolder.womanId.setText(pc.getDetails().get("program_client_id") != null ? pc.getDetails().get("program_client_id") : "");
         viewHolder.womanName.setText(pc.getDetails().get("first_name") != null ? pc.getDetails().get("first_name") : "");
         viewHolder.fatherName.setText(pc.getDetails().get("father_name") != null ? pc.getDetails().get("father_name") : "");
-        viewHolder.womanDOB.setText(pc.getDetails().get("chid_dob_confirm") != null ? pc.getDetails().get("chid_dob_confirm") : "");
-
+        viewHolder.womanDOB.setText(pc.getDetails().get("client_dob_confirm") != null ? pc.getDetails().get("chid_dob_confirm") : "");
+        viewHolder.edd.setText(pc.getDetails().get("final_edd")!=null ?pc.getDetails().get("final_edd"):"N/A");
         viewHolder. profilepic.setOnClickListener(onClickListener);
         viewHolder. profilepic.setTag(client);
 

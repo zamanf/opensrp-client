@@ -25,6 +25,13 @@
     <string name="woman_alphabetical_sort">Alphabetical (Child Name)</string>
     <string name="woman_id_sort">Program Id </string>
     <string name="woman_search_hint">Search Woman</string>
+    <string name="woman_details_title" >Woman Details</string>
+    <string name="day_month">Day/Month</string>
+    <string name="month_target">Monthly Target</string>
+    <string name="month_received">Total Vaccinces stock Received</string>
+    <string name="month_used">Total Vaccinces stock Used</string>
+    <string name="month_wasted">Total Vaccinces stock Wasted</string>
+    <string name="field_entries">Stock Register</string>
 
 
 </resources>
