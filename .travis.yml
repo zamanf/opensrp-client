@@ -6,9 +6,9 @@ android:
     - platform-tools
     - tools
     # The BuildTools version used by your project
-    - build-tools-22.0.1
+    - build-tools-21.1.2
     # The SDK version used to compile your project
-    - android-22
+    - android-21
     # Additional components
     - extra-google-google_play_services
     - extra-google-m2repository
@@ -24,7 +24,7 @@ android:
 env:
   global:
    # install timeout in minutes (2 minutes by default)
-    - ADB_INSTALL_TIMEOUT=8
+    - ADB_INSTALL_TIMEOUT=12
 
 before_script:
   # Emulator Management: Create, Start and Wait
@@ -38,4 +38,4 @@ script:
   - echo $ADB_INSTALL_TIMEOUT
   - android list target
   - chmod 755 gradlew
-  - ./gradlew connectedAndroidTest
+  - ./gradlew build connectedCheck
