@@ -193,17 +193,16 @@ private  HashMap<String,String> overrides;
         //context.
       // AllCommonsRepository commonRepo=context.allCommonsRepositoryobjects("child");
             //    new CommonPersonObjectController()
-            controller = new CommonPersonObjectController(context.allCommonsRepositoryobjects("vaccine_child"),
+   /*         controller = new CommonPersonObjectController(context.allCommonsRepositoryobjects("vaccine_child"),
                     context.allBeneficiaries(), context.listCache(),
                     context.personObjectClientsCache(), "first_name", "vaccine_child","type","child",
                     CommonPersonObjectController.ByColumnAndByDetails.byColumn
                     , "child_reg_date",
-                    CommonPersonObjectController.ByColumnAndByDetails.byDetails.byDetails );
-       /*controller= new CommonPersonObjectController(context.allCommonsRepositoryobjects("client"),
+                    CommonPersonObjectController.ByColumnAndByDetails.byDetails.byDetails );*/
+       controller= new CommonPersonObjectController(context.allCommonsRepositoryobjects("client"),
                 context.allBeneficiaries(), context.listCache(),
                 context.personObjectClientsCache(), "first_name", "client", "child_reg_date",
                 CommonPersonObjectController.ByColumnAndByDetails.byDetails );
-*/
               //Log.d("Child count :", context.commonrepository("vaccine_child").count() + "");
 
                 //context.

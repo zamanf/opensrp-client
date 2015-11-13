@@ -40,6 +40,17 @@ public class CommonPersonObjectController {
     }
 
 
+    /**
+     *
+     * @param allpersons
+     * @param allBeneficiaries
+     * @param cache
+     * @param personClientsCache
+     * @param nameString
+     * @param bindtype
+     * @param null_check_key
+     * @param byColumnAndByDetailsNullcheck
+     */
     public CommonPersonObjectController(AllCommonsRepository allpersons,
                                         AllBeneficiaries allBeneficiaries, Cache<String> cache,
                                         Cache<CommonPersonObjectClients> personClientsCache, String nameString, String bindtype,String null_check_key,ByColumnAndByDetails byColumnAndByDetailsNullcheck) {
@@ -53,6 +64,21 @@ public class CommonPersonObjectController {
         this.byColumnAndByDetailsNullcheck = byColumnAndByDetailsNullcheck;
 
     }
+
+    /**
+     *
+     * @param allpersons
+     * @param allBeneficiaries
+     * @param cache
+     * @param personClientsCache
+     * @param nameString
+     * @param bindtype
+     * @param filterkey
+     * @param filtervalue
+     * @param byColumnAndByDetails
+     * @param null_check_key
+     * @param byColumnAndByDetailsNullcheck
+     */
     public CommonPersonObjectController(AllCommonsRepository allpersons,
                                         AllBeneficiaries allBeneficiaries, Cache<String> cache,
                                         Cache<CommonPersonObjectClients> personClientsCache, String nameString, String bindtype,String filterkey,String filtervalue,ByColumnAndByDetails byColumnAndByDetails,String null_check_key,ByColumnAndByDetails byColumnAndByDetailsNullcheck ) {
@@ -68,6 +94,19 @@ public class CommonPersonObjectController {
         this.null_check_key = null_check_key;
         this.byColumnAndByDetailsNullcheck = byColumnAndByDetailsNullcheck;
     }
+
+    /**
+     *
+     * @param allpersons
+     * @param allBeneficiaries
+     * @param cache
+     * @param personClientsCache
+     * @param nameString
+     * @param bindtype
+     * @param null_check_key
+     * @param byColumnAndByDetailsNullcheck
+     * @param sortOption
+     */
     public CommonPersonObjectController(AllCommonsRepository allpersons,
                                         AllBeneficiaries allBeneficiaries, Cache<String> cache,
                                         Cache<CommonPersonObjectClients> personClientsCache, String nameString, String bindtype,String null_check_key,ByColumnAndByDetails byColumnAndByDetailsNullcheck,SortOption sortOption) {
@@ -82,6 +121,22 @@ public class CommonPersonObjectController {
         this.sortOption = sortOption;
 
     }
+
+    /**
+     *
+     * @param allpersons
+     * @param allBeneficiaries
+     * @param cache
+     * @param personClientsCache
+     * @param nameString
+     * @param bindtype
+     * @param filterkey
+     * @param filtervalue
+     * @param byColumnAndByDetails
+     * @param null_check_key
+     * @param byColumnAndByDetailsNullcheck
+     * @param sortOption
+     */
     public CommonPersonObjectController(AllCommonsRepository allpersons,
                                         AllBeneficiaries allBeneficiaries, Cache<String> cache,
                                         Cache<CommonPersonObjectClients> personClientsCache, String nameString, String bindtype,String filterkey,String filtervalue,ByColumnAndByDetails byColumnAndByDetails,String null_check_key,ByColumnAndByDetails byColumnAndByDetailsNullcheck,SortOption sortOption ) {
@@ -99,6 +154,22 @@ public class CommonPersonObjectController {
         this.sortOption = sortOption;
     }
 
+    /**
+     *
+     * @param allpersons
+     * @param allBeneficiaries
+     * @param cache
+     * @param personClientsCache
+     * @param nameString
+     * @param bindtype
+     * @param filterkey
+     * @param filtervalue
+     * @param filterCase
+     * @param byColumnAndByDetails
+     * @param null_check_key
+     * @param byColumnAndByDetailsNullcheck
+     * @param sortOption
+     */
     public CommonPersonObjectController(AllCommonsRepository allpersons,
                                         AllBeneficiaries allBeneficiaries, Cache<String> cache,
                                         Cache<CommonPersonObjectClients> personClientsCache, String nameString, String bindtype,String filterkey,String filtervalue,boolean filterCase,ByColumnAndByDetails byColumnAndByDetails,String null_check_key,ByColumnAndByDetails byColumnAndByDetailsNullcheck,SortOption sortOption ) {
