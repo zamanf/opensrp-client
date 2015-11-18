@@ -88,7 +88,7 @@ public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
         }
 
      //   ViewGroup itemView = viewGroup;
-        org.ei.opensrp.util.Log.logDebug("in childclientsmartprovider view setup");
+        //org.ei.opensrp.util.Log.logDebug("in childclientsmartprovider view setup");
         CommonPersonObjectClient pc = (CommonPersonObjectClient) client;
 
         if(pc.getDetails().get("profilepic")==null){

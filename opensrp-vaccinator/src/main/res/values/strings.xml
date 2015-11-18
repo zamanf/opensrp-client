@@ -33,5 +33,7 @@
     <string name="month_wasted">Total Vaccinces stock Wasted</string>
     <string name="field_entries">Stock Register</string>
 
+    <string name="str_field_search_hint">Search Field Register</string>
+
 
 </resources>

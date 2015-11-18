@@ -1,5 +1,8 @@
 package org.ei.opensrp.vaccinator.field;
 
+import android.os.AsyncTask;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -7,12 +10,19 @@ import android.view.WindowManager;
 import org.ei.opensrp.commonregistry.CommonPersonObjectController;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.vaccinator.R;
+import org.ei.opensrp.vaccinator.child.ChildSearchOption;
 import org.ei.opensrp.vaccinator.child.ChildSmartClientsProvider;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
+import org.ei.opensrp.view.contract.SmartRegisterClients;
+import org.ei.opensrp.view.dialog.AllClientsFilter;
 import org.ei.opensrp.view.dialog.DialogOption;
 import org.ei.opensrp.view.dialog.FilterOption;
 import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
+
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 /**
  * Created by muhammad.ahmed@ihsinformatics.com on 19-Oct-15.
@@ -34,12 +44,12 @@ public class FieldMonitorSmartRegisterActivity extends SecuredNativeSmartRegiste
         return new DefaultOptionsProvider() {
             @Override
             public ServiceModeOption serviceMode() {
-                return null;
+                return new FieldMonitorServiceModeOption(clientsProvider());
             }
 
             @Override
             public FilterOption villageFilter() {
-                return null;
+                return new AllClientsFilter();
             }
 
             @Override
@@ -119,8 +129,8 @@ public class FieldMonitorSmartRegisterActivity extends SecuredNativeSmartRegiste
     @Override
     protected void startRegistration() {
 
+        //startFormActivity();
 
-        //formController.startFormActivity();
     }
 
     @Override
@@ -145,6 +155,66 @@ public class FieldMonitorSmartRegisterActivity extends SecuredNativeSmartRegiste
         public void onClick(View v) {
 
         }
+    }
+
+
+    @Override
+    protected void onResumption() {
+        super.onResumption();
+        getDefaultOptionsProvider();
+        updateSearchView();
+    }
+
+
+    public void updateSearchView(){
+        getSearchView().addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+            }
+
+            @Override
+            public void onTextChanged(final CharSequence cs, int start, int before, int count) {
+                (new AsyncTask() {
+                    SmartRegisterClients filteredClients;
+
+                    @Override
+                    protected Object doInBackground(Object[] params) {
+//                        currentSearchFilter =
+                        setCurrentSearchFilter(new FieldSearchOption(cs.toString()));
+                        filteredClients = getClientsAdapter().getListItemProvider()
+                                .updateClients(getCurrentVillageFilter(), getCurrentServiceModeOption(),
+                                        getCurrentSearchFilter(), getCurrentSortOption());
+
+
+                        return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Object o) {
+//                        clientsAdapter
+//                                .refreshList(currentVillageFilter, currentServiceModeOption,
+//                                        currentSearchFilter, currentSortOption);
+                        getClientsAdapter().refreshClients(filteredClients);
+                        getClientsAdapter().notifyDataSetChanged();
+                        getSearchCancelView().setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
+                        super.onPostExecute(o);
+                    }
+                }).execute();
+//                currentSearchFilter = new HHSearchOption(cs.toString());
+//                clientsAdapter
+//                        .refreshList(currentVillageFilter, currentServiceModeOption,
+//                                currentSearchFilter, currentSortOption);
+//
+//                searchCancelView.setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
+
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
 
 }
