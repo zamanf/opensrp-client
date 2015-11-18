@@ -17,6 +17,7 @@ import org.ei.opensrp.indonesia.view.activity.NativeKISmartRegisterActivity;
 import org.ei.opensrp.indonesia.view.contract.KartuIbuClient;
 import org.ei.opensrp.indonesia.view.controller.BidanVillageController;
 import org.ei.opensrp.indonesia.view.controller.KartuIbuRegisterController;
+import org.ei.opensrp.indonesia.view.cursorAdapter.CommonCursorAdapter;
 import org.ei.opensrp.indonesia.view.dialog.AllHighRiskSort;
 import org.ei.opensrp.indonesia.view.dialog.AllKartuIbuServiceMode;
 import org.ei.opensrp.indonesia.view.dialog.EstimatedDateOfDeliverySortKI;
@@ -75,7 +76,7 @@ public class NativeKISmartRegisterFragment extends BidanSecuredNativeSmartRegist
                 new OpenFormOption(getString(R.string.str_register_anc_form), KARTU_IBU_ANC_REGISTRATION, formController),
                 new OpenFormOption(getString(R.string.str_register_anak_form), ANAK_BAYI_REGISTRATION, formController),
                 new OpenFormOption(getString(R.string.str_edit_ki_form), KARTU_IBU_EDIT, formController),
-                new OpenFormOption(getString(R.string.str_close_ki_form),KARTU_IBU_CLOSE, formController),
+                new OpenFormOption(getString(R.string.str_close_ki_form), KARTU_IBU_CLOSE, formController),
         };
     }
 
@@ -108,6 +109,13 @@ public class NativeKISmartRegisterFragment extends BidanSecuredNativeSmartRegist
     @Override
     protected void setupViews(View view) {
         super.setupViews(view);
+    }
+
+    @Override
+    protected void onResumption() {
+        getClientsView().setAdapter(new CommonCursorAdapter(getActivity(), ((Context) context).kartuIbuRepository().allKartuIbusCursor()));
+        getClientsView().setVisibility(View.VISIBLE);
+        getClientsProgressView().setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -153,23 +161,23 @@ public class NativeKISmartRegisterFragment extends BidanSecuredNativeSmartRegist
     @Override
     protected void onInitialization() {
         controller = new KartuIbuRegisterController(
-                ((Context)context).allKartuIbus(),
+                ((Context) context).allKartuIbus(),
                 context.listCache(),
                 context.serviceProvidedService(),
                 context.alertService(),
-                ((Context)context).kiClientsCache(),
-                ((Context)context).allKohort());
-        villageController = new BidanVillageController(context.villagesCache(), ((Context)context).allKartuIbus());
+                ((Context) context).kiClientsCache(),
+                ((Context) context).allKohort());
+        villageController = new BidanVillageController(context.villagesCache(), ((Context) context).allKartuIbus());
         dialogOptionMapper = new DialogOptionMapper();
         context.formSubmissionRouter().getHandlerMap()
                 .put(AllConstantsINA.FormNames.KARTU_IBU_REGISTRATION,
-                        new KIRegistrationHandler(((Context)context).kartuIbuService()));
+                        new KIRegistrationHandler(((Context) context).kartuIbuService()));
     }
 
     @Override
     protected void startRegistration() {
-        String uniqueIdJson = ((Context)context).uniqueIdController().getUniqueIdJson();
-        if(uniqueIdJson == null || uniqueIdJson.isEmpty()) {
+        String uniqueIdJson = ((Context) context).uniqueIdController().getUniqueIdJson();
+        if (uniqueIdJson == null || uniqueIdJson.isEmpty()) {
             Toast.makeText(getActivity(), "No Unique Id", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -181,7 +189,7 @@ public class NativeKISmartRegisterFragment extends BidanSecuredNativeSmartRegist
         }
         ft.addToBackStack(null);
         LocationSelectorDialogFragment
-                .newInstance((SecuredNativeSmartRegisterActivity)getActivity(), new EditDialogOptionModel(), context.anmLocationController().get(), KARTU_IBU_REGISTRATION)
+                .newInstance((SecuredNativeSmartRegisterActivity) getActivity(), new EditDialogOptionModel(), context.anmLocationController().get(), KARTU_IBU_REGISTRATION)
                 .show(ft, locationDialogTAG);
     }
 
@@ -220,8 +228,8 @@ public class NativeKISmartRegisterFragment extends BidanSecuredNativeSmartRegist
         public void onDialogOptionSelection(DialogOption option, Object tag) {
             SmartRegisterClient client = (SmartRegisterClient) tag;
 
-            if(option.name().equalsIgnoreCase(getString(R.string.str_register_anc_form)) ) {
-                if(controller.isMotherInANCorPNC(client.entityId())) {
+            if (option.name().equalsIgnoreCase(getString(R.string.str_register_anc_form))) {
+                if (controller.isMotherInANCorPNC(client.entityId())) {
                     Toast.makeText(getActivity().getApplicationContext(), getString(R.string.mother_already_registered), Toast.LENGTH_SHORT).show();
                     return;
                 }

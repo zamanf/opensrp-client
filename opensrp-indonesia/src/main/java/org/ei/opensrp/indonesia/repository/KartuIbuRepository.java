@@ -86,7 +86,11 @@ public class KartuIbuRepository extends DrishtiRepository{
                 IS_CLOSED_COLUMN + " = ?", new String[]{IN_AREA, NOT_CLOSED}, null, null, null, null);
         return readAllKartuIbus(cursor);
     }
-
+    public Cursor allKartuIbusCursor() {
+        SQLiteDatabase database = masterRepository.getReadableDatabase();
+        Cursor cursor = database.rawQuery("Select id as _id,details,dusun,isClosed,isOutOfArea From kartu_ibu Where isClosed = 'false' And isOutOfArea = 'false' limit 20",null);
+        return cursor;
+    }
     public List<KartuIbu> allKartuIbusWithOA() {
         SQLiteDatabase database = masterRepository.getReadableDatabase();
         Cursor cursor = database.query(KI_TABLE_NAME, KI_TABLE_COLUMNS,

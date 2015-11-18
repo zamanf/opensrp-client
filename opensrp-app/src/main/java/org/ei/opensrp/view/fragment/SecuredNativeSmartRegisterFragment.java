@@ -19,6 +19,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.ei.opensrp.Context;
 import org.ei.opensrp.R;
 import org.ei.opensrp.adapter.SmartRegisterPaginatedAdapter;
 import org.ei.opensrp.domain.ReportMonth;
@@ -47,6 +48,7 @@ import static java.util.Arrays.asList;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.ei.opensrp.AllConstants.SHORT_DATE_FORMAT;
 
+
 /**
  * Created by koros on 10/12/15.
  */
@@ -63,6 +65,10 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
     private EditText searchView;
     private View searchCancelView;
     private TextView titleLabelView;
+
+    public ListView getClientsView() {
+        return clientsView;
+    }
 
     public EditText getSearchView() {
         return searchView;
@@ -94,6 +100,10 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
 
     public void setClientsAdapter(SmartRegisterPaginatedAdapter clientsAdapter) {
         this.clientsAdapter = clientsAdapter;
+    }
+
+    public ProgressBar getClientsProgressView() {
+        return clientsProgressView;
     }
 
     private SmartRegisterPaginatedAdapter clientsAdapter;

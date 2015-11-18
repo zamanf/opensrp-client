@@ -49,6 +49,22 @@ public abstract class SecuredNativeSmartRegisterActivity extends SecuredActivity
     public static final String DIALOG_TAG = "dialog";
     public static final List<? extends DialogOption> DEFAULT_FILTER_OPTIONS = asList(new AllClientsFilter());
 
+    public ListView getClientsView() {
+        return clientsView;
+    }
+
+    public void setClientsView(ListView clientsView) {
+        this.clientsView = clientsView;
+    }
+
+    public ProgressBar getClientsProgressView() {
+        return clientsProgressView;
+    }
+
+    public void setClientsProgressView(ProgressBar clientsProgressView) {
+        this.clientsProgressView = clientsProgressView;
+    }
+
     private ListView clientsView;
     private ProgressBar clientsProgressView;
     private TextView serviceModeView;
