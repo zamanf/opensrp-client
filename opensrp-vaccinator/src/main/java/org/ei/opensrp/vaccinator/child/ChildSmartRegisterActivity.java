@@ -267,9 +267,11 @@ private  HashMap<String,String> overrides;
 
        */
                 //controller.getClients().
-                String locationjson = context.anmLocationController().get();
+                String locationjson = context.anmLocationController().getLocationJSON();
+
               //  Log.d("ANM LOCATION : ", locationjson);
                 LocationTree locationTree = EntityUtils.fromJson(locationjson, LocationTree.class);
+                //locationTree.
                 //locationTree.
                 Map<String,TreeNode<String, Location>> locationMap =
                         locationTree.getLocationsHierarchy();
@@ -277,8 +279,15 @@ private  HashMap<String,String> overrides;
 
                 for (String s : locationMap.keySet()){
                     TreeNode<String, Location> locations= locationMap.get(s);
+
                    if(locations.getChildren()==null) {
 
+
+                /*    for(Location l : locations)
+                    {
+
+                   // l.getTags();
+                    }*/
                     Log.d("Location Label",locations.getLabel());
                    }
                 }
@@ -307,7 +316,7 @@ private  HashMap<String,String> overrides;
                    showFragmentDialog(new EditDialogOptionModel(map),null);
                 }else {
                  getSearchView().setText(qrcode);
-
+   // startFormActivity();
              }
 
 

@@ -6,8 +6,11 @@ import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
 
 import org.ei.opensrp.repository.DrishtiRepository;
+import org.ei.opensrp.vaccinator.domain.ReportType;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by muhammad.ahmed@ihsinformatics.com on 18-Nov-15.
@@ -16,7 +19,7 @@ public class ReportTypeRepository extends DrishtiRepository {
     private static final String ID_COLUMN="_id";
     private static final String TYPE_COLUMN="type";
     private static final String TABLE_NAME="report";
-
+    private static final String[] COLUMNS={ID_COLUMN,TYPE_COLUMN};
     private static String REPORT_TABLE="create table report (_id int primary key , type varchar )";
 
     @Override
@@ -33,22 +36,38 @@ public class ReportTypeRepository extends DrishtiRepository {
 
     }
 
-    public HashMap<Integer,String> getAllReportTypes(){
-        HashMap<Integer,String> map=new HashMap<Integer,String>();
+    public ReportType getReportTypeById(int id){
+
+        SQLiteDatabase database = masterRepository.getWritableDatabase();
+
+        // database.
+        Cursor cursor=database.query(TABLE_NAME, COLUMNS,"id=?" ,new String[]{String.valueOf(id)},null,null,null);
+        return readAll(cursor).get(0);
+    }
+
+    public List<ReportType> getAllReportTypes(){
+        List<ReportType> list=new ArrayList<ReportType>();
         SQLiteDatabase database = masterRepository.getWritableDatabase();
 
         // database.
         Cursor cursor=database.rawQuery("Select * from report;" , null);
-        for (int i=0; i<cursor.getCount();i++){
 
-            ;
+        return readAll(cursor);
 
-            int id= cursor.getInt(cursor.getColumnIndex(ID_COLUMN));
-            String name= cursor.getString(cursor.getColumnIndex(TABLE_NAME));
-            map.put(id,name);
+    }
+
+    private List<ReportType> readAll(android.database.Cursor cursor) {
+        cursor.moveToFirst();
+        List<ReportType> children = new ArrayList<ReportType>();
+        while (!cursor.isAfterLast()) {
+
+            children.add(new ReportType(cursor.getInt(cursor.getColumnIndex(ID_COLUMN)),
+                    cursor.getString(cursor.getColumnIndex(TYPE_COLUMN) )
+                     ));
+            cursor.moveToNext();
         }
-
-        return map;
+        cursor.close();
+        return children;
     }
 
 
