@@ -1,7 +1,7 @@
 {
   "form_data_definition_version" : "1",
   "form" : {
-    "bind_type" : "vaccine_child",
+    "bind_type" : "pkchild",
     "default_bind_path" : "/model/instance/Child_Followup_Vaccination_Register",
     "fields" : [ {
       "name" : "id",
@@ -172,7 +172,7 @@
       "name" : "measles_2_dose",
       "bind" : "/model/instance/Child_Followup_Vaccination_Register/vaccines_group/measles_2_dose"
     }, {
-      "name" : "vaccines_2",
+      "name" : "vaccines2",
       "bind" : "/model/instance/Child_Followup_Vaccination_Register/vaccines_2"
     }, {
       "name" : "vaccination_date",

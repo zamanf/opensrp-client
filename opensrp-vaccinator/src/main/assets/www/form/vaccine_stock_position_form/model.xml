@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+    <instance>
+        <vaccine_stock_position encounter_type="Vaccine stock position" id="vaccine_stock_position" version="201511201025">
+            <formhub>
+                <uuid/>
+            </formhub>
+            <provider_uc/>
+            <provider_town/>
+            <provider_city/>
+            <provider_province/>
+            <provider_id/>
+            <provider_location_id openmrs_entity="encounter" openmrs_entity_id="location_id"/>
+            <provider_location_name/>
+            <provider_location_note/>
+            <start openmrs_entity="encounter" openmrs_entity_id="encounter_start"/>
+            <end openmrs_entity="encounter" openmrs_entity_id="encounter_end"/>
+            <today openmrs_entity="encounter" openmrs_entity_id="encounter_date"/>
+            <deviceid openmrs_entity="concept"/>
+            <subscriberid openmrs_entity="concept"/>
+            <simserial openmrs_entity="concept"/>
+            <phonenumber openmrs_entity="concept"/>
+            <subscriber_id openmrs_entity="provider"/>
+            <sim_serial openmrs_entity="provider"/>
+            <phone_number openmrs_entity="provider"/>
+            <date_formatted/>
+            <vaccinator_name/>
+            <center_name/>
+            <today_note/>
+            <report openmrs_entity="concept"/>
+            <Target_assigned_for_vaccination_at_each_month openmrs_entity="concept"/>
+            <Target_assigned_for_vaccination_for_the_year openmrs_entity="concept"/>
+            <bcg_balance_in_hand openmrs_entity="concept"/>
+            <bcg_received openmrs_entity="concept"/>
+            <bcg_wasted openmrs_entity="concept"/>
+            <opv_balance_in_hand openmrs_entity="concept"/>
+            <opv_received openmrs_entity="concept"/>
+            <opv_wasted openmrs_entity="concept"/>
+            <ipv_balance_in_hand openmrs_entity="concept"/>
+            <ipv_received openmrs_entity="concept"/>
+            <ipv_wasted openmrs_entity="concept"/>
+            <pcv_balance_in_hand openmrs_entity="concept"/>
+            <pcv_received openmrs_entity="concept"/>
+            <pcv_wasted openmrs_entity="concept"/>
+            <penta_balance_in_hand openmrs_entity="concept"/>
+            <penta_received openmrs_entity="concept"/>
+            <penta_wasted openmrs_entity="concept"/>
+            <measles_balance_in_hand openmrs_entity="concept"/>
+            <measles_received openmrs_entity="concept"/>
+            <mesles_wasted openmrs_entity="concept"/>
+            <tt_balance_in_hand openmrs_entity="concept"/>
+            <tt_received openmrs_entity="concept"/>
+            <tt_wasted openmrs_entity="concept"/>
+            <dilutants_balance_in_hand openmrs_entity="concept"/>
+            <dilutants_received openmrs_entity="concept"/>
+            <dilutants_wasted openmrs_entity="concept"/>
+            <syringes_balance_in_hand openmrs_entity="concept"/>
+            <syringes_received openmrs_entity="concept"/>
+            <syringes_wasted openmrs_entity="concept"/>
+            <safety_boxes_balance_in_hand openmrs_entity="concept"/>
+            <safety_boxes_received openmrs_entity="concept"/>
+            <safety_boxes_wasted openmrs_entity="concept"/>
+            <total_wasted/>
+            <total_received/>
+            <total_balanceInHand/>
+            <meta>
+                <instanceID/>
+            </meta>
+        </vaccine_stock_position>
+    </instance>
+</model>

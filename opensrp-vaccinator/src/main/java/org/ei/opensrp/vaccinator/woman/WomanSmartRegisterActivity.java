@@ -132,9 +132,9 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
     @Override
     protected void onInitialization() {
         if(controller==null) {
-            controller = new CommonPersonObjectController(context.allCommonsRepositoryobjects("vaccine_woman"),
+            controller = new CommonPersonObjectController(context.allCommonsRepositoryobjects("pk_woman"),
                     context.allBeneficiaries(), context.listCache(),
-                    context.personObjectClientsCache(), "first_name", "vaccine_woman", "program_client_id",
+                    context.personObjectClientsCache(), "first_name", "pk_woman", "program_client_id",
                     CommonPersonObjectController.ByColumnAndByDetails.byDetails.byDetails );
 
 

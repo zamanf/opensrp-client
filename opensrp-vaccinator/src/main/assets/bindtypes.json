@@ -2,20 +2,21 @@
     "bindobjects":
  [
     {
-      "name": "vaccine_woman",
+      "name": "pkwoman",
       "columns" : [ ]
     },
    {
-   "name":"vaccine_child",
-   "columns":[]
+   "name":"pkchild",
+   "columns":[{"name":"vaccines"}, {"name":"vaccines2"}]
    },
    {
-     "name":"vaccines_w",
-     "columns":[]
-   },
-   {
-     "name":"vaccines_c",
-     "columns":[]
+     "name":"field",
+     "columns":[
+       {"name":"total_wasted"},
+       {"name":"total_received"} ,
+       {"name":"total_balanceInHand"} ,
+       {"name":""}
+     ]
    }
 
  ]

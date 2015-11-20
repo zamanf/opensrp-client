@@ -199,9 +199,9 @@ private  HashMap<String,String> overrides;
                     CommonPersonObjectController.ByColumnAndByDetails.byColumn
                     , "child_reg_date",
                     CommonPersonObjectController.ByColumnAndByDetails.byDetails.byDetails );*/
-       controller= new CommonPersonObjectController(context.allCommonsRepositoryobjects("client"),
+       controller= new CommonPersonObjectController(context.allCommonsRepositoryobjects("pkchild"),
                 context.allBeneficiaries(), context.listCache(),
-                context.personObjectClientsCache(), "first_name", "client", "child_reg_date",
+                context.personObjectClientsCache(), "first_name", "pkchild", "child_reg_date",
                 CommonPersonObjectController.ByColumnAndByDetails.byDetails );
               //Log.d("Child count :", context.commonrepository("vaccine_child").count() + "");
 
@@ -339,7 +339,7 @@ private  HashMap<String,String> overrides;
         overridemap.put("existing_location", "existing_location");*/
         return new DialogOption[]{
 
-                new ClientlessOpenFormOption("Enrollment", "child_enrollment_form", formController,overridemap, ClientlessOpenFormOption.ByColumnAndByDetails.bydefault),
+                new ClientlessOpenFormOption("Enrollment", "child_enrollment_form", formController,overridemap, ClientlessOpenFormOption.ByColumnAndByDetails.bydefault)
             //    new ClientlessOpenFormOption("Followup", "child_followup_fake_form", formController,overridemap, ClientlessOpenFormOption.ByColumnAndByDetails.byDetails)
         };
     }
@@ -368,6 +368,7 @@ private  HashMap<String,String> overrides;
             onEditSelection((EditOption) option, (SmartRegisterClient) tag);
         }
     }
+
     public HashMap<String,String> getOverrides() {
         return overrides;
     }

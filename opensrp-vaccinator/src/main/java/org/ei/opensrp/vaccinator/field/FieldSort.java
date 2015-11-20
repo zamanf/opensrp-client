@@ -39,7 +39,7 @@ public class FieldSort implements SortOption {
     Comparator<SmartRegisterClient> commoncomparator = new Comparator<SmartRegisterClient>() {
         @Override
         public int compare(SmartRegisterClient oneClient, SmartRegisterClient anotherClient2) {
-            CommonPersonObjectClient commonPersonObjectClient = (CommonPersonObjectClient) oneClient;
+ /*           CommonPersonObjectClient commonPersonObjectClient = (CommonPersonObjectClient) oneClient;
             CommonPersonObjectClient commonPersonObjectClient2 = (CommonPersonObjectClient) anotherClient2;
             switch (byMonthlyAndByDaily){
                 case ByMonth:
@@ -53,8 +53,8 @@ public class FieldSort implements SortOption {
                     break;
 
 
-            }
-
+            }*/
+            return 0;
         }
     };
 }

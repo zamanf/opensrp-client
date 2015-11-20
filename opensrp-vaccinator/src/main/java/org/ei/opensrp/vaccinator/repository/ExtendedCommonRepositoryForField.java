@@ -28,11 +28,14 @@ public class ExtendedCommonRepositoryForField extends DrishtiRepository {
 
 
     public List<CommonPersonObject> findDailyDataByMonth(String month) {
-
+/*
         SQLiteDatabase database = masterRepository.getReadableDatabase();
         Cursor cursor = database.rawQuery(String.format("SELECT * FROM %s WHERE %s IN (%s)", "field", "date",
-                insertPlaceholdersForInClause(caseIds.length)), caseIds);
-
+                insertPlaceholdersForInClause(caseIds.length)), caseIds);*//*
+        SQLiteDatabase database = masterRepository.getReadableDatabase();
+        Cursor cursor = database.rawQuery(String.format("SELECT * FROM %s WHERE %s IN (%s)", "field", "date",
+                insertPlaceholdersForInClause(caseIds.length)), caseIds);*/
+return null;
     }
 
 }

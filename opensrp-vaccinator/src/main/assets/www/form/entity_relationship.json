@@ -1,21 +1,12 @@
 [
-/*  {
-    "parent": "vaccine_woman",
-    "child": "vaccines_w",
-    "field": "wife",
-    "kind": "one_to_many",
-    "from": "vaccine_woman.id",
-    "to": "vaccines_w.relationalid"
-  },
   {
-    "parent": "vaccine_child",
-    "child": "vaccines_c",
+    "parent": "pkwoman",
+    "child": "pkchild",
     "field": "child",
     "kind": "one_to_many",
-    "from": "vaccine_child.id",
-    "to": "vaccines_c.relationalid"
-  },*/
-
+    "from": "pkwoman.id",
+    "to": "pkchild.relationalid"
+  },
   {
     "parent": "eligible_couple",
     "child": "mother",
