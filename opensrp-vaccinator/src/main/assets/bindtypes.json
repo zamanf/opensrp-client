@@ -3,11 +3,19 @@
  [
     {
       "name": "pkwoman",
-      "columns" : [ ]
+      "columns" : [
+        {"name":"vaccines"},
+        {"name":"vaccines2"},
+        {"name":"total_used"},
+        {"name":"date"} ]
     },
    {
    "name":"pkchild",
-   "columns":[{"name":"vaccines"}, {"name":"vaccines2"}]
+   "columns":[
+     {"name":"vaccines"},
+     {"name":"vaccines2"} ,
+     {"name":"total_used"},
+     {"name":"date"}]
    },
    {
      "name":"field",
@@ -15,7 +23,8 @@
        {"name":"total_wasted"},
        {"name":"total_received"} ,
        {"name":"total_balanceInHand"} ,
-       {"name":""}
+       {"name":"total_used"},
+       {"name":"date"}
      ]
    }
 

@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 
 
 import org.ei.opensrp.vaccinator.child.ChildSmartRegisterActivity;
+import org.ei.opensrp.vaccinator.field.FieldMonitorSmartRegisterActivity;
 import org.ei.opensrp.view.controller.ANMController;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
@@ -41,7 +42,9 @@ public class VaccinatorNavigationController extends org.ei.opensrp.view.controll
 
     @Override
     public void startFPSmartRegistry() {
-      //  activity.startActivity(new Intent(activity, ElcoSmartRegisterActivity.class));
+        activity.startActivity(new Intent(activity, FieldMonitorSmartRegisterActivity.class));
+
+        //  activity.startActivity(new Intent(activity, ElcoSmartRegisterActivity.class));
     }
 
 

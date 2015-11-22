@@ -35,7 +35,20 @@ public class ExtendedCommonRepositoryForField extends DrishtiRepository {
         SQLiteDatabase database = masterRepository.getReadableDatabase();
         Cursor cursor = database.rawQuery(String.format("SELECT * FROM %s WHERE %s IN (%s)", "field", "date",
                 insertPlaceholdersForInClause(caseIds.length)), caseIds);*/
-return null;
+    return null;
     }
+
+    public void calculateTotalUsedByMonth(String monthYear){
+        SQLiteDatabase database=masterRepository.getReadableDatabase();
+        Cursor cursor=database.rawQuery("select * from pkchild where date like "+monthYear+"%",null);
+
+        if(cursor.isAfterLast())
+        {
+
+
+        }
+    }
+
+
 
 }

@@ -45,6 +45,39 @@
     }, {
       "name" : "phonenumber",
       "bind" : "/model/instance/vaccine_stock_position/phonenumber"
-    }]
+    }, {
+      "name" : "date",
+      "bind" : "/model/instance/vaccine_stock_position/today"
+    },
+    {
+        "name" : "total_wasted",
+        "bind" : "/model/instance/vaccine_stock_position/total_wasted"
+    },
+    {
+        "name" : "total_received",
+        "bind" : "/model/instance/vaccine_stock_position/total_received"
+    },
+
+    {
+        "name" : "total_balanceInHand",
+        "bind" : "/model/instance/vaccine_stock_position/total_balanceInHand"
+    },
+
+      {
+        "name" : "report",
+        "bind" : "/model/instance/vaccine_stock_position/report"
+      }
+    ,
+
+      {
+        "name" : "date_formatted",
+        "bind" : "/model/instance/vaccine_stock_position/date_formatted"
+      }
+
+
+
+
+
+    ]
   }
 }

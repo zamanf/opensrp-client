@@ -9,8 +9,10 @@ import android.widget.AbsListView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.commonregistry.CommonPersonObjectController;
+import org.ei.opensrp.commonregistry.CommonRepository;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.service.AlertService;
 import org.ei.opensrp.util.DateUtil;
@@ -22,6 +24,8 @@ import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
 import org.ei.opensrp.view.viewHolder.OnClickFormLauncher;
 import org.joda.time.LocalDate;
+
+import java.util.List;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
@@ -36,7 +40,8 @@ public class FieldMonitorSmartClientsProvider implements SmartRegisterClientsPro
     AlertService alertService;
     private final int txtColorBlack;
     private final AbsListView.LayoutParams clientViewLayoutParams;
-
+    //private CommonRepository commonRepository=new CommonRepository();
+    private org.ei.opensrp.Context context1;
     ByMonthANDByDAILY byMonthlyAndByDaily;
     public enum  ByMonthANDByDAILY{ ByMonth , ByDaily;}
 
@@ -63,6 +68,7 @@ public class FieldMonitorSmartClientsProvider implements SmartRegisterClientsPro
     @Override
     public View getView(SmartRegisterClient client, View parentView, ViewGroup viewGroup) {
         ViewHolder viewHolder;
+
         if(parentView==null){
             parentView = (ViewGroup) inflater().inflate(R.layout.smart_register_field_client, null);
 
@@ -96,8 +102,15 @@ public class FieldMonitorSmartClientsProvider implements SmartRegisterClientsPro
 
         if(ByMonthANDByDAILY.ByMonth.equals(byMonthlyAndByDaily)){
 
-            String date_entered =pc.getDetails().get("date_formatted");
 
+            String date_entered =pc.getDetails().get("date_formatted");
+            String sql ="select * from pkchild where date like  ?";
+            List<CommonPersonObject> used=context1.allCommonsRepositoryobjects("field").customQuery(sql, new String[]{date_entered}, "pkchild");
+            int totalUsed=0;
+            for (CommonPersonObject o:used) {
+                totalUsed+=  Integer.parseInt(o.getColumnmaps().get("total_used"));
+
+            }
            //LocalDate localTime= DateUtil.getLocalDate(month);
             ///localTime.
             viewHolder.daymonthTextView.setText(date_entered);
@@ -147,6 +160,7 @@ public class FieldMonitorSmartClientsProvider implements SmartRegisterClientsPro
 
             viewHolder.monthreceivedTextView.setText(Received);
             viewHolder.monthusedTextView.setText(balanceInHand);
+            viewHolder.monthusedTextView.setText(totalUsed);
 
 
 

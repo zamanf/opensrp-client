@@ -150,10 +150,19 @@ public class CommonRepository extends DrishtiRepository {
         return commons;
     }
 
+
+
     private String insertPlaceholdersForInClause(int length) {
         return repeat("?", ",", length);
     }
 
+
+    public  List<CommonPersonObject> customQuery(String sql ,String[] selections,String tableName){
+
+        SQLiteDatabase database = masterRepository.getReadableDatabase();
+        Cursor cursor = database.rawQuery(sql,selections);
+        return readAllcommon(cursor,tableName);
+    }
 
 
 
@@ -169,5 +178,25 @@ public class CommonRepository extends DrishtiRepository {
         }
         cursor.close();
         return detailsList;
+    }
+
+    private List<CommonPersonObject> readAllcommon(Cursor cursor ,String tableName) {
+        cursor.moveToFirst();
+        List<CommonPersonObject> commons = new ArrayList<CommonPersonObject>();
+        while (!cursor.isAfterLast()) {
+            int columncount = cursor.getColumnCount();
+            HashMap <String, String> columns = new HashMap<String, String>();
+            for (int i = 3;i < columncount;i++ ){
+                columns.put(additionalcolumns[i-3],cursor.getString(i));
+            }
+            CommonPersonObject common = new CommonPersonObject(cursor.getString(0),cursor.getString(1),new Gson().<Map<String, String>>fromJson(cursor.getString(2), new TypeToken<Map<String, String>>() {
+            }.getType()),tableName);
+            common.setColumnmaps(columns);
+
+            commons.add(common);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return commons;
     }
 }

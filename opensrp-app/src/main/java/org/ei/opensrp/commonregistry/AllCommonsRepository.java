@@ -53,4 +53,9 @@ public class AllCommonsRepository {
     public void mergeDetails(String entityId, Map<String, String> details) {
         personRepository.mergeDetails(entityId, details);
     }
+
+    public List<CommonPersonObject> customQuery(String sql , String[] selections , String tableName){
+        return personRepository.customQuery(sql,selections,tableName);
+
+    }
 }

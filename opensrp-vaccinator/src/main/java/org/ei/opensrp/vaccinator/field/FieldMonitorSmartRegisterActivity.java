@@ -3,22 +3,30 @@ package org.ei.opensrp.vaccinator.field;
 import android.os.AsyncTask;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.commonregistry.CommonPersonObjectController;
+import org.ei.opensrp.domain.form.FieldOverrides;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.vaccinator.R;
 import org.ei.opensrp.vaccinator.child.ChildSearchOption;
 import org.ei.opensrp.vaccinator.child.ChildSmartClientsProvider;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
+import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.contract.SmartRegisterClients;
 import org.ei.opensrp.view.dialog.AllClientsFilter;
 import org.ei.opensrp.view.dialog.DialogOption;
 import org.ei.opensrp.view.dialog.FilterOption;
 import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
@@ -29,14 +37,14 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
  */
 public class FieldMonitorSmartRegisterActivity extends SecuredNativeSmartRegisterActivity {
 
+    private CommonPersonObjectController controller;
 
-    private CommonPersonObjectController controllerByMonth;
-    private CommonPersonObjectController controllerByDay;
     private SmartRegisterClientsProvider clientProvider = null;
     private DefaultOptionsProvider defaultOptionProvider;
     private NavBarOptionsProvider navBarOptionsProvider;
     private final ClientActionHandler clientActionHandler = new ClientActionHandler();
-    private boolean sortbymonth=true;
+    //private CommonRepository
+    public static boolean sortbymonth;
 
 
     @Override
@@ -54,12 +62,12 @@ public class FieldMonitorSmartRegisterActivity extends SecuredNativeSmartRegiste
 
             @Override
             public SortOption sortOption() {
-                return null;
+                return new FieldSort(FieldSort.ByMonthANDByDAILY.ByMonth,"report");
             }
 
             @Override
             public String nameInShortFormForTitle() {
-                return null;
+               return getResources().getString(R.string.field_title);
             }
         };
     }
@@ -84,7 +92,7 @@ public class FieldMonitorSmartRegisterActivity extends SecuredNativeSmartRegiste
 
             @Override
             public String searchHint() {
-                return null;
+                return  getResources().getString(R.string.str_field_search_hint);
             }
         };
     }
@@ -93,50 +101,51 @@ public class FieldMonitorSmartRegisterActivity extends SecuredNativeSmartRegiste
 
     @Override
     protected void onInitialization() {
-        controllerByMonth = new CommonPersonObjectController(context.allCommonsRepositoryobjects("vaccine_field"),
-                context.allBeneficiaries(), context.listCache(),
-                context.personObjectClientsCache(), "vaccinator_name", "vaccine_field","report","monthly",
-                CommonPersonObjectController.ByColumnAndByDetails.byDetails
-                , "date_formatted",
-                CommonPersonObjectController.ByColumnAndByDetails.byDetails.byDetails );
+        if(sortbymonth) {
+            controller = new CommonPersonObjectController(context.allCommonsRepositoryobjects("field"),
+                    context.allBeneficiaries(), context.listCache(),
+                    context.personObjectClientsCache(), "vaccinator_name", "field", "report", "monthly",
+                    CommonPersonObjectController.ByColumnAndByDetails.byDetails
+                    , "date_formatted",
+                    CommonPersonObjectController.ByColumnAndByDetails.byDetails.byDetails);
 
-        controllerByDay = new CommonPersonObjectController(context.allCommonsRepositoryobjects("vaccine_field"),
-                context.allBeneficiaries(), context.listCache(),
-                context.personObjectClientsCache(), "vaccinator_name", "vaccine_field","report","daily",
-                CommonPersonObjectController.ByColumnAndByDetails.byDetails
-                , "date_formatted",
-                CommonPersonObjectController.ByColumnAndByDetails.byDetails.byDetails );
+        }else {
+            controller = new CommonPersonObjectController(context.allCommonsRepositoryobjects("field"),
+                    context.allBeneficiaries(), context.listCache(),
+                    context.personObjectClientsCache(), "vaccinator_name", "field", "report", "daily",
+                    CommonPersonObjectController.ByColumnAndByDetails.byDetails
+                    , "date_formatted",
+                    CommonPersonObjectController.ByColumnAndByDetails.byDetails.byDetails);
+        }
     }
 
 
     @Override
     protected SmartRegisterClientsProvider clientsProvider() {
 
-        if(sortbymonth) {
-          //  if (clientProvider == null) {
-                clientProvider = new ChildSmartClientsProvider(
-                        this, clientActionHandler, controllerByMonth, context.alertService());
-            //}
-        }
-        else{
-            clientProvider = new ChildSmartClientsProvider(
-                    this, clientActionHandler, controllerByMonth, context.alertService());
+     clientProvider = new FieldMonitorSmartClientsProvider(
+                        this, clientActionHandler, controller, context.alertService(),FieldMonitorSmartClientsProvider.ByMonthANDByDAILY.ByMonth);
 
-
-        }
         return clientProvider;
     }
     @Override
     protected void startRegistration() {
+        HashMap<String,String> map=new HashMap<>();
+        map.put("provider_id","demotest");
+        map.put("provider_city","korangi");
+        map.put("provider_town","korangi");
+        map.put("provider_district","karachi");
 
-        //startFormActivity();
+        startForm("vaccine_stock_position_form", null, map,ByColumnAndByDetails.bydefault);
+       // startFormActivity("vaccine_stock_position_form",null ,);
 
     }
 
     @Override
     protected void onCreation() {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        super.onCreation();
+       super.onCreation();
+        setContentView(R.layout.smart_register_activity);
 
 
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -217,4 +226,56 @@ public class FieldMonitorSmartRegisterActivity extends SecuredNativeSmartRegiste
         });
     }
 
+
+
+    public enum ByColumnAndByDetails{
+        byColumn,byDetails,bydefault;
+    }
+    private void startForm(String formName,SmartRegisterClient client ,HashMap<String , String> overrideStringmap , ByColumnAndByDetails byColumnAndByDetails) {
+
+       // Log.d("form COntroller check", formController.toString() );
+        if(overrideStringmap == null) {
+            org.ei.opensrp.util.Log.logDebug("overrides data is null");
+            if(null==client){
+                formController.startFormActivity(formName, null, null);
+
+            }else {
+
+                formController.startFormActivity(formName, client.entityId(), null);
+            }
+        }else{
+            JSONObject overridejsonobject = new JSONObject();
+            try {
+                for (Map.Entry<String, String> entry : overrideStringmap.entrySet()) {
+                    switch (byColumnAndByDetails){
+                        case byDetails:
+                            overridejsonobject.put(entry.getKey() , ((CommonPersonObjectClient)client).getDetails().get(entry.getValue()));
+                            break;
+                        case byColumn:
+                            overridejsonobject.put(entry.getKey() , ((CommonPersonObjectClient)client).getColumnmaps().get(entry.getValue()));
+                            break;
+                        case bydefault:
+                            overridejsonobject.put(entry.getKey() ,entry.getValue());
+                            break;
+                    }
+                }
+//                overridejsonobject.put("existing_MWRA", );
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            // org.ei.opensrp.util.Log.logDebug("overrides data is : " + overrideStringmap);
+            FieldOverrides fieldOverrides = new FieldOverrides(overridejsonobject.toString());
+            org.ei.opensrp.util.Log.logDebug("fieldOverrides data is : " + fieldOverrides.getJSONString());
+            //formController.startFormActivity(formName, client.entityId(), fieldOverrides.getJSONString());
+
+            if(null==client){
+                formController.startFormActivity(formName, null, fieldOverrides.getJSONString());
+
+            }else {
+
+                formController.startFormActivity(formName, client.entityId(), fieldOverrides.getJSONString());
+            }
+
+        }
+    }
 }

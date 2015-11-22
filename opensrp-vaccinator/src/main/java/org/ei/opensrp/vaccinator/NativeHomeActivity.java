@@ -1,8 +1,11 @@
 package org.ei.opensrp.vaccinator;
 
 import android.app.ActionBar;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.media.Image;
 import android.util.Log;
 import android.view.Menu;
@@ -19,6 +22,7 @@ import org.ei.opensrp.service.PendingFormSubmissionService;
 import org.ei.opensrp.sync.SyncAfterFetchListener;
 import org.ei.opensrp.sync.SyncProgressIndicator;
 import org.ei.opensrp.sync.UpdateActionsTask;
+import org.ei.opensrp.vaccinator.field.FieldMonitorSmartRegisterActivity;
 import org.ei.opensrp.view.activity.SecuredActivity;
 import org.ei.opensrp.view.contract.HomeContext;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
@@ -44,6 +48,7 @@ public class NativeHomeActivity extends SecuredActivity {
     private MenuItem remainingFormsToSyncMenuItem;
     private String locationDialogTAG = "locationDialogTAG";
     private PendingFormSubmissionService pendingFormSubmissionService;
+    Activity activity=this;
 
     private Listener<Boolean> onSyncStartListener = new Listener<Boolean>() {
         @Override
@@ -85,6 +90,7 @@ public class NativeHomeActivity extends SecuredActivity {
     private TextView pncRegisterClientCountView;
     private TextView fpRegisterClientCountView;
     private TextView childRegisterClientCountView;
+    private TextView fieldRegisterClientCountView;
 
     @Override
     protected void onCreation() {
@@ -115,7 +121,9 @@ public class NativeHomeActivity extends SecuredActivity {
      //   findViewById(R.id.btn_fp_register).setOnClickListener(onRegisterStartListener);
       // findViewById(R.id.btn_child_register_new).setOnClickListener(onRegisterStartListener);
         ImageButton imgButton=(ImageButton)findViewById(R.id.btn_child_register_new);
+        ImageButton imgButtonField=(ImageButton)findViewById(R.id.btn_field_register);
         if(onRegisterStartListener!=null) {
+            imgButtonField.setOnClickListener(onRegisterStartListener);
             imgButton.setOnClickListener(onRegisterStartListener);
         }
             findViewById(R.id.btn_reporting).setOnClickListener(onButtonsClickListener);
@@ -124,8 +132,9 @@ public class NativeHomeActivity extends SecuredActivity {
      //   ecRegisterClientCountView = (TextView) findViewById(R.id.txt_ec_register_client_count);
      //   pncRegisterClientCountView = (TextView) findViewById(R.id.txt_pnc_register_client_count);
      //   ancRegisterClientCountView = (TextView) findViewById(R.id.txt_anc_register_client_count);
-     //   fpRegisterClientCountView = (TextView) findViewById(R.id.txt_fp_register_client_count);
+     //   fpRegisterClientCountView = (TextView) findViewById(R.id.txt_fp_register_client_count);txt_field_register_client_count
         childRegisterClientCountView = (TextView) findViewById(R.id.txt_child_register_client_count);
+        fieldRegisterClientCountView = (TextView) findViewById(R.id.txt_field_register_client_count);
     }
 
     private void initialize() {
@@ -167,6 +176,10 @@ public class NativeHomeActivity extends SecuredActivity {
                 context.allBeneficiaries(), context.listCache(),
                 context.personObjectClientsCache(), "first_name", "pkchild", "child_reg_date",
                 CommonPersonObjectController.ByColumnAndByDetails.byDetails );
+        CommonPersonObjectController fieldController = new CommonPersonObjectController(context.allCommonsRepositoryobjects("field"),
+                context.allBeneficiaries(), context.listCache(),
+                context.personObjectClientsCache(), "today", "field", "report",
+                CommonPersonObjectController.ByColumnAndByDetails.byDetails );
 
        // ecRegisterClientCountView.setText(valueOf(hhcontroller.getClients().size()));
     //    ancRegisterClientCountView.setText(valueOf(homeContext.ancCount()));
@@ -174,6 +187,7 @@ public class NativeHomeActivity extends SecuredActivity {
      //   fpRegisterClientCountView.setText(valueOf(elcocontroller.getClients().size()));
 //        Log.d("child count cin ", childController.getClients().size()+"");
         childRegisterClientCountView.setText(valueOf(childController.getClients().size()));
+        fieldRegisterClientCountView.setText(valueOf(fieldController.getClients().size()));
     }
 
     @Override
@@ -257,9 +271,27 @@ public class NativeHomeActivity extends SecuredActivity {
                     navigationController.startANCSmartRegistry();
                     break;*/
 
-              /*  case R.id.btn_pnc_register:
-                    navigationController.startPNCSmartRegistry();
-                    break;*/
+                case R.id.btn_field_register:
+                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                    builder.setTitle(R.string.pick_report);
+                    builder.setItems(new String[]{"Monthly", "Daily"}, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            //if()
+                           //Toast.makeText(activity, "selected item :" + which, Toast.LENGTH_LONG).show();
+                            if (which == 0) {
+                                FieldMonitorSmartRegisterActivity.sortbymonth = true;
+                            } else {
+                                FieldMonitorSmartRegisterActivity.sortbymonth = false;
+                            } // The 'which' argument contains the index position
+                            // of the selected item
+                            dialog.dismiss();
+                            navigationController.startFPSmartRegistry();
+                        }
+                    }).show();
+
+
+
+                    break;
 
                 case R.id.btn_child_register_new:
                     navigationController.startChildSmartRegistry();

@@ -32,8 +32,9 @@
     <string name="month_used">Total Vaccinces stock Used</string>
     <string name="month_wasted">Total Vaccinces stock Wasted</string>
     <string name="field_entries">Stock Register</string>
-
+    <string name="field_title">Field</string>
     <string name="str_field_search_hint">Search Field Register</string>
+    <string name="pick_report">Report</string>
 
 
 </resources>
