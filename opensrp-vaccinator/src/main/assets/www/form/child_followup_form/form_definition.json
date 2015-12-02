@@ -7,6 +7,9 @@
       "name" : "id",
       "shouldLoadValue" : true
     }, {
+      "name": "provider_id",
+      "bind": "/model/instance/vaccine_stock_position/provider_id"
+    },{
       "name" : "provider_uc",
       "bind" : "/model/instance/Child_Followup_Vaccination_Register/provider_uc"
     }, {

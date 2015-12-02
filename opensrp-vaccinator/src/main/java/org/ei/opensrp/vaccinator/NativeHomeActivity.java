@@ -6,8 +6,6 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
-import android.media.Image;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,16 +23,8 @@ import org.ei.opensrp.sync.UpdateActionsTask;
 import org.ei.opensrp.vaccinator.field.FieldMonitorSmartRegisterActivity;
 import org.ei.opensrp.view.activity.SecuredActivity;
 import org.ei.opensrp.view.contract.HomeContext;
-import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.controller.NativeAfterANMDetailsFetchListener;
 import org.ei.opensrp.view.controller.NativeUpdateANMDetailsTask;
-import org.ei.opensrp.view.dialog.DialogOption;
-import org.ei.opensrp.view.dialog.DialogOptionModel;
-import org.ei.opensrp.view.dialog.EditOption;
-import org.ei.opensrp.view.dialog.LocationSelectorDialogFragment;
-import org.ei.opensrp.view.dialog.OpenFormOption;
-
-import java.util.HashMap;
 
 import static android.widget.Toast.LENGTH_SHORT;
 import static java.lang.String.valueOf;
@@ -86,7 +76,7 @@ public class NativeHomeActivity extends SecuredActivity {
     };
 
     private TextView ecRegisterClientCountView;
-    private TextView ancRegisterClientCountView;
+    private TextView womanRegisterClientCountView;
     private TextView pncRegisterClientCountView;
     private TextView fpRegisterClientCountView;
     private TextView childRegisterClientCountView;
@@ -120,18 +110,20 @@ public class NativeHomeActivity extends SecuredActivity {
   //      findViewById(R.id.btn_anc_register).setOnClickListener(onRegisterStartListener);
      //   findViewById(R.id.btn_fp_register).setOnClickListener(onRegisterStartListener);
       // findViewById(R.id.btn_child_register_new).setOnClickListener(onRegisterStartListener);
-        ImageButton imgButton=(ImageButton)findViewById(R.id.btn_child_register_new);
+        ImageButton imgButtonChild=(ImageButton)findViewById(R.id.btn_child_register_new);
+        ImageButton imgButtonWoman=(ImageButton)findViewById(R.id.btn_woman_register);
         ImageButton imgButtonField=(ImageButton)findViewById(R.id.btn_field_register);
         if(onRegisterStartListener!=null) {
             imgButtonField.setOnClickListener(onRegisterStartListener);
-            imgButton.setOnClickListener(onRegisterStartListener);
+            imgButtonWoman.setOnClickListener(onRegisterStartListener);
+            imgButtonChild.setOnClickListener(onRegisterStartListener);
         }
             findViewById(R.id.btn_reporting).setOnClickListener(onButtonsClickListener);
         findViewById(R.id.btn_videos).setOnClickListener(onButtonsClickListener);
 
      //   ecRegisterClientCountView = (TextView) findViewById(R.id.txt_ec_register_client_count);
      //   pncRegisterClientCountView = (TextView) findViewById(R.id.txt_pnc_register_client_count);
-     //   ancRegisterClientCountView = (TextView) findViewById(R.id.txt_anc_register_client_count);
+        womanRegisterClientCountView = (TextView) findViewById(R.id.txt_woman_register_client_count);
      //   fpRegisterClientCountView = (TextView) findViewById(R.id.txt_fp_register_client_count);txt_field_register_client_count
         childRegisterClientCountView = (TextView) findViewById(R.id.txt_child_register_client_count);
         fieldRegisterClientCountView = (TextView) findViewById(R.id.txt_field_register_client_count);
@@ -176,13 +168,18 @@ public class NativeHomeActivity extends SecuredActivity {
                 context.allBeneficiaries(), context.listCache(),
                 context.personObjectClientsCache(), "first_name", "pkchild", "child_reg_date",
                 CommonPersonObjectController.ByColumnAndByDetails.byDetails );
+        CommonPersonObjectController womanController = new CommonPersonObjectController(context.allCommonsRepositoryobjects("pkwoman"),
+                context.allBeneficiaries(), context.listCache(),
+                context.personObjectClientsCache(), "first_name", "pkwoman", "program_client_id",
+                CommonPersonObjectController.ByColumnAndByDetails.byDetails.byDetails );
+
         CommonPersonObjectController fieldController = new CommonPersonObjectController(context.allCommonsRepositoryobjects("field"),
                 context.allBeneficiaries(), context.listCache(),
-                context.personObjectClientsCache(), "today", "field", "report",
-                CommonPersonObjectController.ByColumnAndByDetails.byDetails );
+                context.personObjectClientsCache(), "date", "field", "report",
+                CommonPersonObjectController.ByColumnAndByDetails.byColumn );
 
        // ecRegisterClientCountView.setText(valueOf(hhcontroller.getClients().size()));
-    //    ancRegisterClientCountView.setText(valueOf(homeContext.ancCount()));
+        womanRegisterClientCountView.setText(valueOf(womanController.getClients().size()));
      //   pncRegisterClientCountView.setText(valueOf(homeContext.pncCount()));
      //   fpRegisterClientCountView.setText(valueOf(elcocontroller.getClients().size()));
 //        Log.d("child count cin ", childController.getClients().size()+"");
@@ -297,9 +294,9 @@ public class NativeHomeActivity extends SecuredActivity {
                     navigationController.startChildSmartRegistry();
                     break;
 
-             /*   case R.id.btn_fp_register:
-                    navigationController.startFPSmartRegistry();
-                    break;*/
+                case R.id.btn_woman_register:
+                    navigationController.startANCSmartRegistry();
+                    break;
             }
         }
     };

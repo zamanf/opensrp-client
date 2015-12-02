@@ -16,6 +16,8 @@
     <string name="vaccination_summery"> Vaccination Summery</string>
 
 
+
+    <string name="woman_entries" ></string>
     <string name="str_woman_search_hint">Search Woman Register</string>
     <string name="woman_profile" >Woman Profile</string>
     <string name="woman_title" >Woman</string>
@@ -28,9 +30,9 @@
     <string name="woman_details_title" >Woman Details</string>
     <string name="day_month">Day/Month</string>
     <string name="month_target">Monthly Target</string>
-    <string name="month_received">Total Vaccinces stock Received</string>
-    <string name="month_used">Total Vaccinces stock Used</string>
-    <string name="month_wasted">Total Vaccinces stock Wasted</string>
+    <string name="month_received">Total Received</string>
+    <string name="month_used">Total Used</string>
+    <string name="month_wasted">Total Wasted</string>
     <string name="field_entries">Stock Register</string>
     <string name="field_title">Field</string>
     <string name="str_field_search_hint">Search Field Register</string>

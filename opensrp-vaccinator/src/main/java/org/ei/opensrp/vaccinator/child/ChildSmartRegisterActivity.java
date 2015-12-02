@@ -228,7 +228,7 @@ private  HashMap<String,String> overrides;
      //   Log.d("location json id: ", locationMap.get("country").getId());
 
     //    Log.d("ANM LOCATION JSON : ", l.getName());
-        context.formSubmissionRouter().getHandlerMap().put("child_followup_form",new ChildFollowupHandler(new ChildService(context.allBeneficiaries(),context.allTimelineEvents())));
+        context.formSubmissionRouter().getHandlerMap().put("child_followup_form",new ChildFollowupHandler(new ChildService(context.allBeneficiaries(),context.allTimelineEvents(), context.allCommonsRepositoryobjects("pkchild"))));
         dialogOptionMapper = new DialogOptionMapper();
 
     }

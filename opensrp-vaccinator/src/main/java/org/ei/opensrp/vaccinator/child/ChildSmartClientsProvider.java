@@ -58,7 +58,7 @@ public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
 
         clientViewLayoutParams = new AbsListView.LayoutParams(MATCH_PARENT,
                 (int) context.getResources().getDimension(org.ei.opensrp.R.dimen.list_item_height));
-        org.ei.opensrp.util.Log.logDebug("in childclientsmartprovider");
+     //   org.ei.opensrp.util.Log.logDebug("in childclientsmartprovider");
         txtColorBlack = context.getResources().getColor(org.ei.opensrp.R.color.text_black);
     }
 
@@ -78,7 +78,7 @@ public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
             viewHolder.last_vaccine=(TextView)convertView.findViewById(R.id.child_last_vaccine);
             viewHolder.next_visit_date=(TextView)convertView.findViewById(R.id.child_next_visit);
             viewHolder.next_visit_date_holder=(FrameLayout)convertView.findViewById(R.id.child_next_visit_holder);
-            viewHolder.follow_up=(FrameLayout)convertView.findViewById(R.id.child_next_visit_holder);
+          //  viewHolder.follow_up=(FrameLayout)convertView.findViewById(R.id.child_next_visit_holder);
             //viewHolder.profilepic.setImageResource();
             convertView.setTag(viewHolder);
         }else{
@@ -157,11 +157,12 @@ public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
 
         }
         //alertService.
-            List<Alert> alertlist_for_client = alertService.findByEntityIdAndAlertNames(pc.entityId(), "BCG","OPV_0_AND_1");
-        Log.d("alert list :" , alertlist_for_client.size()+"");
+            List<Alert> alertlist_for_client = alertService.findByEntityIdAndAlertNames(pc.entityId(), "BCG","OPV_0_AND_1","pentavalent_1","pentavalent_2","measles");
+        Log.d("alert list :" , alertlist_for_client.size()+"") ;
+        int e=3;
         if(alertlist_for_client.size() == 0 ){
             viewHolder.next_visit_date.setText("Not Synced to Server");
-            viewHolder.follow_up.setBackgroundColor(context.getResources().getColor(R.color.status_bar_text_almost_white));
+            viewHolder.next_visit_date_holder.setBackgroundColor(context.getResources().getColor(R.color.status_bar_text_almost_white));
             viewHolder.next_visit_date.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -178,10 +179,10 @@ public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
 
                     }
                 });
-                viewHolder.follow_up.setBackgroundColor(context.getResources().getColor(R.color.alert_upcoming_light_blue));
+                viewHolder.next_visit_date_holder.setBackgroundColor(context.getResources().getColor(R.color.background_floating_material_dark));
             }
             if(alertlist_for_client.get(i).status().value().equalsIgnoreCase("upcoming")){
-                viewHolder.follow_up.setBackgroundColor(context.getResources().getColor(R.color.pnc_pp_fp_grey));
+                viewHolder.next_visit_date_holder.setBackgroundColor(context.getResources().getColor(R.color.alert_upcoming_light_blue));
                 viewHolder.next_visit_date.setOnClickListener(onClickListener);
                 viewHolder.next_visit_date.setTag(client);
 
@@ -189,10 +190,10 @@ public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
             if(alertlist_for_client.get(i).status().value().equalsIgnoreCase("urgent")){
                 viewHolder.next_visit_date.setOnClickListener(onClickListener);
                 viewHolder.next_visit_date.setTag(client);
-                viewHolder.follow_up.setBackgroundColor(context.getResources().getColor(R.color.alert_urgent_red));
+                viewHolder.next_visit_date_holder.setBackgroundColor(context.getResources().getColor(R.color.alert_urgent_red));
             }
             if(alertlist_for_client.get(i).status().value().equalsIgnoreCase("expired")){
-                viewHolder.follow_up.setBackgroundColor(context.getResources().getColor(R.color.client_list_header_dark_grey));
+                viewHolder.next_visit_date_holder.setBackgroundColor(context.getResources().getColor(R.color.client_list_header_dark_grey));
                 viewHolder.next_visit_date.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -202,7 +203,7 @@ public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
             }
             if(alertlist_for_client.get(i).isComplete()){
                 viewHolder.next_visit_date.setText("visited");
-                viewHolder.follow_up.setBackgroundColor(context.getResources().getColor(R.color.alert_urgent_red));
+                viewHolder.next_visit_date_holder.setBackgroundColor(context.getResources().getColor(R.color.alert_urgent_red));
             }
         }
         if(lastdate!= null){
@@ -211,7 +212,7 @@ public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
             calendar.add(Calendar.DATE, 84);
             lastdate.setTime(calendar.getTime().getTime());
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-
+              //setting duedate for next visit
             viewHolder.next_visit_date.setText(format.format(lastdate));
 //            viewHolder.due_visit_date.append(format.format(lastdate));
 

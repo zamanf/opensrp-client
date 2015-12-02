@@ -21,6 +21,8 @@
             android:screenOrientation="landscape"/>
         <activity android:name=".field.FieldMonitorSmartRegisterActivity"
             android:screenOrientation="landscape"/>
+        <activity android:name=".woman.WomanSmartRegisterActivity"
+            android:screenOrientation="landscape"/>
 
     </application>
     <uses-permission android:name="android.permission.CAMERA" />

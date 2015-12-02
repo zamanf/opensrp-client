@@ -1,6 +1,7 @@
 package org.ei.opensrp.vaccinator.field;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -13,6 +14,7 @@ import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.commonregistry.CommonPersonObjectController;
 import org.ei.opensrp.commonregistry.CommonRepository;
+import org.ei.opensrp.domain.TimelineEvent;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.service.AlertService;
 import org.ei.opensrp.util.DateUtil;
@@ -51,10 +53,11 @@ public class FieldMonitorSmartClientsProvider implements SmartRegisterClientsPro
 
     public FieldMonitorSmartClientsProvider(Context context,
                                             OnClickListener onClickListener,CommonPersonObjectController controller,
-                                            AlertService alertService , ByMonthANDByDAILY byMonthlyAndByDaily) {
+                                            AlertService alertService , ByMonthANDByDAILY byMonthlyAndByDaily ,org.ei.opensrp.Context context1) {
         this.onClickListener = onClickListener;
         this.controller = controller;
         this.context = context;
+        this.context1=context1;
         this.alertService = alertService;
         this.byMonthlyAndByDaily=byMonthlyAndByDaily;
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -103,14 +106,22 @@ public class FieldMonitorSmartClientsProvider implements SmartRegisterClientsPro
         if(ByMonthANDByDAILY.ByMonth.equals(byMonthlyAndByDaily)){
 
 
+            int totalUsed=0;
             String date_entered =pc.getDetails().get("date_formatted");
             String sql ="select * from pkchild where date like  ?";
-            List<CommonPersonObject> used=context1.allCommonsRepositoryobjects("field").customQuery(sql, new String[]{date_entered}, "pkchild");
-            int totalUsed=0;
-            for (CommonPersonObject o:used) {
-                totalUsed+=  Integer.parseInt(o.getColumnmaps().get("total_used"));
+            List<CommonPersonObject> used=null;
+            if(context1!=null) {
+                Log.d("Vaccinator", "Context is not null");
+                if (context1.allCommonsRepositoryobjects("pkchild") != null) {
+                    Log.d("Vaccinator", "Pk child repo not null");
+                    used = context1.allCommonsRepositoryobjects("pkchild").customQuery(sql, new String[]{date_entered + "%"}, "pkchild");
+                }
+                for (CommonPersonObject o : used) {
+                    totalUsed += Integer.parseInt(o.getColumnmaps().get("total_used"));
 
+                }
             }
+
            //LocalDate localTime= DateUtil.getLocalDate(month);
             ///localTime.
             viewHolder.daymonthTextView.setText(date_entered);
@@ -151,21 +162,21 @@ public class FieldMonitorSmartClientsProvider implements SmartRegisterClientsPro
             int safety_boxes_balance_in_hand=Integer.parseInt(pc.getDetails().get("safety_boxes_balance_in_hand")!=null ?pc.getDetails().get("safety_boxes_balance_in_hand"):"0");
             int safety_boxes_received=Integer.parseInt(pc.getDetails().get("safety_boxes_received")!=null ?pc.getDetails().get("safety_boxes_received"):"0");
 
-
+            //#TODO get Total balance,wasted and received from total variables instead of calculating here.
             int balanceInHand=bcgBalanceInHand+opv_balance_in_hand+ipv_balance_in_hand+pcv_balance_in_hand+penta_balance_in_hand+measles_balance_in_hand+tt_balance_in_hand+dilutants_balance_in_hand+
                     syringes_balance_in_hand+safety_boxes_balance_in_hand;
 
             int Received=bcgReceived+opv_received+ipv_received+pcv_received+penta_received+measles_received+tt_received+
                     dilutants_received+syringes_received+safety_boxes_received;
 
-            viewHolder.monthreceivedTextView.setText(Received);
-            viewHolder.monthusedTextView.setText(balanceInHand);
-            viewHolder.monthusedTextView.setText(totalUsed);
+            viewHolder.monthreceivedTextView.setText(String.valueOf(Received));
+          //  viewHolder.monthusedTextView.setText(String.valueOf(balanceInHand));
+            viewHolder.monthusedTextView.setText(String.valueOf(totalUsed));
 
 
 
         }else{
-
+            //#TODO instiante  views for daily
 
         }
 
@@ -221,5 +232,35 @@ public class FieldMonitorSmartClientsProvider implements SmartRegisterClientsPro
         LinearLayout monthwastedLayout;
 
 
+    }
+
+    private int calculateVaccineUsed(String date){
+       int totalUsed=0;
+        String sql ="select * from pkchild where date like  ?";
+    //    List<CommonPersonObject> used=null;
+
+           // Log.d("Vaccinator", "Context is not null");
+
+                Log.d("Vaccinator", "Pk child repo not null");
+        List<CommonPersonObject> used = context1.allCommonsRepositoryobjects("pkchild").customQuery(sql, new String[]{date + "%"}, "pkchild");
+
+            for (CommonPersonObject o : used) {
+                totalUsed += Integer.parseInt(o.getColumnmaps().get("total_used"));
+
+            }
+        String sql1 ="select * from pkwoman where date like  ?";
+        List<CommonPersonObject> used1 =context1.allCommonsRepositoryobjects("pkwoman").customQuery(sql1, new String[]{date + "%"}, "pkwoman");
+
+        for (CommonPersonObject o : used1) {
+            totalUsed += Integer.parseInt(o.getColumnmaps().get("total_used"));
+
+        }
+
+        String sqlEvents ="select * from TimelineEvent where date like  ?";
+
+        // #TODO include TimeLineevent table data also .
+     //  TimelineEvent time= context1.allCommonsRepositoryobjects("TimelineEvent").customQuery(sqlEvents,new String[]{},"TimelineEvent");
+
+        return totalUsed;
     }
 }

@@ -7,23 +7,29 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
 import org.ei.opensrp.Context;
+import org.ei.opensrp.commonregistry.CommonObjectFilterOption;
 import org.ei.opensrp.commonregistry.CommonObjectSort;
 import org.ei.opensrp.commonregistry.CommonPersonObjectController;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
+import org.ei.opensrp.util.StringUtil;
 import org.ei.opensrp.vaccinator.R;
 
-import org.ei.opensrp.vaccinator.child.ChildSearchOption;
+
 
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
+import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.contract.SmartRegisterClients;
 import org.ei.opensrp.view.controller.VillageController;
 import org.ei.opensrp.view.dialog.AllClientsFilter;
 import org.ei.opensrp.view.dialog.DialogOption;
 import org.ei.opensrp.view.dialog.DialogOptionMapper;
+import org.ei.opensrp.view.dialog.DialogOptionModel;
+import org.ei.opensrp.view.dialog.EditOption;
 import org.ei.opensrp.view.dialog.FilterOption;
 import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
@@ -32,9 +38,13 @@ import org.opensrp.api.util.EntityUtils;
 import org.opensrp.api.util.LocationTree;
 import org.opensrp.api.util.TreeNode;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
+import util.ClientlessOpenFormOption;
 import util.barcode.Barcode;
 
 import static android.view.View.INVISIBLE;
@@ -90,13 +100,27 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
 
             @Override
             public DialogOption[] filterOptions() {
+                ArrayList<DialogOption> dialogOptionslist = new ArrayList<DialogOption>();
+                String locationjson = context.anmLocationController().get();
+                LocationTree locationTree = EntityUtils.fromJson(locationjson, LocationTree.class);
+                //locationTree.
+                Map<String,TreeNode<String, Location>> locationMap =
+                        locationTree.getLocationsHierarchy();
+                addChildToList(dialogOptionslist,locationMap);
+                DialogOption[] dialogOptions = new DialogOption[dialogOptionslist.size()];
+                for (int i = 0;i < dialogOptionslist.size();i++){
+                    dialogOptions[i] = dialogOptionslist.get(i);
+                }
 
-                return new DialogOption[]{};
+                return  dialogOptions;
             }
 
             @Override
             public DialogOption[] serviceModeOptions() {
-                return new DialogOption[]{};
+                return  new DialogOption[]{
+                      //  new CommonObjectSort(CommonObjectSort.ByColumnAndByDetails.byDetails,true,"program_client_id",getResources().getString(R.string.child_id_sort))
+
+                };
             }
 
             @Override
@@ -115,7 +139,7 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
 
             @Override
             public String searchHint() {
-                return getResources().getString(R.string.woman_search_hint);
+                return Context.getInstance().getStringResource(R.string.woman_search_hint) ;
             }
         };
     }//end of method
@@ -132,30 +156,19 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
     @Override
     protected void onInitialization() {
         if(controller==null) {
-            controller = new CommonPersonObjectController(context.allCommonsRepositoryobjects("pk_woman"),
+            controller = new CommonPersonObjectController(context.allCommonsRepositoryobjects("pkwoman"),
                     context.allBeneficiaries(), context.listCache(),
-                    context.personObjectClientsCache(), "first_name", "pk_woman", "program_client_id",
+                    context.personObjectClientsCache(), "first_name", "pkwoman", "program_client_id",
                     CommonPersonObjectController.ByColumnAndByDetails.byDetails.byDetails );
 
-
-          //  Log.d("Child count :", context.commonrepository("vaccine_child").toString() + "");
-
-            //context.
-         /*   controller = new CommonPersonObjectController(context.allCommonsRepositoryobjects("elco"),
-                    context.allBeneficiaries(), context.listCache(),
-                    context.personObjectClientsCache(),
-                    "FWWOMFNAME","elco","FWELIGIBLE","1",
-                    CommonPersonObjectController.ByColumnAndByDetails.byDetails.byDetails,
-                    "FWWOMFNAME", CommonPersonObjectController.ByColumnAndByDetails.byDetails,
-                    new ElcoPSRFDueDateSort());
-*/
-
-        }
+            }
         dialogOptionMapper = new DialogOptionMapper();
     }//end of method
 
     @Override
     protected void onCreation() {
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        super.onCreation();
         setContentView( R.layout.smart_register_activity_customized);
 
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -178,7 +191,7 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
     @Override
     public void setupViews() {
         getDefaultOptionsProvider();
-
+ //       getNavBarOptionsProvider();
         super.setupViews();
 
         setServiceModeViewDrawableRight(null);
@@ -227,7 +240,7 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
                     @Override
                     protected Object doInBackground(Object[] params) {
 //                        currentSearchFilter =
-                        setCurrentSearchFilter(new ChildSearchOption(cs.toString()));
+                        setCurrentSearchFilter(new WomanSearchOption(cs.toString()));
                         filteredClients = getClientsAdapter().getListItemProvider()
                                 .updateClients(getCurrentVillageFilter(), getCurrentServiceModeOption(),
                                         getCurrentSearchFilter(), getCurrentSortOption());
@@ -266,7 +279,7 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
 
     private int getfilteredClients(String filterString){
         int i=0;
-        setCurrentSearchFilter(new ChildSearchOption(filterString));
+        setCurrentSearchFilter(new WomanSearchOption(filterString));
         SmartRegisterClients  filteredClients = getClientsAdapter().getListItemProvider()
                 .updateClients(getCurrentVillageFilter(), getCurrentServiceModeOption(),
                         getCurrentSearchFilter(), getCurrentSortOption());
@@ -291,12 +304,30 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
 
        */
             //controller.getClients().
+            org.ei.opensrp.util.Log.logDebug("ANM DETAILS"+context.anmController().get());
             String locationjson = context.anmLocationController().get();
-                 //   Log.d("ANM LOCATION : ", locationjson);
             LocationTree locationTree = EntityUtils.fromJson(locationjson, LocationTree.class);
+                 //   Log.d("ANM LOCATION : ", locationjson);
+           String country= getLocationNameByAttribute(locationTree,"Country")!=null?getLocationNameByAttribute(locationTree,"Country"):"unkown";
+            String province= getLocationNameByAttribute(locationTree,"province")!=null?getLocationNameByAttribute(locationTree,"province"):"unkown";
+            String city= getLocationNameByAttribute(locationTree,"city")!=null?getLocationNameByAttribute(locationTree,"city"):"unkown";
+            String town= getLocationNameByAttribute(locationTree,"town")!=null?getLocationNameByAttribute(locationTree,"town"):"unkown";
+            String uc= getLocationNameByAttribute(locationTree,"uc")!=null?getLocationNameByAttribute(locationTree,"uc"):"unknown";
+
+            String center= getLocationNameByAttribute(locationTree,"center")!=null?getLocationNameByAttribute(locationTree,"center"):"unknown";
+
+         /*   LocationTree locationTree = EntityUtils.fromJson(locationjson, LocationTree.class);
             //locationTree.
             Map<String,TreeNode<String, Location>> locationMap =
                     locationTree.getLocationsHierarchy();
+            Collection<TreeNode<String,Location>> collection=locationMap.values();
+           Iterator iterator=collection.iterator();
+           while (iterator.hasNext()){
+              Location location= (Location)iterator.next();
+               location.getAttributes()
+
+           }*/
+           // for (String name: collection.){}
             //  locationMap.get("province")
 
               /*  for (String s : locationMap.keySet()){
@@ -312,13 +343,14 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
 
             if(getfilteredClients(qrcode)<= 0){
                 HashMap<String , String> map=new HashMap<String,String>();
-                map.put("provider_uc","korangi");
-                map.put("provider_town","korangi");
-                map.put("provider_city","karachi");
-                map.put("provider_province","sindh");
+                map.put("provider_uc",uc);
+                map.put("provider_id","demotest");
+                map.put("provider_town",town);
+                map.put("provider_city",city);
+                map.put("provider_province",province);
                 map.put("existing_program_client_id",qrcode);
-                map.put("provider_location_id","korangi");
-                map.put("provider_location_name", "korangi");
+                map.put("provider_location_id",center);
+                map.put("provider_location_name", center);
                 //map.put("","");
                 setOverrides(map);
 
@@ -326,7 +358,7 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
                 //  map.put("program_client_id",qrcode);
                 //showFragmentDialog(new EditDialogOptionModel(getOverrides()));
 
-             //   showFragmentDialog(new EditDialogOptionModel(map),null);
+               showFragmentDialog(new EditDialogOptionModel(map),null);
             }else {
                 getSearchView().setText(qrcode);
 
@@ -343,6 +375,64 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
     }//end of the method
 
 
+    private String getLocationNameByAttribute(   LocationTree locationTree  ,String tag){
+
+        //   Log.d("ANM LOCATION : ", locationjson);
+
+        //locationTree.
+        Map<String,TreeNode<String, Location>> locationMap =
+                locationTree.getLocationsHierarchy();
+        Collection<TreeNode<String,Location>> collection=locationMap.values();
+        Iterator iterator=collection.iterator();
+        while (iterator.hasNext()){
+            Location location= (Location)iterator.next();
+            for (String s:  location.getTags())
+            {
+                if(s.equalsIgnoreCase(tag))
+                {
+
+                  return   location.getName();
+                }
+
+                //location.getAttributes().get(s).toString().equalsIgnoreCase(attribute);
+
+            }
+        }
+        return null;
+    }
+
+
+    private class EditDialogOptionModel implements DialogOptionModel {
+        private  HashMap<String,String> overrides1;
+
+        public EditDialogOptionModel(HashMap<String,String> overrides1) {
+            this.overrides1=overrides1;
+        }
+
+        @Override
+        public DialogOption[] getDialogOptions() {
+            return getEditOptions(this.overrides1);
+        }
+
+        @Override
+        public void onDialogOptionSelection(DialogOption option, Object tag) {
+
+            //     Toast.makeText(ChildSmartRegisterActivity.this,option.name()+"", Toast.LENGTH_LONG).show();
+            onEditSelection((EditOption) option, (SmartRegisterClient) tag);
+        }
+    }
+
+    private DialogOption[] getEditOptions( HashMap<String,String> overridemap ) {
+     /*//  = new HashMap<String,String>();
+        overridemap.put("existing_MWRA","MWRA");
+        overridemap.put("existing_location", "existing_location");*/
+        return new DialogOption[]{
+
+                new ClientlessOpenFormOption("Enrollment", "woman_enrollment_form", formController,overridemap, ClientlessOpenFormOption.ByColumnAndByDetails.bydefault)
+                //    new ClientlessOpenFormOption("Followup", "child_followup_fake_form", formController,overridemap, ClientlessOpenFormOption.ByColumnAndByDetails.byDetails)
+        };
+    }
+
     public HashMap<String,String> getOverrides() {
         return overrides;
     }//end of method
@@ -350,4 +440,21 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
 
         this.overrides=overrides;
     }//end of method
+
+    public void addChildToList(ArrayList<DialogOption> dialogOptionslist,Map<String,TreeNode<String, Location>> locationMap){
+        for(Map.Entry<String, TreeNode<String, Location>> entry : locationMap.entrySet()) {
+
+            if(entry.getValue().getChildren() != null) {
+                addChildToList(dialogOptionslist,entry.getValue().getChildren());
+
+            }else{
+                StringUtil.humanize(entry.getValue().getLabel());
+                String name = StringUtil.humanize(entry.getValue().getLabel());
+                Log.d("ANM Details", "location name :" + name);
+                dialogOptionslist.add(new CommonObjectFilterOption(name.replace(" ", "_"), "location_name", CommonObjectFilterOption.ByColumnAndByDetails.byDetails, name));
+
+            }
+        }
+    }
+
 }

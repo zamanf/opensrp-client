@@ -121,7 +121,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/register_label"
-                    style="@style/CustomFontTextViewStyle.Home.RegisterLabelCustom"/>
+                    style="@style/CustomFontTextViewStyle.Home.RegisterLabelCustomForField"/>
 
                 <org.ei.opensrp.view.customControls.CustomFontTextView
                     android:id="@+id/txt_field_register_client_count"
@@ -157,7 +157,7 @@
                 android:layout_weight="1"
                 android:drawableLeft="@drawable/ic_reporting"
                 android:drawablePadding="5dp"
-                android:paddingLeft="185dp"
+                android:paddingLeft="100dp"
                 android:paddingRight="185dp"
                 android:text="@string/str_reporting"
                 style="@style/CustomFontTextViewStyle.Home.Buttons"/>
@@ -169,7 +169,7 @@
                 android:layout_weight="1"
                 android:drawableLeft="@drawable/ic_tv"
                 android:drawablePadding="5dp"
-                android:paddingLeft="200dp"
+                android:paddingLeft="150dp"
                 android:paddingRight="200dp"
                 android:text="@string/str_videos"
                 style="@style/CustomFontTextViewStyle.Home.Buttons"/>

@@ -104,18 +104,18 @@ public class FieldMonitorSmartRegisterActivity extends SecuredNativeSmartRegiste
         if(sortbymonth) {
             controller = new CommonPersonObjectController(context.allCommonsRepositoryobjects("field"),
                     context.allBeneficiaries(), context.listCache(),
-                    context.personObjectClientsCache(), "vaccinator_name", "field", "report", "monthly",
-                    CommonPersonObjectController.ByColumnAndByDetails.byDetails
-                    , "date_formatted",
-                    CommonPersonObjectController.ByColumnAndByDetails.byDetails.byDetails);
+                    context.personObjectClientsCache(), "date", "field", "report", "monthly",
+                    CommonPersonObjectController.ByColumnAndByDetails.byColumn
+                    ,"date",
+                    CommonPersonObjectController.ByColumnAndByDetails.byColumn);
 
         }else {
             controller = new CommonPersonObjectController(context.allCommonsRepositoryobjects("field"),
                     context.allBeneficiaries(), context.listCache(),
-                    context.personObjectClientsCache(), "vaccinator_name", "field", "report", "daily",
-                    CommonPersonObjectController.ByColumnAndByDetails.byDetails
-                    , "date_formatted",
-                    CommonPersonObjectController.ByColumnAndByDetails.byDetails.byDetails);
+                    context.personObjectClientsCache(), "date", "field", "report", "daily",
+                    CommonPersonObjectController.ByColumnAndByDetails.byColumn
+                    ,"date",
+                    CommonPersonObjectController.ByColumnAndByDetails.byColumn);
         }
     }
 
@@ -124,12 +124,13 @@ public class FieldMonitorSmartRegisterActivity extends SecuredNativeSmartRegiste
     protected SmartRegisterClientsProvider clientsProvider() {
 
      clientProvider = new FieldMonitorSmartClientsProvider(
-                        this, clientActionHandler, controller, context.alertService(),FieldMonitorSmartClientsProvider.ByMonthANDByDAILY.ByMonth);
+                        this, clientActionHandler, controller, context.alertService(),FieldMonitorSmartClientsProvider.ByMonthANDByDAILY.ByMonth,context);
 
         return clientProvider;
     }
     @Override
     protected void startRegistration() {
+        //embedding data for testing purpose
         HashMap<String,String> map=new HashMap<>();
         map.put("provider_id","demotest");
         map.put("provider_city","korangi");
@@ -144,7 +145,7 @@ public class FieldMonitorSmartRegisterActivity extends SecuredNativeSmartRegiste
     @Override
     protected void onCreation() {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-       super.onCreation();
+        super.onCreation();
         setContentView(R.layout.smart_register_activity);
 
 

@@ -65,6 +65,11 @@ public class CommonRepository extends DrishtiRepository {
         database.update(TABLE_NAME, valuesToUpdate, ID_COLUMN + " = ?", new String[]{caseId});
     }
 
+    public void updateColumn(String tableName,ContentValues contentValues,String caseId){
+        SQLiteDatabase database = masterRepository.getWritableDatabase();
+        database.update(tableName,contentValues,ID_COLUMN + " = ?",new String[]{caseId});
+    }
+
     public void mergeDetails(String caseId, Map<String, String> details) {
         SQLiteDatabase database = masterRepository.getWritableDatabase();
 

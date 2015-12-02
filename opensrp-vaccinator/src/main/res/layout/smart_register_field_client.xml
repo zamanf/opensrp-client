@@ -24,8 +24,8 @@
             android:text="Month Name"
             style="@style/CustomFontTextViewStyle.ListView.Medium"
             android:id="@+id/field_daymonth"
-            android:textColor="@color/alert_urgent_red"
-            android:textSize="24sp"
+            android:textColor="@color/text_black"
+            android:textSize="15sp"
             android:gravity="center_vertical"
             />
 
@@ -49,8 +49,8 @@
             android:text="Month Target"
             style="@style/CustomFontTextViewStyle.ListView.Medium"
             android:id="@+id/field_month_target"
-            android:textColor="@color/alert_urgent_red"
-            android:textSize="24sp"
+            android:textColor="@color/text_black"
+            android:textSize="15sp"
             android:gravity="center_vertical"
             />
 
@@ -74,8 +74,8 @@
             android:text="Vaccine Received"
             style="@style/CustomFontTextViewStyle.ListView.Medium"
             android:id="@+id/field_vaccine_recieved"
-            android:textColor="@color/alert_urgent_red"
-            android:textSize="24sp"
+            android:textColor="@color/text_black"
+            android:textSize="15sp"
             android:gravity="center_vertical"
             />
 
@@ -99,8 +99,8 @@
             android:text="Vaccine Used"
             style="@style/CustomFontTextViewStyle.ListView.Medium"
             android:id="@+id/field_vaccine_used"
-            android:textColor="@color/alert_urgent_red"
-            android:textSize="24sp"
+            android:textColor="@color/text_black"
+            android:textSize="15sp"
             android:gravity="center_vertical"
             />
 
@@ -124,8 +124,8 @@
             android:text="Vaccine Wasted"
             style="@style/CustomFontTextViewStyle.ListView.Medium"
             android:id="@+id/field_vaccine_wasted"
-            android:textColor="@color/alert_urgent_red"
-            android:textSize="24sp"
+            android:textColor="@color/text_black"
+            android:textSize="15sp"
             android:gravity="center_vertical"
             />
 

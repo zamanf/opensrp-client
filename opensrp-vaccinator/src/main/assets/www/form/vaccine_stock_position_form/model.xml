@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <model>
     <instance>
-        <vaccine_stock_position encounter_type="Vaccine stock position" id="vaccine_stock_position" version="201511201025">
+        <vaccine_stock_position encounter_type="Vaccine stock position" id="vaccine_stock_position" version="201512021048">
             <formhub>
                 <uuid/>
             </formhub>
