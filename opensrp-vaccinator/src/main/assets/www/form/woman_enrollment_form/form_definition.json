@@ -1,7 +1,7 @@
 {
   "form_data_definition_version" : "1",
   "form" : {
-    "bind_type" : "",
+    "bind_type" : "pkwoman",
     "default_bind_path" : "/model/instance/Women_TT_enrollment_form/",
     "fields" : [ {
       "name" : "id",

@@ -159,7 +159,7 @@ public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
         //alertService.
             List<Alert> alertlist_for_client = alertService.findByEntityIdAndAlertNames(pc.entityId(), "BCG","OPV_0_AND_1","pentavalent_1","pentavalent_2","measles");
         Log.d("alert list :" , alertlist_for_client.size()+"") ;
-        int e=3;
+       // int e=3;
         if(alertlist_for_client.size() == 0 ){
             viewHolder.next_visit_date.setText("Not Synced to Server");
             viewHolder.next_visit_date_holder.setBackgroundColor(context.getResources().getColor(R.color.status_bar_text_almost_white));

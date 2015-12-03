@@ -36,6 +36,7 @@ import org.ei.opensrp.view.dialog.SortOption;
 import org.opensrp.api.domain.Location;
 import org.opensrp.api.util.EntityUtils;
 import org.opensrp.api.util.LocationTree;
+import org.opensrp.api.util.Tree;
 import org.opensrp.api.util.TreeNode;
 
 import java.util.ArrayList;
@@ -218,9 +219,9 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
                     //startActivity(intent);
                     // finish();
                     break;
-                /*case R.id.:
+                case R.id.woman_next_visit:
                    // showFragmentDialog(new EditDialogOptionModel(), view.getTag());
-                    break;*/
+                    break;
             }
         }
 
@@ -308,14 +309,16 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
             String locationjson = context.anmLocationController().get();
             LocationTree locationTree = EntityUtils.fromJson(locationjson, LocationTree.class);
                  //   Log.d("ANM LOCATION : ", locationjson);
-           String country= getLocationNameByAttribute(locationTree,"Country")!=null?getLocationNameByAttribute(locationTree,"Country"):"unkown";
+
+
+           /*String country= getLocationNameByAttribute(locationTree,"Country")!=null?getLocationNameByAttribute(locationTree,"Country"):"unkown";
             String province= getLocationNameByAttribute(locationTree,"province")!=null?getLocationNameByAttribute(locationTree,"province"):"unkown";
             String city= getLocationNameByAttribute(locationTree,"city")!=null?getLocationNameByAttribute(locationTree,"city"):"unkown";
             String town= getLocationNameByAttribute(locationTree,"town")!=null?getLocationNameByAttribute(locationTree,"town"):"unkown";
             String uc= getLocationNameByAttribute(locationTree,"uc")!=null?getLocationNameByAttribute(locationTree,"uc"):"unknown";
 
             String center= getLocationNameByAttribute(locationTree,"center")!=null?getLocationNameByAttribute(locationTree,"center"):"unknown";
-
+*/
          /*   LocationTree locationTree = EntityUtils.fromJson(locationjson, LocationTree.class);
             //locationTree.
             Map<String,TreeNode<String, Location>> locationMap =
@@ -342,6 +345,15 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
             Log.d("location json id: ", locationMap.get("country").getId());*/
 
             if(getfilteredClients(qrcode)<= 0){
+
+                HashMap<String , String> map=new HashMap<String,String>();
+                map.put("provider_uc","korangi");
+                map.put("provider_town","korangi");
+                map.put("provider_city","karachi");
+                map.put("provider_province","sindh");
+                map.put("existing_program_client_id",qrcode);
+                map.put("provider_location_id","korangi");
+                map.put("provider_location_name", "korangi");/*
                 HashMap<String , String> map=new HashMap<String,String>();
                 map.put("provider_uc",uc);
                 map.put("provider_id","demotest");
@@ -350,7 +362,7 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
                 map.put("provider_province",province);
                 map.put("existing_program_client_id",qrcode);
                 map.put("provider_location_id",center);
-                map.put("provider_location_name", center);
+                map.put("provider_location_name", center);*/
                 //map.put("","");
                 setOverrides(map);
 
@@ -377,7 +389,7 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
 
     private String getLocationNameByAttribute(   LocationTree locationTree  ,String tag){
 
-        //   Log.d("ANM LOCATION : ", locationjson);
+           Log.d("ANM LOCATION : ", "in getLocationName Method");
 
         //locationTree.
         Map<String,TreeNode<String, Location>> locationMap =
@@ -385,12 +397,16 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
         Collection<TreeNode<String,Location>> collection=locationMap.values();
         Iterator iterator=collection.iterator();
         while (iterator.hasNext()){
-            Location location= (Location)iterator.next();
+          TreeNode<String,Location> treeNode=(TreeNode < String, Location >)iterator.next();
+            Location location= (Location)treeNode.getNode();
+
+           // Location location= (Location)iterator.next();
             for (String s:  location.getTags())
             {
+
                 if(s.equalsIgnoreCase(tag))
                 {
-
+                    Log.d("Amn Locations" ,location.getName() );
                   return   location.getName();
                 }
 
@@ -398,6 +414,8 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
 
             }
         }
+        Log.d("Amn Locations" ,"No location found");
+
         return null;
     }
 

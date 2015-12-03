@@ -23,6 +23,8 @@
             android:screenOrientation="landscape"/>
         <activity android:name=".woman.WomanSmartRegisterActivity"
             android:screenOrientation="landscape"/>
+        <activity android:name=".woman.WomanDetailActivity"
+            android:screenOrientation="landscape"/>
 
     </application>
     <uses-permission android:name="android.permission.CAMERA" />
