@@ -1,6 +1,6 @@
 <model>
     <instance>
-        <Child_Enrollment_Vaccination_Register encounter_type="Enrollement Vaccination Register" id="child_enrollment_vaccination_register" version="201512021046">
+        <Child_Enrollment_Vaccination_Register encounter_type="Enrollement Vaccination Register" id="child_enrollment_vaccination_register" version="201512041148">
             <formhub>
                 <uuid/>
             </formhub>
@@ -14,21 +14,22 @@
             <provider_location_note/>
             <start openmrs_entity="encounter" openmrs_entity_id="encounter_start"/>
             <end openmrs_entity="encounter" openmrs_entity_id="encounter_end"/>
-            <today openmrs_entity="concept"/>
-            <deviceid openmrs_entity="concept"/>
-            <subscriberid openmrs_entity="concept"/>
-            <simserial openmrs_entity="concept"/>
-            <phonenumber openmrs_entity="concept"/>
+            <today/>
+            <deviceid/>
+            <subscriberid/>
+            <simserial/>
+            <phonenumber/>
             <child_reg_date openmrs_entity="encounter" openmrs_entity_id="encounter_date"/>
             <program_client_id/>
             <epi_card_number openmrs_entity="person_attribute" openmrs_entity_id="EPI Card Number"/>
             <first_name openmrs_entity="person" openmrs_entity_id="first_name"/>
             <last_name openmrs_entity="person" openmrs_entity_id="last_name"/>
-            <child_birth_date_known openmrs_entity="concept"/>
+            <child_birth_date_known/>
             <child_birth_date/>
             <age/>
-            <child_age openmrs_entity="concept"/>
+            <child_age/>
             <child_dob/>
+            <child_dob_formatted/>
             <chid_dob_confirm openmrs_entity="person" openmrs_entity_id="birthdate"/>
             <child_dob_estimated openmrs_entity="person" openmrs_entity_id="birthdate_estimated"/>
             <child_birth_date_note/>
@@ -78,8 +79,8 @@
                 <measles_2_dose openmrs_entity="concept" openmrs_entity_id="1418AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" openmrs_entity_parent="36AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
             </vaccines_group>
             <vaccines_2 openmrs_entity="concept" openmrs_entity_id="984AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
-            <child_was_suffering_from_a_disease_at_birth openmrs_entity="concept"/>
-            <reminders_approval openmrs_entity="concept"/>
+            <child_was_suffering_from_a_disease_at_birth/>
+            <reminders_approval/>
             <contact_phone_number openmrs_entity="concept" openmrs_entity_id="159635AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
             <bcg_today openmrs_entity="concept" openmrs_entity_id="1410AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" openmrs_entity_parent="886AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
             <opv_0_date_today openmrs_entity="concept" openmrs_entity_id="1410AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" openmrs_entity_parent="783AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>

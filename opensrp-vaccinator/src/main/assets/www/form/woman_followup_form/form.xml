@@ -1,7 +1,8 @@
+
 <form autocomplete="off" novalidate="novalidate" class="or clearfix" id="woman_follow_up_register">
    <!--This form was created by transforming a OpenRosa-flavored (X)Form using an XSLT sheet created by Enketo LLC.-->
    <section class="form-logo"> </section>
-   <h3 id="form-title">&#x641;&#x627;&#x644;&#x648;&#x627;&#x67E; &#x631;&#x62C;&#x633;&#x679;&#x631; &#x628;&#x631;&#x627;&#x626;&#x6D2; &#x679;&#x6CC;&#x6A9;&#x627;&#x62C;&#x627;&#x62A;</h3>
+   <h3 id="form-title">&#x62E;&#x648;&#x627;&#x62A;&#x6CC;&#x646; &#x641;&#x627;&#x644;&#x648;&#x627;&#x67E; &#x631;&#x62C;&#x633;&#x679;&#x631; &#x628;&#x631;&#x627;&#x626;&#x6D2; &#x679;&#x6CC;&#x6A9;&#x627;&#x62C;&#x627;&#x62A;</h3>
    <select id="form-languages" data-default-lang="en">
       <option value="ur">urdu</option>
       <option value="en">english</option>
@@ -302,22 +303,22 @@
    <label class="question or-branch pre-init non-select ">
       <span lang="ur" class="question-label " data-itext-id="/Woman_TT_Follow_up_form/tt_1:label">&#x679;&#x6CC; &#x679;&#x6CC; 1</span>
       <span lang="en" class="question-label active" data-itext-id="/Woman_TT_Follow_up_form/tt_1:label">TT1</span>
-      <input type="date" name="/Woman_TT_Follow_up_form/tt_1" data-constraint="(.&lt;= /Woman_TT_Follow_up_form/today  and .&lt;= /Woman_TT_Follow_up_form/existing_client_reg_date )" data-relevant="selected( /Woman_TT_Follow_up_form/vaccines ,'tt_1')" data-type-xml="date"/>
+      <input type="date" name="/Woman_TT_Follow_up_form/tt_1" data-constraint="(.&lt;= /Woman_TT_Follow_up_form/today  and .&lt;= /Woman_TT_Follow_up_form/existing_client_reg_date )" data-relevant="selected( /Woman_TT_Follow_up_form/vaccines ,'TT1')" data-type-xml="date"/>
    </label>
    <label class="question or-branch pre-init non-select ">
       <span lang="ur" class="question-label " data-itext-id="/Woman_TT_Follow_up_form/tt_2:label">&#x679;&#x6CC; &#x679;&#x6CC; 2</span>
       <span lang="en" class="question-label active" data-itext-id="/Woman_TT_Follow_up_form/tt_2:label">TT2</span>
-      <input type="date" name="/Woman_TT_Follow_up_form/tt_2" data-constraint="(.&lt;= /Woman_TT_Follow_up_form/today  and .&gt;= /Woman_TT_Follow_up_form/tt_1 )" data-relevant="selected( /Woman_TT_Follow_up_form/vaccines ,'tt_2')" data-type-xml="date"/>
+      <input type="date" name="/Woman_TT_Follow_up_form/tt_2" data-constraint="(.&lt;= /Woman_TT_Follow_up_form/today  and .&gt;= /Woman_TT_Follow_up_form/tt_1 )" data-relevant="selected( /Woman_TT_Follow_up_form/vaccines ,'TT2')" data-type-xml="date"/>
    </label>
    <label class="question or-branch pre-init non-select ">
       <span lang="ur" class="question-label " data-itext-id="/Woman_TT_Follow_up_form/tt_3:label">&#x679;&#x6CC; &#x679;&#x6CC; 3</span>
       <span lang="en" class="question-label active" data-itext-id="/Woman_TT_Follow_up_form/tt_3:label">TT3</span>
-      <input type="date" name="/Woman_TT_Follow_up_form/tt_3" data-constraint="(.&lt;= /Woman_TT_Follow_up_form/today  and .&gt;= /Woman_TT_Follow_up_form/tt_2  and if((selected( /Woman_TT_Follow_up_form/pregnant , 'no'))))" data-relevant="selected( /Woman_TT_Follow_up_form/vaccines ,'tt_3')" data-type-xml="date"/>
+      <input type="date" name="/Woman_TT_Follow_up_form/tt_3" data-constraint="(.&lt;= /Woman_TT_Follow_up_form/today  and .&gt;= /Woman_TT_Follow_up_form/tt_2  and if((selected( /Woman_TT_Follow_up_form/pregnant , 'no'))))" data-relevant="selected( /Woman_TT_Follow_up_form/vaccines ,'TT3')" data-type-xml="date"/>
    </label>
    <label class="question or-branch pre-init non-select ">
       <span lang="ur" class="question-label " data-itext-id="/Woman_TT_Follow_up_form/tt_4:label">&#x679;&#x6CC; &#x679;&#x6CC; 4</span>
       <span lang="en" class="question-label active" data-itext-id="/Woman_TT_Follow_up_form/tt_4:label">TT4</span>
-      <input type="date" name="/Woman_TT_Follow_up_form/tt_4" data-constraint="(.&lt;= /Woman_TT_Follow_up_form/today  and .&gt;= /Woman_TT_Follow_up_form/tt_3  and if((selected( /Woman_TT_Follow_up_form/pregnant , 'no'))))" data-relevant="selected( /Woman_TT_Follow_up_form/vaccines ,'tt_4')" data-type-xml="date"/>
+      <input type="date" name="/Woman_TT_Follow_up_form/tt_4" data-constraint="(.&lt;= /Woman_TT_Follow_up_form/today  and .&gt;= /Woman_TT_Follow_up_form/tt_3  and if((selected( /Woman_TT_Follow_up_form/pregnant , 'no'))))" data-relevant="selected( /Woman_TT_Follow_up_form/vaccines ,'TT4')" data-type-xml="date"/>
    </label>
    <fieldset class="question ">
       <fieldset>
@@ -393,52 +394,52 @@
          <input type="hidden" name="/Woman_TT_Follow_up_form/final_edd" data-calculate="if( /Woman_TT_Follow_up_form/edd_lmp ='lmp', /Woman_TT_Follow_up_form/edd_calc_lmp ,if( /Woman_TT_Follow_up_form/edd_lmp ='edd', /Woman_TT_Follow_up_form/edd  ,if( /Woman_TT_Follow_up_form/edd_lmp ='ultrasound', /Woman_TT_Follow_up_form/edd_calc_ultrasound ,'')))" data-type-xml="string"/>
       </label>
       <label class="calculation non-select ">
-         <input type="hidden" name="/Woman_TT_Follow_up_form/tt_1_dose" data-calculate="1" data-type-xml="string"/>
+         <input type="hidden" name="/Woman_TT_Follow_up_form/tt_1_dose" data-relevant="selected( /Woman_TT_Follow_up_form/vaccines ,'TT1')" data-calculate="1" data-type-xml="string"/>
       </label>
       <label class="calculation non-select ">
-         <input type="hidden" name="/Woman_TT_Follow_up_form/tt_2_dose" data-calculate="2" data-type-xml="string"/>
+         <input type="hidden" name="/Woman_TT_Follow_up_form/tt_2_dose" data-relevant="selected( /Woman_TT_Follow_up_form/vaccines ,'TT2')" data-calculate="2" data-type-xml="string"/>
       </label>
       <label class="calculation non-select ">
-         <input type="hidden" name="/Woman_TT_Follow_up_form/tt_3_dose" data-calculate="3" data-type-xml="string"/>
+         <input type="hidden" name="/Woman_TT_Follow_up_form/tt_3_dose" data-relevant="selected( /Woman_TT_Follow_up_form/vaccines ,'TT3')" data-calculate="3" data-type-xml="string"/>
       </label>
       <label class="calculation non-select ">
-         <input type="hidden" name="/Woman_TT_Follow_up_form/tt_4_dose" data-calculate="4" data-type-xml="string"/>
+         <input type="hidden" name="/Woman_TT_Follow_up_form/tt_4_dose" data-relevant="selected( /Woman_TT_Follow_up_form/vaccines ,'TT4')" data-calculate="4" data-type-xml="string"/>
       </label>
       <label class="calculation non-select ">
-         <input type="hidden" name="/Woman_TT_Follow_up_form/tt_1_today" data-calculate="if(selected( /Woman_TT_Follow_up_form/vaccines_2 , 'tt_1'), /Woman_TT_Follow_up_form/today ,'')" data-type-xml="string"/>
+         <input type="hidden" name="/Woman_TT_Follow_up_form/tt_1_today" data-calculate="if(selected( /Woman_TT_Follow_up_form/vaccines_2 , 'TT1'), /Woman_TT_Follow_up_form/today ,'')" data-type-xml="string"/>
       </label>
       <label class="calculation non-select ">
-         <input type="hidden" name="/Woman_TT_Follow_up_form/tt_1_dose_today" data-calculate="1" data-type-xml="string"/>
+         <input type="hidden" name="/Woman_TT_Follow_up_form/tt_1_dose_today" data-relevant="selected( /Woman_TT_Follow_up_form/vaccines_2 ,'TT1')" data-calculate="1" data-type-xml="string"/>
       </label>
       <label class="calculation non-select ">
-         <input type="hidden" name="/Woman_TT_Follow_up_form/tt_2_today" data-calculate="if(selected( /Woman_TT_Follow_up_form/vaccines_2 , 'tt_2'), /Woman_TT_Follow_up_form/today ,'')" data-type-xml="string"/>
+         <input type="hidden" name="/Woman_TT_Follow_up_form/tt_2_today" data-calculate="if(selected( /Woman_TT_Follow_up_form/vaccines_2 , 'TT2'), /Woman_TT_Follow_up_form/today ,'')" data-type-xml="string"/>
       </label>
       <label class="calculation non-select ">
-         <input type="hidden" name="/Woman_TT_Follow_up_form/tt_2_dose_today" data-calculate="2" data-type-xml="string"/>
+         <input type="hidden" name="/Woman_TT_Follow_up_form/tt_2_dose_today" data-relevant="selected( /Woman_TT_Follow_up_form/vaccines_2 ,'TT2')" data-calculate="2" data-type-xml="string"/>
       </label>
       <label class="calculation non-select ">
-         <input type="hidden" name="/Woman_TT_Follow_up_form/tt_3__today" data-calculate="if(selected( /Woman_TT_Follow_up_form/vaccines_2 , 'tt_3'), /Woman_TT_Follow_up_form/today ,'')" data-type-xml="string"/>
+         <input type="hidden" name="/Woman_TT_Follow_up_form/tt_3__today" data-calculate="if(selected( /Woman_TT_Follow_up_form/vaccines_2 , 'TT3'), /Woman_TT_Follow_up_form/today ,'')" data-type-xml="string"/>
       </label>
       <label class="calculation non-select ">
-         <input type="hidden" name="/Woman_TT_Follow_up_form/tt_3_dose_today" data-calculate="3" data-type-xml="string"/>
+         <input type="hidden" name="/Woman_TT_Follow_up_form/tt_3_dose_today" data-relevant="selected( /Woman_TT_Follow_up_form/vaccines_2 ,'TT3')" data-calculate="3" data-type-xml="string"/>
       </label>
       <label class="calculation non-select ">
-         <input type="hidden" name="/Woman_TT_Follow_up_form/tt_4_today" data-calculate="if(selected( /Woman_TT_Follow_up_form/vaccines_2 , 'tt_4'), /Woman_TT_Follow_up_form/today ,'')" data-type-xml="string"/>
+         <input type="hidden" name="/Woman_TT_Follow_up_form/tt_4_today" data-calculate="if(selected( /Woman_TT_Follow_up_form/vaccines_2 , 'TT4'), /Woman_TT_Follow_up_form/today ,'')" data-type-xml="string"/>
       </label>
       <label class="calculation non-select ">
-         <input type="hidden" name="/Woman_TT_Follow_up_form/tt_4_dose_today" data-calculate="4" data-type-xml="string"/>
+         <input type="hidden" name="/Woman_TT_Follow_up_form/tt_4_dose_today" data-relevant="selected( /Woman_TT_Follow_up_form/vaccines_2 ,'TT4')" data-calculate="4" data-type-xml="string"/>
       </label>
       <label class="calculation non-select ">
-         <input type="hidden" name="/Woman_TT_Follow_up_form/tt_5_today" data-calculate="if(selected( /Woman_TT_Follow_up_form/vaccines_2 , 'tt_5'), /Woman_TT_Follow_up_form/today ,'')" data-type-xml="string"/>
+         <input type="hidden" name="/Woman_TT_Follow_up_form/tt_5_today" data-calculate="if(selected( /Woman_TT_Follow_up_form/vaccines_2 , 'TT5'), /Woman_TT_Follow_up_form/today ,'')" data-type-xml="string"/>
       </label>
       <label class="calculation non-select ">
-         <input type="hidden" name="/Woman_TT_Follow_up_form/tt_5_dose_today" data-calculate="5" data-type-xml="string"/>
+         <input type="hidden" name="/Woman_TT_Follow_up_form/tt_5_dose_today" data-relevant="selected( /Woman_TT_Follow_up_form/vaccines_2 ,'TT5')" data-calculate="5" data-type-xml="string"/>
       </label>
       <label class="calculation non-select ">
          <input type="hidden" name="/Woman_TT_Follow_up_form/meta/instanceID" data-calculate="concat('uuid:', uuid())" data-type-xml="string"/>
       </label>
       <label class="calculation non-select ">
-         <input type="hidden" name="/Woman_TT_Follow_up_form/formhub/uuid" data-calculate="'8be9e2707bbd4286a92c80a15ec6c543'" data-type-xml="string"/>
+         <input type="hidden" name="/Woman_TT_Follow_up_form/formhub/uuid" data-calculate="'e34817aeaafe43f09694357bd89250ef'" data-type-xml="string"/>
       </label>
    </fieldset>
 </form>

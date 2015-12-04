@@ -1,4 +1,3 @@
-
 <form autocomplete="off" novalidate="novalidate" class="or clearfix" id="vaccine_stock_position">
    <!--This form was created by transforming a OpenRosa-flavored (X)Form using an XSLT sheet created by Enketo LLC.-->
    <section class="form-logo"> </section>
@@ -24,7 +23,7 @@
       </span>
       <input type="text" name="/vaccine_stock_position/provider_location_note" data-type-xml="string" readonly="readonly"/>
    </label>
-   <label class="question non-select ">
+   <label class="note non-select ">
       <span lang="ur" class="question-label " data-itext-id="/vaccine_stock_position/vaccinator_name:label">
          <span class="or-output" data-value=" /vaccine_stock_position/provider_id ">
          </span>
@@ -33,7 +32,7 @@
          <span class="or-output" data-value=" /vaccine_stock_position/provider_id ">
          </span>
       </span>
-      <input type="text" name="/vaccine_stock_position/vaccinator_name" data-type-xml="string"/>
+      <input type="text" name="/vaccine_stock_position/vaccinator_name" data-type-xml="string" readonly="readonly"/>
    </label>
    <label class="note non-select ">
       <span lang="ur" class="question-label " data-itext-id="/vaccine_stock_position/center_name:label">Center Name: <span class="or-output" data-value=" /vaccine_stock_position/provider_location_name ">
@@ -306,19 +305,19 @@
          <input type="hidden" name="/vaccine_stock_position/date_formatted" data-calculate="format-date( /vaccine_stock_position/today , '%e-%n-%Y')" data-type-xml="string"/>
       </label>
       <label class="calculation non-select ">
-         <input type="hidden" name="/vaccine_stock_position/total_wasted" data-calculate="bcg_wasted+opv_wasted+ipv_wasted+pcv_wasted+penta_wasted+mesles_wasted+tt_wasted+dilutants_wasted+syringes_wasted+safety_boxes_wasted" data-type-xml="string"/>
+         <input type="hidden" name="/vaccine_stock_position/total_wasted" data-calculate=" /vaccine_stock_position/bcg_wasted + /vaccine_stock_position/opv_wasted + /vaccine_stock_position/ipv_wasted + /vaccine_stock_position/pcv_wasted + /vaccine_stock_position/penta_wasted + /vaccine_stock_position/mesles_wasted + /vaccine_stock_position/tt_wasted + /vaccine_stock_position/dilutants_wasted + /vaccine_stock_position/syringes_wasted + /vaccine_stock_position/safety_boxes_wasted " data-type-xml="string"/>
       </label>
       <label class="calculation non-select ">
-         <input type="hidden" name="/vaccine_stock_position/total_received" data-calculate="bcg_received+opv_received+ipv_received+pcv_received+penta_received+measles_received+tt_received+dilutants_received+syringes_received+safety_boxes_received" data-type-xml="string"/>
+         <input type="hidden" name="/vaccine_stock_position/total_received" data-calculate=" /vaccine_stock_position/bcg_received + /vaccine_stock_position/opv_received + /vaccine_stock_position/ipv_received + /vaccine_stock_position/pcv_received + /vaccine_stock_position/penta_received + /vaccine_stock_position/measles_received + /vaccine_stock_position/tt_received + /vaccine_stock_position/dilutants_received + /vaccine_stock_position/syringes_received + /vaccine_stock_position/safety_boxes_received " data-type-xml="string"/>
       </label>
       <label class="calculation non-select ">
-         <input type="hidden" name="/vaccine_stock_position/total_balanceInHand" data-calculate="bcg_balance_in_hand+opv_balance_in_hand+ipv_balance_in_hand+pcv_balance_in_hand+penta_balance_in_hand+measles_balance_in_hand+tt_balance_in_hand+dilutants_balance_in_hand+syringes_balance_in_hand+safety_boxes_balance_in_hand" data-type-xml="string"/>
+         <input type="hidden" name="/vaccine_stock_position/total_balanceInHand" data-calculate=" /vaccine_stock_position/bcg_balance_in_hand + /vaccine_stock_position/opv_balance_in_hand + /vaccine_stock_position/ipv_balance_in_hand + /vaccine_stock_position/pcv_balance_in_hand + /vaccine_stock_position/penta_balance_in_hand + /vaccine_stock_position/measles_balance_in_hand + /vaccine_stock_position/tt_balance_in_hand + /vaccine_stock_position/dilutants_balance_in_hand + /vaccine_stock_position/syringes_balance_in_hand + /vaccine_stock_position/safety_boxes_balance_in_hand " data-type-xml="string"/>
       </label>
       <label class="calculation non-select ">
          <input type="hidden" name="/vaccine_stock_position/meta/instanceID" data-calculate="concat('uuid:', uuid())" data-type-xml="string"/>
       </label>
       <label class="calculation non-select ">
-         <input type="hidden" name="/vaccine_stock_position/formhub/uuid" data-calculate="'2fe84120797c418d8ad52e915e9fedaa'" data-type-xml="string"/>
+         <input type="hidden" name="/vaccine_stock_position/formhub/uuid" data-calculate="'4d17ca1dc8ef45f59efeac1af516c7a8'" data-type-xml="string"/>
       </label>
    </fieldset>
 </form>
