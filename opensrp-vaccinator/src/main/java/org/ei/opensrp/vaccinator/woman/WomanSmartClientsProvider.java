@@ -86,16 +86,7 @@ public class WomanSmartClientsProvider implements SmartRegisterClientsProvider {
 
         CommonPersonObjectClient pc = (CommonPersonObjectClient) client;
 
-        if(pc.getDetails().get("profilepic")!=null){
-            if( pc.getDetails().get("gender").equalsIgnoreCase("female")) {
-                viewHolder.profilepic.setImageResource(org.ei.opensrp.R.drawable.child_girl_infant);
-                // HouseHoldDetailActivity.setImagetoHolder((Activity) context, pc.getDetails().get("profilepic"), profilepic, R.drawable.child_boy_infant);
-            }else{
-                viewHolder.profilepic.setImageResource(org.ei.opensrp.R.drawable.child_boy_infant);
-                // HouseHoldDetailActivity.setImagetoHolder((Activity) context, pc.getDetails().get("profilepic"), profilepic, R.drawable.child_girl_infant);
 
-            }
-        }
 
         viewHolder.womanId.setText(pc.getDetails().get("program_client_id") != null ? pc.getDetails().get("program_client_id") : "");
         viewHolder.womanName.setText(pc.getDetails().get("first_name") != null ? pc.getDetails().get("first_name") : "");
@@ -107,9 +98,9 @@ public class WomanSmartClientsProvider implements SmartRegisterClientsProvider {
 
 
 
-        ImageView lastVisit = (ImageView)itemView.findViewById(R.id.woman_last_visit_date);
-        ImageView nextVisit = (ImageView)itemView.findViewById(R.id.woman_next_visit);
-        List<Alert> alertlist_for_client = alertService.findByEntityIdAndAlertNames(pc.entityId(), "TT 1","TT 2","TT 3","TT 4","TT 5","");
+     //   ImageView lastVisit = (ImageView)itemView.findViewById(R.id.woman_last_visit_date);
+       // ImageView nextVisit = (ImageView)itemView.findViewById(R.id.woman_next_visit);
+        List<Alert> alertlist_for_client = alertService.findByEntityIdAndAlertNames(pc.entityId(), "TT 1","TT 2","TT 3","TT 4","TT 5");
         Log.d("alert list :", alertlist_for_client.size() + "") ;
 
 
@@ -139,6 +130,7 @@ public class WomanSmartClientsProvider implements SmartRegisterClientsProvider {
                 viewHolder.next_due_date_holder.setBackgroundColor(context.getResources().getColor(R.color.alert_upcoming_light_blue));
                 viewHolder.next_visit_date.setOnClickListener(onClickListener);
                 viewHolder.next_visit_date.setTag(client);
+               // viewHolder.
 
             }
             if (alertlist_for_client.get(i).status().value().equalsIgnoreCase("urgent")) {
