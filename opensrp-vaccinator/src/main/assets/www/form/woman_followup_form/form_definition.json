@@ -191,25 +191,25 @@
       "bind" : "/model/instance/Woman_TT_Follow_up_form/vaccines"
     }, {
       "name" : "tt1_retro",
-      "bind" : "/model/instance/Woman_TT_Follow_up_form/tt_1"
+      "bind" : "/model/instance/Woman_TT_Follow_up_form/tt1_retro"
     }, {
       "name" : "tt_1_dose",
       "bind" : "/model/instance/Woman_TT_Follow_up_form/tt_1_dose"
     }, {
       "name" : "tt2_retro",
-      "bind" : "/model/instance/Woman_TT_Follow_up_form/tt_2"
+      "bind" : "/model/instance/Woman_TT_Follow_up_form/tt2_retro"
     }, {
       "name" : "tt_2_dose",
       "bind" : "/model/instance/Woman_TT_Follow_up_form/tt_2_dose"
     }, {
       "name" : "tt3_retro",
-      "bind" : "/model/instance/Woman_TT_Follow_up_form/tt_3"
+      "bind" : "/model/instance/Woman_TT_Follow_up_form/tt3_retro"
     }, {
       "name" : "tt_3_dose",
       "bind" : "/model/instance/Woman_TT_Follow_up_form/tt_3_dose"
     }, {
       "name" : "tt4_retro",
-      "bind" : "/model/instance/Woman_TT_Follow_up_form/tt_4"
+      "bind" : "/model/instance/Woman_TT_Follow_up_form/tt4_retro"
     }, {
       "name" : "tt_4_dose",
       "bind" : "/model/instance/Woman_TT_Follow_up_form/tt_4_dose"
@@ -218,31 +218,31 @@
       "bind" : "/model/instance/Woman_TT_Follow_up_form/vaccines_2"
     }, {
       "name" : "tt1",
-      "bind" : "/model/instance/Woman_TT_Follow_up_form/tt_1_today"
+      "bind" : "/model/instance/Woman_TT_Follow_up_form/tt1"
     }, {
       "name" : "tt_1_dose_today",
       "bind" : "/model/instance/Woman_TT_Follow_up_form/tt_1_dose_today"
     }, {
       "name" : "tt2",
-      "bind" : "/model/instance/Woman_TT_Follow_up_form/tt_2_today"
+      "bind" : "/model/instance/Woman_TT_Follow_up_form/tt2"
     }, {
       "name" : "tt_2_dose_today",
       "bind" : "/model/instance/Woman_TT_Follow_up_form/tt_2_dose_today"
     }, {
       "name" : "tt3",
-      "bind" : "/model/instance/Woman_TT_Follow_up_form/tt_3__today"
+      "bind" : "/model/instance/Woman_TT_Follow_up_form/tt3"
     }, {
       "name" : "tt3_dose_today",
       "bind" : "/model/instance/Woman_TT_Follow_up_form/tt_3_dose_today"
     }, {
       "name" : "tt4",
-      "bind" : "/model/instance/Woman_TT_Follow_up_form/tt_4_today"
+      "bind" : "/model/instance/Woman_TT_Follow_up_form/tt4"
     }, {
       "name" : "tt_4_dose_today",
       "bind" : "/model/instance/Woman_TT_Follow_up_form/tt_4_dose_today"
     }, {
       "name" : "tt5",
-      "bind" : "/model/instance/Woman_TT_Follow_up_form/tt_5_today"
+      "bind" : "/model/instance/Woman_TT_Follow_up_form/tt5"
     }, {
       "name" : "tt_5_dose_today",
       "bind" : "/model/instance/Woman_TT_Follow_up_form/tt_5_dose_today"

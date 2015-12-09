@@ -1,6 +1,6 @@
 <model>
     <instance>
-        <vaccine_stock_position encounter_type="Vaccine stock position" id="vaccine_stock_position" version="201512041148">
+        <vaccine_stock_position encounter_type="Vaccine stock position" id="vaccine_stock_position" version="201512091209">
             <formhub>
                 <uuid/>
             </formhub>

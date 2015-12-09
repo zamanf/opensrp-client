@@ -1,7 +1,7 @@
 
 <model>
     <instance>
-        <Woman_TT_Follow_up_form encounter_type="Woman TT vaccine  Follow Up form" id="woman_follow_up_register" version="201512041150">
+        <Woman_TT_Follow_up_form encounter_type="Woman TT vaccine  Follow Up form" id="woman_follow_up_register" version="201512091220">
             <formhub>
                 <uuid/>
             </formhub>
@@ -24,6 +24,11 @@
             <existing_ethnicity/>
             <existing_client_reg_date/>
             <existing_epi_card_number/>
+            <e_tt1/>
+            <e_tt2/>
+            <e_tt3/>
+            <e_tt4/>
+            <e_tt5/>
             <provider_id/>
             <existing_program_client_id/>
             <provider_location_id openmrs_entity="encounter" openmrs_entity_id="location_id"/>
@@ -32,10 +37,10 @@
             <start openmrs_entity="encounter" openmrs_entity_id="encounter_start"/>
             <end openmrs_entity="encounter" openmrs_entity_id="encounter_end"/>
             <today openmrs_entity="encounter" openmrs_entity_id="encounter_date"/>
-            <deviceid openmrs_entity="concept"/>
-            <subscriberid openmrs_entity="concept"/>
-            <simserial openmrs_entity="concept"/>
-            <phonenumber openmrs_entity="concept"/>
+            <deviceid/>
+            <subscriberid/>
+            <simserial/>
+            <phonenumber/>
             <client_reg_date_note/>
             <program_client_id_note openmrs_entity="person_identifier" openmrs_entity_id="Program Client ID"/>
             <epi_card_number_note openmrs_entity="person_attribute" openmrs_entity_id="EPI Card Number"/>
@@ -59,35 +64,123 @@
             <edd_lmp/>
             <edd openmrs_entity="concept" openmrs_entity_id="5596AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
             <lmp openmrs_entity="concept" openmrs_entity_id="1427AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
-            <ultrasound_date openmrs_entity="concept"/>
-            <ultrasound_weeks openmrs_entity="concept"/>
+            <ultrasound_date/>
+            <ultrasound_weeks/>
             <edd_calc_lmp/>
             <edd_calc_ultrasound/>
             <final_edd openmrs_entity="concept" openmrs_entity_id="5596AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
             <final_edd_note/>
-            <vaccines openmrs_entity_id="??????????????????????">minimal</vaccines>
-            <tt_1 openmrs_entity="concept" openmrs_entity_id="1410AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" openmrs_entity_parent="104528AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
+            <vaccines>minimal</vaccines>
+            <tt1_retro openmrs_entity="concept" openmrs_entity_id="1410AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" openmrs_entity_parent="104528AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
             <tt_1_dose openmrs_entity="concept" openmrs_entity_id="1418AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" openmrs_entity_parent="104528AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
-            <tt_2 openmrs_entity="concept" openmrs_entity_id="1410AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" openmrs_entity_parent="104528AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
+            <tt2_retro openmrs_entity="concept" openmrs_entity_id="1410AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" openmrs_entity_parent="104528AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
             <tt_2_dose openmrs_entity="concept" openmrs_entity_id="1418AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" openmrs_entity_parent="104528AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
-            <tt_3 openmrs_entity="concept" openmrs_entity_id="1410AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" openmrs_entity_parent="104528AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
+            <tt3_retro openmrs_entity="concept" openmrs_entity_id="1410AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" openmrs_entity_parent="104528AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
             <tt_3_dose openmrs_entity="concept" openmrs_entity_id="1418AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" openmrs_entity_parent="104528AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
-            <tt_4 openmrs_entity="concept" openmrs_entity_id="1410AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" openmrs_entity_parent="104528AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
+            <tt4_retro openmrs_entity="concept" openmrs_entity_id="1410AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" openmrs_entity_parent="104528AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
             <tt_4_dose openmrs_entity_id="1418AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
             <vaccines_2/>
-            <tt_1_today openmrs_entity="concept" openmrs_entity_id="1410AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" openmrs_entity_parent="104528AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
+            <tt1 openmrs_entity="concept" openmrs_entity_id="1410AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" openmrs_entity_parent="104528AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
             <tt_1_dose_today openmrs_entity="concept" openmrs_entity_id="1418AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" openmrs_entity_parent="104528AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
-            <tt_2_today openmrs_entity="concept" openmrs_entity_id="1410AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" openmrs_entity_parent="104528AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
+            <tt2 openmrs_entity="concept" openmrs_entity_id="1410AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" openmrs_entity_parent="104528AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
             <tt_2_dose_today openmrs_entity="concept" openmrs_entity_id="1418AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" openmrs_entity_parent="104528AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
-            <tt_3__today openmrs_entity="concept" openmrs_entity_id="1410AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" openmrs_entity_parent="104528AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
+            <tt3 openmrs_entity="concept" openmrs_entity_id="1410AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" openmrs_entity_parent="104528AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
             <tt_3_dose_today openmrs_entity="concept" openmrs_entity_id="1418AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" openmrs_entity_parent="104528AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
-            <tt_4_today openmrs_entity="concept" openmrs_entity_id="1410AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" openmrs_entity_parent="104528AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
+            <tt4 openmrs_entity="concept" openmrs_entity_id="1410AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" openmrs_entity_parent="104528AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
             <tt_4_dose_today openmrs_entity="concept" openmrs_entity_id="1418AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" openmrs_entity_parent="104528AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
-            <tt_5_today openmrs_entity="concept" openmrs_entity_id="1410AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" openmrs_entity_parent="104528AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
+            <tt5 openmrs_entity="concept" openmrs_entity_id="1410AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" openmrs_entity_parent="104528AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
             <tt_5_dose_today openmrs_entity="concept" openmrs_entity_id="1418AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" openmrs_entity_parent="104528AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
             <meta>
                 <instanceID/>
             </meta>
         </Woman_TT_Follow_up_form>
+    </instance>
+    <instance id="dob_age">
+        <root>
+            <item>
+                <itextId>static_instance-dob_age-0</itextId>
+                <name>dob</name>
+            </item>
+            <item>
+                <itextId>static_instance-dob_age-1</itextId>
+                <name>age</name>
+            </item>
+        </root>
+    </instance>
+    <instance id="gender">
+        <root>
+            <item>
+                <itextId>static_instance-gender-0</itextId>
+                <name>male</name>
+            </item>
+            <item>
+                <itextId>static_instance-gender-1</itextId>
+                <name>female</name>
+            </item>
+            <item>
+                <itextId>static_instance-gender-2</itextId>
+                <name>transgender</name>
+            </item>
+        </root>
+    </instance>
+    <instance id="vaccines">
+        <root>
+            <item>
+                <itextId>static_instance-vaccines-0</itextId>
+                <name>TT1</name>
+            </item>
+            <item>
+                <itextId>static_instance-vaccines-1</itextId>
+                <name>TT2</name>
+            </item>
+            <item>
+                <itextId>static_instance-vaccines-2</itextId>
+                <name>TT3</name>
+            </item>
+            <item>
+                <itextId>static_instance-vaccines-3</itextId>
+                <name>TT4</name>
+            </item>
+            <item>
+                <itextId>static_instance-vaccines-4</itextId>
+                <name>TT5</name>
+            </item>
+        </root>
+    </instance>
+    <instance id="edd_lmp">
+        <root>
+            <item>
+                <itextId>static_instance-edd_lmp-0</itextId>
+                <name>edd</name>
+            </item>
+            <item>
+                <itextId>static_instance-edd_lmp-1</itextId>
+                <name>lmp</name>
+            </item>
+            <item>
+                <itextId>static_instance-edd_lmp-2</itextId>
+                <name>ultrasound</name>
+            </item>
+            <item>
+                <itextId>static_instance-edd_lmp-3</itextId>
+                <name>neither</name>
+            </item>
+        </root>
+    </instance>
+    <instance id="yes_no">
+        <root>
+            <item>
+                <itextId>static_instance-yes_no-0</itextId>
+                <name>yes</name>
+            </item>
+            <item>
+                <itextId>static_instance-yes_no-1</itextId>
+                <name>no</name>
+            </item>
+            <item>
+                <itextId>static_instance-yes_no-2</itextId>
+                <name>maybe</name>
+            </item>
+        </root>
     </instance>
 </model>

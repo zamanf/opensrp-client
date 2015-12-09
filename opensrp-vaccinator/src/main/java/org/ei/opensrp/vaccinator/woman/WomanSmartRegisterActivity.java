@@ -14,7 +14,9 @@ import android.widget.Toast;
 import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.CommonObjectFilterOption;
 import org.ei.opensrp.commonregistry.CommonObjectSort;
+import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.commonregistry.CommonPersonObjectController;
+import org.ei.opensrp.domain.form.FieldOverrides;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.util.StringUtil;
 import org.ei.opensrp.vaccinator.R;
@@ -33,6 +35,7 @@ import org.ei.opensrp.view.dialog.EditOption;
 import org.ei.opensrp.view.dialog.FilterOption;
 import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
+import org.json.JSONObject;
 import org.opensrp.api.domain.Location;
 import org.opensrp.api.util.EntityUtils;
 import org.opensrp.api.util.LocationTree;
@@ -163,6 +166,8 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
                     CommonPersonObjectController.ByColumnAndByDetails.byDetails.byDetails );
 
             }
+        context.formSubmissionRouter().getHandlerMap().put("woman_followup_form",new WomanFollowupHandler(new WomanService(context.allTimelineEvents(), context.allCommonsRepositoryobjects("pkwoman"))));
+
         dialogOptionMapper = new DialogOptionMapper();
     }//end of method
 
@@ -220,7 +225,28 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
                     // finish();
                     break;
                 case R.id.woman_next_visit:
-                   // showFragmentDialog(new EditDialogOptionModel(), view.getTag());
+                    HashMap<String , String> map=new HashMap<String,String>();
+                    map.put("provider_uc","korangi");
+                    map.put("provider_town","korangi");
+                    map.put("provider_city","karachi");
+                    map.put("provider_province","sindh");
+                  //  map.put("existing_program_client_id",view.getTag());
+                    map.put("provider_location_id","korangi");
+                    map.put("provider_location_name", "korangi");/*
+                HashMap<String , String> map=new HashMap<String,String>();
+                map.put("provider_uc",uc);
+                map.put("provider_id","demotest");
+                map.put("provider_town",town);
+                map.put("provider_city",city);
+                map.put("provider_province",province);
+                map.put("existing_program_client_id",qrcode);
+                map.put("provider_location_id",center);
+                map.put("provider_location_name", center);*/
+                    //map.put("","");
+                    setOverrides(map);
+                    startFollowupForms("woman_followup_form",(SmartRegisterClient)view.getTag(),map ,ByColumnAndByDetails.bydefault);
+
+                  // showFragmentDialog(new EditDialogOptionModel(map), view.getTag());
                     break;
             }
         }
@@ -353,6 +379,7 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
                 map.put("provider_province","sindh");
                 map.put("existing_program_client_id",qrcode);
                 map.put("provider_location_id","korangi");
+                map.put("gender","female");
                 map.put("provider_location_name", "korangi");/*
                 HashMap<String , String> map=new HashMap<String,String>();
                 map.put("provider_uc",uc);
@@ -472,6 +499,43 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
                 dialogOptionslist.add(new CommonObjectFilterOption(name.replace(" ", "_"), "location_name", CommonObjectFilterOption.ByColumnAndByDetails.byDetails, name));
 
             }
+        }
+    }
+
+    public enum ByColumnAndByDetails{
+        byColumn,byDetails,bydefault;
+    }
+
+    private void startFollowupForms(String formName,SmartRegisterClient client ,HashMap<String , String> overrideStringmap , ByColumnAndByDetails byColumnAndByDetails) {
+
+
+        if(overrideStringmap == null) {
+            org.ei.opensrp.util.Log.logDebug("overrides data is null");
+            formController.startFormActivity(formName, client.entityId(), null);
+        }else{
+            JSONObject overridejsonobject = new JSONObject();
+            try {
+                for (Map.Entry<String, String> entry : overrideStringmap.entrySet()) {
+                    switch (byColumnAndByDetails){
+                        case byDetails:
+                            overridejsonobject.put(entry.getKey() , ((CommonPersonObjectClient)client).getDetails().get(entry.getValue()));
+                            break;
+                        case byColumn:
+                            overridejsonobject.put(entry.getKey() , ((CommonPersonObjectClient)client).getColumnmaps().get(entry.getValue()));
+                            break;
+                        case bydefault:
+                            overridejsonobject.put(entry.getKey() ,entry.getValue());
+                            break;
+                    }
+                }
+//                overridejsonobject.put("existing_MWRA", );
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            // org.ei.opensrp.util.Log.logDebug("overrides data is : " + overrideStringmap);
+            FieldOverrides fieldOverrides = new FieldOverrides(overridejsonobject.toString());
+            org.ei.opensrp.util.Log.logDebug("fieldOverrides data is : " + fieldOverrides.getJSONString());
+            formController.startFormActivity(formName, client.entityId(), fieldOverrides.getJSONString());
         }
     }
 

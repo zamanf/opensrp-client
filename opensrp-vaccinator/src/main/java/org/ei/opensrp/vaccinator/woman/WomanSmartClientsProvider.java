@@ -118,28 +118,31 @@ public class WomanSmartClientsProvider implements SmartRegisterClientsProvider {
             viewHolder.next_visit_date.setText(alertlist_for_client.get(i).expiryDate());
             if (alertlist_for_client.get(i).status().value().equalsIgnoreCase("normal")) {
                 String dueDate=alertlist_for_client.get(i).startDate();
-                viewHolder.next_visit_date.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                    }
-                });
-                viewHolder.next_due_date_holder.setBackgroundColor(context.getResources().getColor(R.color.background_floating_material_dark));
+               String vaccine= alertlist_for_client.get(i).visitCode();
+                viewHolder.next_visit_date.setText("Vaccine : " +vaccine +"\n Due  : "+dueDate);
+                viewHolder.next_visit_date.setOnClickListener(onClickListener);
+                viewHolder.next_due_date_holder.setBackgroundColor(context.getResources().getColor(R.color.client_light_blue));
             }
             if (alertlist_for_client.get(i).status().value().equalsIgnoreCase("upcoming")) {
-                viewHolder.next_due_date_holder.setBackgroundColor(context.getResources().getColor(R.color.alert_upcoming_light_blue));
+                String dueDate=alertlist_for_client.get(i).startDate();
+                String vaccine= alertlist_for_client.get(i).visitCode();
+                viewHolder.next_visit_date.setText("Vaccine : " +vaccine +"\n Due  : "+dueDate);
+                viewHolder.next_due_date_holder.setBackgroundColor(context.getResources().getColor(R.color.client_light_blue));
                 viewHolder.next_visit_date.setOnClickListener(onClickListener);
                 viewHolder.next_visit_date.setTag(client);
                // viewHolder.
 
             }
             if (alertlist_for_client.get(i).status().value().equalsIgnoreCase("urgent")) {
+                String dueDate=alertlist_for_client.get(i).startDate();
+                String vaccine= alertlist_for_client.get(i).visitCode();
+                viewHolder.next_visit_date.setText("Vaccine : " +vaccine +"\n Due  : "+dueDate);
                 viewHolder.next_visit_date.setOnClickListener(onClickListener);
                 viewHolder.next_visit_date.setTag(client);
-                viewHolder.next_due_date_holder.setBackgroundColor(context.getResources().getColor(R.color.alert_urgent_red));
+                viewHolder.next_due_date_holder.setBackgroundColor(context.getResources().getColor(R.color.client_dark_blue));
             }
             if (alertlist_for_client.get(i).status().value().equalsIgnoreCase("expired")) {
-                viewHolder.next_due_date_holder.setBackgroundColor(context.getResources().getColor(R.color.client_list_header_dark_grey));
+                viewHolder.next_due_date_holder.setBackgroundColor(context.getResources().getColor(R.color.alert_urgent_red));
                 viewHolder.next_visit_date.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -149,7 +152,7 @@ public class WomanSmartClientsProvider implements SmartRegisterClientsProvider {
             }
             if (alertlist_for_client.get(i).isComplete()) {
                 viewHolder.next_visit_date.setText("visited");
-                viewHolder.next_due_date_holder.setBackgroundColor(context.getResources().getColor(R.color.alert_urgent_red));
+                viewHolder.next_due_date_holder.setBackgroundColor(context.getResources().getColor(R.color.alert_complete_green));
             }
         }
 

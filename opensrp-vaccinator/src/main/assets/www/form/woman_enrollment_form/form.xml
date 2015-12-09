@@ -1,4 +1,3 @@
-
 <form autocomplete="off" novalidate="novalidate" class="or clearfix" id="women_tt_enrollement_form">
    <!--This form was created by transforming a OpenRosa-flavored (X)Form using an XSLT sheet created by Enketo LLC.-->
    <section class="form-logo"> </section>
@@ -112,8 +111,8 @@
       <span lang="ur" class="question-label " data-itext-id="/Women_TT_enrollment_form/client_birth_date_note:label">&#x6A9;&#x644;&#x627;&#x621;&#x646;&#x679; &#x6A9;&#x6CC; &#x62A;&#x627;&#x631;&#x6CC;&#x62E; &#x67E;&#x6CC;&#x62F;&#x627;&#x626;&#x634;:{client_dob} (<span class="or-output" data-value=" /Women_TT_enrollment_form/client_age ">
       </span>)$ &#x633;&#x627;&#x644;</span>
       <span lang="openmrs_code" class="question-label " data-itext-id="/Women_TT_enrollment_form/client_birth_date_note:label">-</span>
-      <span lang="en" class="question-label active" data-itext-id="/Women_TT_enrollment_form/client_birth_date_note:label">client dob: <span class="or-output" data-value=" /Women_TT_enrollment_form/client_dob ">
-      </span> (<span class="or-output" data-value=" /Women_TT_enrollment_form/client_age ">
+      <span lang="en" class="question-label active" data-itext-id="/Women_TT_enrollment_form/client_birth_date_note:label">client dob: (<span class="or-output" data-value=" /Women_TT_enrollment_form/client_dob_confirm ">
+      </span>) (<span class="or-output" data-value=" /Women_TT_enrollment_form/client_age ">
       </span>) years</span>
       <input type="text" name="/Women_TT_enrollment_form/client_birth_date_note" data-type-xml="string" readonly="readonly"/>
    </label>
@@ -993,28 +992,28 @@
       </fieldset>
    </fieldset>
    <label class="question or-branch pre-init non-select ">
-      <span lang="ur" class="question-label " data-itext-id="/Women_TT_enrollment_form/tt_1:label">&#x679;&#x6CC; &#x679;&#x6CC; 1</span>
-      <span lang="openmrs_code" class="question-label " data-itext-id="/Women_TT_enrollment_form/tt_1:label">-</span>
-      <span lang="en" class="question-label active" data-itext-id="/Women_TT_enrollment_form/tt_1:label">TT1</span>
-      <input type="date" name="/Women_TT_enrollment_form/tt_1" data-constraint="(.&lt;= /Women_TT_enrollment_form/today  and .&lt;= /Women_TT_enrollment_form/client_reg_date )" data-relevant="selected( /Women_TT_enrollment_form/vaccines ,'TT1')" data-type-xml="date"/>
+      <span lang="ur" class="question-label " data-itext-id="/Women_TT_enrollment_form/tt1_retro:label">&#x679;&#x6CC; &#x679;&#x6CC; 1</span>
+      <span lang="openmrs_code" class="question-label " data-itext-id="/Women_TT_enrollment_form/tt1_retro:label">-</span>
+      <span lang="en" class="question-label active" data-itext-id="/Women_TT_enrollment_form/tt1_retro:label">TT1</span>
+      <input type="date" name="/Women_TT_enrollment_form/tt1_retro" data-constraint="(.&lt;= /Women_TT_enrollment_form/today  and .&lt;= /Women_TT_enrollment_form/client_reg_date )" data-relevant="selected( /Women_TT_enrollment_form/vaccines ,'TT1')" data-type-xml="date"/>
    </label>
    <label class="question or-branch pre-init non-select ">
-      <span lang="ur" class="question-label " data-itext-id="/Women_TT_enrollment_form/tt_2:label">&#x679;&#x6CC; &#x679;&#x6CC; 2</span>
-      <span lang="openmrs_code" class="question-label " data-itext-id="/Women_TT_enrollment_form/tt_2:label">-</span>
-      <span lang="en" class="question-label active" data-itext-id="/Women_TT_enrollment_form/tt_2:label">TT2</span>
-      <input type="date" name="/Women_TT_enrollment_form/tt_2" data-constraint="(.&lt;= /Women_TT_enrollment_form/today  and .&gt;= /Women_TT_enrollment_form/tt_1 )" data-relevant="selected( /Women_TT_enrollment_form/vaccines ,'TT2')" data-type-xml="date"/>
+      <span lang="ur" class="question-label " data-itext-id="/Women_TT_enrollment_form/tt2_retro:label">&#x679;&#x6CC; &#x679;&#x6CC; 2</span>
+      <span lang="openmrs_code" class="question-label " data-itext-id="/Women_TT_enrollment_form/tt2_retro:label">-</span>
+      <span lang="en" class="question-label active" data-itext-id="/Women_TT_enrollment_form/tt2_retro:label">TT2</span>
+      <input type="date" name="/Women_TT_enrollment_form/tt2_retro" data-constraint="(.&lt;= /Women_TT_enrollment_form/today  and .&gt;= /Women_TT_enrollment_form/tt1_retro )" data-relevant="selected( /Women_TT_enrollment_form/vaccines ,'TT2')" data-type-xml="date"/>
    </label>
    <label class="question or-branch pre-init non-select ">
-      <span lang="ur" class="question-label " data-itext-id="/Women_TT_enrollment_form/tt_3:label">&#x679;&#x6CC; &#x679;&#x6CC; 3</span>
-      <span lang="openmrs_code" class="question-label " data-itext-id="/Women_TT_enrollment_form/tt_3:label">-</span>
-      <span lang="en" class="question-label active" data-itext-id="/Women_TT_enrollment_form/tt_3:label">TT3</span>
-      <input type="date" name="/Women_TT_enrollment_form/tt_3" data-constraint="(.&lt;= /Women_TT_enrollment_form/today  and .&gt;= /Women_TT_enrollment_form/tt_2  and if((selected( /Women_TT_enrollment_form/pregnant , 'no'))))" data-relevant="selected( /Women_TT_enrollment_form/vaccines ,'TT3')" data-type-xml="date"/>
+      <span lang="ur" class="question-label " data-itext-id="/Women_TT_enrollment_form/tt3_retro:label">&#x679;&#x6CC; &#x679;&#x6CC; 3</span>
+      <span lang="openmrs_code" class="question-label " data-itext-id="/Women_TT_enrollment_form/tt3_retro:label">-</span>
+      <span lang="en" class="question-label active" data-itext-id="/Women_TT_enrollment_form/tt3_retro:label">TT3</span>
+      <input type="date" name="/Women_TT_enrollment_form/tt3_retro" data-constraint="(.&lt;= /Women_TT_enrollment_form/today  and .&gt;= /Women_TT_enrollment_form/tt2_retro  and if((selected( /Women_TT_enrollment_form/pregnant , 'no'))))" data-relevant="selected( /Women_TT_enrollment_form/vaccines ,'TT3')" data-type-xml="date"/>
    </label>
    <label class="question or-branch pre-init non-select ">
-      <span lang="ur" class="question-label " data-itext-id="/Women_TT_enrollment_form/tt_4:label">&#x679;&#x6CC; &#x679;&#x6CC; 4</span>
-      <span lang="openmrs_code" class="question-label " data-itext-id="/Women_TT_enrollment_form/tt_4:label">-</span>
-      <span lang="en" class="question-label active" data-itext-id="/Women_TT_enrollment_form/tt_4:label">TT4</span>
-      <input type="date" name="/Women_TT_enrollment_form/tt_4" data-constraint="(.&lt;= /Women_TT_enrollment_form/today  and .&gt;= /Women_TT_enrollment_form/tt_3  and if((selected( /Women_TT_enrollment_form/pregnant , 'no'))))" data-relevant="selected( /Women_TT_enrollment_form/vaccines ,'TT4')" data-type-xml="date"/>
+      <span lang="ur" class="question-label " data-itext-id="/Women_TT_enrollment_form/tt4_retro:label">&#x679;&#x6CC; &#x679;&#x6CC; 4</span>
+      <span lang="openmrs_code" class="question-label " data-itext-id="/Women_TT_enrollment_form/tt4_retro:label">-</span>
+      <span lang="en" class="question-label active" data-itext-id="/Women_TT_enrollment_form/tt4_retro:label">TT4</span>
+      <input type="date" name="/Women_TT_enrollment_form/tt4_retro" data-constraint="(.&lt;= /Women_TT_enrollment_form/today  and .&gt;= /Women_TT_enrollment_form/tt3_retro  and if((selected( /Women_TT_enrollment_form/pregnant , 'no'))))" data-relevant="selected( /Women_TT_enrollment_form/vaccines ,'TT4')" data-type-xml="date"/>
    </label>
    <fieldset class="question ">
       <fieldset>
@@ -1090,10 +1089,16 @@
          <input type="hidden" name="/Women_TT_enrollment_form/client_dob" data-calculate="date( today() - ( /Women_TT_enrollment_form/age  * 365))" data-type-xml="string"/>
       </label>
       <label class="calculation non-select ">
-         <input type="hidden" name="/Women_TT_enrollment_form/client_dob_confirm" data-calculate="if( /Women_TT_enrollment_form/client_birth_date_known ='yes', /Women_TT_enrollment_form/client_birth_date , /Women_TT_enrollment_form/client_dob )" data-type-xml="string"/>
+         <input type="hidden" name="/Women_TT_enrollment_form/client_agedob_formatted" data-calculate="format-date( /Women_TT_enrollment_form/client_dob , '%Y-%n-%e')" data-type-xml="string"/>
+      </label>
+      <label class="calculation non-select ">
+         <input type="hidden" name="/Women_TT_enrollment_form/client_dob_confirm" data-calculate="if( /Women_TT_enrollment_form/client_birth_date_known ='yes', /Women_TT_enrollment_form/client_birth_date , /Women_TT_enrollment_form/client_agedob_formatted )" data-type-xml="string"/>
       </label>
       <label class="calculation non-select ">
          <input type="hidden" name="/Women_TT_enrollment_form/client_dob_estimated" data-calculate="if( /Women_TT_enrollment_form/client_birth_date_known  = 'yes', '0', '1')" data-type-xml="string"/>
+      </label>
+      <label class="calculation non-select ">
+         <input type="hidden" name="/Women_TT_enrollment_form/gender1" data-calculate="concat(&quot;female&quot;,&quot;&quot;)" data-type-xml="string"/>
       </label>
       <label class="calculation non-select ">
          <input type="hidden" name="/Women_TT_enrollment_form/edd_calc_lmp" data-calculate="date( /Women_TT_enrollment_form/lmp +280)" data-type-xml="string"/>
@@ -1123,31 +1128,31 @@
          <input type="hidden" name="/Women_TT_enrollment_form/tt_4_dose" data-relevant="selected( /Women_TT_enrollment_form/vaccines ,'TT4')" data-calculate="4" data-type-xml="string"/>
       </label>
       <label class="calculation non-select ">
-         <input type="hidden" name="/Women_TT_enrollment_form/tt_1_today" data-calculate="if(selected( /Women_TT_enrollment_form/vaccines_2 , 'TT1'), /Women_TT_enrollment_form/today ,'')" data-type-xml="string"/>
+         <input type="hidden" name="/Women_TT_enrollment_form/tt1" data-calculate="if(selected( /Women_TT_enrollment_form/vaccines_2 , 'TT1'), /Women_TT_enrollment_form/client_reg_date ,'')" data-type-xml="string"/>
       </label>
       <label class="calculation non-select ">
          <input type="hidden" name="/Women_TT_enrollment_form/tt_1_dose_today" data-relevant="selected( /Women_TT_enrollment_form/vaccines_2 ,'TT1')" data-calculate="1" data-type-xml="string"/>
       </label>
       <label class="calculation non-select ">
-         <input type="hidden" name="/Women_TT_enrollment_form/tt_2_today" data-calculate="if(selected( /Women_TT_enrollment_form/vaccines_2 , 'TT2'), /Women_TT_enrollment_form/today ,'')" data-type-xml="string"/>
+         <input type="hidden" name="/Women_TT_enrollment_form/tt2" data-calculate="if(selected( /Women_TT_enrollment_form/vaccines_2 , 'TT2'), /Women_TT_enrollment_form/client_reg_date ,'')" data-type-xml="string"/>
       </label>
       <label class="calculation non-select ">
          <input type="hidden" name="/Women_TT_enrollment_form/tt_2_dose_today" data-relevant="selected( /Women_TT_enrollment_form/vaccines_2 ,'TT2')" data-calculate="2" data-type-xml="string"/>
       </label>
       <label class="calculation non-select ">
-         <input type="hidden" name="/Women_TT_enrollment_form/tt_3__today" data-calculate="if(selected( /Women_TT_enrollment_form/vaccines_2 , 'TT3'), /Women_TT_enrollment_form/today ,'')" data-type-xml="string"/>
+         <input type="hidden" name="/Women_TT_enrollment_form/tt3" data-calculate="if(selected( /Women_TT_enrollment_form/vaccines_2 , 'TT3'), /Women_TT_enrollment_form/client_reg_date ,'')" data-type-xml="string"/>
       </label>
       <label class="calculation non-select ">
          <input type="hidden" name="/Women_TT_enrollment_form/tt_3_dose_today" data-relevant="selected( /Women_TT_enrollment_form/vaccines_2 ,'TT3')" data-calculate="3" data-type-xml="string"/>
       </label>
       <label class="calculation non-select ">
-         <input type="hidden" name="/Women_TT_enrollment_form/tt_4_today" data-calculate="if(selected( /Women_TT_enrollment_form/vaccines_2 , 'TT4'), /Women_TT_enrollment_form/today ,'')" data-type-xml="string"/>
+         <input type="hidden" name="/Women_TT_enrollment_form/tt4" data-calculate="if(selected( /Women_TT_enrollment_form/vaccines_2 , 'TT4'), /Women_TT_enrollment_form/client_reg_date ,'')" data-type-xml="string"/>
       </label>
       <label class="calculation non-select ">
          <input type="hidden" name="/Women_TT_enrollment_form/tt_4_dose_today" data-relevant="selected( /Women_TT_enrollment_form/vaccines_2 ,'TT4')" data-calculate="4" data-type-xml="string"/>
       </label>
       <label class="calculation non-select ">
-         <input type="hidden" name="/Women_TT_enrollment_form/tt_5_today" data-calculate="if(selected( /Women_TT_enrollment_form/vaccines_2 , 'TT5'), /Women_TT_enrollment_form/today ,'')" data-type-xml="string"/>
+         <input type="hidden" name="/Women_TT_enrollment_form/tt5" data-calculate="if(selected( /Women_TT_enrollment_form/vaccines_2 , 'TT5'), /Women_TT_enrollment_form/client_reg_date ,'')" data-type-xml="string"/>
       </label>
       <label class="calculation non-select ">
          <input type="hidden" name="/Women_TT_enrollment_form/tt_5_dose_today" data-relevant="selected( /Women_TT_enrollment_form/vaccines_2 ,'TT5')" data-calculate="5" data-type-xml="string"/>
@@ -1156,7 +1161,7 @@
          <input type="hidden" name="/Women_TT_enrollment_form/meta/instanceID" data-calculate="concat('uuid:', uuid())" data-type-xml="string"/>
       </label>
       <label class="calculation non-select ">
-         <input type="hidden" name="/Women_TT_enrollment_form/formhub/uuid" data-calculate="'4967b4ccb19c4d70b16354c413253ada'" data-type-xml="string"/>
+         <input type="hidden" name="/Women_TT_enrollment_form/formhub/uuid" data-calculate="'f22002c21b48464a9d306963bd0dbbaa'" data-type-xml="string"/>
       </label>
    </fieldset>
 </form>

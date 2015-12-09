@@ -206,7 +206,7 @@ public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
                 viewHolder.next_visit_date_holder.setBackgroundColor(context.getResources().getColor(R.color.alert_urgent_red));
             }
         }
-        if(lastdate!= null){
+    /*    if(lastdate!= null){
             GregorianCalendar calendar = new GregorianCalendar();
             calendar.setTime(lastdate);
             calendar.add(Calendar.DATE, 84);
@@ -216,7 +216,7 @@ public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
             viewHolder.next_visit_date.setText(format.format(lastdate));
 //            viewHolder.due_visit_date.append(format.format(lastdate));
 
-        }
+        }*/
 
 
 

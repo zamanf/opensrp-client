@@ -25,6 +25,7 @@ public class ChildService {
              AllTimelineEvents allTimelines , AllCommonsRepository allCommonsRepository){
 this.allBeneficiaries=allBeneficiaries;
         this.allTimelines=allTimelines;
+        this.allCommonsRepository=allCommonsRepository;
 
     }
 
@@ -32,72 +33,72 @@ this.allBeneficiaries=allBeneficiaries;
         //#TODO :add details into string then into form submission.
         HashMap<String , String>  map=new HashMap<String , String >();
        //retro vaccines
-        map.put("bcg_date_retro",submission.getFieldValue("bcg")!=null ?submission.getFieldValue("bcg"):"");
-        map.put("opv_0_date_retro",submission.getFieldValue("opv_0_date")!=null ?submission.getFieldValue("opv_0_date"):"");
+        map.put("bcg_retro",submission.getFieldValue("bcg_retro")!=null ?submission.getFieldValue("bcg_retro"):"");
+        map.put("opv_0_retro",submission.getFieldValue("opv_0_retro")!=null ?submission.getFieldValue("opv_0_retro"):"");
         //map.put("opv_0_dose_retro",submission.getFieldValue("opv_0_dose")!=null ?submission.getFieldValue("opv_0_dose"):"");
-        map.put("pcv_1_date_retro",submission.getFieldValue("pcv_1_date")!=null ?submission.getFieldValue("pcv_1_date"):"");
+        map.put("pcv_1_retro",submission.getFieldValue("pcv_1_retro")!=null ?submission.getFieldValue("pcv_1_retro"):"");
         //map.put("pcv_1_dose_retro",submission.getFieldValue("pcv_1_dose")!=null ?submission.getFieldValue("pcv_1_dose"):"");
 
-        map.put("opv_1_date_retro",submission.getFieldValue("opv_1_date")!=null ?submission.getFieldValue("opv_1_date"):"");
+        map.put("opv_1_retro",submission.getFieldValue("opv_1_retro")!=null ?submission.getFieldValue("opv_1_retro"):"");
         //map.put("opv_1_dose_retro",submission.getFieldValue("opv_1_dose")!=null ?submission.getFieldValue("opv_1_dose"):"");
 
-        map.put("pentavalent_1_date_retro",submission.getFieldValue("pentavalent_1_date")!=null ?submission.getFieldValue("pentavalent_1_date"):"");
+        map.put("pentavalent_1_retro",submission.getFieldValue("pentavalent_1_retro")!=null ?submission.getFieldValue("pentavalent_1_retro"):"");
       //  map.put("pentavalent_1_dose_retro",submission.getFieldValue("pentavalent_1_dose")!=null ?submission.getFieldValue("pentavalent_1_dose"):"");
 
-        map.put("pcv_2_date_retro",submission.getFieldValue("pcv_2_date")!=null ?submission.getFieldValue("pcv_2_date"):"");
+        map.put("pcv_2_retro",submission.getFieldValue("pcv_2_retro")!=null ?submission.getFieldValue("pcv_2_retro"):"");
       //  map.put("retro_pcv_2_dose",submission.getFieldValue("pcv_2_dose")!=null ?submission.getFieldValue("pcv_2_dose"):"");
 
-        map.put("opv_2_date_retro",submission.getFieldValue("opv_2_date")!=null ?submission.getFieldValue("opv_2_date"):"");
+        map.put("opv_2_retro",submission.getFieldValue("opv_2_retro")!=null ?submission.getFieldValue("opv_2_retro"):"");
         //map.put("retro_opv_2_dose",submission.getFieldValue("opv_2_dose")!=null ?submission.getFieldValue("opv_2_dose"):"");
 
-        map.put("pcv_3_date_retro",submission.getFieldValue("pcv_3_date")!=null ?submission.getFieldValue("pcv_3_date"):"");
+        map.put("pcv_3_retro",submission.getFieldValue("pcv_3_retro")!=null ?submission.getFieldValue("pcv_3_retro"):"");
        // map.put("retro_pcv_3_dose",submission.getFieldValue("pcv_3_dose")!=null ?submission.getFieldValue("pcv_3_dose"):"");
 
-        map.put("opv_3_date_retro",submission.getFieldValue("opv_3_date")!=null ?submission.getFieldValue("opv_3_date"):"");
+        map.put("opv_3_retro",submission.getFieldValue("opv_3_retro")!=null ?submission.getFieldValue("opv_3_retro"):"");
        // map.put("retro_opv_3_dose",submission.getFieldValue("opv_3_dose")!=null ?submission.getFieldValue("opv_3_dose"):"");
 
-        map.put("pentavalent_3_date_retro",submission.getFieldValue("pentavalent_3_date")!=null ?submission.getFieldValue("pentavalent_3_date"):"");
+        map.put("pentavalent_3_retro",submission.getFieldValue("pentavalent_3_retro")!=null ?submission.getFieldValue("pentavalent_3_retro"):"");
     //    map.put("retro_pentavalent_3_dose",submission.getFieldValue("pentavalent_3_dose")!=null ?submission.getFieldValue("pentavalent_3_dose"):"");
 
-        map.put("measles_1_date_retro",submission.getFieldValue("measles_1_date")!=null ?submission.getFieldValue("measles_1_date"):"");
+        map.put("measles_1_retro",submission.getFieldValue("measles_1_retro")!=null ?submission.getFieldValue("measles_1_retro"):"");
       //  map.put("retro_measles_1_dose",submission.getFieldValue("measles_1_dose")!=null ?submission.getFieldValue("measles_1_dose"):"");
 
-        map.put("measles_2_date_retro",submission.getFieldValue("measles_2_date")!=null ?submission.getFieldValue("measles_2_date"):"");
+        map.put("measles_2_retro",submission.getFieldValue("measles_2_retro")!=null ?submission.getFieldValue("measles_2_retro"):"");
         ///map.put("retro_measles_2_dose",submission.getFieldValue("measles_2_dose")!=null ?submission.getFieldValue("measles_2_dose"):"");
 
 
 
-        map.put("bcg",submission.getFieldValue("bcg_today")!=null ?submission.getFieldValue("bcg_today"):"");
-        map.put("opv_0",submission.getFieldValue("opv_0_date_today")!=null ?submission.getFieldValue("opv_0_date_today"):"");
+        map.put("bcg",submission.getFieldValue("bcg")!=null ?submission.getFieldValue("bcg"):"");
+        map.put("opv_0",submission.getFieldValue("opv_0")!=null ?submission.getFieldValue("opv_0"):"");
        // map.put("today_opv_0_dose",submission.getFieldValue("opv_0_dose_today")!=null ?submission.getFieldValue("opv_0_dose_today"):"");
-        map.put("pcv_1",submission.getFieldValue("pcv_1_date_today")!=null ?submission.getFieldValue("pcv_1_date_today"):"");
+        map.put("pcv_1",submission.getFieldValue("pcv_1")!=null ?submission.getFieldValue("pcv_1"):"");
         //map.put("today_pcv_1_dose",submission.getFieldValue("pcv_1_dose_today")!=null ?submission.getFieldValue("pcv_1_dose_today"):"");
 
-        map.put("opv_1",submission.getFieldValue("opv_1_date_today")!=null ?submission.getFieldValue("opv_1_date_today"):"");
+        map.put("opv_1",submission.getFieldValue("opv_1")!=null ?submission.getFieldValue("opv_1"):"");
         //map.put("today_opv_1_dose",submission.getFieldValue("opv_1_dose_today")!=null ?submission.getFieldValue("opv_1_dose_today"):"");
 
-        map.put("pentavalent_1",submission.getFieldValue("pentavalent_1_date")!=null ?submission.getFieldValue("pentavalent_1_date_today"):"");
+        map.put("pentavalent_1",submission.getFieldValue("pentavalent_1")!=null ?submission.getFieldValue("pentavalent_1"):"");
         //map.put("today_pentavalent_1_dose",submission.getFieldValue("pentavalent_1_dose_today")!=null ?submission.getFieldValue("pentavalent_1_dose_today"):"");
 
-        map.put("pcv_2",submission.getFieldValue("pcv_2_date_today")!=null ?submission.getFieldValue("pcv_2_date_today"):"");
+        map.put("pcv_2",submission.getFieldValue("pcv_2")!=null ?submission.getFieldValue("pcv_2"):"");
 //        map.put("today_pcv_2_dose",submission.getFieldValue("pcv_2_dose_today")!=null ?submission.getFieldValue("pcv_2_dose_today"):"");
 
-        map.put("opv_2",submission.getFieldValue("opv_2_date_today")!=null ?submission.getFieldValue("opv_2_date_today"):"");
+        map.put("opv_2",submission.getFieldValue("opv_2")!=null ?submission.getFieldValue("opv_2"):"");
 //        map.put("today_opv_2_dose",submission.getFieldValue("opv_2_dose_today")!=null ?submission.getFieldValue("opv_2_dose_today"):"");
 
-        map.put("pcv_3",submission.getFieldValue("pcv_3_date_today")!=null ?submission.getFieldValue("pcv_3_date_today"):"");
+        map.put("pcv_3",submission.getFieldValue("pcv_3")!=null ?submission.getFieldValue("pcv_3"):"");
 //        map.put("today_pcv_3_dose",submission.getFieldValue("pcv_3_dose_today")!=null ?submission.getFieldValue("pcv_3_dose_today"):"");
 
-        map.put("opv_3",submission.getFieldValue("opv_3_date_today")!=null ?submission.getFieldValue("opv_3_date_today"):"");
+        map.put("opv_3",submission.getFieldValue("opv_3")!=null ?submission.getFieldValue("opv_3"):"");
      //   map.put("today_opv_3_dose",submission.getFieldValue("opv_3_dose_today")!=null ?submission.getFieldValue("opv_3_dose_today"):"");
 
-        map.put("pentavalent_3",submission.getFieldValue("pentavalent_3_date_today")!=null ?submission.getFieldValue("pentavalent_3_date_today"):"");
+        map.put("pentavalent_3",submission.getFieldValue("pentavalent_3")!=null ?submission.getFieldValue("pentavalent_3"):"");
       //  map.put("today_pentavalent_3_dose",submission.getFieldValue("pentavalent_3_dose_today")!=null ?submission.getFieldValue("pentavalent_3_dose_today"):"");
 
-        map.put("measles_1",submission.getFieldValue("measles_1_date_today")!=null ?submission.getFieldValue("measles_1_date_today"):"");
+        map.put("measles_1",submission.getFieldValue("measles_1")!=null ?submission.getFieldValue("measles_1"):"");
         //map.put("today_measles_1_dose",submission.getFieldValue("measles_1_dose_today")!=null ?submission.getFieldValue("measles_1_dose_today"):"");
 
-        map.put("measles_2",submission.getFieldValue("measles_2_date_today")!=null ?submission.getFieldValue("measles_2_date_today"):"");
+        map.put("measles_2",submission.getFieldValue("measles_2")!=null ?submission.getFieldValue("measles_2"):"");
         //map.put("today_measles_2_dose",submission.getFieldValue("measles_2_dose_today")!=null ?submission.getFieldValue("measles_2_dose_today"):"");
 
 
@@ -130,7 +131,7 @@ this.allBeneficiaries=allBeneficiaries;
         mapOther.put("retro_vaccines",submission.getFieldValue("vaccines")!=null ?submission.getFieldValue("vaccines"):"");
         //today's vaccines
         mapOther.put("current_vaccines",submission.getFieldValue("vaccines_2")!=null ?submission.getFieldValue("vaccines_2"):"");
-        mapOther.put("current_vaccines",submission.getFieldValue("vaccination_date")!=null ?submission.getFieldValue("vaccination_date"):"");
+        mapOther.put("current_vaccines_date",submission.getFieldValue("vaccination_date")!=null ?submission.getFieldValue("vaccination_date"):"");
 
         //today vaccines today
         mapOther.put("retro_vaccines",submission.getFieldValue("vaccines")!=null ?submission.getFieldValue("vaccines"):"");
