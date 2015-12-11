@@ -93,6 +93,12 @@ public class WomanDetailActivity extends Activity {
         TextView tt4TextView =(TextView) findViewById(R.id.womandetail_tt4);
         TextView tt5TextView =(TextView) findViewById(R.id.womandetail_tt5);
 
+        tt1TextView.setText(womanclient.getColumnmaps().get("tt1") != "" ? womanclient.getColumnmaps().get("tt1") : womanclient.getColumnmaps().get("tt1_retro")!=""?womanclient.getColumnmaps().get("tt1_retro"):"");
+        tt2TextView.setText(womanclient.getColumnmaps().get("tt2") != "" ? womanclient.getColumnmaps().get("tt2") : womanclient.getColumnmaps().get("tt2_retro")!=""?womanclient.getColumnmaps().get("tt2_retro"):"");
+        tt3TextView.setText(womanclient.getColumnmaps().get("tt3") != "" ? womanclient.getColumnmaps().get("tt3") : womanclient.getColumnmaps().get("tt3_retro")!=""?womanclient.getColumnmaps().get("tt3_retro"):"");
+        tt4TextView.setText(womanclient.getColumnmaps().get("tt4") != "" ? womanclient.getColumnmaps().get("tt4") : womanclient.getColumnmaps().get("tt4_retro")!=""?womanclient.getColumnmaps().get("tt4_retro"):"");
+        tt5TextView.setText(womanclient.getColumnmaps().get("tt5") != "" ? womanclient.getColumnmaps().get("tt5") : womanclient.getColumnmaps().get("tt5_retro")!=""?womanclient.getColumnmaps().get("tt5_retro"):"");
+
 
         //declaring back button
         ImageButton back = (ImageButton)findViewById(R.id.btn_back_to_home);

@@ -101,8 +101,22 @@ public class ChildDetailActivity extends Activity {
         TextView penta1TextView =(TextView) findViewById(R.id.childdetail_penta1);
         TextView penta2TextView =(TextView) findViewById(R.id.childdetail_penta2);
         TextView penta3TextView =(TextView) findViewById(R.id.childdetail_penta3);
-        TextView tt1TextView =(TextView) findViewById(R.id.childdetail_tt1);
-        TextView tt2TextView =(TextView) findViewById(R.id.childdetail_tt2);
+
+        //setting vaccines dates
+        bcgTextView.setText(childclient.getColumnmaps().get("bcg")!=""?childclient.getColumnmaps().get("bcg"):childclient.getColumnmaps().get("bcg_retro")!=""?childclient.getColumnmaps().get("bcg_retro"):"");
+        opvTextView.setText(childclient.getColumnmaps().get("opv_0")!=""?childclient.getColumnmaps().get("opv_0"):childclient.getColumnmaps().get("opv_0_retro")!=""?childclient.getColumnmaps().get("opv_0_retro"):"");
+        opv1TextView.setText(childclient.getColumnmaps().get("opv_1") != "" ? childclient.getColumnmaps().get("opv_1") : childclient.getColumnmaps().get("opv_1_retro")!=""?childclient.getColumnmaps().get("opv_1_retro"):"");
+        opv2TextView.setText(childclient.getColumnmaps().get("opv_2") != "" ? childclient.getColumnmaps().get("opv_2") : childclient.getColumnmaps().get("opv_2_retro")!=""?childclient.getColumnmaps().get("opv_2_retro"):"");
+        opv3TextView.setText(childclient.getColumnmaps().get("opv_3") != "" ? childclient.getColumnmaps().get("opv_3") : childclient.getColumnmaps().get("opv_3_retro")!=""?childclient.getColumnmaps().get("opv_3_retro"):"");
+        measles1TextView.setText(childclient.getColumnmaps().get("measles_1") != "" ? childclient.getColumnmaps().get("measles_1") : childclient.getColumnmaps().get("measles_1_retro")!=""?childclient.getColumnmaps().get("measles_1_retro"):"");
+        measles2TextView.setText(childclient.getColumnmaps().get("measles_2") != "" ? childclient.getColumnmaps().get("measles_2") : childclient.getColumnmaps().get("measles_2_retro")!=""?childclient.getColumnmaps().get("measles_2_retro"):"");
+        pcv1TextView.setText(childclient.getColumnmaps().get("pentavalent_1") != "" ? childclient.getColumnmaps().get("pentavalent_1") : childclient.getColumnmaps().get("pentavalent_1_retro")!=""?childclient.getColumnmaps().get("pentavalent_1_retro"):"");
+        pcv2TextView.setText(childclient.getColumnmaps().get("pentavalent_2") != "" ? childclient.getColumnmaps().get("pentavalent_2") : childclient.getColumnmaps().get("pentavalent_2_retro")!=""?childclient.getColumnmaps().get("pentavalent_2_retro"):"");
+        pcv3TextView.setText(childclient.getColumnmaps().get("pentavalent_3") != "" ? childclient.getColumnmaps().get("pentavalent_3") : childclient.getColumnmaps().get("pentavalent_3_retro") != "" ? childclient.getColumnmaps().get("pentavalent_3_retro"):"");
+        penta1TextView.setText(childclient.getColumnmaps().get("pcv_1") != "" ? childclient.getColumnmaps().get("pcv_1") : childclient.getColumnmaps().get("pcv_1_retro")!=""?childclient.getColumnmaps().get("pcv_1_retro"):"");
+        penta2TextView.setText(childclient.getColumnmaps().get("pcv_2") != "" ? childclient.getColumnmaps().get("pcv_2") : childclient.getColumnmaps().get("pcv_2_retro")!=""?childclient.getColumnmaps().get("pcv_2_retro"):"");
+        penta3TextView.setText(childclient.getColumnmaps().get("pcv_3") != "" ? childclient.getColumnmaps().get("pcv_3") : childclient.getColumnmaps().get("pcv_3_retro")!=""?childclient.getColumnmaps().get("pcv_3_retro"):"");
+
 
         //declaring back button
         ImageButton back = (ImageButton)findViewById(R.id.btn_back_to_home);

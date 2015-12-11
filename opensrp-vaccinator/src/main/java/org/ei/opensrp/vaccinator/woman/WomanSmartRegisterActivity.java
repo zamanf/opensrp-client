@@ -123,7 +123,7 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
 
                         new WomanDateSort(WomanDateSort.ByColumnAndByDetails.byDetails,"client_dob_confirm"),
                         new CommonObjectSort(CommonObjectSort.ByColumnAndByDetails.byDetails,false,"first_name",getResources().getString(R.string.woman_alphabetical_sort)),
-                        new CommonObjectSort(CommonObjectSort.ByColumnAndByDetails.byDetails,true,"program_client_id",getResources().getString(R.string.woman_id_sort))
+                        new CommonObjectSort(CommonObjectSort.ByColumnAndByDetails.byDetails,false,"program_client_id",getResources().getString(R.string.woman_id_sort))
 
 //""
 //                        new CommonObjectSort(true,false,true,"age")
@@ -208,10 +208,11 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.profile_info_layout:
-                    // HouseHoldDetailActivity.householdclient = (CommonPersonObjectClient)view.getTag();
-                    // Intent intent = new Intent(HouseHoldSmartRegisterActivity.this,HouseHoldDetailActivity.class);
-                    //startActivity(intent);
-                    // finish();
+                     WomanDetailActivity.womanclient = (CommonPersonObjectClient)view.getTag();
+                     Intent intent = new Intent(WomanSmartRegisterActivity.this,WomanDetailActivity.class);
+                    startActivity(intent);
+                     finish();
+
                     break;
                 case R.id.woman_next_visit:
                     HashMap<String , String> map=new HashMap<String,String>();
