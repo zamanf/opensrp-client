@@ -116,20 +116,8 @@ private  HashMap<String,String> overrides;
 
             @Override
             public DialogOption[] filterOptions() {
-                ArrayList<DialogOption> dialogOptionslist = new ArrayList<DialogOption>();
-                String locationjson = context.anmLocationController().get();
-                LocationTree locationTree = EntityUtils.fromJson(locationjson, LocationTree.class);
-                //locationTree.
-                Map<String,TreeNode<String, Location>> locationMap =
-                        locationTree.getLocationsHierarchy();
-                addChildToList(dialogOptionslist,locationMap);
-                DialogOption[] dialogOptions = new DialogOption[dialogOptionslist.size()];
-                for (int i = 0;i < dialogOptionslist.size();i++){
-                    dialogOptions[i] = dialogOptionslist.get(i);
-                }
 
-                return  dialogOptions;
-                //return new DialogOption[]{};
+                return new DialogOption[]{};
             }
 
             @Override
@@ -306,6 +294,7 @@ private  HashMap<String,String> overrides;
                     map.put("existing_program_client_id",qrcode);
                     map.put("provider_location_id","korangi");
                     map.put("provider_location_name", "korangi");
+                   // map.put("e_bcg",)
                     //map.put("","");
                     setOverrides(map);
 
@@ -416,13 +405,20 @@ private  HashMap<String,String> overrides;
                     map.put("existing_program_client_id",client.getDetails().get("existing_program_client_id"));
                     map.put("provider_location_id","korangi");
                     map.put("provider_location_name", "korangi");//client
-                    startFollowupForms("child_followup_form",(SmartRegisterClient)view.getTag(),map,ByColumnAndByDetails.bydefault);
+              //      SmartRegisterClient clientTag=(SmartRegisterClient)view.getTag();
+                    //client
+                    map.putAll(getPreloadVaccinesData(client));
+
+                    startFollowupForms("child_followup_form",client,map,ByColumnAndByDetails.bydefault);
                    // showFragmentDialog(new EditDialogOptionModel(), view.getTag());
                     break;
             }
         }
 
     }
+
+
+
 
     @Override
     public void setupViews() {
@@ -569,5 +565,130 @@ private  HashMap<String,String> overrides;
             org.ei.opensrp.util.Log.logDebug("fieldOverrides data is : " + fieldOverrides.getJSONString());
             formController.startFormActivity(formName, client.entityId(), fieldOverrides.getJSONString());
         }
+    }
+
+    //use to get columns and get date of vaccines submitted
+    private HashMap getPreloadVaccinesData(CommonPersonObjectClient client){
+        HashMap<String , String > map=new HashMap<String ,String>();
+        for(String s :client.getColumnmaps().keySet()){
+            if(s.contains("bcg"))
+            {
+                if(!client.getColumnmaps().get(s).equalsIgnoreCase("")) {
+                    map.put("e_bcg", client.getColumnmaps().get(s));
+                }else{
+                    map.put("e_bcg","");
+
+                }
+            }else   if(s.contains("opv_0"))
+            {
+                if(!client.getColumnmaps().get(s).equalsIgnoreCase("")) {
+                    map.put("e_opv0", client.getColumnmaps().get(s));
+                }else{
+                    map.put("e_opv0","");
+
+                }
+            }
+            else   if(s.contains("opv_1"))
+            {
+                if(!client.getColumnmaps().get(s).equalsIgnoreCase("")) {
+                    map.put("e_opv1", client.getColumnmaps().get(s));
+                }else{
+                    map.put("e_opv1","");
+
+                }
+            }
+            else   if(s.contains("opv_2"))
+            {
+                if(!client.getColumnmaps().get(s).equalsIgnoreCase("")) {
+                    map.put("e_opv2", client.getColumnmaps().get(s));
+                }else{
+                    map.put("e_opv2","");
+
+                }
+            }
+            else   if(s.contains("opv_3"))
+            {
+                if(!client.getColumnmaps().get(s).equalsIgnoreCase("")) {
+                    map.put("e_opv3", client.getColumnmaps().get(s));
+                }else{
+                    map.put("e_opv3","");
+
+                }
+            }
+            else   if(s.contains("pcv_1"))
+            {
+                if(!client.getColumnmaps().get(s).equalsIgnoreCase("")) {
+                    map.put("e_pcv1", client.getColumnmaps().get(s));
+                }else{
+                    map.put("e_pcv1","");
+
+                }
+            }
+            else   if(s.contains("pcv_2"))
+            {
+                if(!client.getColumnmaps().get(s).equalsIgnoreCase("")) {
+                    map.put("e_pcv2", client.getColumnmaps().get(s));
+                }else{
+                    map.put("e_pcv2","");
+
+                }
+            }
+            else   if(s.contains("pcv_3"))
+            {
+                if(!client.getColumnmaps().get(s).equalsIgnoreCase("")) {
+                    map.put("e_pcv3", client.getColumnmaps().get(s));
+                }else{
+                    map.put("e_pcv3","");
+
+                }
+            }
+            else   if(s.contains("pentavalent_1"))
+            {
+                if(!client.getColumnmaps().get(s).equalsIgnoreCase("")) {
+                    map.put("e_penta1", client.getColumnmaps().get(s));
+                }else{
+                    map.put("e_penta1","");
+
+                }
+            }
+            else   if(s.contains("pentavalent_2"))
+            {
+                if(!client.getColumnmaps().get(s).equalsIgnoreCase("")) {
+                    map.put("e_penta2", client.getColumnmaps().get(s));
+                }else{
+                    map.put("e_penta2","");
+
+                }
+            }
+            else   if(s.contains("pentavalent_3"))
+            {
+                if(!client.getColumnmaps().get(s).equalsIgnoreCase("")) {
+                    map.put("e_penta3", client.getColumnmaps().get(s));
+                }else{
+                    map.put("e_penta3","");
+
+                }
+            }
+            else   if(s.contains("measles_1"))
+            {
+                if(!client.getColumnmaps().get(s).equalsIgnoreCase("")) {
+                    map.put("e_measles1", client.getColumnmaps().get(s));
+                }else{
+                    map.put("e_measles1","");
+
+                }
+            }
+            else   if(s.contains("measles_2"))
+            {
+                if(!client.getColumnmaps().get(s).equalsIgnoreCase("")) {
+                    map.put("e_measles2", client.getColumnmaps().get(s));
+                }else{
+                    map.put("e_measles2","");
+
+                }
+            }
+        }
+        return map;
+
     }
 }

@@ -27,6 +27,12 @@ import org.ei.opensrp.view.dialog.SortOption;
 import org.ei.opensrp.view.viewHolder.OnClickFormLauncher;
 import org.joda.time.LocalDate;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Formatter;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
@@ -72,126 +78,201 @@ public class FieldMonitorSmartClientsProvider implements SmartRegisterClientsPro
     public View getView(SmartRegisterClient client, View parentView, ViewGroup viewGroup) {
         ViewHolder viewHolder;
 
-        if(parentView==null){
+        if (parentView == null) {
             parentView = (ViewGroup) inflater().inflate(R.layout.smart_register_field_client, null);
 
 
             viewHolder = new ViewHolder();
 
-            viewHolder.daymonthTextView=(TextView)parentView.findViewById(R.id.field_daymonth);
-            viewHolder.daymonthLayout=(LinearLayout)parentView.findViewById(R.id.field_daymonth_layout);
+            viewHolder.daymonthTextView = (TextView) parentView.findViewById(R.id.field_daymonth);
+            viewHolder.daymonthLayout = (LinearLayout) parentView.findViewById(R.id.field_daymonth_layout);
 
-            viewHolder.monthTargetTextView=(TextView)parentView.findViewById(R.id.field_month_target);
-            viewHolder.monthTargetLayout=(LinearLayout)parentView.findViewById(R.id.field_month_target_layout);
+            viewHolder.monthTargetTextView = (TextView) parentView.findViewById(R.id.field_month_target);
+            viewHolder.monthTargetLayout = (LinearLayout) parentView.findViewById(R.id.field_month_target_layout);
 
-            viewHolder.monthreceivedTextView=(TextView)parentView.findViewById(R.id.field_vaccine_recieved);
-            viewHolder.monthreceivedLayout=(LinearLayout)parentView.findViewById(R.id.field_vaccine_recieved_layout);
-
-
-            viewHolder.monthusedTextView=(TextView)parentView.findViewById(R.id.field_vaccine_used);
-            viewHolder.monthusedLayout=(LinearLayout)parentView.findViewById(R.id.field_vaccine_used_layout);
-
-            viewHolder.monthwastedTextView=(TextView)parentView.findViewById(R.id.field_vaccine_wasted);
-            viewHolder.monthwastedLayout=(LinearLayout)parentView.findViewById(R.id.field_vaccine_wasted_layout);
+            viewHolder.monthreceivedTextView = (TextView) parentView.findViewById(R.id.field_vaccine_recieved);
+            viewHolder.monthreceivedLayout = (LinearLayout) parentView.findViewById(R.id.field_vaccine_recieved_layout);
 
 
+            viewHolder.monthusedTextView = (TextView) parentView.findViewById(R.id.field_vaccine_used);
+            viewHolder.monthusedLayout = (LinearLayout) parentView.findViewById(R.id.field_vaccine_used_layout);
 
-        }else{
+            viewHolder.monthwastedTextView = (TextView) parentView.findViewById(R.id.field_vaccine_wasted);
+            viewHolder.monthwastedLayout = (LinearLayout) parentView.findViewById(R.id.field_vaccine_wasted_layout);
+
+
+        } else {
             viewHolder = (ViewHolder) parentView.getTag();
 
         }
         CommonPersonObjectClient pc = (CommonPersonObjectClient) client;
 
 
-        if(ByMonthANDByDAILY.ByMonth.equals(byMonthlyAndByDaily)){
+        if (ByMonthANDByDAILY.ByMonth.equals(byMonthlyAndByDaily)) {
 
 
-            int totalUsed=0;
-            String date_entered =pc.getDetails().get("date_formatted");
-            String sql ="select * from pkchild where date like  ?";
-            List<CommonPersonObject> used=null;
-            if(context1!=null) {
-                Log.d("Vaccinator", "Context is not null");
-                if (context1.allCommonsRepositoryobjects("pkchild") != null) {
-                    Log.d("Vaccinator", "Pk child repo not null");
-                    used = context1.allCommonsRepositoryobjects("pkchild").customQuery(sql, new String[]{date_entered + "%"}, "pkchild");
-                }
-                for (CommonPersonObject o : used) {
-                    totalUsed += Integer.parseInt(o.getColumnmaps().get("total_used"));
 
-                }
+            String date_entered = pc.getDetails().get("date_formatted");
+
+            SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+            Date date= null;
+            try {
+                date = format.parse(date_entered);
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
 
-           //LocalDate localTime= DateUtil.getLocalDate(month);
-            ///localTime.
-            viewHolder.daymonthTextView.setText(date_entered);
+            if (date != null) {
+                // GregorianCalendar calendar = new GregorianCalendar();
+                //  calendar.setTime(date);
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(date);
+                int year = cal.get(Calendar.YEAR);
+                int month = cal.get(Calendar.MONTH) + 1;
+                int day = cal.get(Calendar.DAY_OF_MONTH);
+                Formatter fmt = new Formatter();
+                //Calendar cal = Calendar.getInstance();
+                //fmt = new Formatter();
 
-            viewHolder.monthTargetTextView.setText(pc.getDetails().get("Target_assigned_for_vaccination_at_each_month")!=null?pc.getDetails().get("Target_assigned_for_vaccination_at_each_month"):"Not Defined");
-            viewHolder.monthreceivedTextView.setText(pc.getDetails().get("Target_assigned_for_vaccination_at_each_month")!=null?pc.getDetails().get("Target_assigned_for_vaccination_at_each_month"):"Not Defined");
+                String startDate = year + "-" + month + "-" + "01";
+                cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+                String endDate = year + "-" + month + "-" + cal.get(Calendar.DAY_OF_MONTH);
 
-            int bcgBalanceInHand=Integer.parseInt(pc.getDetails().get("bcg_balance_in_hand")!=null ?pc.getDetails().get("bcg_balance_in_hand"):"0");
-            int bcgReceived=Integer.parseInt(pc.getDetails().get("bcg_received")!=null ?pc.getDetails().get("bcg_received"):"0");
-
-            int opv_balance_in_hand=Integer.parseInt(pc.getDetails().get("opv_balance_in_hand")!=null ?pc.getDetails().get("opv_balance_in_hand"):"0");
-            int opv_received=Integer.parseInt(pc.getDetails().get("opv_received")!=null ?pc.getDetails().get("opv_received"):"0");
-
-
-            int ipv_balance_in_hand=Integer.parseInt(pc.getDetails().get("ipv_balance_in_hand")!=null ?pc.getDetails().get("ipv_balance_in_hand"):"0");
-            int ipv_received=Integer.parseInt(pc.getDetails().get("ipv_received")!=null ?pc.getDetails().get("ipv_received"):"0");
-
-            int pcv_balance_in_hand=Integer.parseInt(pc.getDetails().get("pcv_balance_in_hand")!=null ?pc.getDetails().get("pcv_balance_in_hand"):"0");
-            int pcv_received=Integer.parseInt(pc.getDetails().get("pcv_received")!=null ?pc.getDetails().get("pcv_received"):"0");
-
-            int penta_balance_in_hand=Integer.parseInt(pc.getDetails().get("penta_balance_in_hand")!=null ?pc.getDetails().get("penta_balance_in_hand"):"0");
-            int penta_received=Integer.parseInt(pc.getDetails().get("penta_received")!=null ?pc.getDetails().get("penta_received"):"0");
-
-            int measles_balance_in_hand=Integer.parseInt(pc.getDetails().get("measles_balance_in_hand")!=null ?pc.getDetails().get("measles_balance_in_hand"):"0");
-            int measles_received=Integer.parseInt(pc.getDetails().get("measles_received")!=null ?pc.getDetails().get("measles_received"):"0");
+                String sqlWoman = "select (" +
+                        "select count(*) c from pkwoman where tt1 between  '" + startDate + "' and '" + endDate + "') tt1," +
+                        "(select count(*) c from pkwoman where tt2 between '" + startDate + "' and '" + endDate + "') tt2," +
+                        "(select count(*) c from pkwoman where tt3 between '" + startDate + "' and '" + endDate + "') tt3," +
+                        "(select count(*) c from pkwoman where tt4 between '" + startDate + "' and '" + endDate + "') tt4," +
+                        "(select count(*) c from pkwoman where tt5 between '" + startDate + "' and '" + endDate + "') tt5 " +
+                        "from pkwoman limit 1; ";
 
 
-            int tt_balance_in_hand=Integer.parseInt(pc.getDetails().get("tt_balance_in_hand")!=null ?pc.getDetails().get("tt_balance_in_hand"):"0");
-            int tt_received=Integer.parseInt(pc.getDetails().get("tt_received")!=null ?pc.getDetails().get("tt_received"):"0");
+                String sqlChild = "select (" +
+                        "select count(*) c from pkchild where bcg between '" + startDate + "' and '" + endDate + "') bcg," +
+                        "(select count(*) c from pkchild where opv_0 between '" + startDate + "' and '" + endDate + "') opv_0," +
+                        "(select count(*) c from pkchild where opv_1 between '" + startDate + "' and '" + endDate + "') opv_1," +
+                        "(select count(*) c from pkchild where opv_2 between '" + startDate + "' and '" + endDate + "') opv_2," +
+                        "(select count(*) c from pkchild where opv_3 between '" + startDate + "' and '" + endDate + "') opv_3, " +
+                        "(select count(*) c from pkchild where pcv_1 between '" + startDate + "' and '" + endDate + "') pcv_1," +
+                        "(select count(*) c from pkchild where pcv_2 between '" + startDate + "' and '" + endDate + "') pcv_2," +
+                        "(select count(*) c from pkchild where pcv_3 between '" + startDate + "' and '" + endDate + "') pcv_3, " +
+                        "(select count(*) c from pkchild where measles_1 between '" + startDate + "' and '" + endDate + "') measles_1, " +
+                        "(select count(*) c from pkchild where measles_2 between '" + startDate + "' and '" + endDate + "') measles_2," +
+                        "(select count(*) c from pkchild where pentavalent_1 between '" + startDate + "' and '" + endDate + "') pentavalent_1," +
+                        "(select count(*) c from pkchild where pentavalent_2 between '" + startDate + "' and '" + endDate + "') pentavalent_2," +
+                        "(select count(*) c from pkchild where pentavalent_3 between '" + startDate + "' and '" + endDate + "') pentavalent_3 " +
+                        "from pkchild limit 1 ;";
 
-            int dilutants_balance_in_hand=Integer.parseInt(pc.getDetails().get("dilutants_balance_in_hand")!=null ?pc.getDetails().get("dilutants_balance_in_hand"):"0");
-            int dilutants_received=Integer.parseInt(pc.getDetails().get("dilutants_received")!=null ?pc.getDetails().get("dilutants_received"):"0");
+                String sqlWasted="select sum (total_wasted)as total_wasted from field where date between '" + startDate + "' and '" + endDate + "'";
+                List<CommonPersonObject> ttVaccinesUsed = null;
+                List<CommonPersonObject> childVaccinesUsed = null;
+                List<CommonPersonObject> wastedVaccines = null;
 
-            int syringes_balance_in_hand=Integer.parseInt(pc.getDetails().get("syringes_balance_in_hand")!=null ?pc.getDetails().get("syringes_balance_in_hand"):"0");
-            int syringes_received=Integer.parseInt(pc.getDetails().get("syringes_received")!=null ?pc.getDetails().get("syringes_received"):"0");
-
-
-            int safety_boxes_balance_in_hand=Integer.parseInt(pc.getDetails().get("safety_boxes_balance_in_hand")!=null ?pc.getDetails().get("safety_boxes_balance_in_hand"):"0");
-            int safety_boxes_received=Integer.parseInt(pc.getDetails().get("safety_boxes_received")!=null ?pc.getDetails().get("safety_boxes_received"):"0");
-
-            //#TODO get Total balance,wasted and received from total variables instead of calculating here.
-            int balanceInHand=bcgBalanceInHand+opv_balance_in_hand+ipv_balance_in_hand+pcv_balance_in_hand+penta_balance_in_hand+measles_balance_in_hand+tt_balance_in_hand+dilutants_balance_in_hand+
-                    syringes_balance_in_hand+safety_boxes_balance_in_hand;
-
-            int Received=bcgReceived+opv_received+ipv_received+pcv_received+penta_received+measles_received+tt_received+
-                    dilutants_received+syringes_received+safety_boxes_received;
-
-            viewHolder.monthreceivedTextView.setText(String.valueOf(Received));
-          //  viewHolder.monthusedTextView.setText(String.valueOf(balanceInHand));
-            viewHolder.monthusedTextView.setText(String.valueOf(totalUsed));
+                int totalTTUsed = 0;
+                int totalChildVaccinesUsed = 0;
+                int totalWasted=0;
+                if (context1 != null) {
 
 
 
-        }else{
-            //#TODO instiante  views for daily
+                        ttVaccinesUsed = context1.allCommonsRepositoryobjects("pkwoman").customQuery(sqlWoman, new String[]{}, "pkwoman");
+                        childVaccinesUsed = context1.allCommonsRepositoryobjects("pkchild").customQuery(sqlChild, new String[]{}, "pkchild");
+                        wastedVaccines = context1.allCommonsRepositoryobjects("field").customQuery(sqlWasted, new String[]{}, "field");
 
+                   //Log.d("TT Vaccines",  ttVaccinesUsed.size() +"tt vaccines used");
+                    //Log.d("child Vaccines",  childVaccinesUsed.size() +"tt vaccines used");
+                    for (String s : ttVaccinesUsed.get(0).getColumnmaps().keySet()) {
+                                               totalTTUsed =totalTTUsed + Integer.parseInt(ttVaccinesUsed.get(0).getColumnmaps().get(s));
+
+                    }
+
+                    for (String s : childVaccinesUsed.get(0).getColumnmaps().keySet()) {
+                          totalChildVaccinesUsed =totalChildVaccinesUsed+ Integer.parseInt(childVaccinesUsed.get(0).getColumnmaps().get(s));
+
+
+                    }
+                    for(int i=0;i<wastedVaccines.size();i++) {
+                        for (String s : wastedVaccines.get(i).getColumnmaps().keySet()) {
+
+                            Log.d("child Vaccines-", s);
+                            Log.d("child Vaccines", wastedVaccines.get(i).getColumnmaps().get(s) + " -wasted vaccines used");
+
+                            totalWasted = totalWasted + Integer.parseInt(wastedVaccines.get(i).getColumnmaps().get(s));
+
+                        }
+
+                    }
+                }
+
+                viewHolder.daymonthTextView.setText(fmt.format("%tB %tY", cal,cal).toString());
+
+                viewHolder.monthTargetTextView.setText(pc.getDetails().get("Target_assigned_for_vaccination_at_each_month") != null ? pc.getDetails().get("Target_assigned_for_vaccination_at_each_month") : "Not Defined");
+                viewHolder.monthreceivedTextView.setText(pc.getDetails().get("Target_assigned_for_vaccination_at_each_month") != null ? pc.getDetails().get("Target_assigned_for_vaccination_at_each_month") : "Not Defined");
+
+                int bcgBalanceInHand = Integer.parseInt(pc.getDetails().get("bcg_balance_in_hand") != null ? pc.getDetails().get("bcg_balance_in_hand") : "0");
+                int bcgReceived = Integer.parseInt(pc.getDetails().get("bcg_received") != null ? pc.getDetails().get("bcg_received") : "0");
+
+                int opv_balance_in_hand = Integer.parseInt(pc.getDetails().get("opv_balance_in_hand") != null ? pc.getDetails().get("opv_balance_in_hand") : "0");
+                int opv_received = Integer.parseInt(pc.getDetails().get("opv_received") != null ? pc.getDetails().get("opv_received") : "0");
+
+
+                int ipv_balance_in_hand = Integer.parseInt(pc.getDetails().get("ipv_balance_in_hand") != null ? pc.getDetails().get("ipv_balance_in_hand") : "0");
+                int ipv_received = Integer.parseInt(pc.getDetails().get("ipv_received") != null ? pc.getDetails().get("ipv_received") : "0");
+
+                int pcv_balance_in_hand = Integer.parseInt(pc.getDetails().get("pcv_balance_in_hand") != null ? pc.getDetails().get("pcv_balance_in_hand") : "0");
+                int pcv_received = Integer.parseInt(pc.getDetails().get("pcv_received") != null ? pc.getDetails().get("pcv_received") : "0");
+
+                int penta_balance_in_hand = Integer.parseInt(pc.getDetails().get("penta_balance_in_hand") != null ? pc.getDetails().get("penta_balance_in_hand") : "0");
+                int penta_received = Integer.parseInt(pc.getDetails().get("penta_received") != null ? pc.getDetails().get("penta_received") : "0");
+
+                int measles_balance_in_hand = Integer.parseInt(pc.getDetails().get("measles_balance_in_hand") != null ? pc.getDetails().get("measles_balance_in_hand") : "0");
+                int measles_received = Integer.parseInt(pc.getDetails().get("measles_received") != null ? pc.getDetails().get("measles_received") : "0");
+
+
+                int tt_balance_in_hand = Integer.parseInt(pc.getDetails().get("tt_balance_in_hand") != null ? pc.getDetails().get("tt_balance_in_hand") : "0");
+                int tt_received = Integer.parseInt(pc.getDetails().get("tt_received") != null ? pc.getDetails().get("tt_received") : "0");
+
+                int dilutants_balance_in_hand = Integer.parseInt(pc.getDetails().get("dilutants_balance_in_hand") != null ? pc.getDetails().get("dilutants_balance_in_hand") : "0");
+                int dilutants_received = Integer.parseInt(pc.getDetails().get("dilutants_received") != null ? pc.getDetails().get("dilutants_received") : "0");
+
+                int syringes_balance_in_hand = Integer.parseInt(pc.getDetails().get("syringes_balance_in_hand") != null ? pc.getDetails().get("syringes_balance_in_hand") : "0");
+                int syringes_received = Integer.parseInt(pc.getDetails().get("syringes_received") != null ? pc.getDetails().get("syringes_received") : "0");
+
+
+                int safety_boxes_balance_in_hand = Integer.parseInt(pc.getDetails().get("safety_boxes_balance_in_hand") != null ? pc.getDetails().get("safety_boxes_balance_in_hand") : "0");
+                int safety_boxes_received = Integer.parseInt(pc.getDetails().get("safety_boxes_received") != null ? pc.getDetails().get("safety_boxes_received") : "0");
+
+                //#TODO get Total balance,wasted and received from total variables instead of calculating here.
+                int balanceInHand = bcgBalanceInHand + opv_balance_in_hand + ipv_balance_in_hand + pcv_balance_in_hand + penta_balance_in_hand + measles_balance_in_hand + tt_balance_in_hand + dilutants_balance_in_hand +
+                        syringes_balance_in_hand + safety_boxes_balance_in_hand;
+
+                int Received = bcgReceived + opv_received + ipv_received + pcv_received + penta_received + measles_received + tt_received +
+                        dilutants_received + syringes_received + safety_boxes_received;
+                viewHolder.monthwastedTextView.setText(String.valueOf(totalWasted));
+                viewHolder.monthreceivedTextView.setText(String.valueOf(Received));
+                //  viewHolder.monthusedTextView.setText(String.valueOf(balanceInHand));
+                viewHolder.monthusedTextView.setText(String.valueOf(totalChildVaccinesUsed + totalTTUsed));
+
+
+            }
+        }
+        else {
+                //#TODO instiante  views for daily
+
+            }
+
+            viewHolder.daymonthTextView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+
+
+            parentView.setLayoutParams(clientViewLayoutParams);
+            return parentView;
         }
 
-        viewHolder.daymonthTextView.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-
-
-        parentView.setLayoutParams(clientViewLayoutParams);
-        return parentView;
-    }
 
     @Override
     public SmartRegisterClients getClients() {

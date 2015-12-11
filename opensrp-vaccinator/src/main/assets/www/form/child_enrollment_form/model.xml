@@ -37,7 +37,7 @@
             <gender openmrs_entity="person" openmrs_entity_id="gender"/>
             <father_name openmrs_entity="concept" openmrs_entity_id="1594AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
             <mother_name openmrs_entity="concept" openmrs_entity_id="1593AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
-            <ethnicity openmrs_entity="concept"/>
+            <ethnicity />
             <province openmrs_entity="person_address" openmrs_entity_id="stateProvince" openmrs_entity_parent="usual_residence"/>
             <city_village openmrs_entity="person_address" openmrs_entity_id="cityVillage" openmrs_entity_parent="usual_residence"/>
             <town openmrs_entity="person_address" openmrs_entity_id="town" openmrs_entity_parent="usual_residence"/>

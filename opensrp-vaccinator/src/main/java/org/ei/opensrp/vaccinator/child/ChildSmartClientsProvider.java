@@ -78,6 +78,8 @@ public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
             viewHolder.last_vaccine=(TextView)convertView.findViewById(R.id.child_last_vaccine);
             viewHolder.next_visit_date=(TextView)convertView.findViewById(R.id.child_next_visit);
             viewHolder.next_visit_date_holder=(FrameLayout)convertView.findViewById(R.id.child_next_visit_holder);
+            viewHolder.next_visit_due_TextView=(TextView)convertView.findViewById(R.id.child_next_visit2);
+            viewHolder.next_visit_due=(FrameLayout)convertView.findViewById(R.id.child_next_visit_holder2);
           //  viewHolder.follow_up=(FrameLayout)convertView.findViewById(R.id.child_next_visit_holder);
             //viewHolder.profilepic.setImageResource();
             convertView.setTag(viewHolder);
@@ -126,8 +128,8 @@ public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
         viewHolder.next_visit_date_holder.setTag(client);
         //setting previous vaccanies
         viewHolder.last_visit_date.setText(pc.getDetails().get("child_reg_date") != null ? pc.getDetails().get("child_reg_date") : "");
-        String retroVaccinces=pc.getDetails().get("vaccines")!=null?pc.getDetails().get("vaccines") : "";
-        String currentVaccinces=pc.getDetails().get("vaccines_2")!=null?pc.getDetails().get("vaccines_2") : "";
+        String retroVaccinces=pc.getDetails().get("vaccines")!=null?pc.getColumnmaps().get("vaccines") : "";
+        String currentVaccinces=pc.getDetails().get("vaccines_2")!=null?pc.getColumnmaps().get("vaccines_2") : "";
 
 
         viewHolder.last_vaccine.setText(retroVaccinces +" "+currentVaccinces);
@@ -161,8 +163,8 @@ public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
         Log.d("alert list :" , alertlist_for_client.size()+"") ;
        // int e=3;
         if(alertlist_for_client.size() == 0 ){
-            viewHolder.next_visit_date.setText("Not Synced to Server");
-            viewHolder.next_visit_date_holder.setBackgroundColor(context.getResources().getColor(R.color.status_bar_text_almost_white));
+            viewHolder.next_visit_date.setText("Upcoming : Not Synced to Server");
+            //viewHolder.next_visit_date_holder.setBackgroundColor(context.getResources().getColor(R.color.status_bar_text_almost_white));
             viewHolder.next_visit_date.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -173,17 +175,18 @@ public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
         for(int i = 0;i<alertlist_for_client.size();i++){
             viewHolder.next_visit_date.setText(alertlist_for_client.get(i).expiryDate());
             if(alertlist_for_client.get(i).status().value().equalsIgnoreCase("normal")){
-                viewHolder.next_visit_date.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
 
-                    }
-                });
+                String v=alertlist_for_client.get(i).visitCode();
+                viewHolder.next_visit_due_TextView.append(v+" ");
+                viewHolder.next_visit_date.setOnClickListener(onClickListener);
                 viewHolder.next_visit_date_holder.setBackgroundColor(context.getResources().getColor(R.color.background_floating_material_dark));
             }
             if(alertlist_for_client.get(i).status().value().equalsIgnoreCase("upcoming")){
+               String vaccine= alertlist_for_client.get(i).visitCode();
+                viewHolder.next_visit_date.append( vaccine+" ");
+
                 viewHolder.next_visit_date_holder.setBackgroundColor(context.getResources().getColor(R.color.alert_upcoming_light_blue));
-                viewHolder.next_visit_date.setOnClickListener(onClickListener);
+                //viewHolder.next_visit_date.setOnClickListener(onClickListener);
                 viewHolder.next_visit_date.setTag(client);
 
             }
@@ -202,8 +205,9 @@ public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
                 });
             }
             if(alertlist_for_client.get(i).isComplete()){
-                viewHolder.next_visit_date.setText("visited");
-                viewHolder.next_visit_date_holder.setBackgroundColor(context.getResources().getColor(R.color.alert_urgent_red));
+                viewHolder.last_vaccine.append(alertlist_for_client.get(i).visitCode());
+                viewHolder.last_visit_date.setText(alertlist_for_client.get(i).completionDate());
+            //    viewHolder.next_visit_date_holder.setBackgroundColor(context.getResources().getColor(R.color.alert_urgent_red));
             }
         }
     /*    if(lastdate!= null){
@@ -271,5 +275,7 @@ public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
         LinearLayout profilelayout;
         ImageView profilepic;
         FrameLayout next_visit_date_holder;
+        FrameLayout next_visit_due;
+        TextView next_visit_due_TextView;
     }
 }

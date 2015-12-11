@@ -104,19 +104,8 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
 
             @Override
             public DialogOption[] filterOptions() {
-                ArrayList<DialogOption> dialogOptionslist = new ArrayList<DialogOption>();
-                String locationjson = context.anmLocationController().get();
-                LocationTree locationTree = EntityUtils.fromJson(locationjson, LocationTree.class);
-                //locationTree.
-                Map<String,TreeNode<String, Location>> locationMap =
-                        locationTree.getLocationsHierarchy();
-                addChildToList(dialogOptionslist,locationMap);
-                DialogOption[] dialogOptions = new DialogOption[dialogOptionslist.size()];
-                for (int i = 0;i < dialogOptionslist.size();i++){
-                    dialogOptions[i] = dialogOptionslist.get(i);
-                }
 
-                return  dialogOptions;
+                return new DialogOption[]{};
             }
 
             @Override
@@ -226,12 +215,14 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
                     break;
                 case R.id.woman_next_visit:
                     HashMap<String , String> map=new HashMap<String,String>();
+                    CommonPersonObjectClient client=(CommonPersonObjectClient)view.getTag();
                     map.put("provider_uc","korangi");
                     map.put("provider_town","korangi");
                     map.put("provider_city","karachi");
                     map.put("provider_province","sindh");
                   //  map.put("existing_program_client_id",view.getTag());
                     map.put("provider_location_id","korangi");
+                    map.put("provider_id","demotest");
                     map.put("provider_location_name", "korangi");/*
                 HashMap<String , String> map=new HashMap<String,String>();
                 map.put("provider_uc",uc);
@@ -243,6 +234,7 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
                 map.put("provider_location_id",center);
                 map.put("provider_location_name", center);*/
                     //map.put("","");
+                    map.putAll(getPreloadVaccineData(client));
                     setOverrides(map);
                     startFollowupForms("woman_followup_form",(SmartRegisterClient)view.getTag(),map ,ByColumnAndByDetails.bydefault);
 
@@ -252,6 +244,59 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
         }
 
     }//end of method
+
+
+    private HashMap<String ,String > getPreloadVaccineData( CommonPersonObjectClient client){
+        HashMap<String , String > map=new HashMap<String ,String>();
+        for(String s :client.getColumnmaps().keySet()){
+            if(s.contains("tt1"))
+            {
+                if(!client.getColumnmaps().get(s).equalsIgnoreCase("")) {
+                    map.put("e_tt1", client.getColumnmaps().get(s));
+                }else{
+                    map.put("e_tt1","");
+
+                }
+            }else   if(s.contains("tt2"))
+            {
+                if(!client.getColumnmaps().get(s).equalsIgnoreCase("")) {
+                    map.put("e_tt2", client.getColumnmaps().get(s));
+                }else{
+                    map.put("e_tt2","");
+
+                }
+            }
+            else   if(s.contains("tt3"))
+            {
+                if(!client.getColumnmaps().get(s).equalsIgnoreCase("")) {
+                    map.put("e_tt3", client.getColumnmaps().get(s));
+                }else{
+                    map.put("e_tt3","");
+
+                }
+            }
+            else   if(s.contains("tt4"))
+            {
+                if(!client.getColumnmaps().get(s).equalsIgnoreCase("")) {
+                    map.put("e_tt4", client.getColumnmaps().get(s));
+                }else{
+                    map.put("e_tt4","");
+
+                }
+            }
+            else   if(s.contains("tt5"))
+            {
+                if(!client.getColumnmaps().get(s).equalsIgnoreCase("")) {
+                    map.put("e_tt5", client.getColumnmaps().get(s));
+                }else{
+                    map.put("e_tt5","");
+
+                }
+            }
+        }
+        return map;
+
+    }
 
     public void updateSearchView(){
         getSearchView().addTextChangedListener(new TextWatcher() {
@@ -423,6 +468,7 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
                 locationTree.getLocationsHierarchy();
         Collection<TreeNode<String,Location>> collection=locationMap.values();
         Iterator iterator=collection.iterator();
+        //if()
         while (iterator.hasNext()){
           TreeNode<String,Location> treeNode=(TreeNode < String, Location >)iterator.next();
             Location location= (Location)treeNode.getNode();
@@ -441,6 +487,7 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
 
             }
         }
+
         Log.d("Amn Locations" ,"No location found");
 
         return null;
