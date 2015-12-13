@@ -28,7 +28,7 @@ public class FieldMonitorDailyDetailActivity extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
 
-        Context context = Context.getInstance();
+//        Context context = Context.getInstance();
 
 
             //setting view
@@ -41,11 +41,6 @@ public class FieldMonitorDailyDetailActivity extends Activity {
 
             TextView bcgUsedTextView =(TextView)findViewById(R.id.fielddetail_bcg_used);
             TextView bcgWastedTextView =(TextView)findViewById(R.id.fielddetail_bcg_wasted);
-
-        if(fieldclient!=null){
-
-            Log.d("field Monitor","isnot null");
-        }
 
     // String bcgWasted=fieldclient.getDetails().get("bcg_wasted");
         String bcgWasted=fieldclient.getDetails().get("bcg_wasted")!=null?fieldclient.getDetails().get("bcg_wasted"):"N/A";

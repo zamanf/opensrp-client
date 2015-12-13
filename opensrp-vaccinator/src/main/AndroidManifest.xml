@@ -23,6 +23,8 @@
             android:screenOrientation="landscape"/>
         <activity android:name=".field.FieldMonitorDailyDetailActivity"
             android:screenOrientation="landscape"/>
+        <activity android:name=".field.FieldMonitorMonthlyDetailActivity"
+            android:screenOrientation="landscape"/>
         <activity android:name=".woman.WomanSmartRegisterActivity"
             android:screenOrientation="landscape"/>
         <activity android:name=".woman.WomanDetailActivity"

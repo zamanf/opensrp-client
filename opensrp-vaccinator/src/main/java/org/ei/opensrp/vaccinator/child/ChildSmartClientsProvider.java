@@ -83,33 +83,22 @@ public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
             viewHolder.last_vaccine=(TextView)convertView.findViewById(R.id.child_last_vaccine);
             viewHolder.next_visit_date=(TextView)convertView.findViewById(R.id.child_next_visit);
             viewHolder.next_visit_date_holder=(FrameLayout)convertView.findViewById(R.id.child_next_visit_holder);
-            viewHolder.next_visit_due_TextView=(TextView)convertView.findViewById(R.id.child_next_visit2);
-            viewHolder.next_visit_due=(FrameLayout)convertView.findViewById(R.id.child_next_visit_holder2);
-          //  viewHolder.follow_up=(FrameLayout)convertView.findViewById(R.id.child_next_visit_holder);
-            //viewHolder.profilepic.setImageResource();
             convertView.setTag(viewHolder);
         }else{
             viewHolder = (ViewHolder) convertView.getTag();
-        //    convertView.setTag(viewHolder);
-
         }
-
-     //   ViewGroup itemView = viewGroup;
-        //org.ei.opensrp.util.Log.logDebug("in childclientsmartprovider view setup");
-        CommonPersonObjectClient pc = (CommonPersonObjectClient) client;
+    CommonPersonObjectClient pc = (CommonPersonObjectClient) client;
 
         if(pc.getDetails().get("profilepic")==null){
            if( pc.getDetails().get("gender").equalsIgnoreCase("male")) {
                viewHolder.profilepic.setImageResource(org.ei.opensrp.R.drawable.child_boy_infant);
-               // HouseHoldDetailActivity.setImagetoHolder((Activity) context, pc.getDetails().get("profilepic"), profilepic, R.drawable.child_boy_infant);
+
             }else if (pc.getDetails().get("gender").equalsIgnoreCase("female")){
                viewHolder.profilepic.setImageResource(org.ei.opensrp.R.drawable.child_girl_infant);
-              // HouseHoldDetailActivity.setImagetoHolder((Activity) context, pc.getDetails().get("profilepic"), profilepic, R.drawable.child_girl_infant);
 
            }
            else {
                viewHolder.profilepic.setImageResource(R.drawable.child_transgender_inflant);
-               // HouseHoldDetailActivity.setImagetoHolder((Activity) context, pc.getDetails().get("profilepic"), profilepic, R.drawable.child_girl_infant);
 
            }
         }else {
@@ -129,11 +118,6 @@ public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
         viewHolder. profilepic.setOnClickListener(onClickListener);
         viewHolder. profilepic.setTag(client);
 
-        //ImageView lastVisit = (ImageView)itemView.findViewById(R.id.child_last_visit_date);
-        //ImageView nextVisit = (ImageView)itemView.findViewById(R.id.child_next_visit);
-
-       // lastVisit.setOnClickListener(onClickListener);
-     //   lastVisit.setTag(client);
         viewHolder.next_visit_date_holder.setOnClickListener(onClickListener);
         viewHolder.next_visit_date_holder.setTag(client);
         //setting previous vaccanies
@@ -220,17 +204,6 @@ public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
             //    viewHolder.next_visit_date_holder.setBackgroundColor(context.getResources().getColor(R.color.alert_urgent_red));
             }
         }
-    /*    if(lastdate!= null){
-            GregorianCalendar calendar = new GregorianCalendar();
-            calendar.setTime(lastdate);
-            calendar.add(Calendar.DATE, 84);
-            lastdate.setTime(calendar.getTime().getTime());
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-              //setting duedate for next visit
-            viewHolder.next_visit_date.setText(format.format(lastdate));
-//            viewHolder.due_visit_date.append(format.format(lastdate));
-
-        }*/
 
 
 
@@ -242,11 +215,6 @@ public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
 
     @Override
     public SmartRegisterClients getClients() {
-       /*if(controller.getClients()==null) {
-            Log.d("Controller  Clients  :" , "is  Null ");
-            return  new CommonPersonObjectClients();
-        }*/
-
 
 
         return controller.getClients();
