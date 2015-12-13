@@ -1,5 +1,6 @@
 package org.ei.opensrp.vaccinator.field;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -52,8 +53,13 @@ public class FieldMonitorSmartRegisterActivity extends SecuredNativeSmartRegiste
         return new DefaultOptionsProvider() {
             @Override
             public ServiceModeOption serviceMode() {
-                return new FieldMonitorServiceModeOption(clientsProvider());
-            }
+                if(sortbymonth) {
+                    return new FieldMonitorServiceModeOption(clientsProvider());
+                }else{
+
+                    return new FieldMonitorServiceModeOptionDaily(clientsProvider());
+                }
+                }
 
             @Override
             public FilterOption villageFilter() {
@@ -122,10 +128,15 @@ public class FieldMonitorSmartRegisterActivity extends SecuredNativeSmartRegiste
 
     @Override
     protected SmartRegisterClientsProvider clientsProvider() {
+if(sortbymonth) {
+    clientProvider = new FieldMonitorSmartClientsProvider(
+            this, clientActionHandler, controller, context.alertService(), FieldMonitorSmartClientsProvider.ByMonthANDByDAILY.ByMonth, context);
+}else{
 
-     clientProvider = new FieldMonitorSmartClientsProvider(
-                        this, clientActionHandler, controller, context.alertService(),FieldMonitorSmartClientsProvider.ByMonthANDByDAILY.ByMonth,context);
+    clientProvider = new FieldMonitorSmartClientsProvider(
+            this, clientActionHandler, controller, context.alertService(), FieldMonitorSmartClientsProvider.ByMonthANDByDAILY.ByDaily, context);
 
+}
         return clientProvider;
     }
     @Override
@@ -163,6 +174,16 @@ public class FieldMonitorSmartRegisterActivity extends SecuredNativeSmartRegiste
     private class ClientActionHandler implements View.OnClickListener {
         @Override
         public void onClick(View v) {
+            if(sortbymonth){
+
+            }else{
+                FieldMonitorDailyDetailActivity.fieldclient=(CommonPersonObjectClient)v.getTag(R.id.field_day);
+                FieldMonitorDailyDetailActivity.usedVaccines=(HashMap<String,String>)v.getTag(R.id.field_day_layout);
+                Intent intent =new Intent(FieldMonitorSmartRegisterActivity.this,FieldMonitorDailyDetailActivity.class);
+                startActivity(intent);
+                finish();
+
+            }
 
         }
     }

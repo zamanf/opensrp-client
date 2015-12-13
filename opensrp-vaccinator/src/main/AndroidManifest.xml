@@ -21,6 +21,8 @@
             android:screenOrientation="landscape"/>
         <activity android:name=".field.FieldMonitorSmartRegisterActivity"
             android:screenOrientation="landscape"/>
+        <activity android:name=".field.FieldMonitorDailyDetailActivity"
+            android:screenOrientation="landscape"/>
         <activity android:name=".woman.WomanSmartRegisterActivity"
             android:screenOrientation="landscape"/>
         <activity android:name=".woman.WomanDetailActivity"

@@ -119,7 +119,7 @@ public class WomanDetailActivity extends Activity {
             @Override
             public void onClick(View v) {
 
-                bindobject = "vaccine_woman";
+                bindobject = "pkwoman";
                 entityid = womanclient.entityId();
                 dispatchTakePictureIntent(womanview);
 

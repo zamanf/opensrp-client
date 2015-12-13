@@ -37,6 +37,7 @@
     <string name="field_title">Field</string>
     <string name="str_field_search_hint">Search Field Register</string>
     <string name="pick_report">Report</string>
+    <string name="field_details_title">Stock Position Vaccination</string>
 
 
 </resources>

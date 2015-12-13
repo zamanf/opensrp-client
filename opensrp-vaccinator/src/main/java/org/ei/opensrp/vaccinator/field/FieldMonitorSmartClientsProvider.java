@@ -13,11 +13,8 @@ import android.widget.TextView;
 import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.commonregistry.CommonPersonObjectController;
-import org.ei.opensrp.commonregistry.CommonRepository;
-import org.ei.opensrp.domain.TimelineEvent;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.service.AlertService;
-import org.ei.opensrp.util.DateUtil;
 import org.ei.opensrp.vaccinator.R;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.contract.SmartRegisterClients;
@@ -25,15 +22,15 @@ import org.ei.opensrp.view.dialog.FilterOption;
 import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
 import org.ei.opensrp.view.viewHolder.OnClickFormLauncher;
-import org.joda.time.LocalDate;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Formatter;
-import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
@@ -78,7 +75,11 @@ public class FieldMonitorSmartClientsProvider implements SmartRegisterClientsPro
     public View getView(SmartRegisterClient client, View parentView, ViewGroup viewGroup) {
         ViewHolder viewHolder;
 
-        if (parentView == null) {
+        CommonPersonObjectClient pc = (CommonPersonObjectClient) client;
+
+        if (ByMonthANDByDAILY.ByMonth.equals(byMonthlyAndByDaily)) {
+
+            if (parentView == null) {
             parentView = (ViewGroup) inflater().inflate(R.layout.smart_register_field_client, null);
 
 
@@ -105,12 +106,10 @@ public class FieldMonitorSmartClientsProvider implements SmartRegisterClientsPro
             viewHolder = (ViewHolder) parentView.getTag();
 
         }
-        CommonPersonObjectClient pc = (CommonPersonObjectClient) client;
 
 
-        if (ByMonthANDByDAILY.ByMonth.equals(byMonthlyAndByDaily)) {
 
-
+            viewHolder.daymonthLayout.setOnClickListener(onClickListener);
 
             String date_entered = pc.getDetails().get("date_formatted");
 
@@ -259,14 +258,108 @@ public class FieldMonitorSmartClientsProvider implements SmartRegisterClientsPro
         else {
                 //#TODO instiante  views for daily
 
+
+
+            if (parentView == null) {
+                parentView = (ViewGroup) inflater().inflate(R.layout.smart_register_field_client_daily, null);
+
+
+                viewHolder = new ViewHolder();
+
+                viewHolder.dateTextView=(TextView)parentView.findViewById(R.id.field_day);
+                viewHolder.dateLayout=(LinearLayout)parentView.findViewById(R.id.field_day_layout);
+
+                viewHolder.dailyUsedTextView=(TextView)parentView.findViewById(R.id.field_date_used);
+                viewHolder.dailyUsedLayout=(LinearLayout)parentView.findViewById(R.id.field_date_used_layout);
+
+                viewHolder.dailyWastedTextView =(TextView)parentView.findViewById(R.id.field_date_vaccine_wasted);
+                viewHolder.dailyWastedLayout=(LinearLayout)parentView.findViewById(R.id.field_date_vaccine_wasted_layout);
+
+
+
+
+            }
+            else {
+                viewHolder = (ViewHolder) parentView.getTag();
+
             }
 
-            viewHolder.daymonthTextView.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            viewHolder.dateLayout.setOnClickListener(onClickListener);
+            viewHolder.dateLayout.setTag(R.id.field_day,client);
+            String totalWaste=pc.getDetails().get("total_wasted")!=null?pc.getDetails().get("total_wasted"):"";
+            viewHolder.dailyWastedTextView.setText(totalWaste);
+
+            String date =pc.getColumnmaps().get("date")!=null?pc.getColumnmaps().get("date"):"";
+            viewHolder.dateTextView.setText(date);
+
+            String sqlWomanforDaily = "select (" +
+                    "select count(*) c from pkwoman where tt1 =  '"+date+ "') tt1," +
+                    "(select count(*) c from pkwoman where tt2 = '" +date+ "') tt2," +
+                    "(select count(*) c from pkwoman where tt3 = '" + date+ "') tt3," +
+                    "(select count(*) c from pkwoman where tt4 = '" + date + "') tt4," +
+                    "(select count(*) c from pkwoman where tt5 = '" +date + "') tt5 " +
+                    "from pkwoman limit 1; ";
+
+
+            String sqlChildforDaily = "select (" +
+                    "select count(*) c from pkchild where bcg like '" + date + "') bcg," +
+                    "(select count(*) c from pkchild where opv_0 like '" + date + "') opv_0," +
+                    "(select count(*) c from pkchild where opv_1 like '" + date + "') opv_1," +
+                    "(select count(*) c from pkchild where opv_2 like '" + date + "') opv_2," +
+                    "(select count(*) c from pkchild where opv_3 like '" + date + "') opv_3, " +
+                    "(select count(*) c from pkchild where pcv_1 like '" + date + "') pcv_1," +
+                    "(select count(*) c from pkchild where pcv_2 like '" + date + "') pcv_2," +
+                    "(select count(*) c from pkchild where pcv_3 like '" + date + "') pcv_3, " +
+                    "(select count(*) c from pkchild where measles_1 like '" + date + "') measles_1, " +
+                    "(select count(*) c from pkchild where measles_2 like '" + date + "') measles_2," +
+                    "(select count(*) c from pkchild where pentavalent_1 like '" + date + "') pentavalent_1," +
+                    "(select count(*) c from pkchild where pentavalent_2 like '" + date + "') pentavalent_2," +
+                    "(select count(*) c from pkchild where pentavalent_3 like '" + date + "') pentavalent_3 " +
+                    "from pkchild limit 1 ;";
+
+            List<CommonPersonObject> ttVaccinesUsed = null;
+            List<CommonPersonObject> childVaccinesUsed = null;
+
+
+            int totalTTUsed = 0;
+            int totalChildVaccinesUsed = 0;
+            ttVaccinesUsed = context1.allCommonsRepositoryobjects("pkwoman").customQuery(sqlWomanforDaily, new String[]{}, "pkwoman");
+            childVaccinesUsed = context1.allCommonsRepositoryobjects("pkchild").customQuery(sqlChildforDaily, new String[]{}, "pkchild");
+
+            //Log.d("TT Vaccines",  ttVaccinesUsed.size() +"tt vaccines used");
+            //Log.d("child Vaccines",  childVaccinesUsed.size() +"tt vaccines used");
+            HashMap<String,Integer> map=new HashMap<String ,Integer>();
+
+            for (String s : ttVaccinesUsed.get(0).getColumnmaps().keySet()) {
+                totalTTUsed =totalTTUsed + Integer.parseInt(ttVaccinesUsed.get(0).getColumnmaps().get(s));
+
+                map.put(s,Integer.parseInt(ttVaccinesUsed.get(0).getColumnmaps().get(s)));
+            }
+
+            for (String s : childVaccinesUsed.get(0).getColumnmaps().keySet()) {
+                totalChildVaccinesUsed =totalChildVaccinesUsed+ Integer.parseInt(childVaccinesUsed.get(0).getColumnmaps().get(s));
+                if(map.containsKey(s))
+                {
+
+                  map.put(s,map.get(s)+Integer.parseInt(childVaccinesUsed.get(0).getColumnmaps().get(s)));
+                }else{
+
+                    map.put(s,Integer.parseInt(childVaccinesUsed.get(0).getColumnmaps().get(s)));
 
                 }
-            });
+            }
+            HashMap<String ,String > map2=new HashMap<String,String>();
+            for(Map.Entry<String, Integer> entry: map.entrySet())
+            {
+
+                map2.put(entry.getKey(), String.valueOf(entry.getValue()));
+            }
+
+            viewHolder.dailyUsedTextView.setText(String.valueOf(totalChildVaccinesUsed+totalTTUsed));
+            viewHolder.dateLayout.setTag(R.id.field_day_layout,map2);
+
+        }
+
 
 
             parentView.setLayoutParams(clientViewLayoutParams);
@@ -300,6 +393,7 @@ public class FieldMonitorSmartClientsProvider implements SmartRegisterClientsPro
 
 
     class ViewHolder {
+        //for monthly
         TextView daymonthTextView;
         TextView monthTargetTextView;
         TextView monthreceivedTextView;
@@ -311,6 +405,18 @@ public class FieldMonitorSmartClientsProvider implements SmartRegisterClientsPro
         LinearLayout monthreceivedLayout;
         LinearLayout monthusedLayout;
         LinearLayout monthwastedLayout;
+
+
+
+        //for daily
+        TextView dateTextView;
+        TextView dailyUsedTextView;
+        TextView dailyWastedTextView;
+
+        LinearLayout dateLayout;
+        LinearLayout dailyUsedLayout;
+        LinearLayout dailyWastedLayout;
+
 
 
     }

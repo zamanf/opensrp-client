@@ -573,7 +573,7 @@ private  HashMap<String,String> overrides;
         for(String s :client.getColumnmaps().keySet()){
             if(s.contains("bcg"))
             {
-                if(!client.getColumnmaps().get(s).equalsIgnoreCase("")) {
+                if(!client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
                     map.put("e_bcg", client.getColumnmaps().get(s));
                 }else{
                     map.put("e_bcg","");
@@ -581,7 +581,7 @@ private  HashMap<String,String> overrides;
                 }
             }else   if(s.contains("opv_0"))
             {
-                if(!client.getColumnmaps().get(s).equalsIgnoreCase("")) {
+                if(!client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
                     map.put("e_opv0", client.getColumnmaps().get(s));
                 }else{
                     map.put("e_opv0","");
@@ -590,7 +590,7 @@ private  HashMap<String,String> overrides;
             }
             else   if(s.contains("opv_1"))
             {
-                if(!client.getColumnmaps().get(s).equalsIgnoreCase("")) {
+                if(!client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
                     map.put("e_opv1", client.getColumnmaps().get(s));
                 }else{
                     map.put("e_opv1","");
@@ -599,7 +599,7 @@ private  HashMap<String,String> overrides;
             }
             else   if(s.contains("opv_2"))
             {
-                if(!client.getColumnmaps().get(s).equalsIgnoreCase("")) {
+                if(!client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
                     map.put("e_opv2", client.getColumnmaps().get(s));
                 }else{
                     map.put("e_opv2","");
@@ -608,7 +608,7 @@ private  HashMap<String,String> overrides;
             }
             else   if(s.contains("opv_3"))
             {
-                if(!client.getColumnmaps().get(s).equalsIgnoreCase("")) {
+                if(!client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
                     map.put("e_opv3", client.getColumnmaps().get(s));
                 }else{
                     map.put("e_opv3","");
@@ -617,7 +617,7 @@ private  HashMap<String,String> overrides;
             }
             else   if(s.contains("pcv_1"))
             {
-                if(!client.getColumnmaps().get(s).equalsIgnoreCase("")) {
+                if(!client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
                     map.put("e_pcv1", client.getColumnmaps().get(s));
                 }else{
                     map.put("e_pcv1","");
@@ -626,7 +626,7 @@ private  HashMap<String,String> overrides;
             }
             else   if(s.contains("pcv_2"))
             {
-                if(!client.getColumnmaps().get(s).equalsIgnoreCase("")) {
+                if(!client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
                     map.put("e_pcv2", client.getColumnmaps().get(s));
                 }else{
                     map.put("e_pcv2","");
@@ -635,7 +635,7 @@ private  HashMap<String,String> overrides;
             }
             else   if(s.contains("pcv_3"))
             {
-                if(!client.getColumnmaps().get(s).equalsIgnoreCase("")) {
+                if(!client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
                     map.put("e_pcv3", client.getColumnmaps().get(s));
                 }else{
                     map.put("e_pcv3","");
@@ -644,7 +644,7 @@ private  HashMap<String,String> overrides;
             }
             else   if(s.contains("pentavalent_1"))
             {
-                if(!client.getColumnmaps().get(s).equalsIgnoreCase("")) {
+                if(!client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
                     map.put("e_penta1", client.getColumnmaps().get(s));
                 }else{
                     map.put("e_penta1","");
@@ -653,7 +653,7 @@ private  HashMap<String,String> overrides;
             }
             else   if(s.contains("pentavalent_2"))
             {
-                if(!client.getColumnmaps().get(s).equalsIgnoreCase("")) {
+                if(!client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
                     map.put("e_penta2", client.getColumnmaps().get(s));
                 }else{
                     map.put("e_penta2","");
@@ -662,7 +662,7 @@ private  HashMap<String,String> overrides;
             }
             else   if(s.contains("pentavalent_3"))
             {
-                if(!client.getColumnmaps().get(s).equalsIgnoreCase("")) {
+                if(!client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
                     map.put("e_penta3", client.getColumnmaps().get(s));
                 }else{
                     map.put("e_penta3","");
@@ -671,7 +671,7 @@ private  HashMap<String,String> overrides;
             }
             else   if(s.contains("measles_1"))
             {
-                if(!client.getColumnmaps().get(s).equalsIgnoreCase("")) {
+                if(!client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
                     map.put("e_measles1", client.getColumnmaps().get(s));
                 }else{
                     map.put("e_measles1","");
@@ -680,7 +680,7 @@ private  HashMap<String,String> overrides;
             }
             else   if(s.contains("measles_2"))
             {
-                if(!client.getColumnmaps().get(s).equalsIgnoreCase("")) {
+                if(!client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
                     map.put("e_measles2", client.getColumnmaps().get(s));
                 }else{
                     map.put("e_measles2","");

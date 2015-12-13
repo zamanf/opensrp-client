@@ -35,7 +35,7 @@
                     android:id="@+id/btn_woman_register"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@drawable/register_anc"
+                    android:src="@drawable/register_woman"
                     style="@style/ImageButton.Home.Register"/>
 
                 <org.ei.opensrp.view.customControls.CustomFontTextView

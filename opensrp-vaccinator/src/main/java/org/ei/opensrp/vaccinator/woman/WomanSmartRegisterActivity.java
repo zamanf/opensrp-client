@@ -207,7 +207,7 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
-                case R.id.profile_info_layout:
+                case R.id.woman_profile_info_layout:
                      WomanDetailActivity.womanclient = (CommonPersonObjectClient)view.getTag();
                      Intent intent = new Intent(WomanSmartRegisterActivity.this,WomanDetailActivity.class);
                     startActivity(intent);
@@ -252,7 +252,7 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
         for(String s :client.getColumnmaps().keySet()){
             if(s.contains("tt1"))
             {
-                if(!client.getColumnmaps().get(s).equalsIgnoreCase("")) {
+                if(!client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
                     map.put("e_tt1", client.getColumnmaps().get(s));
                 }else{
                     map.put("e_tt1","");
@@ -260,7 +260,7 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
                 }
             }else   if(s.contains("tt2"))
             {
-                if(!client.getColumnmaps().get(s).equalsIgnoreCase("")) {
+                if(!client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
                     map.put("e_tt2", client.getColumnmaps().get(s));
                 }else{
                     map.put("e_tt2","");
@@ -269,7 +269,7 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
             }
             else   if(s.contains("tt3"))
             {
-                if(!client.getColumnmaps().get(s).equalsIgnoreCase("")) {
+                if(!client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
                     map.put("e_tt3", client.getColumnmaps().get(s));
                 }else{
                     map.put("e_tt3","");
@@ -278,7 +278,7 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
             }
             else   if(s.contains("tt4"))
             {
-                if(!client.getColumnmaps().get(s).equalsIgnoreCase("")) {
+                if(!client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
                     map.put("e_tt4", client.getColumnmaps().get(s));
                 }else{
                     map.put("e_tt4","");
@@ -287,7 +287,7 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
             }
             else   if(s.contains("tt5"))
             {
-                if(!client.getColumnmaps().get(s).equalsIgnoreCase("")) {
+                if(! client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
                     map.put("e_tt5", client.getColumnmaps().get(s));
                 }else{
                     map.put("e_tt5","");

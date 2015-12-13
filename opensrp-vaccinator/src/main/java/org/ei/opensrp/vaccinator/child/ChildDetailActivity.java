@@ -135,8 +135,12 @@ public class ChildDetailActivity extends Activity {
             if(childclient.getDetails().get("gender").equalsIgnoreCase("female")) {
                 setImagetoHolder(ChildDetailActivity.this, childclient.getDetails().get("profilepic"), childview, R.drawable.child_girl_infant);
             }
-            else{
+            else  if(childclient.getDetails().get("gender").equalsIgnoreCase("male")) {
                 setImagetoHolder(ChildDetailActivity.this, childclient.getDetails().get("profilepic"), childview, R.drawable.child_boy_infant);
+
+            }
+            else{
+                setImagetoHolder(ChildDetailActivity.this, childclient.getDetails().get("profilepic"), childview, R.drawable.child_transgender_inflant);
 
             }
        // }
@@ -144,7 +148,7 @@ public class ChildDetailActivity extends Activity {
             @Override
             public void onClick(View v) {
 
-                bindobject = "vaccine_child";
+                bindobject = "pkchild";
                 entityid = childclient.entityId();
                 dispatchTakePictureIntent(childview);
 

@@ -1,5 +1,6 @@
 package org.ei.opensrp.vaccinator.child;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,12 +32,16 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import util.ImageCache;
+import util.ImageFetcher;
+
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 /**
  * Created by Ahmed on 13-Oct-15.
  */
 public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
+
 
     private final LayoutInflater inflater;
     private final Context context;
@@ -97,9 +102,14 @@ public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
            if( pc.getDetails().get("gender").equalsIgnoreCase("male")) {
                viewHolder.profilepic.setImageResource(org.ei.opensrp.R.drawable.child_boy_infant);
                // HouseHoldDetailActivity.setImagetoHolder((Activity) context, pc.getDetails().get("profilepic"), profilepic, R.drawable.child_boy_infant);
-            }else{
+            }else if (pc.getDetails().get("gender").equalsIgnoreCase("female")){
                viewHolder.profilepic.setImageResource(org.ei.opensrp.R.drawable.child_girl_infant);
               // HouseHoldDetailActivity.setImagetoHolder((Activity) context, pc.getDetails().get("profilepic"), profilepic, R.drawable.child_girl_infant);
+
+           }
+           else {
+               viewHolder.profilepic.setImageResource(R.drawable.child_transgender_inflant);
+               // HouseHoldDetailActivity.setImagetoHolder((Activity) context, pc.getDetails().get("profilepic"), profilepic, R.drawable.child_girl_infant);
 
            }
         }else {
@@ -128,7 +138,7 @@ public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
         viewHolder.next_visit_date_holder.setTag(client);
         //setting previous vaccanies
         viewHolder.last_visit_date.setText(pc.getDetails().get("child_reg_date") != null ? pc.getDetails().get("child_reg_date") : "");
-        String retroVaccinces=pc.getDetails().get("vaccines")!=null?pc.getColumnmaps().get("vaccines") : "";
+        String retroVaccinces= pc.getDetails().get("vaccines")!=null?pc.getColumnmaps().get("vaccines") : "";
         String currentVaccinces=pc.getDetails().get("vaccines_2")!=null?pc.getColumnmaps().get("vaccines_2") : "";
 
 
@@ -162,7 +172,7 @@ public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
             List<Alert> alertlist_for_client = alertService.findByEntityIdAndAlertNames(pc.entityId(), "BCG","OPV_0_AND_1","pentavalent_1","pentavalent_2","measles");
         Log.d("alert list :" , alertlist_for_client.size()+"") ;
        // int e=3;
-        if(alertlist_for_client.size() == 0 ){
+        if(alertlist_for_client.size() == 0) {
             viewHolder.next_visit_date.setText("Upcoming : Not Synced to Server");
             //viewHolder.next_visit_date_holder.setBackgroundColor(context.getResources().getColor(R.color.status_bar_text_almost_white));
             viewHolder.next_visit_date.setOnClickListener(new View.OnClickListener() {
@@ -204,7 +214,7 @@ public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
                     }
                 });
             }
-            if(alertlist_for_client.get(i).isComplete()){
+            if(alertlist_for_client.get(i).isComplete()) {
                 viewHolder.last_vaccine.append(alertlist_for_client.get(i).visitCode());
                 viewHolder.last_visit_date.setText(alertlist_for_client.get(i).completionDate());
             //    viewHolder.next_visit_date_holder.setBackgroundColor(context.getResources().getColor(R.color.alert_urgent_red));
@@ -278,4 +288,6 @@ public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
         FrameLayout next_visit_due;
         TextView next_visit_due_TextView;
     }
+
+
 }

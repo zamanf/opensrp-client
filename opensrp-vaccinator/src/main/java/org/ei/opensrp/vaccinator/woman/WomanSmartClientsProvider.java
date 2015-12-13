@@ -25,6 +25,8 @@ import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
 import org.ei.opensrp.view.viewHolder.OnClickFormLauncher;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
@@ -82,8 +84,6 @@ public class WomanSmartClientsProvider implements SmartRegisterClientsProvider {
 
         }
 
-        ViewGroup itemView = viewGroup;
-
         CommonPersonObjectClient pc = (CommonPersonObjectClient) client;
 
 
@@ -92,16 +92,19 @@ public class WomanSmartClientsProvider implements SmartRegisterClientsProvider {
         viewHolder.womanName.setText(pc.getDetails().get("first_name") != null ? pc.getDetails().get("first_name") : "");
         viewHolder.fatherName.setText(pc.getDetails().get("father_name") != null ? pc.getDetails().get("father_name") : "");
        // viewHolder.womanDOB.setText(pc.getDetails().get("client_dob_confirm") != null ? pc.getDetails().get("chid_dob_confirm") : "");
-        viewHolder.edd.setText(pc.getDetails().get("final_edd")!=null ?pc.getDetails().get("final_edd"):"N/A");
-        viewHolder. profilepic.setOnClickListener(onClickListener);
-        viewHolder. profilepic.setTag(client);
+        viewHolder.edd.setText(pc.getDetails().get("final_edd") != null ? pc.getDetails().get("final_edd") : "N/A");
+        viewHolder. profilelayout.setOnClickListener(onClickListener);
+        viewHolder. profilelayout.setTag(client);
 
+      HashMap<String, String> dateMaps=  getPreloadVaccineData(pc);
+        for(String s:dateMaps.keySet()){
 
+            //Log.d("vaccined :" ,s+" -" +dateMaps.get(s).toString());
+        }
+        String lastVaccine=Collections.max(dateMaps.values());
 
-     //   ImageView lastVisit = (ImageView)itemView.findViewById(R.id.woman_last_visit_date);
-       // ImageView nextVisit = (ImageView)itemView.findViewById(R.id.woman_next_visit);
+        viewHolder.last_visit_date.setText(lastVaccine);
         List<Alert> alertlist_for_client = alertService.findByEntityIdAndAlertNames(pc.entityId(), "TT 1","TT 2","TT 3","TT 4","TT 5");
-        Log.d("alert list :", alertlist_for_client.size() + "") ;
 
 
         if(alertlist_for_client.size() == 0 ){
@@ -155,9 +158,6 @@ public class WomanSmartClientsProvider implements SmartRegisterClientsProvider {
                 viewHolder.next_due_date_holder.setBackgroundColor(context.getResources().getColor(R.color.alert_complete_green));
             }
         }
-
-        // lastVisit.setOnClickListener(onClickListener);
-        //   lastVisit.setTag(client);
         viewHolder.next_visit_date.setOnClickListener(onClickListener);
         viewHolder.next_visit_date.setTag(client);
         convertView.setLayoutParams(clientViewLayoutParams);
@@ -186,6 +186,60 @@ public class WomanSmartClientsProvider implements SmartRegisterClientsProvider {
 
     public LayoutInflater inflater() {
         return inflater;
+    }
+
+    private HashMap<String ,String > getPreloadVaccineData( CommonPersonObjectClient client){
+        HashMap<String , String > map=new HashMap<String ,String>();
+        for(String s :client.getColumnmaps().keySet()){
+            if(s.contains("tt1"))
+            {
+                if(client.getColumnmaps().get(s) !=null &&!client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
+                    map.put("tt1", client.getColumnmaps().get(s).toString());
+                }else{
+                    map.put("tt1","");
+
+                }
+            }else   if(s.contains("tt2"))
+            {
+                if(client.getColumnmaps().get(s) !=null &&!client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
+                    map.put("tt2", client.getColumnmaps().get(s).toString());
+                }else{
+                    map.put("tt2","");
+
+                }
+            }
+            else   if(s.contains("tt3"))
+            {
+                if(client.getColumnmaps().get(s) !=null &&!client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
+                    map.put("tt3", client.getColumnmaps().get(s).toString());
+                }else{
+                    map.put("tt3","");
+
+                }
+            }
+            else   if(s.contains("tt4"))
+            {
+                if(client.getColumnmaps().get(s) !=null &&!client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
+                    map.put("tt4", client.getColumnmaps().get(s).toString());
+                }else{
+                    map.put("tt4","");
+
+                }
+            }
+            else   if(s.contains("tt5"))
+            {
+                if( client.getColumnmaps().get(s) !=null &&! client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
+                    map.put("tt5", client.getColumnmaps().get(s).toString());
+                }else{
+                    map.put("tt5","");
+
+                }
+            }
+
+            Log.d("column name :" , s +"---"+client.getColumnmaps().get(s));
+        }
+        return map;
+
     }
 
     class ViewHolder {
