@@ -6,8 +6,10 @@ import android.util.Log;
 import org.ei.opensrp.commonregistry.AllCommonsRepository;
 import org.ei.opensrp.domain.TimelineEvent;
 import org.ei.opensrp.domain.form.FormSubmission;
+import org.ei.opensrp.repository.AllAlerts;
 import org.ei.opensrp.repository.AllBeneficiaries;
 import org.ei.opensrp.repository.AllTimelineEvents;
+import org.ei.opensrp.service.AlertService;
 import org.joda.time.LocalDate;
 import org.json.JSONObject;
 
@@ -21,9 +23,11 @@ public class ChildService {
     private AllBeneficiaries allBeneficiaries;
     private AllTimelineEvents allTimelines;
     private AllCommonsRepository allCommonsRepository;
+    private AlertService alertService;
     public ChildService (AllBeneficiaries allBeneficiaries,
-             AllTimelineEvents allTimelines , AllCommonsRepository allCommonsRepository){
+             AllTimelineEvents allTimelines , AllCommonsRepository allCommonsRepository,AlertService alertService){
 this.allBeneficiaries=allBeneficiaries;
+        this.alertService=alertService;
         this.allTimelines=allTimelines;
         this.allCommonsRepository=allCommonsRepository;
 
@@ -110,6 +114,9 @@ this.allBeneficiaries=allBeneficiaries;
                 continue;
             }else {
                 contentValues.put(key, map.get(key));
+              //  key
+                alertService.changeAlertStatusToComplete(submission.entityId(),key.replace("_"," "));
+
             }
         }
 

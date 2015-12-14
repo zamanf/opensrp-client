@@ -7,6 +7,7 @@ import android.widget.TextView;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.vaccinator.R;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -16,6 +17,7 @@ public class FieldMonitorMonthlyDetailActivity extends Activity {
 
     public static Map<String, String> usedVaccines;
     public static CommonPersonObjectClient fieldclient;
+    public static HashMap<String, String> wastedVaccines;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

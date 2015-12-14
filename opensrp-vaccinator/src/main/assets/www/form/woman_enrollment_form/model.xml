@@ -1,7 +1,6 @@
-
 <model>
     <instance>
-        <Women_TT_enrollment_form encounter_type="Women TT enrollment form" id="women_tt_enrollement_form" version="201512091220">
+        <Women_TT_enrollment_form encounter_type="Women TT enrollment form" id="women_tt_enrollement_form" version="201512140832">
             <formhub>
                 <uuid/>
             </formhub>
@@ -11,6 +10,7 @@
             <provider_province/>
             <provider_id/>
             <provider_location_id openmrs_entity="encounter" openmrs_entity_id="location_id"/>
+            <existing_program_client_id openmrs_entity="person_identifier" openmrs_entity_id="Program Client ID"/>
             <provider_location_name/>
             <gender openmrs_entity="person" openmrs_entity_id="gender"/>
             <provider_location_note/>

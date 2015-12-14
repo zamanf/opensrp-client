@@ -7,6 +7,7 @@ import org.ei.opensrp.commonregistry.AllCommonsRepository;
 import org.ei.opensrp.domain.TimelineEvent;
 import org.ei.opensrp.domain.form.FormSubmission;
 import org.ei.opensrp.repository.AllTimelineEvents;
+import org.ei.opensrp.service.AlertService;
 import org.joda.time.LocalDate;
 import org.json.JSONObject;
 
@@ -19,10 +20,12 @@ public class WomanService {
 
     private AllTimelineEvents allTimelines;
     private AllCommonsRepository allCommonsRepository;
+    private AlertService alertService;
 
-    public WomanService(AllTimelineEvents allTimelines ,AllCommonsRepository allCommonsRepository){
+    public WomanService(AllTimelineEvents allTimelines ,AllCommonsRepository allCommonsRepository,AlertService alertService){
         this.allTimelines=allTimelines;
         this.allCommonsRepository=allCommonsRepository;
+        this.alertService=alertService;
 
     }
 
@@ -48,9 +51,13 @@ public class WomanService {
 
             if(map.get(key).equalsIgnoreCase("") )
             {
+
                 continue;
             }else {
-                contentValues.put(key, map.get(key));
+               Character vaccineNUmber= key.charAt(2) ;
+                alertService.changeAlertStatusToComplete(submission.entityId(),"TT "+vaccineNUmber );
+                contentValues.put(key,map.get(key) );
+
             }
         }
 
@@ -65,11 +72,12 @@ public class WomanService {
         mapOther.put("retro_vaccines",submission.getFieldValue("vaccines")!=null ?submission.getFieldValue("vaccines"):"");
         //today's vaccines
         mapOther.put("current_vaccines",submission.getFieldValue("vaccines_2")!=null ?submission.getFieldValue("vaccines_2"):"");
-        mapOther.put("current_vaccines_date",submission.getFieldValue("date")!=null ?submission.getFieldValue("date"):"");
+        mapOther.put("current_vaccines_date", submission.getFieldValue("date") != null ? submission.getFieldValue("date") : "");
 
         JSONObject json =new JSONObject(mapOther);
         Log.d("followup submission : ", json.toString());
 
+//        alertService.changeAlertStatusToComplete(submission.entityId(),);
         allTimelines.add(new TimelineEvent(submission.entityId(), "WOMANFOLLOWUP", LocalDate.parse(submission.getFieldValue("date")), "woman followup", json.toString(), null));
 
     }

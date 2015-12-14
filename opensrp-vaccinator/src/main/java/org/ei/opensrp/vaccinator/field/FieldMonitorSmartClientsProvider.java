@@ -177,17 +177,27 @@ public class FieldMonitorSmartClientsProvider implements SmartRegisterClientsPro
                         ttVaccinesUsed = context1.allCommonsRepositoryobjects("pkwoman").customQuery(sqlWoman, new String[]{}, "pkwoman");
                         childVaccinesUsed = context1.allCommonsRepositoryobjects("pkchild").customQuery(sqlChild, new String[]{}, "pkchild");
                         wastedVaccines = context1.allCommonsRepositoryobjects("field").customQuery(sqlWasted, new String[]{}, "field");
+                Map<String,Integer> usedmap=new HashMap<String,Integer>();
+                    Map<String,Integer> wastedmap=new HashMap<String,Integer>();
 
                    //Log.d("TT Vaccines",  ttVaccinesUsed.size() +"tt vaccines used");
                     //Log.d("child Vaccines",  childVaccinesUsed.size() +"tt vaccines used");
                     for (String s : ttVaccinesUsed.get(0).getColumnmaps().keySet()) {
                                                totalTTUsed =totalTTUsed + Integer.parseInt(ttVaccinesUsed.get(0).getColumnmaps().get(s));
-
+                        usedmap.put(s,Integer.parseInt(ttVaccinesUsed.get(0).getColumnmaps().get(s)));
                     }
 
                     for (String s : childVaccinesUsed.get(0).getColumnmaps().keySet()) {
                           totalChildVaccinesUsed =totalChildVaccinesUsed+ Integer.parseInt(childVaccinesUsed.get(0).getColumnmaps().get(s));
+                        if(usedmap.containsKey(s))
+                        {
 
+                            usedmap.put(s,usedmap.get(s)+Integer.parseInt(childVaccinesUsed.get(0).getColumnmaps().get(s)));
+                        }else{
+
+                            usedmap.put(s,Integer.parseInt(childVaccinesUsed.get(0).getColumnmaps().get(s)));
+
+                        }
 
                     }
                     for(int i=0;i<wastedVaccines.size();i++) {
@@ -196,12 +206,32 @@ public class FieldMonitorSmartClientsProvider implements SmartRegisterClientsPro
                             Log.d("child Vaccines-", s);
                             Log.d("child Vaccines", wastedVaccines.get(i).getColumnmaps().get(s) + " -wasted vaccines used");
 
-                            totalWasted = totalWasted + Integer.parseInt(wastedVaccines.get(i).getColumnmaps().get(s));
-
+                                totalWasted = totalWasted + Integer.parseInt(wastedVaccines.get(i).getColumnmaps().get(s));
+                            wastedmap.put(s,Integer.parseInt(wastedVaccines.get(i).getColumnmaps().get(s)));
                         }
 
                     }
+                    HashMap<String ,String > map2=new HashMap<String,String>();
+                    for(Map.Entry<String, Integer> entry: usedmap.entrySet())
+                    {
+
+                        map2.put(entry.getKey(), String.valueOf(entry.getValue()));
+                    }
+
+                    HashMap<String ,String > wastedmap2=new HashMap<String,String>();
+                    for(Map.Entry<String, Integer> entry: wastedmap.entrySet())
+                    {
+
+                        map2.put(entry.getKey(), String.valueOf(entry.getValue()));
+                    }
+                    viewHolder.daymonthLayout.setTag(R.id.field_daymonth,pc);
+                   viewHolder.daymonthLayout.setTag(R.id.field_daymonth_layout,map2);
+                    viewHolder.daymonthLayout.setTag(R.id.field_month_target_layout,wastedmap2);
+
                 }
+
+
+
 
                 viewHolder.daymonthTextView.setText(fmt.format("%tB %tY", cal,cal).toString());
 
@@ -286,7 +316,7 @@ public class FieldMonitorSmartClientsProvider implements SmartRegisterClientsPro
 
             viewHolder.dateLayout.setOnClickListener(onClickListener);
             viewHolder.dateLayout.setTag(R.id.field_day,client);
-            String totalWaste=pc.getDetails().get("total_wasted")!=null?pc.getDetails().get("total_wasted"):"";
+            String totalWaste=pc.getColumnmaps().get("total_wasted")!=null?pc.getColumnmaps().get("total_wasted"):"0";
             viewHolder.dailyWastedTextView.setText(totalWaste);
 
             String date =pc.getColumnmaps().get("date")!=null?pc.getColumnmaps().get("date"):"";

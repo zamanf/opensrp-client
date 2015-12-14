@@ -155,7 +155,8 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
                     CommonPersonObjectController.ByColumnAndByDetails.byDetails.byDetails );
 
             }
-        context.formSubmissionRouter().getHandlerMap().put("woman_followup_form",new WomanFollowupHandler(new WomanService(context.allTimelineEvents(), context.allCommonsRepositoryobjects("pkwoman"))));
+
+        context.formSubmissionRouter().getHandlerMap().put("woman_followup_form",new WomanFollowupHandler(new WomanService(context.allTimelineEvents(), context.allCommonsRepositoryobjects("pkwoman"),context.alertService())));
 
         dialogOptionMapper = new DialogOptionMapper();
     }//end of method
@@ -217,25 +218,46 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
                 case R.id.woman_next_visit:
                     HashMap<String , String> map=new HashMap<String,String>();
                     CommonPersonObjectClient client=(CommonPersonObjectClient)view.getTag();
-                    map.put("provider_uc","korangi");
-                    map.put("provider_town","korangi");
-                    map.put("provider_city","karachi");
-                    map.put("provider_province","sindh");
-                  //  map.put("existing_program_client_id",view.getTag());
-                    map.put("provider_location_id","korangi");
-                    map.put("provider_id","demotest");
-                    map.put("provider_location_name", "korangi");/*
-                HashMap<String , String> map=new HashMap<String,String>();
-                map.put("provider_uc",uc);
-                map.put("provider_id","demotest");
-                map.put("provider_town",town);
-                map.put("provider_city",city);
-                map.put("provider_province",province);
-                map.put("existing_program_client_id",qrcode);
-                map.put("provider_location_id",center);
-                map.put("provider_location_name", center);*/
-                    //map.put("","");
-                    map.putAll(getPreloadVaccineData(client));
+                    String locationjson = context.anmLocationController().get();
+                    LocationTree locationTree = EntityUtils.fromJson(locationjson, LocationTree.class);
+
+                    Map<String,TreeNode<String, Location>> locationMap =
+                            locationTree.getLocationsHierarchy();
+
+                    addChildToList(locationMap,"Country");
+                    addChildToList(locationMap,"province");
+                    addChildToList(locationMap,"city");
+                    addChildToList(locationMap,"town");
+                    addChildToList(locationMap, "uc");
+
+
+                        map.put("provider_uc", locations.get("uc"));
+                        map.put("provider_town", locations.get("town"));
+                        map.put("provider_city",locations.get("city"));
+                        map.put("provider_province", locations.get("province"));
+
+                        map.put("existing_program_client_id",client.getDetails().get("program_client_id"));
+                        map.put("provider_location_id",locations.get("uc"));
+                        map.put("existing_gender","female");
+                        map.put("provider_location_name", locations.get("uc"));
+                        map.put("provider_id",context.anmService().fetchDetails().name());
+                    map.put("existing_house_number",client.getDetails().get("house_number")!=null?client.getDetails().get("house_number"):"");
+                    map.put("existing_street",client.getDetails().get("street")!=null?client.getDetails().get("street"):"");
+                    map.put("existing_union_council",client.getDetails().get("union_council")!=null?client.getDetails().get("union_council"):"");
+                    map.put("existing_town",client.getDetails().get("town")!=null?client.getDetails().get("town"):"");
+                    map.put("existing_city_village",client.getDetails().get("city_village")!=null?client.getDetails().get("city_village"):"");
+                    map.put("existing_province",client.getDetails().get("province")!=null?client.getDetails().get("province"):"");
+                    map.put("existing_landmark",client.getDetails().get("landmark")!=null?client.getDetails().get("landmark"):"");
+            //        map.put("existing_street",client.getDetails().get("existing_program_client_id")!=null?client.getDetails().get("existing_program_client_id"):"");
+
+                    map.put("existing_first_name",client.getDetails().get("first_name")!=null?client.getDetails().get("first_name"):"");
+                    map.put("existing_last_name",client.getDetails().get("last_name")!=null?client.getDetails().get("last_name"):"");
+                    map.put("existing_father_name",client.getDetails().get("father_name")!=null?client.getDetails().get("father_name"):"");
+                    map.put("existing_client_birth_date",client.getDetails().get("client_dob_confirm")!=null?client.getDetails().get("client_dob_confirm"):"");
+                    map.put("existing_ethnicity",client.getDetails().get("ethnicity")!=null?client.getDetails().get("ethnicity"):"");
+                    map.put("existing_client_reg_date",client.getDetails().get("client_reg_date")!=null?client.getDetails().get("client_reg_date"):"");
+                    map.put("existing_epi_card_number",client.getDetails().get("epi_card_number")!=null?client.getDetails().get("epi_card_number"):"");
+                     map.putAll(getPreloadVaccineData(client));
                     setOverrides(map);
                     startFollowupForms("woman_followup_form",(SmartRegisterClient)view.getTag(),map ,ByColumnAndByDetails.bydefault);
 
@@ -252,7 +274,7 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
         for(String s :client.getColumnmaps().keySet()){
             if(s.contains("tt1"))
             {
-                if(!client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
+                if( client.getColumnmaps().get(s)!=null && client.getColumnmaps().get(s).toString()!=null && !client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
                     map.put("e_tt1", client.getColumnmaps().get(s));
                 }else{
                     map.put("e_tt1","");
@@ -260,7 +282,7 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
                 }
             }else   if(s.contains("tt2"))
             {
-                if(!client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
+                if(client.getColumnmaps().get(s)!=null && client.getColumnmaps().get(s).toString()!=null && !client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
                     map.put("e_tt2", client.getColumnmaps().get(s));
                 }else{
                     map.put("e_tt2","");
@@ -269,7 +291,7 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
             }
             else   if(s.contains("tt3"))
             {
-                if(!client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
+                if(client.getColumnmaps().get(s)!=null && client.getColumnmaps().get(s).toString()!=null &&!client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
                     map.put("e_tt3", client.getColumnmaps().get(s));
                 }else{
                     map.put("e_tt3","");
@@ -278,7 +300,7 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
             }
             else   if(s.contains("tt4"))
             {
-                if(!client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
+                if(client.getColumnmaps().get(s)!=null && client.getColumnmaps().get(s).toString()!=null && !client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
                     map.put("e_tt4", client.getColumnmaps().get(s));
                 }else{
                     map.put("e_tt4","");
@@ -287,7 +309,9 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
             }
             else   if(s.contains("tt5"))
             {
-                if(! client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
+               /* Log.d("Coulmn Name :-", s);
+                ig()*/
+                if( client.getColumnmaps().get(s)!=null && client.getColumnmaps().get(s).toString()!=null &&! client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
                     map.put("e_tt5", client.getColumnmaps().get(s));
                 }else{
                     map.put("e_tt5","");
@@ -380,53 +404,27 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
             org.ei.opensrp.util.Log.logDebug("ANM DETAILS"+context.anmController().get());
             String locationjson = context.anmLocationController().get();
             LocationTree locationTree = EntityUtils.fromJson(locationjson, LocationTree.class);
-                 //   Log.d("ANM LOCATION : ", locationjson);
 
-
-           /*String country= getLocationNameByAttribute(locationTree,"Country")!=null?getLocationNameByAttribute(locationTree,"Country"):"unkown";
-            String province= getLocationNameByAttribute(locationTree,"province")!=null?getLocationNameByAttribute(locationTree,"province"):"unkown";
-            String city= getLocationNameByAttribute(locationTree,"city")!=null?getLocationNameByAttribute(locationTree,"city"):"unkown";
-            String town= getLocationNameByAttribute(locationTree,"town")!=null?getLocationNameByAttribute(locationTree,"town"):"unkown";
-            String uc= getLocationNameByAttribute(locationTree,"uc")!=null?getLocationNameByAttribute(locationTree,"uc"):"unknown";
-
-            String center= getLocationNameByAttribute(locationTree,"center")!=null?getLocationNameByAttribute(locationTree,"center"):"unknown";
-*/
-         /*   LocationTree locationTree = EntityUtils.fromJson(locationjson, LocationTree.class);
-            //locationTree.
             Map<String,TreeNode<String, Location>> locationMap =
                     locationTree.getLocationsHierarchy();
-            Collection<TreeNode<String,Location>> collection=locationMap.values();
-           Iterator iterator=collection.iterator();
-           while (iterator.hasNext()){
-              Location location= (Location)iterator.next();
-               location.getAttributes()
 
-           }*/
-           // for (String name: collection.){}
-            //  locationMap.get("province")
-
-              /*  for (String s : locationMap.keySet()){
-                    TreeNode<String, Location> locations= locationMap.get(s);
-                    for(locations.getChildren()){
-
-
-                    }
-                }*/
-
-          /*   Log.d("location json label : ", locationMap.get("country").getLabel());
-            Log.d("location json id: ", locationMap.get("country").getId());*/
-
+            addChildToList(locationMap,"Country");
+            addChildToList(locationMap,"province");
+            addChildToList(locationMap,"city");
+            addChildToList(locationMap,"town");
+            addChildToList(locationMap,"uc");
             if(getfilteredClients(qrcode)<= 0){
 
                 HashMap<String , String> map=new HashMap<String,String>();
-                map.put("provider_uc","korangi");
-                map.put("provider_town","korangi");
-                map.put("provider_city","karachi");
-                map.put("provider_province","sindh");
+                map.put("provider_uc",locations.get("uc"));
+                map.put("provider_town",locations.get("town"));
+                map.put("provider_city",locations.get("city"));
+                map.put("provider_province",locations.get("province"));
                 map.put("existing_program_client_id",qrcode);
-                map.put("provider_location_id","korangi");
+                map.put("provider_location_id",locations.get("uc"));
                 map.put("gender","female");
-                map.put("provider_location_name", "korangi");/*
+                map.put("provider_location_name", locations.get("uc"));
+                map.put("provider_id",context.anmService().fetchDetails().name());/*
                 HashMap<String , String> map=new HashMap<String,String>();
                 map.put("provider_uc",uc);
                 map.put("provider_id","demotest");
@@ -587,4 +585,32 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
         }
     }
 
+    private Map<String,String> locations =new HashMap<String,String>();
+
+
+    public void addChildToList(Map<String,TreeNode<String, Location>> locationMap, String locationTag){
+        for(Map.Entry<String, TreeNode<String, Location>> entry : locationMap.entrySet()) {
+boolean tagFound=false;
+            if(entry.getValue() != null) {
+                Location l= entry.getValue().getNode();
+
+                for(String s:l.getTags()){
+                    if(s.equalsIgnoreCase(locationTag))
+                    {
+                        locations.put(locationTag,l.getName());
+                        tagFound=true;
+                        return;
+                    }
+                }
+
+
+
+            }
+            if(!tagFound){
+                if(entry.getValue().getChildren()!=null) {
+                    addChildToList(entry.getValue().getChildren(), locationTag);
+                }
+                }
+        }
+    }
 }

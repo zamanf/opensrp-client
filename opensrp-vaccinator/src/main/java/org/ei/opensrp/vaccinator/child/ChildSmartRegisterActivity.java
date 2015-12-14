@@ -216,7 +216,7 @@ private  HashMap<String,String> overrides;
      //   Log.d("location json id: ", locationMap.get("country").getId());
 
     //    Log.d("ANM LOCATION JSON : ", l.getName());
-        context.formSubmissionRouter().getHandlerMap().put("child_followup_form",new ChildFollowupHandler(new ChildService(context.allBeneficiaries(),context.allTimelineEvents(), context.allCommonsRepositoryobjects("pkchild"))));
+        context.formSubmissionRouter().getHandlerMap().put("child_followup_form",new ChildFollowupHandler(new ChildService(context.allBeneficiaries(),context.allTimelineEvents(), context.allCommonsRepositoryobjects("pkchild"),context.alertService())));
         dialogOptionMapper = new DialogOptionMapper();
 
     }
@@ -254,47 +254,30 @@ private  HashMap<String,String> overrides;
        #TODO:after reading the code , app first search for that id in database if he it is there , that client appears  on register only . if it doesnt then it shows two options
 
        */
-                //controller.getClients().
-                String locationjson = context.anmLocationController().getLocationJSON();
-
-              //  Log.d("ANM LOCATION : ", locationjson);
+                org.ei.opensrp.util.Log.logDebug("ANM DETAILS"+context.anmController().get());
+                String locationjson = context.anmLocationController().get();
                 LocationTree locationTree = EntityUtils.fromJson(locationjson, LocationTree.class);
-                //locationTree.
-                //locationTree.
+
                 Map<String,TreeNode<String, Location>> locationMap =
                         locationTree.getLocationsHierarchy();
-              //  locationMap.get("province")
 
-                for (String s : locationMap.keySet()){
-                    TreeNode<String, Location> locations= locationMap.get(s);
+                addChildToList(locationMap,"Country");
+                addChildToList(locationMap,"province");
+                addChildToList(locationMap,"city");
+                addChildToList(locationMap,"town");
+                addChildToList(locationMap,"uc");
+                if(getfilteredClients(qrcode)<= 0){
 
-                   if(locations.getChildren()==null) {
-
-
-                /*    for(Location l : locations)
-                    {
-
-                   // l.getTags();
-                    }*/
-                    Log.d("Location Label",locations.getLabel());
-                   }
-                }
-            //    addChildToList(locationMap);
-
-               // Log.d("location json : ", locationjson);
-
-               // Log.d("location json label : ", locationMap.get("country").getLabel());
-             //   Log.d("location json id: ", locationMap.get("country").getId());
-             if(getfilteredClients(qrcode)<= 0){
                     HashMap<String , String> map=new HashMap<String,String>();
-                   map.put("provider_uc","korangi");
-                    map.put("provider_town","korangi");
-                    map.put("provider_city","karachi");
-                    map.put("provider_province","sindh");
+                    map.put("provider_uc",locations.get("uc"));
+                    map.put("provider_town",locations.get("town"));
+                    map.put("provider_city",locations.get("city"));
+                    map.put("provider_province",locations.get("province"));
                     map.put("existing_program_client_id",qrcode);
-                    map.put("provider_location_id","korangi");
-                    map.put("provider_location_name", "korangi");
-                   // map.put("e_bcg",)
+                    map.put("provider_location_id",locations.get("uc"));
+                    map.put("gender","female");
+                    map.put("provider_location_name", locations.get("uc"));
+                    map.put("provider_id",context.anmService().fetchDetails().name());                   // map.put("e_bcg",)
                     //map.put("","");
                     setOverrides(map);
 
@@ -386,31 +369,59 @@ private  HashMap<String,String> overrides;
                     Intent intent =new Intent(ChildSmartRegisterActivity.this,ChildDetailActivity.class);
                     startActivity(intent);
                     finish();
-                   // HouseHoldDetailActivity.householdclient = (CommonPersonObjectClient)view.getTag();
-                   // Intent intent = new Intent(HouseHoldSmartRegisterActivity.this,HouseHoldDetailActivity.class);
-                    //startActivity(intent);
-                   // finish();
                     break;
                 case R.id.child_next_visit_holder:
-                //    formController.startFormActivity("child_followup_form",view.getTag());
-                 //   view.getTag().
-                 //   Log.d("child :", "next Visit Clicked !");
                     CommonPersonObjectClient client=(CommonPersonObjectClient)view.getTag();
-                 //   Log.d("child :", client.getDetails().get("existing_program_client_id"));
-                    HashMap<String , String > map=new HashMap<String ,String>();
-                    map.put("provider_uc","korangi");
-                    map.put("provider_town","korangi");
-                    map.put("provider_city","karachi");
-                    map.put("provider_province","sindh");
-                    map.put("existing_program_client_id",client.getDetails().get("existing_program_client_id"));
-                    map.put("provider_location_id","korangi");
-                    map.put("provider_location_name", "korangi");//client
-              //      SmartRegisterClient clientTag=(SmartRegisterClient)view.getTag();
-                    //client
-                    map.putAll(getPreloadVaccinesData(client));
+                    org.ei.opensrp.util.Log.logDebug("ANM DETAILS"+context.anmController().get());
+                    String locationjson = context.anmLocationController().get();
+                    LocationTree locationTree = EntityUtils.fromJson(locationjson, LocationTree.class);
 
-                    startFollowupForms("child_followup_form",client,map,ByColumnAndByDetails.bydefault);
-                   // showFragmentDialog(new EditDialogOptionModel(), view.getTag());
+                    Map<String,TreeNode<String, Location>> locationMap =
+                            locationTree.getLocationsHierarchy();
+
+                    addChildToList(locationMap,"Country");
+                    addChildToList(locationMap,"province");
+                    addChildToList(locationMap,"city");
+                    addChildToList(locationMap, "town");
+                    addChildToList(locationMap, "uc");
+
+
+                        HashMap<String , String> map=new HashMap<String,String>();
+                        map.put("provider_uc",locations.get("uc"));
+                        map.put("provider_town",locations.get("town"));
+                        map.put("provider_city",locations.get("city"));
+                        map.put("provider_province",locations.get("province"));
+                        map.put("existing_program_client_id",client.getDetails().get("existing_program_client_id"));
+                        map.put("provider_location_id",locations.get("uc"));
+                        map.put("gender",client.getDetails().get("gender"));
+                        map.put("provider_location_name", locations.get("uc"));
+                        map.put("provider_id",context.anmService().fetchDetails().name());
+
+                    map.put("existing_house_number",client.getDetails().get("house_number")!=null?client.getDetails().get("house_number"):"");
+                    map.put("existing_street",client.getDetails().get("street")!=null?client.getDetails().get("street"):"");
+                    map.put("existing_union_council",client.getDetails().get("union_council")!=null?client.getDetails().get("union_council"):"");
+                    map.put("existing_town",client.getDetails().get("town")!=null?client.getDetails().get("town"):"");
+                    map.put("existing_city_village",client.getDetails().get("city_village")!=null?client.getDetails().get("city_village"):"");
+                    map.put("existing_province",client.getDetails().get("province")!=null?client.getDetails().get("province"):"");
+                    map.put("existing_landmark",client.getDetails().get("landmark")!=null?client.getDetails().get("landmark"):"");
+                    map.put("existing_gender",client.getDetails().get("gender")!=null?client.getDetails().get("gender"):"");
+
+                    map.put("existing_first_name",client.getDetails().get("first_name")!=null?client.getDetails().get("first_name"):"");
+                    map.put("existing_second_name",client.getDetails().get("last_name")!=null?client.getDetails().get("last_name"):"");
+                    map.put("existing_father_name",client.getDetails().get("father_name")!=null?client.getDetails().get("father_name"):"");
+                    map.put("existing_mother_name",client.getDetails().get("mother_name")!=null?client.getDetails().get("mother_name"):"");
+
+                    map.put("existing_chid_dob",client.getDetails().get("chid_dob_confirm")!=null?client.getDetails().get("chid_dob_confirm"):"");
+                    map.put("existing_ethnicity",client.getDetails().get("ethnicity")!=null?client.getDetails().get("ethnicity"):"");
+                    map.put("existing_child_reg_date",client.getDetails().get("child_reg_date")!=null?client.getDetails().get("child_reg_date"):"");
+                    map.put("existing_card_number",client.getDetails().get("epi_card_number")!=null?client.getDetails().get("epi_card_number"):"");
+                    map.put("existing_child_was_suffering_from_a_disease_at_birth",client.getDetails().get("child_was_suffering_from_a_disease_at_birth")!=null?client.getDetails().get("child_was_suffering_from_a_disease_at_birth"):"");
+
+                        map.putAll(getPreloadVaccinesData(client));
+                    setOverrides(map);
+                    Log.d("Map loadind",map.toString());
+
+                    startFollowupForms("child_followup_form", (SmartRegisterClient) view.getTag(), map, ByColumnAndByDetails.bydefault);
                     break;
             }
         }
@@ -485,39 +496,35 @@ private  HashMap<String,String> overrides;
         });
     }
 
-    public void addChildToList(ArrayList<DialogOption> dialogOptionslist,Map<String,TreeNode<String, Location>> locationMap){
+    private Map<String,String> locations =new HashMap<String,String>();
+
+
+    public void addChildToList(Map<String,TreeNode<String, Location>> locationMap, String locationTag){
         for(Map.Entry<String, TreeNode<String, Location>> entry : locationMap.entrySet()) {
+            boolean tagFound=false;
+            if(entry.getValue() != null) {
+                Location l= entry.getValue().getNode();
 
-            if(entry.getValue().getChildren() != null) {
-                addChildToList(dialogOptionslist,entry.getValue().getChildren());
+                for(String s:l.getTags()){
+                    if(s.equalsIgnoreCase(locationTag))
+                    {
+                        locations.put(locationTag,l.getName());
+                        tagFound=true;
+                        return;
+                    }
+                }
 
-            }else{
-                StringUtil.humanize(entry.getValue().getLabel());
-                String name = StringUtil.humanize(entry.getValue().getLabel());
-                Log.d("ANM Details", "location name :" + name);
-                dialogOptionslist.add(new CommonObjectFilterOption(name.replace(" ","_"),"location_name", CommonObjectFilterOption.ByColumnAndByDetails.byDetails,name));
 
+
+            }
+            if(!tagFound){
+                if(entry.getValue().getChildren()!=null) {
+                    addChildToList(entry.getValue().getChildren(), locationTag);
+                }
             }
         }
     }
 
-
-    public void addChildToList(Map<String,TreeNode<String, Location>> locationMap){
-        for(Map.Entry<String, TreeNode<String, Location>> entry : locationMap.entrySet()) {
-
-            if(entry.getValue().getChildren() != null) {
-                addChildToList(entry.getValue().getChildren());
-
-            }else{
-                StringUtil.humanize(entry.getValue().getLabel());
-                String name = StringUtil.humanize(entry.getValue().getLabel());
-                Log.d("ANM Details", "location name :" + name);
-
-               // dialogOptionslist.add(new CommonObjectFilterOption(name.replace(" ","_"),"location_name", CommonObjectFilterOption.ByColumnAndByDetails.byDetails,name));
-
-            }
-        }
-    }
 
     private int getfilteredClients(String filterString){
     int i=0;
@@ -573,7 +580,7 @@ private  HashMap<String,String> overrides;
         for(String s :client.getColumnmaps().keySet()){
             if(s.contains("bcg"))
             {
-                if(!client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
+                if(client.getColumnmaps().get(s)!=null && client.getColumnmaps().get(s).toString()!=null && !client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
                     map.put("e_bcg", client.getColumnmaps().get(s));
                 }else{
                     map.put("e_bcg","");
@@ -581,7 +588,7 @@ private  HashMap<String,String> overrides;
                 }
             }else   if(s.contains("opv_0"))
             {
-                if(!client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
+                if(client.getColumnmaps().get(s)!=null && client.getColumnmaps().get(s).toString()!=null && !client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
                     map.put("e_opv0", client.getColumnmaps().get(s));
                 }else{
                     map.put("e_opv0","");
@@ -590,7 +597,7 @@ private  HashMap<String,String> overrides;
             }
             else   if(s.contains("opv_1"))
             {
-                if(!client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
+                if(client.getColumnmaps().get(s)!=null && client.getColumnmaps().get(s).toString()!=null && !client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
                     map.put("e_opv1", client.getColumnmaps().get(s));
                 }else{
                     map.put("e_opv1","");
@@ -599,7 +606,7 @@ private  HashMap<String,String> overrides;
             }
             else   if(s.contains("opv_2"))
             {
-                if(!client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
+                if( client.getColumnmaps().get(s)!=null && client.getColumnmaps().get(s).toString()!=null && !client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
                     map.put("e_opv2", client.getColumnmaps().get(s));
                 }else{
                     map.put("e_opv2","");
@@ -608,7 +615,7 @@ private  HashMap<String,String> overrides;
             }
             else   if(s.contains("opv_3"))
             {
-                if(!client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
+                if( client.getColumnmaps().get(s)!=null && client.getColumnmaps().get(s).toString()!=null && !client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
                     map.put("e_opv3", client.getColumnmaps().get(s));
                 }else{
                     map.put("e_opv3","");
@@ -617,7 +624,7 @@ private  HashMap<String,String> overrides;
             }
             else   if(s.contains("pcv_1"))
             {
-                if(!client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
+                if(client.getColumnmaps().get(s)!=null && client.getColumnmaps().get(s).toString()!=null && !client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
                     map.put("e_pcv1", client.getColumnmaps().get(s));
                 }else{
                     map.put("e_pcv1","");
@@ -626,7 +633,7 @@ private  HashMap<String,String> overrides;
             }
             else   if(s.contains("pcv_2"))
             {
-                if(!client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
+                if(client.getColumnmaps().get(s)!=null && client.getColumnmaps().get(s).toString()!=null && !client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
                     map.put("e_pcv2", client.getColumnmaps().get(s));
                 }else{
                     map.put("e_pcv2","");
@@ -635,7 +642,7 @@ private  HashMap<String,String> overrides;
             }
             else   if(s.contains("pcv_3"))
             {
-                if(!client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
+                if(client.getColumnmaps().get(s)!=null && client.getColumnmaps().get(s).toString()!=null && !client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
                     map.put("e_pcv3", client.getColumnmaps().get(s));
                 }else{
                     map.put("e_pcv3","");
@@ -644,7 +651,7 @@ private  HashMap<String,String> overrides;
             }
             else   if(s.contains("pentavalent_1"))
             {
-                if(!client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
+                if(client.getColumnmaps().get(s)!=null && client.getColumnmaps().get(s).toString()!=null && !client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
                     map.put("e_penta1", client.getColumnmaps().get(s));
                 }else{
                     map.put("e_penta1","");
@@ -653,7 +660,7 @@ private  HashMap<String,String> overrides;
             }
             else   if(s.contains("pentavalent_2"))
             {
-                if(!client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
+                if(client.getColumnmaps().get(s)!=null && client.getColumnmaps().get(s).toString()!=null && !client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
                     map.put("e_penta2", client.getColumnmaps().get(s));
                 }else{
                     map.put("e_penta2","");
@@ -662,7 +669,7 @@ private  HashMap<String,String> overrides;
             }
             else   if(s.contains("pentavalent_3"))
             {
-                if(!client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
+                if(client.getColumnmaps().get(s)!=null && client.getColumnmaps().get(s).toString()!=null && !client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
                     map.put("e_penta3", client.getColumnmaps().get(s));
                 }else{
                     map.put("e_penta3","");
@@ -671,7 +678,7 @@ private  HashMap<String,String> overrides;
             }
             else   if(s.contains("measles_1"))
             {
-                if(!client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
+                if(client.getColumnmaps().get(s)!=null && client.getColumnmaps().get(s).toString()!=null && client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
                     map.put("e_measles1", client.getColumnmaps().get(s));
                 }else{
                     map.put("e_measles1","");
@@ -680,7 +687,7 @@ private  HashMap<String,String> overrides;
             }
             else   if(s.contains("measles_2"))
             {
-                if(!client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
+                if(client.getColumnmaps().get(s)!=null && client.getColumnmaps().get(s).toString()!=null && !client.getColumnmaps().get(s).toString().equalsIgnoreCase("")) {
                     map.put("e_measles2", client.getColumnmaps().get(s));
                 }else{
                     map.put("e_measles2","");

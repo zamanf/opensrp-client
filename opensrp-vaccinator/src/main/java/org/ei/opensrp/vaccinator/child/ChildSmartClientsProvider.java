@@ -108,7 +108,7 @@ public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
         }
 
         //setting date for next visit
-        viewHolder.next_visit_date.setText("no alerts available");
+        //viewHolder.next_visit_date.setText("no alerts available");
 
         viewHolder.childId.setText(pc.getDetails().get("existing_program_client_id") != null ? pc.getDetails().get("existing_program_client_id") : "");
         viewHolder. childName.setText(pc.getDetails().get("first_name") != null ? pc.getDetails().get("first_name") : "");
@@ -118,12 +118,12 @@ public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
         viewHolder. profilepic.setOnClickListener(onClickListener);
         viewHolder. profilepic.setTag(client);
 
-        viewHolder.next_visit_date_holder.setOnClickListener(onClickListener);
-        viewHolder.next_visit_date_holder.setTag(client);
+        //viewHolder.next_visit_date_holder.setOnClickListener(onClickListener);
+    //    viewHolder.next_visit_date_holder.setTag(client);
         //setting previous vaccanies
         viewHolder.last_visit_date.setText(pc.getDetails().get("child_reg_date") != null ? pc.getDetails().get("child_reg_date") : "");
-        String retroVaccinces= pc.getDetails().get("vaccines")!=null?pc.getColumnmaps().get("vaccines") : "";
-        String currentVaccinces=pc.getDetails().get("vaccines_2")!=null?pc.getColumnmaps().get("vaccines_2") : "";
+        String retroVaccinces= pc.getColumnmaps().get("vaccines")!=null?pc.getColumnmaps().get("vaccines") : "";
+        String currentVaccinces=pc.getColumnmaps().get("vaccines2")!=null?pc.getColumnmaps().get("vaccines2") : "";
 
 
         viewHolder.last_vaccine.setText(retroVaccinces +" "+currentVaccinces);
@@ -153,12 +153,16 @@ public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
 
         }
         //alertService.
-            List<Alert> alertlist_for_client = alertService.findByEntityIdAndAlertNames(pc.entityId(), "BCG","OPV_0_AND_1","pentavalent_1","pentavalent_2","measles");
-        Log.d("alert list :" , alertlist_for_client.size()+"") ;
+//            List<Alert> alertlist_for_client = alertService.findByEntityIdAndAlertNames(pc.entityId(), "BCG","OPV_0_AND_1","PENTAVALENT 3" ,"PCV_1","PCV_2","PCV_3","OPV 1","OPV 2","OPV 3","PENTAVALENT 1","PENTAVALENT 2","Measles 1","Measles 2");
+        List<Alert> alertlist_for_client = alertService.findByEntityIdAndAlertNames(pc.entityId(), "bcg","opv_1","pentavalent_3" ,"pcv_1","pcv_2","pcv_3","opv_2","opv_3","pentavalent_1","pentavalent_2","measles 2","measles 2");
+
+        //     Log.d("alert list :" , alertlist_for_client.size()+"") ;
        // int e=3;
+        viewHolder.next_visit_date.setText("");
+//        viewHolder.next_visit_due_TextView.setText("");
         if(alertlist_for_client.size() == 0) {
-            viewHolder.next_visit_date.setText("Upcoming : Not Synced to Server");
-            //viewHolder.next_visit_date_holder.setBackgroundColor(context.getResources().getColor(R.color.status_bar_text_almost_white));
+            viewHolder.next_visit_date.setText("Not Synced to Server");
+            viewHolder.next_visit_date_holder.setBackgroundColor(context.getResources().getColor(R.color.status_bar_text_almost_white));
             viewHolder.next_visit_date.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -167,36 +171,33 @@ public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
             });
         }
         for(int i = 0;i<alertlist_for_client.size();i++){
-            viewHolder.next_visit_date.setText(alertlist_for_client.get(i).expiryDate());
+         //   viewHolder.next_visit_date.setText(alertlist_for_client.get(i).expiryDate());
             if(alertlist_for_client.get(i).status().value().equalsIgnoreCase("normal")){
 
                 String v=alertlist_for_client.get(i).visitCode();
-                viewHolder.next_visit_due_TextView.append(v+" ");
-                viewHolder.next_visit_date.setOnClickListener(onClickListener);
+                viewHolder.next_visit_date.setText(v);
+                viewHolder.next_visit_date_holder.setOnClickListener(onClickListener);
                 viewHolder.next_visit_date_holder.setBackgroundColor(context.getResources().getColor(R.color.background_floating_material_dark));
             }
             if(alertlist_for_client.get(i).status().value().equalsIgnoreCase("upcoming")){
                String vaccine= alertlist_for_client.get(i).visitCode();
-                viewHolder.next_visit_date.append( vaccine+" ");
+                viewHolder.next_visit_date.setText(vaccine + " ");
 
                 viewHolder.next_visit_date_holder.setBackgroundColor(context.getResources().getColor(R.color.alert_upcoming_light_blue));
                 //viewHolder.next_visit_date.setOnClickListener(onClickListener);
-                viewHolder.next_visit_date.setTag(client);
+               // viewHolder.next_visit_date_holder.setTag(client);
 
             }
             if(alertlist_for_client.get(i).status().value().equalsIgnoreCase("urgent")){
-                viewHolder.next_visit_date.setOnClickListener(onClickListener);
-                viewHolder.next_visit_date.setTag(client);
+                viewHolder.next_visit_date.setText(alertlist_for_client.get(i).scheduleName());
+                viewHolder.next_visit_date_holder.setOnClickListener(onClickListener);
+                viewHolder.next_visit_date_holder.setTag(client);
                 viewHolder.next_visit_date_holder.setBackgroundColor(context.getResources().getColor(R.color.alert_urgent_red));
             }
             if(alertlist_for_client.get(i).status().value().equalsIgnoreCase("expired")){
                 viewHolder.next_visit_date_holder.setBackgroundColor(context.getResources().getColor(R.color.client_list_header_dark_grey));
-                viewHolder.next_visit_date.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                viewHolder.next_visit_date_holder.setOnClickListener(onClickListener);
 
-                    }
-                });
             }
             if(alertlist_for_client.get(i).isComplete()) {
                 viewHolder.last_vaccine.append(alertlist_for_client.get(i).visitCode());
@@ -253,8 +254,7 @@ public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
         LinearLayout profilelayout;
         ImageView profilepic;
         FrameLayout next_visit_date_holder;
-        FrameLayout next_visit_due;
-        TextView next_visit_due_TextView;
+
     }
 
 

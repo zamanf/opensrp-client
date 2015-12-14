@@ -175,7 +175,13 @@ if(sortbymonth) {
         @Override
         public void onClick(View v) {
             if(sortbymonth){
+                FieldMonitorMonthlyDetailActivity.fieldclient=(CommonPersonObjectClient)v.getTag(R.id.field_daymonth);
+                FieldMonitorMonthlyDetailActivity.usedVaccines=(HashMap<String,String>)v.getTag(R.id.field_daymonth_layout);
+                FieldMonitorMonthlyDetailActivity.wastedVaccines=(HashMap<String,String>)v.getTag(R.id.field_month_target_layout);
 
+                Intent intent =new Intent(FieldMonitorSmartRegisterActivity.this,FieldMonitorMonthlyDetailActivity.class);
+                startActivity(intent);
+                finish();
             }else{
                 FieldMonitorDailyDetailActivity.fieldclient=(CommonPersonObjectClient)v.getTag(R.id.field_day);
                 FieldMonitorDailyDetailActivity.usedVaccines=(HashMap<String,String>)v.getTag(R.id.field_day_layout);

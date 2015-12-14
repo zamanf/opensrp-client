@@ -96,12 +96,12 @@ public class WomanSmartClientsProvider implements SmartRegisterClientsProvider {
         viewHolder. profilelayout.setOnClickListener(onClickListener);
         viewHolder. profilelayout.setTag(client);
 
-      HashMap<String, String> dateMaps=  getPreloadVaccineData(pc);
-        for(String s:dateMaps.keySet()){
+     // HashMap<String, String> dateMaps=  getPreloadVaccineData(pc);
+        String  vaccineretro=pc.getColumnmaps().get("vaccines")!=null?pc.getColumnmaps().get("vaccines"):"";
+        String vaccine2=pc.getColumnmaps().get("vaccines2")!=null?pc.getColumnmaps().get("vaccines2"):"";
 
-            //Log.d("vaccined :" ,s+" -" +dateMaps.get(s).toString());
-        }
-        String lastVaccine=Collections.max(dateMaps.values());
+       viewHolder.last_vaccine.setText(vaccineretro + " "+vaccine2);
+        String lastVaccine=pc.getColumnmaps().get("date")!=null?pc.getColumnmaps().get("date"):"";
 
         viewHolder.last_visit_date.setText(lastVaccine);
         List<Alert> alertlist_for_client = alertService.findByEntityIdAndAlertNames(pc.entityId(), "TT 1","TT 2","TT 3","TT 4","TT 5");
@@ -154,8 +154,9 @@ public class WomanSmartClientsProvider implements SmartRegisterClientsProvider {
                 });
             }
             if (alertlist_for_client.get(i).isComplete()) {
-                viewHolder.next_visit_date.setText("visited");
-                viewHolder.next_due_date_holder.setBackgroundColor(context.getResources().getColor(R.color.alert_complete_green));
+                viewHolder.last_visit_date.setText(alertlist_for_client.get(i).scheduleName());
+              viewHolder.last_visit_date.setText(alertlist_for_client.get(i).completionDate());
+              //  viewHolder..setBackgroundColor(context.getResources().getColor(R.color.alert_complete_green));
             }
         }
         viewHolder.next_visit_date.setOnClickListener(onClickListener);
