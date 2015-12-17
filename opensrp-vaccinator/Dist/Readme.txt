@@ -1,3 +1,6 @@
+*Please find all the codebooks forms in forms folder 
+*please read scope document named as "ScopeDocument" in this directory .
+
 Installation Process:
 
 Note:Application uses third party barcode scanner 
