@@ -1,5 +1,5 @@
 {
-  "form_data_definition_version" : "3",
+  "form_data_definition_version" : "4",
   "form" : {
     "bind_type" : "pkwoman",
     "default_bind_path" : "/model/instance/Women_TT_enrollment_form/",
@@ -55,8 +55,8 @@
       "name" : "client_reg_date",
       "bind" : "/model/instance/Women_TT_enrollment_form/client_reg_date"
     }, {
-      "name" : "program_client_id",
-      "bind" : "/model/instance/Women_TT_enrollment_form/program_client_id"
+      "name" : "existing_program_client_id",
+      "bind" : "/model/instance/Women_TT_enrollment_form/existing_program_client_id"
     }, {
       "name" : "epi_card_number",
       "bind" : "/model/instance/Women_TT_enrollment_form/epi_card_number"
@@ -70,7 +70,7 @@
       "name" : "client_birth_date_known",
       "bind" : "/model/instance/Women_TT_enrollment_form/client_birth_date_known"
     }, {
-      "name" : "client_dob_confirm",
+      "name" : "dob",
       "bind" : "/model/instance/Women_TT_enrollment_form/client_dob_confirm"
     }, {
       "name" : "client_dob_estimated",

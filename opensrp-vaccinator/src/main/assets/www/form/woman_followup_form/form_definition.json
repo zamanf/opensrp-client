@@ -24,7 +24,24 @@
     }, {
       "name" : "existing_street",
       "bind" : "/model/instance/Woman_TT_Follow_up_form/existing_street"
-    }, {
+    },{
+      "name" : "e_tt1",
+      "bind" : "/model/instance/Woman_TT_Follow_up_form/e_tt1"
+    },
+      {
+        "name" : "e_tt2",
+        "bind" : "/model/instance/Woman_TT_Follow_up_form/e_tt2"
+      },
+      {
+        "name" : "e_tt3",
+        "bind" : "/model/instance/Woman_TT_Follow_up_form/e_tt3"
+      },
+      {
+        "name" : "e_tt4",
+        "bind" : "/model/instance/Woman_TT_Follow_up_form/e_tt4"
+      },
+
+      {
       "name" : "existing_union_council",
       "bind" : "/model/instance/Woman_TT_Follow_up_form/existing_union_council"
     }, {

@@ -16,6 +16,7 @@ import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.vaccinator.R;
 import org.ei.opensrp.vaccinator.child.ChildSearchOption;
 import org.ei.opensrp.vaccinator.child.ChildSmartClientsProvider;
+import org.ei.opensrp.vaccinator.domain.Field;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.contract.SmartRegisterClients;
@@ -25,6 +26,10 @@ import org.ei.opensrp.view.dialog.FilterOption;
 import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
 import org.json.JSONObject;
+import org.opensrp.api.domain.Location;
+import org.opensrp.api.util.EntityUtils;
+import org.opensrp.api.util.LocationTree;
+import org.opensrp.api.util.TreeNode;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,7 +44,7 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 public class FieldMonitorSmartRegisterActivity extends SecuredNativeSmartRegisterActivity {
 
     private CommonPersonObjectController controller;
-
+    HashMap<String,String> map=new HashMap<>();
     private SmartRegisterClientsProvider clientProvider = null;
     private DefaultOptionsProvider defaultOptionProvider;
     private NavBarOptionsProvider navBarOptionsProvider;
@@ -142,11 +147,28 @@ if(sortbymonth) {
     @Override
     protected void startRegistration() {
         //embedding data for testing purpose
-        HashMap<String,String> map=new HashMap<>();
-        map.put("provider_id","demotest");
-        map.put("provider_city","korangi");
-        map.put("provider_town","korangi");
-        map.put("provider_district","karachi");
+
+
+        String locationjson = context.anmLocationController().get();
+        LocationTree locationTree = EntityUtils.fromJson(locationjson, LocationTree.class);
+
+        Map<String,TreeNode<String, Location>> locationMap =
+                locationTree.getLocationsHierarchy();
+
+        addChildToList(locationMap,"Country");
+        addChildToList(locationMap,"province");
+        addChildToList(locationMap,"city");
+        addChildToList(locationMap,"town");
+        addChildToList(locationMap, "uc");
+
+
+        map.put("provider_uc", locations.get("uc"));
+        map.put("provider_town", locations.get("town"));
+        map.put("provider_city",locations.get("city"));
+        map.put("provider_province", locations.get("province"));
+        map.put("provider_location_id",locations.get("uc"));
+        map.put("provider_location_name", locations.get("uc"));
+        map.put("provider_id",context.anmService().fetchDetails().name());
 
         startForm("vaccine_stock_position_form", null, map,ByColumnAndByDetails.bydefault);
        // startFormActivity("vaccine_stock_position_form",null ,);
@@ -175,6 +197,7 @@ if(sortbymonth) {
         @Override
         public void onClick(View v) {
             if(sortbymonth){
+                    FieldMonitorMonthlyDetailActivity.userMap=map;
                 FieldMonitorMonthlyDetailActivity.fieldclient=(CommonPersonObjectClient)v.getTag(R.id.field_daymonth);
                 FieldMonitorMonthlyDetailActivity.usedVaccines=(HashMap<String,String>)v.getTag(R.id.field_daymonth_layout);
                 FieldMonitorMonthlyDetailActivity.wastedVaccines=(HashMap<String,String>)v.getTag(R.id.field_month_target_layout);
@@ -183,6 +206,7 @@ if(sortbymonth) {
                 startActivity(intent);
                 finish();
             }else{
+                FieldMonitorDailyDetailActivity.userMap=map;
                 FieldMonitorDailyDetailActivity.fieldclient=(CommonPersonObjectClient)v.getTag(R.id.field_day);
                 FieldMonitorDailyDetailActivity.usedVaccines=(HashMap<String,String>)v.getTag(R.id.field_day_layout);
                 Intent intent =new Intent(FieldMonitorSmartRegisterActivity.this,FieldMonitorDailyDetailActivity.class);
@@ -304,6 +328,35 @@ if(sortbymonth) {
                 formController.startFormActivity(formName, client.entityId(), fieldOverrides.getJSONString());
             }
 
+        }
+    }
+
+    private Map<String,String> locations =new HashMap<String,String>();
+
+
+    public void addChildToList(Map<String,TreeNode<String, Location>> locationMap, String locationTag){
+        for(Map.Entry<String, TreeNode<String, Location>> entry : locationMap.entrySet()) {
+            boolean tagFound=false;
+            if(entry.getValue() != null) {
+                Location l= entry.getValue().getNode();
+
+                for(String s:l.getTags()){
+                    if(s.equalsIgnoreCase(locationTag))
+                    {
+                        locations.put(locationTag,l.getName());
+                        tagFound=true;
+                        return;
+                    }
+                }
+
+
+
+            }
+            if(!tagFound){
+                if(entry.getValue().getChildren()!=null) {
+                    addChildToList(entry.getValue().getChildren(), locationTag);
+                }
+            }
         }
     }
 }

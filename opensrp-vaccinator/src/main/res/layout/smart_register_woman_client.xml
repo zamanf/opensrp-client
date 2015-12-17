@@ -17,7 +17,7 @@
             android:layout_width="@dimen/client_profile_pic_width"
             android:layout_height="80dp"
             android:id="@+id/woman_profilepic"
-            android:src="@drawable/woman_placeholder"
+            android:src="@drawable/pk_woman_icon"
             android:layout_margin="2dp"
             android:layout_gravity="center_vertical"
             android:scaleType="fitXY" />

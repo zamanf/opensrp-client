@@ -189,8 +189,12 @@ public class FieldMonitorSmartClientsProvider implements SmartRegisterClientsPro
 
                     for (String s : childVaccinesUsed.get(0).getColumnmaps().keySet()) {
                           totalChildVaccinesUsed =totalChildVaccinesUsed+ Integer.parseInt(childVaccinesUsed.get(0).getColumnmaps().get(s));
+                        Log.d("child Vaccines-", s);
+                     //   Log.d("child Vaccines", wastedVaccines.get(i).getColumnmaps().get(s) + " -wasted vaccines used");
+
                         if(usedmap.containsKey(s))
                         {
+
 
                             usedmap.put(s,usedmap.get(s)+Integer.parseInt(childVaccinesUsed.get(0).getColumnmaps().get(s)));
                         }else{

@@ -7,6 +7,15 @@
     "from": "pkwoman.id",
     "to": "pkchild.relationalid"
   },
+
+  {
+    "parent": "field",
+    "child": "reports",
+    "field": "field",
+    "kind": "one_to_one",
+    "from": "field.id",
+    "to": "reports.relationalid"
+  },
   {
     "parent": "eligible_couple",
     "child": "mother",

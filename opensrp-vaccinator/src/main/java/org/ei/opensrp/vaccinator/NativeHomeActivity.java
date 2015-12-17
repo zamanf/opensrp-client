@@ -170,7 +170,7 @@ public class NativeHomeActivity extends SecuredActivity {
                 CommonPersonObjectController.ByColumnAndByDetails.byDetails );
         CommonPersonObjectController womanController = new CommonPersonObjectController(context.allCommonsRepositoryobjects("pkwoman"),
                 context.allBeneficiaries(), context.listCache(),
-                context.personObjectClientsCache(), "first_name", "pkwoman", "program_client_id",
+                context.personObjectClientsCache(), "first_name", "pkwoman", "client_reg_date",
                 CommonPersonObjectController.ByColumnAndByDetails.byDetails.byDetails );
 
         CommonPersonObjectController fieldController = new CommonPersonObjectController(context.allCommonsRepositoryobjects("field"),

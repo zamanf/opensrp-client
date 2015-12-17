@@ -1,4 +1,3 @@
-
 <form autocomplete="off" novalidate="novalidate" class="or clearfix" id="woman_follow_up_register">
    <!--This form was created by transforming a OpenRosa-flavored (X)Form using an XSLT sheet created by Enketo LLC.-->
    <section class="form-logo"> </section>
@@ -468,7 +467,7 @@
          <input type="hidden" name="/Woman_TT_Follow_up_form/meta/instanceID" data-calculate="concat('uuid:', uuid())" data-type-xml="string"/>
       </label>
       <label class="calculation non-select ">
-         <input type="hidden" name="/Woman_TT_Follow_up_form/formhub/uuid" data-calculate="'f747b7a3b47f4d3f949225789c048ef0'" data-type-xml="string"/>
+         <input type="hidden" name="/Woman_TT_Follow_up_form/formhub/uuid" data-calculate="'6b3111fa1a5846fbaf18af992beb60ab'" data-type-xml="string"/>
       </label>
    </fieldset>
 </form>

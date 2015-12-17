@@ -110,7 +110,7 @@ public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
         //setting date for next visit
         //viewHolder.next_visit_date.setText("no alerts available");
 
-        viewHolder.childId.setText(pc.getDetails().get("existing_program_client_id") != null ? pc.getDetails().get("existing_program_client_id") : "");
+        viewHolder.childId.setText(pc.getDetails().get("existing_program_client_id") != null ? pc.getDetails().get("existing_program_client_id") : "N/A");
         viewHolder. childName.setText(pc.getDetails().get("first_name") != null ? pc.getDetails().get("first_name") : "");
         viewHolder.fatherName.setText(pc.getDetails().get("father_name") != null ? pc.getDetails().get("father_name") : "");
         viewHolder. childDOB.setText(pc.getDetails().get("chid_dob_confirm") != null ? pc.getDetails().get("chid_dob_confirm") : "");
@@ -121,7 +121,7 @@ public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
         //viewHolder.next_visit_date_holder.setOnClickListener(onClickListener);
     //    viewHolder.next_visit_date_holder.setTag(client);
         //setting previous vaccanies
-        viewHolder.last_visit_date.setText(pc.getDetails().get("child_reg_date") != null ? pc.getDetails().get("child_reg_date") : "");
+        viewHolder.last_visit_date.setText(pc.getColumnmaps().get("child_reg_date") != null ? pc.getDetails().get("child_reg_date") : "");
         String retroVaccinces= pc.getColumnmaps().get("vaccines")!=null?pc.getColumnmaps().get("vaccines") : "";
         String currentVaccinces=pc.getColumnmaps().get("vaccines2")!=null?pc.getColumnmaps().get("vaccines2") : "";
 

@@ -16,7 +16,7 @@ import java.util.Map;
  * Created by engrmahmed14@gmail.com on 12/13/15.
  */
 public class FieldMonitorDailyDetailActivity extends Activity {
-
+    public static Map<String, String> userMap;
     public static Map<String, String> usedVaccines;
     public static CommonPersonObjectClient fieldclient;
     //private Map<String, String> WastedVaccines;
@@ -38,6 +38,11 @@ public class FieldMonitorDailyDetailActivity extends Activity {
             TextView vaccinatorNameTextView =(TextView)findViewById(R.id.fielddetail_vaccinator_name);
             TextView centerIdTextView =(TextView)findViewById(R.id.fielddetail_centerid);
             TextView ucTextView =(TextView)findViewById(R.id.fielddetail_uc);
+        vaccinatorIdTextView.setText(userMap.get("provider_id"));
+        vaccinatorNameTextView.setText(userMap.get("provider_id"));
+        centerIdTextView.setText(userMap.get("provider_location_id"));
+        ucTextView.setText(userMap.get("provider_location_id"));
+
 
             TextView bcgUsedTextView =(TextView)findViewById(R.id.fielddetail_bcg_used);
             TextView bcgWastedTextView =(TextView)findViewById(R.id.fielddetail_bcg_wasted);

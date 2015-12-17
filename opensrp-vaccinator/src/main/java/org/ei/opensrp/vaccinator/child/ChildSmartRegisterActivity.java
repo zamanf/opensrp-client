@@ -128,14 +128,9 @@ private  HashMap<String,String> overrides;
             @Override
             public DialogOption[] sortingOptions() {
                 return new DialogOption[]{
-//                        new HouseholdCensusDueDateSort(),
 
-                       // new ChildAgeSort(),
                         new CommonObjectSort(CommonObjectSort.ByColumnAndByDetails.byDetails,false,"first_name",getResources().getString(R.string.child_alphabetical_sort)),
                         new CommonObjectSort(CommonObjectSort.ByColumnAndByDetails.byDetails,true,"program_client_id",getResources().getString(R.string.child_id_sort))
-
-//""
-//                        new CommonObjectSort(true,false,true,"age")
                 };
             }
 
@@ -177,45 +172,15 @@ private  HashMap<String,String> overrides;
 
     @Override
     protected void onInitialization() {
-             //   context.allCommonsRepositoryobjects(
-        //context.
-      // AllCommonsRepository commonRepo=context.allCommonsRepositoryobjects("child");
-            //    new CommonPersonObjectController()
-   /*         controller = new CommonPersonObjectController(context.allCommonsRepositoryobjects("vaccine_child"),
-                    context.allBeneficiaries(), context.listCache(),
-                    context.personObjectClientsCache(), "first_name", "vaccine_child","type","child",
-                    CommonPersonObjectController.ByColumnAndByDetails.byColumn
-                    , "child_reg_date",
-                    CommonPersonObjectController.ByColumnAndByDetails.byDetails.byDetails );*/
+
        controller= new CommonPersonObjectController(context.allCommonsRepositoryobjects("pkchild"),
                 context.allBeneficiaries(), context.listCache(),
                 context.personObjectClientsCache(), "first_name", "pkchild", "child_reg_date",
                 CommonPersonObjectController.ByColumnAndByDetails.byDetails );
-              //Log.d("Child count :", context.commonrepository("vaccine_child").count() + "");
 
-                //context.
-         /*   controller = new CommonPersonObjectController(context.allCommonsRepositoryobjects("elco"),
-                    context.allBeneficiaries(), context.listCache(),
-                    context.personObjectClientsCache(),
-                    "FWWOMFNAME","elco","FWELIGIBLE","1",
-                    CommonPersonObjectController.ByColumnAndByDetails.byDetails.byDetails,
-                    "FWWOMFNAME", CommonPersonObjectController.ByColumnAndByDetails.byDetails,
-                    new ElcoPSRFDueDateSort());
-*/
         String locationjson = context.anmLocationController().get();
-        Log.d("ANM LOCATION : ", locationjson);
-
-        LocationTree locationTree = EntityUtils.fromJson(locationjson, LocationTree.class);
-//      Location l=  locationTree.findLocation("Country");
 
 
-
-        Map<String,TreeNode<String, Location>> locationMap =
-                locationTree.getLocationsHierarchy();
-        Log.d("location json label : ", locationMap.entrySet().toString());
-     //   Log.d("location json id: ", locationMap.get("country").getId());
-
-    //    Log.d("ANM LOCATION JSON : ", l.getName());
         context.formSubmissionRouter().getHandlerMap().put("child_followup_form",new ChildFollowupHandler(new ChildService(context.allBeneficiaries(),context.allTimelineEvents(), context.allCommonsRepositoryobjects("pkchild"),context.alertService())));
         dialogOptionMapper = new DialogOptionMapper();
 
@@ -223,18 +188,9 @@ private  HashMap<String,String> overrides;
 
     @Override
     protected void startRegistration() {
-        //public static
-        //final String    BARCODE_INTENT= "com.google.zxing.client.android.SCAN";
         Intent intent = new Intent(Barcode.BARCODE_INTENT);
         intent.putExtra(Barcode.SCAN_MODE, Barcode.QR_MODE);
         startActivityForResult(intent, Barcode.BARCODE_REQUEST_CODE);
-
-
-        //FieldOverrides fieldOverrides = new FieldOverrides(overridejsonobject.toString());
-        //formController.startFormActivity("child_enrollment_form",);
-       // new OpenFormOption("Child Enrollment Form", "child_enrollment_form", formController,overridemap, OpenFormOption.ByColumnAndByDetails.byDetails);
-
-
     }
 
 
@@ -247,13 +203,6 @@ private  HashMap<String,String> overrides;
 
                 Bundle extras =data.getExtras();
                 String qrcode= (String)    extras.get(Barcode.SCAN_RESULT);
-
-
-                Toast.makeText(this ,"QrCode is : "+qrcode, Toast.LENGTH_LONG).show();
-       /*
-       #TODO:after reading the code , app first search for that id in database if he it is there , that client appears  on register only . if it doesnt then it shows two options
-
-       */
                 org.ei.opensrp.util.Log.logDebug("ANM DETAILS"+context.anmController().get());
                 String locationjson = context.anmLocationController().get();
                 LocationTree locationTree = EntityUtils.fromJson(locationjson, LocationTree.class);
@@ -278,14 +227,9 @@ private  HashMap<String,String> overrides;
                     map.put("gender","female");
                     map.put("provider_location_name", locations.get("uc"));
                     map.put("provider_id",context.anmService().fetchDetails().name());                   // map.put("e_bcg",)
-                    //map.put("","");
+
                     setOverrides(map);
-
-                  //  map.put("provider_id", anmController.get());
-                  //  map.put("program_client_id",qrcode);
-                    //showFragmentDialog(new EditDialogOptionModel(getOverrides()));
-
-                   showFragmentDialog(new EditDialogOptionModel(map),null);
+                    showFragmentDialog(new EditDialogOptionModel(map),null);
                 }else {
                  getSearchView().setText(qrcode);
    // startFormActivity();
@@ -336,7 +280,7 @@ private  HashMap<String,String> overrides;
         @Override
         public void onDialogOptionSelection(DialogOption option, Object tag) {
 
-           //     Toast.makeText(ChildSmartRegisterActivity.this,option.name()+"", Toast.LENGTH_LONG).show();
+
             onEditSelection((EditOption) option, (SmartRegisterClient) tag);
         }
     }
@@ -386,42 +330,43 @@ private  HashMap<String,String> overrides;
                     addChildToList(locationMap, "uc");
 
 
-                        HashMap<String , String> map=new HashMap<String,String>();
-                        map.put("provider_uc",locations.get("uc"));
-                        map.put("provider_town",locations.get("town"));
-                        map.put("provider_city",locations.get("city"));
-                        map.put("provider_province",locations.get("province"));
-                        map.put("existing_program_client_id",client.getDetails().get("existing_program_client_id"));
-                        map.put("provider_location_id",locations.get("uc"));
-                        map.put("gender",client.getDetails().get("gender"));
-                        map.put("provider_location_name", locations.get("uc"));
-                        map.put("provider_id",context.anmService().fetchDetails().name());
+                        HashMap<String , String> preloadmap=new HashMap<String,String>();
+                        preloadmap.put("provider_uc",locations.get("uc"));
+                        preloadmap.put("provider_town",locations.get("town"));
+                        preloadmap.put("provider_city",locations.get("city"));
+                        preloadmap.put("provider_province",locations.get("province"));
+                    preloadmap.put("provider_id",context.anmService().fetchDetails().name());
+                    preloadmap.put("existing_program_client_id",client.getDetails().get("existing_program_client_id")!=null?client.getDetails().get("existing_program_client_id"):"");
+                    preloadmap.put("provider_location_id",locations.get("uc"));
+                    preloadmap.put("gender",client.getDetails().get("gender"));
+                    preloadmap.put("provider_location_name", locations.get("uc"));
 
-                    map.put("existing_house_number",client.getDetails().get("house_number")!=null?client.getDetails().get("house_number"):"");
-                    map.put("existing_street",client.getDetails().get("street")!=null?client.getDetails().get("street"):"");
-                    map.put("existing_union_council",client.getDetails().get("union_council")!=null?client.getDetails().get("union_council"):"");
-                    map.put("existing_town",client.getDetails().get("town")!=null?client.getDetails().get("town"):"");
-                    map.put("existing_city_village",client.getDetails().get("city_village")!=null?client.getDetails().get("city_village"):"");
-                    map.put("existing_province",client.getDetails().get("province")!=null?client.getDetails().get("province"):"");
-                    map.put("existing_landmark",client.getDetails().get("landmark")!=null?client.getDetails().get("landmark"):"");
-                    map.put("existing_gender",client.getDetails().get("gender")!=null?client.getDetails().get("gender"):"");
 
-                    map.put("existing_first_name",client.getDetails().get("first_name")!=null?client.getDetails().get("first_name"):"");
-                    map.put("existing_second_name",client.getDetails().get("last_name")!=null?client.getDetails().get("last_name"):"");
-                    map.put("existing_father_name",client.getDetails().get("father_name")!=null?client.getDetails().get("father_name"):"");
-                    map.put("existing_mother_name",client.getDetails().get("mother_name")!=null?client.getDetails().get("mother_name"):"");
+                    preloadmap.put("existing_house_number",client.getDetails().get("house_number")!=null?client.getDetails().get("house_number"):"");
+                    preloadmap.put("existing_street",client.getDetails().get("street")!=null?client.getDetails().get("street"):"");
+                    preloadmap.put("existing_union_council",client.getDetails().get("union_council")!=null?client.getDetails().get("union_council"):"");
+                    preloadmap.put("existing_town",client.getDetails().get("town")!=null?client.getDetails().get("town"):"");
+                    preloadmap.put("existing_city_village",client.getDetails().get("city_village")!=null?client.getDetails().get("city_village"):"");
+                    preloadmap.put("existing_province",client.getDetails().get("province")!=null?client.getDetails().get("province"):"");
+                    preloadmap.put("existing_landmark",client.getDetails().get("landmark")!=null?client.getDetails().get("landmark"):"");
+                    preloadmap.put("existing_gender",client.getDetails().get("gender")!=null?client.getDetails().get("gender"):"");
 
-                    map.put("existing_chid_dob",client.getDetails().get("chid_dob_confirm")!=null?client.getDetails().get("chid_dob_confirm"):"");
-                    map.put("existing_ethnicity",client.getDetails().get("ethnicity")!=null?client.getDetails().get("ethnicity"):"");
-                    map.put("existing_child_reg_date",client.getDetails().get("child_reg_date")!=null?client.getDetails().get("child_reg_date"):"");
-                    map.put("existing_card_number",client.getDetails().get("epi_card_number")!=null?client.getDetails().get("epi_card_number"):"");
-                    map.put("existing_child_was_suffering_from_a_disease_at_birth",client.getDetails().get("child_was_suffering_from_a_disease_at_birth")!=null?client.getDetails().get("child_was_suffering_from_a_disease_at_birth"):"");
+                    preloadmap.put("existing_first_name",client.getDetails().get("first_name")!=null?client.getDetails().get("first_name"):"");
+                    preloadmap.put("existing_second_name",client.getDetails().get("last_name")!=null?client.getDetails().get("last_name"):"");
+                    preloadmap.put("existing_father_name",client.getDetails().get("father_name")!=null?client.getDetails().get("father_name"):"");
+                    preloadmap.put("existing_mother_name",client.getDetails().get("mother_name")!=null?client.getDetails().get("mother_name"):"");
 
-                        map.putAll(getPreloadVaccinesData(client));
-                    setOverrides(map);
-                    Log.d("Map loadind",map.toString());
+                    preloadmap.put("existing_chid_dob",client.getDetails().get("chid_dob_confirm")!=null?client.getDetails().get("chid_dob_confirm"):"");
+                    preloadmap.put("existing_ethnicity",client.getDetails().get("ethnicity")!=null?client.getDetails().get("ethnicity"):"");
+                    preloadmap.put("existing_child_reg_date",client.getDetails().get("child_reg_date")!=null?client.getDetails().get("child_reg_date"):"");
+                    preloadmap.put("existing_card_number",client.getDetails().get("epi_card_number")!=null?client.getDetails().get("epi_card_number"):"");
+                    preloadmap.put("existing_child_was_suffering_from_a_disease_at_birth",client.getDetails().get("child_was_suffering_from_a_disease_at_birth")!=null?client.getDetails().get("child_was_suffering_from_a_disease_at_birth"):"");
 
-                    startFollowupForms("child_followup_form", (SmartRegisterClient) view.getTag(), map, ByColumnAndByDetails.bydefault);
+                        preloadmap.putAll(getPreloadVaccinesData(client));
+                    setOverrides(preloadmap);
+
+
+                    startFollowupForms("child_followup_form", (SmartRegisterClient) view.getTag(), preloadmap, ByColumnAndByDetails.bydefault);
                     break;
             }
         }
@@ -567,7 +512,7 @@ private  HashMap<String,String> overrides;
             }catch (Exception e){
                 e.printStackTrace();
             }
-           // org.ei.opensrp.util.Log.logDebug("overrides data is : " + overrideStringmap);
+            // org.ei.opensrp.util.Log.logDebug("overrides data is : " + overrideStringmap);
             FieldOverrides fieldOverrides = new FieldOverrides(overridejsonobject.toString());
             org.ei.opensrp.util.Log.logDebug("fieldOverrides data is : " + fieldOverrides.getJSONString());
             formController.startFormActivity(formName, client.entityId(), fieldOverrides.getJSONString());

@@ -88,7 +88,7 @@ public class WomanSmartClientsProvider implements SmartRegisterClientsProvider {
 
 
 
-        viewHolder.womanId.setText(pc.getDetails().get("program_client_id") != null ? pc.getDetails().get("program_client_id") : "");
+        viewHolder.womanId.setText(pc.getDetails().get("existing_program_client_id") != null ? pc.getDetails().get("existing_program_client_id") : "N/A");
         viewHolder.womanName.setText(pc.getDetails().get("first_name") != null ? pc.getDetails().get("first_name") : "");
         viewHolder.fatherName.setText(pc.getDetails().get("father_name") != null ? pc.getDetails().get("father_name") : "");
        // viewHolder.womanDOB.setText(pc.getDetails().get("client_dob_confirm") != null ? pc.getDetails().get("chid_dob_confirm") : "");
@@ -110,7 +110,7 @@ public class WomanSmartClientsProvider implements SmartRegisterClientsProvider {
         if(alertlist_for_client.size() == 0 ){
             viewHolder.next_visit_date.setText("Not Synced to Server");
             viewHolder.next_due_date_holder.setBackgroundColor(context.getResources().getColor(R.color.status_bar_text_almost_white));
-            viewHolder.next_visit_date.setOnClickListener(new View.OnClickListener() {
+            viewHolder.next_due_date_holder.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 

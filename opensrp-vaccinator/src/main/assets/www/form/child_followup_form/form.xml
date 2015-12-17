@@ -593,7 +593,7 @@
          <input type="hidden" name="/Child_Followup_Vaccination_Register/meta/instanceID" data-calculate="concat('uuid:', uuid())" data-type-xml="string"/>
       </label>
       <label class="calculation non-select ">
-         <input type="hidden" name="/Child_Followup_Vaccination_Register/formhub/uuid" data-calculate="'75df76f9199c440c9625e154f5270e74'" data-type-xml="string"/>
+         <input type="hidden" name="/Child_Followup_Vaccination_Register/formhub/uuid" data-calculate="'3b0122054d334319baa367d0ecdf1aa7'" data-type-xml="string"/>
       </label>
    </fieldset>
 </form>

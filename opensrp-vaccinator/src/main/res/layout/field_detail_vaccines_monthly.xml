@@ -268,7 +268,7 @@
                 style="@style/CustomFontTextViewStyle.ListView.Medium"
                 android:text="N/A "
                 android:layout_margin="5dp"
-                android:id="@+id/fielddetail_measles_used"
+                android:id="@+id/fielddetail_measles_used_monthly"
                 android:textSize="16sp"
                 android:textColor="@color/text_black" />
 

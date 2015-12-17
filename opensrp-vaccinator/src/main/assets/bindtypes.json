@@ -1,9 +1,11 @@
 {
     "bindobjects":
  [
+   {"name":"reports",
+   "columns":[]},
     {
       "name": "pkwoman",
-      "columns" : [
+      "columns" : [{"name":"dob"},
         {"name":"vaccines"},
         {"name":"vaccines2"},
         {"name":"tt1_retro"},
@@ -19,7 +21,7 @@
     },
    {
    "name":"pkchild",
-   "columns":[
+   "columns":[ {"name":"dob"},
      {"name":"vaccines"},
      {"name":"vaccines2"} ,
      {"name":"date"},

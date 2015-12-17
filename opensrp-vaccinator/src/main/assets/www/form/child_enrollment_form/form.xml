@@ -1,4 +1,3 @@
-
 <form autocomplete="off" novalidate="novalidate" class="or clearfix" id="child_enrollment_vaccination_register">
    <!--This form was created by transforming a OpenRosa-flavored (X)Form using an XSLT sheet created by Enketo LLC.-->
    <section class="form-logo"> </section>
@@ -1321,7 +1320,7 @@
          <input type="hidden" name="/Child_Enrollment_Vaccination_Register/meta/instanceID" data-calculate="concat('uuid:', uuid())" data-type-xml="string"/>
       </label>
       <label class="calculation non-select ">
-         <input type="hidden" name="/Child_Enrollment_Vaccination_Register/formhub/uuid" data-calculate="'9215d9108ab74da3b76549254c61277e'" data-type-xml="string"/>
+         <input type="hidden" name="/Child_Enrollment_Vaccination_Register/formhub/uuid" data-calculate="'df0bca11a9594e30a9820ffbf8c173d4'" data-type-xml="string"/>
       </label>
    </fieldset>
 </form>
