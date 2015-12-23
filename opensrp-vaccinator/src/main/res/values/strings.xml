@@ -38,6 +38,12 @@
     <string name="str_field_search_hint">Search Field Register</string>
     <string name="pick_report">Report</string>
     <string name="field_details_title">Stock Position Vaccination</string>
+    <string name="title_activity_vaccine_report">VaccineReport</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>

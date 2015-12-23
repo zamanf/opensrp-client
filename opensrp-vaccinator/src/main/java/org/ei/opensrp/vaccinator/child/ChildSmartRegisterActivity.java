@@ -74,8 +74,7 @@ public class ChildSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
     private CommonPersonObjectController controller;
     private VillageController villageController;
     private DialogOptionMapper dialogOptionMapper;
-//    private final FormController formController;
-private  HashMap<String,String> overrides;
+    private  HashMap<String,String> overrides;
     private final ClientActionHandler clientActionHandler = new ClientActionHandler();
 
     @Override

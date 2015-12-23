@@ -60,6 +60,10 @@ public class AllCommonsRepository {
         return personRepository.customQuery(sql,selections,tableName);
 
     }
+    public List<CommonPersonObject> customQueryForCompleteRow(String sql , String[] selections , String tableName){
+        return personRepository.customQueryForCompleteRow(sql,selections,tableName);
+
+    }
 
     public void update(String tableName,ContentValues contentValues,String caseId){
 
