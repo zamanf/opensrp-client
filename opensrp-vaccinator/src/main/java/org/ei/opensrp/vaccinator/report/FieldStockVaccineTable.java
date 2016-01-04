@@ -31,7 +31,7 @@ public class FieldStockVaccineTable extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.logDebug("reached childVaccineTable");
+
         View rootView =inflater.inflate(R.layout.fragment_field_stock_vaccine_table2, container, false);
        // View rootView = inflater.inflate(R.layout.fragment_child_vaccine_table, container, false);
         TextView bcgBalanceTextView=(TextView)rootView.findViewById(R.id.field_table_bcgbalance);

@@ -18,6 +18,7 @@ import android.view.Window;
 import android.widget.TextView;
 
 import org.ei.opensrp.Context;
+
 import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.util.Log;
 import org.ei.opensrp.vaccinator.R;
@@ -25,6 +26,7 @@ import org.ei.opensrp.vaccinator.R;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Formatter;
+import java.util.List;
 
 public class VaccineReport extends AppCompatActivity {
 
@@ -37,6 +39,7 @@ public class VaccineReport extends AppCompatActivity {
     private CommonPersonObject childVaccineForFieldObject;
     private Fragment fieldReport;
     private Fragment childReport;
+    private CommonPersonObject pregnantWomanObject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,8 +108,13 @@ public class VaccineReport extends AppCompatActivity {
                 "(select count(*) c from pkchild where measles_2 between '"+startDate+"' and '"+endDate+"' and (date('now')-dob)<1  ) measles2_0," +
                 "(select count(*) c from pkchild where measles_2 between '"+startDate+"' and '"+endDate+"' and (date('now')-dob)=1  ) measles2_1," +
                 "(select count(*) c from pkchild where measles_2 between '"+startDate+"' and '"+endDate+"' and (date('now')-dob)>2  ) measles2_2  from pkchild limit 1;";
- childObject =context.allCommonsRepositoryobjects("pkchild").customQuery(childTablesql, new String[]{}, "pkchild").get(0);
+     List<CommonPersonObject> childList= context.allCommonsRepositoryobjects("pkchild").customQuery(childTablesql, new String[]{}, "pkchild");
+        if(childList.size()<1) {
+            childObject=null;
+        }else{
 
+            childObject =childList.get(0);
+        }
 //select * from field where field.date like '2015-12%' and report=='monthly'
         String womanVaccineSQlForField="select " +
                 "(select count(*) c from pkwoman where tt1 between '"+startDate+"' and '"+endDate+"' ) tt1," +
@@ -115,11 +123,26 @@ public class VaccineReport extends AppCompatActivity {
                 "(select count(*) c from pkwoman where tt4 between '"+startDate+"' and '"+endDate+"' ) tt4," +
                 "(select count(*) c from pkwoman where tt5 between '"+startDate+"' and '"+endDate+"' ) tt5 " +
                 "from pkwoman limit 1;";
-     womanVaccineObjectForField =   context.allCommonsRepositoryobjects("pkwoman").customQuery(womanVaccineSQlForField, new String[]{}, "pkwoman").get(0);
+        List<CommonPersonObject> womanVaccineListForField= context.allCommonsRepositoryobjects("pkwoman").customQuery(womanVaccineSQlForField, new String[]{}, "pkwoman");
+    if(womanVaccineListForField.size()<1) {
+        womanVaccineObjectForField=null;
+    }else{
 
+        womanVaccineObjectForField =womanVaccineListForField.get(0);
+
+    }
         String reportMonth=year + "-" + month + "-";
         String fieldVaccineSQL="select * from field where field.date like '"+reportMonth+"%' and report=='monthly'";
-        fieldVaccineObjectForField= context.allCommonsRepositoryobjects("field").customQueryForCompleteRow(fieldVaccineSQL, new String[]{}, "field").get(0);
+
+        List<CommonPersonObject>  fieldVaccineListForField= context.allCommonsRepositoryobjects("field").customQueryForCompleteRow(fieldVaccineSQL, new String[]{}, "field");
+        if(fieldVaccineListForField.size()<1) {
+            fieldVaccineObjectForField=null;
+        }else{
+
+            fieldVaccineObjectForField =fieldVaccineListForField.get(0);
+
+        }
+        //fieldVaccineObjectForField= context.allCommonsRepositoryobjects("field").customQueryForCompleteRow(fieldVaccineSQL, new String[]{}, "field").get(0);
 
 String childVaccineForFieldSQL= "select (" +
         "select count(*) c from pkchild where bcg between '" + startDate + "' and '" + endDate + "') bcg," +
@@ -137,7 +160,38 @@ String childVaccineForFieldSQL= "select (" +
         "(select count(*) c from pkchild where pentavalent_3 between '" + startDate + "' and '" + endDate + "') pentavalent_3 " +
         "from pkchild limit 1 ;";
 
-        childVaccineForFieldObject=context.allCommonsRepositoryobjects("pkchild").customQuery(childVaccineForFieldSQL, new String[]{}, "pkchild").get(0);
+
+
+        List<CommonPersonObject>  childVaccineListForField=context.allCommonsRepositoryobjects("pkchild").customQuery(childVaccineForFieldSQL, new String[]{}, "pkchild");
+        if(fieldVaccineListForField.size()<1) {
+            childVaccineForFieldObject=null;
+
+        }else{
+
+            childVaccineForFieldObject =childVaccineListForField.get(0);
+
+        }
+       // childVaccineForFieldObject=context.allCommonsRepositoryobjects("pkchild").customQuery(childVaccineForFieldSQL, new String[]{}, "pkchild").get(0);
+
+       String pregnantWomanSQL="select " +
+               "(select count(*) c from pkwoman where tt1 between '" + startDate + "' and '" + endDate + "' and pregnant='yes') tt1," +
+               "(select count(*) c from pkwoman where tt2 between '" + startDate + "' and '" + endDate + "' and pregnant='yes') tt2," +
+               "(select count(*) c from pkwoman where tt3 between '" + startDate + "' and '" + endDate + "' and pregnant='yes') tt3," +
+               "(select count(*) c from pkwoman where tt4 between '" + startDate + "' and '" + endDate + "' and pregnant='yes') tt4," +
+               "(select count(*) c from pkwoman where tt5 between '" + startDate + "' and '" + endDate + "' and pregnant='yes') tt5 " +
+               "from pkwoman limit 1;    ";
+        List<CommonPersonObject>  pregnantVaccineList=context.allCommonsRepositoryobjects("pkwoman").customQuery(pregnantWomanSQL, new String[]{}, "pkwoman");
+        if(pregnantVaccineList.size()<1) {
+
+            pregnantWomanObject=null;
+        }else{
+
+            pregnantWomanObject =pregnantVaccineList.get(0);
+
+        }
+
+     //  pregnantWomanObject=context.allCommonsRepositoryobjects("pkwoman").customQuery(pregnantWomanSQL, new String[]{}, "pkwoman").get(0);
+
         Log.logDebug("Reached fieldVaccineObjectForField " );
     }
 
@@ -183,7 +237,7 @@ String childVaccineForFieldSQL= "select (" +
             return new ChildVaccineTable(childObject);
         }else if(position==1){
 
-            return new WomanVaccineTable();
+            return new WomanVaccineTable(pregnantWomanObject);
 
         }
         else if(position==2) {
