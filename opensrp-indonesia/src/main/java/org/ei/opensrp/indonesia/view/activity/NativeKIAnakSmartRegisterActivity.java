@@ -99,7 +99,7 @@ public class NativeKIAnakSmartRegisterActivity extends BidanSecuredNativeSmartRe
         setRequestedOrientation(page < ((BaseRegisterActivityPagerAdapter)mPagerAdapter).offset() ? ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
-    @Override   
+    @Override
     protected SmartRegisterPaginatedAdapter adapter() {
         return null;
     }
@@ -207,6 +207,11 @@ public class NativeKIAnakSmartRegisterActivity extends BidanSecuredNativeSmartRe
             switchToBaseFragment(formSubmission); // Unnecessary!! passing on data
 
         }catch (Exception e){
+            // TODO: show error dialog on the formfragment if the submission fails
+            DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(currentPage);
+            if (displayFormFragment != null) {
+                displayFormFragment.hideTranslucentProgressDialog();
+            }
             e.printStackTrace();
         }
     }
@@ -225,6 +230,7 @@ public class NativeKIAnakSmartRegisterActivity extends BidanSecuredNativeSmartRe
                 //hack reset the form
                 DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(prevPageIndex);
                 if (displayFormFragment != null) {
+                    displayFormFragment.hideTranslucentProgressDialog();
                     displayFormFragment.setFormData(null);
                     displayFormFragment.loadFormData();
                 }
