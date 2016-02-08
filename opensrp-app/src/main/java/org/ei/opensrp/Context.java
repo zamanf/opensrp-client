@@ -24,6 +24,7 @@ import org.ei.opensrp.repository.DrishtiRepository;
 import org.ei.opensrp.repository.EligibleCoupleRepository;
 import org.ei.opensrp.repository.FormDataRepository;
 import org.ei.opensrp.repository.FormsVersionRepository;
+import org.ei.opensrp.repository.ImageRepository;
 import org.ei.opensrp.repository.MotherRepository;
 import org.ei.opensrp.repository.ReportRepository;
 import org.ei.opensrp.repository.Repository;
@@ -123,6 +124,8 @@ public class Context {
     private AllReports allReports;
     private AllServicesProvided allServicesProvided;
     private AllCommonsRepository allCommonPersonObjectsRepository;
+    private static ImageRepository imageRepository;
+
 
     private DrishtiService drishtiService;
     private ActionService actionService;
@@ -187,7 +190,7 @@ public class Context {
     private ANMController anmController;
     private ANMLocationController anmLocationController;
 
-    private DristhiConfiguration configuration;
+    protected DristhiConfiguration configuration;
 
     ///////////////////common bindtypes///////////////
     public static ArrayList<CommonRepositoryInformationHolder> bindtypes;
@@ -489,6 +492,7 @@ public class Context {
             drishtireposotorylist.add(formDataRepository());
             drishtireposotorylist.add(serviceProvidedRepository());
             drishtireposotorylist.add(formsVersionRepository());
+            drishtireposotorylist.add(imageRepository());
             for(int i = 0;i < bindtypes.size();i++){
                 drishtireposotorylist.add(commonrepository(bindtypes.get(i).getBindtypename()));
             }
@@ -630,6 +634,12 @@ public class Context {
             formsVersionRepository = new FormsVersionRepository();
         }
         return formsVersionRepository;
+    }
+    public static DrishtiRepository imageRepository() {
+        if (imageRepository == null) {
+            imageRepository = new ImageRepository();
+        }
+        return imageRepository;
     }
 
     public UserService userService() {
@@ -868,7 +878,7 @@ public class Context {
                 String bindname = bindtypeObjects.getJSONObject(i).getString("name");
                 String [] columNames = new String[ bindtypeObjects.getJSONObject(i).getJSONArray("columns").length()];
                 for(int j = 0 ; j < columNames.length;j++){
-                  columNames[j] =  bindtypeObjects.getJSONObject(i).getJSONArray("columns").getJSONObject(j).getString("name");
+                    columNames[j] =  bindtypeObjects.getJSONObject(i).getJSONArray("columns").getJSONObject(j).getString("name");
                 }
                 bindtypes.add(new CommonRepositoryInformationHolder(bindname,columNames));
                 Log.v("bind type logs",bindtypeObjects.getJSONObject(i).getString("name"));
@@ -920,6 +930,10 @@ public class Context {
 
     protected void setRepository(Repository repository) {
         this.repository = repository;
+    }
+
+    public HTTPAgent getHttpAgent() {
+        return httpAgent;
     }
 
     ///////////////////////////////////////////////////////////////////////////////
