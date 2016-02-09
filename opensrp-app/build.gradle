@@ -48,7 +48,7 @@ android {
     }
 
     defaultConfig {
-        // multiDexEnabled = true
+        multiDexEnabled = true
         //applicationId "org.ei.opensrp"
         minSdkVersion 16
         targetSdkVersion 21
