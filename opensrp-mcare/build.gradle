@@ -1,29 +1,15 @@
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath "com.android.tools.build:gradle:1.2.3"
-        classpath 'org.apache.commons:commons-lang3:3.3.2'
-        classpath 'org.robolectric:robolectric-gradle-plugin:1.1.0'
-    }
-}
 apply plugin: 'com.android.application'
-dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile project(':opensrp-app')
-}
+
 android {
-    compileSdkVersion androidCompileSdkVersion
-    buildToolsVersion androidBuildToolsVersion
+    compileSdkVersion 23
+    buildToolsVersion "23.0.1"
 
     defaultConfig {
         applicationId "org.ei.opensrp.mcare"
         minSdkVersion 16
-        targetSdkVersion 21
-        versionCode 21
-        versionName "21.0"
-        multiDexEnabled true
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
     }
     buildTypes {
         release {
@@ -31,6 +17,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES.txt'
         exclude 'META-INF/LICENSE.txt'
@@ -48,4 +35,8 @@ android {
     }
 }
 
-
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile project(':opensrp-app')
+}

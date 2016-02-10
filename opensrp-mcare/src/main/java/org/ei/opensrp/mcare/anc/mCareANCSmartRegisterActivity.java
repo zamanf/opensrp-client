@@ -157,14 +157,14 @@ public class mCareANCSmartRegisterActivity extends SecuredNativeSmartRegisterAct
             overridemap.put("ANC4_current_formStatus", alertstatus);
             return new DialogOption[]{new OpenFormOption(getResources().getString(R.string.anc4form), "anc_reminder_visit_4", formController,overridemap, OpenFormOption.ByColumnAndByDetails.bydefault)};
         } else if (ancvisittext.contains("ANC3")) {
-            Log.v("anc3 form status",alertstatus);
+            Log.v("anc3 form status", alertstatus);
             overridemap.put("ANC3_current_formStatus", alertstatus);
             return new DialogOption[]{new OpenFormOption(getResources().getString(R.string.anc3form), "anc_reminder_visit_3", formController,overridemap, OpenFormOption.ByColumnAndByDetails.bydefault)};
         } else if (ancvisittext.contains("ANC2")) {
             overridemap.put("ANC2_current_formStatus", alertstatus);
             return new DialogOption[]{new OpenFormOption(getResources().getString(R.string.anc2form), "anc_reminder_visit_2", formController,overridemap, OpenFormOption.ByColumnAndByDetails.bydefault)};
         } else if (ancvisittext.contains("ANC1")) {
-            Log.v("anc1 form status",alertstatus);
+            Log.v("anc1 form status", alertstatus);
             overridemap.put("anc1_current_formStatus", alertstatus);
             return new DialogOption[]{new OpenFormOption(getResources().getString(R.string.anc1form), "anc_reminder_visit_1", formController,overridemap, OpenFormOption.ByColumnAndByDetails.bydefault)};
         }else {
@@ -304,7 +304,7 @@ public class mCareANCSmartRegisterActivity extends SecuredNativeSmartRegisterAct
     }
 
     public void switchToBaseFragment(final String data){
-        Log.v("we are here","switchtobasegragment");
+        Log.v("we are here", "switchtobasegragment");
         final int prevPageIndex = currentPage;
         runOnUiThread(new Runnable() {
             @Override

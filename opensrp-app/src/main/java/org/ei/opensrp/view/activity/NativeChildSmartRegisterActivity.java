@@ -1,6 +1,7 @@
 package org.ei.opensrp.view.activity;
 
 import android.view.View;
+
 import org.ei.opensrp.AllConstants;
 import org.ei.opensrp.R;
 import org.ei.opensrp.adapter.SmartRegisterPaginatedAdapter;

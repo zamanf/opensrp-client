@@ -31,7 +31,6 @@ import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.Scroller;
 
-
 import org.ei.opensrp.mcare.R;
 
 import java.util.EnumSet;
@@ -543,7 +542,7 @@ public class ViewFlow extends AdapterView<Adapter> {
 			postInvalidate();
 		} else if (mNextScreen != INVALID_SCREEN) {
 			mCurrentScreen = Math.max(0,
-                    Math.min(mNextScreen, getChildCount() - 1));
+					Math.min(mNextScreen, getChildCount() - 1));
 			mNextScreen = INVALID_SCREEN;
 			post(new Runnable() {
 				@Override
@@ -562,7 +561,7 @@ public class ViewFlow extends AdapterView<Adapter> {
 	 */
 	private void setVisibleView(int indexInBuffer, boolean uiThread) {
 		mCurrentScreen = Math.max(0,
-                Math.min(indexInBuffer, getChildCount() - 1));
+				Math.min(indexInBuffer, getChildCount() - 1));
 		int dx = (mCurrentScreen * getChildWidth()) - mScroller.getCurrX();
 		mScroller.startScroll(mScroller.getCurrX(), mScroller.getCurrY(), dx,
 				0, 0);
@@ -702,7 +701,7 @@ public class ViewFlow extends AdapterView<Adapter> {
 
 		for (int i = Math.max(0, mCurrentAdapterIndex - mSideBuffer); i < Math
 				.min(mAdapter.getCount(), mCurrentAdapterIndex + mSideBuffer
-                        + 1); i++) {
+						+ 1); i++) {
 			mLoadedViews.addLast(makeAndAddView(i, true));
 			if (i == mCurrentAdapterIndex) {
 				mCurrentBufferIndex = mLoadedViews.size() - 1;

@@ -35,7 +35,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Locale;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static org.ei.opensrp.util.StringUtil.humanize;
@@ -225,7 +224,7 @@ public class ElcoSmartClientsProvider implements SmartRegisterClientsProvider {
         }
         for(int i = 0;i<alertlist_for_client.size();i++){
 //           psrfdue.setText(alertlist_for_client.get(i).expiryDate());
-            Log.v("printing alertlist",alertlist_for_client.get(i).status().value());
+            Log.v("printing alertlist", alertlist_for_client.get(i).status().value());
             if(alertlist_for_client.get(i).status().value().equalsIgnoreCase("normal")){
                psrfdue.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -272,7 +271,7 @@ public class ElcoSmartClientsProvider implements SmartRegisterClientsProvider {
         //check if woman is pregnant and if so then block the button
         if(pc.getDetails().get("FWPSRSTS")!=null && pc.getDetails().get("psrf_schedule_logic")!=null ){
             if( ((pc.getDetails().get("psrf_schedule_logic").equalsIgnoreCase("0")) || pc.getDetails().get("FWPSRSTS").equalsIgnoreCase("01"))){
-                Log.v("printing alertlist","yoo hoo");
+                Log.v("printing alertlist", "yoo hoo");
                 psrfdue.setText(pc.getDetails().get("FWPSRDATE"));
                 psrfdue.setBackgroundColor(context.getResources().getColor(R.color.alert_complete_green_mcare));
                 psrfdue.setOnClickListener(new View.OnClickListener() {

@@ -1,6 +1,7 @@
 package org.ei.opensrp.view.activity;
 
 import android.view.View;
+
 import org.ei.opensrp.AllConstants;
 import org.ei.opensrp.R;
 import org.ei.opensrp.adapter.SmartRegisterPaginatedAdapter;
@@ -17,7 +18,14 @@ import java.util.List;
 import static com.google.common.collect.Iterables.concat;
 import static com.google.common.collect.Iterables.toArray;
 import static java.util.Arrays.asList;
-import static org.ei.opensrp.AllConstants.FormNames.*;
+import static org.ei.opensrp.AllConstants.FormNames.ANC_CLOSE;
+import static org.ei.opensrp.AllConstants.FormNames.ANC_INVESTIGATIONS;
+import static org.ei.opensrp.AllConstants.FormNames.ANC_VISIT;
+import static org.ei.opensrp.AllConstants.FormNames.DELIVERY_OUTCOME;
+import static org.ei.opensrp.AllConstants.FormNames.DELIVERY_PLAN;
+import static org.ei.opensrp.AllConstants.FormNames.HB_TEST;
+import static org.ei.opensrp.AllConstants.FormNames.IFA;
+import static org.ei.opensrp.AllConstants.FormNames.TT;
 
 public class NativeANCSmartRegisterActivity extends SecuredNativeSmartRegisterActivity {
 

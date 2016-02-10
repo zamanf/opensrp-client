@@ -184,7 +184,7 @@ public class HTTPAgent {
 
             httpost.setHeader("Accept", "multipart/form-data");
             File filetoupload = new File(image.getFilepath());
-            Log.v("file to upload",""+filetoupload.length());
+            Log.v("file to upload", "" + filetoupload.length());
             MultipartEntity entity = new MultipartEntity();
             entity.addPart("anm-id", new StringBody(image.getAnmId()));
             entity.addPart("entity-id", new StringBody(image.getEntityID()));
@@ -195,7 +195,7 @@ public class HTTPAgent {
             String authToken = null;
             HttpResponse response = httpClient.postContent(httpost);
             responseString = EntityUtils.toString(response.getEntity());
-            Log.v("response so many",responseString);
+            Log.v("response so many", responseString);
             int RESPONSE_OK = 200;
             int RESPONSE_OK_ = 201;
 

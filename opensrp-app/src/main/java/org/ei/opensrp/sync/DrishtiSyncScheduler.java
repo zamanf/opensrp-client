@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+
 import org.ei.opensrp.event.Listener;
 import org.ei.opensrp.view.receiver.SyncBroadcastReceiver;
 

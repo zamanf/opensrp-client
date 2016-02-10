@@ -3,6 +3,9 @@ package org.ei.opensrp.repository;
 import android.content.SharedPreferences;
 
 import static org.ei.opensrp.AllConstants.*;
+import static org.ei.opensrp.AllConstants.DEFAULT_LOCALE;
+import static org.ei.opensrp.AllConstants.IS_SYNC_IN_PROGRESS_PREFERENCE_KEY;
+import static org.ei.opensrp.AllConstants.LANGUAGE_PREFERENCE_KEY;
 
 public class AllSharedPreferences {
     public static final String ANM_IDENTIFIER_PREFERENCE_KEY = "anmIdentifier";
@@ -51,6 +54,6 @@ public class AllSharedPreferences {
 
     public Integer fetchPort(Integer port){
 
-        return  Integer.parseInt( preferences.getString(PORT,""+port));
+        return  Integer.parseInt(preferences.getString(PORT, "" + port));
     }
 }

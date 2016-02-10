@@ -337,7 +337,7 @@ public class mCareAncDetailActivity extends Activity {
 //            Bundle extras = data.getExtras();
 //            String imageBitmap = (String) extras.get(MediaStore.EXTRA_OUTPUT);
 //            Toast.makeText(this,imageBitmap,Toast.LENGTH_LONG).show();
-            HashMap <String,String> details = new HashMap<String,String>();
+            HashMap<String,String> details = new HashMap<String,String>();
             details.put("profilepic",currentfile.getAbsolutePath());
             saveimagereference(bindobject,entityid,details);
             BitmapFactory.Options options = new BitmapFactory.Options();

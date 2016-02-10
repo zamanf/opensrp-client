@@ -267,7 +267,7 @@ public class ElcoSmartRegisterActivity extends SecuredNativeSmartRegisterActivit
     }
 
     public void switchToBaseFragment(final String data){
-        Log.v("we are here","switchtobasegragment");
+        Log.v("we are here", "switchtobasegragment");
         final int prevPageIndex = currentPage;
         runOnUiThread(new Runnable() {
             @Override

@@ -1,14 +1,12 @@
 package org.ei.opensrp.view.activity;
 
-import org.ei.opensrp.R;
-
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
-import android.view.Menu;
 
-public class SettingsActivity extends PreferenceActivity{
+import org.ei.opensrp.R;
+
+public class SettingsActivity extends PreferenceActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)

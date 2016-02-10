@@ -105,7 +105,7 @@ public class HouseHoldSmartRegisterActivity extends SecuredNativeSmartRegisterAc
 
     public DialogOption[] getEditOptions() {
 
-        HashMap <String,String> overridemap = new HashMap<String,String>();
+        HashMap<String,String> overridemap = new HashMap<String,String>();
         CommonPersonObjectClient pc = HouseHoldDetailActivity.householdclient;
         String alertstate = "";
         if(pc!=null) {

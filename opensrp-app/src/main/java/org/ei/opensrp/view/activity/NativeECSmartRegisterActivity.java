@@ -3,9 +3,9 @@ package org.ei.opensrp.view.activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.view.View;
+
 import org.ei.opensrp.R;
 import org.ei.opensrp.adapter.SmartRegisterPaginatedAdapter;
-import org.ei.opensrp.domain.form.FieldOverrides;
 import org.ei.opensrp.provider.ECSmartRegisterClientsProvider;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.view.contract.ECClient;
@@ -13,15 +13,15 @@ import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.controller.ECSmartRegisterController;
 import org.ei.opensrp.view.controller.VillageController;
 import org.ei.opensrp.view.dialog.*;
-import org.opensrp.api.util.EntityUtils;
-import org.opensrp.api.util.LocationTree;
-
-import java.util.List;
 
 import static com.google.common.collect.Iterables.concat;
 import static com.google.common.collect.Iterables.toArray;
-import static java.util.Arrays.asList;
-import static org.ei.opensrp.AllConstants.FormNames.*;
+import static org.ei.opensrp.AllConstants.FormNames.ANC_REGISTRATION;
+import static org.ei.opensrp.AllConstants.FormNames.CHILD_REGISTRATION_EC;
+import static org.ei.opensrp.AllConstants.FormNames.EC_CLOSE;
+import static org.ei.opensrp.AllConstants.FormNames.EC_EDIT;
+import static org.ei.opensrp.AllConstants.FormNames.EC_REGISTRATION;
+import static org.ei.opensrp.AllConstants.FormNames.FP_CHANGE;
 
 public class NativeECSmartRegisterActivity extends SecuredNativeSmartRegisterActivity {
 

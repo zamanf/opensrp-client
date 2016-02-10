@@ -2,7 +2,6 @@ package org.ei.opensrp.mcare.elco;
 
 
 import android.util.Log;
-import android.view.View;
 
 import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
@@ -193,7 +192,7 @@ public class ElcoPSRFDueDateSort implements SortOption {
             Log.v("alertclient1", alertforclient1);
             Log.v("alertclient2", alertforclient2);
 
-            Log.v("alert-compares","alertclient1 : "+ alertforclient1+ " ; alertclient2 :"+ alertforclient2+ "the alertweight compares to "+ alertweight1.compareTo(alertweight2));
+            Log.v("alert-compares", "alertclient1 : " + alertforclient1 + " ; alertclient2 :" + alertforclient2 + "the alertweight compares to " + alertweight1.compareTo(alertweight2));
             return alertweight2.compareTo(alertweight1);
 
 

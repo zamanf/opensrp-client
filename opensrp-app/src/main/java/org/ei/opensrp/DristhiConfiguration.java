@@ -1,7 +1,6 @@
 package org.ei.opensrp;
 
 import android.content.res.AssetManager;
-import android.util.Log;
 
 import org.ei.opensrp.repository.AllSharedPreferences;
 import org.ei.opensrp.util.IntegerUtil;
@@ -20,7 +19,7 @@ public class DristhiConfiguration {
     private Properties properties = new Properties();
 
     public DristhiConfiguration(AssetManager assetManager) {
-        preferences=Context.getInstance().allSharedPreferences();
+        preferences= Context.getInstance().allSharedPreferences();
         try {
             properties.load(assetManager.open("app.properties"));
         } catch (IOException e) {

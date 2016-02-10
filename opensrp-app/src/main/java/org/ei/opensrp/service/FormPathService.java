@@ -9,7 +9,6 @@ import org.ei.opensrp.Context;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * Created by Dimas Ciputra on 3/22/15.

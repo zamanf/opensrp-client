@@ -3,7 +3,6 @@ package org.ei.opensrp;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 import org.ei.opensrp.commonregistry.AllCommonsRepository;
@@ -837,7 +836,7 @@ public class Context {
         return allCommonPersonObjectsRepository;
     }
 
-    private HashMap <String ,CommonRepository> MapOfCommonRepository;
+    private HashMap<String ,CommonRepository> MapOfCommonRepository;
 
     public long countofcommonrepositroy(String tablename){
         return commonrepository(tablename).count();
@@ -870,12 +869,12 @@ public class Context {
 
             for(int i = 0 ;i<bindtypeObjects.length();i++){
                 String bindname = bindtypeObjects.getJSONObject(i).getString("name");
-                String [] columNames = new String[ bindtypeObjects.getJSONObject(i).getJSONArray("columns").length()];
+                String[] columNames = new String[ bindtypeObjects.getJSONObject(i).getJSONArray("columns").length()];
                 for(int j = 0 ; j < columNames.length;j++){
                   columNames[j] =  bindtypeObjects.getJSONObject(i).getJSONArray("columns").getJSONObject(j).getString("name");
                 }
                 bindtypes.add(new CommonRepositoryInformationHolder(bindname,columNames));
-                Log.v("bind type logs",bindtypeObjects.getJSONObject(i).getString("name"));
+                Log.v("bind type logs", bindtypeObjects.getJSONObject(i).getString("name"));
             }
         } catch (Exception e) {
             e.printStackTrace();

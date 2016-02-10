@@ -1,7 +1,5 @@
 package org.ei.opensrp.commonregistry;
 
-import android.util.Log;
-
 import com.google.gson.Gson;
 
 import org.ei.opensrp.repository.AllBeneficiaries;
@@ -11,10 +9,10 @@ import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.dialog.SortOption;
 
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 
 import static java.util.Collections.sort;
+
 /**
  * Created by Raihan Ahmed on 4/15/15.
  */
@@ -27,7 +25,7 @@ public class CommonPersonObjectController {
     private final Cache<String> cache;
     private final Cache<CommonPersonObjectClients> personObjectClientsCache;
     public final String nameString;
-    public  String filterkey = null;
+    public String filterkey = null;
     public String filtervalue = null;
     public String null_check_key = "";
     public boolean filtercase = true;

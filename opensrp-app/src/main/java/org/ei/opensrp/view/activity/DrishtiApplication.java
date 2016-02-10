@@ -1,7 +1,6 @@
 package org.ei.opensrp.view.activity;
 
 import android.app.Application;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.util.Log;
 

@@ -4,7 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
+
 import org.ei.opensrp.AllConstants;
 import org.ei.opensrp.R;
 import org.ei.opensrp.adapter.SmartRegisterPaginatedAdapter;
@@ -18,7 +18,10 @@ import org.ei.opensrp.view.dialog.*;
 
 import static com.google.common.collect.Iterables.concat;
 import static com.google.common.collect.Iterables.toArray;
-import static org.ei.opensrp.AllConstants.FormNames.*;
+import static org.ei.opensrp.AllConstants.FormNames.EC_REGISTRATION;
+import static org.ei.opensrp.AllConstants.FormNames.FP_CHANGE;
+import static org.ei.opensrp.AllConstants.FormNames.FP_COMPLICATIONS;
+import static org.ei.opensrp.AllConstants.FormNames.RECORD_ECPS;
 
 public class NativeFPSmartRegisterActivity extends SecuredNativeSmartRegisterActivity {
 

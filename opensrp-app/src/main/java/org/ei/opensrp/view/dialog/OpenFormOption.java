@@ -69,7 +69,7 @@ public class OpenFormOption implements EditOption {
 
             }
             FieldOverrides fieldOverrides = new FieldOverrides(overridejsonobject.toString());
-            Log.v("in edit form optopn",overridejsonobject.toString());
+            Log.v("in edit form optopn", overridejsonobject.toString());
             formController.startFormActivity(formName, client.entityId(), fieldOverrides.getJSONString());
         }
     }

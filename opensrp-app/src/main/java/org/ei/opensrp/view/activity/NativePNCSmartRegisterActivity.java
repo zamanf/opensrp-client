@@ -1,6 +1,7 @@
 package org.ei.opensrp.view.activity;
 
 import android.view.View;
+
 import org.ei.opensrp.R;
 import org.ei.opensrp.adapter.SmartRegisterPaginatedAdapter;
 import org.ei.opensrp.domain.form.FieldOverrides;
@@ -16,7 +17,10 @@ import java.util.List;
 import static com.google.common.collect.Iterables.concat;
 import static com.google.common.collect.Iterables.toArray;
 import static java.util.Arrays.asList;
-import static org.ei.opensrp.AllConstants.FormNames.*;
+import static org.ei.opensrp.AllConstants.FormNames.PNC_CLOSE;
+import static org.ei.opensrp.AllConstants.FormNames.PNC_POSTPARTUM_FAMILY_PLANNING;
+import static org.ei.opensrp.AllConstants.FormNames.PNC_REGISTRATION_OA;
+import static org.ei.opensrp.AllConstants.FormNames.PNC_VISIT;
 
 public class NativePNCSmartRegisterActivity extends SecuredNativeSmartRegisterActivity {
 

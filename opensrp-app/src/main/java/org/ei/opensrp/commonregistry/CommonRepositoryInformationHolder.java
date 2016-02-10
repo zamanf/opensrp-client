@@ -5,7 +5,7 @@ package org.ei.opensrp.commonregistry;
  */
 public class CommonRepositoryInformationHolder {
     String bindtypename;
-    String [] columnNames;
+    String[] columnNames;
 
     public String getBindtypename() {
         return bindtypename;

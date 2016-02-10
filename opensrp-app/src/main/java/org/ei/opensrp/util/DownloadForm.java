@@ -82,7 +82,7 @@ public class DownloadForm {
             fos.flush();
             fos.close();
 
-            Log.d("DownloadFormService", "download finished in " + ((System.currentTimeMillis()-startTime) / 1000) + " sec");
+            Log.d("DownloadFormService", "download finished in " + ((System.currentTimeMillis() - startTime) / 1000) + " sec");
 
         } catch (IOException e) {
             Log.d("DownloadFormService", "download error : " + e);

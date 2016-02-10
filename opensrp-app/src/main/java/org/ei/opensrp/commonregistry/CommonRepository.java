@@ -29,7 +29,7 @@ public class CommonRepository extends DrishtiRepository {
     public static final String DETAILS_COLUMN = "details";
     public String TABLE_NAME = "common";
     public  String[] common_TABLE_COLUMNS = new String[]{ID_COLUMN,Relational_ID,DETAILS_COLUMN};
-    public String [] additionalcolumns;
+    public String[] additionalcolumns;
     public CommonRepository(String tablename, String[] columns) {
         super();
         additionalcolumns = columns;
@@ -135,7 +135,7 @@ public class CommonRepository extends DrishtiRepository {
         List<CommonPersonObject> commons = new ArrayList<CommonPersonObject>();
         while (!cursor.isAfterLast()) {
             int columncount = cursor.getColumnCount();
-            HashMap <String, String> columns = new HashMap<String, String>();
+            HashMap<String, String> columns = new HashMap<String, String>();
             for (int i = 3;i < columncount;i++ ){
                 columns.put(additionalcolumns[i-3],cursor.getString(i));
             }
