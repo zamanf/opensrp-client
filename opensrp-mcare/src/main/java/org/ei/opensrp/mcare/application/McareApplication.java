@@ -10,6 +10,13 @@ import org.ei.opensrp.view.activity.DrishtiApplication;
  */
 public class McareApplication extends DrishtiApplication {
 
+    public static final String TAG = "McareApplication";
+    private static McareApplication instance;
+
+    public static McareApplication getInstance() {
+        return instance;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
