@@ -14,12 +14,16 @@ import com.google.gson.reflect.TypeToken;
 import org.ei.opensrp.AllConstants;
 import org.ei.opensrp.Context;
 import org.ei.opensrp.R;
+import org.ei.opensrp.application.OpenSRPApplication;
 import org.ei.opensrp.event.Listener;
+import org.ei.opensrp.service.UserService;
 import org.ei.opensrp.view.controller.ANMController;
 import org.ei.opensrp.view.controller.FormController;
 import org.ei.opensrp.view.controller.NavigationController;
 
 import java.util.Map;
+
+import javax.inject.Inject;
 
 import static android.widget.Toast.LENGTH_SHORT;
 import static org.ei.opensrp.AllConstants.ALERT_NAME_PARAM;
@@ -32,18 +36,23 @@ import static org.ei.opensrp.event.Event.ON_LOGOUT;
 import static org.ei.opensrp.util.Log.logInfo;
 
 public abstract class SecuredActivity extends ActionBarActivity {
-    protected Context context;
+    //protected Context context;
     protected Listener<Boolean> logoutListener;
     protected FormController formController;
+
+    @Inject
     protected ANMController anmController;
     protected NavigationController navigationController;
     private String metaData;
 
+    @Inject
+    protected UserService userService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        context = Context.getInstance().updateApplicationContext(this.getApplicationContext());
+        OpenSRPApplication.getInstance().inject(this);
+        //context = Context.getInstance().updateApplicationContext(this.getApplicationContext());
 
         logoutListener = new Listener<Boolean>() {
             public void onEvent(Boolean data) {
@@ -52,21 +61,20 @@ public abstract class SecuredActivity extends ActionBarActivity {
         };
         ON_LOGOUT.addListener(logoutListener);
 
-        if (context.IsUserLoggedOut()) {
+        if (userService.hasSessionExpired()) {
             DrishtiApplication application = (DrishtiApplication)getApplication();
             application.logoutCurrentUser();
             return;
         }
         formController = new FormController(this);
-        anmController = context.anmController();
-        navigationController = new NavigationController(this, anmController);
+        navigationController = new NavigationController(this);
         onCreation();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (context.IsUserLoggedOut()) {
+        if (userService.hasSessionExpired()) {
             DrishtiApplication application = (DrishtiApplication)getApplication();
             application.logoutCurrentUser();
             return;
@@ -79,7 +87,7 @@ public abstract class SecuredActivity extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int i = item.getItemId();
         if (i == R.id.switchLanguageMenuItem) {
-            String newLanguagePreference = context.userService().switchLanguagePreference();
+            String newLanguagePreference = userService.switchLanguagePreference();
             Toast.makeText(this, "Language preference set to " + newLanguagePreference + ". Please restart the application.", LENGTH_SHORT).show();
 
             return super.onOptionsItemSelected(item);

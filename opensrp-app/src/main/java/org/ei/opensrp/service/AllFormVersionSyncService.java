@@ -4,12 +4,13 @@ import com.google.gson.reflect.TypeToken;
 
 import org.ei.opensrp.AllConstants;
 import org.ei.opensrp.DristhiConfiguration;
+import org.ei.opensrp.application.OpenSRPApplication;
+import org.ei.opensrp.db.adapters.FormsVersionRepository;
 import org.ei.opensrp.domain.DownloadStatus;
 import org.ei.opensrp.domain.FetchStatus;
 import org.ei.opensrp.domain.FormDefinitionVersion;
 import org.ei.opensrp.domain.Response;
 import org.ei.opensrp.domain.SyncStatus;
-import org.ei.opensrp.repository.FormsVersionRepository;
 import org.ei.opensrp.util.ZipUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,6 +26,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import static org.ei.opensrp.domain.DownloadStatus.nothingDownloaded;
 import static org.ei.opensrp.domain.SyncStatus.PENDING;
 import static org.ei.opensrp.domain.SyncStatus.SYNCED;
@@ -35,17 +38,20 @@ import static org.ei.opensrp.util.Log.logError;
  */
 public class AllFormVersionSyncService {
 
-    private final HTTPAgent httpAgent;
-    private final DristhiConfiguration configuration;
-    private final FormsVersionRepository formsVersionRepository;
+    @Inject
+    private HTTPAgent httpAgent;
+
+    @Inject
+    private DristhiConfiguration configuration;
+
+    @Inject
+    private FormsVersionRepository formsVersionRepository;
+
     private static final String FORM_DEF_VERSION_FIELD = "form_data_definition_version";
     private static final String FORM_DEF_JSON_FILENAME = "form_definition.json";
 
-    public AllFormVersionSyncService(HTTPAgent httpAgent,
-                                     DristhiConfiguration configuration, FormsVersionRepository formsVersionRepository) {
-        this.formsVersionRepository = formsVersionRepository;
-        this.httpAgent = httpAgent;
-        this.configuration = configuration;
+    public AllFormVersionSyncService() {
+        OpenSRPApplication.getInstance().inject(this);
     }
 
     public FetchStatus pullFormDefinitionFromServer() {

@@ -5,6 +5,7 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
 import org.ei.drishti.dto.Action;
+import org.ei.opensrp.application.OpenSRPApplication;
 import org.ei.opensrp.domain.Response;
 
 import java.lang.reflect.Type;
@@ -12,15 +13,19 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import static org.ei.opensrp.domain.ResponseStatus.failure;
 
 public class DrishtiService {
-    private HTTPAgent agent = null;
+    @Inject
+    private HTTPAgent agent;
+
+    @Inject
     private String drishtiBaseURL;
 
-    public DrishtiService(HTTPAgent agent, String drishtiBaseURL) {
-        this.agent = agent;
-        this.drishtiBaseURL = drishtiBaseURL;
+    public DrishtiService() {
+        OpenSRPApplication.getInstance().inject(this);
     }
 
     public Response<List<Action>> fetchNewActions(String anmIdentifier, String previouslyFetchedIndex) {

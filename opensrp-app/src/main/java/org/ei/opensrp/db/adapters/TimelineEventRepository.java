@@ -8,6 +8,7 @@ import net.sqlcipher.database.SQLiteDatabase;
 
 import org.ei.opensrp.db.RepositoryManager;
 import org.ei.opensrp.domain.TimelineEvent;
+import org.ei.opensrp.util.Session;
 import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
@@ -27,26 +28,26 @@ public class TimelineEventRepository {
     private static final String[] TIMELINEEVENT_TABLE_COLUMNS = {CASEID_COLUMN, TYPE_COLUMN, REF_DATE_COLUMN, TITLE_COLUMN, DETAIL1_COLUMN, DETAIL2_COLUMN};
 
     private Context context;
-    private String password;
+    private Session session;
 
-    public TimelineEventRepository(Context context, String password){
+    public TimelineEventRepository(Context context, Session session){
         this.context = context;
-        this.password = password;
+        this.session = session;
     }
 
     public void add(TimelineEvent timelineEvent) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         database.insert(TIMELINEEVENT_TABLE_NAME, null, createValuesFor(timelineEvent));
     }
 
     public List<TimelineEvent> allFor(String caseId) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         Cursor cursor = database.query(TIMELINEEVENT_TABLE_NAME, TIMELINEEVENT_TABLE_COLUMNS, CASEID_COLUMN + " = ?", new String[]{caseId}, null, null, null);
         return readAllTimelineEvents(cursor);
     }
 
     public void deleteAllTimelineEventsForEntity(String caseId) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         database.delete(TIMELINEEVENT_TABLE_NAME, CASEID_COLUMN + " = ?", new String[]{caseId});
     }
 
@@ -71,4 +72,9 @@ public class TimelineEventRepository {
         values.put(DETAIL2_COLUMN, timelineEvent.detail2());
         return values;
     }
+
+    public List<TimelineEvent> forCase(String caseId) {
+        return allFor(caseId);
+    }
+
 }

@@ -29,14 +29,15 @@ import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.ei.opensrp.DristhiConfiguration;
 import org.ei.opensrp.R;
+import org.ei.opensrp.application.OpenSRPApplication;
 import org.ei.opensrp.client.GZipEncodingHttpClient;
+import org.ei.opensrp.db.adapters.SettingsRepository;
+import org.ei.opensrp.db.adapters.SharedPreferencesAdapter;
 import org.ei.opensrp.domain.DownloadStatus;
 import org.ei.opensrp.domain.LoginResponse;
 import org.ei.opensrp.domain.ProfileImage;
 import org.ei.opensrp.domain.Response;
 import org.ei.opensrp.domain.ResponseStatus;
-import org.ei.opensrp.repository.AllSettings;
-import org.ei.opensrp.repository.AllSharedPreferences;
 import org.ei.opensrp.util.DownloadForm;
 import org.ei.opensrp.util.FileUtilities;
 
@@ -45,6 +46,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.KeyStore;
 
+import javax.inject.Inject;
 import javax.net.ssl.SSLException;
 
 import static org.ei.opensrp.AllConstants.REALM;
@@ -57,19 +59,22 @@ import static org.ei.opensrp.util.Log.logError;
 import static org.ei.opensrp.util.Log.logWarn;
 
 public class HTTPAgent {
-    private final GZipEncodingHttpClient httpClient;
+    private GZipEncodingHttpClient httpClient;
+
+    @Inject
     private Context context;
-    private AllSettings settings;
-    private AllSharedPreferences allSharedPreferences;
+
+    @Inject
+    private SettingsRepository settings;
+
+    @Inject
+    private SharedPreferencesAdapter allSharedPreferences;
+
+    @Inject
     private DristhiConfiguration configuration;
 
-
-    public HTTPAgent(Context context, AllSettings settings, AllSharedPreferences allSharedPreferences, DristhiConfiguration configuration) {
-        this.context = context;
-        this.settings = settings;
-        this.allSharedPreferences = allSharedPreferences;
-        this.configuration = configuration;
-
+    public HTTPAgent() {
+        OpenSRPApplication.getInstance().inject(this);
         BasicHttpParams basicHttpParams = new BasicHttpParams();
         HttpConnectionParams.setConnectionTimeout(basicHttpParams, 30000);
         HttpConnectionParams.setSoTimeout(basicHttpParams, 60000);

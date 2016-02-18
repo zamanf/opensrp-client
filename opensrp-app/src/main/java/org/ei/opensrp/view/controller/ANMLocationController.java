@@ -2,20 +2,28 @@ package org.ei.opensrp.view.controller;
 
 import com.google.gson.Gson;
 
-import org.ei.opensrp.repository.AllSettings;
+import org.ei.opensrp.application.OpenSRPApplication;
+import org.ei.opensrp.db.adapters.SettingsRepository;
 import org.ei.opensrp.util.Cache;
 import org.ei.opensrp.util.CacheableData;
 import org.ei.opensrp.view.contract.ANMLocation;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 public class ANMLocationController {
     private static final String ANM_LOCATION = "anmLocation";
     private static final String ANM_LOCATION_JSON = "anmLocationJSON";
-    private AllSettings allSettings;
-    private Cache<String> cache;
 
-    public ANMLocationController(AllSettings allSettings, Cache<String> cache) {
-        this.allSettings = allSettings;
-        this.cache = cache;
+    @Inject
+    private SettingsRepository allSettings;
+
+    @Inject
+    @Named("ListCache")
+    public Cache<String> cache;
+
+    public ANMLocationController() {
+        OpenSRPApplication.getInstance().inject(this);
     }
 
     public String get() {

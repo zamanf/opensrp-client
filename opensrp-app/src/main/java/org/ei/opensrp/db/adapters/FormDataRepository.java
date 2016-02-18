@@ -13,8 +13,7 @@ import net.sqlcipher.database.SQLiteDatabase;
 import org.ei.opensrp.db.RepositoryManager;
 import org.ei.opensrp.domain.SyncStatus;
 import org.ei.opensrp.domain.form.FormSubmission;
-import org.ei.opensrp.repository.ChildRepository;
-import org.ei.opensrp.repository.MotherRepository;
+import org.ei.opensrp.util.Session;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import static java.lang.System.currentTimeMillis;
+import static java.lang.System.setProperty;
 import static java.util.Arrays.asList;
 import static java.util.UUID.randomUUID;
 import static net.sqlcipher.DatabaseUtils.longForQuery;
@@ -53,18 +53,18 @@ public class FormDataRepository {
     private Map<String, String[]> TABLE_COLUMN_MAP;
 
     private Context context;
-    private String password;
+    private Session session;
 
-    public FormDataRepository(Context context, String password){
+    public FormDataRepository(Context context, Session session){
         this.context = context;
-        this.password = password;
+        this.session = session;
     }
 
     public FormDataRepository() {
         TABLE_COLUMN_MAP = new HashMap<String, String[]>();
-        TABLE_COLUMN_MAP.put(org.ei.opensrp.repository.EligibleCoupleRepository.EC_TABLE_NAME, org.ei.opensrp.repository.EligibleCoupleRepository.EC_TABLE_COLUMNS);
-        TABLE_COLUMN_MAP.put(org.ei.opensrp.repository.MotherRepository.MOTHER_TABLE_NAME, MotherRepository.MOTHER_TABLE_COLUMNS);
-        TABLE_COLUMN_MAP.put(org.ei.opensrp.repository.ChildRepository.CHILD_TABLE_NAME, ChildRepository.CHILD_TABLE_COLUMNS);
+        TABLE_COLUMN_MAP.put(EligibleCoupleRepository.EC_TABLE_NAME, EligibleCoupleRepository.EC_TABLE_COLUMNS);
+        TABLE_COLUMN_MAP.put(MotherRepository.MOTHER_TABLE_NAME, MotherRepository.MOTHER_TABLE_COLUMNS);
+        TABLE_COLUMN_MAP.put(ChildRepository.CHILD_TABLE_NAME, ChildRepository.CHILD_TABLE_COLUMNS);
 
         for(int i = 0;i< org.ei.opensrp.Context.bindtypes.size();i++){
             TABLE_COLUMN_MAP.put(org.ei.opensrp.Context.bindtypes.get(i).getBindtypename(), org.ei.opensrp.Context.getInstance().commonrepository(org.ei.opensrp.Context.bindtypes.get(i).getBindtypename()).common_TABLE_COLUMNS);
@@ -73,7 +73,7 @@ public class FormDataRepository {
 
     @JavascriptInterface
     public String queryUniqueResult(String sql) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         Cursor cursor = database.rawQuery(sql, new String[]{});
 
         cursor.moveToFirst();
@@ -85,7 +85,7 @@ public class FormDataRepository {
 
     @JavascriptInterface
     public String queryList(String sql) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         Cursor cursor = database.rawQuery(sql, new String[]{});
         List<Map<String, String>> results = new ArrayList<Map<String, String>>();
         cursor.moveToFirst();
@@ -99,7 +99,7 @@ public class FormDataRepository {
 
     @JavascriptInterface
     public String saveFormSubmission(String paramsJSON, String data, String formDataDefinitionVersion) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         Map<String, String> params = new Gson().fromJson(paramsJSON, new TypeToken<Map<String, String>>() {
         }.getType());
         database.insert(FORM_SUBMISSION_TABLE_NAME, null, createValuesForFormSubmission(params, data, formDataDefinitionVersion));
@@ -108,31 +108,31 @@ public class FormDataRepository {
 
     @JavascriptInterface
     public void saveFormSubmission(FormSubmission formSubmission) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         database.insert(FORM_SUBMISSION_TABLE_NAME, null, createValuesForFormSubmission(formSubmission));
     }
 
     public FormSubmission fetchFromSubmission(String instanceId) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         Cursor cursor = database.query(FORM_SUBMISSION_TABLE_NAME, FORM_SUBMISSION_TABLE_COLUMNS, INSTANCE_ID_COLUMN + " = ?", new String[]{instanceId}, null, null, null);
         return readFormSubmission(cursor).get(0);
     }
 
     public List<FormSubmission> getPendingFormSubmissions() {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         Cursor cursor = database.query(FORM_SUBMISSION_TABLE_NAME, FORM_SUBMISSION_TABLE_COLUMNS, SYNC_STATUS_COLUMN + " = ?", new String[]{PENDING.value()}, null, null, null);
         return readFormSubmission(cursor);
     }
 
     public long getPendingFormSubmissionsCount() {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         return longForQuery(database, "SELECT COUNT(1) FROM " + FORM_SUBMISSION_TABLE_NAME
                         + " WHERE " + SYNC_STATUS_COLUMN + " = ? ",
                 new String[]{PENDING.value()});
     }
 
     public void markFormSubmissionsAsSynced(List<FormSubmission> formSubmissions) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         for (FormSubmission submission : formSubmissions) {
             FormSubmission updatedSubmission = new FormSubmission(submission.instanceId(), submission.entityId(), submission.formName(), submission.instance(), submission.version(), SYNCED, "1");
             database.update(FORM_SUBMISSION_TABLE_NAME, createValuesForFormSubmission(updatedSubmission), INSTANCE_ID_COLUMN + " = ?", new String[]{updatedSubmission.instanceId()});
@@ -140,14 +140,14 @@ public class FormDataRepository {
     }
 
     public void updateServerVersion(String instanceId, String serverVersion) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         ContentValues values = new ContentValues();
         values.put(SERVER_VERSION_COLUMN, serverVersion);
         database.update(FORM_SUBMISSION_TABLE_NAME, values, INSTANCE_ID_COLUMN + " = ?", new String[]{instanceId});
     }
 
     public boolean submissionExists(String instanceId) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         Cursor cursor = database.query(FORM_SUBMISSION_TABLE_NAME, new String[]{INSTANCE_ID_COLUMN}, INSTANCE_ID_COLUMN + " = ?", new String[]{instanceId}, null, null, null);
         boolean isThere = cursor.moveToFirst();
         cursor.close();
@@ -156,7 +156,7 @@ public class FormDataRepository {
 
     @JavascriptInterface
     public String saveEntity(String entityType, String fields) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         Map<String, String> updatedFieldsMap = new Gson().fromJson(fields, new TypeToken<Map<String, String>>() {
         }.getType());
 

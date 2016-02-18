@@ -3,12 +3,12 @@ package org.ei.opensrp.service.formSubmissionHandler;
 import org.ei.opensrp.domain.form.FormSubmission;
 import org.ei.opensrp.service.EligibleCoupleService;
 
-public class ECCloseHandler implements FormSubmissionHandler {
-    private EligibleCoupleService ecService;
+import javax.inject.Inject;
 
-    public ECCloseHandler(EligibleCoupleService ecService) {
-        this.ecService = ecService;
-    }
+public class ECCloseHandler implements FormSubmissionHandler {
+
+    @Inject
+    private EligibleCoupleService ecService;
 
     @Override
     public void handle(FormSubmission submission) {

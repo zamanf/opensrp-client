@@ -9,7 +9,7 @@ import static org.joda.time.DateTimeConstants.SECONDS_PER_MINUTE;
 
 public class Session {
     private String password;
-    private String repositoryName = "drishti.db";
+    private String repositoryName = "opensrp.db";
     private long sessionExpiryTime = 0;
 
     public long lengthInMilliseconds() {

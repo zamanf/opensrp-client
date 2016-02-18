@@ -11,11 +11,14 @@ import android.webkit.WebView;
 
 import org.acra.ACRA;
 import org.ei.opensrp.R;
+import org.ei.opensrp.db.adapters.SharedPreferencesAdapter;
 import org.ei.opensrp.sync.SyncAfterFetchListener;
 import org.ei.opensrp.sync.SyncProgressIndicator;
 import org.ei.opensrp.sync.UpdateActionsTask;
 import org.ei.opensrp.view.InternationalizationContext;
 import org.ei.opensrp.view.controller.UpdateController;
+
+import javax.inject.Inject;
 
 import static android.webkit.ConsoleMessage.MessageLevel.ERROR;
 import static java.text.MessageFormat.format;
@@ -27,6 +30,9 @@ public abstract class SecuredWebActivity extends SecuredActivity {
     protected UpdateController updateController;
     protected boolean shouldDismissProgressBarOnProgressComplete = true;
     private ProgressDialog progressDialog;
+
+    @Inject
+    private SharedPreferencesAdapter sharedPreferencesAdapter;
 
     @Override
     protected void onCreation() {
@@ -58,7 +64,7 @@ public abstract class SecuredWebActivity extends SecuredActivity {
     }
 
     public void updateFromServer() {
-        UpdateActionsTask updateActionsTask = new UpdateActionsTask(this, context.actionService(), context.formSubmissionSyncService(), new SyncProgressIndicator(), context.allFormVersionSyncService());
+        UpdateActionsTask updateActionsTask = new UpdateActionsTask(this, new SyncProgressIndicator(sharedPreferencesAdapter));
         updateActionsTask.updateFromServer(new SyncAfterFetchListener());
     }
 

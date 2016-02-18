@@ -3,6 +3,7 @@ package org.ei.opensrp.sync;
 import android.content.Context;
 import android.widget.Toast;
 
+import org.ei.opensrp.application.OpenSRPApplication;
 import org.ei.opensrp.domain.DownloadStatus;
 import org.ei.opensrp.domain.FetchStatus;
 import org.ei.opensrp.service.ActionService;
@@ -12,23 +13,29 @@ import org.ei.opensrp.view.BackgroundAction;
 import org.ei.opensrp.view.LockingBackgroundTask;
 import org.ei.opensrp.view.ProgressIndicator;
 
+import javax.inject.Inject;
+
 import static org.ei.opensrp.domain.FetchStatus.fetched;
 import static org.ei.opensrp.domain.FetchStatus.nothingFetched;
 import static org.ei.opensrp.util.Log.logInfo;
 
 public class UpdateActionsTask {
     private final LockingBackgroundTask task;
+
+    @Inject
     private ActionService actionService;
+
     private Context context;
+
+    @Inject
     private FormSubmissionSyncService formSubmissionSyncService;
+
+    @Inject
     private AllFormVersionSyncService allFormVersionSyncService;
 
-    public UpdateActionsTask(Context context, ActionService actionService, FormSubmissionSyncService formSubmissionSyncService, ProgressIndicator progressIndicator,
-                             AllFormVersionSyncService allFormVersionSyncService) {
-        this.actionService = actionService;
+    public UpdateActionsTask(Context context, ProgressIndicator progressIndicator) {
+        OpenSRPApplication.getInstance().inject(this);
         this.context = context;
-        this.formSubmissionSyncService = formSubmissionSyncService;
-        this.allFormVersionSyncService = allFormVersionSyncService;
         task = new LockingBackgroundTask(progressIndicator);
     }
 

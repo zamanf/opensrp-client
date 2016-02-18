@@ -1,9 +1,10 @@
 package org.ei.opensrp.view.controller;
 
+import org.ei.opensrp.application.OpenSRPApplication;
+import org.ei.opensrp.db.adapters.BeneficiariesAdapter;
+import org.ei.opensrp.db.adapters.EligibleCoupleRepository;
 import org.ei.opensrp.domain.Alert;
 import org.ei.opensrp.domain.EligibleCouple;
-import org.ei.opensrp.repository.AllBeneficiaries;
-import org.ei.opensrp.repository.AllEligibleCouples;
 import org.ei.opensrp.service.AlertService;
 import org.ei.opensrp.util.Cache;
 import org.ei.opensrp.util.CacheableData;
@@ -13,6 +14,9 @@ import org.ei.opensrp.view.contract.FPClients;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.ei.opensrp.AllConstants.DEFAULT_WOMAN_IMAGE_PLACEHOLDER_PATH;
@@ -33,18 +37,26 @@ public class FPSmartRegisterController {
 
     private final static String FP_CLIENTS_LIST = "FPClientsList";
 
-    private final AllEligibleCouples allEligibleCouples;
-    private final AllBeneficiaries allBeneficiaries;
-    private Cache<String> cache;
-    private Cache<FPClients> fpClientsCache;
-    private final AlertService alertService;
+    @Inject
+    private EligibleCoupleRepository allEligibleCouples;
 
-    public FPSmartRegisterController(AllEligibleCouples allEligibleCouples, AllBeneficiaries allBeneficiaries, AlertService alertService, Cache<String> cache, Cache<FPClients> fpClientsCache) {
-        this.allEligibleCouples = allEligibleCouples;
-        this.allBeneficiaries = allBeneficiaries;
-        this.alertService = alertService;
-        this.cache = cache;
-        this.fpClientsCache = fpClientsCache;
+    @Inject
+    private BeneficiariesAdapter allBeneficiaries;
+
+    @Inject
+    private AlertService alertService;
+
+    @Inject
+    @Named("ListCache")
+    public Cache<String> cache;
+
+    @Inject
+    @Named("FPClientsCache")
+    public Cache<FPClients> fpClientsCache;
+
+
+    public FPSmartRegisterController() {
+        OpenSRPApplication.getInstance().inject(this);
     }
 
     private List<AlertDTO> getFPAlertsForEC(String entityId) {

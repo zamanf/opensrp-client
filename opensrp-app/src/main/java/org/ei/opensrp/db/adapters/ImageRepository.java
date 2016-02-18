@@ -8,6 +8,7 @@ import net.sqlcipher.database.SQLiteDatabase;
 
 import org.ei.opensrp.db.RepositoryManager;
 import org.ei.opensrp.domain.ProfileImage;
+import org.ei.opensrp.util.Session;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,35 +34,34 @@ public class ImageRepository {
     public static String TYPE_Synced = "Synced";
 
     private Context context;
-    private String password;
+    private Session session;
 
-    public ImageRepository(Context context, String password){
+    public ImageRepository(Context context, Session session){
         this.context = context;
-        this.password = password;
+        this.session = session;
     }
 
     public void add(ProfileImage Image) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         database.insert(Image_TABLE_NAME, null, createValuesFor(Image, TYPE_ANC));
         database.close();
     }
 
     public List<ProfileImage> allProfileImages() {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         Cursor cursor = database.query(Image_TABLE_NAME, Image_TABLE_COLUMNS, syncStatus_COLUMN + " = ?", new String[]{TYPE_Unsynced}, null, null, null, null);
         return readAll(cursor);
     }
 
     public ProfileImage findByEntityId(String entityId) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         Cursor cursor = database.query(Image_TABLE_NAME, Image_TABLE_COLUMNS, entityID_COLUMN + " = ?", new String[]{entityId}, null, null, null, null);
         return readAll(cursor).get(0);
     }
 
 
-
     public void close(String caseId) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         ContentValues values = new ContentValues();
         values.put(syncStatus_COLUMN,TYPE_Synced);
         database.update(Image_TABLE_NAME, values, ID_COLUMN + " = ?", new String[]{caseId});

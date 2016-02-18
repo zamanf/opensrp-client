@@ -2,11 +2,13 @@ package org.ei.opensrp;
 
 import android.content.res.AssetManager;
 
-import org.ei.opensrp.repository.AllSharedPreferences;
+import org.ei.opensrp.db.adapters.SharedPreferencesAdapter;
 import org.ei.opensrp.util.IntegerUtil;
 
 import java.io.IOException;
 import java.util.Properties;
+
+import javax.inject.Inject;
 
 public class DristhiConfiguration {
 
@@ -15,11 +17,13 @@ public class DristhiConfiguration {
     private static final String PORT = "PORT";
     private static final String SHOULD_VERIFY_CERTIFICATE = "SHOULD_VERIFY_CERTIFICATE";
     private static final String SYNC_DOWNLOAD_BATCH_SIZE = "SYNC_DOWNLOAD_BATCH_SIZE";
-    public static AllSharedPreferences preferences;
+
+    @Inject
+    public SharedPreferencesAdapter preferences;
+
     private Properties properties = new Properties();
 
     public DristhiConfiguration(AssetManager assetManager) {
-        preferences= Context.getInstance().allSharedPreferences();
         try {
             properties.load(assetManager.open("app.properties"));
         } catch (IOException e) {

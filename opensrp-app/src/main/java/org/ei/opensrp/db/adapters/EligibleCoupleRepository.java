@@ -12,6 +12,7 @@ import net.sqlcipher.database.SQLiteDatabase;
 import org.ei.opensrp.AllConstants;
 import org.ei.opensrp.db.RepositoryManager;
 import org.ei.opensrp.domain.EligibleCouple;
+import org.ei.opensrp.util.Session;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,20 +48,20 @@ public class EligibleCoupleRepository {
     private static final String IN_AREA = "false";
 
     private Context context;
-    private String password;
+    private Session session;
 
-    public EligibleCoupleRepository(Context context, String password){
+    public EligibleCoupleRepository(Context context, Session session){
         this.context = context;
-        this.password = password;
+        this.session = session;
     }
 
     public void add(EligibleCouple eligibleCouple) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         database.insert(EC_TABLE_NAME, null, createValuesFor(eligibleCouple));
     }
 
     public void updateDetails(String caseId, Map<String, String> details) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
 
         EligibleCouple couple = findByCaseID(caseId);
         if (couple == null) {
@@ -73,7 +74,7 @@ public class EligibleCoupleRepository {
     }
 
     public void mergeDetails(String caseId, Map<String, String> details) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
 
         EligibleCouple couple = findByCaseID(caseId);
         if (couple == null) {
@@ -88,21 +89,25 @@ public class EligibleCoupleRepository {
     }
 
     public List<EligibleCouple> allEligibleCouples() {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         Cursor cursor = database.query(EC_TABLE_NAME, EC_TABLE_COLUMNS, IS_OUT_OF_AREA_COLUMN + " = ? AND " +
                 IS_CLOSED_COLUMN + " = ?", new String[]{IN_AREA, NOT_CLOSED}, null, null, null, null);
         return readAllEligibleCouples(cursor);
     }
 
     public List<EligibleCouple> findByCaseIDs(String... caseIds) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         Cursor cursor = database.rawQuery(String.format("SELECT * FROM %s WHERE %s IN (%s)", EC_TABLE_NAME, ID_COLUMN,
                 insertPlaceholdersForInClause(caseIds.length)), caseIds);
         return readAllEligibleCouples(cursor);
     }
 
+    public List<EligibleCouple> findByCaseIDs(List<String> caseIds) {
+        return findByCaseIDs(caseIds.toArray(new String[caseIds.size()]));
+    }
+
     public EligibleCouple findByCaseID(String caseId) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         Cursor cursor = database.query(EC_TABLE_NAME, EC_TABLE_COLUMNS, ID_COLUMN + " = ?", new String[]{caseId},
                 null, null, null, null);
         List<EligibleCouple> couples = readAllEligibleCouples(cursor);
@@ -113,14 +118,14 @@ public class EligibleCoupleRepository {
     }
 
     public long count() {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         return longForQuery(database, "SELECT COUNT(1) FROM " + EC_TABLE_NAME
                 + " WHERE " + IS_OUT_OF_AREA_COLUMN + " = '" + IN_AREA + "' and " +
                 IS_CLOSED_COLUMN + " = '" + NOT_CLOSED + "'", new String[0]);
     }
 
     public List<String> villages() {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         Cursor cursor = database.query(true, EC_TABLE_NAME, new String[]{VILLAGE_NAME_COLUMN}, IS_OUT_OF_AREA_COLUMN +
                 " = ? AND " + IS_CLOSED_COLUMN + " = ?", new String[]{IN_AREA, NOT_CLOSED}, null, null, null, null);
         cursor.moveToFirst();
@@ -134,14 +139,14 @@ public class EligibleCoupleRepository {
     }
 
     public void updatePhotoPath(String caseId, String imagePath) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         ContentValues values = new ContentValues();
         values.put(PHOTO_PATH_COLUMN, imagePath);
         database.update(EC_TABLE_NAME, values, ID_COLUMN + " = ?", new String[]{caseId});
     }
 
-    public void close(String caseId) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+    public void closeEligibleCouple(String caseId) {
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         ContentValues values = new ContentValues();
         values.put(IS_CLOSED_COLUMN, TRUE.toString());
         database.update(EC_TABLE_NAME, values, ID_COLUMN + " = ?", new String[]{caseId});
@@ -186,7 +191,7 @@ public class EligibleCoupleRepository {
     }
 
     public long fpCount() {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         Cursor cursor = database.rawQuery(format("SELECT details FROM {0} WHERE {1} = ''{2}'' and {3} = ''{4}''",
                 EC_TABLE_NAME, IS_OUT_OF_AREA_COLUMN, IN_AREA, IS_CLOSED_COLUMN, NOT_CLOSED), new String[0]);
         List<Map<String, String>> detailsList = readDetailsList(cursor);
@@ -215,4 +220,15 @@ public class EligibleCoupleRepository {
         cursor.close();
         return detailsList;
     }
+
+    public List<EligibleCouple> all() {
+        return allEligibleCouples();
+    }
+
+    public void close(String entityId) {
+        RepositoryManager.current().alertRepository().deleteAllAlertsForEntity(entityId);
+        RepositoryManager.current().timelineEventRepository().deleteAllTimelineEventsForEntity(entityId);
+        closeEligibleCouple(entityId);
+    }
+
 }

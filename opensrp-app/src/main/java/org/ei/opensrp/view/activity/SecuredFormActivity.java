@@ -9,10 +9,15 @@ import android.webkit.WebSettings;
 
 import org.apache.commons.io.IOUtils;
 import org.ei.opensrp.Context;
+import org.ei.opensrp.db.adapters.FormDataRepository;
+import org.ei.opensrp.service.ZiggyFileLoader;
+import org.ei.opensrp.service.formSubmissionHandler.FormSubmissionRouter;
 
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.text.MessageFormat;
+
+import javax.inject.Inject;
 
 import static java.util.UUID.randomUUID;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
@@ -36,6 +41,15 @@ public abstract class SecuredFormActivity extends SecuredWebActivity {
     private String formName;
     private String entityId;
     private String fieldOverrides;
+
+    @Inject
+    FormDataRepository formDataRepository;
+
+    @Inject
+    ZiggyFileLoader ziggyFileLoader;
+
+    @Inject
+    FormSubmissionRouter formSubmissionRouter;
 
     public SecuredFormActivity() {
         super();
@@ -70,9 +84,9 @@ public abstract class SecuredFormActivity extends SecuredWebActivity {
         webViewSettings.setDatabaseEnabled(true);
         webViewSettings.setDomStorageEnabled(true);
         webView.addJavascriptInterface(new FormWebInterface(model, form, this), ANDROID_CONTEXT_FIELD);
-        webView.addJavascriptInterface(Context.getInstance().formDataRepository(), REPOSITORY);
-        webView.addJavascriptInterface(Context.getInstance().ziggyFileLoader(), ZIGGY_FILE_LOADER);
-        webView.addJavascriptInterface(Context.getInstance().formSubmissionRouter(), FORM_SUBMISSION_ROUTER);
+        webView.addJavascriptInterface(formDataRepository, REPOSITORY);
+        webView.addJavascriptInterface(ziggyFileLoader, ZIGGY_FILE_LOADER);
+        webView.addJavascriptInterface(formSubmissionRouter, FORM_SUBMISSION_ROUTER);
         String encodedFieldOverrides = null;
         try {
             if (isNotBlank(this.fieldOverrides)) {

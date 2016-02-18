@@ -1,15 +1,19 @@
 package org.ei.opensrp.service;
 
+import org.ei.opensrp.application.OpenSRPApplication;
+import org.ei.opensrp.db.adapters.ServiceProvidedRepository;
 import org.ei.opensrp.domain.ServiceProvided;
-import org.ei.opensrp.repository.AllServicesProvided;
 
 import java.util.List;
 
-public class ServiceProvidedService {
-    private AllServicesProvided allServiceProvided;
+import javax.inject.Inject;
 
-    public ServiceProvidedService(AllServicesProvided allServicesProvided) {
-        this.allServiceProvided = allServicesProvided;
+public class ServiceProvidedService {
+    @Inject
+    private ServiceProvidedRepository allServiceProvided;
+
+    public ServiceProvidedService() {
+        OpenSRPApplication.getInstance().inject(this);
     }
 
     public List<ServiceProvided> findByEntityIdAndServiceNames(String entityId, String... names) {

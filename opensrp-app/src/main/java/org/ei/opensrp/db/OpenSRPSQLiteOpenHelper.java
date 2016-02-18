@@ -7,6 +7,9 @@ import net.sqlcipher.database.SQLiteDatabase;
 import net.sqlcipher.database.SQLiteOpenHelper;
 
 import org.ei.opensrp.R;
+import org.ei.opensrp.util.Session;
+
+import java.io.File;
 
 
 /**
@@ -19,6 +22,9 @@ public class OpenSRPSQLiteOpenHelper extends SQLiteOpenHelper {
     Context context;
     String name;
     SQLiteDatabase.CursorFactory factory;
+    private File databasePath;
+    private String dbName;
+    private Session session;
 
     private static final String create_alerts_table = "CREATE TABLE alerts(caseID VARCHAR, scheduleName VARCHAR, visitCode VARCHAR, status VARCHAR, startDate VARCHAR, expiryDate VARCHAR, completionDate VARCHAR)";
     private static final String create_child_table = "CREATE TABLE child(id VARCHAR PRIMARY KEY, motherCaseId VARCHAR, thayiCardNumber VARCHAR, dateOfBirth VARCHAR, gender VARCHAR, details VARCHAR, isClosed VARCHAR, photoPath VARCHAR)";
@@ -37,13 +43,15 @@ public class OpenSRPSQLiteOpenHelper extends SQLiteOpenHelper {
     private static final String MOTHER_TYPE_INDEX_SQL = "CREATE INDEX mother_type_index ON mother(type);";
     private static final String MOTHER_REFERENCE_DATE_INDEX_SQL = "CREATE INDEX mother_referenceDate_index ON mother(referenceDate);";
     private static final String TIMELINEVENT_CASEID_INDEX_SQL = "CREATE INDEX timelineEvent_caseID_index ON timelineEvent(caseID);";
+    private static final String REPORT_INDICATOR_INDEX_SQL = "CREATE INDEX report_indicator_index ON report(indicator);";
 
     public OpenSRPSQLiteOpenHelper(Context context, String name, SQLiteDatabase.CursorFactory factory) {
         super(context, name, factory, context.getResources().getInteger(R.integer.db_version));
-
         this.context = context;
         this.name = name;
         this.factory = factory;
+        this.databasePath = context.getDatabasePath(session.repositoryName());
+        this.dbName = session.repositoryName();
     }
 
     @Override
@@ -86,8 +94,44 @@ public class OpenSRPSQLiteOpenHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
+    {
+        try
+        {
+            Log.w(TAG, "Upgrading from version " + oldVersion + " to " + newVersion + ".");
+            boolean success = false;
 
+            db.beginTransaction();
+            if (newVersion > oldVersion)
+            {
+                //perform database upgrades
+                for (int v = oldVersion + 1; v <= newVersion; v++)
+                {
+                    Log.i(TAG, "Upgrading database to version" + v);
+                    success = executeUpgradeFor(db, v);
+                    //If an upgrade fails, abort the process.
+                    if (!success)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            if (success)
+            {
+                db.setVersion(newVersion);
+                Log.w(TAG, "Database has been set to version: " + db.getVersion());
+                db.setTransactionSuccessful();
+            }
+        }
+        catch (Exception e)
+        {
+            Log.e(TAG, "Exception occurred : " + e.getMessage());
+        }
+        finally
+        {
+            db.endTransaction();
+        }
     }
 
     /**
@@ -108,7 +152,7 @@ public class OpenSRPSQLiteOpenHelper extends SQLiteOpenHelper {
                     success = createDatabase(db);
                     break;
                 /* case 2:
-                    success = upgradesForVersion_2(db, false);
+                    success = upgradesForVersion_2(db);
                     break; */
                 default:
                     Log.e(TAG, "No upgrades exist for the version number" + version);
@@ -147,6 +191,7 @@ public class OpenSRPSQLiteOpenHelper extends SQLiteOpenHelper {
             db.execSQL(MOTHER_TYPE_INDEX_SQL);
             db.execSQL(MOTHER_REFERENCE_DATE_INDEX_SQL);
             db.execSQL(TIMELINEVENT_CASEID_INDEX_SQL);
+            db.execSQL(REPORT_INDICATOR_INDEX_SQL);
 
             Log.i(TAG, "Upgraded db to version 1");
             return true;
@@ -161,9 +206,43 @@ public class OpenSRPSQLiteOpenHelper extends SQLiteOpenHelper {
     /**
      * Executes statements contained in this block when db version changes to 2
      **/
-    boolean upgradesForVersion_2(SQLiteDatabase db, boolean clearLicenseTermsAgreement)
+    boolean upgradesForVersion_2(SQLiteDatabase db)
     {
+        //Statements for v2 upgrade
         return true;
     }
 
+    public SQLiteDatabase getReadableDatabase() {
+        if (password() == null) {
+            throw new RuntimeException("Password has not been set!");
+        }
+        return super.getReadableDatabase(password());
+    }
+
+    public SQLiteDatabase getWritableDatabase() {
+        if (password() == null) {
+            throw new RuntimeException("Password has not been set!");
+        }
+        return super.getWritableDatabase(password());
+    }
+
+    public boolean canUseThisPassword(String password) {
+        try {
+            SQLiteDatabase database = SQLiteDatabase.openDatabase(databasePath.getPath(), password, null, SQLiteDatabase.OPEN_READONLY);
+            database.close();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private String password() {
+        return session.password();
+    }
+
+    public void deleteRepository() {
+        close();
+        context.deleteDatabase(dbName);
+        context.getDatabasePath(dbName).delete();
+    }
 }

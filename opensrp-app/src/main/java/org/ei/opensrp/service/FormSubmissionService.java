@@ -3,14 +3,16 @@ package org.ei.opensrp.service;
 import com.google.gson.Gson;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.ei.opensrp.application.OpenSRPApplication;
+import org.ei.opensrp.db.adapters.FormDataRepository;
+import org.ei.opensrp.db.adapters.SettingsRepository;
 import org.ei.opensrp.domain.form.FormSubmission;
-import org.ei.opensrp.repository.AllSettings;
-import org.ei.opensrp.repository.FormDataRepository;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import static java.text.MessageFormat.format;
-import static org.ei.opensrp.AllConstants.*;
 import static org.ei.opensrp.AllConstants.ENTITY_ID_PARAM;
 import static org.ei.opensrp.AllConstants.FORM_NAME_PARAM;
 import static org.ei.opensrp.AllConstants.INSTANCE_ID_PARAM;
@@ -21,14 +23,17 @@ import static org.ei.opensrp.util.EasyMap.create;
 import static org.ei.opensrp.util.Log.logError;
 
 public class FormSubmissionService {
+    @Inject
     private ZiggyService ziggyService;
-    private FormDataRepository formDataRepository;
-    private AllSettings allSettings;
 
-    public FormSubmissionService(ZiggyService ziggyService, FormDataRepository formDataRepository, AllSettings allSettings) {
-        this.ziggyService = ziggyService;
-        this.formDataRepository = formDataRepository;
-        this.allSettings = allSettings;
+    @Inject
+    private FormDataRepository formDataRepository;
+
+    @Inject
+    private SettingsRepository allSettings;
+
+    public FormSubmissionService() {
+        OpenSRPApplication.getInstance().inject(this);
     }
 
     public void processSubmissions(List<FormSubmission> formSubmissions) {

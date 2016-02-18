@@ -13,6 +13,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.ei.opensrp.db.RepositoryManager;
 import org.ei.opensrp.domain.EligibleCouple;
 import org.ei.opensrp.domain.Mother;
+import org.ei.opensrp.util.Session;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +23,9 @@ import static java.lang.Boolean.TRUE;
 import static net.sqlcipher.DatabaseUtils.longForQuery;
 import static org.apache.commons.lang3.StringUtils.join;
 import static org.apache.commons.lang3.StringUtils.repeat;
-import static org.ei.opensrp.repository.EligibleCoupleRepository.EC_TABLE_COLUMNS;
-import static org.ei.opensrp.repository.EligibleCoupleRepository.EC_TABLE_NAME;
-import static org.ei.opensrp.repository.EligibleCoupleRepository.IS_OUT_OF_AREA_COLUMN;
+import static org.ei.opensrp.db.adapters.EligibleCoupleRepository.EC_TABLE_COLUMNS;
+import static org.ei.opensrp.db.adapters.EligibleCoupleRepository.EC_TABLE_NAME;
+import static org.ei.opensrp.db.adapters.EligibleCoupleRepository.IS_OUT_OF_AREA_COLUMN;
 
 /**
  * Created by koros on 2/12/16.
@@ -45,21 +46,21 @@ public class MotherRepository {
     private static final String NOT_CLOSED = "false";
 
     private Context context;
-    private String password;
+    private Session session;
 
-    public MotherRepository(Context context, String password){
+    public MotherRepository(Context context, Session session){
         this.context = context;
-        this.password = password;
+        this.session = session;
     }
 
     public void add(Mother mother) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         database.insert(MOTHER_TABLE_NAME, null, createValuesFor(mother, TYPE_ANC));
     }
 
     public void switchToPNC(String caseId)
     {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         ContentValues motherValuesToBeUpdated = new ContentValues();
         motherValuesToBeUpdated.put(TYPE_COLUMN, TYPE_PNC);
         database.update(MOTHER_TABLE_NAME, motherValuesToBeUpdated, ID_COLUMN + " = ?", new String[]{caseId});
@@ -67,38 +68,38 @@ public class MotherRepository {
 
     public List<Mother> allANCs()
     {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         Cursor cursor = database.query(MOTHER_TABLE_NAME, MOTHER_TABLE_COLUMNS, TYPE_COLUMN + " = ? AND " + IS_CLOSED_COLUMN + " = ?", new String[]{TYPE_ANC, NOT_CLOSED}, null, null, null, null);
         return readAll(cursor);
     }
 
     public Mother findById(String entityId)
     {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         Cursor cursor = database.query(MOTHER_TABLE_NAME, MOTHER_TABLE_COLUMNS, ID_COLUMN + " = ?", new String[]{entityId}, null, null, null, null);
         return readAll(cursor).get(0);
     }
 
     public List<Mother> allPNCs()
     {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         Cursor cursor = database.query(MOTHER_TABLE_NAME, MOTHER_TABLE_COLUMNS, TYPE_COLUMN + " = ? AND " + IS_CLOSED_COLUMN + " = ?", new String[]{TYPE_PNC, NOT_CLOSED}, null, null, null, null);
         return readAll(cursor);
     }
 
     public long ancCount()
     {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         return longForQuery(database, "SELECT COUNT(1) FROM " + MOTHER_TABLE_NAME + " WHERE " + TYPE_COLUMN + " = ? AND " + IS_CLOSED_COLUMN + " = ?", new String[]{TYPE_ANC, NOT_CLOSED});
     }
 
     public long pncCount() {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         return longForQuery(database, "SELECT COUNT(1) FROM " + MOTHER_TABLE_NAME + " WHERE " + TYPE_COLUMN + " = ? AND " + IS_CLOSED_COLUMN + " = ?", new String[]{TYPE_PNC, NOT_CLOSED});
     }
 
     public Mother findOpenCaseByCaseID(String caseId) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         Cursor cursor = database.query(MOTHER_TABLE_NAME, MOTHER_TABLE_COLUMNS, ID_COLUMN + " = ? AND " + IS_CLOSED_COLUMN + " = ?", new String[]{caseId, NOT_CLOSED}, null, null, null, null);
         List<Mother> mothers = readAll(cursor);
 
@@ -109,24 +110,24 @@ public class MotherRepository {
     }
 
     public List<Mother> findAllCasesForEC(String ecCaseId) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         Cursor cursor = database.query(MOTHER_TABLE_NAME, MOTHER_TABLE_COLUMNS, EC_CASEID_COLUMN + " = ?", new String[]{ecCaseId}, null, null, null, null);
         return readAll(cursor);
     }
 
     public List<Mother> findByCaseIds(String... caseIds) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         Cursor cursor = database.rawQuery(String.format("SELECT * FROM %s WHERE %s IN (%s)", MOTHER_TABLE_NAME, ID_COLUMN, insertPlaceholdersForInClause(caseIds.length)), caseIds);
         return readAll(cursor);
     }
 
     public List<Pair<Mother, EligibleCouple>> allMothersOfATypeWithEC(String type) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         Cursor cursor = database.rawQuery("SELECT " + tableColumnsForQuery(MOTHER_TABLE_NAME, MOTHER_TABLE_COLUMNS) + ", " + tableColumnsForQuery(EC_TABLE_NAME, EC_TABLE_COLUMNS) +
                 " FROM " + MOTHER_TABLE_NAME + ", " + EC_TABLE_NAME +
                 " WHERE " + TYPE_COLUMN + "='" + type +
                 "' AND " + MOTHER_TABLE_NAME + "." + IS_CLOSED_COLUMN + "= '" + NOT_CLOSED + "' AND " +
-                MOTHER_TABLE_NAME + "." + EC_CASEID_COLUMN + " = " + EC_TABLE_NAME + "." + org.ei.opensrp.repository.EligibleCoupleRepository.ID_COLUMN, null);
+                MOTHER_TABLE_NAME + "." + EC_CASEID_COLUMN + " = " + EC_TABLE_NAME + "." + EligibleCoupleRepository.ID_COLUMN, null);
         return readAllMothersWithEC(cursor);
     }
 
@@ -138,7 +139,7 @@ public class MotherRepository {
     }
 
     public void close(String caseId) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         ContentValues values = new ContentValues();
         values.put(IS_CLOSED_COLUMN, TRUE.toString());
         database.update(MOTHER_TABLE_NAME, values, ID_COLUMN + " = ?", new String[]{caseId});
@@ -183,7 +184,7 @@ public class MotherRepository {
                     }.getType()));
             EligibleCouple eligibleCouple = new EligibleCouple(cursor.getString(7), cursor.getString(8), cursor.getString(9), cursor.getString(10), cursor.getString(11), cursor.getString(12),
                     new Gson().<Map<String, String>>fromJson(cursor.getString(14), new TypeToken<Map<String, String>>() {
-                    }.getType())).withPhotoPath(cursor.getString(cursor.getColumnIndex(org.ei.opensrp.repository.EligibleCoupleRepository.PHOTO_PATH_COLUMN)));
+                    }.getType())).withPhotoPath(cursor.getString(cursor.getColumnIndex(EligibleCoupleRepository.PHOTO_PATH_COLUMN)));
             if (Boolean.valueOf(cursor.getString(cursor.getColumnIndex(IS_OUT_OF_AREA_COLUMN)))) {
                 eligibleCouple.asOutOfArea();
             }
@@ -213,21 +214,21 @@ public class MotherRepository {
     }
 
     public Mother findMotherWithOpenStatusByECId(String ecId) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         Cursor cursor = database.query(MOTHER_TABLE_NAME, MOTHER_TABLE_COLUMNS, EC_CASEID_COLUMN + " = ? AND " + IS_CLOSED_COLUMN + " = ?", new String[]{ecId, NOT_CLOSED}, null, null, null, null);
         List<Mother> mothers = readAll(cursor);
         return mothers.isEmpty() ? null : mothers.get(0);
     }
 
     public boolean isPregnant(String ecId) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         return longForQuery(database, "SELECT COUNT(1) FROM " + MOTHER_TABLE_NAME
                         + " WHERE " + EC_CASEID_COLUMN + " = ? AND " + IS_CLOSED_COLUMN + " = ? AND " + TYPE_COLUMN + " = ?",
                 new String[]{ecId, NOT_CLOSED, TYPE_ANC}) > 0;
     }
 
     public void update(Mother mother) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         database.update(MOTHER_TABLE_NAME, createValuesFor(mother, TYPE_ANC), ID_COLUMN + " = ?", new String[]{mother.caseId()});
     }
 

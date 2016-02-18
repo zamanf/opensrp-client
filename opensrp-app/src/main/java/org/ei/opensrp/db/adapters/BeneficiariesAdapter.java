@@ -1,4 +1,4 @@
-package org.ei.opensrp.repository;
+package org.ei.opensrp.db.adapters;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.ei.opensrp.domain.Child;
@@ -7,22 +7,23 @@ import org.ei.opensrp.domain.Mother;
 
 import java.util.List;
 
-import static org.ei.opensrp.repository.MotherRepository.TYPE_ANC;
-import static org.ei.opensrp.repository.MotherRepository.TYPE_PNC;
+import javax.inject.Inject;
 
-public class AllBeneficiaries {
+import static org.ei.opensrp.db.adapters.MotherRepository.TYPE_ANC;
+import static org.ei.opensrp.db.adapters.MotherRepository.TYPE_PNC;
+
+/**
+ * Created by koros on 2/15/16.
+ */
+public class BeneficiariesAdapter {
+    @Inject
     private ChildRepository childRepository;
+    @Inject
     private MotherRepository motherRepository;
-    private final AlertRepository alertRepository;
-    private final TimelineEventRepository timelineEventRepository;
-
-    public AllBeneficiaries(MotherRepository motherRepository, ChildRepository childRepository,
-                            AlertRepository alertRepository, TimelineEventRepository timelineEventRepository) {
-        this.childRepository = childRepository;
-        this.motherRepository = motherRepository;
-        this.alertRepository = alertRepository;
-        this.timelineEventRepository = timelineEventRepository;
-    }
+    @Inject
+    private AlertRepository alertRepository;
+    @Inject
+    private TimelineEventRepository timelineEventRepository;
 
     //#TODO
     public Mother findMotherWithOpenStatus(String caseId) {

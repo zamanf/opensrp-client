@@ -9,27 +9,9 @@ import org.ei.opensrp.commonregistry.AllCommonsRepository;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClients;
 import org.ei.opensrp.commonregistry.CommonRepository;
 import org.ei.opensrp.commonregistry.CommonRepositoryInformationHolder;
-import org.ei.opensrp.repository.AlertRepository;
-import org.ei.opensrp.repository.AllAlerts;
-import org.ei.opensrp.repository.AllBeneficiaries;
-import org.ei.opensrp.repository.AllEligibleCouples;
-import org.ei.opensrp.repository.AllReports;
-import org.ei.opensrp.repository.AllServicesProvided;
-import org.ei.opensrp.repository.AllSettings;
-import org.ei.opensrp.repository.AllSharedPreferences;
-import org.ei.opensrp.repository.AllTimelineEvents;
-import org.ei.opensrp.repository.ChildRepository;
+import org.ei.opensrp.db.adapters.ImageRepository;
 import org.ei.opensrp.repository.DrishtiRepository;
-import org.ei.opensrp.repository.EligibleCoupleRepository;
-import org.ei.opensrp.repository.FormDataRepository;
-import org.ei.opensrp.repository.FormsVersionRepository;
-import org.ei.opensrp.repository.ImageRepository;
-import org.ei.opensrp.repository.MotherRepository;
-import org.ei.opensrp.repository.ReportRepository;
 import org.ei.opensrp.repository.Repository;
-import org.ei.opensrp.repository.ServiceProvidedRepository;
-import org.ei.opensrp.repository.SettingsRepository;
-import org.ei.opensrp.repository.TimelineEventRepository;
 import org.ei.opensrp.service.ANMService;
 import org.ei.opensrp.service.ActionService;
 import org.ei.opensrp.service.AlertService;
@@ -103,27 +85,8 @@ public class Context {
     private static Context context = new Context();
 
     private Repository repository;
-    private EligibleCoupleRepository eligibleCoupleRepository;
-    private AlertRepository alertRepository;
-    private SettingsRepository settingsRepository;
-    private ChildRepository childRepository;
-    private MotherRepository motherRepository;
-    private TimelineEventRepository timelineEventRepository;
-    private ReportRepository reportRepository;
-    private FormDataRepository formDataRepository;
-    private ServiceProvidedRepository serviceProvidedRepository;
-    private FormsVersionRepository formsVersionRepository;
 
-    private AllSettings allSettings;
-    private AllSharedPreferences allSharedPreferences;
-    private AllAlerts allAlerts;
-    private AllEligibleCouples allEligibleCouples;
-    private AllBeneficiaries allBeneficiaries;
-    private AllTimelineEvents allTimelineEvents;
-    private AllReports allReports;
-    private AllServicesProvided allServicesProvided;
     private AllCommonsRepository allCommonPersonObjectsRepository;
-    private static ImageRepository imageRepository;
 
 
     private DrishtiService drishtiService;

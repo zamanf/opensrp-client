@@ -1,16 +1,17 @@
 package org.ei.opensrp.service;
 
 import org.ei.opensrp.AllConstants;
+import org.ei.opensrp.application.OpenSRPApplication;
+import org.ei.opensrp.db.adapters.AlertRepository;
+import org.ei.opensrp.db.adapters.BeneficiariesAdapter;
+import org.ei.opensrp.db.adapters.ChildRepository;
+import org.ei.opensrp.db.adapters.MotherRepository;
+import org.ei.opensrp.db.adapters.TimelineEventRepository;
 import org.ei.opensrp.domain.Child;
 import org.ei.opensrp.domain.Mother;
 import org.ei.opensrp.domain.ServiceProvided;
 import org.ei.opensrp.domain.form.FormSubmission;
 import org.ei.opensrp.domain.form.SubForm;
-import org.ei.opensrp.repository.AllAlerts;
-import org.ei.opensrp.repository.AllBeneficiaries;
-import org.ei.opensrp.repository.AllTimelineEvents;
-import org.ei.opensrp.repository.ChildRepository;
-import org.ei.opensrp.repository.MotherRepository;
 import org.ei.opensrp.util.EasyMap;
 
 import java.util.ArrayList;
@@ -18,6 +19,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.inject.Inject;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.ei.opensrp.AllConstants.ChildIllnessFields.*;
@@ -75,21 +78,26 @@ import static org.ei.opensrp.domain.TimelineEvent.forChildImmunization;
 import static org.ei.opensrp.domain.TimelineEvent.forChildPNCVisit;
 
 public class ChildService {
-    private AllBeneficiaries allBeneficiaries;
-    private ChildRepository childRepository;
-    private MotherRepository motherRepository;
-    private AllTimelineEvents allTimelines;
-    private ServiceProvidedService serviceProvidedService;
-    private AllAlerts allAlerts;
+    @Inject
+    private BeneficiariesAdapter allBeneficiaries;
 
-    public ChildService(AllBeneficiaries allBeneficiaries, MotherRepository motherRepository, ChildRepository childRepository,
-                        AllTimelineEvents allTimelineEvents, ServiceProvidedService serviceProvidedService, AllAlerts allAlerts) {
-        this.allBeneficiaries = allBeneficiaries;
-        this.childRepository = childRepository;
-        this.motherRepository = motherRepository;
-        this.allTimelines = allTimelineEvents;
-        this.serviceProvidedService = serviceProvidedService;
-        this.allAlerts = allAlerts;
+    @Inject
+    private ChildRepository childRepository;
+
+    @Inject
+    private MotherRepository motherRepository;
+
+    @Inject
+    private TimelineEventRepository allTimelines;
+
+    @Inject
+    private ServiceProvidedService serviceProvidedService;
+
+    @Inject
+    private AlertRepository allAlerts;
+
+    public ChildService() {
+        OpenSRPApplication.getInstance().inject(this);
     }
 
     public void register(FormSubmission submission) {

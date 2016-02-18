@@ -1,11 +1,13 @@
 package org.ei.opensrp.view.controller;
 
+import org.ei.opensrp.application.OpenSRPApplication;
 import org.ei.opensrp.view.activity.SecuredActivity;
 
 public class FormController {
     private SecuredActivity activity;
 
     public FormController(SecuredActivity activity) {
+        OpenSRPApplication.getInstance().inject(this);
         this.activity = activity;
     }
 

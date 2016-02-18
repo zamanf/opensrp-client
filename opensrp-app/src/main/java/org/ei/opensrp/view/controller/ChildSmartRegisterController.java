@@ -4,10 +4,11 @@ import com.google.gson.Gson;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.ei.opensrp.AllConstants;
+import org.ei.opensrp.application.OpenSRPApplication;
+import org.ei.opensrp.db.adapters.BeneficiariesAdapter;
 import org.ei.opensrp.domain.Alert;
 import org.ei.opensrp.domain.Child;
 import org.ei.opensrp.domain.ServiceProvided;
-import org.ei.opensrp.repository.AllBeneficiaries;
 import org.ei.opensrp.service.AlertService;
 import org.ei.opensrp.service.ServiceProvidedService;
 import org.ei.opensrp.util.Cache;
@@ -22,6 +23,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import static java.util.Collections.sort;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.ei.opensrp.domain.ServiceProvided.CHILD_ILLNESS_SERVICE_PROVIDED_NAME;
@@ -30,19 +34,26 @@ import static org.ei.opensrp.domain.ServiceProvided.VITAMIN_A_SERVICE_PROVIDED_N
 
 public class ChildSmartRegisterController {
     private static final String CHILD_CLIENTS_LIST_CACHE_ENTRY_NAME = "ChildClientList";
-    private final ServiceProvidedService serviceProvidedService;
-    private final AlertService alertService;
-    private final AllBeneficiaries allBeneficiaries;
-    private final Cache<String> cache;
-    private final Cache<SmartRegisterClients> smartRegisterCache;
 
-    public ChildSmartRegisterController(ServiceProvidedService serviceProvidedService, AlertService alertService,
-                                        AllBeneficiaries allBeneficiaries, Cache<String> cache, Cache<SmartRegisterClients> smartRegisterCache) {
-        this.serviceProvidedService = serviceProvidedService;
-        this.alertService = alertService;
-        this.allBeneficiaries = allBeneficiaries;
-        this.cache = cache;
-        this.smartRegisterCache = smartRegisterCache;
+    @Inject
+    private ServiceProvidedService serviceProvidedService;
+
+    @Inject
+    private AlertService alertService;
+
+    @Inject
+    private BeneficiariesAdapter allBeneficiaries;
+
+    @Inject
+    @Named("SmartRegisterClientsCache")
+    private Cache<SmartRegisterClients> smartRegisterCache;
+
+    @Inject
+    @Named("ListCache")
+    public Cache<String> cache;
+
+    public ChildSmartRegisterController() {
+        OpenSRPApplication.getInstance().inject(this);
     }
 
     public String get() {

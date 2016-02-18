@@ -1,20 +1,25 @@
 package org.ei.opensrp.service;
 
 import org.ei.opensrp.Context;
+import org.ei.opensrp.application.OpenSRPApplication;
+import org.ei.opensrp.db.adapters.ImageRepository;
 import org.ei.opensrp.domain.ProfileImage;
-import org.ei.opensrp.repository.ImageRepository;
 
 import java.util.ArrayList;
+
+import javax.inject.Inject;
 
 /**
  * Created by Raihan Ahmed on 10/14/15.
  */
 public class ImageUploadSyncService {
 
-
+    @Inject
     private ImageRepository imageRepository;
 
-
+    public ImageUploadSyncService(){
+        OpenSRPApplication.getInstance().inject(this);
+    }
 
     public ImageUploadSyncService(ImageRepository imageRepository) {
 

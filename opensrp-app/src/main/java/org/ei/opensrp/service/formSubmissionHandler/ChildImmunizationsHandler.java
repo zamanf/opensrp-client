@@ -3,12 +3,12 @@ package org.ei.opensrp.service.formSubmissionHandler;
 import org.ei.opensrp.domain.form.FormSubmission;
 import org.ei.opensrp.service.ChildService;
 
-public class ChildImmunizationsHandler implements FormSubmissionHandler {
-    private ChildService childService;
+import javax.inject.Inject;
 
-    public ChildImmunizationsHandler(ChildService childService) {
-        this.childService = childService;
-    }
+public class ChildImmunizationsHandler implements FormSubmissionHandler {
+
+    @Inject
+    private ChildService childService;
 
     @Override
     public void handle(FormSubmission submission) {

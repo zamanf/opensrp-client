@@ -1,6 +1,6 @@
 package org.ei.opensrp.sync;
 
-import org.ei.opensrp.repository.AllSettings;
+import org.ei.opensrp.db.adapters.SettingsRepository;
 import org.ei.opensrp.util.Log;
 import org.ei.opensrp.view.BackgroundAction;
 import org.ei.opensrp.view.LockingBackgroundTask;
@@ -12,9 +12,9 @@ import org.ei.opensrp.view.ProgressIndicator;
 public class SaveUserInfoTask {
 
     private LockingBackgroundTask lockingBackgroundTask;
-    private AllSettings allSettings;
+    private SettingsRepository allSettings;
 
-    public SaveUserInfoTask(AllSettings allSettings) {
+    public SaveUserInfoTask(SettingsRepository allSettings) {
         this.allSettings = allSettings;
         lockingBackgroundTask = new LockingBackgroundTask(new ProgressIndicator() {
             @Override

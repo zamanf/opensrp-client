@@ -16,6 +16,7 @@ import org.ei.opensrp.db.adapters.MotherRepository;
 import org.ei.opensrp.db.adapters.ServiceProvidedRepository;
 import org.ei.opensrp.db.adapters.SettingsRepository;
 import org.ei.opensrp.db.adapters.TimelineEventRepository;
+import org.ei.opensrp.util.Session;
 
 
 /**
@@ -43,20 +44,23 @@ public class RepositoryManager {
     private SettingsRepository settingsRepository;
     private TimelineEventRepository timelineEventRepository;
 
-    private String password;
+    private Session session;
 
     public RepositoryManager(Context applicationContext)
     {
         Log.w(TAG, "initializing Db connection manager...");
         appContext = applicationContext;
         openSRPSQLiteOpenHelper = new OpenSRPSQLiteOpenHelper(applicationContext, DATABASE_NAME, null);
-        alertRepository = new AlertRepository(applicationContext, password);
-        childRepository = new ChildRepository(applicationContext, password);
-        eligibleCoupleRepository = new EligibleCoupleRepository(applicationContext, password);
+        alertRepository = new AlertRepository(applicationContext, session);
+        childRepository = new ChildRepository(applicationContext, session);
+        eligibleCoupleRepository = new EligibleCoupleRepository(applicationContext, session);
         formDataRepository = new FormDataRepository();
-        formsVersionRepository = new FormsVersionRepository(applicationContext, password);
-        imageRepository = new ImageRepository(applicationContext, password);
-        motherRepository = new MotherRepository(applicationContext, password);
+        formsVersionRepository = new FormsVersionRepository(applicationContext, session);
+        imageRepository = new ImageRepository(applicationContext, session);
+        motherRepository = new MotherRepository(applicationContext, session);
+        serviceProvidedRepository = new ServiceProvidedRepository(applicationContext, session);
+        settingsRepository = new SettingsRepository(applicationContext, session);
+        timelineEventRepository = new TimelineEventRepository(applicationContext, session);
     }
 
     public static boolean open(String password)
@@ -123,7 +127,6 @@ public class RepositoryManager {
     /**
      * @param context
      */
-
     public static void initializeRepositoryManager(Context context)
     {
         if (repositoryManager == null)
@@ -179,7 +182,7 @@ public class RepositoryManager {
     }
 
     public FormDataRepository formDataRepository(){
-        return formDataRepository();
+        return formDataRepository;
     }
 
     public FormsVersionRepository formsVersionRepository(){
@@ -192,6 +195,18 @@ public class RepositoryManager {
 
     public MotherRepository motherRepository(){
         return motherRepository;
+    }
+
+    public ServiceProvidedRepository serviceProvidedRepository(){
+        return serviceProvidedRepository;
+    }
+
+    public SettingsRepository settingsRepository(){
+        return settingsRepository;
+    }
+
+    public TimelineEventRepository timelineEventRepository(){
+        return timelineEventRepository;
     }
 
 }

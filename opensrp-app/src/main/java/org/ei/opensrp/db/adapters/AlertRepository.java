@@ -8,6 +8,7 @@ import net.sqlcipher.database.SQLiteDatabase;
 
 import org.ei.opensrp.db.RepositoryManager;
 import org.ei.opensrp.domain.Alert;
+import org.ei.opensrp.util.Session;
 import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
@@ -46,27 +47,27 @@ public class AlertRepository {
     public static final String CASE_AND_VISIT_CODE_COLUMN_SELECTIONS = ALERTS_CASEID_COLUMN + " = ? AND " + ALERTS_VISIT_CODE_COLUMN + " = ?";
 
     private Context context;
-    private String password;
+    private Session session;
 
-    public AlertRepository(Context context, String password){
+    public AlertRepository(Context context, Session session){
         this.context = context;
-        this.password = password;
+        this.session = session;
     }
 
     public List<Alert> allAlerts() {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         Cursor cursor = database.query(ALERTS_TABLE_NAME, ALERTS_TABLE_COLUMNS, null, null, null, null, null, null);
         return readAllAlerts(cursor);
     }
 
     public List<Alert> allActiveAlertsForCase(String caseId) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         Cursor cursor = database.query(ALERTS_TABLE_NAME, ALERTS_TABLE_COLUMNS, ALERTS_CASEID_COLUMN + " = ?", new String[]{caseId}, null, null, null, null);
         return filterActiveAlerts(readAllAlerts(cursor));
     }
 
     public void createAlert(Alert alert) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         String[] caseAndScheduleNameColumnValues = {alert.caseId(), alert.scheduleName()};
 
         String caseAndScheduleNameColumnSelections = ALERTS_CASEID_COLUMN + " = ? AND " + ALERTS_SCHEDULE_NAME_COLUMN + " = ?";
@@ -82,7 +83,7 @@ public class AlertRepository {
     }
 
     public void markAlertAsClosed(String caseId, String visitCode, String completionDate) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         String[] caseAndVisitCodeColumnValues = {caseId, visitCode};
 
         ContentValues valuesToBeUpdated = new ContentValues();
@@ -92,12 +93,12 @@ public class AlertRepository {
     }
 
     public void deleteAllAlertsForEntity(String caseId) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         database.delete(ALERTS_TABLE_NAME, ALERTS_CASEID_COLUMN + "= ?", new String[]{caseId});
     }
 
     public void deleteAllAlerts() {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         database.delete(ALERTS_TABLE_NAME, null, null);
     }
 
@@ -143,7 +144,7 @@ public class AlertRepository {
     }
 
     public List<Alert> findByEntityIdAndAlertNames(String entityId, String... names) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         Cursor cursor = database.rawQuery(format("SELECT * FROM %s WHERE %s = ? AND %s IN (%s) ORDER BY DATE(%s)",
                 ALERTS_TABLE_NAME, ALERTS_CASEID_COLUMN, ALERTS_VISIT_CODE_COLUMN,
                 insertPlaceholdersForInClause(names.length), ALERTS_STARTDATE_COLUMN), addAll(new String[]{entityId}, names));
@@ -155,7 +156,7 @@ public class AlertRepository {
     }
 
     public void changeAlertStatusToInProcess(String entityId, String alertName) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         String[] caseAndVisitCodeColumnValues = {entityId, alertName};
 
         ContentValues valuesToBeUpdated = new ContentValues();
@@ -163,7 +164,7 @@ public class AlertRepository {
         database.update(ALERTS_TABLE_NAME, valuesToBeUpdated, CASE_AND_VISIT_CODE_COLUMN_SELECTIONS, caseAndVisitCodeColumnValues);
     }
     public void changeAlertStatusToComplete(String entityId, String alertName) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         String[] caseAndVisitCodeColumnValues = {entityId, alertName};
 
         ContentValues valuesToBeUpdated = new ContentValues();

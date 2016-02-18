@@ -16,6 +16,8 @@ import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.controller.*;
 import org.ei.opensrp.view.dialog.*;
 
+import javax.inject.Inject;
+
 import static com.google.common.collect.Iterables.concat;
 import static com.google.common.collect.Iterables.toArray;
 import static org.ei.opensrp.AllConstants.FormNames.EC_REGISTRATION;
@@ -34,6 +36,9 @@ public class NativeFPSmartRegisterActivity extends SecuredNativeSmartRegisterAct
     private DialogOptionMapper dialogOptionMapper;
 
     private final ClientActionHandler clientActionHandler = new ClientActionHandler();
+
+    @Inject
+    ANMLocationController anmLocationController;
 
     @Override
     protected SmartRegisterPaginatedAdapter adapter() {
@@ -124,11 +129,8 @@ public class NativeFPSmartRegisterActivity extends SecuredNativeSmartRegisterAct
 
     @Override
     protected void onInitialization() {
-        controller = new FPSmartRegisterController(context.allEligibleCouples(),
-                context.allBeneficiaries(), context.alertService(),
-                context.listCache(), context.fpClientsCache());
-        villageController = new VillageController(context.allEligibleCouples(),
-                context.listCache(), context.villagesCache());
+        controller = new FPSmartRegisterController();
+        villageController = new VillageController();
         dialogOptionMapper = new DialogOptionMapper();
         clientsProvider().onServiceModeSelected(new FPAllMethodsServiceMode(clientsProvider()));
     }
@@ -141,7 +143,7 @@ public class NativeFPSmartRegisterActivity extends SecuredNativeSmartRegisterAct
 
     @Override
     public void startRegistration() {
-        FieldOverrides fieldOverrides = new FieldOverrides(context.anmLocationController().getLocationJSON());
+        FieldOverrides fieldOverrides = new FieldOverrides(anmLocationController.getLocationJSON());
         startFormActivity(EC_REGISTRATION, null, fieldOverrides.getJSONString());
     }
 

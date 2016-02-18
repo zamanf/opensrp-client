@@ -14,7 +14,8 @@ import org.ei.opensrp.db.RepositoryManager;
 import org.ei.opensrp.domain.Child;
 import org.ei.opensrp.domain.EligibleCouple;
 import org.ei.opensrp.domain.Mother;
-import org.ei.opensrp.repository.EligibleCoupleRepository;
+import org.ei.opensrp.db.adapters.EligibleCoupleRepository;
+import org.ei.opensrp.util.Session;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,10 +24,10 @@ import java.util.Map;
 import static java.lang.Boolean.TRUE;
 import static net.sqlcipher.DatabaseUtils.longForQuery;
 import static org.apache.commons.lang3.StringUtils.repeat;
-import static org.ei.opensrp.repository.EligibleCoupleRepository.EC_TABLE_COLUMNS;
-import static org.ei.opensrp.repository.EligibleCoupleRepository.EC_TABLE_NAME;
-import static org.ei.opensrp.repository.MotherRepository.MOTHER_TABLE_COLUMNS;
-import static org.ei.opensrp.repository.MotherRepository.MOTHER_TABLE_NAME;
+import static org.ei.opensrp.db.adapters.EligibleCoupleRepository.EC_TABLE_COLUMNS;
+import static org.ei.opensrp.db.adapters.EligibleCoupleRepository.EC_TABLE_NAME;
+import static org.ei.opensrp.db.adapters.MotherRepository.MOTHER_TABLE_COLUMNS;
+import static org.ei.opensrp.db.adapters.MotherRepository.MOTHER_TABLE_NAME;
 
 /**
  * Created by koros on 2/12/16.
@@ -45,31 +46,31 @@ public class ChildRepository {
     public static final String NOT_CLOSED = "false";
 
     private Context context;
-    private String password;
+    private Session session;
 
-    public ChildRepository(Context context, String password){
+    public ChildRepository(Context context, Session session){
         this.context = context;
-        this.password = password;
+        this.session = session;
     }
 
     public void add(Child child) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         database.insert(CHILD_TABLE_NAME, null, createValuesFor(child));
     }
 
     public void update(Child child) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         database.update(CHILD_TABLE_NAME, createValuesFor(child), ID_COLUMN + " = ?", new String[]{child.caseId()});
     }
 
     public List<Child> all() {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         Cursor cursor = database.query(CHILD_TABLE_NAME, CHILD_TABLE_COLUMNS, IS_CLOSED_COLUMN + " = ?", new String[]{NOT_CLOSED}, null, null, null, null);
         return readAll(cursor);
     }
 
     public Child find(String caseId) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         Cursor cursor = database.query(CHILD_TABLE_NAME, CHILD_TABLE_COLUMNS, ID_COLUMN + " = ?", new String[]{caseId}, null, null, null, null);
         List<Child> children = readAll(cursor);
 
@@ -80,26 +81,26 @@ public class ChildRepository {
     }
 
     public List<Child> findChildrenByCaseIds(String... caseIds) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         Cursor cursor = database.rawQuery(String.format("SELECT * FROM %s WHERE %s IN (%s)", CHILD_TABLE_NAME, ID_COLUMN, insertPlaceholdersForInClause(caseIds.length)), caseIds);
         return readAll(cursor);
     }
 
     public void updateDetails(String caseId, Map<String, String> details) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         ContentValues values = new ContentValues();
         values.put(DETAILS_COLUMN, new Gson().toJson(details));
         database.update(CHILD_TABLE_NAME, values, ID_COLUMN + " = ?", new String[]{caseId});
     }
 
     public List<Child> findByMotherCaseId(String caseId) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         Cursor cursor = database.query(CHILD_TABLE_NAME, CHILD_TABLE_COLUMNS, MOTHER_ID_COLUMN + " = ?", new String[]{caseId}, null, null, null, null);
         return readAll(cursor);
     }
 
     public long count() {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         return longForQuery(database, "SELECT COUNT(1) FROM " + CHILD_TABLE_NAME + " WHERE " + IS_CLOSED_COLUMN + " = '" + NOT_CLOSED + "'", new String[0]);
     }
 
@@ -108,15 +109,15 @@ public class ChildRepository {
     }
 
     public List<Child> allChildrenWithMotherAndEC() {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         Cursor cursor = database.rawQuery("SELECT " +
                         tableColumnsForQuery(CHILD_TABLE_NAME, CHILD_TABLE_COLUMNS) + ", " +
                         tableColumnsForQuery(MOTHER_TABLE_NAME, MOTHER_TABLE_COLUMNS) + ", " +
                         tableColumnsForQuery(EC_TABLE_NAME, EC_TABLE_COLUMNS) +
                         " FROM " + CHILD_TABLE_NAME + ", " + MOTHER_TABLE_NAME + ", " + EC_TABLE_NAME +
                         " WHERE " + CHILD_TABLE_NAME + "." + IS_CLOSED_COLUMN + "= '" + NOT_CLOSED + "' AND " +
-                        CHILD_TABLE_NAME + "." + MOTHER_ID_COLUMN + " = " + MOTHER_TABLE_NAME + "." + org.ei.opensrp.repository.MotherRepository.ID_COLUMN
-                        + " AND " + MOTHER_TABLE_NAME + "." + org.ei.opensrp.repository.MotherRepository.EC_CASEID_COLUMN + " = " + EC_TABLE_NAME + "." + org.ei.opensrp.repository.EligibleCoupleRepository.ID_COLUMN,
+                        CHILD_TABLE_NAME + "." + MOTHER_ID_COLUMN + " = " + MOTHER_TABLE_NAME + "." + MotherRepository.ID_COLUMN
+                        + " AND " + MOTHER_TABLE_NAME + "." + MotherRepository.EC_CASEID_COLUMN + " = " + EC_TABLE_NAME + "." + EligibleCoupleRepository.ID_COLUMN,
                 null);
         return readAllChildrenWithMotherAndEC(cursor);
     }
@@ -135,7 +136,7 @@ public class ChildRepository {
     }
 
     private void markAsClosed(String caseId) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         ContentValues values = new ContentValues();
         values.put(IS_CLOSED_COLUMN, TRUE.toString());
         database.update(CHILD_TABLE_NAME, values, ID_COLUMN + " = ?", new String[]{caseId});
@@ -185,25 +186,25 @@ public class ChildRepository {
 
     private EligibleCouple ecFromCursor(Cursor cursor) {
         return new EligibleCouple(
-                getColumnValueByAlias(cursor, EC_TABLE_NAME, org.ei.opensrp.repository.EligibleCoupleRepository.ID_COLUMN),
-                getColumnValueByAlias(cursor, EC_TABLE_NAME, org.ei.opensrp.repository.EligibleCoupleRepository.WIFE_NAME_COLUMN),
-                getColumnValueByAlias(cursor, EC_TABLE_NAME, org.ei.opensrp.repository.EligibleCoupleRepository.HUSBAND_NAME_COLUMN),
-                getColumnValueByAlias(cursor, EC_TABLE_NAME, org.ei.opensrp.repository.EligibleCoupleRepository.EC_NUMBER_COLUMN),
-                getColumnValueByAlias(cursor, EC_TABLE_NAME, org.ei.opensrp.repository.EligibleCoupleRepository.VILLAGE_NAME_COLUMN),
-                getColumnValueByAlias(cursor, EC_TABLE_NAME, org.ei.opensrp.repository.EligibleCoupleRepository.SUBCENTER_NAME_COLUMN),
-                new Gson().<Map<String, String>>fromJson(getColumnValueByAlias(cursor, EC_TABLE_NAME, org.ei.opensrp.repository.EligibleCoupleRepository.DETAILS_COLUMN), new TypeToken<Map<String, String>>() {
+                getColumnValueByAlias(cursor, EC_TABLE_NAME, EligibleCoupleRepository.ID_COLUMN),
+                getColumnValueByAlias(cursor, EC_TABLE_NAME, EligibleCoupleRepository.WIFE_NAME_COLUMN),
+                getColumnValueByAlias(cursor, EC_TABLE_NAME, EligibleCoupleRepository.HUSBAND_NAME_COLUMN),
+                getColumnValueByAlias(cursor, EC_TABLE_NAME, EligibleCoupleRepository.EC_NUMBER_COLUMN),
+                getColumnValueByAlias(cursor, EC_TABLE_NAME, EligibleCoupleRepository.VILLAGE_NAME_COLUMN),
+                getColumnValueByAlias(cursor, EC_TABLE_NAME, EligibleCoupleRepository.SUBCENTER_NAME_COLUMN),
+                new Gson().<Map<String, String>>fromJson(getColumnValueByAlias(cursor, EC_TABLE_NAME, EligibleCoupleRepository.DETAILS_COLUMN), new TypeToken<Map<String, String>>() {
                 }.getType()))
-                .withPhotoPath(getColumnValueByAlias(cursor, EC_TABLE_NAME, org.ei.opensrp.repository.EligibleCoupleRepository.PHOTO_PATH_COLUMN))
-                .withOutOfArea(getColumnValueByAlias(cursor, EC_TABLE_NAME, org.ei.opensrp.repository.EligibleCoupleRepository.IS_OUT_OF_AREA_COLUMN));
+                .withPhotoPath(getColumnValueByAlias(cursor, EC_TABLE_NAME, EligibleCoupleRepository.PHOTO_PATH_COLUMN))
+                .withOutOfArea(getColumnValueByAlias(cursor, EC_TABLE_NAME, EligibleCoupleRepository.IS_OUT_OF_AREA_COLUMN));
     }
 
     private Mother motherFromCursor(Cursor cursor) {
         return new Mother(
-                getColumnValueByAlias(cursor, MOTHER_TABLE_NAME, org.ei.opensrp.repository.MotherRepository.ID_COLUMN),
-                getColumnValueByAlias(cursor, MOTHER_TABLE_NAME, org.ei.opensrp.repository.MotherRepository.EC_CASEID_COLUMN),
-                getColumnValueByAlias(cursor, MOTHER_TABLE_NAME, org.ei.opensrp.repository.MotherRepository.THAYI_CARD_NUMBER_COLUMN),
-                getColumnValueByAlias(cursor, MOTHER_TABLE_NAME, org.ei.opensrp.repository.MotherRepository.REF_DATE_COLUMN))
-                .withDetails(new Gson().<Map<String, String>>fromJson(getColumnValueByAlias(cursor, MOTHER_TABLE_NAME, org.ei.opensrp.repository.MotherRepository.DETAILS_COLUMN), new TypeToken<Map<String, String>>() {
+                getColumnValueByAlias(cursor, MOTHER_TABLE_NAME, MotherRepository.ID_COLUMN),
+                getColumnValueByAlias(cursor, MOTHER_TABLE_NAME, MotherRepository.EC_CASEID_COLUMN),
+                getColumnValueByAlias(cursor, MOTHER_TABLE_NAME, MotherRepository.THAYI_CARD_NUMBER_COLUMN),
+                getColumnValueByAlias(cursor, MOTHER_TABLE_NAME, MotherRepository.REF_DATE_COLUMN))
+                .withDetails(new Gson().<Map<String, String>>fromJson(getColumnValueByAlias(cursor, MOTHER_TABLE_NAME, MotherRepository.DETAILS_COLUMN), new TypeToken<Map<String, String>>() {
                 }.getType()));
     }
 
@@ -240,27 +241,27 @@ public class ChildRepository {
     }
 
     public void updatePhotoPath(String caseId, String imagePath) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         ContentValues values = new ContentValues();
         values.put(PHOTO_PATH_COLUMN, imagePath);
         database.update(CHILD_TABLE_NAME, values, ID_COLUMN + " = ?", new String[]{caseId});
     }
 
     public List<Child> findAllChildrenByECId(String ecId) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         Cursor cursor = database.rawQuery("SELECT " +
                 tableColumnsForQuery(CHILD_TABLE_NAME, CHILD_TABLE_COLUMNS) +
                 " FROM " + CHILD_TABLE_NAME + ", " + MOTHER_TABLE_NAME + ", " + EC_TABLE_NAME +
                 " WHERE " + CHILD_TABLE_NAME + "." + IS_CLOSED_COLUMN + "= '" + NOT_CLOSED + "' AND " +
-                CHILD_TABLE_NAME + "." + MOTHER_ID_COLUMN + " = " + MOTHER_TABLE_NAME + "." + org.ei.opensrp.repository.MotherRepository.ID_COLUMN
-                + " AND " + MOTHER_TABLE_NAME + "." + org.ei.opensrp.repository.MotherRepository.EC_CASEID_COLUMN + " = " + EC_TABLE_NAME + "." +
-                org.ei.opensrp.repository.EligibleCoupleRepository.ID_COLUMN + " AND " + EC_TABLE_NAME + "." + EligibleCoupleRepository.ID_COLUMN +
+                CHILD_TABLE_NAME + "." + MOTHER_ID_COLUMN + " = " + MOTHER_TABLE_NAME + "." + MotherRepository.ID_COLUMN
+                + " AND " + MOTHER_TABLE_NAME + "." + MotherRepository.EC_CASEID_COLUMN + " = " + EC_TABLE_NAME + "." +
+                EligibleCoupleRepository.ID_COLUMN + " AND " + EC_TABLE_NAME + "." + EligibleCoupleRepository.ID_COLUMN +
                 "= ? ", new String[]{ecId});
         return readAllChildren(cursor);
     }
 
     public void delete(String childId) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         database.delete(CHILD_TABLE_NAME, ID_COLUMN + "= ?", new String[]{childId});
     }
 }

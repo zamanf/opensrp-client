@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import org.ei.opensrp.Context;
 import org.ei.opensrp.R;
+import org.ei.opensrp.db.adapters.SharedPreferencesAdapter;
 import org.ei.opensrp.event.Listener;
 import org.ei.opensrp.service.PendingFormSubmissionService;
 import org.ei.opensrp.sync.SyncAfterFetchListener;
@@ -15,6 +16,8 @@ import org.ei.opensrp.sync.UpdateActionsTask;
 import org.ei.opensrp.view.contract.HomeContext;
 import org.ei.opensrp.view.controller.NativeAfterANMDetailsFetchListener;
 import org.ei.opensrp.view.controller.NativeUpdateANMDetailsTask;
+
+import javax.inject.Inject;
 
 import static java.lang.String.valueOf;
 import static org.ei.opensrp.event.Event.ACTION_HANDLED;
@@ -25,7 +28,12 @@ import static org.ei.opensrp.event.Event.SYNC_STARTED;
 public class NativeHomeActivity extends SecuredActivity {
     private MenuItem updateMenuItem;
     private MenuItem remainingFormsToSyncMenuItem;
+
+    @Inject
     private PendingFormSubmissionService pendingFormSubmissionService;
+
+    @Inject
+    SharedPreferencesAdapter sharedPreferencesAdapter;
 
     private Listener<Boolean> onSyncStartListener = new Listener<Boolean>() {
         @Override
@@ -93,7 +101,6 @@ public class NativeHomeActivity extends SecuredActivity {
     }
 
     private void initialize() {
-        pendingFormSubmissionService = context.pendingFormSubmissionService();
         SYNC_STARTED.addListener(onSyncStartListener);
         SYNC_COMPLETED.addListener(onSyncCompleteListener);
         FORM_SUBMITTED.addListener(onFormSubmittedListener);
@@ -148,9 +155,7 @@ public class NativeHomeActivity extends SecuredActivity {
     }
 
     public void updateFromServer() {
-        UpdateActionsTask updateActionsTask = new UpdateActionsTask(
-                this, context.actionService(), context.formSubmissionSyncService(),
-                new SyncProgressIndicator(), context.allFormVersionSyncService());
+        UpdateActionsTask updateActionsTask = new UpdateActionsTask(this, new SyncProgressIndicator(sharedPreferencesAdapter));
         updateActionsTask.updateFromServer(new SyncAfterFetchListener());
     }
 
@@ -166,7 +171,7 @@ public class NativeHomeActivity extends SecuredActivity {
 
     private void updateSyncIndicator() {
         if (updateMenuItem != null) {
-            if (context.allSharedPreferences().fetchIsSyncInProgress()) {
+            if (sharedPreferencesAdapter.fetchIsSyncInProgress()) {
                 updateMenuItem.setActionView(R.layout.progress);
             } else
                 updateMenuItem.setActionView(null);

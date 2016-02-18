@@ -10,10 +10,13 @@ import org.ei.opensrp.provider.ANCSmartRegisterClientsProvider;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.controller.ANCSmartRegisterController;
+import org.ei.opensrp.view.controller.ANMLocationController;
 import org.ei.opensrp.view.controller.VillageController;
 import org.ei.opensrp.view.dialog.*;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import static com.google.common.collect.Iterables.concat;
 import static com.google.common.collect.Iterables.toArray;
@@ -33,8 +36,10 @@ public class NativeANCSmartRegisterActivity extends SecuredNativeSmartRegisterAc
     private ANCSmartRegisterController controller;
     private VillageController villageController;
     private DialogOptionMapper dialogOptionMapper;
-    public static final List<? extends DialogOption> DEFAULT_ANC_FILTER_OPTIONS =
-            asList(new OutOfAreaFilter());
+    public static final List<? extends DialogOption> DEFAULT_ANC_FILTER_OPTIONS = asList(new OutOfAreaFilter());
+
+    @Inject
+    ANMLocationController anmLocationController;
 
     private final ClientActionHandler clientActionHandler = new ClientActionHandler();
 
@@ -129,17 +134,9 @@ public class NativeANCSmartRegisterActivity extends SecuredNativeSmartRegisterAc
 
     @Override
     protected void onInitialization() {
-        controller = new ANCSmartRegisterController(
-                context.serviceProvidedService(),
-                context.alertService(),
-                context.allBeneficiaries(),
-                context.listCache(),
-                context.ancClientsCache());
+        controller = new ANCSmartRegisterController();
 
-        villageController = new VillageController(
-                context.allEligibleCouples(),
-                context.listCache(),
-                context.villagesCache());
+        villageController = new VillageController();
 
         dialogOptionMapper = new DialogOptionMapper();
 
@@ -148,7 +145,7 @@ public class NativeANCSmartRegisterActivity extends SecuredNativeSmartRegisterAc
 
     @Override
     public void startRegistration() {
-        FieldOverrides fieldOverrides = new FieldOverrides(context.anmLocationController().getLocationJSON());
+        FieldOverrides fieldOverrides = new FieldOverrides(anmLocationController.getLocationJSON());
         startFormActivity(AllConstants.FormNames.ANC_REGISTRATION_OA, null, fieldOverrides.getJSONString());
     }
 

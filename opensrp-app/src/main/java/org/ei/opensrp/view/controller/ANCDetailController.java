@@ -7,6 +7,10 @@ import android.webkit.JavascriptInterface;
 import com.google.gson.Gson;
 
 import org.ei.opensrp.AllConstants;
+import org.ei.opensrp.application.OpenSRPApplication;
+import org.ei.opensrp.db.adapters.BeneficiariesAdapter;
+import org.ei.opensrp.db.adapters.EligibleCoupleRepository;
+import org.ei.opensrp.db.adapters.TimelineEventRepository;
 import org.ei.opensrp.domain.EligibleCouple;
 import org.ei.opensrp.domain.Mother;
 import org.ei.opensrp.repository.AllBeneficiaries;
@@ -30,6 +34,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.ei.opensrp.AllConstants.DEFAULT_WOMAN_IMAGE_PLACEHOLDER_PATH;
 import static org.ei.opensrp.AllConstants.ENTITY_ID;
@@ -39,16 +45,20 @@ public class ANCDetailController {
     public static final int DURATION_OF_PREGNANCY_IN_WEEKS = 40;
     private final Context context;
     private final String caseId;
-    private final AllEligibleCouples allEligibleCouples;
-    private final AllBeneficiaries allBeneficiaries;
-    private final AllTimelineEvents allTimelineEvents;
 
-    public ANCDetailController(Context context, String caseId, AllEligibleCouples allEligibleCouples, AllBeneficiaries allBeneficiaries, AllTimelineEvents allTimelineEvents) {
+    @Inject
+    private EligibleCoupleRepository allEligibleCouples;
+
+    @Inject
+    private BeneficiariesAdapter allBeneficiaries;
+
+    @Inject
+    private TimelineEventRepository allTimelineEvents;
+
+    public ANCDetailController(Context context, String caseId) {
         this.context = context;
         this.caseId = caseId;
-        this.allEligibleCouples = allEligibleCouples;
-        this.allBeneficiaries = allBeneficiaries;
-        this.allTimelineEvents = allTimelineEvents;
+        OpenSRPApplication.getInstance().inject(this);
     }
 
     @JavascriptInterface

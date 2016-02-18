@@ -11,6 +11,7 @@ import net.sqlcipher.database.SQLiteDatabase;
 
 import org.ei.opensrp.db.RepositoryManager;
 import org.ei.opensrp.domain.ServiceProvided;
+import org.ei.opensrp.util.Session;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,22 +33,21 @@ public class ServiceProvidedRepository {
     public static final String DATA_ID_COLUMN = "data";
     public static final String[] SERVICE_PROVIDED_TABLE_COLUMNS = new String[]{ENTITY_ID_COLUMN, NAME_ID_COLUMN, DATE_ID_COLUMN, DATA_ID_COLUMN};
 
-
     private Context context;
-    private String password;
+    private Session session;
 
-    public ServiceProvidedRepository(Context context, String password){
+    public ServiceProvidedRepository(Context context, Session session){
         this.context = context;
-        this.password = password;
+        this.session = session;
     }
 
     public void add(ServiceProvided serviceProvided) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         database.insert(SERVICE_PROVIDED_TABLE_NAME, null, createValuesFor(serviceProvided));
     }
 
     public List<ServiceProvided> findByEntityIdAndServiceNames(String entityId, String... names) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         Cursor cursor = database.rawQuery(
                 format("SELECT * FROM %s WHERE %s = ? AND %s IN (%s) ORDER BY DATE(%s)",
                         SERVICE_PROVIDED_TABLE_NAME, ENTITY_ID_COLUMN, NAME_ID_COLUMN,
@@ -57,7 +57,7 @@ public class ServiceProvidedRepository {
     }
 
     public List<ServiceProvided> all() {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         Cursor cursor = database.query(SERVICE_PROVIDED_TABLE_NAME, SERVICE_PROVIDED_TABLE_COLUMNS, null, null, null, null, DATE_ID_COLUMN);
         return readAllServicesProvided(cursor);
     }

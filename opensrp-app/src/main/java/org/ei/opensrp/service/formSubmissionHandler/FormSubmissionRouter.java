@@ -3,15 +3,17 @@ package org.ei.opensrp.service.formSubmissionHandler;
 import android.webkit.JavascriptInterface;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.ei.opensrp.application.OpenSRPApplication;
+import org.ei.opensrp.db.adapters.FormDataRepository;
 import org.ei.opensrp.domain.form.FormSubmission;
-import org.ei.opensrp.repository.FormDataRepository;
 import org.ei.opensrp.util.Log;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import static java.text.MessageFormat.format;
-import static org.ei.opensrp.AllConstants.FormNames.*;
 import static org.ei.opensrp.AllConstants.FormNames.ANC_CLOSE;
 import static org.ei.opensrp.AllConstants.FormNames.ANC_INVESTIGATIONS;
 import static org.ei.opensrp.AllConstants.FormNames.ANC_REGISTRATION;
@@ -46,32 +48,87 @@ import static org.ei.opensrp.util.Log.logWarn;
 
 public class FormSubmissionRouter {
     private final Map<String, FormSubmissionHandler> handlerMap;
+
+    @Inject
     private FormDataRepository formDataRepository;
 
-    public FormSubmissionRouter(FormDataRepository formDataRepository,
-                                ECRegistrationHandler ecRegistrationHandler,
-                                FPComplicationsHandler fpComplicationsHandler,
-                                FPChangeHandler fpChangeHandler,
-                                RenewFPProductHandler renewFPProductHandler,
-                                ECCloseHandler ecCloseHandler,
-                                ANCRegistrationHandler ancRegistrationHandler,
-                                ANCRegistrationOAHandler ancRegistrationOAHandler,
-                                ANCVisitHandler ancVisitHandler,
-                                ANCCloseHandler ancCloseHandler,
-                                TTHandler ttHandler,
-                                IFAHandler ifaHandler,
-                                HBTestHandler hbTestHandler,
-                                DeliveryOutcomeHandler deliveryOutcomeHandler,
-                                PNCRegistrationOAHandler pncRegistrationOAHandler,
-                                PNCCloseHandler pncCloseHandler,
-                                PNCVisitHandler pncVisitHandler,
-                                ChildImmunizationsHandler childImmunizationsHandler,
-                                ChildRegistrationECHandler childRegistrationECHandler,
-                                ChildRegistrationOAHandler childRegistrationOAHandler,
-                                ChildCloseHandler childCloseHandler, ChildIllnessHandler childIllnessHandler,
-                                VitaminAHandler vitaminAHandler, DeliveryPlanHandler deliveryPlanHandler,
-                                ECEditHandler ecEditHandler, ANCInvestigationsHandler ancInvestigationsHandler) {
-        this.formDataRepository = formDataRepository;
+    @Inject
+    ECRegistrationHandler ecRegistrationHandler;
+
+    @Inject
+    FPComplicationsHandler fpComplicationsHandler;
+
+    @Inject
+    FPChangeHandler fpChangeHandler;
+
+    @Inject
+    RenewFPProductHandler renewFPProductHandler;
+
+    @Inject
+    ECCloseHandler ecCloseHandler;
+
+    @Inject
+    ANCRegistrationHandler ancRegistrationHandler;
+
+    @Inject
+    ANCRegistrationOAHandler ancRegistrationOAHandler;
+
+    @Inject
+    ANCVisitHandler ancVisitHandler;
+
+    @Inject
+    ANCCloseHandler ancCloseHandler;
+
+    @Inject
+    TTHandler ttHandler;
+
+    @Inject
+    IFAHandler ifaHandler;
+
+    @Inject
+    HBTestHandler hbTestHandler;
+
+    @Inject
+    DeliveryOutcomeHandler deliveryOutcomeHandler;
+
+    @Inject
+    PNCRegistrationOAHandler pncRegistrationOAHandler;
+
+    @Inject
+    PNCCloseHandler pncCloseHandler;
+
+    @Inject
+    PNCVisitHandler pncVisitHandler;
+
+    @Inject
+    ChildImmunizationsHandler childImmunizationsHandler;
+
+    @Inject
+    ChildRegistrationECHandler childRegistrationECHandler;
+
+    @Inject
+    ChildRegistrationOAHandler childRegistrationOAHandler;
+
+    @Inject
+    ChildCloseHandler childCloseHandler;
+
+    @Inject
+    ChildIllnessHandler childIllnessHandler;
+
+    @Inject
+    VitaminAHandler vitaminAHandler;
+
+    @Inject
+    DeliveryPlanHandler deliveryPlanHandler;
+
+    @Inject
+    ECEditHandler ecEditHandler;
+
+    @Inject
+    ANCInvestigationsHandler ancInvestigationsHandler;
+
+    public FormSubmissionRouter() {
+        OpenSRPApplication.getInstance().inject(this);
         handlerMap = new HashMap<String, FormSubmissionHandler>();
         handlerMap.put(EC_REGISTRATION, ecRegistrationHandler);
         handlerMap.put(FP_COMPLICATIONS, fpComplicationsHandler);

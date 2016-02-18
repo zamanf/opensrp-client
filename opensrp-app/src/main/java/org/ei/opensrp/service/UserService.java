@@ -3,16 +3,20 @@ package org.ei.opensrp.service;
 import android.util.Log;
 
 import org.ei.opensrp.DristhiConfiguration;
+import org.ei.opensrp.application.OpenSRPApplication;
+import org.ei.opensrp.db.OpenSRPSQLiteOpenHelper;
+import org.ei.opensrp.db.adapters.SettingsRepository;
+import org.ei.opensrp.db.adapters.SharedPreferencesAdapter;
 import org.ei.opensrp.domain.LoginResponse;
 import org.ei.opensrp.domain.Response;
-import org.ei.opensrp.repository.AllSettings;
-import org.ei.opensrp.repository.AllSharedPreferences;
 import org.ei.opensrp.repository.Repository;
 import org.ei.opensrp.sync.SaveANMLocationTask;
 import org.ei.opensrp.sync.SaveUserInfoTask;
 import org.ei.opensrp.util.Session;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import javax.inject.Inject;
 
 import static org.ei.opensrp.AllConstants.*;
 import static org.ei.opensrp.AllConstants.ENGLISH_LANGUAGE;
@@ -24,26 +28,32 @@ import static org.ei.opensrp.AllConstants.OPENSRP_LOCATION_URL_PATH;
 import static org.ei.opensrp.event.Event.ON_LOGOUT;
 
 public class UserService {
-    private final Repository repository;
-    private final AllSettings allSettings;
-    private final AllSharedPreferences allSharedPreferences;
+    //FIXME: !!!
+    private Repository repository;
+
+    @Inject
+    private SettingsRepository allSettings;
+
+    @Inject
+    private SharedPreferencesAdapter allSharedPreferences;
+
+    @Inject
     private HTTPAgent httpAgent;
+
+    @Inject
     private Session session;
+
+    @Inject
     private DristhiConfiguration configuration;
+
+    @Inject
     private SaveANMLocationTask saveANMLocationTask;
+
+    @Inject
     private SaveUserInfoTask saveUserInfoTask;
 
-    public UserService(Repository repository, AllSettings allSettings, AllSharedPreferences allSharedPreferences, HTTPAgent httpAgent, Session session,
-                       DristhiConfiguration configuration, SaveANMLocationTask saveANMLocationTask,
-                       SaveUserInfoTask saveUserInfoTask) {
-        this.repository = repository;
-        this.allSettings = allSettings;
-        this.allSharedPreferences = allSharedPreferences;
-        this.httpAgent = httpAgent;
-        this.session = session;
-        this.configuration = configuration;
-        this.saveANMLocationTask = saveANMLocationTask;
-        this.saveUserInfoTask = saveUserInfoTask;
+    public UserService() {
+        OpenSRPApplication.getInstance().inject(this);
     }
 
     public boolean isValidLocalLogin(String userName, String password) {

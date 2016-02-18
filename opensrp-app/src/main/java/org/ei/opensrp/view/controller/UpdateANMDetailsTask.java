@@ -4,11 +4,14 @@ import android.os.AsyncTask;
 
 import java.util.concurrent.locks.ReentrantLock;
 
+import javax.inject.Inject;
+
 import static android.os.AsyncTask.THREAD_POOL_EXECUTOR;
 import static org.ei.opensrp.util.Log.logWarn;
 
 public class UpdateANMDetailsTask {
-    private final ANMController anmController;
+    @Inject
+    private ANMController anmController;
     private static final ReentrantLock lock = new ReentrantLock();
 
     public UpdateANMDetailsTask(ANMController anmController) {

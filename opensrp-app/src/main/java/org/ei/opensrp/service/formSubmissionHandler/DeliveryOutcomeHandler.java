@@ -4,14 +4,14 @@ import org.ei.opensrp.domain.form.FormSubmission;
 import org.ei.opensrp.service.ChildService;
 import org.ei.opensrp.service.MotherService;
 
-public class DeliveryOutcomeHandler implements FormSubmissionHandler {
-    private final MotherService motherService;
-    private ChildService childService;
+import javax.inject.Inject;
 
-    public DeliveryOutcomeHandler(MotherService motherService, ChildService childService) {
-        this.motherService = motherService;
-        this.childService = childService;
-    }
+public class DeliveryOutcomeHandler implements FormSubmissionHandler {
+
+    @Inject
+    private MotherService motherService;
+    @Inject
+    private ChildService childService;
 
     @Override
     public void handle(FormSubmission submission) {

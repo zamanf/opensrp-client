@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import org.ei.opensrp.Context;
 import org.ei.opensrp.R;
+import org.ei.opensrp.db.adapters.SharedPreferencesAdapter;
 import org.ei.opensrp.domain.LoginResponse;
 import org.ei.opensrp.domain.Response;
 import org.ei.opensrp.domain.ResponseStatus;
@@ -36,6 +37,8 @@ import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import javax.inject.Inject;
+
 import static android.view.inputmethod.InputMethodManager.HIDE_NOT_ALWAYS;
 import static org.ei.opensrp.domain.LoginResponse.SUCCESS;
 import static org.ei.opensrp.util.Log.logError;
@@ -46,6 +49,9 @@ public class LoginActivity extends Activity {
     private EditText userNameEditText;
     private EditText passwordEditText;
     private ProgressDialog progressDialog;
+
+    @Inject
+    SharedPreferencesAdapter sharedPreferencesAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -230,7 +236,7 @@ public class LoginActivity extends Activity {
 
     private void fillUserIfExists() {
         if (context.userService().hasARegisteredUser()) {
-            userNameEditText.setText(context.allSharedPreferences().fetchRegisteredANM());
+            userNameEditText.setText(sharedPreferencesAdapter.fetchRegisteredANM());
             userNameEditText.setEnabled(false);
         }
     }

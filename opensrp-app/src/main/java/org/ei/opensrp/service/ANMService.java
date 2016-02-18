@@ -1,19 +1,26 @@
 package org.ei.opensrp.service;
 
+import org.ei.opensrp.application.OpenSRPApplication;
+import org.ei.opensrp.db.adapters.BeneficiariesAdapter;
+import org.ei.opensrp.db.adapters.EligibleCoupleRepository;
+import org.ei.opensrp.db.adapters.SharedPreferencesAdapter;
 import org.ei.opensrp.domain.ANM;
-import org.ei.opensrp.repository.AllBeneficiaries;
-import org.ei.opensrp.repository.AllEligibleCouples;
-import org.ei.opensrp.repository.AllSharedPreferences;
+
+import javax.inject.Inject;
 
 public class ANMService {
-    private AllSharedPreferences allSharedPreferences;
-    private AllBeneficiaries allBeneficiaries;
-    private AllEligibleCouples allEligibleCouples;
 
-    public ANMService(AllSharedPreferences allSharedPreferences, AllBeneficiaries allBeneficiaries, AllEligibleCouples allEligibleCouples) {
-        this.allSharedPreferences = allSharedPreferences;
-        this.allBeneficiaries = allBeneficiaries;
-        this.allEligibleCouples = allEligibleCouples;
+    @Inject
+    private SharedPreferencesAdapter allSharedPreferences;
+
+    @Inject
+    private BeneficiariesAdapter allBeneficiaries;
+
+    @Inject
+    private EligibleCoupleRepository allEligibleCouples;
+
+    public ANMService() {
+        OpenSRPApplication.getInstance().inject(this);
     }
 
     public ANM fetchDetails() {

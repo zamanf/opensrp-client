@@ -6,10 +6,11 @@ import android.content.Intent;
 import com.google.gson.Gson;
 
 import org.ei.drishti.dto.MonthSummaryDatum;
+import org.ei.opensrp.application.OpenSRPApplication;
+import org.ei.opensrp.db.adapters.ReportRepository;
 import org.ei.opensrp.domain.Report;
 import org.ei.opensrp.domain.ReportIndicator;
 import org.ei.opensrp.domain.ReportsCategory;
-import org.ei.opensrp.repository.AllReports;
 import org.ei.opensrp.view.activity.ReportIndicatorDetailActivity;
 import org.ei.opensrp.view.contract.CategoryReports;
 import org.ei.opensrp.view.contract.IndicatorReport;
@@ -20,6 +21,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import static java.lang.Integer.parseInt;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.ei.opensrp.AllConstants.CATEGORY_DESCRIPTION;
@@ -28,14 +31,16 @@ import static org.ei.opensrp.util.DateUtil.today;
 
 public class ReportIndicatorListViewController {
     private final Context context;
-    private final AllReports allReports;
     private final String category;
     private List<Report> reports;
     private ReportsCategory reportsCategory;
 
-    public ReportIndicatorListViewController(Context context, AllReports allReports, String category) {
+    @Inject
+    private ReportRepository allReports;
+
+    public ReportIndicatorListViewController(Context context, String category) {
+        OpenSRPApplication.getInstance().inject(this);
         this.context = context;
-        this.allReports = allReports;
         this.category = category;
     }
 

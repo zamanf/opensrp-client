@@ -9,11 +9,14 @@ import org.ei.opensrp.domain.form.FieldOverrides;
 import org.ei.opensrp.provider.ChildSmartRegisterClientsProvider;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
+import org.ei.opensrp.view.controller.ANMLocationController;
 import org.ei.opensrp.view.controller.ChildSmartRegisterController;
 import org.ei.opensrp.view.controller.VillageController;
 import org.ei.opensrp.view.dialog.*;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import static com.google.common.collect.Iterables.concat;
 import static com.google.common.collect.Iterables.toArray;
@@ -25,6 +28,10 @@ public class NativeChildSmartRegisterActivity extends SecuredNativeSmartRegister
     private ChildSmartRegisterController controller;
     private VillageController villageController;
     private DialogOptionMapper dialogOptionMapper;
+
+    @Inject
+    ANMLocationController anmLocationController;
+
     public static final List<? extends DialogOption> DEFAULT_CHILD_FILTER_OPTIONS =
             asList(new OutOfAreaFilter());
 
@@ -115,17 +122,9 @@ public class NativeChildSmartRegisterActivity extends SecuredNativeSmartRegister
 
     @Override
     protected void onInitialization() {
-        controller = new ChildSmartRegisterController(
-                context.serviceProvidedService(),
-                context.alertService(),
-                context.allBeneficiaries(),
-                context.listCache(),
-                context.smartRegisterClientsCache());
+        controller = new ChildSmartRegisterController();
 
-        villageController = new VillageController(
-                context.allEligibleCouples(),
-                context.listCache(),
-                context.villagesCache());
+        villageController = new VillageController();
 
         dialogOptionMapper = new DialogOptionMapper();
 
@@ -134,7 +133,7 @@ public class NativeChildSmartRegisterActivity extends SecuredNativeSmartRegister
 
     @Override
     public void startRegistration() {
-        FieldOverrides fieldOverrides = new FieldOverrides(context.anmLocationController().getLocationJSON());
+        FieldOverrides fieldOverrides = new FieldOverrides(anmLocationController.getLocationJSON());
         startFormActivity(AllConstants.FormNames.CHILD_REGISTRATION_OA, null, fieldOverrides.getJSONString());
     }
 

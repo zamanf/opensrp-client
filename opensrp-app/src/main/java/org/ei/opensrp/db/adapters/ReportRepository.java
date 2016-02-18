@@ -1,45 +1,53 @@
-package org.ei.opensrp.repository;
+package org.ei.opensrp.db.adapters;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
+import org.ei.drishti.dto.Action;
+import org.ei.opensrp.db.RepositoryManager;
 import org.ei.opensrp.domain.Report;
+import org.ei.opensrp.domain.ReportIndicator;
+import org.ei.opensrp.util.Session;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.apache.commons.lang3.StringUtils.repeat;
 
-public class ReportRepository extends DrishtiRepository {
-    private static final String REPORT_SQL = "CREATE TABLE report(indicator VARCHAR PRIMARY KEY, annualTarget VARCHAR, monthlySummaries VARCHAR)";
-    private static final String REPORT_INDICATOR_INDEX_SQL = "CREATE INDEX report_indicator_index ON report(indicator);";
+/**
+ * Created by koros on 2/15/16.
+ */
+public class ReportRepository {
     private static final String REPORT_TABLE_NAME = "report";
     private static final String INDICATOR_COLUMN = "indicator";
     private static final String ANNUAL_TARGET_COLUMN = "annualTarget";
     private static final String MONTHLY_SUMMARIES_COLUMN = "monthlySummaries";
     private static final String[] REPORT_TABLE_COLUMNS = {INDICATOR_COLUMN, ANNUAL_TARGET_COLUMN, MONTHLY_SUMMARIES_COLUMN};
 
-    @Override
-    protected void onCreate(SQLiteDatabase database) {
-        database.execSQL(REPORT_SQL);
-        database.execSQL(REPORT_INDICATOR_INDEX_SQL);
+    private Context context;
+    private Session session;
+
+    public ReportRepository(Context context, Session session){
+        this.context = context;
+        this.session = session;
     }
 
     public void update(Report report) {
-        SQLiteDatabase database = masterRepository.getWritableDatabase();
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         database.replace(REPORT_TABLE_NAME, null, createValuesFor(report));
     }
 
     public List<Report> allFor(String... indicators) {
-        SQLiteDatabase database = masterRepository.getReadableDatabase();
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         Cursor cursor = database.rawQuery(String.format("SELECT * FROM %s WHERE %s IN (%s)", REPORT_TABLE_NAME, INDICATOR_COLUMN, insertPlaceholdersForInClause(indicators.length)), indicators);
         return readAll(cursor);
     }
 
     public List<Report> all() {
-        SQLiteDatabase database = masterRepository.getReadableDatabase();
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         Cursor cursor = database.query(REPORT_TABLE_NAME, REPORT_TABLE_COLUMNS, null, null, null, null, null);
         return readAll(cursor);
     }
@@ -69,5 +77,17 @@ public class ReportRepository extends DrishtiRepository {
 
     private String insertPlaceholdersForInClause(int length) {
         return repeat("?", ",", length);
+    }
+
+    public void handleAction(Action action) {
+        update(new Report(action.type(), action.get("annualTarget"), action.get("monthlySummaries")));
+    }
+
+    public List<Report> allFor(List<ReportIndicator> indicators) {
+        List<String> indicatorList = new ArrayList<String>();
+        for (ReportIndicator indicator : indicators) {
+            indicatorList.add(indicator.value());
+        }
+        return allFor(indicatorList.toArray(new String[indicatorList.size()]));
     }
 }

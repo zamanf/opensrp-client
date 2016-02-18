@@ -10,6 +10,7 @@ import org.ei.opensrp.db.RepositoryManager;
 import org.ei.opensrp.domain.FormDefinitionVersion;
 import org.ei.opensrp.domain.SyncStatus;
 import org.ei.opensrp.util.EasyMap;
+import org.ei.opensrp.util.Session;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,36 +37,36 @@ public class FormsVersionRepository {
             FORM_DIR_NAME_COLUMN, VERSION_COLUMN, SYNC_STATUS_COLUMN};
 
     private Context context;
-    private String password;
+    private Session session;
 
-    public FormsVersionRepository(Context context, String password){
+    public FormsVersionRepository(Context context, Session session){
         this.context = context;
-        this.password = password;
+        this.session = session;
     }
 
     public FormDefinitionVersion fetchVersionByFormName(String formName) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         Cursor cursor = database.query(FORM_VERSION_TABLE_NAME, FORM_VERSION_TABLE_COLUMNS, FORM_NAME_COLUMN + " = ?",
                 new String[]{formName}, null, null, null);
         return readFormVersion(cursor).get(0);
     }
 
     public FormDefinitionVersion fetchVersionByFormDirName(String formDirName) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         Cursor cursor = database.query(FORM_VERSION_TABLE_NAME, FORM_VERSION_TABLE_COLUMNS, FORM_DIR_NAME_COLUMN + " = ?",
                 new String[]{formDirName}, null, null, null);
         return readFormVersion(cursor).get(0);
     }
 
     public String getVersion(String formDirName) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         Cursor cursor = database.query(FORM_VERSION_TABLE_NAME, FORM_VERSION_TABLE_COLUMNS, FORM_DIR_NAME_COLUMN + " = ?",
                 new String[]{formDirName}, null, null, null);
         return (readFormVersion(cursor).get(0)).getVersion();
     }
 
     public FormDefinitionVersion getFormByFormDirName(String formDirName) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         Cursor cursor = database.query(FORM_VERSION_TABLE_NAME, FORM_VERSION_TABLE_COLUMNS, FORM_DIR_NAME_COLUMN + " = ?",
                 new String[]{formDirName}, null, null, null);
         return (readFormVersion(cursor).get(0));
@@ -73,57 +74,57 @@ public class FormsVersionRepository {
 
 
     public List<FormDefinitionVersion> getAllFormWithSyncStatus(SyncStatus status) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         Cursor cursor = database.query(FORM_VERSION_TABLE_NAME, FORM_VERSION_TABLE_COLUMNS, SYNC_STATUS_COLUMN + " = ?",
                 new String[]{status.value()}, null, null, null);
         return readFormVersion(cursor);
     }
 
     public List<Map<String,String>> getAllFormWithSyncStatusAsMap(SyncStatus status) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         Cursor cursor = database.query(FORM_VERSION_TABLE_NAME, FORM_VERSION_TABLE_COLUMNS, SYNC_STATUS_COLUMN + " = ?",
                 new String[]{status.value()}, null, null, null);
         return readFormVersionToMap(cursor);
     }
 
     public void addFormVersion(Map<String, String> dataJSON) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         database.insert(FORM_VERSION_TABLE_NAME, null, createValuesFormVersions(dataJSON));
     }
 
     public void addFormVersionFromObject(FormDefinitionVersion formDefinitionVersion) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         database.insert(FORM_VERSION_TABLE_NAME, null, createValuesFromObject(formDefinitionVersion));
     }
 
     public void deleteAll() {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         database.delete(FORM_VERSION_TABLE_NAME, null, null);
     }
 
     public void updateServerVersion(String formDirName, String serverVersion) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         ContentValues values = new ContentValues();
         values.put(VERSION_COLUMN, serverVersion);
         database.update(FORM_VERSION_TABLE_NAME, values, FORM_DIR_NAME_COLUMN + " = ?", new String[]{formDirName});
     }
 
     public void updateFormName(String formDirName, String formName) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         ContentValues values = new ContentValues();
         values.put(FORM_NAME_COLUMN, formName);
         database.update(FORM_VERSION_TABLE_NAME, values, FORM_DIR_NAME_COLUMN + " = ?", new String[]{formDirName});
     }
 
     public void updateSyncStatus(String formDirName, SyncStatus status){
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         ContentValues values = new ContentValues();
         values.put(SYNC_STATUS_COLUMN, status.value());
         database.update(FORM_VERSION_TABLE_NAME, values, FORM_DIR_NAME_COLUMN + " = ?", new String[]{formDirName});
     }
 
     public boolean formExists(String formDirName) {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         Cursor cursor = database.query(FORM_VERSION_TABLE_NAME, new String[]{FORM_DIR_NAME_COLUMN},
                 FORM_DIR_NAME_COLUMN
                         + " = ?", new String[]{formDirName}, null, null, null);
@@ -151,7 +152,7 @@ public class FormsVersionRepository {
     }
 
     public long count() {
-        SQLiteDatabase database = RepositoryManager.getDatabase(context, password);
+        SQLiteDatabase database = RepositoryManager.getDatabase(context, session.password());
         return longForQuery(database, "SELECT COUNT(1) FROM " + FORM_VERSION_TABLE_NAME
                 + " WHERE " + SYNC_STATUS_COLUMN + " = 'SYNCED'" , new String[0]);
     }

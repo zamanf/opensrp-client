@@ -2,18 +2,23 @@ package org.ei.opensrp.view.controller;
 
 import android.os.AsyncTask;
 
+import org.ei.opensrp.application.OpenSRPApplication;
 import org.ei.opensrp.view.contract.HomeContext;
 
 import java.util.concurrent.locks.ReentrantLock;
+
+import javax.inject.Inject;
 
 import static android.os.AsyncTask.THREAD_POOL_EXECUTOR;
 import static org.ei.opensrp.util.Log.logWarn;
 
 public class NativeUpdateANMDetailsTask {
-    private final ANMController anmController;
+    @Inject
+    private ANMController anmController;
     private static final ReentrantLock lock = new ReentrantLock();
 
     public NativeUpdateANMDetailsTask(ANMController anmController) {
+        OpenSRPApplication.getInstance().inject(this);
         this.anmController = anmController;
     }
 

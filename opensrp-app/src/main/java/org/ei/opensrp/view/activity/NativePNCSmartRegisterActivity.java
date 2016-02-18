@@ -8,11 +8,14 @@ import org.ei.opensrp.domain.form.FieldOverrides;
 import org.ei.opensrp.provider.PNCSmartRegisterClientsProvider;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
+import org.ei.opensrp.view.controller.ANMLocationController;
 import org.ei.opensrp.view.controller.PNCSmartRegisterController;
 import org.ei.opensrp.view.controller.VillageController;
 import org.ei.opensrp.view.dialog.*;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import static com.google.common.collect.Iterables.concat;
 import static com.google.common.collect.Iterables.toArray;
@@ -32,6 +35,9 @@ public class NativePNCSmartRegisterActivity extends SecuredNativeSmartRegisterAc
             asList(new OutOfAreaFilter());
 
     private final ClientActionHandler clientActionHandler = new ClientActionHandler();
+
+    @Inject
+    ANMLocationController anmLocationController;
 
     @Override
     protected SmartRegisterPaginatedAdapter adapter() {
@@ -117,11 +123,8 @@ public class NativePNCSmartRegisterActivity extends SecuredNativeSmartRegisterAc
 
     @Override
     protected void onInitialization() {
-        controller = new PNCSmartRegisterController(context.serviceProvidedService(), context.alertService(), context.allEligibleCouples(),
-                context.allBeneficiaries(),
-                context.listCache(), context.pncClientsCache());
-        villageController = new VillageController(context.allEligibleCouples(),
-                context.listCache(), context.villagesCache());
+        controller = new PNCSmartRegisterController();
+        villageController = new VillageController();
         dialogOptionMapper = new DialogOptionMapper();
         clientsProvider().onServiceModeSelected(new PNCOverviewServiceMode(clientsProvider()));
     }
@@ -133,7 +136,7 @@ public class NativePNCSmartRegisterActivity extends SecuredNativeSmartRegisterAc
 
     @Override
     public void startRegistration() {
-        FieldOverrides fieldOverrides = new FieldOverrides(context.anmLocationController().getLocationJSON());
+        FieldOverrides fieldOverrides = new FieldOverrides(anmLocationController.getLocationJSON());
         startFormActivity(PNC_REGISTRATION_OA, null, fieldOverrides.getJSONString());
     }
 

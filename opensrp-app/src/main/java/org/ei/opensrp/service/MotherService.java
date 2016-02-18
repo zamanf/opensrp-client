@@ -1,12 +1,15 @@
 package org.ei.opensrp.service;
 
 import org.ei.opensrp.AllConstants;
+import org.ei.opensrp.application.OpenSRPApplication;
+import org.ei.opensrp.db.adapters.BeneficiariesAdapter;
+import org.ei.opensrp.db.adapters.EligibleCoupleRepository;
+import org.ei.opensrp.db.adapters.TimelineEventRepository;
 import org.ei.opensrp.domain.Mother;
 import org.ei.opensrp.domain.ServiceProvided;
 import org.ei.opensrp.domain.form.FormSubmission;
-import org.ei.opensrp.repository.AllBeneficiaries;
-import org.ei.opensrp.repository.AllEligibleCouples;
-import org.ei.opensrp.repository.AllTimelineEvents;
+
+import javax.inject.Inject;
 
 import static org.ei.opensrp.AllConstants.ANCCloseFields.CLOSE_REASON_FIELD_NAME;
 import static org.ei.opensrp.AllConstants.ANCCloseFields.DEATH_OF_WOMAN_FIELD_VALUE;
@@ -53,19 +56,25 @@ import static org.ei.opensrp.util.Log.logWarn;
 
 public class MotherService {
     public static final String MOTHER_ID = "motherId";
-    private AllBeneficiaries allBeneficiaries;
-    private AllTimelineEvents allTimelines;
-    private AllEligibleCouples allEligibleCouples;
+
+    @Inject
+    private BeneficiariesAdapter allBeneficiaries;
+
+    @Inject
+    private TimelineEventRepository allTimelines;
+
+    @Inject
+    private EligibleCoupleRepository allEligibleCouples;
+
+    @Inject
     private ServiceProvidedService serviceProvidedService;
+
+    @Inject
     public static String submissionDate = "submissionDate";
 
 
-    public MotherService(AllBeneficiaries allBeneficiaries, AllEligibleCouples allEligibleCouples,
-                         AllTimelineEvents allTimelineEvents, ServiceProvidedService serviceProvidedService) {
-        this.allBeneficiaries = allBeneficiaries;
-        this.allTimelines = allTimelineEvents;
-        this.allEligibleCouples = allEligibleCouples;
-        this.serviceProvidedService = serviceProvidedService;
+    public MotherService() {
+        OpenSRPApplication.getInstance().inject(this);
     }
 
     public void registerANC(FormSubmission submission) {

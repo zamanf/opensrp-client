@@ -1,12 +1,15 @@
 package org.ei.opensrp.service;
 
-import org.ei.opensrp.repository.FormDataRepository;
+import org.ei.opensrp.application.OpenSRPApplication;
+import org.ei.opensrp.db.adapters.FormDataRepository;
 import org.ei.opensrp.service.formSubmissionHandler.FormSubmissionRouter;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.ScriptableObject;
 
 import java.util.Map;
+
+import javax.inject.Inject;
 
 import static java.text.MessageFormat.format;
 import static org.ei.opensrp.AllConstants.*;
@@ -26,17 +29,21 @@ public class ZiggyService {
             "    controller = FormDataController;\n" +
             "});";
 
+    @Inject
     private ZiggyFileLoader ziggyFileLoader;
+
+    @Inject
     private FormDataRepository dataRepository;
+
+    @Inject
     private FormSubmissionRouter formSubmissionRouter;
+
     private Context context;
     private ScriptableObject scope;
     private Function saveFunction;
 
-    public ZiggyService(ZiggyFileLoader ziggyFileLoader, FormDataRepository dataRepository, FormSubmissionRouter formSubmissionRouter) {
-        this.ziggyFileLoader = ziggyFileLoader;
-        this.dataRepository = dataRepository;
-        this.formSubmissionRouter = formSubmissionRouter;
+    public ZiggyService() {
+        OpenSRPApplication.getInstance().inject(this);
         initRhino();
     }
 

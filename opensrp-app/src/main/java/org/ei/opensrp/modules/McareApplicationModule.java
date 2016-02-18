@@ -1,10 +1,14 @@
 package org.ei.opensrp.modules;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 
 import org.ei.opensrp.application.OpenSRPApplication;
 
+import javax.inject.Singleton;
+
 import dagger.Module;
+import dagger.Provides;
 
 /**
  * Created by koros on 2/12/16.
@@ -21,5 +25,10 @@ public class McareApplicationModule {
         this.applicationContext = this.openSRPApplication.getApplicationContext();
     }
 
+    @Provides
+    @Singleton
+    Context provideApplicationContext() {
+        return applicationContext;
+    }
 
 }

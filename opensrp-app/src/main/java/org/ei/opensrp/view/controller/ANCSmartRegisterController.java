@@ -2,11 +2,12 @@ package org.ei.opensrp.view.controller;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.ei.opensrp.AllConstants;
+import org.ei.opensrp.application.OpenSRPApplication;
+import org.ei.opensrp.db.adapters.BeneficiariesAdapter;
 import org.ei.opensrp.domain.Alert;
 import org.ei.opensrp.domain.EligibleCouple;
 import org.ei.opensrp.domain.Mother;
 import org.ei.opensrp.domain.ServiceProvided;
-import org.ei.opensrp.repository.AllBeneficiaries;
 import org.ei.opensrp.service.AlertService;
 import org.ei.opensrp.service.ServiceProvidedService;
 import org.ei.opensrp.util.Cache;
@@ -20,6 +21,9 @@ import org.ei.opensrp.view.contract.SmartRegisterClient;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import static java.util.Collections.sort;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -52,22 +56,28 @@ public class ANCSmartRegisterController {
     private static final String DELIVERY_PLAN_ALERT_NAME = "Delivery Plan";
 
     private static final String ANC_CLIENTS_LIST = "ANCClientList";
-    private AllBeneficiaries allBeneficiaries;
+
+    @Inject
+    private BeneficiariesAdapter allBeneficiaries;
+
+    @Inject
     private AlertService alertService;
-    private Cache<String> cache;
+
+    @Inject
+    private ServiceProvidedService serviceProvidedService;
+
+    @Inject
+    @Named("ANCClientsCache")
     private Cache<ANCClients> ancClientsCache;
-    private final ServiceProvidedService serviceProvidedService;
 
-    public ANCSmartRegisterController(ServiceProvidedService serviceProvidedService, AlertService alertService,
-                                      AllBeneficiaries allBeneficiaries,
-                                      Cache<String> cache, Cache<ANCClients> ancClientsCache) {
-        this.allBeneficiaries = allBeneficiaries;
-        this.alertService = alertService;
-        this.serviceProvidedService = serviceProvidedService;
-        this.cache = cache;
-        this.ancClientsCache = ancClientsCache;
+    @Inject
+    @Named("ListCache")
+    public Cache<String> cache;
+
+
+    public ANCSmartRegisterController() {
+        OpenSRPApplication.getInstance().inject(this);
     }
-
 
     private List<ServiceProvidedDTO> getServicesProvided(String entityId) {
         List<ServiceProvided> servicesProvided = serviceProvidedService.findByEntityIdAndServiceNames(entityId,

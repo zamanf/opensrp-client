@@ -2,7 +2,8 @@ package org.ei.opensrp.view.controller;
 
 import com.google.gson.Gson;
 
-import org.ei.opensrp.repository.AllEligibleCouples;
+import org.ei.opensrp.application.OpenSRPApplication;
+import org.ei.opensrp.db.adapters.EligibleCoupleRepository;
 import org.ei.opensrp.util.Cache;
 import org.ei.opensrp.util.CacheableData;
 import org.ei.opensrp.view.contract.Village;
@@ -11,17 +12,25 @@ import org.ei.opensrp.view.contract.Villages;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 public class VillageController {
     private static final String VILLAGE_LIST = "VILLAGE_LIST";
-    private AllEligibleCouples allEligibleCouples;
-    private Cache<String> cache;
+
+    @Inject
+    private EligibleCoupleRepository allEligibleCouples;
+
+    @Inject
+    @Named("VillagesCache")
     private Cache<Villages> villagesCache;
 
-    public VillageController(AllEligibleCouples allEligibleCouples, Cache<String> cache,
-                             Cache<Villages> villagesCache) {
-        this.allEligibleCouples = allEligibleCouples;
-        this.cache = cache;
-        this.villagesCache = villagesCache;
+    @Inject
+    @Named("ListCache")
+    public Cache<String> cache;
+
+    public VillageController() {
+        OpenSRPApplication.getInstance().inject(this);
     }
 
     public String villages() {

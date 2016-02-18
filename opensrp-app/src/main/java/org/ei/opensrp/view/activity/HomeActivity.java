@@ -4,9 +4,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import org.ei.opensrp.R;
+import org.ei.opensrp.db.adapters.SharedPreferencesAdapter;
 import org.ei.opensrp.event.Listener;
 import org.ei.opensrp.service.PendingFormSubmissionService;
 import org.ei.opensrp.view.controller.HomeController;
+
+import javax.inject.Inject;
 
 import static org.ei.opensrp.event.Event.ACTION_HANDLED;
 import static org.ei.opensrp.event.Event.FORM_SUBMITTED;
@@ -16,6 +19,11 @@ import static org.ei.opensrp.event.Event.SYNC_STARTED;
 public class HomeActivity extends SecuredWebActivity {
     private MenuItem updateMenuItem;
     private MenuItem remainingFormsToSyncMenuItem;
+
+    @Inject
+    SharedPreferencesAdapter sharedPreferencesAdapter;
+
+    @Inject
     private PendingFormSubmissionService pendingFormSubmissionService;
 
     private Listener<Boolean> onSyncStartListener = new Listener<Boolean>() {
@@ -50,7 +58,6 @@ public class HomeActivity extends SecuredWebActivity {
 
     @Override
     protected void onInitialization() {
-        pendingFormSubmissionService = context.pendingFormSubmissionService();
         SYNC_STARTED.addListener(onSyncStartListener);
         SYNC_COMPLETED.addListener(onSyncCompleteListener);
         FORM_SUBMITTED.addListener(onFormSubmittedListener);
@@ -89,7 +96,7 @@ public class HomeActivity extends SecuredWebActivity {
 
     private void updateSyncIndicator() {
         if (updateMenuItem != null) {
-            if (context.allSharedPreferences().fetchIsSyncInProgress()) {
+            if (sharedPreferencesAdapter.fetchIsSyncInProgress()) {
                 updateMenuItem.setActionView(R.layout.progress);
             } else
                 updateMenuItem.setActionView(null);

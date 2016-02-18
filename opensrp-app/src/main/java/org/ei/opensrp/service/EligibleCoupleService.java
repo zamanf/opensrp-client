@@ -1,11 +1,14 @@
 package org.ei.opensrp.service;
 
 import org.ei.opensrp.AllConstants;
+import org.ei.opensrp.application.OpenSRPApplication;
+import org.ei.opensrp.db.adapters.BeneficiariesAdapter;
+import org.ei.opensrp.db.adapters.EligibleCoupleRepository;
+import org.ei.opensrp.db.adapters.TimelineEventRepository;
 import org.ei.opensrp.domain.TimelineEvent;
 import org.ei.opensrp.domain.form.FormSubmission;
-import org.ei.opensrp.repository.AllBeneficiaries;
-import org.ei.opensrp.repository.AllEligibleCouples;
-import org.ei.opensrp.repository.AllTimelineEvents;
+
+import javax.inject.Inject;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
@@ -14,14 +17,17 @@ import static org.ei.opensrp.domain.TimelineEvent.forChangeOfFPMethod;
 import static org.ei.opensrp.util.EasyMap.mapOf;
 
 public class EligibleCoupleService {
-    private final AllEligibleCouples allEligibleCouples;
-    private final AllTimelineEvents allTimelineEvents;
-    private final AllBeneficiaries allBeneficiaries;
+    @Inject
+    private EligibleCoupleRepository allEligibleCouples;
 
-    public EligibleCoupleService(AllEligibleCouples allEligibleCouples, AllTimelineEvents allTimelineEvents, AllBeneficiaries allBeneficiaries) {
-        this.allEligibleCouples = allEligibleCouples;
-        this.allTimelineEvents = allTimelineEvents;
-        this.allBeneficiaries = allBeneficiaries;
+    @Inject
+    private TimelineEventRepository allTimelineEvents;
+
+    @Inject
+    private BeneficiariesAdapter allBeneficiaries;
+
+    public EligibleCoupleService() {
+        OpenSRPApplication.getInstance().inject(this);
     }
 
     public void register(FormSubmission submission) {

@@ -7,9 +7,10 @@ import android.webkit.JavascriptInterface;
 import com.google.gson.Gson;
 
 import org.ei.opensrp.AllConstants;
+import org.ei.opensrp.application.OpenSRPApplication;
+import org.ei.opensrp.db.adapters.EligibleCoupleRepository;
+import org.ei.opensrp.db.adapters.TimelineEventRepository;
 import org.ei.opensrp.domain.EligibleCouple;
-import org.ei.opensrp.repository.AllEligibleCouples;
-import org.ei.opensrp.repository.AllTimelineEvents;
 import org.ei.opensrp.util.TimelineEventComparator;
 import org.ei.opensrp.view.activity.CameraLaunchActivity;
 import org.ei.opensrp.view.contract.Child;
@@ -23,21 +24,25 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import static org.ei.opensrp.AllConstants.ENTITY_ID;
 import static org.ei.opensrp.AllConstants.WOMAN_TYPE;
 
 public class EligibleCoupleDetailController {
     private final Context context;
     private String caseId;
-    private final AllEligibleCouples allEligibleCouples;
-    private final AllTimelineEvents allTimelineEvents;
 
-    public EligibleCoupleDetailController(Context context, String caseId, AllEligibleCouples allEligibleCouples,
-                                          AllTimelineEvents allTimelineEvents) {
+    @Inject
+    private EligibleCoupleRepository allEligibleCouples;
+
+    @Inject
+    private TimelineEventRepository allTimelineEvents;
+
+    public EligibleCoupleDetailController(Context context, String caseId) {
+        OpenSRPApplication.getInstance().inject(this);
         this.context = context;
         this.caseId = caseId;
-        this.allEligibleCouples = allEligibleCouples;
-        this.allTimelineEvents = allTimelineEvents;
     }
 
     @JavascriptInterface

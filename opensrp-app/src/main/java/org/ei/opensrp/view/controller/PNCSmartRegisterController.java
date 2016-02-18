@@ -3,13 +3,14 @@ package org.ei.opensrp.view.controller;
 import com.google.gson.Gson;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.ei.opensrp.application.OpenSRPApplication;
+import org.ei.opensrp.db.adapters.BeneficiariesAdapter;
+import org.ei.opensrp.db.adapters.EligibleCoupleRepository;
 import org.ei.opensrp.domain.Alert;
 import org.ei.opensrp.domain.Child;
 import org.ei.opensrp.domain.EligibleCouple;
 import org.ei.opensrp.domain.Mother;
 import org.ei.opensrp.domain.ServiceProvided;
-import org.ei.opensrp.repository.AllBeneficiaries;
-import org.ei.opensrp.repository.AllEligibleCouples;
 import org.ei.opensrp.service.AlertService;
 import org.ei.opensrp.service.ServiceProvidedService;
 import org.ei.opensrp.util.Cache;
@@ -26,6 +27,9 @@ import org.ei.opensrp.view.preProcessor.PNCClientPreProcessor;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import static java.util.Collections.sort;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -51,29 +55,35 @@ public class PNCSmartRegisterController {
     private static final String PNC_1_ALERT_NAME = "PNC 1";
 
     private static final String PNC_CLIENTS_LIST = "PNCClientList";
-    private AllEligibleCouples allEligibleCouples;
-    private AllBeneficiaries allBeneficiaries;
+
+    @Inject
+    private EligibleCoupleRepository allEligibleCouples;
+
+    @Inject
+    private BeneficiariesAdapter allBeneficiaries;
+
+    @Inject
     private AlertService alertService;
-    private Cache<String> cache;
-    private Cache<PNCClients> pncClientsCache;
-    private final ServiceProvidedService serviceProvidedService;
+
+    @Inject
+    private ServiceProvidedService serviceProvidedService;
+
     private PNCClientPreProcessor pncClientPreProcessor;
 
-    public PNCSmartRegisterController(ServiceProvidedService serviceProvidedService, AlertService alertService,
-                                      AllEligibleCouples allEligibleCouples, AllBeneficiaries allBeneficiaries,
-                                      Cache<String> cache, Cache<PNCClients> pncClientsCache) {
-        this(serviceProvidedService, alertService, allEligibleCouples, allBeneficiaries, cache, pncClientsCache, new PNCClientPreProcessor());
+    @Inject
+    @Named("ListCache")
+    public Cache<String> cache;
+
+    @Inject
+    @Named("PNCClientsCache")
+    public Cache<PNCClients> pncClientsCache;
+
+    public PNCSmartRegisterController() {
+        this(new PNCClientPreProcessor());
     }
 
-    public PNCSmartRegisterController(ServiceProvidedService serviceProvidedService, AlertService alertService,
-                                      AllEligibleCouples allEligibleCouples, AllBeneficiaries allBeneficiaries,
-                                      Cache<String> cache, Cache<PNCClients> pncClientsCache, PNCClientPreProcessor pncClientPreProcessor) {
-        this.allEligibleCouples = allEligibleCouples;
-        this.allBeneficiaries = allBeneficiaries;
-        this.alertService = alertService;
-        this.serviceProvidedService = serviceProvidedService;
-        this.cache = cache;
-        this.pncClientsCache = pncClientsCache;
+    public PNCSmartRegisterController(PNCClientPreProcessor pncClientPreProcessor) {
+        OpenSRPApplication.getInstance().inject(this);
         this.pncClientPreProcessor = pncClientPreProcessor;
     }
 

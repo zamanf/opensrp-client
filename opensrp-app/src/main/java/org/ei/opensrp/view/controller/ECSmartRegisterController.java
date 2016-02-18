@@ -4,11 +4,12 @@ import com.google.common.collect.Iterables;
 import com.google.gson.Gson;
 
 import org.ei.opensrp.AllConstants;
+import org.ei.opensrp.application.OpenSRPApplication;
+import org.ei.opensrp.db.adapters.BeneficiariesAdapter;
+import org.ei.opensrp.db.adapters.EligibleCoupleRepository;
 import org.ei.opensrp.domain.Child;
 import org.ei.opensrp.domain.EligibleCouple;
 import org.ei.opensrp.domain.Mother;
-import org.ei.opensrp.repository.AllBeneficiaries;
-import org.ei.opensrp.repository.AllEligibleCouples;
 import org.ei.opensrp.util.Cache;
 import org.ei.opensrp.util.CacheableData;
 import org.ei.opensrp.util.EasyMap;
@@ -23,6 +24,9 @@ import org.joda.time.format.DateTimeFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import static java.util.Collections.sort;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -58,18 +62,22 @@ public class ECSmartRegisterController {
     public static final String FP_METHOD_DATE_FIELD = "fpMethodDate";
     private static final String EC_CLIENTS_LIST = "ECClientsList";
 
-    private final AllEligibleCouples allEligibleCouples;
-    private final AllBeneficiaries allBeneficiaries;
-    private final Cache<String> cache;
-    private final Cache<ECClients> ecClientsCache;
+    @Inject
+    private EligibleCoupleRepository allEligibleCouples;
 
-    public ECSmartRegisterController(AllEligibleCouples allEligibleCouples,
-                                     AllBeneficiaries allBeneficiaries, Cache<String> cache,
-                                     Cache<ECClients> ecClientsCache) {
-        this.allEligibleCouples = allEligibleCouples;
-        this.allBeneficiaries = allBeneficiaries;
-        this.cache = cache;
-        this.ecClientsCache = ecClientsCache;
+    @Inject
+    private BeneficiariesAdapter allBeneficiaries;
+
+    @Inject
+    @Named("ECClientsCache")
+    private Cache<ECClients> ecClientsCache;
+
+    @Inject
+    @Named("ListCache")
+    public Cache<String> cache;
+
+    public ECSmartRegisterController() {
+        OpenSRPApplication.getInstance().inject(this);
     }
 
     public String get() {

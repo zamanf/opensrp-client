@@ -8,12 +8,13 @@ import com.google.gson.Gson;
 import com.ocpsoft.pretty.time.PrettyTime;
 
 import org.ei.opensrp.AllConstants;
+import org.ei.opensrp.application.OpenSRPApplication;
+import org.ei.opensrp.db.adapters.BeneficiariesAdapter;
+import org.ei.opensrp.db.adapters.EligibleCoupleRepository;
+import org.ei.opensrp.db.adapters.TimelineEventRepository;
 import org.ei.opensrp.domain.Child;
 import org.ei.opensrp.domain.EligibleCouple;
 import org.ei.opensrp.domain.Mother;
-import org.ei.opensrp.repository.AllBeneficiaries;
-import org.ei.opensrp.repository.AllEligibleCouples;
-import org.ei.opensrp.repository.AllTimelineEvents;
 import org.ei.opensrp.util.DateUtil;
 import org.ei.opensrp.util.TimelineEventComparator;
 import org.ei.opensrp.view.activity.CameraLaunchActivity;
@@ -30,6 +31,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.ei.opensrp.AllConstants.CHILD_TYPE;
 import static org.ei.opensrp.AllConstants.ENTITY_ID;
@@ -37,16 +40,20 @@ import static org.ei.opensrp.AllConstants.ENTITY_ID;
 public class ChildDetailController {
     private final Context context;
     private final String caseId;
-    private final AllEligibleCouples allEligibleCouples;
-    private final AllBeneficiaries allBeneficiaries;
-    private final AllTimelineEvents allTimelineEvents;
 
-    public ChildDetailController(Context context, String caseId, AllEligibleCouples allEligibleCouples, AllBeneficiaries allBeneficiaries, AllTimelineEvents allTimelineEvents) {
+    @Inject
+    private EligibleCoupleRepository allEligibleCouples;
+
+    @Inject
+    private BeneficiariesAdapter allBeneficiaries;
+
+    @Inject
+    private TimelineEventRepository allTimelineEvents;
+
+    public ChildDetailController(Context context, String caseId) {
+        OpenSRPApplication.getInstance().inject(this);
         this.context = context;
         this.caseId = caseId;
-        this.allEligibleCouples = allEligibleCouples;
-        this.allBeneficiaries = allBeneficiaries;
-        this.allTimelineEvents = allTimelineEvents;
     }
 
     @JavascriptInterface

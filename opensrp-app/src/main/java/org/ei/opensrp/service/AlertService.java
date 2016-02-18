@@ -2,16 +2,21 @@ package org.ei.opensrp.service;
 
 import org.ei.drishti.dto.Action;
 import org.ei.drishti.dto.AlertStatus;
+import org.ei.opensrp.application.OpenSRPApplication;
+import org.ei.opensrp.db.adapters.AlertRepository;
 import org.ei.opensrp.domain.Alert;
-import org.ei.opensrp.repository.AlertRepository;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class AlertService {
+
+    @Inject
     private AlertRepository repository;
 
-    public AlertService(AlertRepository repository) {
-        this.repository = repository;
+    public AlertService() {
+        OpenSRPApplication.getInstance().inject(this);
     }
 
     public void create(Action action) {

@@ -3,6 +3,7 @@ package org.ei.opensrp.view.controller;
 import android.app.Activity;
 import android.content.Intent;
 
+import org.ei.opensrp.application.OpenSRPApplication;
 import org.ei.opensrp.view.activity.NativeANCSmartRegisterActivity;
 import org.ei.opensrp.view.activity.NativeChildSmartRegisterActivity;
 import org.ei.opensrp.view.activity.NativeECSmartRegisterActivity;
@@ -11,6 +12,8 @@ import org.ei.opensrp.view.activity.NativePNCSmartRegisterActivity;
 import org.ei.opensrp.view.activity.ReportsActivity;
 import org.ei.opensrp.view.activity.VideosActivity;
 
+import javax.inject.Inject;
+
 import static org.ei.opensrp.view.controller.ProfileNavigationController.navigateToANCProfile;
 import static org.ei.opensrp.view.controller.ProfileNavigationController.navigateToChildProfile;
 import static org.ei.opensrp.view.controller.ProfileNavigationController.navigateToECProfile;
@@ -18,11 +21,13 @@ import static org.ei.opensrp.view.controller.ProfileNavigationController.navigat
 
 public class NavigationController {
     private Activity activity;
+
+    @Inject
     private ANMController anmController;
 
-    public NavigationController(Activity activity, ANMController anmController) {
+    public NavigationController(Activity activity) {
+        OpenSRPApplication.getInstance().inject(this);
         this.activity = activity;
-        this.anmController = anmController;
     }
 
     public void startReports() {

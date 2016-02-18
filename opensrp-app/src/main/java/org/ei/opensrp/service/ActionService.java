@@ -3,37 +3,41 @@ package org.ei.opensrp.service;
 import com.google.gson.Gson;
 
 import org.ei.drishti.dto.Action;
+import org.ei.opensrp.application.OpenSRPApplication;
+import org.ei.opensrp.db.adapters.ReportRepository;
+import org.ei.opensrp.db.adapters.SettingsRepository;
+import org.ei.opensrp.db.adapters.SharedPreferencesAdapter;
 import org.ei.opensrp.domain.FetchStatus;
 import org.ei.opensrp.domain.Response;
-import org.ei.opensrp.repository.AllReports;
-import org.ei.opensrp.repository.AllSettings;
-import org.ei.opensrp.repository.AllSharedPreferences;
 import org.ei.opensrp.router.ActionRouter;
 import org.ei.opensrp.util.Log;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import static java.text.MessageFormat.format;
 import static org.ei.opensrp.domain.FetchStatus.fetchedFailed;
 import static org.ei.opensrp.domain.FetchStatus.nothingFetched;
 
 public class ActionService {
-    private final ActionRouter actionRouter;
+    @Inject
+    private ActionRouter actionRouter;
+
+    @Inject
     private DrishtiService drishtiService;
-    private AllSettings allSettings;
-    private AllSharedPreferences allSharedPreference;
-    private AllReports allReports;
 
-    public ActionService(DrishtiService drishtiService, AllSettings allSettings, AllSharedPreferences allSharedPreferences, AllReports allReports) {
-       this(drishtiService, allSettings, allSharedPreferences, allReports, null);
-    }
+    @Inject
+    private SettingsRepository allSettings;
 
-    public ActionService(DrishtiService drishtiService, AllSettings allSettings, AllSharedPreferences allSharedPreferences, AllReports allReports, ActionRouter actionRouter) {
-        this.drishtiService = drishtiService;
-        this.allSettings = allSettings;
-        this.allSharedPreference = allSharedPreferences;
-        this.allReports = allReports;
-        this.actionRouter = actionRouter == null ? new ActionRouter() : actionRouter;
+    @Inject
+    private SharedPreferencesAdapter allSharedPreference;
+
+    @Inject
+    private ReportRepository allReports;
+
+    public ActionService(){
+        OpenSRPApplication.getInstance().inject(this);
     }
 
     public FetchStatus fetchNewActions() {

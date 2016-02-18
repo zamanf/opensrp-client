@@ -10,9 +10,12 @@ import org.ei.opensrp.provider.ECSmartRegisterClientsProvider;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.view.contract.ECClient;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
+import org.ei.opensrp.view.controller.ANMLocationController;
 import org.ei.opensrp.view.controller.ECSmartRegisterController;
 import org.ei.opensrp.view.controller.VillageController;
 import org.ei.opensrp.view.dialog.*;
+
+import javax.inject.Inject;
 
 import static com.google.common.collect.Iterables.concat;
 import static com.google.common.collect.Iterables.toArray;
@@ -31,6 +34,9 @@ public class NativeECSmartRegisterActivity extends SecuredNativeSmartRegisterAct
     private DialogOptionMapper dialogOptionMapper;
     public static final String locationDialogTAG = "locationDialogTAG";
     private final ClientActionHandler clientActionHandler = new ClientActionHandler();
+
+    @Inject
+    ANMLocationController anmLocationController;
 
     @Override
     protected SmartRegisterPaginatedAdapter adapter() {
@@ -114,11 +120,8 @@ public class NativeECSmartRegisterActivity extends SecuredNativeSmartRegisterAct
 
     @Override
     protected void onInitialization() {
-        controller = new ECSmartRegisterController(context.allEligibleCouples(),
-                context.allBeneficiaries(), context.listCache(),
-                context.ecClientsCache());
-        villageController = new VillageController(context.allEligibleCouples(),
-                context.listCache(), context.villagesCache());
+        controller = new ECSmartRegisterController();
+        villageController = new VillageController();
         dialogOptionMapper = new DialogOptionMapper();
     }
 
@@ -139,7 +142,7 @@ public class NativeECSmartRegisterActivity extends SecuredNativeSmartRegisterAct
         }
         ft.addToBackStack(null);
             LocationSelectorDialogFragment
-                .newInstance(this, new EditDialogOptionModel(), context.anmLocationController().get(),EC_REGISTRATION)
+                .newInstance(this, new EditDialogOptionModel(), anmLocationController.get(),EC_REGISTRATION)
                 .show(ft, locationDialogTAG);
     }
 

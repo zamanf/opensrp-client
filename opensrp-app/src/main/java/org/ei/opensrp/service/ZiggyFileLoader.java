@@ -4,22 +4,27 @@ import android.content.res.AssetManager;
 import android.webkit.JavascriptInterface;
 
 import org.apache.commons.io.IOUtils;
+import org.ei.opensrp.application.OpenSRPApplication;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+
+import javax.inject.Inject;
 
 import static java.text.MessageFormat.format;
 import static org.ei.opensrp.util.Log.logError;
 
 public class ZiggyFileLoader {
-    private String ziggyDirectoryPath;
-    private String formDirectoryPath;
+
+    private static final String ziggyDirectoryPath = "www/ziggy";
+
+    private static final String formDirectoryPath = "www/form";
+
+    @Inject
     private AssetManager assetManager;
 
-    public ZiggyFileLoader(String ziggyDirectoryPath, String formDirectoryPath, AssetManager assetManager) {
-        this.ziggyDirectoryPath = ziggyDirectoryPath;
-        this.formDirectoryPath = formDirectoryPath;
-        this.assetManager = assetManager;
+    public ZiggyFileLoader() {
+        OpenSRPApplication.getInstance().inject(this);
     }
 
     public String getJSFiles() throws IOException, URISyntaxException {

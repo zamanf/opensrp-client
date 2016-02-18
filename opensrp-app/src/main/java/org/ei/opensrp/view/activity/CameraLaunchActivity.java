@@ -8,13 +8,17 @@ import android.provider.MediaStore;
 import android.widget.Toast;
 
 import org.ei.opensrp.AllConstants;
+import org.ei.opensrp.db.adapters.EligibleCoupleRepository;
 import org.ei.opensrp.event.CapturedPhotoInformation;
+import org.ei.opensrp.service.ChildService;
 import org.ei.opensrp.util.Log;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.UUID;
+
+import javax.inject.Inject;
 
 import static android.os.Environment.DIRECTORY_PICTURES;
 import static android.os.Environment.getExternalStoragePublicDirectory;
@@ -30,6 +34,12 @@ public class CameraLaunchActivity extends SecuredActivity {
     private File imageFile;
     private String entityType;
     private String entityId;
+
+    @Inject
+    EligibleCoupleRepository allEligibleCouples;
+
+    @Inject
+    ChildService childService;
 
     @Override
     protected void onCreation() {
@@ -100,10 +110,10 @@ public class CameraLaunchActivity extends SecuredActivity {
 
     private void updateEntity(String imagePath) {
         if (WOMAN_TYPE.equals(entityType)) {
-            context.allEligibleCouples().updatePhotoPath(entityId, imagePath);
+            allEligibleCouples.updatePhotoPath(entityId, imagePath);
         }
         if(CHILD_TYPE.equals(entityType)) {
-            context.childService().updatePhotoPath(entityId, imagePath);
+            childService.updatePhotoPath(entityId, imagePath);
         }
         ON_PHOTO_CAPTURED.notifyListeners(new CapturedPhotoInformation(entityId, imagePath));
     }
