@@ -43,6 +43,10 @@
         "bind": "/model/instance/kunjungan_anc_reviewed_anc_visit/trimester_ke"
       },
       {
+        "name": "kunjunganKe",
+        "bind": "/model/instance/kunjungan_anc_reviewed_anc_visit/Kunjungan_ke"
+      },
+      {
         "name": "ancKe",
         "bind": "/model/instance/kunjungan_anc_reviewed_anc_visit/anc_ke"
       },
