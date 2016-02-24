@@ -20,8 +20,6 @@ import static org.ei.opensrp.util.Log.logInfo;
  * Created by Dimas Ciputra on 9/18/15.
  */
 public class BidanApplication extends DrishtiApplication {
-    private Locale locale = null;
-    private Context context;
 
     @Override
     public void onCreate() {

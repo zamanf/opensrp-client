@@ -54,7 +54,7 @@ import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
 import org.ei.opensrp.view.fragment.DisplayFormFragment;
 import org.ei.opensrp.view.fragment.SecuredNativeSmartRegisterFragment;
-import org.ei.opensrp.view.viewpager.SampleViewPager;
+import org.ei.opensrp.view.viewpager.OpenSRPViewPager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -76,7 +76,7 @@ import static com.google.common.collect.Iterables.toArray;
 public class NativeKBSmartRegisterActivity extends BidanSecuredNativeSmartRegisterActivity  implements LocationSelectorDialogFragment.OnLocationSelectedListener {
 
     @Bind(R.id.view_pager)
-    SampleViewPager mPager;
+    OpenSRPViewPager mPager;
     private FragmentPagerAdapter mPagerAdapter;
     private int currentPage;
 
@@ -116,11 +116,11 @@ public class NativeKBSmartRegisterActivity extends BidanSecuredNativeSmartRegist
 
     public DialogOption[] getEditOptions() {
         return new DialogOption[]{
-            new OpenFormOption(getString(R.string.str_kb_update),
-                    KOHORT_KB_UPDATE, formController),
-            new OpenFormOption(getString(R.string.str_kb_edit),
-                    KOHORT_KB_EDIT, formController),
-            new OpenFormOption(getString(R.string.str_kb_close),
+                new OpenFormOption(getString(R.string.str_kb_update),
+                        KOHORT_KB_UPDATE, formController),
+                new OpenFormOption(getString(R.string.str_kb_edit),
+                        KOHORT_KB_EDIT, formController),
+                new OpenFormOption(getString(R.string.str_kb_close),
                         KOHORT_KB_CLOSE, formController),
         };
     }
@@ -160,7 +160,7 @@ public class NativeKBSmartRegisterActivity extends BidanSecuredNativeSmartRegist
     }
 
     @Override
-    protected void startRegistration() {
+    public void startRegistration() {
 
     }
 
@@ -201,6 +201,11 @@ public class NativeKBSmartRegisterActivity extends BidanSecuredNativeSmartRegist
             switchToBaseFragment(formSubmission); // Unnecessary!! passing on data
 
         }catch (Exception e){
+            // TODO: show error dialog on the formfragment if the submission fails
+            DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(currentPage);
+            if (displayFormFragment != null) {
+                displayFormFragment.hideTranslucentProgressDialog();
+            }
             e.printStackTrace();
         }
     }
@@ -220,6 +225,7 @@ public class NativeKBSmartRegisterActivity extends BidanSecuredNativeSmartRegist
                 //hack reset the form
                 DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(prevPageIndex);
                 if (displayFormFragment != null) {
+                    displayFormFragment.hideTranslucentProgressDialog();
                     displayFormFragment.setFormData(null);
                     displayFormFragment.loadFormData();
                 }

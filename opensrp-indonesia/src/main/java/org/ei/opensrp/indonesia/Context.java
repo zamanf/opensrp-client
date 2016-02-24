@@ -1,5 +1,6 @@
 package org.ei.opensrp.indonesia;
 
+import org.ei.opensrp.DristhiConfiguration;
 import org.ei.opensrp.indonesia.repository.AllKartuIbus;
 import org.ei.opensrp.indonesia.repository.AllKohort;
 import org.ei.opensrp.indonesia.repository.AllSettingsINA;
@@ -122,7 +123,7 @@ public class Context extends org.ei.opensrp.Context{
             setRepository(new Repository(applicationContext(), session(), super.settingsRepository(),
                     super.alertRepository(), super.timelineEventRepository(), super.formDataRepository(),
                     super.serviceProvidedRepository(), super.formsVersionRepository(), kartuIbuRepository(), ibuRepository(),
-                    anakRepository(), bidanRepository(), uniqueIdRepository()));
+                    anakRepository(), bidanRepository(), imageRepository(), uniqueIdRepository()));
         }
         return getRepository();
     }
@@ -267,5 +268,13 @@ public class Context extends org.ei.opensrp.Context{
             anakRegisterController = new AnakRegisterController(allKohort(), alertService(), serviceProvidedService(), listCache(),smartRegisterClientsCache(), villagesCache());
         }
         return anakRegisterController;
+    }
+
+    @Override
+    public DristhiConfiguration configuration() {
+        if (configuration == null) {
+            configuration = new BidanConfiguration(getInstance().applicationContext().getAssets());
+        }
+        return configuration;
     }
 }
