@@ -556,6 +556,19 @@ public class FormUtils {
                     e.printStackTrace();
                 }
             }
+
+            // Apply necessary formatting if needed
+            // See - https://github.com/OpenSRP/opensrp-client/issues/146#
+            if (item.has("type") && item.getString("type").equalsIgnoreCase("date")
+                    && item.has("current_format") && item.has("required_format") && item.has("value")){
+
+                SimpleDateFormat cdf = new SimpleDateFormat(item.getString("current_format"));
+                Date d = cdf.parse(item.getString("value"));
+                Format rdf = new SimpleDateFormat(item.getString("required_format"));
+                String formattedStr = rdf.format(d);
+                item.put("value", formattedStr);
+            }
+
         }
         return fieldsArray;
     }

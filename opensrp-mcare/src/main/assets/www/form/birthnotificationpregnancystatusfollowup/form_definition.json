@@ -80,7 +80,10 @@
       },
       {
         "name": "FWEDD",
-        "bind": "/model/instance/BirthNotificationPregnancyStatusFollowUp/FWEDD"
+        "bind": "/model/instance/BirthNotificationPregnancyStatusFollowUp/FWEDD",
+        "type": "date",
+        "current_format": "EEE, dd MMM yyyy HH:mm:ss z",
+        "required_format": "yyyy-MM-dd HH:mm:ss"
       },
       {
         "name": "FWBNFSTS",
