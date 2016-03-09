@@ -111,6 +111,7 @@
         </activity>
         <activity
             android:name="org.ei.opensrp.view.activity.FormActivity"
+            tools:replace="android:theme"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustResize|stateHidden" />
