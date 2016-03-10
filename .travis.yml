@@ -3,8 +3,8 @@ jdk: oraclejdk7
 
 env:
   global:
-    - GRADLE_OPTS="-XX:MaxPermSize=512m -Xmx4g"
-    - JAVA_OPTS=-Xmx2g
+    - GRADLE_OPTS="-XX:MaxPermSize=2g -Xmx4g"
+    - JAVA_OPTS=-Xmx4g
 
 android:
   components:
