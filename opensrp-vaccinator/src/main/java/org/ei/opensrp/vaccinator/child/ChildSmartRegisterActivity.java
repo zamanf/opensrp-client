@@ -218,8 +218,6 @@ public class ChildSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
                 DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(formIndex);
 
                 if (displayFormFragment != null) {
-
-
                     displayFormFragment.setFormData(data);
                     displayFormFragment.loadFormData();
                     displayFormFragment.setRecordId(entityId);

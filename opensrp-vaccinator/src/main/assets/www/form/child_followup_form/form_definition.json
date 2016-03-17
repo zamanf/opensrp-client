@@ -29,15 +29,15 @@
       "bind" : "/model/instance/Child_Followup_Vaccination_Register/provider_location_name"
     },
       {
-        "name" : "existing_first_name",
+        "name" : "first_name",
         "bind" : "/model/instance/Child_Followup_Vaccination_Register/existing_first_name"
       },
 
       {
-        "name" : "existing_second_name",
+        "name" : "second_name",
         "bind" : "/model/instance/Child_Followup_Vaccination_Register/existing_second_name"
       },   {
-        "name" : "existing_father_name",
+        "name" : "father_name",
         "bind" : "/model/instance/Child_Followup_Vaccination_Register/existing_father_name"
       },   {
         "name" : "existing_mother_name",
@@ -47,32 +47,32 @@
 
 
       {
-        "name" : "existing_gender",
+        "name" : "gender",
         "bind" : "/model/instance/Child_Followup_Vaccination_Register/existing_gender"
       },
 
       {
-        "name" : "existing_chid_dob",
+        "name" : "chid_dob",
         "bind" : "/model/instance/Child_Followup_Vaccination_Register/existing_chid_dob"
       },   {
-        "name" : "existing_child_reg_date",
+        "name" : "child_reg_date",
         "bind" : "/model/instance/Child_Followup_Vaccination_Register/existing_child_reg_date"
       },   {
-        "name" : "existing_house_number",
+        "name" : "house_number",
         "bind" : "/model/instance/Child_Followup_Vaccination_Register/existing_house_number"
       },
 
 
       {
-        "name" : "existing_street",
+        "name" : "street",
         "bind" : "/model/instance/Child_Followup_Vaccination_Register/existing_street"
       },
 
       {
-        "name" : "existing_ethnicity",
+        "name" : "ethnicity",
         "bind" : "/model/instance/Child_Followup_Vaccination_Register/existing_ethnicity"
       },   {
-        "name" : "existing_union_council",
+        "name" : "union_council",
         "bind" : "/model/instance/Child_Followup_Vaccination_Register/existing_union_council"
       },   {
         "name" : "existing_town",

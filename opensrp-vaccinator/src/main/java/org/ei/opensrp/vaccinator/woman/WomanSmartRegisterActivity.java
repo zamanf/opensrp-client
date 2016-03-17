@@ -73,10 +73,9 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
         formNames = this.buildFormNameList();
         mBaseFragment = new WomanSmartRegisterFragment(this.formControllerown);
 
-
         // Instantiate a ViewPager and a PagerAdapter.
         mPagerAdapter = new BaseRegisterActivityPagerAdapter(getSupportFragmentManager(), formNames, mBaseFragment);
-        mPager.setOffscreenPageLimit(getEditOptions(null).length);
+        mPager.setOffscreenPageLimit(formNames.length);
         mPager.setAdapter(mPagerAdapter);
         mPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
@@ -123,10 +122,6 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
         List<String> formNames = new ArrayList<String>();
         formNames.add("woman_enrollment_form");
         formNames.add("woman_followup_form");
-        DialogOption[] options = getEditOptions(null);
-        for (int i = 0; i < options.length; i++){
-            formNames.add(((ClientlessOpenFormOption) options[i]). getFormName());
-        }
         return formNames.toArray(new String[formNames.size()]);
     }
 
