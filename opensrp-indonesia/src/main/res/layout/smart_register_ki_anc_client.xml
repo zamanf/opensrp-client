@@ -176,7 +176,6 @@
         >
 
         <LinearLayout
-            android:id="@+id/layout_resiko_anc"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:background="@color/status_bar_text_almost_white"
@@ -191,13 +190,31 @@
 
 
             <org.ei.opensrp.view.customControls.CustomFontTextView
-                android:id="@+id/txt_ki_anc_penyakit_kronis"
+                android:id="@+id/txt_tanggal_kunjungan_anc"
                 android:layout_marginTop="-2dp"
                 style="@style/CustomFontTextViewStyle.ListView.Medium.FourLine"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="14sp"
-                android:text="Something something asdasd"/>
+                android:text="Something "/>
+
+            <org.ei.opensrp.view.customControls.CustomFontTextView
+                android:id="@+id/txt_anc_number"
+                android:layout_marginTop="-2dp"
+                style="@style/CustomFontTextViewStyle.ListView.Medium.FourLine"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:text="Something "/>
+
+            <org.ei.opensrp.view.customControls.CustomFontTextView
+                android:id="@+id/txt_kunjugan_ke"
+                android:layout_marginTop="-2dp"
+                style="@style/CustomFontTextViewStyle.ListView.Medium.FourLine"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:text="Something "/>
 
             <!--<org.ei.bidan.view.customControls.CustomFontTextView-->
                 <!--android:id="@+id/lbl_ki_anc_alergi"-->

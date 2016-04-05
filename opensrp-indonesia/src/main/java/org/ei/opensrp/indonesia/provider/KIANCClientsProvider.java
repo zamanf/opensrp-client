@@ -90,10 +90,10 @@ public class KIANCClientsProvider implements SmartRegisterClientsProvider {
         setupIdDetailsView(kartuIbuClient, viewHolder);
         setupANCStatusView(kartuIbuClient, viewHolder);
         setupPemeriksaanView(kartuIbuClient, viewHolder);
-        setupResikoView(kartuIbuClient, viewHolder);
+        //ssetupResikoView(kartuIbuClient, viewHolder);
         setupEditView(kartuIbuClient, viewHolder);
         setupStatusView(kartuIbuClient, viewHolder);
-
+        setupTanggalKunjunganAnc(kartuIbuClient, viewHolder);
         itemView.setLayoutParams(clientViewLayoutParams);
         return itemView;
     }
@@ -146,6 +146,13 @@ public class KIANCClientsProvider implements SmartRegisterClientsProvider {
         viewHolder.getPemeriksaanLILA().setText(client.getLILA());
     }
 
+    private void setupTanggalKunjunganAnc(KIANCClient client, NativeKIANCRegisterViewHolder viewHolder) {
+        viewHolder.getTanggalKunjunganAnc().setText(client.getAncDate());
+        viewHolder.getAncNumber().setText(client.getAncNumber());
+        viewHolder.getkunjunganKe().setText(client.getKunjunganKe());
+    }
+
+    /*
     private void setupResikoView(KIANCClient client, NativeKIANCRegisterViewHolder viewHolder) {
         List<String> allRisks = new ArrayList<>();
         allRisks.addAll(client.highRiskReason());
@@ -170,7 +177,7 @@ public class KIANCClientsProvider implements SmartRegisterClientsProvider {
             viewHolder.getLayoutResikoANC().setBackgroundColor(Color.parseColor("#CCFFCC"));
         }
     }
-
+       */
     private void setupEditView(KIANCClient client, NativeKIANCRegisterViewHolder viewHolder) {
         if (iconPencilDrawable == null) {
             iconPencilDrawable = context.getResources().getDrawable(R.drawable.ic_pencil);
