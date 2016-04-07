@@ -12,26 +12,41 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="@string/label_sorted_by"
-            style="@style/CustomFontTextViewStyle.StatusBar.Bold.NoPadding"/>
+            style="@style/CustomFontTextViewStyle.StatusBar"/>
 
     <org.ei.opensrp.view.customControls.CustomFontTextView
             android:id="@+id/sorted_by"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:paddingLeft="1dp"
-            style="@style/CustomFontTextViewStyle.StatusBar.Black"/>
+            android:paddingLeft="5dp"
+            style="@style/CustomFontTextViewStyle.StatusBar.Bold"/>
 
     <org.ei.opensrp.view.customControls.CustomFontTextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="@string/label_village"
-            style="@style/CustomFontTextViewStyle.StatusBar.Bold.NoPadding" />
+            style="@style/CustomFontTextViewStyle.StatusBar.Bold"/>
 
     <org.ei.opensrp.view.customControls.CustomFontTextView
             android:id="@+id/village"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:paddingLeft="1dp"
-            style="@style/CustomFontTextViewStyle.StatusBar.Black"/>
+            android:paddingLeft="5dp"
+            style="@style/CustomFontTextViewStyle.StatusBar.Bold"/>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        />
+
+    <org.ei.opensrp.view.customControls.CustomFontTextView
+        android:id="@+id/statusbar_today"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent" android:text="Today is todays date"
+        android:paddingLeft="5dp"
+        style="@style/CustomFontTextViewStyle.StatusBar.Bold"
+        android:layout_gravity="right"
+        android:paddingRight="20dp" />
 
 </LinearLayout>

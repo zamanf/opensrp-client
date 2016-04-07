@@ -2,11 +2,8 @@ package org.ei.opensrp.vaccinator.field;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Window;
-import android.widget.TextView;
 
-import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.vaccinator.R;
 
@@ -34,7 +31,7 @@ public class FieldMonitorDailyDetailActivity extends Activity {
             //setting view
             setContentView(R.layout.field_detail_daily_activity);
 
-            TextView vaccinatorIdTextView =(TextView)findViewById(R.id.fielddetail_vaccinatorid);
+            /*TextView vaccinatorIdTextView =(TextView)findViewById(R.id.fielddetail_vaccinatorid);
             TextView vaccinatorNameTextView =(TextView)findViewById(R.id.fielddetail_vaccinator_name);
             TextView centerIdTextView =(TextView)findViewById(R.id.fielddetail_centerid);
             TextView ucTextView =(TextView)findViewById(R.id.fielddetail_uc);
@@ -115,5 +112,5 @@ public class FieldMonitorDailyDetailActivity extends Activity {
         pcvUsedTextView.setText(usedVaccines.get("pcv")!=null?usedVaccines.get("pcv"):"N/A");
 
 
-    }
+*/    }
 }

@@ -5,6 +5,7 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.DataSetObserver;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.text.Editable;
@@ -298,7 +299,8 @@ public abstract class SecuredNativeSmartRegisterActivity extends SecuredActivity
     private View getColumnHeaderView(int i, int[] weights, int[] headerTxtResIds) {
         CustomFontTextView header = new CustomFontTextView(this, null, R.style.CustomFontTextViewStyle_Header_Black);
         header.setFontVariant(FontVariant.BLACK);
-        header.setTextSize(16);
+        header.setFontVariant(FontVariant.BOLD);
+        header.setTextSize(14);
         header.setTextColor(getResources().getColor(R.color.client_list_header_text_color));
         LinearLayout.LayoutParams lp =
                 new LinearLayout.LayoutParams(
