@@ -7,7 +7,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+<<<<<<< HEAD
 import android.util.Log;
+=======
+import android.view.Gravity;
+>>>>>>> f9b3600... client app 1.0.0b
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +46,7 @@ import java.util.List;
 
 import static android.os.AsyncTask.THREAD_POOL_EXECUTOR;
 import static android.view.View.INVISIBLE;
+import static android.view.View.TEXT_ALIGNMENT_CENTER;
 import static android.view.View.VISIBLE;
 import static java.text.MessageFormat.format;
 import static java.util.Arrays.asList;
@@ -282,6 +287,8 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
                         0,
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         weights[i]);
+        lp.gravity = Gravity.CENTER_HORIZONTAL;
+        header.setGravity(TEXT_ALIGNMENT_CENTER);
 
         header.setLayoutParams(lp);
         header.setText(headerTxtResIds[i]);
@@ -455,31 +462,24 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
     }
 
     public class NavBarActionsHandler implements View.OnClickListener {
-
         @Override
         public void onClick(View view) {
             int i = view.getId();
             if (i == R.id.title_layout || i == R.id.btn_back_to_home) {
                 goBack();
-
             } else if (i == R.id.register_client) {
                 startRegistration();
-
             } else if (i == R.id.filter_selection) {
                 showFragmentDialog(new FilterDialogOptionModel());
-
             } else if (i == R.id.sort_selection) {
                 showFragmentDialog(new SortDialogOptionModel());
-
             } else if (i == R.id.service_mode_selection) {
                 showFragmentDialog(new ServiceModeDialogOptionModel());
-
             }
         }
     }
 
     public class SearchCancelHandler implements View.OnClickListener {
-
         @Override
         public void onClick(View view) {
             clearSearchText();
