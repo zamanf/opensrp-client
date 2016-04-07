@@ -7,11 +7,11 @@
 
     <ImageButton
             android:id="@+id/btn_back_to_home"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
+            android:layout_width="60dp"
+            android:layout_height="50dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:scaleType="center"
+            android:scaleType="fitXY"
             android:src="@drawable/homestacks"
             android:background="@drawable/transparent_gray_background"
             android:paddingLeft="8dp"
@@ -68,7 +68,7 @@
                 android:id="@+id/edt_search"
                 android:layout_width="@dimen/ec_main_header_search_box_width"
                 android:layout_height="fill_parent"
-                android:hint="@string/str_ec_search_hint"
+                android:hint="@string/str_ec_search_hint" android:textColorHint="@color/text_black"
                 android:textSize="17sp"
                 android:singleLine="true"
                 android:ellipsize="end"

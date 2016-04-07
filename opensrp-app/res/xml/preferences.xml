@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory android:title="Server">
 
        <EditTextPreference 
@@ -8,7 +8,7 @@
             android:summary="Defines the base server url that handles requests"
             android:dialogTitle="OpenSRP base URL"
             android:dialogMessage="Enter Base Server Url"    
-            android:defaultValue="http://46.101.51.199:8080/oweb"
+            android:defaultValue="http://202.141.249.106:6806/opensrp"
             android:persistent="true"/>
        
        <EditTextPreference 
@@ -17,7 +17,7 @@
             android:summary="Defines the host url of application"
             android:dialogTitle="Host Url"
             android:dialogMessage="Enter Host Url"    
-            android:defaultValue="http://46.101.51.199"
+            android:defaultValue="http://202.141.249.106"
             android:persistent="true"/>
        
        <EditTextPreference 
@@ -26,7 +26,7 @@
             android:summary="Defines the port of base server url"
             android:dialogTitle="Port"
             android:dialogMessage="Enter port"    
-            android:defaultValue="8080"
+            android:defaultValue="6806"
             android:persistent="true"/>
     </PreferenceCategory>
 </PreferenceScreen>

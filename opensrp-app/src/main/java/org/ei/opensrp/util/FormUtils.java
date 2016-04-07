@@ -289,14 +289,14 @@ public class FormUtils {
                         writeXMLAttributes(child, serializer, null, null); // a value node doesn't have id or relationaId fields
                         //write the node value
                         String value = retrieveValueForNodeName(fieldName, entityJson, formDefinition);
-                        //write the node value
-                        if (value != null){
-                            serializer.text(value);
-                        }
 
                         //overwrite the node value with contents from overrides map
                         if (fieldOverrides.has(fieldName)) {
-                            serializer.text(fieldOverrides.getString(fieldName));
+                            value = fieldOverrides.getString(fieldName);
+                        }
+                        //write the node value
+                        if (value != null){
+                            serializer.text(value);
                         }
 
                         serializer.endTag("", fieldName);
@@ -363,11 +363,11 @@ public class FormUtils {
                                 if (entityJson.has(keyName)){
                                     return entityJson.getString(keyName);
                                 }else{
-                                    return "";
+                                    return null;
                                 }
                             }else{
                                 // the shouldLoadValue flag isnt set
-                                return "";
+                                return null;
                             }
                         }
                     }
@@ -376,7 +376,7 @@ public class FormUtils {
         }catch (Exception e){
             e.printStackTrace();
         }
-        return "";
+        return null;
     }
 
     /**

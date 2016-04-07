@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:background="@color/client_list_header_dark_grey">
 
-    <include layout="@layout/field_detail_nav_bar"/>
+    <include layout="@layout/detail_nav_bar"/>
 
     <ImageView
         android:layout_width="match_parent"
@@ -61,7 +61,7 @@
         android:id="@+id/imageView4" />
 
     <include
-        layout="@layout/field_detail_profile_daily"
+        layout="@layout/field_detail_profile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 

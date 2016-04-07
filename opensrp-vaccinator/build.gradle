@@ -10,7 +10,6 @@ buildscript {
 }
 apply plugin: 'com.android.application'
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':opensrp-app')
     compile 'com.android.support:design:22.2.1'
     compile 'com.android.support:support-v4:22.1.1'
@@ -21,10 +20,10 @@ android {
 
     defaultConfig {
         applicationId "org.ei.opensrp.vaccinator"
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 22
         versionCode 1
-        versionName "0.02.2 alpha"
+        versionName "0.1.0b"
     }
     buildTypes {
         release {
