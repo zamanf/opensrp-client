@@ -12,12 +12,10 @@ public class ReportFilterOption implements FilterOption {
     @Override
     public boolean filter(SmartRegisterClient client) {
         CommonPersonObjectClient currentclient = (CommonPersonObjectClient) client;
-        if(currentclient.getDetails().get("report") != null
-                && currentclient.getDetails().get("report").toLowerCase().contains(criteria.toLowerCase())) {
+        if(currentclient.getColumnmaps().get("report").toLowerCase().contains(criteria.toLowerCase())) {
             return true;
         }
-        else if(currentclient.getDetails().get("report") != null
-                && currentclient.getDetails().get("report").toLowerCase().contains(criteria.toLowerCase())) {
+        else if(currentclient.getColumnmaps().get("report").toLowerCase().contains(criteria.toLowerCase())) {
             return true;
         }
         return false;

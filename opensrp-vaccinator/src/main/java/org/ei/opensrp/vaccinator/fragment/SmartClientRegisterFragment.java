@@ -30,7 +30,7 @@ import java.util.Map;
 import util.Utils;
 import util.barcode.Barcode;
 
-public abstract class SmartClientRegisterFragment {
+public abstract class SmartClientRegisterFragment extends SmartRegisterFragment {
     private FormController formController1;
 
     public CESQLiteHelper getClientEventDb() {
@@ -72,9 +72,9 @@ public abstract class SmartClientRegisterFragment {
             @Override
             public DialogOption[] sortingOptions() {
                 return new DialogOption[]{
+                        new CommonObjectSort(CommonObjectSort.ByColumnAndByDetails.byDetails, false, "first_name", getResources().getString(R.string.woman_alphabetical_sort)),
                         new DateSort(DateSort.ByColumnAndByDetails.byColumn, "Age", "dob"),
                         new StatusSort("Due Status"),
-                        new CommonObjectSort(CommonObjectSort.ByColumnAndByDetails.byDetails, false, "first_name", getResources().getString(R.string.woman_alphabetical_sort)),
                         new CommonObjectSort(CommonObjectSort.ByColumnAndByDetails.byDetails, false, "program_client_id", getResources().getString(R.string.id_sort))
                 };
             }
@@ -114,7 +114,7 @@ public abstract class SmartClientRegisterFragment {
 
         ((TextView)mView.findViewById(org.ei.opensrp.R.id.txt_title_label)).setText(getRegisterLabel());
 
-        ((TextView)mView.findViewById(org.ei.opensrp.R.id.statusbar_today)).setText("Today : "+Utils.convertDateFormat(DateTime.now()));
+        ((TextView)mView.findViewById(org.ei.opensrp.R.id.statusbar_today)).setText("Today: "+Utils.convertDateFormat(DateTime.now()));
 
         mView.findViewById(org.ei.opensrp.R.id.filter_selection).setVisibility(View.GONE);
 
@@ -125,10 +125,10 @@ public abstract class SmartClientRegisterFragment {
         mView.findViewById(org.ei.opensrp.R.id.village).setVisibility(View.GONE);
 
         ImageView imv = ((ImageView)mView.findViewById(org.ei.opensrp.R.id.register_client));
-        imv.setImageResource(R.mipmap.ic_action_barcode_2);
+        imv.setImageResource(R.mipmap.qr_code);
         // create a matrix for the manipulation
         imv.setAdjustViewBounds(true);
-        imv.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        imv.setScaleType(ImageView.ScaleType.FIT_XY);
     }//end of method
 
     protected void startFollowupForm(String formName, SmartRegisterClient client, HashMap<String, String> overrideStringmap, ByColumnAndByDetails byColumnAndByDetails) {

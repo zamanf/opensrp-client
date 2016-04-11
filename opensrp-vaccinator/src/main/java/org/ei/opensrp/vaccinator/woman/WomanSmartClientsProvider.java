@@ -1,6 +1,7 @@
 package org.ei.opensrp.vaccinator.woman;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +15,6 @@ import org.ei.opensrp.commonregistry.CommonPersonObjectController;
 import org.ei.opensrp.domain.Alert;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.service.AlertService;
-import org.ei.opensrp.util.StringUtil;
 import org.ei.opensrp.vaccinator.R;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.contract.SmartRegisterClients;
@@ -23,7 +23,6 @@ import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
 import org.ei.opensrp.view.viewHolder.OnClickFormLauncher;
 import org.joda.time.DateTime;
-import org.joda.time.Months;
 import org.joda.time.Years;
 
 import java.util.List;
@@ -94,51 +93,33 @@ public class WomanSmartClientsProvider implements SmartRegisterClientsProvider {
 
         List<Alert> alertlist_for_client = alertService.findByEntityIdAndAlertNames(pc.entityId(), "TT 1", "TT 2", "TT 3", "TT 4", "TT 5", "tt1", "tt2", "tt3", "tt4", "tt5");
 
-        if (alertlist_for_client.size() == 0) {
-            if(StringUtils.isNotBlank(getValue(pc.getColumnmaps(), "tt5", false))){
-                fillValue((TextView) convertView.findViewById(R.id.woman_next_visit), "Fully Immunized");
-                convertView.findViewById(R.id.woman_next_visit_holder).setBackgroundColor(context.getResources().getColor(R.color.alert_na));
-            }
-            else if(age > 49 && StringUtils.isBlank(getValue(pc.getColumnmaps(), "tt5", false))){
-                fillValue((TextView) convertView.findViewById(R.id.woman_next_visit), "Partially Immunized");
-                convertView.findViewById(R.id.woman_next_visit_holder).setBackgroundColor(context.getResources().getColor(R.color.alert_na));
-            }
-            else {
-                fillValue((TextView) convertView.findViewById(R.id.woman_next_visit), "Waiting");
-                convertView.findViewById(R.id.woman_next_visit_holder).setBackgroundColor(context.getResources().getColor(R.color.alert_na));
-            }
+        if(StringUtils.isNotBlank(getValue(pc.getColumnmaps(), "tt5", false))){
+            deactivateNextVaccine("Fully Immunized", "", R.color.alert_na, convertView);
+        }
+        else if(age > 49 && StringUtils.isBlank(getValue(pc.getColumnmaps(), "tt5", false))){
+            deactivateNextVaccine("Partially Immunized", "", R.color.alert_na, convertView);
+        }
+        else if (alertlist_for_client.size() == 0) {
+            fillValue((TextView) convertView.findViewById(R.id.woman_next_visit_vaccine), "Waiting");
+            deactivateNextVaccine("Waiting", "", R.color.alert_na, convertView);
         }
         else {
             for (int i = 0; i < alertlist_for_client.size(); i++) {
-                fillValue((TextView) convertView.findViewById(R.id.woman_next_visit), alertlist_for_client.get(i).expiryDate());
+                String vaccine = alertlist_for_client.get(i).scheduleName().replaceAll(" ", "");
                 if (alertlist_for_client.get(i).status().value().equalsIgnoreCase("normal")) {
                     String dueDate = alertlist_for_client.get(i).startDate();
-                    String vaccine = alertlist_for_client.get(i).scheduleName();
-                    fillValue((TextView) convertView.findViewById(R.id.woman_next_visit), vaccine + " : " + convertDateFormat(dueDate, true));
-                    convertView.findViewById(R.id.woman_next_visit_holder).setBackgroundColor(context.getResources().getColor(R.color.alert_normal));
-                    convertView.findViewById(R.id.woman_next_visit_holder).setOnClickListener(onClickListener);
-                    convertView.findViewById(R.id.woman_next_visit_holder).setTag(client);
+                    activateNextVaccine(dueDate, vaccine, Color.WHITE, R.color.alert_normal, onClickListener, client, convertView);
                 }
                 if (alertlist_for_client.get(i).status().value().equalsIgnoreCase("upcoming")) {
                     String dueDate = alertlist_for_client.get(i).startDate();
-                    String vaccine = alertlist_for_client.get(i).scheduleName();
-                    fillValue((TextView) convertView.findViewById(R.id.woman_next_visit), vaccine + " : " + convertDateFormat(dueDate, true));
-                    convertView.findViewById(R.id.woman_next_visit_holder).setBackgroundColor(context.getResources().getColor(R.color.alert_upcoming));
-                    convertView.findViewById(R.id.woman_next_visit_holder).setOnClickListener(onClickListener);
-                    convertView.findViewById(R.id.woman_next_visit_holder).setTag(client);
+                    activateNextVaccine(dueDate, vaccine, Color.BLACK, R.color.alert_upcoming, onClickListener, client, convertView);
                 }
                 if (alertlist_for_client.get(i).status().value().equalsIgnoreCase("urgent")) {
                     String dueDate = alertlist_for_client.get(i).startDate();
-                    String vaccine = alertlist_for_client.get(i).scheduleName();
-                    fillValue((TextView) convertView.findViewById(R.id.woman_next_visit), vaccine + " : " + convertDateFormat(dueDate, true));
-                    convertView.findViewById(R.id.woman_next_visit_holder).setBackgroundColor(context.getResources().getColor(R.color.alert_urgent));
-                    convertView.findViewById(R.id.woman_next_visit_holder).setOnClickListener(onClickListener);
-                    convertView.findViewById(R.id.woman_next_visit_holder).setTag(client);
+                    activateNextVaccine(dueDate, vaccine, Color.WHITE, R.color.alert_urgent, onClickListener, client, convertView);
                 }
                 if (alertlist_for_client.get(i).status().value().equalsIgnoreCase("expired")) {
-                    String vaccine = alertlist_for_client.get(i).scheduleName();
-                    fillValue((TextView) convertView.findViewById(R.id.woman_next_visit), vaccine + " : " + convertDateFormat(alertlist_for_client.get(i).expiryDate(), true));
-                    convertView.findViewById(R.id.woman_next_visit_holder).setBackgroundColor(context.getResources().getColor(R.color.alert_expired));
+                    deactivateNextVaccine(vaccine + " Expired", alertlist_for_client.get(i).expiryDate(), R.color.alert_expired, convertView);
                 }
             }
         }
@@ -149,6 +130,24 @@ public class WomanSmartClientsProvider implements SmartRegisterClientsProvider {
 
         convertView.setLayoutParams(clientViewLayoutParams);
         return convertView;
+    }
+
+    private void deactivateNextVaccine(String vaccineViewText, String vaccineDateText, int color, View convertView){
+        fillValue((TextView) convertView.findViewById(R.id.woman_next_visit_vaccine), vaccineViewText);
+        ((TextView) convertView.findViewById(R.id.woman_next_visit_date)).setText(vaccineDateText);
+        convertView.findViewById(R.id.woman_next_visit_holder).setBackgroundColor(context.getResources().getColor(color));
+    }
+
+    private void activateNextVaccine(String dueDate, String vaccine, int foreColor, int backColor, View.OnClickListener onClickListener,
+                                     SmartRegisterClient client, View convertView){
+        fillValue((TextView) convertView.findViewById(R.id.woman_next_visit_vaccine), vaccine);
+        fillValue((TextView) convertView.findViewById(R.id.woman_next_visit_date), convertDateFormat(dueDate, true));
+        ((TextView) convertView.findViewById(R.id.woman_next_visit_vaccine)).setTextColor(foreColor);
+        ((TextView) convertView.findViewById(R.id.woman_next_visit_date)).setTextColor(foreColor);
+
+        convertView.findViewById(R.id.woman_next_visit_holder).setBackgroundColor(context.getResources().getColor(backColor));
+        convertView.findViewById(R.id.woman_next_visit_holder).setOnClickListener(onClickListener);
+        convertView.findViewById(R.id.woman_next_visit_holder).setTag(client);
     }
 
     @Override

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model>
     <instance>
-        <Offsite_Woman_Followup_Form encounter_type="Off Site Woman Follow Up" id="offsite_woman_followup_form" version="201604041059">
+        <Offsite_Woman_Followup_Form encounter_type="Off Site Woman Follow Up" id="offsite_woman_followup_form" version="201604080459">
             <formhub>
                 <uuid/>
             </formhub>
@@ -31,6 +31,8 @@
             <existing_client_reg_date/>
             <existing_program_client_id/>
             <existing_epi_card_number/>
+            <existing_reminders_approval/>
+            <existing_contact_phone_number/>
             <e_tt1/>
             <e_tt2/>
             <e_tt3/>
@@ -42,7 +44,7 @@
             <provider_location_note/>
             <start openmrs_entity="concept" openmrs_entity_id="163137AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
             <end openmrs_entity="concept" openmrs_entity_id="163138AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
-            <today openmrs_entity="encounter" openmrs_entity_id="encounter_date"/>
+            <today/>
             <deviceid openmrs_entity="concept" openmrs_entity_id="163149AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
             <subscriberid openmrs_entity="concept" openmrs_entity_id="163150AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
             <simserial openmrs_entity="concept" openmrs_entity_id="163151AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
@@ -69,10 +71,12 @@
             <street openmrs_entity="person_address" openmrs_entity_id="street" openmrs_entity_parent="usual_residence"/>
             <landmark openmrs_entity="person_address" openmrs_entity_id="landmark" openmrs_entity_parent="usual_residence"/>
             <center_gps openmrs_entity="concept" openmrs_entity_id="163277AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
+            <reminders_approval openmrs_entity="concept" openmrs_entity_id="163089AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
+            <contact_phone_number openmrs_entity="concept" openmrs_entity_id="159635AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
             <pregnant openmrs_entity="concept" openmrs_entity_id="5272AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
             <edd_lmp openmrs_entity="concept" openmrs_entity_id="160697AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
-            <edd openmrs_entity="concept" openmrs_entity_id="5596AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
-            <lmp openmrs_entity="concept" openmrs_entity_id="1427AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
+            <edd/>
+            <lmp/>
             <ultrasound_date openmrs_entity="concept" openmrs_entity_id="163165AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
             <ultrasound_weeks/>
             <edd_calc_lmp/>
@@ -102,6 +106,7 @@
             <tt4_retro openmrs_entity="concept" openmrs_entity_id="1410AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" openmrs_entity_parent="104528AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
             <tt_4_dose openmrs_entity="concept" openmrs_entity_id="1418AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" openmrs_entity_parent="104528AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
             <vaccines_2 openmrs_entity="concept" openmrs_entity_id="984AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" openmrs_entity_parent="1441AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
+            <vaccination_date openmrs_entity="encounter" openmrs_entity_id="encounter_date"/>
             <tt1 openmrs_entity="concept" openmrs_entity_id="1410AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" openmrs_entity_parent="104528AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
             <tt_1_dose_today openmrs_entity="concept" openmrs_entity_id="1418AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" openmrs_entity_parent="104528AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
             <tt2 openmrs_entity="concept" openmrs_entity_id="1410AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" openmrs_entity_parent="104528AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>

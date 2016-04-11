@@ -332,6 +332,9 @@
       "name" : "vaccines_2",
       "bind" : "/model/instance/Offsite_Woman_Followup_Form/vaccines_2"
     }, {
+      "name" : "vaccination_date",
+      "bind" : "/model/instance/Offsite_Woman_Followup_Form/vaccination_date"
+    }, {
       "name" : "tt1",
       "bind" : "/model/instance/Offsite_Woman_Followup_Form/tt1"
     }, {

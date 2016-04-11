@@ -1,16 +1,12 @@
 package org.ei.opensrp.vaccinator.field;
 
-import static util.Utils.*;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
-import android.widget.TextView;
 
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.commonregistry.CommonPersonObjectController;
@@ -31,6 +27,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+
+import static util.Utils.addToRow;
+import static util.Utils.getDataRow;
+import static util.Utils.getValue;
 
 public class FieldMonitorSmartClientsProvider implements SmartRegisterClientsProvider {
 
@@ -94,11 +94,11 @@ public class FieldMonitorSmartClientsProvider implements SmartRegisterClientsPro
 
     private ArrayList<HashMap<String, String>> getUsed(String startDate, String endDate){
         String sqlWoman = "select (" +
-                "select count(*) c from pkwoman where tt1 between  '" + startDate + "' and '" + endDate + "') tt1," +
-                "(select count(*) c from pkwoman where tt2 between '" + startDate + "' and '" + endDate + "') tt2," +
-                "(select count(*) c from pkwoman where tt3 between '" + startDate + "' and '" + endDate + "') tt3," +
-                "(select count(*) c from pkwoman where tt4 between '" + startDate + "' and '" + endDate + "') tt4," +
-                "(select count(*) c from pkwoman where tt5 between '" + startDate + "' and '" + endDate + "') tt5 " +
+                "select count(*) tt1 from pkwoman where tt1 between  '" + startDate + "' and '" + endDate + "') tt1," +
+                "(select count(*) tt2 from pkwoman where tt2 between '" + startDate + "' and '" + endDate + "') tt2," +
+                "(select count(*) tt3 from pkwoman where tt3 between '" + startDate + "' and '" + endDate + "') tt3," +
+                "(select count(*) tt4 from pkwoman where tt4 between '" + startDate + "' and '" + endDate + "') tt4," +
+                "(select count(*) tt5 from pkwoman where tt5 between '" + startDate + "' and '" + endDate + "') tt5 " +
                 "from pkwoman limit 1; ";
 
         String sqlChild = "select (" +
@@ -129,11 +129,11 @@ public class FieldMonitorSmartClientsProvider implements SmartRegisterClientsPro
         CommonPersonObjectClient pc = (CommonPersonObjectClient) client;
         parentView = (ViewGroup) inflater().inflate(R.layout.smart_register_field_client, null);
 
-        String date_entered = pc.getDetails().get("date_formatted");
+        String date_entered = pc.getColumnmaps().get("date");
 
-        Date date = null;
+        DateTime date = null;
         try {
-            date = new SimpleDateFormat("dd-MM-yyyy").parse(date_entered);
+            date = new DateTime(new SimpleDateFormat("yyyy-MM-dd").parse(date_entered).getTime());
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -144,10 +144,10 @@ public class FieldMonitorSmartClientsProvider implements SmartRegisterClientsPro
 
         if(byMonthlyAndByDaily.equals(ByMonthByDay.ByMonth)){
 
-            String startDate = new DateTime(date.getTime()).withDayOfMonth(1).toString("yyyy-MM-dd");
-            String endDate = new DateTime(date.getTime()).plusMonths(1).minusDays(1).toString("yyyy-MM-dd");
+            String startDate = date.withDayOfMonth(1).toString("yyyy-MM-dd");
+            String endDate = date.withDayOfMonth(1).plusMonths(1).minusDays(1).toString("yyyy-MM-dd");
 
-            addToRow(context, new DateTime(date.getTime()).toString("MMMM (yyyy)"), tr);
+            addToRow(context, date.toString("MMMM (yyyy)"), tr);
             addToRow(context, pc.getDetails().get("Target_assigned_for_vaccination_at_each_month"), tr);
 
             int bcgBalanceInHand = Integer.parseInt(getValue(pc, "bcg_balance_in_hand", "0", false));
@@ -193,21 +193,17 @@ public class FieldMonitorSmartClientsProvider implements SmartRegisterClientsPro
             addToRow(context, balanceInHand+"", tr);
 
             tr.setTag(R.id.client_details_tag, client);
-            tr.setTag(R.id.vaccine_stock_used_tag, getUsed(startDate, endDate));
-            tr.setTag(R.id.vaccine_stock_wasted_tag, getWasted(startDate, endDate, "monthly"));
         }
         else if(byMonthlyAndByDaily.equals(ByMonthByDay.ByDay)){
-            String startDate = new DateTime(date.getTime()).toString("yyyy-MM-dd");
-            String endDate = new DateTime(date.getTime()).toString("yyyy-MM-dd");
+            String startDate = date.toString("yyyy-MM-dd");
+            String endDate = date.toString("yyyy-MM-dd");
 
-            addToRow(context, date_entered, tr);
+            addToRow(context, date.toString("dd-MM-yyyy"), tr);
             addToRow(context, getTotalUsed(startDate, endDate) + "", tr);
 
             addToRow(context, getTotalWasted(startDate, endDate, "daily") + "", tr);
 
             tr.setTag(R.id.client_details_tag, client);
-            tr.setTag(R.id.vaccine_stock_used_tag, getUsed(startDate, endDate));
-            tr.setTag(R.id.vaccine_stock_wasted_tag, getWasted(startDate, endDate, "monthly"));
         }
 
         tr.setId(R.id.stock_detail_holder);

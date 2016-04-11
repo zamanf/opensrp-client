@@ -21,11 +21,11 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Build.VERSION_CODES;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TableRow;
@@ -39,9 +39,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 
 import org.apache.commons.lang3.StringUtils;
+import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.domain.ProfileImage;
 import org.ei.opensrp.repository.ImageRepository;
+import org.ei.opensrp.util.IntegerUtil;
 import org.ei.opensrp.util.StringUtil;
 import org.ei.opensrp.vaccinator.fragment.SmartRegisterFragment;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
@@ -81,7 +83,6 @@ public class Utils {
             return UI_DF.format(DB_DF.parse(date));
         }
         catch (ParseException e) {
-            e.printStackTrace();
             if(!suppressException) throw new RuntimeException(e);
         }
         return "";
@@ -92,7 +93,6 @@ public class Utils {
             return UI_DF.format(DB_DF.parse(date));
         }
         catch (ParseException e) {
-            e.printStackTrace();
             if(!suppressException) throw new RuntimeException(e);
         }
         return StringUtils.isNotBlank(defaultV)?defaultV:"";
@@ -242,6 +242,17 @@ public class Utils {
         return "";
     }
 
+    public static boolean hasAnyEmptyValue(Map<String, String> cm, String... fields){
+        List<String> l = Arrays.asList(fields);
+        for (String f : l) {
+            String v = getValue(cm, f, false);
+            if (v == "") {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static String overridesToString(Map<String, String> overrides, SmartRegisterClient client, SmartRegisterFragment.ByColumnAndByDetails byColumnAndByDetails){
         JSONObject overridejsonobject = new JSONObject();
         try {
@@ -264,9 +275,46 @@ public class Utils {
         return overridejsonobject.toString();
     }
 
-    private ArrayList<HashMap<String, String>> getWasted(String startDate, String endDate, String type){
+    public static ArrayList<HashMap<String, String>> getWasted(String startDate, String endDate, String type){
         String sqlWasted = "select sum (total_wasted)as total_wasted from stock where `report` ='"+type+"' and `date` between '" + startDate + "' and '" + endDate + "'";
         return org.ei.opensrp.Context.getInstance().commonrepository("stock").rawQuery(sqlWasted);
+    }
+
+    public static int getWasted(String startDate, String endDate, String type, String... variables){
+        List<CommonPersonObject> cl = org.ei.opensrp.Context.getInstance().commonrepository("stock").customQueryForCompleteRow("SELECT * FROM stock WHERE `report` ='" + type + "' and `date` between '" + startDate + "' and '" + endDate + "'", null, "stock");
+        int total = 0;
+        for (CommonPersonObject c : cl) {
+            for (String v : variables){
+                String val = getValue(c.getDetails(), v, "0", false);
+                total += IntegerUtil.tryParse(val, 0);
+            }
+        }
+        return total;
+    }
+
+    public static ArrayList<HashMap<String, String>> getUsed(String startDate, String endDate, String table, String... vaccines){
+        String q = "SELECT * FROM (";
+        for (String v: vaccines) {
+            q += " (select count(*) "+v+" from "+table+" where "+v+" between '" + startDate + "' and '" + endDate + "') "+v+" , ";
+        }
+        q = q.trim().substring(0, q.trim().lastIndexOf(","));
+        q += " ) e ";
+
+        Log.i("DD", q);
+        return org.ei.opensrp.Context.getInstance().commonrepository(table).rawQuery(q);
+    }
+
+    public static int getTotalUsed(String startDate, String endDate, String table, String... vaccines){
+        int totalUsed = 0;
+
+        for (HashMap<String, String> v: getUsed(startDate, endDate, table, vaccines)) {
+            for (String k: v.keySet()) {
+                totalUsed += Integer.parseInt(v.get(k) == null?"0":v.get(k));
+            }
+        }
+        Log.i("", "TOTAL USED: "+totalUsed);
+
+        return totalUsed;
     }
 
     public static TableRow getDataRow(Context context, String label, String value, TableRow row){

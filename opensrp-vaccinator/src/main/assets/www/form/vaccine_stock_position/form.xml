@@ -26,16 +26,11 @@
     <span lang="Roman Urdu" class="question-label " data-itext-id="/Vaccine_Stock_Position/center_name:label">Center ka naam: <span class="or-output" data-value=" /Vaccine_Stock_Position/provider_location_name ">            </span>
     </span>
     <input type="text" name="/Vaccine_Stock_Position/center_name" data-type-xml="string" readonly="readonly"/>
-</label>    <label class="note non-select ">
-    <span lang="ur" class="question-label " data-itext-id="/Vaccine_Stock_Position/today_note:label">تاریخ: {date_formatted}$</span>
-    <span lang="en" class="question-label active" data-itext-id="/Vaccine_Stock_Position/today_note:label">Date: <span class="or-output" data-value=" /Vaccine_Stock_Position/date_formatted ">            </span>
-    </span>
-    <span lang="Roman Urdu" class="question-label " data-itext-id="/Vaccine_Stock_Position/today_note:label">Tareekh: <span class="or-output" data-value=" /Vaccine_Stock_Position/date_formatted ">            </span>
-    </span>
-    <span lang="ur" class="or-hint " data-itext-id="/Vaccine_Stock_Position/today_note:hint">دن-مہینہ-سال</span>
-    <span lang="en" class="or-hint active" data-itext-id="/Vaccine_Stock_Position/today_note:hint">day-month-year</span>
-    <span lang="Roman Urdu" class="or-hint " data-itext-id="/Vaccine_Stock_Position/today_note:hint">din-mahina-saal</span>
-    <input type="text" name="/Vaccine_Stock_Position/today_note" data-type-xml="string" readonly="readonly"/>
+</label>    <label class="question non-select ">
+    <span lang="ur" class="question-label " data-itext-id="/Vaccine_Stock_Position/date:label">تاریخ</span>
+    <span lang="en" class="question-label active" data-itext-id="/Vaccine_Stock_Position/date:label">Date</span>
+    <span lang="Roman Urdu" class="question-label " data-itext-id="/Vaccine_Stock_Position/date:label">Tareekh</span>
+    <input type="date" name="/Vaccine_Stock_Position/date" data-type-xml="date"/>
 </label>    <fieldset class="question ">
     <fieldset>
         <legend>
@@ -380,7 +375,7 @@
             <input type="hidden" name="/Vaccine_Stock_Position/meta/instanceID" data-calculate="concat('uuid:', uuid())" data-type-xml="string"/>
         </label>
         <label class="calculation non-select ">
-            <input type="hidden" name="/Vaccine_Stock_Position/formhub/uuid" data-calculate="'c78ecf12f2574863b5de441b00ef16f0'" data-type-xml="string"/>
+            <input type="hidden" name="/Vaccine_Stock_Position/formhub/uuid" data-calculate="'a8f5fc7d749e4426aac7660996c290f1'" data-type-xml="string"/>
         </label>
     </fieldset>
 </form>

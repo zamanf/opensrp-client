@@ -111,6 +111,12 @@
       "bind" : "/model/instance/Woman_TT_Followup_Form/existing_epi_card_number",
       "shouldLoadValue" : true
     }, {
+      "name" : "existing_reminders_approval",
+      "bind" : "/model/instance/Woman_TT_Followup_Form/existing_reminders_approval"
+    }, {
+      "name" : "existing_contact_phone_number",
+      "bind" : "/model/instance/Woman_TT_Followup_Form/existing_contact_phone_number"
+    }, {
       "name" : "e_tt1",
       "bind" : "/model/instance/Woman_TT_Followup_Form/e_tt1",
       "shouldLoadValue" : true
@@ -233,6 +239,12 @@
       "name" : "center_gps",
       "bind" : "/model/instance/Woman_TT_Followup_Form/center_gps"
     }, {
+      "name" : "reminders_approval",
+      "bind" : "/model/instance/Woman_TT_Followup_Form/reminders_approval"
+    }, {
+      "name" : "contact_phone_number",
+      "bind" : "/model/instance/Woman_TT_Followup_Form/contact_phone_number"
+    }, {
       "name" : "pregnant",
       "bind" : "/model/instance/Woman_TT_Followup_Form/pregnant"
     }, {
@@ -331,6 +343,9 @@
     }, {
       "name" : "vaccines_2",
       "bind" : "/model/instance/Woman_TT_Followup_Form/vaccines_2"
+    }, {
+      "name" : "vaccination_date",
+      "bind" : "/model/instance/Woman_TT_Followup_Form/vaccination_date"
     }, {
       "name" : "tt1",
       "bind" : "/model/instance/Woman_TT_Followup_Form/tt1"

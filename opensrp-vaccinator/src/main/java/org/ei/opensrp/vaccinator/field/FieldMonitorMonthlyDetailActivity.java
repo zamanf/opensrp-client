@@ -5,28 +5,22 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-
 import org.ei.opensrp.Context;
-import org.ei.opensrp.commonregistry.CommonPersonObject;
-import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
-import org.ei.opensrp.util.IntegerUtil;
 import org.ei.opensrp.vaccinator.R;
 import org.ei.opensrp.vaccinator.woman.DetailActivity;
 import org.joda.time.DateTime;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import static util.Utils.addToRow;
 import static util.Utils.convertDateFormat;
 import static util.Utils.getDataRow;
+import static util.Utils.getTotalUsed;
 import static util.Utils.getValue;
+import static util.Utils.getWasted;
 import static util.Utils.providerDetails;
 
 public class FieldMonitorMonthlyDetailActivity extends DetailActivity {
@@ -65,47 +59,10 @@ public class FieldMonitorMonthlyDetailActivity extends DetailActivity {
         return false;
     }
 
-    private int getWasted(String startDate, String endDate, String type, String... variables){
-        List<CommonPersonObject> cl = Context.getInstance().commonrepository("stock").customQueryForCompleteRow("SELECT * FROM stock WHERE `report` ='" + type + "' and `date` between '" + startDate + "' and '" + endDate + "'", null, "stock");
-        int total = 0;
-        for (CommonPersonObject c : cl) {
-            for (String v : variables){
-                String val = getValue(c.getDetails(), v, "0", false);
-                total += IntegerUtil.tryParse(val, 0);
-            }
-        }
-        return total;
-    }
 
-    private ArrayList<HashMap<String, String>> getUsed(String startDate, String endDate, String table, String... vaccines){
-        String q = "SELECT ";
-        for (String v: vaccines) {
-            q += " (select count(*) c from "+table+" where "+v+" between '" + startDate + "' and '" + endDate + "') "+v+" , ";
-        }
-        q = q.trim().substring(0, q.trim().lastIndexOf(","));
-        q += " FROM "+table;
-
-        Log.i("DD", q);
-        return org.ei.opensrp.Context.getInstance().commonrepository(table).rawQuery(q);
-    }
-
-    private int getTotalUsed(String startDate, String endDate, String table, String... vaccines){
-        int totalUsed = 0;
-
-        for (HashMap<String, String> v: getUsed(startDate, endDate, table, vaccines)) {
-            for (String k: v.keySet()) {
-                totalUsed += Integer.parseInt(v.get(k) == null?"0":v.get(k));
-            }
-        }
-        Log.i("", "TOTAL USED: "+totalUsed);
-
-        return totalUsed;
-    }
 
     @Override
     protected void generateView() {
-        ((TextView)findViewById(R.id.field_detail_today)).setText("Today : "+convertDateFormat(new SimpleDateFormat("yyyy-MM-dd").format(new Date()), true));
-
         HashMap provider =  providerDetails();
 
         TableLayout dt = (TableLayout) findViewById(R.id.field_detail_info_table1);
@@ -137,7 +94,7 @@ public class FieldMonitorMonthlyDetailActivity extends DetailActivity {
             e.printStackTrace();
         }
         String startDate = new DateTime(date.getTime()).withDayOfMonth(1).toString("yyyy-MM-dd");
-        String endDate = new DateTime(date.getTime()).plusMonths(1).minusDays(1).toString("yyyy-MM-dd");
+        String endDate = new DateTime(date.getTime()).withDayOfMonth(1).plusMonths(1).minusDays(1).toString("yyyy-MM-dd");
 
         String childTable = "pkchild";
         String womanTable = "pkwoman";

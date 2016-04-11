@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model>
     <instance>
-        <Vaccine_Stock_Position encounter_type="Vaccine stock position" id="vaccine_stock_position" version="201604050703">
+        <Vaccine_Stock_Position encounter_type="Vaccine stock position" id="vaccine_stock_position" version="201604080502">
             <formhub>
                 <uuid/>
             </formhub>
@@ -15,7 +15,7 @@
             <provider_location_note/>
             <start openmrs_entity="concept" openmrs_entity_id="163137AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
             <end openmrs_entity="concept" openmrs_entity_id="163138AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
-            <today openmrs_entity="concept" openmrs_entity_id="163286AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
+            <today/>
             <deviceid openmrs_entity="concept" openmrs_entity_id="163149AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
             <subscriberid openmrs_entity="concept" openmrs_entity_id="163150AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
             <simserial openmrs_entity="concept" openmrs_entity_id="163151AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
@@ -23,7 +23,7 @@
             <date_formatted/>
             <vaccinator_name/>
             <center_name/>
-            <today_note/>
+            <date openmrs_entity="encounter" openmrs_entity_id="encounter_date"/>
             <report openmrs_entity="concept" openmrs_entity_id="163331AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
             <Target_assigned_for_vaccination_at_each_month openmrs_entity="concept" openmrs_entity_id="163174AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
             <Target_assigned_for_vaccination_for_the_year openmrs_entity="concept" openmrs_entity_id="163175AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>

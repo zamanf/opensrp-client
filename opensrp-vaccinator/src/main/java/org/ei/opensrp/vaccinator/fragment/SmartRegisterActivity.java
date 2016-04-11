@@ -23,7 +23,6 @@ import org.json.JSONObject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import util.Utils;
 
 public abstract class SmartRegisterActivity extends SecuredNativeSmartRegisterActivity {
 

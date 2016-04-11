@@ -51,7 +51,7 @@ public class DateSort implements SortOption {
                         Date date1 = dateFormat.parse(commonPersonObjectClient.getColumnmaps().get(field));
                         Date date2 = dateFormat.parse(commonPersonObjectClient2.getColumnmaps().get(field));
 
-                        return date1.compareTo(date2);
+                        return date2.compareTo(date1);
                     } catch (Exception e) {
                         break;
                     }
@@ -62,7 +62,7 @@ public class DateSort implements SortOption {
                         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                         Date date1 = dateFormat.parse(commonPersonObjectClient.getDetails().get(field));
                         Date date2 = dateFormat.parse(commonPersonObjectClient2.getDetails().get(field));
-                        return date1.compareTo(date2);
+                        return date2.compareTo(date1);
                     } catch (Exception e) {
                         break;
                     }
