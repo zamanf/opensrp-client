@@ -11,6 +11,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.flurry.android.FlurryAgent;
+
 import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.CommonPersonObjectController;
 import org.ei.opensrp.event.Listener;
@@ -18,10 +20,16 @@ import org.ei.opensrp.service.PendingFormSubmissionService;
 import org.ei.opensrp.sync.SyncAfterFetchListener;
 import org.ei.opensrp.sync.SyncProgressIndicator;
 import org.ei.opensrp.sync.UpdateActionsTask;
+import org.ei.opensrp.vaccinator.analytics.CountlyAnalytics;
+import org.ei.opensrp.vaccinator.analytics.Events;
 import org.ei.opensrp.view.activity.SecuredActivity;
 import org.ei.opensrp.view.contract.HomeContext;
 import org.ei.opensrp.view.controller.NativeAfterANMDetailsFetchListener;
 import org.ei.opensrp.view.controller.NativeUpdateANMDetailsTask;
+
+import java.util.HashMap;
+
+import ly.count.android.sdk.Countly;
 
 import static android.widget.Toast.LENGTH_SHORT;
 import static java.lang.String.valueOf;
@@ -96,6 +104,9 @@ public class NativeHomeActivity extends SecuredActivity {
       /*  LocationSelectorDialogFragment
                 .newInstance(this, new EditDialogOptionModel(), context.anmLocationController().get(), "new_household_registration")
                 .show(ft, locationDialogTAG);*/
+
+        Countly.sharedInstance().init(this, "https://cloud.count.ly", "dc5dfb412bdbd91792b29f66e5a4bd2ee226cfb6");
+        FlurryAgent.init(this, "PKD27SF3CWTVPRFPVDVV ");
     }
 
 
@@ -189,7 +200,7 @@ public class NativeHomeActivity extends SecuredActivity {
 //        Log.d("child count cin ", childController.getClients().size()+"");
         childRegisterClientCountView.setText(valueOf(childController.getClients().size()));
         fieldRegisterClientCountDView.setText(valueOf(fieldControllerD.getClients().size())+" D");
-        fieldRegisterClientCountMView.setText(valueOf(fieldControllerM.getClients().size())+" M");
+        fieldRegisterClientCountMView.setText(valueOf(fieldControllerM.getClients().size()) + " M");
     }
 
     @Override
@@ -218,6 +229,22 @@ public class NativeHomeActivity extends SecuredActivity {
                 return super.onOptionsItemSelected(item);
         }
 
+    }
+
+    @Override
+    protected void onStart(){
+        super.onStart();
+        HashMap<String,String> segments = new HashMap<String, String>();
+        CountlyAnalytics.startAnalytics(this, Events.LOGIN, segments);
+        //FlurryAgent.setLogEnabled(false);
+        //FlurryAgent.onStartSession(this);
+    }
+
+    @Override
+    protected void onStop(){
+        super.onStop();
+        CountlyAnalytics.stopAnalytics();
+        //FlurryAgent.onEndSession(this);
     }
 
     public void updateFromServer() {
