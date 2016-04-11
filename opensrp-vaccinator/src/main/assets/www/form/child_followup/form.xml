@@ -3,7 +3,7 @@
     <section class="form-logo"> </section>
     <h3 id="form-title">بچّوں کا فالو اپ رجسٹر برائے ٹیکاجات - Child Follow Up Vaccination Register</h3>
     <select id="form-languages" data-default-lang="en">
-        <option value="ur">Urdu</option> <option value="en">English</option>  </select>        <label class="note non-select ">
+        <option value="ur">Urdu</option> <option value="en">English</option>  <option value="Roman Urdu">Roman Urdu</option> </select>        <label class="note non-select ">
     <span lang="ur" class="question-label " data-itext-id="/Child_Vaccination_Followup/provider_location_note:label">شہر: <span class="or-output" data-value=" /Child_Vaccination_Followup/provider_city ">            </span> ; ٹائون: <span class="or-output" data-value=" /Child_Vaccination_Followup/provider_town ">            </span> ; یوسی: <span class="or-output" data-value=" /Child_Vaccination_Followup/provider_uc ">            </span> ; سینٹرکا نام: <span class="or-output" data-value=" /Child_Vaccination_Followup/provider_location_name ">            </span>
     </span>
     <span lang="en" class="question-label active" data-itext-id="/Child_Vaccination_Followup/provider_location_note:label">City: <span class="or-output" data-value=" /Child_Vaccination_Followup/provider_city ">            </span> ; Town: <span class="or-output" data-value=" /Child_Vaccination_Followup/provider_town ">            </span> ; UC: <span class="or-output" data-value=" /Child_Vaccination_Followup/provider_uc ">            </span> ; Center Name: <span class="or-output" data-value=" /Child_Vaccination_Followup/provider_location_name ">            </span>
@@ -14,7 +14,7 @@
     <input type="text" name="/Child_Vaccination_Followup/provider_location_note" data-type-xml="string" readonly="readonly"/>
 </label>    <label class="note non-select ">
     <span lang="ur" class="question-label " data-itext-id="/Child_Vaccination_Followup/existing_client_reg_date_note:label">بچے کی پروگرام میں اندراج کی تاریخ: {existing_client_reg_date}$</span>
-    <span lang="en" class="question-label active" data-itext-id="/Child_Vaccination_Followup/existing_client_reg_date_note:label">Child Registeration date: <span class="or-output" data-value=" /Child_Vaccination_Followup/existing_client_reg_date ">            </span>
+    <span lang="en" class="question-label active" data-itext-id="/Child_Vaccination_Followup/existing_client_reg_date_note:label">Child Registration date: <span class="or-output" data-value=" /Child_Vaccination_Followup/existing_client_reg_date ">            </span>
     </span>
 
     <span lang="Roman Urdu" class="question-label " data-itext-id="/Child_Vaccination_Followup/existing_client_reg_date_note:label">Bachay ki Program mai andraj ki tareekh: <span class="or-output" data-value=" /Child_Vaccination_Followup/existing_client_reg_date ">            </span>
@@ -1088,7 +1088,7 @@
 
     <span lang="Roman Urdu" class="or-constraint-msg " data-itext-id="/Child_Vaccination_Followup/contact_phone_number:jr:constraintMsg">Phone number 11 hindason par mushtamil aur mundarja zail shakal main hona chahiey: 03*********</span>
     <span lang="ur" class="question-label " data-itext-id="/Child_Vaccination_Followup/contact_phone_number:label">موبائل نمبر:{existing_contact_phone_number}$</span>
-    <span lang="en" class="question-label active" data-itext-id="/Child_Vaccination_Followup/contact_phone_number:label">Contact phone number: <span class="or-output" data-value=" /Child_Vaccination_Followup/existing_contact_phone_number ">            </span>
+    <span lang="en" class="question-label active" data-itext-id="/Child_Vaccination_Followup/contact_phone_number:label">Mobile Number: <span class="or-output" data-value=" /Child_Vaccination_Followup/existing_contact_phone_number ">            </span>
     </span>
 
     <span lang="Roman Urdu" class="question-label " data-itext-id="/Child_Vaccination_Followup/contact_phone_number:label">Mobile Number: <span class="or-output" data-value=" /Child_Vaccination_Followup/existing_contact_phone_number ">            </span>
@@ -1549,7 +1549,7 @@
             <input type="hidden" name="/Child_Vaccination_Followup/meta/instanceID" data-calculate="concat('uuid:', uuid())" data-type-xml="string"/>
         </label>
         <label class="calculation non-select ">
-            <input type="hidden" name="/Child_Vaccination_Followup/formhub/uuid" data-calculate="'5073f46e86b24d209ee46b7a61806c56'" data-type-xml="string"/>
+            <input type="hidden" name="/Child_Vaccination_Followup/formhub/uuid" data-calculate="'8f39facc33754ec89007c9a6183af985'" data-type-xml="string"/>
         </label>
     </fieldset>
 </form>

@@ -3,7 +3,7 @@
     <section class="form-logo"> </section>
     <h3 id="form-title">بچّوں کا انرولمنٹ رجسٹر برائے ٹیکاجات - Child Enrollment Vaccination Register</h3>
     <select id="form-languages" data-default-lang="en">
-        <option value="ur">Urdu</option> <option value="en">English</option>  </select>        <label class="note non-select ">
+        <option value="ur">Urdu</option> <option value="en">English</option>  <option value="Roman Urdu">Roman Urdu</option> </select>        <label class="note non-select ">
     <span lang="ur" class="question-label " data-itext-id="/Child_Vaccination_Enrollment/provider_location_note:label">شہر: <span class="or-output" data-value=" /Child_Vaccination_Enrollment/provider_city ">            </span> ; ٹائون: <span class="or-output" data-value=" /Child_Vaccination_Enrollment/provider_town ">            </span> ; یوسی: <span class="or-output" data-value=" /Child_Vaccination_Enrollment/provider_uc ">            </span> ; سینٹرکا نام: <span class="or-output" data-value=" /Child_Vaccination_Enrollment/provider_location_name ">            </span>
     </span>
     <span lang="en" class="question-label active" data-itext-id="/Child_Vaccination_Enrollment/provider_location_note:label">City: <span class="or-output" data-value=" /Child_Vaccination_Enrollment/provider_city ">            </span> ; Town: <span class="or-output" data-value=" /Child_Vaccination_Enrollment/provider_town ">            </span> ; UC: <span class="or-output" data-value=" /Child_Vaccination_Enrollment/provider_uc ">            </span> ; Center Name: <span class="or-output" data-value=" /Child_Vaccination_Enrollment/provider_location_name ">            </span>
@@ -18,7 +18,7 @@
 
     <span lang="Roman Urdu" class="or-constraint-msg " data-itext-id="/Child_Vaccination_Enrollment/client_reg_date:jr:constraintMsg">Bachay ki program mai andraaj ki tareekh mustaqbil ki nahi hosakti</span>
     <span lang="ur" class="question-label " data-itext-id="/Child_Vaccination_Enrollment/client_reg_date:label">بچے کی پروگرام میں اندراج کی تاریخ</span>
-    <span lang="en" class="question-label active" data-itext-id="/Child_Vaccination_Enrollment/client_reg_date:label">Child Registeration date</span>
+    <span lang="en" class="question-label active" data-itext-id="/Child_Vaccination_Enrollment/client_reg_date:label">Child Registration date</span>
 
     <span lang="Roman Urdu" class="question-label " data-itext-id="/Child_Vaccination_Enrollment/client_reg_date:label">Bachay ki Program mai andraj ki tareekh</span>
     <span class="required">*</span>
@@ -1200,7 +1200,7 @@
 
     <span lang="Roman Urdu" class="or-constraint-msg " data-itext-id="/Child_Vaccination_Enrollment/contact_phone_number:jr:constraintMsg">Phone number 11 hindason par mushtamil aur mundarja zail shakal main hona chahiey: 03*********</span>
     <span lang="ur" class="question-label " data-itext-id="/Child_Vaccination_Enrollment/contact_phone_number:label">موبائل نمبر:</span>
-    <span lang="en" class="question-label active" data-itext-id="/Child_Vaccination_Enrollment/contact_phone_number:label">Contact phone number:</span>
+    <span lang="en" class="question-label active" data-itext-id="/Child_Vaccination_Enrollment/contact_phone_number:label">Mobile Number:</span>
 
     <span lang="Roman Urdu" class="question-label " data-itext-id="/Child_Vaccination_Enrollment/contact_phone_number:label">Mobile number:</span>
     <input type="text" name="/Child_Vaccination_Enrollment/contact_phone_number" data-constraint="regex(., '^03[0-9]{9}$')" data-relevant=" /Child_Vaccination_Enrollment/reminders_approval ='yes'" data-type-xml="string"/>
@@ -1693,7 +1693,7 @@
             <input type="hidden" name="/Child_Vaccination_Enrollment/meta/instanceID" data-calculate="concat('uuid:', uuid())" data-type-xml="string"/>
         </label>
         <label class="calculation non-select ">
-            <input type="hidden" name="/Child_Vaccination_Enrollment/formhub/uuid" data-calculate="'c340f96a2c5145edbe2f64b7631ba186'" data-type-xml="string"/>
+            <input type="hidden" name="/Child_Vaccination_Enrollment/formhub/uuid" data-calculate="'836c4603a35e462e8ef79472d6caca3b'" data-type-xml="string"/>
         </label>
     </fieldset>
 </form>

@@ -8,7 +8,6 @@ import android.widget.TextView;
 
 import org.ei.opensrp.Context;
 import org.ei.opensrp.domain.Alert;
-import org.ei.opensrp.util.StringUtil;
 import org.ei.opensrp.vaccinator.R;
 import org.joda.time.DateTime;
 import org.joda.time.Years;
@@ -68,8 +67,6 @@ public class WomanDetailActivity extends DetailActivity {
 
     @Override
     protected void generateView() {
-        ((TextView)findViewById(R.id.woman_detail_today)).setText("Today : "+ convertDateFormat(new SimpleDateFormat("yyyy-MM-dd").format(new Date()), true));
-
         //WOMAN BASIC INFORMATION
         TableLayout dt = (TableLayout) findViewById(R.id.woman_detail_info_table1);
 
@@ -83,6 +80,10 @@ public class WomanDetailActivity extends DetailActivity {
         tr = getDataRow(this, "Woman`s Name", getValue(client, "first_name", true), null);
         dt.addView(tr);
 
+        int age = Years.yearsBetween(new DateTime(getValue(client.getColumnmaps(), "dob", false)), DateTime.now()).getYears();
+        tr = getDataRow(this, "Birthdate (Age)", convertDateFormat(getValue(client.getColumnmaps(), "dob", false), true) + " (" + age + " years)", null);
+        dt.addView(tr);
+
         tr = getDataRow(this, "Father`s Name", getValue(client, "father_name", true), null);
         dt.addView(tr);
 
@@ -90,12 +91,11 @@ public class WomanDetailActivity extends DetailActivity {
         dt.addView(tr);
 
         TableLayout dt2 = (TableLayout) findViewById(R.id.woman_detail_info_table2);
-        int age = Years.yearsBetween(new DateTime(getValue(client.getColumnmaps(), "dob", false)), DateTime.now()).getYears();
-        tr = getDataRow(this, "Birthdate (Age)", convertDateFormat(getValue(client.getColumnmaps(), "dob", false), true) + " (" + age + " years)", null);
-        dt2.addView(tr);
         tr = getDataRow(this, "Ethnicity", getValue(client, "ethnicity", true), null);
         dt2.addView(tr);
         tr = getDataRow(this, "Married", getValue(client, "marriage", true), null);
+        dt2.addView(tr);
+        tr = getDataRow(this, "Contact Number", getValue(client, "contact_phone_number", true), null);
         dt2.addView(tr);
         tr = getDataRow(this, "Address", getValue(client, "house_number", true)+ " "+ getValue(client, "street", true)
                 +", \nUC: "+ getValue(client, "union_council", true)

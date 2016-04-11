@@ -5,7 +5,7 @@
               android:layout_height="@dimen/smart_register_status_bar_height"
               android:background="@color/status_bar_background_dark_grey"
               android:orientation="horizontal"
-              android:paddingLeft="10dp">
+              >
 
     <org.ei.opensrp.view.customControls.CustomFontTextView
             android:id="@+id/label_sorted_by"

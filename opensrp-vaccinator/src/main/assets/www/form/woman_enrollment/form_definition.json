@@ -169,6 +169,12 @@
       "name" : "centre_gps",
       "bind" : "/model/instance/Woman_TT_Enrollment_Form/centre_gps"
     }, {
+      "name" : "reminders_approval",
+      "bind" : "/model/instance/Woman_TT_Enrollment_Form/reminders_approval"
+    }, {
+      "name" : "contact_phone_number",
+      "bind" : "/model/instance/Woman_TT_Enrollment_Form/contact_phone_number"
+    }, {
       "name" : "pregnant",
       "bind" : "/model/instance/Woman_TT_Enrollment_Form/pregnant"
     }, {

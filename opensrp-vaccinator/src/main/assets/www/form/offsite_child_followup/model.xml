@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model>
     <instance>
-        <Offsite_Child_Vaccination_Followup encounter_type="Off Site Child Vaccination Follow Up" id="offsite_child_vaccination_followup" version="201604041055">
+        <Offsite_Child_Vaccination_Followup encounter_type="Off Site Child Vaccination Follow Up" id="offsite_child_vaccination_followup" version="201604080501">
             <formhub>
                 <uuid/>
             </formhub>
@@ -50,9 +50,9 @@
             <provider_location_id openmrs_entity="encounter" openmrs_entity_id="location_id"/>
             <provider_location_name/>
             <provider_location_note/>
-            <start openmrs_entity="encounter" openmrs_entity_id="163137AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
-            <end openmrs_entity="encounter" openmrs_entity_id="163138AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
-            <today openmrs_entity="encounter" openmrs_entity_id="encounter_date"/>
+            <start openmrs_entity="concept" openmrs_entity_id="163137AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
+            <end openmrs_entity="concept" openmrs_entity_id="163138AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
+            <today/>
             <deviceid openmrs_entity="concept" openmrs_entity_id="163149AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
             <subscriberid openmrs_entity="concept" openmrs_entity_id="163150AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
             <simserial openmrs_entity="concept" openmrs_entity_id="163151AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
@@ -78,7 +78,7 @@
             <landmark openmrs_entity="person_address" openmrs_entity_id="landmark" openmrs_entity_parent="usual_residence"/>
             <center_gps openmrs_entity="concept" openmrs_entity_id="163277AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
             <child_was_suffering_from_a_disease_at_birth_note/>
-            <aefi openmrs_entity="concept" openmrs_entity_id="159926AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
+            <aefi openmrs_entity="concept" openmrs_entity_id="163162AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
             <reminders_approval openmrs_entity="concept" openmrs_entity_id="163089AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
             <contact_phone_number openmrs_entity="concept" openmrs_entity_id="159635AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
             <six_weeks/>
@@ -116,7 +116,7 @@
                 <measles2_dose openmrs_entity="concept" openmrs_entity_id="1418AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" openmrs_entity_parent="36AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
             </vaccines_group>
             <vaccines_2 openmrs_entity="concept" openmrs_entity_id="984AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" openmrs_entity_parent="1441AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
-            <vaccination_date openmrs_entity="concept" openmrs_entity_id="1410AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">${today}</vaccination_date>
+            <vaccination_date openmrs_entity="encounter" openmrs_entity_id="encounter_date">${today}</vaccination_date>
             <bcg openmrs_entity="concept" openmrs_entity_id="1410AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" openmrs_entity_parent="886AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
             <opv0 openmrs_entity="concept" openmrs_entity_id="1410AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" openmrs_entity_parent="783AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
             <opv0_dose_today openmrs_entity="concept" openmrs_entity_id="1418AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" openmrs_entity_parent="783AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>

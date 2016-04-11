@@ -3,17 +3,13 @@ package org.ei.opensrp.vaccinator.fragment;
 import android.util.Log;
 
 import org.ei.opensrp.Context;
-import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.domain.Alert;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.contract.SmartRegisterClients;
 import org.ei.opensrp.view.dialog.SortOption;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -47,15 +43,15 @@ public class StatusSort implements SortOption {
             }};
 
             List<Alert> alertlist_for_client1 = Context.getInstance().alertService().findByEntityIdAndAlertNames(oneClient.entityId(), "TT 1", "TT 2", "TT 3", "TT 4", "TT 5", "tt1", "tt2", "tt3", "tt4", "tt5");
-            List<Alert> alertlist_for_client2 = Context.getInstance().alertService().findByEntityIdAndAlertNames(oneClient.entityId(), "TT 1", "TT 2", "TT 3", "TT 4", "TT 5", "tt1", "tt2", "tt3", "tt4", "tt5");
+            List<Alert> alertlist_for_client2 = Context.getInstance().alertService().findByEntityIdAndAlertNames(anotherClient2.entityId(), "TT 1", "TT 2", "TT 3", "TT 4", "TT 5", "tt1", "tt2", "tt3", "tt4", "tt5");
 
-            Log.i("", alertlist_for_client1.toString());
-            Log.i("", alertlist_for_client2.toString());
+            Log.i(this.getClass().getName(), "ALERT 1 SIZE: "+alertlist_for_client1.toString());
+            Log.i(this.getClass().getName(), "ALERT 2 SIZE: "+alertlist_for_client2.toString());
 
             int max1 = 0;
             for (int i = 0; i < alertlist_for_client1.size(); i++) {
                 Alert a = alertlist_for_client1.get(i);
-                Log.i("", "Alert 1:"+a.toString());
+                Log.i(this.getClass().getName(), "Alert 1:"+a.toString());
                 if (m.get(a.status().name()) > max1){
                     max1 = m.get(a.status().name());
                 }
@@ -64,15 +60,15 @@ public class StatusSort implements SortOption {
             int max2 = 0;
             for (int i = 0; i < alertlist_for_client2.size(); i++) {
                 Alert a = alertlist_for_client2.get(i);
-                Log.i("", "Alert 2:"+a.toString());
+                Log.i(this.getClass().getName(), "Alert 2:"+a.toString());
                 if (m.get(a.status().name()) > max2){
                     max2 = m.get(a.status().name());
                 }
             }
 
             if(max1 == max2) return 0;
-            if (max1 > max2) return 1;
-            else return -1;
+            if (max1 > max2) return -1;
+            else return 1;
         }
     };
 }

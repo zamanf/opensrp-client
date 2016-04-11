@@ -3,6 +3,7 @@ package org.ei.opensrp.vaccinator.fragment;
 import android.view.View;
 
 import org.ei.opensrp.Context;
+import org.ei.opensrp.commonregistry.CommonObjectSort;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.commonregistry.CommonPersonObjectController;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
@@ -63,7 +64,7 @@ public class ChildSmartRegisterFragment extends SmartClientRegisterFragment {
 
             @Override
             public SortOption sortOption() {
-                return new DateSort(DateSort.ByColumnAndByDetails.byColumn, "Age", "dob");
+                return new CommonObjectSort(CommonObjectSort.ByColumnAndByDetails.byDetails, false, "first_name", getResources().getString(R.string.woman_alphabetical_sort));
             }
 
             @Override

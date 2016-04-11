@@ -69,8 +69,6 @@ public class ChildDetailActivity extends DetailActivity {
 
     @Override
     protected void generateView() {
-        ((TextView)findViewById(R.id.child_detail_today)).setText("Today : "+convertDateFormat(new SimpleDateFormat("yyyy-MM-dd").format(new Date()), true));
-
         String gender = getValue(client, "gender", true);
         if(gender.equalsIgnoreCase("male")){
             ((ImageView)findViewById(R.id.child_profilepic)).setImageResource(R.drawable.child_boy_infant);

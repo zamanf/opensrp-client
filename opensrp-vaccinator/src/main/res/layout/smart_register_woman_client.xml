@@ -179,20 +179,27 @@
         android:layout_height="fill_parent"
         android:layout_weight="2">
 
-        <FrameLayout
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/woman_next_visit_holder"
             android:background="@color/transparent_blue">
 
             <org.ei.opensrp.view.customControls.CustomFontTextView
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:text="Next Visit"
-                android:id="@+id/woman_next_visit"
-                android:maxLines="10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Next Vaccine"
+                android:id="@+id/woman_next_visit_vaccine"
+                style="@style/CustomFontTextViewStyle.ListView.Medium"/>
+
+            <org.ei.opensrp.view.customControls.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Next Visit Date"
+                android:id="@+id/woman_next_visit_date"
                 style="@style/CustomFontTextViewStyle.ListView.Medium"
                 android:textSize="14sp" />
-            </FrameLayout>
+            </LinearLayout>
     </LinearLayout>
 </LinearLayout>

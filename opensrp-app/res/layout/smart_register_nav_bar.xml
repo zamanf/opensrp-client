@@ -8,7 +8,7 @@
 
     <ImageButton
             android:id="@+id/btn_back_to_home"
-            android:layout_width="60dp"
+            android:layout_width="62dp"
             android:layout_height="50dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
@@ -16,7 +16,8 @@
             android:src="@drawable/homestacks"
             android:background="@drawable/transparent_gray_background"
             android:paddingLeft="8dp"
-            android:paddingRight="8dp"/>
+            android:paddingRight="8dp"
+        android:layout_margin="3dp" />
 
     <ImageView
             android:id="@+id/home_title_separator"
@@ -95,7 +96,9 @@
             android:paddingRight="22dp"
             android:gravity="center"
             android:src="@drawable/ic_plus"
-            android:background="@drawable/transparent_gray_background"/>
+            android:background="@drawable/transparent_gray_background"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp" />
 
     <ImageView
             android:layout_width="@dimen/smart_register_nav_bar_separator"

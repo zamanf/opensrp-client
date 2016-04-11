@@ -3,6 +3,7 @@ package org.ei.opensrp.vaccinator.fragment;
 import android.view.View;
 
 import org.ei.opensrp.Context;
+import org.ei.opensrp.commonregistry.CommonObjectSort;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.commonregistry.CommonPersonObjectController;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
@@ -65,7 +66,7 @@ public class WomanSmartRegisterFragment extends SmartClientRegisterFragment {
 
             @Override
             public SortOption sortOption() {
-                return new DateSort(DateSort.ByColumnAndByDetails.byColumn, "Age", "dob");
+                return new CommonObjectSort(CommonObjectSort.ByColumnAndByDetails.byDetails, false, "first_name", getResources().getString(R.string.woman_alphabetical_sort));
             }
 
             @Override
@@ -188,6 +189,8 @@ public class WomanSmartRegisterFragment extends SmartClientRegisterFragment {
         map.put("existing_ethnicity", getValue(client.getDetails(), "ethnicity", true));
         map.put("existing_client_reg_date", getValue(client.getDetails(), "client_reg_date", false));
         map.put("existing_epi_card_number", getValue(client.getDetails(), "epi_card_number", false));
+        map.put("existing_reminders_approval", getValue(client.getDetails(), "reminders_approval", false));
+        map.put("existing_contact_phone_number", getValue(client.getDetails(), "contact_phone_number", false));
 
         map.putAll(getPreloadVaccineData(client));
 
@@ -224,6 +227,8 @@ public class WomanSmartRegisterFragment extends SmartClientRegisterFragment {
                 map.put("existing_ethnicity", formatValue(e.findObs(null, true, "ethnicity", "163153AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA").getValue(), true));
                 map.put("existing_client_reg_date", formatValue(e.findObs(null, true, "client_reg_date", "1594AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA").getValue(), true));
                 map.put("existing_epi_card_number", formatValue(e.findObs(null, true, "epi_card_number").getValue(), true));
+                map.put("existing_reminders_approval", formatValue(e.findObs(null, true, "reminders_approval", "163089AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA").getValue(), false));
+                map.put("existing_contact_phone_number", formatValue(e.findObs(null, true, "contact_phone_number", "159635AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA").getValue(), false));
 
                 map.putAll(getPreloadVaccineData(e));
             }

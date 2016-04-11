@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?><form autocomplete="off" novalidate="novalidate" class="or clearfix" id="women_tt_enrollement_form">
+<?xml version="1.0" encoding="UTF-8"?><form autocomplete="off" novalidate="novalidate" class="or clearfix" id="woman_tt_enrollement_form">
     <!--This form was created by transforming a OpenRosa-flavored (X)Form using an XSLT sheet created by Enketo LLC.-->
     <section class="form-logo"> </section>
     <h3 id="form-title">خواتین انرولمنٹ فارم برائے ٹی ٹی ٹیکاجات - Woman TT Enrollment Form</h3>
     <select id="form-languages" data-default-lang="en">
-        <option value="ur">Urdu</option> <option value="en">English</option>  </select>        <label class="note non-select ">
+        <option value="ur">Urdu</option> <option value="en">English</option>  <option value="Roman Urdu">Roman Urdu</option> </select>        <label class="note non-select ">
     <span lang="ur" class="question-label " data-itext-id="/Woman_TT_Enrollment_Form/provider_location_note:label">شہر: <span class="or-output" data-value=" /Woman_TT_Enrollment_Form/provider_city ">            </span> ; ٹائون: <span class="or-output" data-value=" /Woman_TT_Enrollment_Form/provider_town ">            </span> ; یوسی: <span class="or-output" data-value=" /Woman_TT_Enrollment_Form/provider_uc ">            </span> ; سینٹرکا نام: <span class="or-output" data-value=" /Woman_TT_Enrollment_Form/provider_location_name ">            </span>
     </span>
     <span lang="en" class="question-label active" data-itext-id="/Woman_TT_Enrollment_Form/provider_location_note:label">City: <span class="or-output" data-value=" /Woman_TT_Enrollment_Form/provider_city ">            </span> ; Town: <span class="or-output" data-value=" /Woman_TT_Enrollment_Form/provider_town ">            </span> ; UC: <span class="or-output" data-value=" /Woman_TT_Enrollment_Form/provider_uc ">            </span> ; Center Name: <span class="or-output" data-value=" /Woman_TT_Enrollment_Form/provider_location_name ">            </span>
@@ -18,7 +18,7 @@
 
     <span lang="Roman Urdu" class="or-constraint-msg " data-itext-id="/Woman_TT_Enrollment_Form/client_reg_date:jr:constraintMsg">Program mai andraaj ki tareekh mustaqbil ki nahi hosakti</span>
     <span lang="ur" class="question-label " data-itext-id="/Woman_TT_Enrollment_Form/client_reg_date:label">پروگرام میں اندراج کی تاریخ</span>
-    <span lang="en" class="question-label active" data-itext-id="/Woman_TT_Enrollment_Form/client_reg_date:label">Client Registeration date</span>
+    <span lang="en" class="question-label active" data-itext-id="/Woman_TT_Enrollment_Form/client_reg_date:label">Client Registration date</span>
 
     <span lang="Roman Urdu" class="question-label " data-itext-id="/Woman_TT_Enrollment_Form/client_reg_date:label">Program mai andraj ki tareekh</span>
     <span class="required">*</span>
@@ -1146,6 +1146,41 @@
 </label>    <fieldset class="question ">
     <fieldset>
         <legend>
+            <span lang="ur" class="question-label " data-itext-id="/Woman_TT_Enrollment_Form/reminders_approval:label">کیا آپ اپنے بچے کی اگلی ویکسین کی تاریخ کے لیے SMS موصول کرنا چاہتے ہیں؟</span>
+            <span lang="en" class="question-label active" data-itext-id="/Woman_TT_Enrollment_Form/reminders_approval:label">Are you willing to receive SMS reminders for your next visit?</span>
+
+            <span lang="Roman Urdu" class="question-label " data-itext-id="/Woman_TT_Enrollment_Form/reminders_approval:label">Kya aap apnay bachay ki agli vaccine ki tareekh ke liye SMS mausool karna chahtay hain?</span>
+            <span class="required">*</span>                    </legend>
+        <div class="option-wrapper">
+            <label class="">
+                <input type="radio" name="/Woman_TT_Enrollment_Form/reminders_approval" data-name="/Woman_TT_Enrollment_Form/reminders_approval" value="yes" required="required" data-type-xml="select1"/>
+                <span lang="ur" class="option-label " data-itext-id="/Woman_TT_Enrollment_Form/reminders_approval/yes:label">ہاں</span>
+                <span lang="en" class="option-label active" data-itext-id="/Woman_TT_Enrollment_Form/reminders_approval/yes:label">Yes</span>
+
+                <span lang="Roman Urdu" class="option-label " data-itext-id="/Woman_TT_Enrollment_Form/reminders_approval/yes:label">Yes</span>
+            </label>
+            <label class="">
+                <input type="radio" name="/Woman_TT_Enrollment_Form/reminders_approval" data-name="/Woman_TT_Enrollment_Form/reminders_approval" value="no" required="required" data-type-xml="select1"/>
+                <span lang="ur" class="option-label " data-itext-id="/Woman_TT_Enrollment_Form/reminders_approval/no:label">نہیں</span>
+                <span lang="en" class="option-label active" data-itext-id="/Woman_TT_Enrollment_Form/reminders_approval/no:label">No</span>
+
+                <span lang="Roman Urdu" class="option-label " data-itext-id="/Woman_TT_Enrollment_Form/reminders_approval/no:label">No</span>
+            </label>
+        </div>
+    </fieldset>
+</fieldset>    <label class="question or-branch pre-init non-select ">
+    <span lang="ur" class="or-constraint-msg " data-itext-id="/Woman_TT_Enrollment_Form/contact_phone_number:jr:constraintMsg">فون نمبر گیارہ ہندسوں پر مشتمل اور مندرجہ ذیل شکل میں ہونا چاہئے: *********03</span>
+    <span lang="en" class="or-constraint-msg active" data-itext-id="/Woman_TT_Enrollment_Form/contact_phone_number:jr:constraintMsg">Phone number should be 11 digits in the following format: 03*********</span>
+
+    <span lang="Roman Urdu" class="or-constraint-msg " data-itext-id="/Woman_TT_Enrollment_Form/contact_phone_number:jr:constraintMsg">Phone number 11 hindason par mushtamil aur mundarja zail shakal main hona chahiey: 03*********</span>
+    <span lang="ur" class="question-label " data-itext-id="/Woman_TT_Enrollment_Form/contact_phone_number:label">موبائل نمبر:</span>
+    <span lang="en" class="question-label active" data-itext-id="/Woman_TT_Enrollment_Form/contact_phone_number:label">Mobile Number:</span>
+
+    <span lang="Roman Urdu" class="question-label " data-itext-id="/Woman_TT_Enrollment_Form/contact_phone_number:label">Mobile number:</span>
+    <input type="text" name="/Woman_TT_Enrollment_Form/contact_phone_number" data-constraint="regex(., '^03[0-9]{9}$')" data-relevant=" /Woman_TT_Enrollment_Form/reminders_approval ='yes'" data-type-xml="string"/>
+</label>    <fieldset class="question ">
+    <fieldset>
+        <legend>
             <span lang="ur" class="question-label " data-itext-id="/Woman_TT_Enrollment_Form/pregnant:label">کیا خا تون حاملہ ہیں؟</span>
             <span lang="en" class="question-label active" data-itext-id="/Woman_TT_Enrollment_Form/pregnant:label">Is female pregnant?</span>
 
@@ -1316,19 +1351,19 @@
     <span lang="en" class="question-label active" data-itext-id="/Woman_TT_Enrollment_Form/tt2_retro:label">TT2</span>
 
     <span lang="Roman Urdu" class="question-label " data-itext-id="/Woman_TT_Enrollment_Form/tt2_retro:label">TT2</span>
-    <input type="date" name="/Woman_TT_Enrollment_Form/tt2_retro" data-constraint="(.&lt;= /Woman_TT_Enrollment_Form/today  and .&gt;= /Woman_TT_Enrollment_Form/tt1_retro )" data-relevant="selected( /Woman_TT_Enrollment_Form/vaccines ,'TT2')" data-type-xml="date"/>
+    <input type="date" name="/Woman_TT_Enrollment_Form/tt2_retro" data-constraint="(.&lt;= /Woman_TT_Enrollment_Form/today  and .&gt;= /Woman_TT_Enrollment_Form/tt1_retro  and ((selected( /Woman_TT_Enrollment_Form/vaccines , 'TT1'))))" data-relevant="selected( /Woman_TT_Enrollment_Form/vaccines ,'TT2')" data-type-xml="date"/>
 </label>    <label class="question or-branch pre-init non-select ">
     <span lang="ur" class="question-label " data-itext-id="/Woman_TT_Enrollment_Form/tt3_retro:label">ٹی ٹی 3</span>
     <span lang="en" class="question-label active" data-itext-id="/Woman_TT_Enrollment_Form/tt3_retro:label">TT3</span>
 
     <span lang="Roman Urdu" class="question-label " data-itext-id="/Woman_TT_Enrollment_Form/tt3_retro:label">TT3</span>
-    <input type="date" name="/Woman_TT_Enrollment_Form/tt3_retro" data-constraint="(.&lt;= /Woman_TT_Enrollment_Form/today  and .&gt;= /Woman_TT_Enrollment_Form/tt2_retro  and if((selected( /Woman_TT_Enrollment_Form/pregnant , 'no'))))" data-relevant="selected( /Woman_TT_Enrollment_Form/vaccines ,'TT3')" data-type-xml="date"/>
+    <input type="date" name="/Woman_TT_Enrollment_Form/tt3_retro" data-constraint="(.&lt;= /Woman_TT_Enrollment_Form/today  and .&gt;= /Woman_TT_Enrollment_Form/tt2_retro  and ((selected( /Woman_TT_Enrollment_Form/vaccines , 'TT2'))))" data-relevant="selected( /Woman_TT_Enrollment_Form/vaccines ,'TT3')" data-type-xml="date"/>
 </label>    <label class="question or-branch pre-init non-select ">
     <span lang="ur" class="question-label " data-itext-id="/Woman_TT_Enrollment_Form/tt4_retro:label">ٹی ٹی 4</span>
     <span lang="en" class="question-label active" data-itext-id="/Woman_TT_Enrollment_Form/tt4_retro:label">TT4</span>
 
     <span lang="Roman Urdu" class="question-label " data-itext-id="/Woman_TT_Enrollment_Form/tt4_retro:label">TT4</span>
-    <input type="date" name="/Woman_TT_Enrollment_Form/tt4_retro" data-constraint="(.&lt;= /Woman_TT_Enrollment_Form/today  and .&gt;= /Woman_TT_Enrollment_Form/tt3_retro  and if((selected( /Woman_TT_Enrollment_Form/pregnant , 'no'))))" data-relevant="selected( /Woman_TT_Enrollment_Form/vaccines ,'TT4')" data-type-xml="date"/>
+    <input type="date" name="/Woman_TT_Enrollment_Form/tt4_retro" data-constraint="(.&lt;= /Woman_TT_Enrollment_Form/today  and .&gt;= /Woman_TT_Enrollment_Form/tt3_retro  and ((selected( /Woman_TT_Enrollment_Form/vaccines , 'TT3'))))" data-relevant="selected( /Woman_TT_Enrollment_Form/vaccines ,'TT4')" data-type-xml="date"/>
 </label>    <fieldset class="question ">
     <fieldset>
         <legend>
@@ -1509,7 +1544,7 @@
             <input type="hidden" name="/Woman_TT_Enrollment_Form/meta/instanceID" data-calculate="concat('uuid:', uuid())" data-type-xml="string"/>
         </label>
         <label class="calculation non-select ">
-            <input type="hidden" name="/Woman_TT_Enrollment_Form/formhub/uuid" data-calculate="'3903dc53b07d40cf8e6882e36bc401f7'" data-type-xml="string"/>
+            <input type="hidden" name="/Woman_TT_Enrollment_Form/formhub/uuid" data-calculate="'6504302afb3740528653e789ba8359cc'" data-type-xml="string"/>
         </label>
     </fieldset>
 </form>

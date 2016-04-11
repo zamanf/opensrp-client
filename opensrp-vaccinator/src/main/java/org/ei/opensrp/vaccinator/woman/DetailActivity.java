@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import static util.Utils.convertDateFormat;
 import static util.Utils.setProfiePic;
 
 public abstract class DetailActivity extends Activity {
@@ -71,6 +72,8 @@ public abstract class DetailActivity extends Activity {
         ((TextView)findViewById(R.id.detail_heading)).setText(pageTitle());
 
         ((TextView)findViewById(R.id.details_id_label)).setText(titleBarId());
+
+        ((TextView)findViewById(R.id.detail_today)).setText("Today: "+ convertDateFormat(new SimpleDateFormat("yyyy-MM-dd").format(new Date()), true));
 
         generateView();
 

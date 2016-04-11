@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-
 import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.commonregistry.CommonPersonObjectController;
@@ -20,8 +18,8 @@ import org.ei.opensrp.vaccinator.field.StockDailyServiceModeOption;
 import org.ei.opensrp.vaccinator.field.StockMonthlyServiceModeOption;
 import org.ei.opensrp.vaccinator.woman.DetailActivity;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
-import org.ei.opensrp.view.contract.SmartRegisterClients;
 import org.ei.opensrp.view.controller.FormController;
+import org.ei.opensrp.view.dialog.AllClientsFilter;
 import org.ei.opensrp.view.dialog.DialogOption;
 import org.ei.opensrp.view.dialog.FilterOption;
 import org.ei.opensrp.view.dialog.ServiceModeOption;
@@ -29,7 +27,6 @@ import org.ei.opensrp.view.dialog.SortOption;
 import org.joda.time.DateTime;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,7 +39,6 @@ public class FieldMonitorRegisterFragment extends SmartRegisterFragment {
 
     private FormController formController1;
     private final ClientActionHandler clientActionHandler = new ClientActionHandler();
-    private CommonPersonObjectController controller;
 
     public FieldMonitorRegisterFragment(FormController formController) {
         super(formController);
@@ -55,12 +51,12 @@ public class FieldMonitorRegisterFragment extends SmartRegisterFragment {
 
             @Override
             public ServiceModeOption serviceMode() {
-                return new StockMonthlyServiceModeOption(clientsProvider());
+                return new StockDailyServiceModeOption(clientsProvider(FieldMonitorSmartClientsProvider.ByMonthByDay.ByDay));
             }
 
             @Override
             public FilterOption villageFilter() {
-                return new ReportFilterOption("monthly");
+                return new AllClientsFilter();
             }
 
             @Override
@@ -85,8 +81,8 @@ public class FieldMonitorRegisterFragment extends SmartRegisterFragment {
             @Override
             public DialogOption[] serviceModeOptions() {
                 return new DialogOption[]{
-                        new StockMonthlyServiceModeOption(clientsProvider(FieldMonitorSmartClientsProvider.ByMonthByDay.ByMonth)),
-                        new StockDailyServiceModeOption(clientsProvider(FieldMonitorSmartClientsProvider.ByMonthByDay.ByDay))
+                        new StockDailyServiceModeOption(clientsProvider(FieldMonitorSmartClientsProvider.ByMonthByDay.ByDay)),
+                        new StockMonthlyServiceModeOption(clientsProvider(FieldMonitorSmartClientsProvider.ByMonthByDay.ByMonth))
                 };
             }
 
@@ -105,36 +101,40 @@ public class FieldMonitorRegisterFragment extends SmartRegisterFragment {
 
     @Override
     protected void onServiceModeSelection(ServiceModeOption serviceModeOption, View view) {
-        if(serviceModeOption.name().toLowerCase().contains("month")){
-            setCurrentSearchFilter(new ReportFilterOption("monthly"));
-        }
-        else{
-            setCurrentSearchFilter(new ReportFilterOption("daily"));
-        }
         super.onServiceModeSelection(serviceModeOption, view);
+        updateSearchView();
     }
 
     @Override
     protected SmartRegisterClientsProvider clientsProvider() {
-        FieldMonitorSmartClientsProvider clientProvider;
-        if (getCurrentServiceModeOption() == null || getCurrentServiceModeOption().name().toLowerCase().contains("month")) {
-            clientProvider = new FieldMonitorSmartClientsProvider(
-                    getActivity().getApplicationContext(), clientActionHandler, controller, context.alertService(), FieldMonitorSmartClientsProvider.ByMonthByDay.ByMonth, context, this);
+        if(getCurrentServiceModeOption() == null || getCurrentServiceModeOption().name().toLowerCase().contains("daily")) {
+            return clientsProvider(FieldMonitorSmartClientsProvider.ByMonthByDay.ByDay);
         }
         else {
-            clientProvider = new FieldMonitorSmartClientsProvider(
-                    getActivity().getApplicationContext(), clientActionHandler, controller, context.alertService(), FieldMonitorSmartClientsProvider.ByMonthByDay.ByDay, context, this);
+            return clientsProvider(FieldMonitorSmartClientsProvider.ByMonthByDay.ByMonth);
         }
-        return clientProvider;
     }
 
     private SmartRegisterClientsProvider clientsProvider(FieldMonitorSmartClientsProvider.ByMonthByDay type) {
         FieldMonitorSmartClientsProvider clientProvider;
+        CommonPersonObjectController controller = null;
         if (type.equals(FieldMonitorSmartClientsProvider.ByMonthByDay.ByMonth)) {
+            setCurrentSearchFilter(new ReportFilterOption("monthly"));
+            controller = new CommonPersonObjectController(context.allCommonsRepositoryobjects("stock"),
+                    context.allBeneficiaries(), context.listCache(),
+                    context.personObjectClientsCache(), "date", "stock", "report", "monthly",
+                    CommonPersonObjectController.ByColumnAndByDetails.byColumn, "date",
+                    CommonPersonObjectController.ByColumnAndByDetails.byColumn);
             clientProvider = new FieldMonitorSmartClientsProvider(
                     getActivity().getApplicationContext(), clientActionHandler, controller, context.alertService(), FieldMonitorSmartClientsProvider.ByMonthByDay.ByMonth, context, this);
         }
         else {
+            setCurrentSearchFilter(new ReportFilterOption("daily"));
+            controller = new CommonPersonObjectController(context.allCommonsRepositoryobjects("stock"),
+                    context.allBeneficiaries(), context.listCache(),
+                    context.personObjectClientsCache(), "date", "stock", "report", "daily",
+                    CommonPersonObjectController.ByColumnAndByDetails.byColumn, "date",
+                    CommonPersonObjectController.ByColumnAndByDetails.byColumn);
             clientProvider = new FieldMonitorSmartClientsProvider(
                     getActivity().getApplicationContext(), clientActionHandler, controller, context.alertService(), FieldMonitorSmartClientsProvider.ByMonthByDay.ByDay, context, this);
         }
@@ -143,27 +143,13 @@ public class FieldMonitorRegisterFragment extends SmartRegisterFragment {
 
     @Override
     protected void onInitialization() {
-        if (getCurrentServiceModeOption() == null || getCurrentServiceModeOption().name().toLowerCase().contains("month")) {
-            controller = new CommonPersonObjectController(context.allCommonsRepositoryobjects("stock"),
-                    context.allBeneficiaries(), context.listCache(),
-                    context.personObjectClientsCache(), "date", "stock", "report", "monthly",
-                    CommonPersonObjectController.ByColumnAndByDetails.byColumn, "date",
-                    CommonPersonObjectController.ByColumnAndByDetails.byColumn);
-        } else {
-            controller = new CommonPersonObjectController(context.allCommonsRepositoryobjects("stock"),
-                    context.allBeneficiaries(), context.listCache(),
-                    context.personObjectClientsCache(), "date", "stock", "report", "daily",
-                    CommonPersonObjectController.ByColumnAndByDetails.byColumn, "date",
-                    CommonPersonObjectController.ByColumnAndByDetails.byColumn);
-        }
-
         ((TextView)mView.findViewById(org.ei.opensrp.R.id.txt_title_label)).setText(getRegisterLabel());
 
         mView.findViewById(org.ei.opensrp.R.id.btn_report_month).setVisibility(View.GONE);
 
         mView.findViewById(org.ei.opensrp.R.id.filter_selection).setVisibility(View.GONE);
 
-        ((TextView)mView.findViewById(org.ei.opensrp.R.id.statusbar_today)).setText("Today : " + Utils.convertDateFormat(DateTime.now()));
+        ((TextView)mView.findViewById(org.ei.opensrp.R.id.statusbar_today)).setText("Today: " + Utils.convertDateFormat(DateTime.now()));
     }
 
     @Override
@@ -212,7 +198,7 @@ public class FieldMonitorRegisterFragment extends SmartRegisterFragment {
                         DetailActivity.startDetailActivity(getActivity(), (CommonPersonObjectClient) view.getTag(R.id.client_details_tag), FieldMonitorMonthlyDetailActivity.class);
                     }
                     else {
-                        Intent intent = new Intent(getActivity(), FieldMonitorDailyDetailActivity.class);
+                        DetailActivity.startDetailActivity(getActivity(), (CommonPersonObjectClient) view.getTag(R.id.client_details_tag), FieldMonitorDailyDetailActivity.class);
                     }
 
                     getActivity().finish();
@@ -221,13 +207,4 @@ public class FieldMonitorRegisterFragment extends SmartRegisterFragment {
             }
         }
     }
-
-
-    private SmartRegisterClients getFilteredClients(String filterString) {
-        setCurrentSearchFilter(new BasicSearchOption(filterString));
-        SmartRegisterClients filteredClients = getClientsAdapter().getListItemProvider()
-                .updateClients(getCurrentVillageFilter(), getCurrentServiceModeOption(),
-                        getCurrentSearchFilter(), getCurrentSortOption());
-        return filteredClients;
-    }//end of method
 }
