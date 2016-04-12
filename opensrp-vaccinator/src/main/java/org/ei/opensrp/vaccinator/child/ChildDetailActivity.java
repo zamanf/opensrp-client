@@ -11,12 +11,15 @@ import org.ei.opensrp.Context;
 import org.ei.opensrp.domain.Alert;
 import org.ei.opensrp.util.StringUtil;
 import org.ei.opensrp.vaccinator.R;
+import org.ei.opensrp.vaccinator.analytics.CountlyAnalytics;
+import org.ei.opensrp.vaccinator.analytics.Events;
 import org.ei.opensrp.vaccinator.woman.DetailActivity;
 import org.joda.time.DateTime;
 import org.joda.time.Months;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import static util.Utils.convertDateFormat;
@@ -164,5 +167,18 @@ public class ChildDetailActivity extends DetailActivity {
 
             table.addView(tr);
         }
+    }
+
+    @Override
+    protected void onStart(){
+        super.onStart();
+        HashMap<String,String> segments = new HashMap<String, String>();
+        CountlyAnalytics.startAnalytics(this, Events.CHILD_DETAIL_ACTIVITY, segments);
+    }
+
+    @Override
+    protected void onStop(){
+        super.onStop();
+        CountlyAnalytics.stopAnalytics();
     }
 }

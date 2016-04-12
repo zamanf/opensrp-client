@@ -9,11 +9,14 @@ import android.widget.TextView;
 import org.ei.opensrp.Context;
 import org.ei.opensrp.domain.Alert;
 import org.ei.opensrp.vaccinator.R;
+import org.ei.opensrp.vaccinator.analytics.CountlyAnalytics;
+import org.ei.opensrp.vaccinator.analytics.Events;
 import org.joda.time.DateTime;
 import org.joda.time.Years;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import static util.Utils.convertDateFormat;
@@ -150,5 +153,18 @@ public class WomanDetailActivity extends DetailActivity {
         pt.addView(tr);
         tr = getDataRow(this, "GA (weeks)", getValue(client, "final_ga", "N/A", false), null);
         pt.addView(tr);
+    }
+
+    @Override
+    protected void onStart(){
+        super.onStart();
+        HashMap<String,String> segments = new HashMap<String, String>();
+        CountlyAnalytics.startAnalytics(this, Events.WOMAN_DETAIL_ACTIVITY, segments);
+    }
+
+    @Override
+    protected void onStop(){
+        super.onStop();
+        CountlyAnalytics.stopAnalytics();
     }
 }

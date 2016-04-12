@@ -240,17 +240,4 @@ public class WomanSmartRegisterFragment extends SmartClientRegisterFragment {
         }
         return map;
     }
-    @Override
-    protected void onStart(){
-        super.onStart();
-        HashMap<String,String> segments = new HashMap<String, String>();
-        CountlyAnalytics.startAnalytics(this, Events.WOMAN_REGISTER, segments);
-    }
-
-    @Override
-    protected void onStop(){
-        super.onStop();
-        CountlyAnalytics.stopAnalytics();
-    }
-
 }
