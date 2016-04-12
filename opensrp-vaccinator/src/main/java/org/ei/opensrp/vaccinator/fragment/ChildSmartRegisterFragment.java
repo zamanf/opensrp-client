@@ -8,6 +8,8 @@ import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.commonregistry.CommonPersonObjectController;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.vaccinator.R;
+import org.ei.opensrp.vaccinator.analytics.CountlyAnalytics;
+import org.ei.opensrp.vaccinator.analytics.Events;
 import org.ei.opensrp.vaccinator.child.ChildDetailActivity;
 import org.ei.opensrp.vaccinator.child.ChildFollowupHandler;
 import org.ei.opensrp.vaccinator.child.ChildService;
@@ -253,5 +255,18 @@ public class ChildSmartRegisterFragment extends SmartClientRegisterFragment {
             e.printStackTrace();
         }
         return map;
+    }
+
+    @Override
+    protected void onStart(){
+        super.onStart();
+        HashMap<String,String> segments = new HashMap<String, String>();
+        CountlyAnalytics.startAnalytics(this, Events.CHILD_REGISTER, segments);
+    }
+
+    @Override
+    protected void onStop(){
+        super.onStop();
+        CountlyAnalytics.stopAnalytics();
     }
 }

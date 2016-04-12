@@ -8,6 +8,8 @@ import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.commonregistry.CommonPersonObjectController;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.vaccinator.R;
+import org.ei.opensrp.vaccinator.analytics.CountlyAnalytics;
+import org.ei.opensrp.vaccinator.analytics.Events;
 import org.ei.opensrp.vaccinator.db.Client;
 import org.ei.opensrp.vaccinator.db.Event;
 import org.ei.opensrp.vaccinator.woman.DetailActivity;
@@ -238,4 +240,17 @@ public class WomanSmartRegisterFragment extends SmartClientRegisterFragment {
         }
         return map;
     }
+    @Override
+    protected void onStart(){
+        super.onStart();
+        HashMap<String,String> segments = new HashMap<String, String>();
+        CountlyAnalytics.startAnalytics(this, Events.WOMAN_REGISTER, segments);
+    }
+
+    @Override
+    protected void onStop(){
+        super.onStop();
+        CountlyAnalytics.stopAnalytics();
+    }
+
 }
