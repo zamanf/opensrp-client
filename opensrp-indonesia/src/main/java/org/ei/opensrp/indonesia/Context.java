@@ -123,7 +123,10 @@ public class Context extends org.ei.opensrp.Context{
             setRepository(new Repository(applicationContext(), session(), super.settingsRepository(),
                     super.alertRepository(), super.timelineEventRepository(), super.formDataRepository(),
                     super.serviceProvidedRepository(), super.formsVersionRepository(), kartuIbuRepository(), ibuRepository(),
-                    anakRepository(), bidanRepository(), imageRepository(), uniqueIdRepository()));
+//<<<<<<< HEAD
+//                    anakRepository(), bidanRepository(), imageRepository(), uniqueIdRepository()));
+//=======
+                    anakRepository(), bidanRepository(),super.imageRepository(), uniqueIdRepository()));
         }
         return getRepository();
     }

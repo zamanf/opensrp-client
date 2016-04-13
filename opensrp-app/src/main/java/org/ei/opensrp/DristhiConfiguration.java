@@ -20,7 +20,7 @@ public class DristhiConfiguration {
     protected static final String SYNC_DOWNLOAD_BATCH_SIZE = "SYNC_DOWNLOAD_BATCH_SIZE";
     protected static final String APP_NAME = "APP_NAME";
     protected static final String SYNC_FORM = "SYNC_FORM";
-    public static AllSharedPreferences preferences;
+    protected static AllSharedPreferences preferences;
     protected Properties properties = new Properties();
     protected String dummyData = null;
 

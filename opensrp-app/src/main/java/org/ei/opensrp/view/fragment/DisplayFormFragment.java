@@ -360,4 +360,6 @@ public class DisplayFormFragment extends Fragment {
         progressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         progressDialog.setContentView(R.layout.progress_dialog);
     }
+
 }
+

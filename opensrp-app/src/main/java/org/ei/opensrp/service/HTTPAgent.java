@@ -174,7 +174,6 @@ public class HTTPAgent {
             throw new AssertionError(e);
         }
     }
-
     public Response<String> fetchWithCredentials(String uri, String username, String password) {
         setCredentials(username, password);
         try {

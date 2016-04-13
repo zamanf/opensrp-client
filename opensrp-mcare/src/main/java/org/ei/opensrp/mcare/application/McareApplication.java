@@ -11,11 +11,13 @@ import org.ei.opensrp.mcare.LoginActivity;
 import org.ei.opensrp.sync.DrishtiSyncScheduler;
 import org.ei.opensrp.view.activity.DrishtiApplication;
 import org.ei.opensrp.view.receiver.SyncBroadcastReceiver;
+import static org.ei.opensrp.util.Log.logInfo;
 
 import java.util.Locale;
 
-import static org.ei.opensrp.util.Log.logInfo;
-
+/**
+ * Created by koros on 1/22/16.
+ */
 @ReportsCrashes(
         formKey = "",
         formUri = "https://drishtiapp.cloudant.com/acra-drishtiapp/_design/acra-storage/_update/report",
@@ -25,24 +27,28 @@ import static org.ei.opensrp.util.Log.logInfo;
         formUriBasicAuthPassword = "ecUMrMeTKf1X1ODxHqo3b43W",
         mode = ReportingInteractionMode.SILENT
 )
-
-/**
- * Created by koros on 1/22/16.
- */
 public class McareApplication extends DrishtiApplication {
-
-    private static final String TAG = "McareApplication";
 
     @Override
     public void onCreate() {
+        DrishtiSyncScheduler.setReceiverClass(SyncBroadcastReceiver.class);
         super.onCreate();
         ACRA.init(this);
 
         DrishtiSyncScheduler.setReceiverClass(SyncBroadcastReceiver.class);
+
         context = Context.getInstance();
         context.updateApplicationContext(getApplicationContext());
         applyUserLanguagePreference();
         cleanUpSyncState();
+    }
+
+    @Override
+    public void logoutCurrentUser(){
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        getApplicationContext().startActivity(intent);
+        context.userService().logoutSession();
     }
 
     private void cleanUpSyncState() {
@@ -52,6 +58,7 @@ public class McareApplication extends DrishtiApplication {
 
     @Override
     public void onTerminate() {
+        super.onTerminate();
         logInfo("Application is terminating. Stopping Dristhi Sync scheduler and resetting isSyncInProgress setting.");
         cleanUpSyncState();
     }
@@ -73,11 +80,4 @@ public class McareApplication extends DrishtiApplication {
                 getBaseContext().getResources().getDisplayMetrics());
     }
 
-    @Override
-    public void logoutCurrentUser(){
-        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        getApplicationContext().startActivity(intent);
-        context.userService().logoutSession();
-    }
 }
