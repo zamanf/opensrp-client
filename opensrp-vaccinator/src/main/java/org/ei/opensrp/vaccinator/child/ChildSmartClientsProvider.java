@@ -146,7 +146,7 @@ public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
             }
         }
 
-        setProfiePic((ImageView) convertView.findViewById(R.id.child_profilepic), client.entityId(), false);
+        setProfiePic(convertView.getContext(), (ImageView) convertView.findViewById(R.id.child_profilepic), client.entityId(), false);
 
         convertView.findViewById(R.id.child_profile_info_layout).setTag(client);
         convertView.findViewById(R.id.child_profile_info_layout).setOnClickListener(onClickListener);

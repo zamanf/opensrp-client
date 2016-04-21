@@ -123,7 +123,7 @@ public class WomanSmartClientsProvider implements SmartRegisterClientsProvider {
                 }
             }
         }
-        setProfiePic((ImageView) convertView.findViewById(R.id.woman_profilepic), client.entityId(), false);
+        setProfiePic(convertView.getContext(), (ImageView) convertView.findViewById(R.id.woman_profilepic), client.entityId(), false);
 
         convertView.findViewById(R.id.woman_profile_info_layout).setTag(client);
         convertView.findViewById(R.id.woman_profile_info_layout).setOnClickListener(onClickListener);

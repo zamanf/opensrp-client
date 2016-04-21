@@ -29,6 +29,7 @@ import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -43,6 +44,7 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
+import com.squareup.picasso.Picasso;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ei.drishti.dto.AlertStatus;
@@ -64,6 +66,7 @@ import org.opensrp.api.util.EntityUtils;
 import org.opensrp.api.util.LocationTree;
 import org.opensrp.api.util.TreeNode;
 
+import java.io.File;
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -504,10 +507,12 @@ public class Utils {
         }
     }
 
-    public static void setProfiePic(ImageView mImageView, String entityId, boolean highQuality){
+    public static void setProfiePic(Context context, ImageView mImageView, String entityId, boolean highQuality){
         ProfileImage photo = ((ImageRepository) org.ei.opensrp.Context.getInstance().imageRepository()).findByEntityId(entityId, "dp");
         if(photo != null){
-            mImageView.setImageBitmap(profiePic(photo.getFilepath(), highQuality));
+            mImageView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+            Picasso.with(context).load(new File(photo.getFilepath())).resize(mImageView.getMeasuredWidth(), mImageView.getMeasuredHeight()).into(mImageView);
+            //mImageView.setImageBitmap(profiePic(photo.getFilepath(), highQuality));
         }
     }
 

@@ -13,6 +13,7 @@ dependencies {
     compile project(':opensrp-app')
     compile 'com.android.support:design:22.2.1'
     compile 'com.android.support:support-v4:22.1.1'
+    compile 'com.squareup.picasso:picasso:2.5.2'
 }
 android {
     compileSdkVersion 22
