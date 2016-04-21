@@ -123,7 +123,7 @@ public class WomanSmartClientsProvider implements SmartRegisterClientsProvider {
                 }
             }
         }
-        setProfiePic((ImageView) convertView.findViewById(R.id.woman_profilepic), client.entityId());
+        setProfiePic(convertView.getContext(), (ImageView) convertView.findViewById(R.id.woman_profilepic), client.entityId(), false);
 
         convertView.findViewById(R.id.woman_profile_info_layout).setTag(client);
         convertView.findViewById(R.id.woman_profile_info_layout).setOnClickListener(onClickListener);
@@ -134,7 +134,7 @@ public class WomanSmartClientsProvider implements SmartRegisterClientsProvider {
 
     private void deactivateNextVaccine(String vaccineViewText, String vaccineDateText, int color, View convertView){
         fillValue((TextView) convertView.findViewById(R.id.woman_next_visit_vaccine), vaccineViewText);
-        ((TextView) convertView.findViewById(R.id.woman_next_visit_date)).setText(vaccineDateText);
+        ((TextView) convertView.findViewById(R.id.woman_next_visit_date)).setText(convertDateFormat(vaccineDateText, true));
         convertView.findViewById(R.id.woman_next_visit_holder).setBackgroundColor(context.getResources().getColor(color));
     }
 

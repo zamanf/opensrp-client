@@ -25,9 +25,16 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Build.VERSION_CODES;
+import android.text.Html;
+import android.text.Spanned;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
@@ -37,14 +44,18 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
+import com.squareup.picasso.Picasso;
 
 import org.apache.commons.lang3.StringUtils;
+import org.ei.drishti.dto.AlertStatus;
 import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
+import org.ei.opensrp.domain.Alert;
 import org.ei.opensrp.domain.ProfileImage;
 import org.ei.opensrp.repository.ImageRepository;
 import org.ei.opensrp.util.IntegerUtil;
 import org.ei.opensrp.util.StringUtil;
+import org.ei.opensrp.vaccinator.R;
 import org.ei.opensrp.vaccinator.fragment.SmartRegisterFragment;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.joda.time.DateTime;
@@ -55,6 +66,7 @@ import org.opensrp.api.util.EntityUtils;
 import org.opensrp.api.util.LocationTree;
 import org.opensrp.api.util.TreeNode;
 
+import java.io.File;
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -123,6 +135,21 @@ public class Utils {
             val = defaultV;
         }
         v.setText(val);
+    }
+
+    public static String getColorValue(Context cxt, AlertStatus alertStatus){
+        if(alertStatus.equals(AlertStatus.upcoming)){
+            return "#"+Integer.toHexString(cxt.getResources().getColor(R.color.alert_upcoming)).substring(2);
+        }
+        if(alertStatus.equals(AlertStatus.normal)){
+            return "#"+Integer.toHexString(cxt.getResources().getColor(R.color.alert_normal)).substring(2);
+        }
+        if(alertStatus.equals(AlertStatus.urgent)){
+            return "#"+Integer.toHexString(cxt.getResources().getColor(R.color.alert_urgent)).substring(2);
+        }
+        else {
+            return "#"+Integer.toHexString(cxt.getResources().getColor(R.color.alert_na)).substring(2);
+        }
     }
 
     public static HashMap<String, String> providerDetails(){
@@ -359,6 +386,10 @@ public class Utils {
     }
 
     public static TableRow addToRow(Context context, String value, TableRow row, boolean compact){
+        return addToRow(context, Html.fromHtml(value), row, compact);
+    }
+
+    public static TableRow addToRow(Context context, Spanned value, TableRow row, boolean compact){
         TextView v = new TextView(context);
         v.setText(value);
         if(compact){
@@ -381,6 +412,70 @@ public class Utils {
         return row;
     }
 
+    public static void addStatusTag(Context context, TableLayout table, String tag, boolean hrLine){
+        TableRow tr = new TableRow(context);
+        if(hrLine) {
+            tr.setBackgroundColor(Color.LTGRAY);
+            tr.setPadding(1, 1, 1, 1);
+            table.addView(tr);
+        }
+        tr = addToRow(context, Html.fromHtml("<b>"+tag+"</b>"), new TableRow(context), true);
+        tr.setPadding(15, 5, 0, 0);
+        table.addView(tr);
+    }
+
+    public static void addVaccineDetail(Context context, TableLayout table, String vaccine, String vaccineDate, Alert alert, boolean compact){
+        TableRow tr = new TableRow(context);
+        TableRow.LayoutParams trlp = new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        tr.setLayoutParams(trlp);
+        if(compact){
+            tr.setPadding(10, 1, 10, 1);
+        }
+        else{
+            tr.setPadding(10, 5, 10, 5);
+        }
+
+        TextView label = new TextView(context);
+        label.setText(vaccine);
+        label.setPadding(20, 5, 70, 5);
+        label.setTextColor(Color.BLACK);
+        label.setBackgroundColor(Color.WHITE);
+        tr.addView(label);
+
+        String color = "";
+        if(StringUtils.isBlank(vaccineDate) && alert != null) {
+            color = Utils.getColorValue(context, alert.status());
+            vaccineDate = "<due : "+convertDateFormat(alert.startDate(), true)+">";
+        }
+        else if(StringUtils.isNotBlank(vaccineDate)){
+            color = "#31B404";
+        }
+
+        LinearLayout l = new LinearLayout(context);
+        l.setOrientation(LinearLayout.HORIZONTAL);
+        l.setVerticalGravity(Gravity.CENTER_VERTICAL);
+        l.setGravity(Gravity.CENTER_VERTICAL);
+
+        Button s = new Button(context);
+        TableRow.LayoutParams blp = new TableRow.LayoutParams(15, 15);
+        blp.setMargins(30, 6, 5, 5);
+        s.setLayoutParams(blp);
+        s.setGravity(Gravity.CENTER_VERTICAL);
+        s.setBackgroundColor(StringUtils.isBlank(color)?Color.WHITE:Color.parseColor(color));
+        l.addView(s);
+
+        TextView v = new TextView(context);
+        v.setText(vaccineDate);
+        v.setPadding(10, 4, 20, 5);
+        v.setTextColor(Color.BLACK);
+        v.setBackgroundColor(Color.WHITE);
+        l.addView(v);
+
+        tr.addView(l);
+
+        table.addView(tr);
+    }
+    
     public static String getPreference(Context context, String key, String defaultVal){
         return context.getSharedPreferences("preferences", Context.MODE_PRIVATE).getString(key, defaultVal);
     }
@@ -412,14 +507,20 @@ public class Utils {
         }
     }
 
-    public static void setProfiePic(ImageView mImageView, String entityId){
+    public static void setProfiePic(Context context, ImageView mImageView, String entityId, boolean highQuality){
         ProfileImage photo = ((ImageRepository) org.ei.opensrp.Context.getInstance().imageRepository()).findByEntityId(entityId, "dp");
         if(photo != null){
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-            Bitmap bitmap = BitmapFactory.decodeFile(photo.getFilepath(), options);
-            mImageView.setImageBitmap(bitmap);
+            mImageView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+            Picasso.with(context).load(new File(photo.getFilepath())).resize(mImageView.getMeasuredWidth(), mImageView.getMeasuredHeight()).into(mImageView);
+            //mImageView.setImageBitmap(profiePic(photo.getFilepath(), highQuality));
         }
+    }
+
+    public static Bitmap profiePic(String photoPath, boolean highQuality){
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inPreferredConfig = highQuality?Bitmap.Config.ARGB_8888:Bitmap.Config.ARGB_4444;
+        Bitmap bitmap = BitmapFactory.decodeFile(photoPath, options);
+        return bitmap;
     }
 
     public static void setThumbnail(ImageView mImageView, String entityId){
