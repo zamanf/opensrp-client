@@ -7,6 +7,7 @@
     <string name="login_text">Log In</string>
     <string name="image_description">logo</string>
     <string name="spacer">spacer</string>
+    <string name="error_title">Error</string>
     <string name="loggin_in_dialog_title">Logging in…</string>
     <string name="loggin_in_dialog_message">Please wait</string>
     <string name="login_failed_dialog_title">Log in failed</string>

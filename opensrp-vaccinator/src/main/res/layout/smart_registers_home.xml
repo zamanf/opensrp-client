@@ -171,10 +171,11 @@
                 android:layout_weight="1"
                 android:drawableLeft="@drawable/ic_reporting"
                 android:drawablePadding="5dp"
-                android:paddingLeft="100dp"
-                android:paddingRight="185dp"
+                android:paddingLeft="150dp"
+                android:paddingRight="150dp"
                 android:text="@string/str_reporting"
-                style="@style/CustomFontTextViewStyle.Home.Buttons"/>
+                style="@style/CustomFontTextViewStyle.Home.Buttons"
+            android:gravity="center_vertical|center_horizontal" />
 
         <org.ei.opensrp.view.customControls.CustomFontTextView
                 android:id="@+id/btn_provider_profile"
@@ -182,11 +183,12 @@
                 android:layout_height="50dp"
                 android:layout_weight="1"
                 android:drawableLeft="@drawable/profile_provider"
-                android:drawablePadding="5dp"
-                android:paddingLeft="120dp"
-                android:paddingRight="160dp"
+            android:paddingLeft="150dp"
+                android:paddingRight="150dp"
                 android:text="@string/str_provider_profile"
-                style="@style/CustomFontTextViewStyle.Home.Buttons"/>
+                style="@style/CustomFontTextViewStyle.Home.Buttons"
+            android:gravity="center_vertical|center_horizontal"
+            android:drawablePadding="5dp" />
 
     </LinearLayout>
 

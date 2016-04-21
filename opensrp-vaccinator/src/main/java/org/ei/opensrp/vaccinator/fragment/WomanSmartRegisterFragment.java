@@ -165,8 +165,7 @@ public class WomanSmartRegisterFragment extends SmartClientRegisterFragment {
 
     private Map<String, String> followupOverrides(CommonPersonObjectClient client){
         Map<String, String> map = new HashMap<>();
-        map.put("existing_house_number", getValue(client.getDetails(), "house_number", true));
-        map.put("existing_street", getValue(client.getDetails(), "street", true));
+        map.put("existing_address1", getValue(client.getDetails(), "address1", true));
         map.put("existing_union_council", getValue(client.getDetails(), "union_council", true));
         map.put("existing_town", getValue(client.getDetails(), "town", true));
         map.put("existing_city_village", getValue(client.getDetails(), "city_village", true));
@@ -199,8 +198,7 @@ public class WomanSmartRegisterFragment extends SmartClientRegisterFragment {
 
     private Map<String, String> followupOverrides(Client client){
         Map<String, String> map = new HashMap<>();
-        map.put("existing_house_number", client.getAddress("usual_residence").getAddressField("house_number"));
-        map.put("existing_street", client.getAddress("usual_residence").getAddressField("street"));
+        map.put("existing_address1", client.getAddress("usual_residence").getAddressField("address1"));
         map.put("existing_union_council", client.getAddress("usual_residence").getSubTown());
         map.put("existing_town", client.getAddress("usual_residence").getTown());
         map.put("existing_city_village", client.getAddress("usual_residence").getCityVillage());

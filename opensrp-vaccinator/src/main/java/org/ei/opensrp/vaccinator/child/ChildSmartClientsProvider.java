@@ -111,7 +111,7 @@ public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
         if(!hasAnyEmptyValue(pc.getColumnmaps(), vaccineList)){
             deactivateNextVaccine("Fully Immunized", "", R.color.alert_na, convertView);
         }
-        else if(agey > 5 && hasAnyEmptyValue(pc.getColumnmaps(), vaccineList)){
+        else if(agey >= 5 && hasAnyEmptyValue(pc.getColumnmaps(), vaccineList)){
             deactivateNextVaccine("Partially Immunized", "", R.color.alert_na, convertView);
         }
         else if (alertlist_for_client.size() == 0) {
@@ -146,7 +146,7 @@ public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
             }
         }
 
-        setProfiePic((ImageView) convertView.findViewById(R.id.child_profilepic), client.entityId());
+        setProfiePic((ImageView) convertView.findViewById(R.id.child_profilepic), client.entityId(), false);
 
         convertView.findViewById(R.id.child_profile_info_layout).setTag(client);
         convertView.findViewById(R.id.child_profile_info_layout).setOnClickListener(onClickListener);
@@ -157,7 +157,7 @@ public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
 
     private void deactivateNextVaccine(String vaccineViewText, String vaccineDateText, int color, View convertView){
         fillValue((TextView) convertView.findViewById(R.id.child_next_visit_vaccine), vaccineViewText);
-        ((TextView) convertView.findViewById(R.id.child_next_visit_date)).setText(vaccineDateText);
+        ((TextView) convertView.findViewById(R.id.child_next_visit_date)).setText(convertDateFormat(vaccineDateText, true));
         convertView.findViewById(R.id.child_next_visit_holder).setBackgroundColor(context.getResources().getColor(color));
     }
 

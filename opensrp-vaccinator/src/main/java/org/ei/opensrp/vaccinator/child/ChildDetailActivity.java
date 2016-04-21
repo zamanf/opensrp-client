@@ -1,11 +1,8 @@
 package org.ei.opensrp.vaccinator.child;
 
-import android.graphics.Color;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
-import android.widget.TextView;
 
 import org.ei.opensrp.Context;
 import org.ei.opensrp.domain.Alert;
@@ -14,19 +11,18 @@ import org.ei.opensrp.vaccinator.R;
 import org.ei.opensrp.vaccinator.woman.DetailActivity;
 import org.joda.time.DateTime;
 import org.joda.time.Months;
+import org.joda.time.Years;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
+import static util.Utils.addStatusTag;
+import static util.Utils.addVaccineDetail;
 import static util.Utils.convertDateFormat;
 import static util.Utils.getDataRow;
 import static util.Utils.getValue;
+import static util.Utils.hasAnyEmptyValue;
 import static util.Utils.nonEmptyValue;
 
-/**
- * Created by muhammad.ahmed@ihsinformatics.com on 20-Oct-15.
- */
 public class ChildDetailActivity extends DetailActivity {
     @Override
     protected int layoutResId() {
@@ -112,7 +108,7 @@ public class ChildDetailActivity extends DetailActivity {
 
         tr = getDataRow(this, "Contact Number", getValue(client, "contact_phone_number", false), null);
         dt2.addView(tr);
-        tr = getDataRow(this, "Address", getValue(client, "house_number", true)+ " "+ getValue(client, "street", true)
+        tr = getDataRow(this, "Address", getValue(client, "address1", true)
                 +", \nUC: "+ getValue(client, "union_council", true)
                 +", \nTown: "+ getValue(client, "town", true)
                 +", \nCity: "+ getValue(client, "city_village", true)
@@ -121,48 +117,28 @@ public class ChildDetailActivity extends DetailActivity {
 
         String[] vl = new String[]{"bcg", "opv0", "penta1", "opv1","pcv1", "penta2", "opv2", "pcv2",
                 "penta3", "opv3", "pcv3", "ipv", "measles1", "measles2"};
-        //VACCINES INFORMATION
 
+        //VACCINES INFORMATION
+        TableLayout table = null;
         for (int i=0; i < vl.length; i++) {
-            TableLayout table = null;
             if (i <= 7) {
                 table = (TableLayout) findViewById(R.id.child_vaccine_table1);
             } else {
                 table = (TableLayout) findViewById(R.id.child_vaccine_table2);
             }
 
-            tr = new TableRow(this);
-            TableRow.LayoutParams trlp = new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            tr.setLayoutParams(trlp);
-            tr.setPadding(10, 1, 10, 1);
-            tr.setBackgroundColor(Color.WHITE);
-
-            TextView label = new TextView(this);
-            label.setText(vl[i].length() <= 4 ? vl[i].toUpperCase() : StringUtil.humanize(vl[i]));
-            label.setPadding(20, 4, 70, 5);
-            label.setTextColor(Color.BLACK);
-            label.setBackgroundColor(Color.WHITE);
-            tr.addView(label);
-
             String val = convertDateFormat(nonEmptyValue(client.getColumnmaps(), true, false, vl[i], vl[i] + "_retro"), true);
-            if (val == "") {
-                try {
-                    List<Alert> al = Context.getInstance().alertService().findByEntityIdAndAlertNames(client.entityId(), vl[i], vl[i].toUpperCase(), StringUtil.humanize(vl[i]));
-                    if (al.size() > 0) {
-                        val = "<due : " + convertDateFormat(al.get(0).startDate(), true) + ">";
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            TextView v = new TextView(this);
-            v.setText(val);
-            v.setPadding(70, 4, 20, 5);
-            v.setTextColor(Color.BLACK);
-            v.setBackgroundColor(Color.WHITE);
-            tr.addView(v);
+            List<Alert> al = Context.getInstance().alertService().findByEntityIdAndAlertNames(client.entityId(), vl[i], vl[i].toUpperCase(), StringUtil.humanize(vl[i]));
+            addVaccineDetail(this, table, vl[i].length() <= 4 ? vl[i].toUpperCase() : StringUtil.humanize(vl[i]), val, al.size()>0?al.get(0):null, true);
+        }
 
-            table.addView(tr);
+        int agey = Years.yearsBetween(new DateTime(getValue(client.getColumnmaps(), "dob", false)), DateTime.now()).getYears();
+
+        if(!hasAnyEmptyValue(client.getColumnmaps(), vl)){
+            addStatusTag(this, table, "Fully Immunized", true);
+        }
+        else if(agey >= 5 && hasAnyEmptyValue(client.getColumnmaps(), vl)){
+            addStatusTag(this, table, "Partially Immunized", true);
         }
     }
 }

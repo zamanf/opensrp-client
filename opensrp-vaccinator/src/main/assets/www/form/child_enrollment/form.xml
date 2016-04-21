@@ -17,10 +17,10 @@
     <span lang="en" class="or-constraint-msg active" data-itext-id="/Child_Vaccination_Enrollment/client_reg_date:jr:constraintMsg">Child registration date cannot be in the future</span>
 
     <span lang="Roman Urdu" class="or-constraint-msg " data-itext-id="/Child_Vaccination_Enrollment/client_reg_date:jr:constraintMsg">Bachay ki program mai andraaj ki tareekh mustaqbil ki nahi hosakti</span>
-    <span lang="ur" class="question-label " data-itext-id="/Child_Vaccination_Enrollment/client_reg_date:label">بچے کی پروگرام میں اندراج کی تاریخ</span>
-    <span lang="en" class="question-label active" data-itext-id="/Child_Vaccination_Enrollment/client_reg_date:label">Child Registration date</span>
+    <span lang="ur" class="question-label " data-itext-id="/Child_Vaccination_Enrollment/client_reg_date:label">پروگرام میں اندراج کی تاریخ</span>
+    <span lang="en" class="question-label active" data-itext-id="/Child_Vaccination_Enrollment/client_reg_date:label">Program Registration date</span>
 
-    <span lang="Roman Urdu" class="question-label " data-itext-id="/Child_Vaccination_Enrollment/client_reg_date:label">Bachay ki Program mai andraj ki tareekh</span>
+    <span lang="Roman Urdu" class="question-label " data-itext-id="/Child_Vaccination_Enrollment/client_reg_date:label">Program mai andraj ki tareekh</span>
     <span class="required">*</span>
     <span lang="ur" class="or-hint " data-itext-id="/Child_Vaccination_Enrollment/client_reg_date:hint">بچے کو ویکسین لگنے کی تاریخ</span>
     <span lang="en" class="or-hint active" data-itext-id="/Child_Vaccination_Enrollment/client_reg_date:hint">Date on which child was vaccinated</span>
@@ -28,11 +28,12 @@
     <span lang="Roman Urdu" class="or-hint " data-itext-id="/Child_Vaccination_Enrollment/client_reg_date:hint">Bachay ko vaccine lagnay ki tareekh</span>
     <input type="date" name="/Child_Vaccination_Enrollment/client_reg_date" required="required" data-constraint=".&lt;= /Child_Vaccination_Enrollment/today " data-type-xml="date"/>
 </label>    <label class="note non-select ">
-    <span lang="ur" class="question-label " data-itext-id="/Child_Vaccination_Enrollment/program_client_id:label">کلائنٹ کی پروگرام آئی ڈی {existing_program_client_id}$</span>
-    <span lang="en" class="question-label active" data-itext-id="/Child_Vaccination_Enrollment/program_client_id:label">Program Client ID <span class="or-output" data-value=" /Child_Vaccination_Enrollment/existing_program_client_id ">            </span>
+    <span lang="ur" class="question-label " data-itext-id="/Child_Vaccination_Enrollment/program_client_id:label">پروگرام آئی ڈی: <span class="or-output" data-value=" /Child_Vaccination_Enrollment/existing_program_client_id ">            </span>
+    </span>
+    <span lang="en" class="question-label active" data-itext-id="/Child_Vaccination_Enrollment/program_client_id:label">Program ID: <span class="or-output" data-value=" /Child_Vaccination_Enrollment/existing_program_client_id ">            </span>
     </span>
 
-    <span lang="Roman Urdu" class="question-label " data-itext-id="/Child_Vaccination_Enrollment/program_client_id:label">Client ki program ID <span class="or-output" data-value=" /Child_Vaccination_Enrollment/existing_program_client_id ">            </span>
+    <span lang="Roman Urdu" class="question-label " data-itext-id="/Child_Vaccination_Enrollment/program_client_id:label">Program ID: <span class="or-output" data-value=" /Child_Vaccination_Enrollment/existing_program_client_id ">            </span>
     </span>
     <input type="text" name="/Child_Vaccination_Enrollment/program_client_id" required="required" data-type-xml="string" readonly="readonly"/>
 </label>    <label class="question non-select ">
@@ -40,17 +41,17 @@
     <span lang="en" class="or-constraint-msg active" data-itext-id="/Child_Vaccination_Enrollment/epi_card_number:jr:constraintMsg">Number should be 8 digits</span>
 
     <span lang="Roman Urdu" class="or-constraint-msg " data-itext-id="/Child_Vaccination_Enrollment/epi_card_number:jr:constraintMsg">Number 8 hindason par mushtamil hona chahiye</span>
-    <span lang="ur" class="question-label " data-itext-id="/Child_Vaccination_Enrollment/epi_card_number:label">کارڈ نمبر</span>
+    <span lang="ur" class="question-label " data-itext-id="/Child_Vaccination_Enrollment/epi_card_number:label">ای پی آئی کارڈ نمبر</span>
     <span lang="en" class="question-label active" data-itext-id="/Child_Vaccination_Enrollment/epi_card_number:label">EPI Card Number</span>
 
     <span lang="Roman Urdu" class="question-label " data-itext-id="/Child_Vaccination_Enrollment/epi_card_number:label">EPI Card Number</span>
     <span class="required">*</span>
     <input type="number" name="/Child_Vaccination_Enrollment/epi_card_number" required="required" data-constraint="string-length(.) = 8" data-type-xml="int"/>
 </label>    <label class="question non-select ">
-    <span lang="ur" class="or-constraint-msg " data-itext-id="/Child_Vaccination_Enrollment/first_name:jr:constraintMsg">نام تین سے پچیس حروف پر مشتمل ہونا چاہئے</span>
-    <span lang="en" class="or-constraint-msg active" data-itext-id="/Child_Vaccination_Enrollment/first_name:jr:constraintMsg">Name should be 3 to 25 characters long</span>
+    <span lang="ur" class="or-constraint-msg " data-itext-id="/Child_Vaccination_Enrollment/first_name:jr:constraintMsg">درج کردہ معلومات درست نہیں</span>
+    <span lang="en" class="or-constraint-msg active" data-itext-id="/Child_Vaccination_Enrollment/first_name:jr:constraintMsg">Invalid data entered</span>
 
-    <span lang="Roman Urdu" class="or-constraint-msg " data-itext-id="/Child_Vaccination_Enrollment/first_name:jr:constraintMsg">Naam 3 say 25 huroof par mushtamil hona chahiye</span>
+    <span lang="Roman Urdu" class="or-constraint-msg " data-itext-id="/Child_Vaccination_Enrollment/first_name:jr:constraintMsg">Darj karda maaloomaat durust nahi</span>
     <span lang="ur" class="question-label " data-itext-id="/Child_Vaccination_Enrollment/first_name:label">نام</span>
     <span lang="en" class="question-label active" data-itext-id="/Child_Vaccination_Enrollment/first_name:label">First Name</span>
 
@@ -58,10 +59,10 @@
     <span class="required">*</span>
     <input type="text" name="/Child_Vaccination_Enrollment/first_name" required="required" data-constraint="regex(., '^[a-zA-Z\s\.\-]{3,25}$')" data-type-xml="string"/>
 </label>    <label class="question non-select ">
-    <span lang="ur" class="or-constraint-msg " data-itext-id="/Child_Vaccination_Enrollment/last_name:jr:constraintMsg">نام تین سے پچیس حروف پر مشتمل ہونا چاہئے</span>
-    <span lang="en" class="or-constraint-msg active" data-itext-id="/Child_Vaccination_Enrollment/last_name:jr:constraintMsg">Name should be 3 to 25 characters long</span>
+    <span lang="ur" class="or-constraint-msg " data-itext-id="/Child_Vaccination_Enrollment/last_name:jr:constraintMsg">درج کردہ معلومات درست نہیں</span>
+    <span lang="en" class="or-constraint-msg active" data-itext-id="/Child_Vaccination_Enrollment/last_name:jr:constraintMsg">Invalid data entered</span>
 
-    <span lang="Roman Urdu" class="or-constraint-msg " data-itext-id="/Child_Vaccination_Enrollment/last_name:jr:constraintMsg">Naam 3 say 25 huroof par mushtamil hona chahiye</span>
+    <span lang="Roman Urdu" class="or-constraint-msg " data-itext-id="/Child_Vaccination_Enrollment/last_name:jr:constraintMsg">Darj karda maaloomaat durust nahi</span>
     <span lang="ur" class="question-label " data-itext-id="/Child_Vaccination_Enrollment/last_name:label">والد کا نام</span>
     <span lang="en" class="question-label active" data-itext-id="/Child_Vaccination_Enrollment/last_name:label">Last name</span>
 
@@ -93,10 +94,10 @@
         </div>
     </fieldset>
 </fieldset>    <label class="question or-branch pre-init non-select ">
-    <span lang="ur" class="or-constraint-msg " data-itext-id="/Child_Vaccination_Enrollment/member_birth_date:jr:constraintMsg">یہ تاریخ مستقبل کی نہیں ہو سکتی۔اندراج کے لیے بچے کی عمر پانچ سال سے کم ہونی چاہئے۔</span>
-    <span lang="en" class="or-constraint-msg active" data-itext-id="/Child_Vaccination_Enrollment/member_birth_date:jr:constraintMsg">This cannot be a date in the future.Child's age must be less than five years for enrollment.</span>
+    <span lang="ur" class="or-constraint-msg " data-itext-id="/Child_Vaccination_Enrollment/member_birth_date:jr:constraintMsg">اندراج کے لیے بچے کی عمر پانچ سال سے کم ہونی چاہئے۔</span>
+    <span lang="en" class="or-constraint-msg active" data-itext-id="/Child_Vaccination_Enrollment/member_birth_date:jr:constraintMsg">Child's age must be less than five years for enrollment.</span>
 
-    <span lang="Roman Urdu" class="or-constraint-msg " data-itext-id="/Child_Vaccination_Enrollment/member_birth_date:jr:constraintMsg">Ye tareekh mustaqbil ki nahi ho sakti.Andraaj ke liye bachay ki umar paanch saal se kam honi chahiye.</span>
+    <span lang="Roman Urdu" class="or-constraint-msg " data-itext-id="/Child_Vaccination_Enrollment/member_birth_date:jr:constraintMsg">Andraaj ke liye bachay ki umar paanch saal se kam honi chahiye.</span>
     <span lang="ur" class="question-label " data-itext-id="/Child_Vaccination_Enrollment/member_birth_date:label">تاریخ پیدائش</span>
     <span lang="en" class="question-label active" data-itext-id="/Child_Vaccination_Enrollment/member_birth_date:label">Birth date</span>
 
@@ -113,7 +114,7 @@
     <span lang="Roman Urdu" class="question-label " data-itext-id="/Child_Vaccination_Enrollment/age:label">Umar (mahinon main)</span>
     <input type="number" name="/Child_Vaccination_Enrollment/age" data-constraint=".&lt;=60" data-relevant="selected( /Child_Vaccination_Enrollment/member_birth_date_known , 'no')" data-type-xml="int"/>
 </label>    <label class="note non-select ">
-    <span lang="ur" class="question-label " data-itext-id="/Child_Vaccination_Enrollment/member_birth_date_note:label">کلائنٹ کی تاریخ پیدائش:<span class="or-output" data-value=" /Child_Vaccination_Enrollment/calc_dob_confirm ">            </span>
+    <span lang="ur" class="question-label " data-itext-id="/Child_Vaccination_Enrollment/member_birth_date_note:label">کلائنٹ کی تاریخ پیدائش: <span class="or-output" data-value=" /Child_Vaccination_Enrollment/calc_dob_confirm ">            </span>
     </span>
     <span lang="en" class="question-label active" data-itext-id="/Child_Vaccination_Enrollment/member_birth_date_note:label">Member Date of Birth: <span class="or-output" data-value=" /Child_Vaccination_Enrollment/calc_dob_confirm ">            </span>
     </span>
@@ -122,7 +123,7 @@
     </span>
     <input type="text" name="/Child_Vaccination_Enrollment/member_birth_date_note" data-type-xml="string" readonly="readonly"/>
 </label>    <label class="note non-select ">
-    <span lang="ur" class="question-label " data-itext-id="/Child_Vaccination_Enrollment/note_age:label">عمر :{calc_age_confirm}$ مہینے</span>
+    <span lang="ur" class="question-label " data-itext-id="/Child_Vaccination_Enrollment/note_age:label">عمر: <span class="or-output" data-value=" /Child_Vaccination_Enrollment/calc_age_confirm ">            </span> مہینے</span>
     <span lang="en" class="question-label active" data-itext-id="/Child_Vaccination_Enrollment/note_age:label">Age: <span class="or-output" data-value=" /Child_Vaccination_Enrollment/calc_age_confirm ">            </span> months</span>
 
     <span lang="Roman Urdu" class="question-label " data-itext-id="/Child_Vaccination_Enrollment/note_age:label">Umar: <span class="or-output" data-value=" /Child_Vaccination_Enrollment/calc_age_confirm ">            </span> mahinay</span>
@@ -153,10 +154,10 @@
 
         <span data-option-value="transgender" lang="Roman Urdu">Khwaja sira</span>                </span>
 </label>    <label class="question non-select ">
-    <span lang="ur" class="or-constraint-msg " data-itext-id="/Child_Vaccination_Enrollment/mother_name:jr:constraintMsg">نام تین سے پچیس حروف پر مشتمل ہونا چاہئے</span>
-    <span lang="en" class="or-constraint-msg active" data-itext-id="/Child_Vaccination_Enrollment/mother_name:jr:constraintMsg">Name should be 3 to 25 characters long</span>
+    <span lang="ur" class="or-constraint-msg " data-itext-id="/Child_Vaccination_Enrollment/mother_name:jr:constraintMsg">درج کردہ معلومات درست نہیں</span>
+    <span lang="en" class="or-constraint-msg active" data-itext-id="/Child_Vaccination_Enrollment/mother_name:jr:constraintMsg">Invalid data entered</span>
 
-    <span lang="Roman Urdu" class="or-constraint-msg " data-itext-id="/Child_Vaccination_Enrollment/mother_name:jr:constraintMsg">Naam 3 say 25 huroof par mushtamil hona chahiye</span>
+    <span lang="Roman Urdu" class="or-constraint-msg " data-itext-id="/Child_Vaccination_Enrollment/mother_name:jr:constraintMsg">Darj karda maaloomaat durust nahi</span>
     <span lang="ur" class="question-label " data-itext-id="/Child_Vaccination_Enrollment/mother_name:label">والدہ کا نام</span>
     <span lang="en" class="question-label active" data-itext-id="/Child_Vaccination_Enrollment/mother_name:label">Mother's Name</span>
 
@@ -1113,33 +1114,25 @@
 
         <span lang="Roman Urdu" class="option-label " data-itext-id="static_instance-ucs-178">Qaabil-e-atlaaq nahi</span>            </span>
 </label>    <label class="question non-select ">
-    <span lang="ur" class="question-label " data-itext-id="/Child_Vaccination_Enrollment/house_number:label">گھر کا نمبر</span>
-    <span lang="en" class="question-label active" data-itext-id="/Child_Vaccination_Enrollment/house_number:label">House Number</span>
+    <span lang="ur" class="question-label " data-itext-id="/Child_Vaccination_Enrollment/address1:label">گھر کا پتہ</span>
+    <span lang="en" class="question-label active" data-itext-id="/Child_Vaccination_Enrollment/address1:label">Home Address</span>
 
-    <span lang="Roman Urdu" class="question-label " data-itext-id="/Child_Vaccination_Enrollment/house_number:label">Ghar ka number</span>
+    <span lang="Roman Urdu" class="question-label " data-itext-id="/Child_Vaccination_Enrollment/address1:label">Ghar ka pata</span>
     <span class="required">*</span>
-    <input type="text" name="/Child_Vaccination_Enrollment/house_number" required="required" data-type-xml="string"/>
-</label>    <label class="question non-select ">
-    <span lang="ur" class="question-label " data-itext-id="/Child_Vaccination_Enrollment/street:label">گلی/کالونی/محلہ</span>
-    <span lang="en" class="question-label active" data-itext-id="/Child_Vaccination_Enrollment/street:label">Street</span>
-
-    <span lang="Roman Urdu" class="question-label " data-itext-id="/Child_Vaccination_Enrollment/street:label">Gali/Colony/Mohalla</span>
-    <span class="required">*</span>
-    <input type="text" name="/Child_Vaccination_Enrollment/street" required="required" data-type-xml="string"/>
+    <input type="text" name="/Child_Vaccination_Enrollment/address1" required="required" data-type-xml="string"/>
 </label>    <label class="question non-select ">
     <span lang="ur" class="question-label " data-itext-id="/Child_Vaccination_Enrollment/landmark:label">گھر کے قریب کوئی مشہور جگہ</span>
     <span lang="en" class="question-label active" data-itext-id="/Child_Vaccination_Enrollment/landmark:label">Land Mark</span>
 
     <span lang="Roman Urdu" class="question-label " data-itext-id="/Child_Vaccination_Enrollment/landmark:label">Ghar ke qareeb koi mashoor jagah</span>
-    <span class="required">*</span>
-    <input type="text" name="/Child_Vaccination_Enrollment/landmark" required="required" data-type-xml="string"/>
+    <input type="text" name="/Child_Vaccination_Enrollment/landmark" data-type-xml="string"/>
 </label>    <label class="note non-select ">
-    <span lang="ur" class="question-label " data-itext-id="/Child_Vaccination_Enrollment/address:label">پتہ: <span class="or-output" data-value=" /Child_Vaccination_Enrollment/house_number ">            </span>, <span class="or-output" data-value=" /Child_Vaccination_Enrollment/street ">            </span>, <span class="or-output" data-value=" /Child_Vaccination_Enrollment/landmark ">            </span>, <span class="or-output" data-value=" /Child_Vaccination_Enrollment/union_councilname ">            </span>, <span class="or-output" data-value=" /Child_Vaccination_Enrollment/townname ">            </span>, <span class="or-output" data-value=" /Child_Vaccination_Enrollment/city_villagename ">            </span>, <span class="or-output" data-value=" /Child_Vaccination_Enrollment/provincename ">            </span>
+    <span lang="ur" class="question-label " data-itext-id="/Child_Vaccination_Enrollment/address:label">پتہ: <span class="or-output" data-value=" /Child_Vaccination_Enrollment/address1 ">            </span>, <span class="or-output" data-value=" /Child_Vaccination_Enrollment/landmark ">            </span>, <span class="or-output" data-value=" /Child_Vaccination_Enrollment/union_councilname ">            </span>, <span class="or-output" data-value=" /Child_Vaccination_Enrollment/townname ">            </span>, <span class="or-output" data-value=" /Child_Vaccination_Enrollment/city_villagename ">            </span>, <span class="or-output" data-value=" /Child_Vaccination_Enrollment/provincename ">            </span>
     </span>
-    <span lang="en" class="question-label active" data-itext-id="/Child_Vaccination_Enrollment/address:label">Address: <span class="or-output" data-value=" /Child_Vaccination_Enrollment/house_number ">            </span>, <span class="or-output" data-value=" /Child_Vaccination_Enrollment/street ">            </span>, <span class="or-output" data-value=" /Child_Vaccination_Enrollment/landmark ">            </span>, <span class="or-output" data-value=" /Child_Vaccination_Enrollment/union_councilname ">            </span>, <span class="or-output" data-value=" /Child_Vaccination_Enrollment/townname ">            </span>, <span class="or-output" data-value=" /Child_Vaccination_Enrollment/city_villagename ">            </span>, <span class="or-output" data-value=" /Child_Vaccination_Enrollment/provincename ">            </span>
+    <span lang="en" class="question-label active" data-itext-id="/Child_Vaccination_Enrollment/address:label">Address: <span class="or-output" data-value=" /Child_Vaccination_Enrollment/address1 ">            </span>, <span class="or-output" data-value=" /Child_Vaccination_Enrollment/landmark ">            </span>, <span class="or-output" data-value=" /Child_Vaccination_Enrollment/union_councilname ">            </span>, <span class="or-output" data-value=" /Child_Vaccination_Enrollment/townname ">            </span>, <span class="or-output" data-value=" /Child_Vaccination_Enrollment/city_villagename ">            </span>, <span class="or-output" data-value=" /Child_Vaccination_Enrollment/provincename ">            </span>
     </span>
 
-    <span lang="Roman Urdu" class="question-label " data-itext-id="/Child_Vaccination_Enrollment/address:label">Pata: <span class="or-output" data-value=" /Child_Vaccination_Enrollment/house_number ">            </span>, <span class="or-output" data-value=" /Child_Vaccination_Enrollment/street ">            </span>, <span class="or-output" data-value=" /Child_Vaccination_Enrollment/landmark ">            </span>, <span class="or-output" data-value=" /Child_Vaccination_Enrollment/union_councilname ">            </span>, <span class="or-output" data-value=" /Child_Vaccination_Enrollment/townname ">            </span>, <span class="or-output" data-value=" /Child_Vaccination_Enrollment/city_villagename ">            </span>, <span class="or-output" data-value=" /Child_Vaccination_Enrollment/provincename ">            </span>
+    <span lang="Roman Urdu" class="question-label " data-itext-id="/Child_Vaccination_Enrollment/address:label">Pata: <span class="or-output" data-value=" /Child_Vaccination_Enrollment/address1 ">            </span>, <span class="or-output" data-value=" /Child_Vaccination_Enrollment/landmark ">            </span>, <span class="or-output" data-value=" /Child_Vaccination_Enrollment/union_councilname ">            </span>, <span class="or-output" data-value=" /Child_Vaccination_Enrollment/townname ">            </span>, <span class="or-output" data-value=" /Child_Vaccination_Enrollment/city_villagename ">            </span>, <span class="or-output" data-value=" /Child_Vaccination_Enrollment/provincename ">            </span>
     </span>
     <input type="text" name="/Child_Vaccination_Enrollment/address" data-type-xml="string" readonly="readonly"/>
 </label>    <label class="question non-select ">
@@ -1147,29 +1140,35 @@
     <span lang="en" class="question-label active" data-itext-id="/Child_Vaccination_Enrollment/centre_gps:label">Collect GPS coordinates of data entry location</span>
 
     <span lang="Roman Urdu" class="question-label " data-itext-id="/Child_Vaccination_Enrollment/centre_gps:label">Hasil karda malomaat ki jaga ke GPS coordinates darj karain</span>
-    <span lang="" class="or-hint active">GPS coordinates can only be collected when outside.</span>
-    <input type="text" name="/Child_Vaccination_Enrollment/centre_gps" data-type-xml="geopoint"/>
-</label>    <label class="question or-appearance-minimal ">
-    <span lang="ur" class="question-label " data-itext-id="/Child_Vaccination_Enrollment/child_was_suffering_from_a_disease_at_birth:label">کیا بچہ پیدائش کے وقت کسی مرض میں مبتلا تھا؟</span>
-    <span lang="en" class="question-label active" data-itext-id="/Child_Vaccination_Enrollment/child_was_suffering_from_a_disease_at_birth:label">Was the child suffering from a disease at birth?</span>
-
-    <span lang="Roman Urdu" class="question-label " data-itext-id="/Child_Vaccination_Enrollment/child_was_suffering_from_a_disease_at_birth:label">Kya bacha pedaaish ke waqt kissi marz mai mubtila tha?</span>
     <span class="required">*</span>
-    <select name="/Child_Vaccination_Enrollment/child_was_suffering_from_a_disease_at_birth" data-name="/Child_Vaccination_Enrollment/child_was_suffering_from_a_disease_at_birth" required="required" data-type-xml="select1">
-        <option value="">...</option>
-        <option value="yes">Yes</option>
-        <option value="no">No</option>
-    </select>
-    <span class="or-option-translations" style="display:none;">
-        <span data-option-value="yes" lang="ur">ہاں</span>
-        <span data-option-value="yes" lang="en">Yes</span>
-
-        <span data-option-value="yes" lang="Roman Urdu">Yes</span>
-        <span data-option-value="no" lang="ur">نہیں</span>
-        <span data-option-value="no" lang="en">No</span>
-
-        <span data-option-value="no" lang="Roman Urdu">No</span>                </span>
+    <span lang="" class="or-hint active">GPS coordinates can only be collected when outside.</span>
+    <input type="text" name="/Child_Vaccination_Enrollment/centre_gps" required="required" data-type-xml="geopoint"/>
 </label>    <fieldset class="question ">
+    <fieldset>
+        <legend>
+            <span lang="ur" class="question-label " data-itext-id="/Child_Vaccination_Enrollment/child_was_suffering_from_a_disease_at_birth:label">کیا بچہ پیدائش کے وقت کسی مرض میں مبتلا تھا؟</span>
+            <span lang="en" class="question-label active" data-itext-id="/Child_Vaccination_Enrollment/child_was_suffering_from_a_disease_at_birth:label">Was the child suffering from a disease at birth?</span>
+
+            <span lang="Roman Urdu" class="question-label " data-itext-id="/Child_Vaccination_Enrollment/child_was_suffering_from_a_disease_at_birth:label">Kya bacha pedaaish ke waqt kissi marz mai mubtila tha?</span>
+            <span class="required">*</span>                    </legend>
+        <div class="option-wrapper">
+            <label class="">
+                <input type="radio" name="/Child_Vaccination_Enrollment/child_was_suffering_from_a_disease_at_birth" data-name="/Child_Vaccination_Enrollment/child_was_suffering_from_a_disease_at_birth" value="yes" required="required" data-type-xml="select1"/>
+                <span lang="ur" class="option-label " data-itext-id="/Child_Vaccination_Enrollment/child_was_suffering_from_a_disease_at_birth/yes:label">ہاں</span>
+                <span lang="en" class="option-label active" data-itext-id="/Child_Vaccination_Enrollment/child_was_suffering_from_a_disease_at_birth/yes:label">Yes</span>
+
+                <span lang="Roman Urdu" class="option-label " data-itext-id="/Child_Vaccination_Enrollment/child_was_suffering_from_a_disease_at_birth/yes:label">Yes</span>
+            </label>
+            <label class="">
+                <input type="radio" name="/Child_Vaccination_Enrollment/child_was_suffering_from_a_disease_at_birth" data-name="/Child_Vaccination_Enrollment/child_was_suffering_from_a_disease_at_birth" value="no" required="required" data-type-xml="select1"/>
+                <span lang="ur" class="option-label " data-itext-id="/Child_Vaccination_Enrollment/child_was_suffering_from_a_disease_at_birth/no:label">نہیں</span>
+                <span lang="en" class="option-label active" data-itext-id="/Child_Vaccination_Enrollment/child_was_suffering_from_a_disease_at_birth/no:label">No</span>
+
+                <span lang="Roman Urdu" class="option-label " data-itext-id="/Child_Vaccination_Enrollment/child_was_suffering_from_a_disease_at_birth/no:label">No</span>
+            </label>
+        </div>
+    </fieldset>
+</fieldset>    <fieldset class="question ">
     <fieldset>
         <legend>
             <span lang="ur" class="question-label " data-itext-id="/Child_Vaccination_Enrollment/reminders_approval:label">کیا آپ اپنے بچے کی اگلی ویکسین کی تاریخ کے لیے SMS موصول کرنا چاہتے ہیں؟</span>
@@ -1537,7 +1536,7 @@
             <input type="hidden" name="/Child_Vaccination_Enrollment/calc_age" data-calculate="int(( /Child_Vaccination_Enrollment/today  -  /Child_Vaccination_Enrollment/member_birth_date ) div 30.44)" data-type-xml="string"/>
         </label>
         <label class="calculation non-select ">
-            <input type="hidden" name="/Child_Vaccination_Enrollment/calc_dob" data-calculate="date( /Child_Vaccination_Enrollment/today  - int( /Child_Vaccination_Enrollment/age  * 30.44))" data-type-xml="string"/>
+            <input type="hidden" name="/Child_Vaccination_Enrollment/calc_dob" data-calculate="format-date (date( /Child_Vaccination_Enrollment/today  - int( /Child_Vaccination_Enrollment/age  * 30.44)), '%Y-%m-%d')" data-type-xml="string"/>
         </label>
         <label class="calculation non-select ">
             <input type="hidden" name="/Child_Vaccination_Enrollment/calc_dob_confirm" data-calculate="if( /Child_Vaccination_Enrollment/member_birth_date_known ='yes',  /Child_Vaccination_Enrollment/member_birth_date ,  /Child_Vaccination_Enrollment/calc_dob )" data-type-xml="string"/>

@@ -190,7 +190,7 @@ public abstract class SmartClientRegisterFragment extends SmartRegisterFragment 
 
             if(c != null && getRegisterLabel().toLowerCase().contains("woman")
                     && c.getBirthdate() != null && Years.yearsBetween(c.getBirthdate(), DateTime.now()).getYears() < 8){
-                showMessageDialog("Scanned ID already exists and is not a woman.", new DialogInterface.OnClickListener() {
+                 showMessageDialog("Scanned ID already exists and is not a woman. Person is "+Years.yearsBetween(c.getBirthdate(), DateTime.now()).getYears()+" years only.", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
@@ -201,7 +201,7 @@ public abstract class SmartClientRegisterFragment extends SmartRegisterFragment 
 
             if(c != null && getRegisterLabel().toLowerCase().contains("child")
                     && c.getBirthdate() != null && Years.yearsBetween(c.getBirthdate(), DateTime.now()).getYears() >= 8){
-                showMessageDialog("Scanned ID already exists and is not a child.", new DialogInterface.OnClickListener() {
+                showMessageDialog("Scanned ID already exists and is not a child. Person is "+Years.yearsBetween(c.getBirthdate(), DateTime.now()).getYears()+" years", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 

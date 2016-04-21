@@ -7,7 +7,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 
-import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.CommonObjectFilterOption;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.util.StringUtil;
@@ -147,8 +146,8 @@ public abstract class SmartRegisterFragment extends SecuredNativeSmartRegisterFr
     protected abstract Map<String, String> customFieldOverrides();
 
     protected void showMessageDialog(String message, DialogInterface.OnClickListener ok) {
-        AlertDialog dialog = new AlertDialog.Builder(Context.getInstance().applicationContext())
-                .setTitle(getString(org.ei.opensrp.R.string.login_failed_dialog_title))
+        AlertDialog dialog = new AlertDialog.Builder(getActivity())
+                .setTitle(getString(org.ei.opensrp.R.string.error_title))
                 .setMessage(message)
                 .setPositiveButton("OK", ok)
                 .create();
@@ -157,8 +156,8 @@ public abstract class SmartRegisterFragment extends SecuredNativeSmartRegisterFr
     }
 
     protected void showMessageDialog(String message, DialogInterface.OnClickListener ok, DialogInterface.OnClickListener cancel) {
-        AlertDialog dialog = new AlertDialog.Builder(Context.getInstance().applicationContext())
-                .setTitle(getString(org.ei.opensrp.R.string.login_failed_dialog_title))
+        AlertDialog dialog = new AlertDialog.Builder(getActivity())
+                .setTitle(getString(org.ei.opensrp.R.string.error_title))
                 .setMessage(message)
                 .setPositiveButton("OK", ok)
                 .setNegativeButton("Cancel", cancel)

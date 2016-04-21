@@ -1,21 +1,19 @@
 package org.ei.opensrp.vaccinator.woman;
 
-import android.graphics.Color;
-import android.view.ViewGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
-import android.widget.TextView;
 
+import org.apache.commons.lang3.StringUtils;
 import org.ei.opensrp.Context;
 import org.ei.opensrp.domain.Alert;
 import org.ei.opensrp.vaccinator.R;
 import org.joda.time.DateTime;
 import org.joda.time.Years;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
+import static util.Utils.addStatusTag;
+import static util.Utils.addVaccineDetail;
 import static util.Utils.convertDateFormat;
 import static util.Utils.getDataRow;
 import static util.Utils.getValue;
@@ -97,7 +95,7 @@ public class WomanDetailActivity extends DetailActivity {
         dt2.addView(tr);
         tr = getDataRow(this, "Contact Number", getValue(client, "contact_phone_number", true), null);
         dt2.addView(tr);
-        tr = getDataRow(this, "Address", getValue(client, "house_number", true)+ " "+ getValue(client, "street", true)
+        tr = getDataRow(this, "Address", getValue(client, "address1", true)
                 +", \nUC: "+ getValue(client, "union_council", true)
                 +", \nTown: "+ getValue(client, "town", true)
                 +", \nCity: "+ getValue(client, "city_village", true)
@@ -108,37 +106,16 @@ public class WomanDetailActivity extends DetailActivity {
         //VACCINES INFORMATION
         TableLayout table = (TableLayout) findViewById(R.id.woman_vaccine_table);
         for (int i=1; i <= 5; i++){
-            tr = new TableRow(this);
-            TableRow.LayoutParams trlp = new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            tr.setLayoutParams(trlp);
-            tr.setPadding(10, 5, 10, 5);
-
-            TextView label = new TextView(this);
-            label.setText("TT "+i);
-            label.setPadding(20, 5, 70, 5);
-            label.setTextColor(Color.BLACK);
-            label.setBackgroundColor(Color.WHITE);
-            tr.addView(label);
-
             String val = convertDateFormat(nonEmptyValue(client.getColumnmaps(), true, false, "tt" + i, "tt" + i + "_retro"), true);
-            if(val == "") {
-                try{
-                    List<Alert> al = Context.getInstance().alertService().findByEntityIdAndAlertNames(client.entityId(), "tt" + i, "TT " + i);
-                    if(al.size() > 0){
-                        val = "<due : "+convertDateFormat(al.get(0).startDate(), true)+">";
-                    }
-                }catch(Exception e){
-                    e.printStackTrace();
-                }
-            }
-            TextView v = new TextView(this);
-            v.setText(val);
-            v.setPadding(70, 5, 20, 5);
-            v.setTextColor(Color.BLACK);
-            v.setBackgroundColor(Color.WHITE);
-            tr.addView(v);
+            List<Alert> al = Context.getInstance().alertService().findByEntityIdAndAlertNames(client.entityId(), "tt" + i, "TT " + i);
+            addVaccineDetail(this, table, "TT "+i, val, al.size()>0?al.get(0):null, false);
+        }
 
-            table.addView(tr);
+        if(StringUtils.isNotBlank(getValue(client.getColumnmaps(), "tt5", false))){
+            addStatusTag(this, table, "Fully Immunized", true);
+        }
+        else if(age > 49 && StringUtils.isBlank(getValue(client.getColumnmaps(), "tt5", false))){
+            addStatusTag(this, table, "Partially Immunized", true);
         }
 
         TableLayout pt = (TableLayout) findViewById(R.id.woman_pregnancy_table);
