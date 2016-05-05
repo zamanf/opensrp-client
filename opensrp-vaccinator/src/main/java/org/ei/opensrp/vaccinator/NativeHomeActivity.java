@@ -18,10 +18,18 @@ import org.ei.opensrp.service.PendingFormSubmissionService;
 import org.ei.opensrp.sync.SyncAfterFetchListener;
 import org.ei.opensrp.sync.SyncProgressIndicator;
 import org.ei.opensrp.sync.UpdateActionsTask;
+import org.ei.opensrp.vaccinator.analytics.CountlyAnalytics;
+import org.ei.opensrp.vaccinator.analytics.Events;
 import org.ei.opensrp.view.activity.SecuredActivity;
 import org.ei.opensrp.view.contract.HomeContext;
 import org.ei.opensrp.view.controller.NativeAfterANMDetailsFetchListener;
 import org.ei.opensrp.view.controller.NativeUpdateANMDetailsTask;
+
+import java.util.HashMap;
+
+//import ly.count.android.sdk.Countly;
+
+import ly.count.android.sdk.Countly;
 
 import static android.widget.Toast.LENGTH_SHORT;
 import static java.lang.String.valueOf;
@@ -74,6 +82,7 @@ public class NativeHomeActivity extends SecuredActivity {
 
     private TextView ecRegisterClientCountView;
     private TextView womanRegisterClientCountView;
+    private TextView householdRegisterClientCountView;
     private TextView pncRegisterClientCountView;
     private TextView fpRegisterClientCountView;
     private TextView childRegisterClientCountView;
@@ -96,9 +105,25 @@ public class NativeHomeActivity extends SecuredActivity {
       /*  LocationSelectorDialogFragment
                 .newInstance(this, new EditDialogOptionModel(), context.anmLocationController().get(), "new_household_registration")
                 .show(ft, locationDialogTAG);*/
+
+        Countly.sharedInstance().init(this, "https://cloud.count.ly", "dc5dfb412bdbd91792b29f66e5a4bd2ee226cfb6");
     }
 
+    @Override
+    protected void onStart(){
+        super.onStart();
+        HashMap<String,String> segments = new HashMap<String, String>();
+        CountlyAnalytics.startAnalytics(this, Events.LOGIN, segments);
+        //FlurryAgent.setLogEnabled(false);
+        //FlurryAgent.onStartSession(this);
+    }
 
+    @Override
+    protected void onStop(){
+        super.onStop();
+        CountlyAnalytics.stopAnalytics();
+        //FlurryAgent.onEndSession(this);
+    }
 
 
 
@@ -109,18 +134,21 @@ public class NativeHomeActivity extends SecuredActivity {
      //   findViewById(R.id.btn_fp_register).setOnClickListener(onRegisterStartListener);
       // findViewById(R.id.btn_child_register_new).setOnClickListener(onRegisterStartListener);
         ImageButton imgButtonChild=(ImageButton)findViewById(R.id.btn_child_register_new);
+        ImageButton imgButtonHousehold=(ImageButton)findViewById(R.id.btn_household_register);
         ImageButton imgButtonWoman=(ImageButton)findViewById(R.id.btn_woman_register);
         ImageButton imgButtonField=(ImageButton)findViewById(R.id.btn_field_register);
         if(onRegisterStartListener!=null) {
             imgButtonField.setOnClickListener(onRegisterStartListener);
             imgButtonWoman.setOnClickListener(onRegisterStartListener);
             imgButtonChild.setOnClickListener(onRegisterStartListener);
+            imgButtonHousehold.setOnClickListener(onRegisterStartListener);
         }
             findViewById(R.id.btn_reporting).setOnClickListener(onButtonsClickListener);
         findViewById(R.id.btn_provider_profile).setOnClickListener(onButtonsClickListener);
 
      //   ecRegisterClientCountView = (TextView) findViewById(R.id.txt_ec_register_client_count);
      //   pncRegisterClientCountView = (TextView) findViewById(R.id.txt_pnc_register_client_count);
+        householdRegisterClientCountView = (TextView) findViewById(R.id.txt_household_register_client_count);
         womanRegisterClientCountView = (TextView) findViewById(R.id.txt_woman_register_client_count);
      //   fpRegisterClientCountView = (TextView) findViewById(R.id.txt_fp_register_client_count);txt_field_register_client_count
         childRegisterClientCountView = (TextView) findViewById(R.id.txt_child_register_client_count);
@@ -172,6 +200,11 @@ public class NativeHomeActivity extends SecuredActivity {
                 context.personObjectClientsCache(), "first_name", "pkwoman", "client_reg_date",
                 CommonPersonObjectController.ByColumnAndByDetails.byDetails.byDetails );
 
+        CommonPersonObjectController householdController = new CommonPersonObjectController(context.allCommonsRepositoryobjects("pkhousehold"),
+                context.allBeneficiaries(), context.listCache(),
+                context.personObjectClientsCache(), "first_name_hhh", "pkhousehold", "date",
+                CommonPersonObjectController.ByColumnAndByDetails.byDetails.byDetails );
+
         CommonPersonObjectController fieldControllerD = new CommonPersonObjectController(context.allCommonsRepositoryobjects("stock"),
                 context.allBeneficiaries(), context.listCache(),
                 context.personObjectClientsCache(), "date", "stock", "report", "daily", CommonPersonObjectController.ByColumnAndByDetails.byColumn, "report",
@@ -188,8 +221,9 @@ public class NativeHomeActivity extends SecuredActivity {
      //   fpRegisterClientCountView.setText(valueOf(elcocontroller.getClients().size()));
 //        Log.d("child count cin ", childController.getClients().size()+"");
         childRegisterClientCountView.setText(valueOf(childController.getClients().size()));
+        householdRegisterClientCountView.setText(valueOf(householdController.getClients().size()));
         fieldRegisterClientCountDView.setText(valueOf(fieldControllerD.getClients().size())+" D");
-        fieldRegisterClientCountMView.setText(valueOf(fieldControllerM.getClients().size())+" M");
+        fieldRegisterClientCountMView.setText(valueOf(fieldControllerM.getClients().size()) + " M");
     }
 
     @Override
@@ -282,6 +316,10 @@ public class NativeHomeActivity extends SecuredActivity {
                             navigationController.startFPSmartRegistry();
 //                        }
 //                    }).show();
+                    break;
+
+                case R.id.btn_household_register:
+                    navigationController.startPNCSmartRegistry();
                     break;
 
                 case R.id.btn_child_register_new:

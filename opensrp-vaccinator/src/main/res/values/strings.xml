@@ -70,4 +70,22 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
+    <string name="household_search_hint">Search Household Register</string>
+    <string name="household_profile">Profiles of Households</string>
+    <string name="household_members">No. of Members</string>
+    <string name="household_address">Address</string>
+    <string name="household_last_visit">Last Visit Date</string>
+    <string name="household_due_date">Household Visit Due Date</string>
+    <string name="household_title">Household</string>
+    <string name="household_register_title">Household Register</string>
+    <string name="person_id">Household ID</string>
+    <string name="household_head">Household Head</string>
+    <string name="name">Name</string>
+    <string name="gender">Gender</string>
+    <string name="contactNumber">Contact Phone Number</string>
+    <string name="household_profile_members">Number of Members</string>
+    <string name="household_water">Source of Drinking Water</string>
+    <string name="household_latrine">Latrine System</string>
+
+
 </resources>

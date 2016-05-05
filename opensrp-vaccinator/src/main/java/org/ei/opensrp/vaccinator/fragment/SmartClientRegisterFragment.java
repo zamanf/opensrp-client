@@ -213,6 +213,8 @@ public abstract class SmartClientRegisterFragment extends SmartRegisterFragment 
             HashMap<String,String> map = new HashMap<>();
             map.put("existing_program_client_id", qrCode);
             map.put("program_client_id", qrCode);
+            map.put("existing_household_id", qrCode);
+            map.put("household_id", qrCode);
             Map<String, String> m = customFieldOverrides();
             if(m != null){
                 map.putAll(m);

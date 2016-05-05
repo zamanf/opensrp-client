@@ -9,6 +9,15 @@
   },
 
   {
+    "parent": "pkhousehold",
+    "child": "pkindividual",
+    "field": "individual",
+    "kind": "one_to_many",
+    "from": "pkhousehold.id",
+    "to": "pkindividual.relationalid"
+  },
+
+  {
     "parent": "stock",
     "child": "reports",
     "field": "stock",

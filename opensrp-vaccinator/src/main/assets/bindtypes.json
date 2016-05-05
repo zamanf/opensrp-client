@@ -66,6 +66,19 @@
        {"name":"date"},
        {"name":"report"}
      ]
+   },
+
+   {
+     "name":"pkhousehold",
+     "columns":[
+       {"name":"person_id_hhh"}
+     ]
+   },
+
+   {
+     "name":"pkindividual",
+     "columns":[
+     ]
    }
 
  ]

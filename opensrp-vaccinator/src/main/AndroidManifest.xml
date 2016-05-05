@@ -59,6 +59,15 @@
             android:screenOrientation="landscape"
             android:theme="@style/AppThemeNoTitle" />
         <activity
+            android:name=".household.HouseholdSmartRegisterActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppThemeNoTitle" />
+        <activity
+            android:name=".household.HouseholdDetailActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppThemeNoTitle" />
+        <activity
             android:name=".report.VaccineReport"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.NoActionBar"></activity>
