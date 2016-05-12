@@ -41,6 +41,7 @@ android {
 
 configurations.all {
     resolutionStrategy.force 'commons-codec:commons-codec:1.6'
+    resolutionStrategy.force 'org.apache.httpcomponents:httpcore:4.2.2'
 }
 
 dependencies {
