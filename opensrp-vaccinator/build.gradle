@@ -21,6 +21,7 @@ android {
         targetSdkVersion 22
         versionCode 1
         versionName "0.02.2 alpha"
+        multiDexEnabled true
     }
     buildTypes {
         release {
