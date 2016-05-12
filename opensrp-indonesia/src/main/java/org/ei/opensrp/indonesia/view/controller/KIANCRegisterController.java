@@ -27,20 +27,36 @@ import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-import static java.lang.String.valueOf;
 import static java.util.Collections.sort;
 import static org.ei.opensrp.domain.ServiceProvided.ANC_1_SERVICE_PROVIDED_NAME;
 import static org.ei.opensrp.domain.ServiceProvided.ANC_2_SERVICE_PROVIDED_NAME;
 import static org.ei.opensrp.domain.ServiceProvided.ANC_3_SERVICE_PROVIDED_NAME;
 import static org.ei.opensrp.domain.ServiceProvided.ANC_4_SERVICE_PROVIDED_NAME;
-import static org.ei.opensrp.domain.ServiceProvided.DELIVERY_PLAN_SERVICE_PROVIDED_NAME;
-import static org.ei.opensrp.domain.ServiceProvided.HB_TEST_SERVICE_PROVIDED_NAME;
-import static org.ei.opensrp.domain.ServiceProvided.IFA_SERVICE_PROVIDED_NAME;
-import static org.ei.opensrp.domain.ServiceProvided.TT_1_SERVICE_PROVIDED_NAME;
-import static org.ei.opensrp.domain.ServiceProvided.TT_2_SERVICE_PROVIDED_NAME;
-import static org.ei.opensrp.domain.ServiceProvided.TT_BOOSTER_SERVICE_PROVIDED_NAME;
-import static org.ei.opensrp.indonesia.AllConstantsINA.KartuIbuFields.*;
 import static org.ei.opensrp.indonesia.AllConstantsINA.KartuANCFields.*;
+import static org.ei.opensrp.indonesia.AllConstantsINA.KartuANCFields.ALLERGY;
+import static org.ei.opensrp.indonesia.AllConstantsINA.KartuANCFields.ANC_VISIT_NUMBER;
+import static org.ei.opensrp.indonesia.AllConstantsINA.KartuANCFields.COMPLICATION_HISTORY;
+import static org.ei.opensrp.indonesia.AllConstantsINA.KartuANCFields.HEIGHT;
+import static org.ei.opensrp.indonesia.AllConstantsINA.KartuANCFields.HIGH_RISK_PREGNANCY_REASON;
+import static org.ei.opensrp.indonesia.AllConstantsINA.KartuANCFields.HPHT_DATE;
+import static org.ei.opensrp.indonesia.AllConstantsINA.KartuANCFields.IMMUNIZATION_TT_STATUS;
+import static org.ei.opensrp.indonesia.AllConstantsINA.KartuANCFields.LILA_CHECK_RESULT;
+import static org.ei.opensrp.indonesia.AllConstantsINA.KartuANCFields.MOTHER_NUTRITION_STATUS;
+import static org.ei.opensrp.indonesia.AllConstantsINA.KartuANCFields.TRIMESTER;
+import static org.ei.opensrp.indonesia.AllConstantsINA.KartuANCFields.WEIGHT_BEFORE;
+import static org.ei.opensrp.indonesia.AllConstantsINA.KartuANCFields.WEIGHT_CHECK_RESULT;
+import static org.ei.opensrp.indonesia.AllConstantsINA.KartuIbuFields.*;
+import static org.ei.opensrp.indonesia.AllConstantsINA.KartuIbuFields.CHRONIC_DISEASE;
+import static org.ei.opensrp.indonesia.AllConstantsINA.KartuIbuFields.EDD;
+import static org.ei.opensrp.indonesia.AllConstantsINA.KartuIbuFields.HUSBAND_NAME;
+import static org.ei.opensrp.indonesia.AllConstantsINA.KartuIbuFields.IS_HIGH_RISK_LABOUR;
+import static org.ei.opensrp.indonesia.AllConstantsINA.KartuIbuFields.MOTHER_DOB;
+import static org.ei.opensrp.indonesia.AllConstantsINA.KartuIbuFields.MOTHER_NAME;
+import static org.ei.opensrp.indonesia.AllConstantsINA.KartuIbuFields.MOTHER_NUMBER;
+import static org.ei.opensrp.indonesia.AllConstantsINA.KartuIbuFields.NUMBER_ABORTIONS;
+import static org.ei.opensrp.indonesia.AllConstantsINA.KartuIbuFields.NUMBER_PARTUS;
+import static org.ei.opensrp.indonesia.AllConstantsINA.KartuIbuFields.PUSKESMAS_NAME;
+import static org.ei.opensrp.indonesia.AllConstantsINA.KartuIbuFields.UNIQUE_ID;
 
 /**
  * Created by Dimas Ciputra on 3/4/15.
@@ -222,7 +238,7 @@ public class KIANCRegisterController extends CommonController {
         );
         List<AlertDTO> alertDTOs = new ArrayList<>();
         for (Alert alert : alerts) {
-            alertDTOs.add(new AlertDTO(alert.visitCode(), valueOf(alert.status()), alert.startDate()));
+            alertDTOs.add(new AlertDTO(alert.visitCode(), String.valueOf(alert.status()), alert.startDate()));
         }
         return alertDTOs;
     }

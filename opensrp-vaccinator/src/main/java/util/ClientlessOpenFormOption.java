@@ -75,9 +75,9 @@ public class ClientlessOpenFormOption implements EditOption {
             }catch (Exception e){
             e.printStackTrace();
             }
-            Log.logDebug("overrides data is : "+ overrideStringmap);
+            Log.logDebug("overrides data is : " + overrideStringmap);
             FieldOverrides fieldOverrides = new FieldOverrides(overridejsonobject.toString());
-            Log.logDebug("fieldOverrides data is : "+ fieldOverrides.getJSONString());
+            Log.logDebug("fieldOverrides data is : " + fieldOverrides.getJSONString());
             formController.startFormActivity(formName, null, fieldOverrides.getJSONString());
         }
     }

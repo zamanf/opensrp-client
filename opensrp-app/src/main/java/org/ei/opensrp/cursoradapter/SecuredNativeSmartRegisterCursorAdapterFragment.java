@@ -2,9 +2,7 @@ package org.ei.opensrp.cursoradapter;
 
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
-import android.database.DataSetObserver;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -15,7 +13,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.Button;
-import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -23,7 +20,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.ei.opensrp.R;
-import org.ei.opensrp.adapter.SmartRegisterPaginatedAdapter;
 import org.ei.opensrp.commonregistry.CommonRepository;
 import org.ei.opensrp.domain.ReportMonth;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
@@ -39,18 +35,15 @@ import org.ei.opensrp.view.dialog.EditOption;
 import org.ei.opensrp.view.dialog.FilterOption;
 import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
-import org.ei.opensrp.view.fragment.SecuredFragment;
 import org.ei.opensrp.view.fragment.SecuredNativeSmartRegisterFragment;
 import org.joda.time.LocalDate;
 
 import java.util.List;
 
-import static android.os.AsyncTask.THREAD_POOL_EXECUTOR;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static java.text.MessageFormat.format;
 import static java.util.Arrays.asList;
-import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.ei.opensrp.AllConstants.SHORT_DATE_FORMAT;
 
 /**

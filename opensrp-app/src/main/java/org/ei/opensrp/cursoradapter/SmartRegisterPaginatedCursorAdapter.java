@@ -9,7 +9,6 @@ import android.widget.CursorAdapter;
 import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.commonregistry.CommonRepository;
-import org.ei.opensrp.view.contract.SmartRegisterClient;
 
 /**
  * Created by raihan on 3/9/16.

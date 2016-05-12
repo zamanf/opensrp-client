@@ -18,13 +18,6 @@ repositories {
     maven { url 'https://maven.fabric.io/public' }
 }
 
-dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project(':opensrp-app')
-    compile('com.crashlytics.sdk.android:crashlytics:2.5.3@aar') {
-        transitive = true;
-    }
-}
 android {
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
@@ -71,6 +64,11 @@ dependencies {
     compile 'com.github.gabrielemariotti.cards:cardslib-core:2.1.0'
     // CardView
     compile 'com.android.support:cardview-v7:21.0.+'
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile project(':opensrp-app')
+    compile('com.crashlytics.sdk.android:crashlytics:2.5.3@aar') {
+        transitive = true;
+    }
 }
 
 dependencies {
@@ -83,3 +81,4 @@ dependencies {
     testCompile('com.squareup:fest-android:1.0.+') { exclude module: 'support-v4' }
     testCompile 'org.robolectric:robolectric:2.4'
 }
+
