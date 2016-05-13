@@ -79,8 +79,10 @@
     <string name="household_title">Household</string>
     <string name="household_register_title">Household Register</string>
     <string name="person_id">Household ID</string>
+    <string name="id">ID</string>
     <string name="household_head">Household Head</string>
     <string name="name">Name</string>
+    <string name="register">Register</string>
     <string name="gender">Gender</string>
     <string name="contactNumber">Contact Phone Number</string>
     <string name="household_profile_members">Number of Members</string>

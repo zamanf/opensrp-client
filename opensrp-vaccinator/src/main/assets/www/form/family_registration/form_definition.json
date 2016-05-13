@@ -2,38 +2,31 @@
   "form_data_definition_version" : "1",
   "form" : {
     "bind_type" : "pkhousehold",
-    "default_bind_path" : "/model/instance/Family_Registration_Form_v1",
+    "default_bind_path" : "/model/instance/Family_Registration_Form_v1/",
     "fields" : [ {
       "name" : "id",
       "shouldLoadValue" : true
     }, {
       "name" : "provider_uc",
-      "bind" : "/model/instance/Family_Registration_Form_v1/provider_uc",
-      "shouldLoadValue" : true
+      "bind" : "/model/instance/Family_Registration_Form_v1/provider_uc"
     }, {
       "name" : "provider_town",
-      "bind" : "/model/instance/Family_Registration_Form_v1/provider_town",
-      "shouldLoadValue" : true
+      "bind" : "/model/instance/Family_Registration_Form_v1/provider_town"
     }, {
       "name" : "provider_city",
-      "bind" : "/model/instance/Family_Registration_Form_v1/provider_city",
-      "shouldLoadValue" : true
+      "bind" : "/model/instance/Family_Registration_Form_v1/provider_city"
     }, {
       "name" : "provider_province",
-      "bind" : "/model/instance/Family_Registration_Form_v1/provider_province",
-      "shouldLoadValue" : true
+      "bind" : "/model/instance/Family_Registration_Form_v1/provider_province"
     }, {
       "name" : "provider_location_id",
-      "bind" : "/model/instance/Family_Registration_Form_v1/provider_location_id",
-      "shouldLoadValue" : true
+      "bind" : "/model/instance/Family_Registration_Form_v1/provider_location_id"
     }, {
       "name" : "provider_location_name",
-      "bind" : "/model/instance/Family_Registration_Form_v1/provider_location_name",
-      "shouldLoadValue" : true
+      "bind" : "/model/instance/Family_Registration_Form_v1/provider_location_name"
     }, {
       "name" : "existing_household_id",
-      "bind" : "/model/instance/Family_Registration_Form_v1/existing_household_id",
-      "shouldLoadValue" : true
+      "bind" : "/model/instance/Family_Registration_Form_v1/existing_household_id"
     }, {
       "name" : "provider_location_note",
       "bind" : "/model/instance/Family_Registration_Form_v1/provider_location_note"
@@ -176,7 +169,7 @@
     "sub_forms" : [ {
       "name" : "individual",
       "bind_type" : "pkindividual",
-      "default_bind_path" : "/model/instance/Family_Registration_Form_v1/individual",
+      "default_bind_path" : "/model/instance/Family_Registration_Form_v1/individual/",
       "fields" : [ {
         "name" : "id",
         "shouldLoadValue" : true

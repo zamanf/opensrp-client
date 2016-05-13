@@ -131,7 +131,7 @@ public abstract class SmartClientRegisterFragment extends SmartRegisterFragment 
         imv.setScaleType(ImageView.ScaleType.FIT_XY);
     }//end of method
 
-    protected void startFollowupForm(String formName, SmartRegisterClient client, HashMap<String, String> overrideStringmap, ByColumnAndByDetails byColumnAndByDetails) {
+    public void startFollowupForm(String formName, SmartRegisterClient client, HashMap<String, String> overrideStringmap, ByColumnAndByDetails byColumnAndByDetails) {
         if (overrideStringmap == null) {
             org.ei.opensrp.util.Log.logDebug("overrides data is null");
             formController1.startFormActivity(formName, client.entityId(), null);
@@ -144,6 +144,8 @@ public abstract class SmartClientRegisterFragment extends SmartRegisterFragment 
             formController1.startFormActivity(formName, client.entityId(), fieldOverrides.getJSONString());
         }
     }
+
+
 
     protected abstract String getRegistrationForm(HashMap<String, String> overridemap);
 

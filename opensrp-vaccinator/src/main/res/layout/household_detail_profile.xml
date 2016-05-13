@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/White">
 
     <LinearLayout
         android:orientation="horizontal"
@@ -46,6 +47,52 @@
             android:layout_gravity="center_horizontal"
             android:padding="10dp">
         </TableLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:weightSum="10"
+        android:layout_height="40dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:id="@+id/addMember"
+            android:textSize="25sp"
+            android:layout_weight="8"
+            android:background="@color/Grey" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="match_parent"
+            android:id="@+id/btnAddMember"
+            android:text="Add Member"
+            android:textSize="25sp"
+            android:textColor="@color/White"
+            android:background="@color/DarkBlue"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="11">
+
+
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/individualList">
+
+
+        </ListView>
+
+
+
 
     </LinearLayout>
 

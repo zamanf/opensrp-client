@@ -63,6 +63,7 @@ public class HouseholdSmartClientsProvider implements SmartRegisterClientsProvid
         fillValue((TextView) parentView.findViewById(R.id.household_address), getValue(pc, "address1", true) + ", " + getValue(pc, "union_council", true) + ", " +
                                                                                 getValue(pc, "town", true) + ",\n " + getValue(pc, "city_village", true) + ", " +
                                                                                 getValue(pc, "province", true) + ", ");
+        fillValue((TextView) parentView.findViewById(R.id.household_contact), getValue(pc, "contact_phone_number_hhh", true));
 
         setProfiePic(parentView.getContext(), (ImageView) parentView.findViewById(R.id.household_profilepic), client.entityId(), false);
 

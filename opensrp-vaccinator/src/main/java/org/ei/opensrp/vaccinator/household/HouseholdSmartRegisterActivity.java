@@ -21,6 +21,7 @@ public class HouseholdSmartRegisterActivity extends SmartRegisterActivity {
     protected String[] buildFormNameList() {
         List<String> formNames = new ArrayList<String>();
         formNames.add("family_registration");
+        formNames.add("new_member_registration");
 
         return formNames.toArray(new String[formNames.size()]);
     }

@@ -29,6 +29,8 @@ import org.ei.opensrp.commonregistry.CommonPersonObjectController;
 import org.ei.opensrp.domain.ProfileImage;
 import org.ei.opensrp.repository.ImageRepository;
 import org.ei.opensrp.vaccinator.R;
+import org.ei.opensrp.vaccinator.fragment.SmartClientRegisterFragment;
+import org.ei.opensrp.view.controller.FormController;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,13 +49,19 @@ public abstract class DetailActivity extends Activity {
     static String mCurrentPhotoPath;
     static File currentPhoto;
     static ImageView mImageView;
-
     protected static CommonPersonObjectClient client;
-    private static CommonPersonObjectController controller;
+    protected static SmartClientRegisterFragment parentSmartRegisterFragment;
 
     public static void startDetailActivity(android.content.Context context, CommonPersonObjectClient clientobj, Class<? extends DetailActivity> detailActivity){
         client = clientobj;
         context.startActivity(new Intent(context, detailActivity));
+        parentSmartRegisterFragment = null;
+    }
+
+    public static void startDetailActivity(android.content.Context context, CommonPersonObjectClient clientobj,
+           Class<? extends DetailActivity> detailActivity, SmartClientRegisterFragment smartClientRegisterFragment){
+        startDetailActivity(context, clientobj, detailActivity);
+        parentSmartRegisterFragment = smartClientRegisterFragment;
     }
 
     protected abstract int layoutResId();

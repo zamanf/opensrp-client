@@ -1,0 +1,22 @@
+package org.ei.opensrp.vaccinator.household;
+
+import org.ei.opensrp.domain.form.FormSubmission;
+import org.ei.opensrp.service.formSubmissionHandler.FormSubmissionHandler;
+import org.ei.opensrp.vaccinator.child.ChildService;
+
+/**
+ * Created by Safwan on 5/10/2016.
+ */
+public class HouseholdFollowupHandler implements FormSubmissionHandler {
+
+    private HouseholdService householdService;
+
+    public HouseholdFollowupHandler(HouseholdService householdService) {
+        this.householdService = householdService;
+    }
+
+    @Override
+    public void handle(FormSubmission submission) {
+        householdService.followup(submission);
+    }
+}

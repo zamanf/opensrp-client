@@ -79,7 +79,7 @@ public class WomanDetailActivity extends DetailActivity {
         dt.addView(tr);
 
         int age = Years.yearsBetween(new DateTime(getValue(client.getColumnmaps(), "dob", false)), DateTime.now()).getYears();
-        tr = getDataRow(this, "Birthdate (Age)", convertDateFormat(getValue(client.getColumnmaps(), "dob", false), true) + " (" + age + " years)", null);
+        tr = getDataRow(this, "Birthdate (Age)", convertDateFormat(getValue(client.getColumnmaps(), "calc_dob_confirm_hhh", false), true) + " (" + age + " years)", null);
         dt.addView(tr);
 
         tr = getDataRow(this, "Father`s Name", getValue(client, "father_name", true), null);

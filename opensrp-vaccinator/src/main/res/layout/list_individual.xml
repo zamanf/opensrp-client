@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="6">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/individual_profilepic"
+                android:layout_width="@dimen/client_profile_pic_width"
+                android:layout_height="80dp"
+                android:layout_margin="5dp"
+                android:src="@drawable/household_profile"
+                android:scaleType="fitXY" />
+
+        </LinearLayout>
+
+<LinearLayout
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="2"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/id"
+            android:paddingLeft="10dp"
+            android:textSize="@dimen/household_detail_activity"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/memberId"
+            android:paddingLeft="75dp"
+            android:text="hello"
+            android:textSize="@dimen/household_detail_activity"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/name"
+            android:paddingLeft="10dp"
+            android:textSize="@dimen/household_detail_activity"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/memberName"
+            android:paddingLeft="40dp"
+            android:text="hello"
+            android:textSize="@dimen/household_detail_activity"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/register"
+            android:paddingLeft="10dp"
+            android:textSize="@dimen/household_detail_activity"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/memberRegister"
+            android:paddingLeft="10dp"
+            android:textSize="@dimen/household_detail_activity"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>
+
+
+
+
+</LinearLayout>

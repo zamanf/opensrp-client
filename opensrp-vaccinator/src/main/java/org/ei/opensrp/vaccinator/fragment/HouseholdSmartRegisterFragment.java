@@ -10,6 +10,8 @@ import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.vaccinator.R;
 import org.ei.opensrp.vaccinator.db.Client;
 import org.ei.opensrp.vaccinator.household.HouseholdDetailActivity;
+import org.ei.opensrp.vaccinator.household.HouseholdFollowupHandler;
+import org.ei.opensrp.vaccinator.household.HouseholdService;
 import org.ei.opensrp.vaccinator.household.HouseholdSmartClientsProvider;
 import org.ei.opensrp.vaccinator.woman.DetailActivity;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
@@ -28,15 +30,18 @@ import java.util.Map;
 public class HouseholdSmartRegisterFragment extends SmartClientRegisterFragment {
 
     private CommonPersonObjectController controller;
-    private final ClientActionHandler clientActionHandler = new ClientActionHandler();
+    private final ClientActionHandler clientActionHandler = new ClientActionHandler(this);
     private HouseholdSmartClientsProvider clientProvider;
+    public static FormController householdFormController;
+
 
     public HouseholdSmartRegisterFragment(){
         super(null);
     }
 
-    public HouseholdSmartRegisterFragment(FormController formController) {
-        super(formController);
+    public HouseholdSmartRegisterFragment(FormController householdFormController) {
+        super(householdFormController);
+        this.householdFormController = householdFormController;
     }
 
     @Override
@@ -46,9 +51,9 @@ public class HouseholdSmartRegisterFragment extends SmartClientRegisterFragment 
             @Override
             public ServiceModeOption serviceMode() {
                 return new VaccinationServiceModeOption(clientsProvider(), "Household", new int[]{
-                        R.string.household_profile , R.string.household_members, R.string.household_address,
+                        R.string.household_profile , R.string.household_members, R.string.household_address, R.string.contactNumber
                         /*R.string.household_last_visit, R.string.household_due_date,*/
-                }, new int[]{3,2,2});
+                }, new int[]{3,2,2,2});
             }
 
             @Override
@@ -58,7 +63,7 @@ public class HouseholdSmartRegisterFragment extends SmartClientRegisterFragment 
 
             @Override
             public SortOption sortOption() {
-                return new CommonObjectSort(CommonObjectSort.ByColumnAndByDetails.byDetails, false, "first_name_hhh", getResources().getString(R.string.household_search_hint));
+                return new CommonObjectSort(CommonObjectSort.ByColumnAndByDetails.byDetails, false, "first_name_hhh", ""/*getResources().getString(R.string.household_search_hint)*/);
             }
 
             @Override
@@ -102,22 +107,28 @@ public class HouseholdSmartRegisterFragment extends SmartClientRegisterFragment 
         if (controller == null) {
                 controller = new CommonPersonObjectController(context.allCommonsRepositoryobjects("pkhousehold"),
                         context.allBeneficiaries(), context.listCache(),
-                        context.personObjectClientsCache(), "first_name_hhh", "pkhousehold", "date",
+                        context.personObjectClientsCache(), "first_name_hhh", "pkhousehold", "first_name_hhh",
                         CommonPersonObjectController.ByColumnAndByDetails.byDetails.byDetails);
         }
 
-        //context.formSubmissionRouter().getHandlerMap().put("woman_followup", new WomanFollowupHandler(new WomanService(context.allTimelineEvents(), context.allCommonsRepositoryobjects("pkwoman"), context.alertService())));
+        context.formSubmissionRouter().getHandlerMap().put("new_member_registration", new HouseholdFollowupHandler(new HouseholdService(context.allTimelineEvents(), context.allCommonsRepositoryobjects("pkindividual"), context.alertService())));
     }//end of method
 
     @Override
     protected void onCreation() { }
 
     private class ClientActionHandler implements View.OnClickListener {
+        private HouseholdSmartRegisterFragment householdSmartRegisterFragment;
+
+        public ClientActionHandler(HouseholdSmartRegisterFragment householdSmartRegisterFragment) {
+            this.householdSmartRegisterFragment = householdSmartRegisterFragment;
+        }
+
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.household_profile_info_layout:
-                    DetailActivity.startDetailActivity(getActivity(), (CommonPersonObjectClient) view.getTag(), HouseholdDetailActivity.class);
+                    DetailActivity.startDetailActivity(getActivity(), (CommonPersonObjectClient) view.getTag(), HouseholdDetailActivity.class, householdSmartRegisterFragment);
                     getActivity().finish();
                     break;
                 /*case R.id.woman_next_visit_holder:

@@ -113,7 +113,7 @@ public class NativeHomeActivity extends SecuredActivity {
     protected void onStart(){
         super.onStart();
         HashMap<String,String> segments = new HashMap<String, String>();
-        CountlyAnalytics.startAnalytics(this, Events.LOGIN, segments);
+        //CountlyAnalytics.startAnalytics(this, Events.LOGIN, segments);
         //FlurryAgent.setLogEnabled(false);
         //FlurryAgent.onStartSession(this);
     }
@@ -121,7 +121,7 @@ public class NativeHomeActivity extends SecuredActivity {
     @Override
     protected void onStop(){
         super.onStop();
-        CountlyAnalytics.stopAnalytics();
+//        CountlyAnalytics.stopAnalytics();
         //FlurryAgent.onEndSession(this);
     }
 
