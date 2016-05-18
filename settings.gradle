@@ -1,1 +1,1 @@
-include ':opensrp-app', ':opensrp-mcare', ':opensrp-indonesia', ':opensrp-vaccinator'
+include ':opensrp-app', ':opensrp-mcare', ':opensrp-indonesia', ':opensrp-vaccinator', ':opensrp-steppingstones'
