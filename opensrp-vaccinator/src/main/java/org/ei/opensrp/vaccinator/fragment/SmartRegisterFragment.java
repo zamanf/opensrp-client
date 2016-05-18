@@ -8,10 +8,13 @@ import android.text.TextWatcher;
 import android.util.Log;
 
 import org.ei.opensrp.commonregistry.CommonObjectFilterOption;
+import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
+import org.ei.opensrp.domain.form.FieldOverrides;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.util.StringUtil;
 import org.ei.opensrp.vaccinator.db.Client;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
+import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.contract.SmartRegisterClients;
 import org.ei.opensrp.view.controller.FormController;
 import org.ei.opensrp.view.dialog.DialogOption;
@@ -39,6 +42,21 @@ public abstract class SmartRegisterFragment extends SecuredNativeSmartRegisterFr
         super();
         this.formController1 = formController;
     }
+
+
+    public void startFollowupForm(String formName, SmartRegisterClient client, HashMap<String, String> overrideStringmap, ByColumnAndByDetails byColumnAndByDetails) {
+        if (overrideStringmap == null) {
+            org.ei.opensrp.util.Log.logDebug("overrides data is null");
+            formController1.startFormActivity(formName, client.entityId(), null);
+        } else {
+            overrideStringmap.putAll(providerOverrides());
+            String overrides = Utils.overridesToString(overrideStringmap, client, byColumnAndByDetails);
+            FieldOverrides fieldOverrides = new FieldOverrides(overrides);
+            org.ei.opensrp.util.Log.logDebug("fieldOverrides data is : " + fieldOverrides.getJSONString());
+            formController1.startFormActivity(formName, client.entityId(), fieldOverrides.getJSONString());
+        }
+    }
+
 
     @Override
     protected abstract SecuredNativeSmartRegisterActivity.DefaultOptionsProvider getDefaultOptionsProvider() ;

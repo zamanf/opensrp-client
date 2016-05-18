@@ -24,7 +24,10 @@ public class HouseholdMemberAdapter extends ArrayAdapter<HouseholdMemberDetails>
 
     TextView memberId;
     TextView memberName;
+    TextView memberAge;
+    TextView memberRelation;
     ImageView memberImage;
+
 
     public HouseholdMemberAdapter(Context context, List<HouseholdMemberDetails> list){
         super(context, R.layout.list_individual, list);
@@ -47,6 +50,12 @@ public class HouseholdMemberAdapter extends ArrayAdapter<HouseholdMemberDetails>
         memberName = (TextView) row.findViewById(R.id.memberName);
         memberName.setText(list.get(position).memberName);
         //memberId.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
+
+        memberAge = (TextView) row.findViewById(R.id.memberDate);
+        memberAge.setText(list.get(position).memberAge);
+
+        memberRelation = (TextView) row.findViewById(R.id.relationship);
+        memberRelation.setText(list.get(position).memberRelationWithHousehold);
 
         memberImage =(ImageView) row.findViewById(R.id.individual_profilepic);
         memberImage.setImageResource(list.get(position).memberImageId);

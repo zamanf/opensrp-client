@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="fill_parent"
-    android:weightSum="9"
+    android:weightSum="11"
     android:layout_height="@dimen/list_item_height">
 
     <LinearLayout
@@ -95,10 +95,28 @@
         <org.ei.opensrp.view.customControls.CustomFontTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/household_address"
             style="@style/CustomFontTextViewStyle.ListView.Normal"
             android:id="@+id/household_contact"
             android:textSize="14sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_weight="2"
+        android:gravity="center"
+        android:background="@color/DarkBlue"
+        android:id="@+id/household_add_member"
+        android:layout_marginRight="1dp">
+
+        <org.ei.opensrp.view.customControls.CustomFontTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/CustomFontTextViewStyle.ListView.Normal"
+            android:textSize="19sp"
+            android:text="@string/household_add_member"
+            android:textColor="@color/White"
+            android:gravity="center"/>
     </LinearLayout>
 
 

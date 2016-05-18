@@ -7,6 +7,9 @@
       "name" : "id",
       "shouldLoadValue" : true
     }, {
+      "name": "relationalid",
+      "shouldLoadValue": true
+    }, {
       "name" : "provider_uc",
       "bind" : "/model/instance/New_Member_Registration_v1/provider_uc",
       "shouldLoadValue" : true

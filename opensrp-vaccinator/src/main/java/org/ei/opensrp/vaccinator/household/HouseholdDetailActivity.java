@@ -71,7 +71,11 @@ public class HouseholdDetailActivity extends DetailActivity {
     protected void generateView() {
         TableLayout dt = (TableLayout) findViewById(R.id.household_detail_info_table1);
 
-        //setting value in WOMAN basic information textviews
+        //setting value in Household basic information textviews
+
+        sql = "select * from pkindividual where relationalid = '" + client.getCaseId() + "'";
+        List<CommonPersonObject> individualList = Context.getInstance().allCommonsRepositoryobjects("pkindividual").customQueryForCompleteRow(sql, new String[]{}, "pkindividual");
+
         TableRow tr = getDataRow(this, "Person ID", getValue(client.getColumnmaps(), "person_id_hhh", true), null);
         dt.addView(tr);
 
@@ -94,7 +98,7 @@ public class HouseholdDetailActivity extends DetailActivity {
         TableLayout dt2 = (TableLayout) findViewById(R.id.household_detail_info_table2);
         tr = getDataRow(this, "Household ID", getValue(client, "existing_household_id", true), null);
         dt2.addView(tr);
-        tr = getDataRow(this, "Number of Members", getValue(client, "num_fam_member", true), null);
+        tr = getDataRow(this, "Number of Members", "" + individualList.size() + "", null);
         dt2.addView(tr);
         tr = getDataRow(this, "Source of Drinking Water", getValue(client, "water_source", true), null);
         dt2.addView(tr);
@@ -108,9 +112,6 @@ public class HouseholdDetailActivity extends DetailActivity {
         dt2.addView(tr);
 
 
-        sql = "select * from pkindividual where relationalid = '" + client.getCaseId() + "'";
-        List<CommonPersonObject> individualList = Context.getInstance().allCommonsRepositoryobjects("pkindividual").customQueryForCompleteRow(sql, new String[]{}, "pkindividual");
-
         arrayAdapter = new ArrayAdapter<CommonPersonObject>
                 (this, android.R.layout.simple_list_item_1, individualList);
 
@@ -122,8 +123,7 @@ public class HouseholdDetailActivity extends DetailActivity {
         for (CommonPersonObject individual : individualList) {
             HouseholdMemberDetails member = new HouseholdMemberDetails();
             int memberAge = Years.yearsBetween(new DateTime(getValue(individual.getDetails(), "calc_dob_confirm", false)), DateTime.now()).getYears();
-            tr = getDataRow(this, "DOB (Age)", convertDateFormat(getValue(individual.getDetails(), "calc_dob_confirm", false), true) + " (" + age + " years)", null);
-            dt.addView(tr);
+            //tr = getDataRow(this, "DOB (Age)", convertDateFormat(getValue(individual.getDetails(), "calc_dob_confirm", false), true) + " (" + age + " years)", null);
 
             if(memberAge < 10 && getValue(individual.getDetails(), "gender", false).equalsIgnoreCase("male"))
                 member.setMemberImageId(R.drawable.child_boy_infant);
@@ -137,11 +137,13 @@ public class HouseholdDetailActivity extends DetailActivity {
 
             member.setMemberId(getValue(individual.getDetails(), "person_id", false));
             member.setMemberName(StringUtil.humanizeAndDoUPPERCASE(getValue(individual.getDetails(), "first_name", false)));
+            member.setMemberRelationWithHousehold(getValue(individual.getDetails(), "relationship", false));
+            member.setMemberAge(convertDateFormat(getValue(individual.getDetails(), "calc_dob_confirm", false), true) + " (" + memberAge + " years)");
             memberDetails.add(member);
         }
         list.setAdapter(new HouseholdMemberAdapter(HouseholdDetailActivity.this, memberDetails));
 
-        Button addMember = (Button) findViewById(R.id.btnAddMember);
+       /* Button addMember = (Button) findViewById(R.id.btnAddMember);
         addMember.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -151,7 +153,7 @@ public class HouseholdDetailActivity extends DetailActivity {
                 map.putAll(Utils.providerDetails());
                 parentSmartRegisterFragment.startFollowupForm("new_member_registration", client, map, SmartRegisterFragment.ByColumnAndByDetails.byDefault);
             }
-        });
+        });*/
     }
 
 
@@ -177,7 +179,7 @@ public class HouseholdDetailActivity extends DetailActivity {
 //    }
 
 
-    private Map<String, String> followupOverrides(CommonPersonObjectClient client){
+    /*private Map<String, String> followupOverrides(CommonPersonObjectClient client){
         Map<String, String> map = new HashMap<>();
         map.put("existing_address1", getValue(client.getDetails(), "adderss1", true));
         map.put("existing_union_council", getValue(client.getDetails(), "union_council", true));
@@ -202,11 +204,11 @@ public class HouseholdDetailActivity extends DetailActivity {
         map.put("existing_epi_card_number", getValue(client.getDetails(), "epi_card_number", false));
         map.put("existing_child_was_suffering_from_a_disease_at_birth", getValue(client.getDetails(), "child_was_suffering_from_a_disease_at_birth", true));
         map.put("existing_reminders_approval", getValue(client.getDetails(), "reminders_approval", false));
-        map.put("existing_contact_phone_number", getValue(client.getDetails(), "contact_phone_number", false));*/
+        map.put("existing_contact_phone_number", getValue(client.getDetails(), "contact_phone_number", false));
 
 
         return map;
-    }
+    }*/
 
     @Override
     protected Class onBackActivity() {

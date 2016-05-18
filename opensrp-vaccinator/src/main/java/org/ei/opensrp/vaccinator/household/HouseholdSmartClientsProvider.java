@@ -6,8 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.commonregistry.CommonPersonObjectController;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
@@ -19,6 +21,8 @@ import org.ei.opensrp.view.dialog.FilterOption;
 import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
 import org.ei.opensrp.view.viewHolder.OnClickFormLauncher;
+
+import java.util.List;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static util.Utils.fillValue;
@@ -56,19 +60,30 @@ public class HouseholdSmartClientsProvider implements SmartRegisterClientsProvid
     public View getView(SmartRegisterClient client, View parentView, ViewGroup viewGroup) {
         CommonPersonObjectClient pc = (CommonPersonObjectClient) client;
 
+        String sql = "select * from pkindividual where relationalid = '" + pc.getCaseId() + "'";
+        List<CommonPersonObject> individualList = org.ei.opensrp.Context.getInstance().allCommonsRepositoryobjects("pkindividual").customQueryForCompleteRow(sql, new String[]{}, "pkindividual");
+
         parentView = (ViewGroup) inflater().inflate(R.layout.smart_register_household_client, null);
         fillValue((TextView)parentView.findViewById(R.id.household_id), pc, "existing_household_id", false);
         fillValue((TextView) parentView.findViewById(R.id.household_name), getValue(pc, "first_name_hhh", true) + " " + getValue(pc, "last_name_hhh", true));
-        fillValue((TextView) parentView.findViewById(R.id.household_member_count), getValue(pc, "num_fam_member", true));
+        fillValue((TextView) parentView.findViewById(R.id.household_member_count), "" + individualList.size() + "");
         fillValue((TextView) parentView.findViewById(R.id.household_address), getValue(pc, "address1", true) + ", " + getValue(pc, "union_council", true) + ", " +
-                                                                                getValue(pc, "town", true) + ",\n " + getValue(pc, "city_village", true) + ", " +
-                                                                                getValue(pc, "province", true) + ", ");
+                getValue(pc, "town", true) + ",\n " + getValue(pc, "city_village", true) + ", " +
+                getValue(pc, "province", true) + ", ");
         fillValue((TextView) parentView.findViewById(R.id.household_contact), getValue(pc, "contact_phone_number_hhh", true));
+
+
+        LinearLayout memberAdd = (LinearLayout) parentView.findViewById(R.id.household_add_member);
+        memberAdd.setBackgroundColor(context.getResources().getColor(R.color.alert_normal));
+
 
         setProfiePic(parentView.getContext(), (ImageView) parentView.findViewById(R.id.household_profilepic), client.entityId(), false);
 
         parentView.findViewById(R.id.household_profile_info_layout).setTag(client);
         parentView.findViewById(R.id.household_profile_info_layout).setOnClickListener(onClickListener);
+
+        parentView.findViewById(R.id.household_add_member).setTag(client);
+        parentView.findViewById(R.id.household_add_member).setOnClickListener(onClickListener);
 
         parentView.setLayoutParams(clientViewLayoutParams);
 

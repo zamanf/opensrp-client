@@ -13,6 +13,10 @@ public class HouseholdMemberDetails {
 
     public String memberRegister;
 
+    public String memberAge;
+
+    public String memberRelationWithHousehold;
+
     public int memberImageId;
 
     public String getMemberId() {
@@ -37,6 +41,22 @@ public class HouseholdMemberDetails {
 
     public void setMemberRegister(String memberRegister) {
         this.memberRegister = memberRegister;
+    }
+
+    public String getMemberAge() {
+        return memberAge;
+    }
+
+    public void setMemberAge(String memberAge) {
+        this.memberAge = memberAge;
+    }
+
+    public String getMemberRelationWithHousehold() {
+        return memberRelationWithHousehold;
+    }
+
+    public void setMemberRelationWithHousehold(String memberRelationWithHousehold) {
+        this.memberRelationWithHousehold = memberRelationWithHousehold;
     }
 
     public int getMemberImageId() {

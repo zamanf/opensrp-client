@@ -1,6 +1,15 @@
 package org.ei.opensrp.vaccinator.fragment;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.view.View;
+import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.CommonObjectSort;
@@ -15,6 +24,7 @@ import org.ei.opensrp.vaccinator.household.HouseholdService;
 import org.ei.opensrp.vaccinator.household.HouseholdSmartClientsProvider;
 import org.ei.opensrp.vaccinator.woman.DetailActivity;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
+import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.controller.FormController;
 import org.ei.opensrp.view.dialog.AllClientsFilter;
 import org.ei.opensrp.view.dialog.FilterOption;
@@ -24,25 +34,29 @@ import org.ei.opensrp.view.dialog.SortOption;
 import java.util.HashMap;
 import java.util.Map;
 
+import static util.Utils.getValue;
+
 /**
  * Created by Safwan on 4/25/2016.
+ *
  */
-public class HouseholdSmartRegisterFragment extends SmartClientRegisterFragment {
+public class HouseholdSmartRegisterFragment extends SmartClientRegisterGroupFragment {
 
     private CommonPersonObjectController controller;
-    private final ClientActionHandler clientActionHandler = new ClientActionHandler(this);
+    private final ClientActionHandler clientActionHandler;
     private HouseholdSmartClientsProvider clientProvider;
-    public static FormController householdFormController;
-
+    public static CommonPersonObjectClient client;
 
     public HouseholdSmartRegisterFragment(){
         super(null);
+        clientActionHandler = new ClientActionHandler(this);
     }
 
     public HouseholdSmartRegisterFragment(FormController householdFormController) {
         super(householdFormController);
-        this.householdFormController = householdFormController;
+        clientActionHandler = new ClientActionHandler(this);
     }
+
 
     @Override
     protected SecuredNativeSmartRegisterActivity.DefaultOptionsProvider getDefaultOptionsProvider() {
@@ -51,9 +65,9 @@ public class HouseholdSmartRegisterFragment extends SmartClientRegisterFragment 
             @Override
             public ServiceModeOption serviceMode() {
                 return new VaccinationServiceModeOption(clientsProvider(), "Household", new int[]{
-                        R.string.household_profile , R.string.household_members, R.string.household_address, R.string.contactNumber
+                        R.string.household_profile , R.string.household_members, R.string.household_address, R.string.contactNumber, R.string.household_add_member
                         /*R.string.household_last_visit, R.string.household_due_date,*/
-                }, new int[]{3,2,2,2});
+                }, new int[]{3,2,2,2,2});
             }
 
             @Override
@@ -83,9 +97,15 @@ public class HouseholdSmartRegisterFragment extends SmartClientRegisterFragment 
         return "family_registration";
     }
 
+
     @Override
     protected String getOAFollowupForm(Client client, HashMap<String, String> overridemap) {
         return null;
+    }
+
+    @Override
+    protected String getMemberRegistrationForm(HashMap<String, String> overridemap) {
+        return "new_member_registration";
     }
 
     @Override
@@ -111,11 +131,12 @@ public class HouseholdSmartRegisterFragment extends SmartClientRegisterFragment 
                         CommonPersonObjectController.ByColumnAndByDetails.byDetails.byDetails);
         }
 
-        context.formSubmissionRouter().getHandlerMap().put("new_member_registration", new HouseholdFollowupHandler(new HouseholdService(context.allTimelineEvents(), context.allCommonsRepositoryobjects("pkindividual"), context.alertService())));
+       //todo context.formSubmissionRouter().getHandlerMap().put("new_member_registration", new HouseholdFollowupHandler(new HouseholdService(context.allTimelineEvents(), context.allCommonsRepositoryobjects("pkindividual"), context.alertService())));
     }//end of method
 
     @Override
     protected void onCreation() { }
+
 
     private class ClientActionHandler implements View.OnClickListener {
         private HouseholdSmartRegisterFragment householdSmartRegisterFragment;
@@ -128,16 +149,98 @@ public class HouseholdSmartRegisterFragment extends SmartClientRegisterFragment 
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.household_profile_info_layout:
-                    DetailActivity.startDetailActivity(getActivity(), (CommonPersonObjectClient) view.getTag(), HouseholdDetailActivity.class, householdSmartRegisterFragment);
+                    DetailActivity.startDetailActivity(getActivity(), (CommonPersonObjectClient) view.getTag(), HouseholdDetailActivity.class);
                     getActivity().finish();
                     break;
-                /*case R.id.woman_next_visit_holder:
-                        HashMap<String, String> map = new HashMap<>();
-                        CommonPersonObjectClient client = (CommonPersonObjectClient) view.getTag();
-                        map.putAll(followupOverrides(client));
-                        startFollowupForm("woman_followup", (SmartRegisterClient) view.getTag(), map, ByColumnAndByDetails.byDefault);
-                    break;*/
+                case R.id.household_add_member:
+                    client = (CommonPersonObjectClient) view.getTag();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+                    LinearLayout ly = new LinearLayout(getActivity());
+                    ly.setOrientation(LinearLayout.VERTICAL);
+                    final RadioButton hasQRCode = new RadioButton(getActivity());
+                    final RadioButton noQRCode = new RadioButton(getActivity());
+                    RadioGroup rG = new RadioGroup(getActivity());
+                    hasQRCode.setText("Yes");
+                    noQRCode.setText("No");
+                    final LinearLayout layout = new LinearLayout(getActivity());
+
+
+                    layout.setOrientation(LinearLayout.HORIZONTAL);
+                    layout.setWeightSum(5);
+                    TextView memberCodeQuestion = new TextView(getActivity());
+                    memberCodeQuestion.setText("Does member QR code exists?");
+                    layout.addView(memberCodeQuestion);
+
+                    rG.addView(hasQRCode);
+                    rG.addView(noQRCode);
+                    ly.addView(layout);
+                    ly.addView(rG);
+
+                    builder.setView(ly);
+
+                    final AlertDialog alertDialog = builder.setPositiveButton("OK", null).setNegativeButton("Cancel", null).create();
+                    alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+
+                        @Override
+                        public void onShow(final DialogInterface dialog) {
+                            Button b = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                            b.setOnClickListener(new View.OnClickListener() {
+
+                                @Override
+                                public void onClick(View view) {
+                                    if (noQRCode.isChecked()) {
+                                        HashMap<String, String> map = new HashMap<>();
+                                        map.putAll(followupOverrides(client));
+                                        startFollowupForm("new_member_registration", client, map, ByColumnAndByDetails.byDefault);
+                                    } else if (hasQRCode.isChecked()) {
+                                        HashMap<String, String> map = new HashMap<>();
+                                        map.putAll(followupOverrides(client));
+                                        startFollowupForm("new_member_registration", client, map, ByColumnAndByDetails.byDefault);
+                                        startRegistration();
+                                    }
+                                    dialog.dismiss();
+                                }
+                            });
+
+                        }
+                    });
+                    alertDialog.show();
+
+
+                    break;
+
             }
         }
     }//end of method
+
+    private Map<String, String> followupOverrides(CommonPersonObjectClient client){
+        Map<String, String> map = new HashMap<>();
+
+        map.put("relationalid",client.getCaseId());
+        map.put("existing_first_name_hhh", getValue(client.getDetails(), "first_name_hhh", true));
+        map.put("existing_last_name_hhh", getValue(client.getDetails(), "last_name_hhh", true));
+        map.put("existing_household_id", getValue(client.getDetails(), "existing_household_id", true));
+        map.put("existing_union_councilname", getValue(client.getDetails(), "union_council", true));
+        map.put("existing_townname", getValue(client.getDetails(), "town", true));
+        map.put("existing_city_villagename", getValue(client.getDetails(), "city_village", true));
+        map.put("existing_provincename", getValue(client.getDetails(), "province", true));
+
+
+
+        /*map.put("existing_gender", getValue(client.getDetails(), "gender", true));
+        map.put("existing_mother_name", getValue(client.getDetails(), "mother_name", true));
+        map.put("existing_father_name", getValue(client.getDetails(), "father_name", true));
+        map.put("existing_birth_date", getValue(client.getDetails(), "dob", false));
+        map.put("existing_ethnicity", getValue(client.getDetails(), "ethnicity", true));
+        map.put("existing_client_reg_date", getValue(client.getDetails(), "client_reg_date", false));
+        map.put("existing_epi_card_number", getValue(client.getDetails(), "epi_card_number", false));
+        map.put("existing_child_was_suffering_from_a_disease_at_birth", getValue(client.getDetails(), "child_was_suffering_from_a_disease_at_birth", true));
+        map.put("existing_reminders_approval", getValue(client.getDetails(), "reminders_approval", false));
+        map.put("existing_contact_phone_number", getValue(client.getDetails(), "contact_phone_number", false));*/
+
+
+        return map;
+    }
+
 }

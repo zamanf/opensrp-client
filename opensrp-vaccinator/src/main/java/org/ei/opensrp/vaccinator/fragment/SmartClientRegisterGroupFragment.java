@@ -10,13 +10,13 @@ import android.widget.TextView;
 
 import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.CommonObjectSort;
+import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.domain.form.FieldOverrides;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.vaccinator.R;
 import org.ei.opensrp.vaccinator.db.CESQLiteHelper;
 import org.ei.opensrp.vaccinator.db.Client;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
-import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.contract.SmartRegisterClients;
 import org.ei.opensrp.view.controller.FormController;
 import org.ei.opensrp.view.dialog.DialogOption;
@@ -30,7 +30,9 @@ import java.util.Map;
 import util.Utils;
 import util.barcode.Barcode;
 
-public abstract class SmartClientRegisterFragment extends SmartRegisterFragment {
+import static util.Utils.getValue;
+
+public abstract class SmartClientRegisterGroupFragment extends SmartRegisterFragment {
     private FormController formController1;
 
     public CESQLiteHelper getClientEventDb() {
@@ -39,7 +41,7 @@ public abstract class SmartClientRegisterFragment extends SmartRegisterFragment 
 
     private CESQLiteHelper ceDb;
 
-    public SmartClientRegisterFragment(FormController formController) {
+    public SmartClientRegisterGroupFragment(FormController formController) {
         super(formController);
         this.formController1 = formController;
     }
@@ -133,6 +135,8 @@ public abstract class SmartClientRegisterFragment extends SmartRegisterFragment 
 
     protected abstract String getRegistrationForm(HashMap<String, String> overridemap);
 
+    protected abstract String getMemberRegistrationForm(HashMap<String, String> overridemap);
+
     protected abstract String getOAFollowupForm(Client client, HashMap<String, String> overridemap);
 
     @Override
@@ -152,14 +156,21 @@ public abstract class SmartClientRegisterFragment extends SmartRegisterFragment 
         formController1.startFormActivity(getRegistrationForm(overrides), null, new FieldOverrides(new JSONObject(overrides).toString()).getJSONString());
     }
 
-    private void startOffSiteFollowupForm(Client client, HashMap<String, String> overrides){
+    private void startFollowupForm(Client client, HashMap<String, String> overrides){
         overrides.putAll(providerOverrides());
         formController1.startFormActivity(getOAFollowupForm(client, overrides), client.getBaseEntityId(), new FieldOverrides(new JSONObject(overrides).toString()).getJSONString());
+    }
+
+    private void startNewMemberRegistrationForm( HashMap<String, String> overrides){
+        overrides.putAll(providerOverrides());
+        formController1.startFormActivity(getMemberRegistrationForm(overrides), null, new FieldOverrides(new JSONObject(overrides).toString()).getJSONString());
     }
 
     private void onQRCodeSucessfullyScanned(String qrCode) {
       /* #TODO:after reading the code , app first search for that id in database if he it is there , that client appears  on register only . if it doesnt then it shows two options
        */
+
+        CommonPersonObjectClient client = null;
         SmartRegisterClients fc = getFilteredClients(qrCode);
         if(fc.size() > 0) {
             getSearchView().setText(qrCode);
@@ -196,21 +207,44 @@ public abstract class SmartClientRegisterFragment extends SmartRegisterFragment 
                 return;
             }
 
+            client = HouseholdSmartRegisterFragment.client;
+
             HashMap<String,String> map = new HashMap<>();
             map.put("existing_program_client_id", qrCode);
             map.put("program_client_id", qrCode);
-            map.put("existing_household_id", qrCode);
-            map.put("household_id", qrCode);
+
+            if(client != null){
+
+                //c.addRelationship("relation", client.getCaseId());
+
+                map.put("relationalid",client.getCaseId());
+                map.put("existing_first_name_hhh", getValue(client.getDetails(), "first_name_hhh", true));
+                map.put("existing_last_name_hhh", getValue(client.getDetails(), "last_name_hhh", true));
+                map.put("existing_household_id", getValue(client.getDetails(), "existing_household_id", true));
+                map.put("existing_address1", getValue(client.getDetails(), "adderss1", true));
+                map.put("existing_union_council", getValue(client.getDetails(), "union_council", true));
+                map.put("existing_town", getValue(client.getDetails(), "town", true));
+                map.put("existing_city_village", getValue(client.getDetails(), "city_village", true));
+                map.put("existing_province", getValue(client.getDetails(), "province", true));
+                map.put("existing_landmark", getValue(client.getDetails(), "landmark", true));
+            } else {
+                map.put("existing_household_id", qrCode);
+                map.put("household_id", qrCode);
+            }
             Map<String, String> m = customFieldOverrides();
             if(m != null){
                 map.putAll(m);
             }
 
             if (c != null){
-                startOffSiteFollowupForm(c, map);
+                startFollowupForm(c, map);
             }
-            else {
+            else if (c == null && client == null) {
                 startEnrollmentForm(map);
+                HouseholdSmartRegisterFragment.client = null;
+            } else {
+                startNewMemberRegistrationForm(map);
+                HouseholdSmartRegisterFragment.client = null;
             }
         }
     }

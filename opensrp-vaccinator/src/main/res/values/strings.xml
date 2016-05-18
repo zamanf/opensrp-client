@@ -88,6 +88,8 @@
     <string name="household_profile_members">Number of Members</string>
     <string name="household_water">Source of Drinking Water</string>
     <string name="household_latrine">Latrine System</string>
+    <string name="household_add_member">Add Member</string>
+    <string name="household_relationship">Relationship</string>
 
 
 </resources>

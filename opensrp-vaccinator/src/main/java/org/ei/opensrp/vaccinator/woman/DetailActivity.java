@@ -55,14 +55,14 @@ public abstract class DetailActivity extends Activity {
     public static void startDetailActivity(android.content.Context context, CommonPersonObjectClient clientobj, Class<? extends DetailActivity> detailActivity){
         client = clientobj;
         context.startActivity(new Intent(context, detailActivity));
-        parentSmartRegisterFragment = null;
     }
 
-    public static void startDetailActivity(android.content.Context context, CommonPersonObjectClient clientobj,
+    /*public static void startDetailActivity(android.content.Context context, CommonPersonObjectClient clientobj,
            Class<? extends DetailActivity> detailActivity, SmartClientRegisterFragment smartClientRegisterFragment){
-        startDetailActivity(context, clientobj, detailActivity);
+        client = clientobj;
         parentSmartRegisterFragment = smartClientRegisterFragment;
-    }
+        context.startActivity(new Intent(context, detailActivity));
+    }*/
 
     protected abstract int layoutResId();
 
