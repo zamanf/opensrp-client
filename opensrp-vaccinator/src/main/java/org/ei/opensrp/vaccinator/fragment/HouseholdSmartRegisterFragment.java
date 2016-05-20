@@ -167,9 +167,10 @@ public class HouseholdSmartRegisterFragment extends SmartClientRegisterGroupFrag
 
 
                     layout.setOrientation(LinearLayout.HORIZONTAL);
-                    layout.setWeightSum(5);
+                    //layout.setWeightSum(5);
                     TextView memberCodeQuestion = new TextView(getActivity());
                     memberCodeQuestion.setText("Does member QR code exists?");
+                    memberCodeQuestion.setTextSize(20);
                     layout.addView(memberCodeQuestion);
 
                     rG.addView(hasQRCode);
