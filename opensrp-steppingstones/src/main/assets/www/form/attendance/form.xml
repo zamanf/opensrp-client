@@ -1,0 +1,10 @@
+<form autocomplete="off" novalidate="novalidate" class="or clearfix theme-formhub" id="Attendance">
+<!--This form was created by transforming a OpenRosa-flavored (X)Form using an XSLT sheet created by Enketo LLC.--><section class="form-logo"> </section><h3 id="form-title">Attendance</h3>
+  
+  
+    <label class="question non-select "><span lang="" class="question-label active">Enter Child UID</span><span class="required">*</span><input type="text" name="/Attendance/UID" required="required" data-type-xml="string"/></label>
+    <label class="question non-select "><span lang="" class="question-label active">Select Month and year</span><span class="required">*</span><input type="date" name="/Attendance/monthandyear" required="required" data-type-xml="date"/></label>
+    <fieldset class="question "><fieldset><legend><span lang="" class="question-label active">Attendance</span><span class="required">*</span>
+                    </legend><div class="option-wrapper"><label class=""><input type="radio" name="/Attendance/status" data-name="/Attendance/status" value="Present" required="required" data-type-xml="select1"/><span lang="" class="option-label active">Present</span></label><label class=""><input type="radio" name="/Attendance/status" data-name="/Attendance/status" value="Absent" required="required" data-type-xml="select1"/><span lang="" class="option-label active">Absent</span></label></div></fieldset></fieldset>
+  
+<fieldset id="or-calculated-items" style="display:none;"><label class="calculation non-select "><input type="hidden" name="/Attendance/meta/instanceID" data-calculate="concat('uuid:', uuid())" data-type-xml="string"/></label><label class="calculation non-select "><input type="hidden" name="/Attendance/formhub/uuid" data-calculate="'ad36ad6748254732b2ce722b333a7e0d'" data-type-xml="string"/></label></fieldset></form>

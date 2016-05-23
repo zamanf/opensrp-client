@@ -1,0 +1,10 @@
+<form autocomplete="off" novalidate="novalidate" class="or clearfix theme-formhub" id="ss_child_reg">
+<!--This form was created by transforming a OpenRosa-flavored (X)Form using an XSLT sheet created by Enketo LLC.--><section class="form-logo"> </section><h3 id="form-title">Child Registration</h3>
+  
+  
+    <label class="question non-select "><span lang="" class="question-label active">Enter Child UID</span><input type="text" name="/ss_child_reg/UID" data-type-xml="string"/></label>
+    <label class="question non-select "><span lang="" class="question-label active">Enter Name</span><input type="text" name="/ss_child_reg/Name" data-type-xml="string"/></label>
+    <label class="question non-select "><span lang="" class="question-label active">Enter Date Of Birth</span><input type="date" name="/ss_child_reg/DOB" data-type-xml="date"/></label>
+    <label class="question non-select "><span lang="" class="question-label active">Enter Age</span><input type="number" name="/ss_child_reg/Age" data-type-xml="int"/></label>
+  
+<fieldset id="or-calculated-items" style="display:none;"><label class="calculation non-select "><input type="hidden" name="/ss_child_reg/meta/instanceID" data-calculate="concat('uuid:', uuid())" data-type-xml="string"/></label><label class="calculation non-select "><input type="hidden" name="/ss_child_reg/formhub/uuid" data-calculate="'134b0cfb74824d398f8b8e4d46638737'" data-type-xml="string"/></label></fieldset></form>

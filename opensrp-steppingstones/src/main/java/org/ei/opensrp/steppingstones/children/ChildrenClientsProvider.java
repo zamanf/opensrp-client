@@ -1,22 +1,16 @@
 package org.ei.opensrp.steppingstones.children;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.commonregistry.CommonPersonObjectController;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.steppingstones.R;
-import org.ei.opensrp.steppingstones.ss_children.ChildrenDetailActivity;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.contract.SmartRegisterClients;
 import org.ei.opensrp.view.dialog.FilterOption;
@@ -53,39 +47,31 @@ public class ChildrenClientsProvider implements SmartRegisterClientsProvider {
         txtColorBlack = context.getResources().getColor(R.color.text_black);
     }
 
-
-
     @Override
     public View getView(SmartRegisterClient smartRegisterClient, View convertView, ViewGroup viewGroup) {
         ViewHolder viewHolder;
         if (convertView == null){
-            convertView = (ViewGroup) inflater().inflate(org.ei.opensrp.steppingstones.R.layout.smart_register_children_client, null);
+            convertView = (ViewGroup) inflater().inflate(R.layout.smart_register_ss_child_client, null);
             viewHolder = new ViewHolder();
-            viewHolder.profilelayout =  (LinearLayout)convertView.findViewById(org.ei.opensrp.steppingstones.R.id.profile_info_layout);
-            viewHolder.gobhhid = (TextView)convertView.findViewById(org.ei.opensrp.steppingstones.R.id.gobhhid);
-            viewHolder.jvitahhid = (TextView)convertView.findViewById(org.ei.opensrp.steppingstones.R.id.jvitahhid);
-            viewHolder.village = (TextView)convertView.findViewById(org.ei.opensrp.steppingstones.R.id.village);
-            viewHolder.profilepic =(ImageView)convertView.findViewById(org.ei.opensrp.steppingstones.R.id.profilepic);
 
-            viewHolder.headofhouseholdname = (TextView)convertView.findViewById(org.ei.opensrp.steppingstones.R.id.householdheadname);
 
-            convertView.setTag(viewHolder);
+            viewHolder.id = (TextView)convertView.findViewById(R.id.id);
+            viewHolder.name = (TextView)convertView.findViewById(R.id.name);
+            viewHolder.age = (TextView)convertView.findViewById(R.id.age);
+            viewHolder.dob = (TextView)convertView.findViewById(R.id.dob);
+
         }else{
+
             viewHolder = (ViewHolder) convertView.getTag();
-            viewHolder.profilepic.setImageDrawable(context.getResources().getDrawable(org.ei.opensrp.steppingstones.R.mipmap.household_profile_thumb));
         }
+
 
         CommonPersonObjectClient pc = (CommonPersonObjectClient) smartRegisterClient;
-
-
-
-        if(pc.getDetails().get("profilepic")!=null){
-            ChildrenDetailActivity.setImagetoHolder((Activity) context, pc.getDetails().get("profilepic"), viewHolder.profilepic, org.ei.opensrp.steppingstones.R.mipmap.household_profile_thumb);
-        }
-        viewHolder.gobhhid.setText(pc.getDetails().get("UID")!=null?pc.getDetails().get("UID"):"");
-        viewHolder.jvitahhid.setText(pc.getDetails().get("Name")!=null?pc.getDetails().get("Name"):"");
-        viewHolder.village.setText(pc.getDetails().get("Name")!=null?pc.getDetails().get("Name"):"");
-        viewHolder.headofhouseholdname.setText(pc.getDetails().get("Name")!=null?pc.getDetails().get("Name"):"");
+//
+        viewHolder.id.setText(pc.getDetails().get("UID")!=null?pc.getDetails().get("UID"):"");
+        viewHolder.name.setText(pc.getDetails().get("Name")!=null?pc.getDetails().get("Name"):"");
+        viewHolder.age.setText(pc.getDetails().get("Age")!=null?pc.getDetails().get("Age"):"");
+        viewHolder.dob.setText(pc.getDetails().get("DOB") != null ? pc.getDetails().get("DOB") : "");
 
         convertView.setLayoutParams(clientViewLayoutParams);
         return convertView;
@@ -122,19 +108,6 @@ public class ChildrenClientsProvider implements SmartRegisterClientsProvider {
         TextView name ;
         TextView dob;
         TextView age;
-
-        TextView gobhhid ;
-        TextView jvitahhid ;
-        TextView village;
-        TextView headofhouseholdname;
-        TextView no_of_mwra;
-        TextView last_visit_date;
-        TextView due_visit_date;
-        ImageButton follow_up;
-        LinearLayout profilelayout;
-        ImageView profilepic;
-        FrameLayout due_date_holder;
-
 
     }
 }

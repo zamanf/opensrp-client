@@ -1,6 +1,5 @@
 package org.ei.opensrp.steppingstones;
 
-import android.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -78,6 +77,8 @@ public class NativeHomeActivity extends SecuredActivity {
         navigationController = new SteppingStonesNavigationController(this,anmController);
         setupViews();
         initialize();
+
+
     }
 
     private void setupViews() {
@@ -103,12 +104,11 @@ public class NativeHomeActivity extends SecuredActivity {
         SYNC_COMPLETED.addListener(onSyncCompleteListener);
         FORM_SUBMITTED.addListener(onFormSubmittedListener);
         ACTION_HANDLED.addListener(updateANMDetailsListener);
-        ActionBar actionBar = getActionBar();
-        getActionBar().setTitle("");
-        getActionBar().setIcon(getResources().getDrawable(R.drawable.logo));
-        actionBar.setLogo(R.drawable.logo);
-        actionBar.setDisplayUseLogoEnabled(true);
-        actionBar.setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle("");
+       // getSupportActionBar().setIcon(getResources().getDrawable(org.ei.opensrp.mcare.R.mipmap.logo));
+      //  getSupportActionBar().setLogo(org.ei.opensrp.mcare.R.mipmap.logo);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         LoginActivity.setLanguage();
 //        getActionBar().setBackgroundDrawable(getReso
 // urces().getDrawable(R.color.action_bar_background));
@@ -116,6 +116,7 @@ public class NativeHomeActivity extends SecuredActivity {
 
     @Override
     protected void onResumption() {
+        LoginActivity.setLanguage();
         updateRegisterCounts();
         updateSyncIndicator();
         updateRemainingFormsToSyncCount();
@@ -138,14 +139,26 @@ public class NativeHomeActivity extends SecuredActivity {
         CommonPersonObjectController elcocontroller = new CommonPersonObjectController(context.allCommonsRepositoryobjects("elco"),
                 context.allBeneficiaries(), context.listCache(),
                 context.personObjectClientsCache(),"FWWOMFNAME","elco","FWELIGIBLE","1", CommonPersonObjectController.ByColumnAndByDetails.byDetails.byDetails,"FWWOMFNAME", CommonPersonObjectController.ByColumnAndByDetails.byDetails);
-
+        CommonPersonObjectController anccontroller = new CommonPersonObjectController(context.allCommonsRepositoryobjects("mcaremother"),
+                context.allBeneficiaries(), context.listCache(),
+                context.personObjectClientsCache(),"FWWOMFNAME","mcaremother","FWWOMVALID","1", CommonPersonObjectController.ByColumnAndByDetails.byDetails.byDetails,"FWWOMFNAME", CommonPersonObjectController.ByColumnAndByDetails.byDetails);
+        CommonPersonObjectController childcontroller = new CommonPersonObjectController(context.allCommonsRepositoryobjects("mcarechild"),
+                context.allBeneficiaries(), context.listCache(),
+                context.personObjectClientsCache(),"FWBNFGEN","mcarechild","FWBNFGEN", CommonPersonObjectController.ByColumnAndByDetails.byDetails);
 
 
         ecRegisterClientCountView.setText(valueOf(hhcontroller.getClients().size()));
-        ancRegisterClientCountView.setText(valueOf(homeContext.ancCount()));
+        ancRegisterClientCountView.setText(valueOf(anccontroller.getClients().size()));
         pncRegisterClientCountView.setText(valueOf(homeContext.pncCount()));
         fpRegisterClientCountView.setText(valueOf(elcocontroller.getClients().size()));
-        childRegisterClientCountView.setText(valueOf(homeContext.childCount()));
+        childRegisterClientCountView.setText(valueOf(childcontroller.getClients().size()));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+      //  MenuInflater inflater = getMenuInflater();
+    //    inflater.inflate(R.menu.menu_main, menu);
+        return true;
     }
 
     @Override
@@ -169,7 +182,9 @@ public class NativeHomeActivity extends SecuredActivity {
                 String newLanguagePreference = LoginActivity.switchLanguagePreference();
                 LoginActivity.setLanguage();
                 Toast.makeText(this, "Language preference set to " + newLanguagePreference + ". Please restart the application.", LENGTH_SHORT).show();
+                this.recreate();
                 return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -229,11 +244,11 @@ public class NativeHomeActivity extends SecuredActivity {
                     break;
 
                 case R.id.btn_pnc_register:
-                    navigationController.startPNCSmartRegistry();
+//                    navigationController.startPNCSmartRegistry();
                     break;
 
                 case R.id.btn_child_register:
-                    navigationController.startChildSmartRegistry();
+//                    navigationController.startChildSmartRegistry();
                     break;
 
                 case R.id.btn_fp_register:
@@ -249,11 +264,11 @@ public class NativeHomeActivity extends SecuredActivity {
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.btn_reporting:
-                    navigationController.startReports();
+//                    navigationController.startReports();
                     break;
 
                 case R.id.btn_videos:
-                    navigationController.startVideos();
+//                    navigationController.startVideos();
                     break;
             }
         }

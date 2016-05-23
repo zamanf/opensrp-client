@@ -1,0 +1,25 @@
+{
+  "form_data_definition_version": "1",
+  "form": {
+    "default_bind_path": "/model/instance/Attendance",
+    "bind_type": "Attendance",
+    "fields": [
+      {
+        "name": "id",
+        "shouldLoadValue": true
+      },
+      {
+        "name": "UID",
+        "bind": "/model/instance/Attendance/UID"
+      },
+      {
+        "name": "monthandyear",
+        "bind": "/model/instance/Attendance/monthandyear"
+      },
+      {
+        "name": "status",
+        "bind": "/model/instance/Attendance/status"
+      }
+    ]
+  }
+}

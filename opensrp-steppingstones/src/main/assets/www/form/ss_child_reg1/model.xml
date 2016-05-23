@@ -1,0 +1,30 @@
+<model>
+    <instance>
+        <ss_child_reg1 encounter_type="Registration" id="ss_child_reg1" version="201603141247">
+          <formhub>
+            <uuid/>
+          </formhub>
+          <existing_location_id openmrs_entity="encounter" openmrs_entity_id="location_id"/>
+          <today openmrs_entity="encounter" openmrs_entity_id="encounter_date"/>
+          <start openmrs_entity="concept" openmrs_entity_id="163137AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
+          <end openmrs_entity="concept" openmrs_entity_id="163138AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
+          <deviceid openmrs_entity="concept" openmrs_entity_id="163149AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
+          <subscriberid openmrs_entity="concept" openmrs_entity_id="163150AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
+          <simserial openmrs_entity="concept" openmrs_entity_id="163151AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
+          <phonenumber openmrs_entity="concept" openmrs_entity_id="163152AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
+          <UID openmrs_entity="person_identifier" openmrs_entity_id="Client UID"/>
+          <Name openmrs_entity="person" openmrs_entity_id="first_name"/>
+          <LastName openmrs_entity="person" openmrs_entity_id="last_name"/>
+          <FatherName openmrs_entity="concept" openmrs_entity_id="1594AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
+          <MotherName openmrs_entity="concept" openmrs_entity_id="1593AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
+          <DOB openmrs_entity="person" openmrs_entity_id="birthdate"/>
+          <Age/>
+          <ThreeOrMore/>
+          <AgeNote/>
+          <Gender openmrs_entity="person" openmrs_entity_id="gender"/>
+          <meta>
+            <instanceID/>
+          </meta>
+        </ss_child_reg1>
+      </instance>
+  </model>

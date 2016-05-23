@@ -1,0 +1,16 @@
+<model>
+    <instance>
+        <ss_child_reg id="ss_child_reg" version="201603141247">
+          <formhub>
+            <uuid/>
+          </formhub>
+          <UID/>
+          <Name/>
+          <DOB/>
+          <Age/>
+          <meta>
+            <instanceID/>
+          </meta>
+        </ss_child_reg>
+      </instance>
+  </model>

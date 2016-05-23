@@ -43,8 +43,6 @@ public class DristhiConfiguration {
     }
 
     public int port() {
-
-
         return preferences.fetchPort(Integer.parseInt(this.get(PORT)));
     }
 

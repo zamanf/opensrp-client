@@ -38,6 +38,16 @@ public class CommonPersonObjectController {
 
     ArrayList <ControllerFilterMap> filtermap;
 
+    public CommonPersonObjectController(AllCommonsRepository allpersons, AllBeneficiaries allBeneficiaries, Cache<String> stringCache, Cache<CommonPersonObjectClients> personClientsCache, String nameString, String bindtype) {
+        this.allpersonobjects = allpersons;
+        this.allBeneficiaries = allBeneficiaries;
+        this.cache = stringCache;
+        this.personObjectClientsCache = personClientsCache;
+        this.nameString = nameString;
+        this.person_CLIENTS_LIST = bindtype+"ClientsList";
+    }
+
+
     public enum ByColumnAndByDetails{
         byColumn,byDetails,byrelationalid;
     }

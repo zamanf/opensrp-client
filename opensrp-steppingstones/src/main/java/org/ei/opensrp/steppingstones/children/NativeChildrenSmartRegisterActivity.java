@@ -2,7 +2,6 @@ package org.ei.opensrp.steppingstones.children;
 
 import android.view.View;
 
-import org.ei.opensrp.R;
 import org.ei.opensrp.adapter.SmartRegisterPaginatedAdapter;
 import org.ei.opensrp.commonregistry.CommonPersonObjectController;
 import org.ei.opensrp.domain.form.FieldOverrides;
@@ -60,7 +59,7 @@ public class NativeChildrenSmartRegisterActivity extends SecuredNativeSmartRegis
 
             @Override
             public String nameInShortFormForTitle() {
-                return getResources().getString(R.string.ec_register_title_in_short);
+                return getResources().getString(org.ei.opensrp.R.string.ec_register_title_in_short);
             }
         };
     }
@@ -91,7 +90,7 @@ public class NativeChildrenSmartRegisterActivity extends SecuredNativeSmartRegis
 
             @Override
             public String searchHint() {
-                return getString(R.string.str_ec_search_hint);
+                return getString(org.ei.opensrp.R.string.str_ec_search_hint);
             }
         };
     }
@@ -107,16 +106,15 @@ public class NativeChildrenSmartRegisterActivity extends SecuredNativeSmartRegis
 
     private DialogOption[] getEditOptions() {
         return new DialogOption[]{
-
                 new OpenFormOption("tb followup", "tb_followup", formController)
         };
     }
 
     @Override
     protected void onInitialization() {
-        controller = new CommonPersonObjectController(context.allCommonsRepositoryobjects("children"),
+        controller = new CommonPersonObjectController(context.allCommonsRepositoryobjects("Children"),
                 context.allBeneficiaries(), context.listCache(),
-                context.personObjectClientsCache(),"Name","children","UID",CommonPersonObjectController.ByColumnAndByDetails.byDetails);
+                context.personObjectClientsCache(),"Name","Children");
         villageController = new VillageController(context.allEligibleCouples(),
                 context.listCache(), context.villagesCache());
         dialogOptionMapper = new DialogOptionMapper();

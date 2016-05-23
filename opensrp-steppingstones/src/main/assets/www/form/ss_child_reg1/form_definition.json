@@ -1,0 +1,45 @@
+{
+  "form_data_definition_version": "1",
+  "form": {
+    "default_bind_path": "/model/instance/ss_child_reg1",
+    "bind_type": "children",
+    "fields": [
+      {
+        "name": "id",
+        "shouldLoadValue": true
+      },
+      {
+        "name": "UID",
+        "bind": "/model/instance/ss_child_reg1/UID"
+      },
+      {
+        "name": "Name",
+        "bind": "/model/instance/ss_child_reg1/Name"
+      },
+      {
+        "name": "LastName",
+        "bind": "/model/instance/ss_child_reg1/LastName"
+      },
+      {
+        "name": "FatherName",
+        "bind": "/model/instance/ss_child_reg1/FatherName"
+      },
+      {
+        "name": "MotherName",
+        "bind": "/model/instance/ss_child_reg1/MotherName"
+      },
+	  {
+        "name": "DOB",
+        "bind": "/model/instance/ss_child_reg1/DOB"
+      },
+	  {
+        "name": "Gender",
+        "bind": "/model/instance/ss_child_reg1/Gender"
+      },
+      {
+        "name": "Age",
+        "bind": "/model/instance/ss_child_reg1/Age"
+      }
+    ]
+  }
+}

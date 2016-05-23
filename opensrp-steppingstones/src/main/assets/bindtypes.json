@@ -1,0 +1,29 @@
+{
+    "bindobjects":
+ [
+    {
+      "name": "person",
+      "columns" : [ {"name": "age"}]
+    },
+   {
+     "name": "Children",
+     "columns" : [ ]
+   },
+   {
+   "name": "household",
+   "columns": [ ]
+   },
+   {
+     "name": "elco",
+     "columns": [ ]
+   },
+   {
+     "name": "mcaremother",
+     "columns": [ ]
+   },
+   {
+     "name": "mcarechild",
+     "columns": [ ]
+   }
+ ]
+}

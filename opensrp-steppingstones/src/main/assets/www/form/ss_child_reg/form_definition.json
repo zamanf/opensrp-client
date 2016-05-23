@@ -1,0 +1,29 @@
+{
+  "form_data_definition_version": "1",
+  "form": {
+    "default_bind_path": "/model/instance/ss_child_reg",
+    "bind_type": "ss_children",
+    "fields": [
+      {
+        "name": "id",
+        "shouldLoadValue": true
+      },
+      {
+        "name": "UID",
+        "bind": "/model/instance/ss_child_reg/UID"
+      },
+      {
+        "name": "Name",
+        "bind": "/model/instance/ss_child_reg/Name"
+      },
+      {
+        "name": "DOB",
+        "bind": "/model/instance/ss_child_reg/DOB"
+      },
+      {
+        "name": "Age",
+        "bind": "/model/instance/ss_child_reg/Age"
+      }
+    ]
+  }
+}

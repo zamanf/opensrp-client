@@ -1,0 +1,15 @@
+<model>
+    <instance>
+        <Attendance id="Attendance" version="201601190644">
+          <formhub>
+            <uuid/>
+          </formhub>
+          <UID/>
+          <monthandyear/>
+          <status/>
+          <meta>
+            <instanceID/>
+          </meta>
+        </Attendance>
+      </instance>
+  </model>
