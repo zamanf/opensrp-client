@@ -21,10 +21,8 @@ android {
         applicationId "org.ei.opensrp.mcare"
         minSdkVersion 16
         targetSdkVersion 21
-
         versionCode 27
         versionName "27.02"
-
         multiDexEnabled true
     }
     buildTypes {
