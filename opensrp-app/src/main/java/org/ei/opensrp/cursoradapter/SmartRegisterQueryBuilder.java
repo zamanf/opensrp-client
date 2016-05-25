@@ -26,7 +26,7 @@ public class SmartRegisterQueryBuilder {
             for sorting if required can also be added in condition string and if not you can pass null.
             Alertname is the name of the alert you would like to sort this by.
              */
-    public  String queryForRegisterSortBasedOnRegisterAndAlert(String tablename,String[]columns,String condition,String AlertName){
+    public String queryForRegisterSortBasedOnRegisterAndAlert(String tablename, String[]columns, String condition, String AlertName){
         Selectquery = "Select id as _id";
         for(int i = 0;i<columns.length;i++){
             Selectquery= Selectquery + " , " + columns[i];
@@ -46,7 +46,7 @@ public class SmartRegisterQueryBuilder {
                 "Else alerts.status END ASC";
         return Selectquery;
     }
-    public String queryForCountOnRegisters(String tablename,String condition){
+    public String queryForCountOnRegisters(String tablename, String condition){
         String Selectquery = "Select Count (*) ";
         Selectquery= Selectquery+ " From " + tablename;
         if(condition != null){
@@ -54,16 +54,16 @@ public class SmartRegisterQueryBuilder {
         }
         return Selectquery;
     }
-    public String addlimitandOffset(String selectquery,int limit,int offset){
+    public String addlimitandOffset(String selectquery, int limit, int offset){
         return selectquery + " Limit " +offset+","+limit;
     }
-    public String limitandOffset(int limit,int offset){
+    public String limitandOffset(int limit, int offset){
         return Selectquery + " Limit " +offset+","+limit;
     }
-    public  String Endquery(String selectquery){
+    public String Endquery(String selectquery){
         return selectquery+";";
     }
-    public String SelectInitiateMainTable(String tablename,String [] columns){
+    public String SelectInitiateMainTable(String tablename, String[] columns){
         Selectquery = "Select id as _id";
         for(int i = 0;i<columns.length;i++){
             Selectquery= Selectquery + " , " + columns[i];
@@ -88,7 +88,7 @@ public class SmartRegisterQueryBuilder {
         Selectquery= Selectquery + " ORDER BY " + condition;
         return Selectquery;
     }
-    public String joinwithALerts(String tablename,String alertname){
+    public String joinwithALerts(String tablename, String alertname){
         Selectquery = Selectquery+ " LEFT JOIN alerts ";
         Selectquery = Selectquery+ " ON "+ tablename +".id = alerts.caseID and  alerts.scheduleName = '"+alertname+"'" ;
         return Selectquery;

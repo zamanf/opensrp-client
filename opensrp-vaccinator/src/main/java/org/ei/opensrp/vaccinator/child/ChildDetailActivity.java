@@ -2,7 +2,6 @@ package org.ei.opensrp.vaccinator.child;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -233,12 +232,12 @@ public class ChildDetailActivity extends Activity {
             mImageView.setImageBitmap(bitmap);
         }
     }
-    public void saveimagereference(String bindobject,String entityid,Map<String,String> details){
+    public void saveimagereference(String bindobject, String entityid, Map<String,String> details){
         Context.getInstance().allCommonsRepositoryobjects(bindobject).mergeDetails(entityid,details);
 //                householdclient.entityId();
 //        Toast.makeText(this,entityid,Toast.LENGTH_LONG).show();
     }
-    public static void setImagetoHolder(Activity activity,String file, ImageView view, int placeholder){
+    public static void setImagetoHolder(Activity activity, String file, ImageView view, int placeholder){
         mImageThumbSize = 300;
         mImageThumbSpacing = Context.getInstance().applicationContext().getResources().getDimensionPixelSize(R.dimen.image_thumbnail_spacing);
 

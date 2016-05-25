@@ -33,7 +33,7 @@ public class Stock {
         this.vId=vId;
     }
 
-    public Stock(int id , int vId , int wasted, int received , int balanced , int used ,String eventDate, int reportId, int target){
+    public Stock(int id , int vId , int wasted, int received , int balanced , int used , String eventDate, int reportId, int target){
 
         this.id=id;
         this.vId=vId;

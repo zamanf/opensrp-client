@@ -5,8 +5,8 @@ public class ProfileImage {
     private String anmId;
     private String entityID;
     private String contenttype;
-    private  String filepath;
-    private  String syncStatus;
+    private String filepath;
+    private String syncStatus;
     private String filecategory;
 
     public ProfileImage(String imageid, String anmId, String entityID, String contenttype, String filepath, String syncStatus, String filecategory) {

@@ -9,7 +9,6 @@ import android.widget.CursorAdapter;
 import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.commonregistry.CommonRepository;
-import org.ei.opensrp.view.contract.SmartRegisterClient;
 
 /**
  * Created by raihan on 3/9/16.
@@ -19,7 +18,7 @@ public class SmartRegisterPaginatedCursorAdapter extends CursorAdapter {
     Context context;
     CommonRepository commonRepository;
 
-    public SmartRegisterPaginatedCursorAdapter(Context context, Cursor c,SmartRegisterCLientsProviderForCursorAdapter listItemProvider,CommonRepository commonRepository) {
+    public SmartRegisterPaginatedCursorAdapter(Context context, Cursor c, SmartRegisterCLientsProviderForCursorAdapter listItemProvider, CommonRepository commonRepository) {
         super(context, c);
         this.listItemProvider = listItemProvider;
         this.context= context;

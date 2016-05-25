@@ -12,10 +12,10 @@ import org.ei.opensrp.view.dialog.SortOption;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 
 import static java.util.Collections.sort;
+
 /**
  * Created by Raihan Ahmed on 4/15/15.
  */
@@ -28,7 +28,7 @@ public class CommonPersonObjectController {
     private final Cache<String> cache;
     private final Cache<CommonPersonObjectClients> personObjectClientsCache;
     public final String nameString;
-    public  String filterkey = null;
+    public String filterkey = null;
     public String filtervalue = null;
     public String null_check_key = "";
     public boolean filtercase = true;
@@ -36,7 +36,7 @@ public class CommonPersonObjectController {
     ByColumnAndByDetails byColumnAndByDetailsNullcheck;
     SortOption sortOption;
 
-    ArrayList <ControllerFilterMap> filtermap;
+    ArrayList<ControllerFilterMap> filtermap;
 
     public enum ByColumnAndByDetails{
         byColumn,byDetails,byrelationalid;
@@ -45,7 +45,7 @@ public class CommonPersonObjectController {
 
     public CommonPersonObjectController(AllCommonsRepository allpersons,
                                         AllBeneficiaries allBeneficiaries, Cache<String> cache,
-                                        Cache<CommonPersonObjectClients> personClientsCache, String nameString, String bindtype,String null_check_key,ByColumnAndByDetails byColumnAndByDetailsNullcheck) {
+                                        Cache<CommonPersonObjectClients> personClientsCache, String nameString, String bindtype, String null_check_key, ByColumnAndByDetails byColumnAndByDetailsNullcheck) {
         this.allpersonobjects = allpersons;
         this.allBeneficiaries = allBeneficiaries;
         this.cache = cache;
@@ -58,7 +58,7 @@ public class CommonPersonObjectController {
     }
     public CommonPersonObjectController(AllCommonsRepository allpersons,
                                         AllBeneficiaries allBeneficiaries, Cache<String> cache,
-                                        Cache<CommonPersonObjectClients> personClientsCache, String nameString, String bindtype,String filterkey,String filtervalue,ByColumnAndByDetails byColumnAndByDetails,String null_check_key,ByColumnAndByDetails byColumnAndByDetailsNullcheck ) {
+                                        Cache<CommonPersonObjectClients> personClientsCache, String nameString, String bindtype, String filterkey, String filtervalue, ByColumnAndByDetails byColumnAndByDetails, String null_check_key, ByColumnAndByDetails byColumnAndByDetailsNullcheck ) {
         this.allpersonobjects = allpersons;
         this.allBeneficiaries = allBeneficiaries;
         this.cache = cache;
@@ -73,7 +73,7 @@ public class CommonPersonObjectController {
     }
     public CommonPersonObjectController(AllCommonsRepository allpersons,
                                         AllBeneficiaries allBeneficiaries, Cache<String> cache,
-                                        Cache<CommonPersonObjectClients> personClientsCache, String nameString, String bindtype,String null_check_key,ByColumnAndByDetails byColumnAndByDetailsNullcheck,SortOption sortOption) {
+                                        Cache<CommonPersonObjectClients> personClientsCache, String nameString, String bindtype, String null_check_key, ByColumnAndByDetails byColumnAndByDetailsNullcheck, SortOption sortOption) {
         this.allpersonobjects = allpersons;
         this.allBeneficiaries = allBeneficiaries;
         this.cache = cache;
@@ -87,7 +87,7 @@ public class CommonPersonObjectController {
     }
     public CommonPersonObjectController(AllCommonsRepository allpersons,
                                         AllBeneficiaries allBeneficiaries, Cache<String> cache,
-                                        Cache<CommonPersonObjectClients> personClientsCache, String nameString, String bindtype,String filterkey,String filtervalue,ByColumnAndByDetails byColumnAndByDetails,String null_check_key,ByColumnAndByDetails byColumnAndByDetailsNullcheck,SortOption sortOption ) {
+                                        Cache<CommonPersonObjectClients> personClientsCache, String nameString, String bindtype, String filterkey, String filtervalue, ByColumnAndByDetails byColumnAndByDetails, String null_check_key, ByColumnAndByDetails byColumnAndByDetailsNullcheck, SortOption sortOption ) {
         this.allpersonobjects = allpersons;
         this.allBeneficiaries = allBeneficiaries;
         this.cache = cache;
@@ -104,7 +104,7 @@ public class CommonPersonObjectController {
 
     public CommonPersonObjectController(AllCommonsRepository allpersons,
                                         AllBeneficiaries allBeneficiaries, Cache<String> cache,
-                                        Cache<CommonPersonObjectClients> personClientsCache, String nameString, String bindtype,String filterkey,String filtervalue,boolean filterCase,ByColumnAndByDetails byColumnAndByDetails,String null_check_key,ByColumnAndByDetails byColumnAndByDetailsNullcheck,SortOption sortOption ) {
+                                        Cache<CommonPersonObjectClients> personClientsCache, String nameString, String bindtype, String filterkey, String filtervalue, boolean filterCase, ByColumnAndByDetails byColumnAndByDetails, String null_check_key, ByColumnAndByDetails byColumnAndByDetailsNullcheck, SortOption sortOption ) {
         this.allpersonobjects = allpersons;
         this.allBeneficiaries = allBeneficiaries;
         this.cache = cache;
@@ -121,7 +121,7 @@ public class CommonPersonObjectController {
     }
     public CommonPersonObjectController(AllCommonsRepository allpersons,
                                         AllBeneficiaries allBeneficiaries, Cache<String> cache,
-                                        Cache<CommonPersonObjectClients> personClientsCache, String nameString, String bindtype,ArrayList <ControllerFilterMap> filtermap,ByColumnAndByDetails byColumnAndByDetails,String null_check_key,ByColumnAndByDetails byColumnAndByDetailsNullcheck,SortOption sortOption ) {
+                                        Cache<CommonPersonObjectClients> personClientsCache, String nameString, String bindtype, ArrayList<ControllerFilterMap> filtermap, ByColumnAndByDetails byColumnAndByDetails, String null_check_key, ByColumnAndByDetails byColumnAndByDetailsNullcheck, SortOption sortOption ) {
         this.allpersonobjects = allpersons;
         this.allBeneficiaries = allBeneficiaries;
         this.cache = cache;
@@ -136,7 +136,7 @@ public class CommonPersonObjectController {
     }
     public CommonPersonObjectController(AllCommonsRepository allpersons,
                                         AllBeneficiaries allBeneficiaries, Cache<String> cache,
-                                        Cache<CommonPersonObjectClients> personClientsCache, String nameString, String bindtype,ArrayList <ControllerFilterMap> filtermap,ByColumnAndByDetails byColumnAndByDetails,String null_check_key,ByColumnAndByDetails byColumnAndByDetailsNullcheck ) {
+                                        Cache<CommonPersonObjectClients> personClientsCache, String nameString, String bindtype, ArrayList<ControllerFilterMap> filtermap, ByColumnAndByDetails byColumnAndByDetails, String null_check_key, ByColumnAndByDetails byColumnAndByDetailsNullcheck ) {
         this.allpersonobjects = allpersons;
         this.allBeneficiaries = allBeneficiaries;
         this.cache = cache;

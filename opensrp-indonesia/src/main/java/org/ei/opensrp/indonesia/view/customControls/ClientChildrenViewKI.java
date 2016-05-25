@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import org.ei.opensrp.indonesia.R;
 import org.ei.opensrp.indonesia.view.contract.KIChildClient;
 import org.ei.opensrp.indonesia.view.contract.KartuIbuClient;
@@ -54,7 +55,7 @@ public class ClientChildrenViewKI extends LinearLayout {
     }
 
     private void setupKIChildView(KIChildClient child, TextView ageView,
-                                String maleChildAgeFormatString, String femaleChildAgeFormatString) {
+                                  String maleChildAgeFormatString, String femaleChildAgeFormatString) {
         ageView.setVisibility(VISIBLE);
         ageView.setText(
                 format(child.isMale() ? maleChildAgeFormatString : femaleChildAgeFormatString,

@@ -108,31 +108,11 @@
             android:screenOrientation="landscape"
             >
         </activity>
-        <activity
-            android:name="org.ei.opensrp.view.activity.FormActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
-        <activity
-            android:name="org.ei.opensrp.view.activity.MicroFormActivity"
-            android:theme="@android:style/Theme.Holo.Dialog.NoActionBar"
-            android:screenOrientation="landscape"/>
 
-        <activity android:name="org.ei.opensrp.view.activity.NativeHomeActivity"
-            android:screenOrientation="landscape">
-        </activity>
-        <activity android:name="org.ei.opensrp.view.activity.SettingsActivity"
-            android:screenOrientation="landscape">
-        </activity>
         <activity android:name="org.ei.opensrp.indonesia.view.activity.NativeReportingActivity"
             android:theme="@style/AppThemeNoActionBarAndTitle"
             android:screenOrientation="landscape">
         </activity>
-        <activity
-            android:name="org.ei.opensrp.view.activity.VideosActivity"
-            android:theme="@style/AppThemeNoActionBarAndTitle"
-            android:screenOrientation="landscape"/>
-
         <receiver android:name=".view.receiver.SyncBidanBroadcastReceiver"/>
         <receiver android:name="org.ei.opensrp.view.receiver.ConnectivityChangeReceiver">
             <intent-filter>

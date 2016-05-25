@@ -48,7 +48,7 @@ public class FieldMonitorServiceModeOption extends ServiceModeOption {
             public int[] headerTextResourceIds() {
                 return new int[]{
                         R.string.day_month
-                        , R.string.month_target, R.string.month_received,R.string.month_used,
+                        , R.string.month_target, R.string.month_received, R.string.month_used,
                         R.string.month_wasted
                 };
             }

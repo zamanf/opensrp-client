@@ -16,13 +16,6 @@
 
 package util.barcode;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
@@ -33,6 +26,14 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -433,9 +434,9 @@ public class BarcodeIntentIntegrator
 				int intentOrientation = intent.getIntExtra ("SCAN_RESULT_ORIENTATION", Integer.MIN_VALUE);
 				Integer orientation = intentOrientation == Integer.MIN_VALUE ? null : intentOrientation;
 				String errorCorrectionLevel = intent.getStringExtra ("SCAN_RESULT_ERROR_CORRECTION_LEVEL");
-				return new BarcodeIntentResult (contents, formatName, rawBytes, orientation, errorCorrectionLevel);
+				return new BarcodeIntentResult(contents, formatName, rawBytes, orientation, errorCorrectionLevel);
 			}
-			return new BarcodeIntentResult ();
+			return new BarcodeIntentResult();
 		}
 		return null;
 	}

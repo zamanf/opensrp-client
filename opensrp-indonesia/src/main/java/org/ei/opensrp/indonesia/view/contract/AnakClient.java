@@ -5,11 +5,10 @@ import com.google.common.base.Strings;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.ei.opensrp.indonesia.util.StringUtil;
 import org.ei.opensrp.util.DateUtil;
 import org.ei.opensrp.util.Log;
-import org.ei.opensrp.view.contract.AlertDTO;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
-import org.ei.opensrp.indonesia.util.StringUtil;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.joda.time.Years;
@@ -29,7 +28,7 @@ import static org.ei.opensrp.util.StringUtil.humanize;
 /**
  * Created by Dimas Ciputra on 4/8/15.
  */
-public class AnakClient extends BidanSmartRegisterClient{
+public class AnakClient extends BidanSmartRegisterClient {
 
     private final String entityId;
     private Map<String, String> details;

@@ -16,8 +16,6 @@ import org.ei.opensrp.service.ZiggyService;
 import org.ei.opensrp.util.FormUtils;
 import org.ei.opensrp.util.StringUtil;
 import org.ei.opensrp.vaccinator.R;
-
-
 import org.ei.opensrp.vaccinator.fragment.WomanSmartRegisterFragment;
 import org.ei.opensrp.vaccinator.pageadapter.BaseRegisterActivityPagerAdapter;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
@@ -55,7 +53,7 @@ public class WomanSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
     private android.support.v4.app.Fragment mProfileFragment = null;
 
     private FormController formControllerown;
-    private  HashMap<String,String> overrides;
+    private HashMap<String,String> overrides;
 
 
     @Override
@@ -181,7 +179,7 @@ Log.d("form open","enrollments form by activity");
 
 
 
-    public void addChildToList(ArrayList<DialogOption> dialogOptionslist,Map<String,TreeNode<String, Location>> locationMap){
+    public void addChildToList(ArrayList<DialogOption> dialogOptionslist, Map<String,TreeNode<String, Location>> locationMap){
         for(Map.Entry<String, TreeNode<String, Location>> entry : locationMap.entrySet()) {
 
             if(entry.getValue().getChildren() != null) {
@@ -201,7 +199,7 @@ Log.d("form open","enrollments form by activity");
         byColumn,byDetails,bydefault;
     }
 */
-    private void startFollowupForms(String formName,SmartRegisterClient client ,HashMap<String , String> overrideStringmap , WomanDateSort.ByColumnAndByDetails byColumnAndByDetails) {
+    private void startFollowupForms(String formName, SmartRegisterClient client , HashMap<String , String> overrideStringmap , WomanDateSort.ByColumnAndByDetails byColumnAndByDetails) {
 
 
         if(overrideStringmap == null) {

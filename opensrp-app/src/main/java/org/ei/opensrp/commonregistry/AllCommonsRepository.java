@@ -56,7 +56,7 @@ public class AllCommonsRepository {
         personRepository.mergeDetails(entityId, details);
     }
 
-    public void update(String tableName,ContentValues contentValues,String caseId){
+    public void update(String tableName, ContentValues contentValues, String caseId){
         personRepository.updateColumn(tableName, contentValues, caseId);
     }
 

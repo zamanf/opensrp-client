@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
@@ -20,7 +19,6 @@ import org.ei.opensrp.adapter.SmartRegisterPaginatedAdapter;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.commonregistry.CommonPersonObjectController;
 import org.ei.opensrp.vaccinator.R;
-import org.ei.opensrp.vaccinator.child.ChildSmartRegisterActivity;
 
 import java.io.File;
 import java.io.IOException;
@@ -201,12 +199,12 @@ public class WomanDetailActivity extends Activity {
             mImageView.setImageBitmap(bitmap);
         }
     }
-    public void saveimagereference(String bindobject,String entityid,Map<String,String> details){
+    public void saveimagereference(String bindobject, String entityid, Map<String,String> details){
         Context.getInstance().allCommonsRepositoryobjects(bindobject).mergeDetails(entityid,details);
 //                householdclient.entityId();
 //        Toast.makeText(this,entityid,Toast.LENGTH_LONG).show();
     }
-    public static void setImagetoHolder(Activity activity,String file, ImageView view, int placeholder){
+    public static void setImagetoHolder(Activity activity, String file, ImageView view, int placeholder){
         mImageThumbSize = 300;
         mImageThumbSpacing = Context.getInstance().applicationContext().getResources().getDimensionPixelSize(R.dimen.image_thumbnail_spacing);
 

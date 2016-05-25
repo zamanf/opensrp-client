@@ -17,7 +17,6 @@ import org.ei.opensrp.domain.form.FormSubmission;
 import org.ei.opensrp.mcare.R;
 import org.ei.opensrp.mcare.elco.ElcoMauzaCommonObjectFilterOption;
 import org.ei.opensrp.mcare.elco.ElcoSearchOption;
-import org.ei.opensrp.mcare.fragment.mCareANCSmartRegisterFragment;
 import org.ei.opensrp.mcare.fragment.mCarePNCSmartRegisterFragment;
 import org.ei.opensrp.mcare.pageradapter.BaseRegisterActivityPagerAdapter;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
@@ -144,7 +143,7 @@ public class mCarePNCSmartRegisterActivity extends SecuredNativeSmartRegisterAct
                 new OpenFormOption(getResources().getString(R.string.nbnf), "birthnotificationpregnancystatusfollowup", formController)
         };
     }
-    public DialogOption[] getEditOptionsforpnc(String visittext,String alertstatus) {
+    public DialogOption[] getEditOptionsforpnc(String visittext, String alertstatus) {
         String ancvisittext = "Not Synced";
         String ancalertstatus = alertstatus;
         ancvisittext = visittext;
@@ -382,7 +381,7 @@ public class mCarePNCSmartRegisterActivity extends SecuredNativeSmartRegisterAct
     public DisplayFormFragment getDisplayFormFragmentAtIndex(int index) {
         return  (DisplayFormFragment)findFragmentByPosition(index);
     }
-    public void addChildToList(ArrayList<DialogOption> dialogOptionslist,Map<String,TreeNode<String, Location>> locationMap){
+    public void addChildToList(ArrayList<DialogOption> dialogOptionslist, Map<String,TreeNode<String, Location>> locationMap){
         for(Map.Entry<String, TreeNode<String, Location>> entry : locationMap.entrySet()) {
 
             if(entry.getValue().getChildren() != null) {

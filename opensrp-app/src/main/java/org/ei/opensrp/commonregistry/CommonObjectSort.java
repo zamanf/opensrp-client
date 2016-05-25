@@ -21,7 +21,7 @@ public class CommonObjectSort implements SortOption {
         byColumn,byDetails;
     }
 
-    public CommonObjectSort(ByColumnAndByDetails byColumnAndByDetails, boolean isinteger, String field,String sortOptionName) {
+    public CommonObjectSort(ByColumnAndByDetails byColumnAndByDetails, boolean isinteger, String field, String sortOptionName) {
         this.byColumnAndByDetails = byColumnAndByDetails;
         this.isInteger = isinteger;
         this.field = field;

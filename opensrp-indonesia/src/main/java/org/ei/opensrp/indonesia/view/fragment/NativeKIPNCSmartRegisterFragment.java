@@ -10,7 +10,6 @@ import org.ei.opensrp.domain.form.FieldOverrides;
 import org.ei.opensrp.indonesia.AllConstantsINA;
 import org.ei.opensrp.indonesia.Context;
 import org.ei.opensrp.indonesia.R;
-import org.ei.opensrp.indonesia.provider.KIANCClientsProvider;
 import org.ei.opensrp.indonesia.provider.KIPNCClientsProvider;
 import org.ei.opensrp.indonesia.service.formSubmissionHandler.KIPNCRegistrationHandler;
 import org.ei.opensrp.indonesia.view.activity.NativeKIPNCSmartRegisterActivity;
@@ -45,7 +44,7 @@ import static org.ei.opensrp.indonesia.AllConstantsINA.FormNames.KARTU_IBU_PNC_O
 /**
  * Created by koros on 10/29/15.
  */
-public class NativeKIPNCSmartRegisterFragment extends BidanSecuredNativeSmartRegisterFragment{
+public class NativeKIPNCSmartRegisterFragment extends BidanSecuredNativeSmartRegisterFragment {
 
     private SmartRegisterClientsProvider clientProvider = null;
     private KIPNCRegisterController controller;

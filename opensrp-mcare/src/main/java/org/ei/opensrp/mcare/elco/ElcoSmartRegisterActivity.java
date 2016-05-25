@@ -358,7 +358,7 @@ public class ElcoSmartRegisterActivity extends SecuredNativeSmartRegisterActivit
     public DisplayFormFragment getDisplayFormFragmentAtIndex(int index) {
         return  (DisplayFormFragment)findFragmentByPosition(index);
     }
-    public void addChildToList(ArrayList<DialogOption> dialogOptionslist,Map<String,TreeNode<String, Location>> locationMap){
+    public void addChildToList(ArrayList<DialogOption> dialogOptionslist, Map<String,TreeNode<String, Location>> locationMap){
         for(Map.Entry<String, TreeNode<String, Location>> entry : locationMap.entrySet()) {
 
             if(entry.getValue().getChildren() != null) {

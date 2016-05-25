@@ -10,7 +10,6 @@ import android.widget.ImageButton;
 
 import org.ei.opensrp.Context;
 import org.ei.opensrp.adapter.SmartRegisterPaginatedAdapter;
-import org.ei.opensrp.commonregistry.CommonObjectSort;
 import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.commonregistry.CommonPersonObjectController;
@@ -22,15 +21,10 @@ import org.ei.opensrp.cursoradapter.SecuredNativeSmartRegisterCursorAdapterFragm
 import org.ei.opensrp.cursoradapter.SmartRegisterPaginatedCursorAdapter;
 import org.ei.opensrp.cursoradapter.SmartRegisterQueryBuilder;
 import org.ei.opensrp.mcare.LoginActivity;
-import org.ei.opensrp.mcare.NativeHomeActivity;
 import org.ei.opensrp.mcare.R;
-import org.ei.opensrp.mcare.anc.mCareANCServiceModeOption;
-import org.ei.opensrp.mcare.anc.mCareANCSmartClientsProvider;
 import org.ei.opensrp.mcare.anc.mCareANCSmartRegisterActivity;
-import org.ei.opensrp.mcare.anc.mCareAncDetailActivity;
 import org.ei.opensrp.mcare.elco.ElcoMauzaCommonObjectFilterOption;
 import org.ei.opensrp.mcare.elco.ElcoPSRFDueDateSort;
-import org.ei.opensrp.mcare.elco.ElcoSearchOption;
 import org.ei.opensrp.mcare.elco.ElcoSmartRegisterActivity;
 import org.ei.opensrp.mcare.pnc.mCarePNCServiceModeOption;
 import org.ei.opensrp.mcare.pnc.mCarePNCSmartClientsProvider;
@@ -52,7 +46,6 @@ import org.ei.opensrp.view.dialog.EditOption;
 import org.ei.opensrp.view.dialog.FilterOption;
 import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
-import org.ei.opensrp.view.fragment.SecuredNativeSmartRegisterFragment;
 import org.opensrp.api.domain.Location;
 import org.opensrp.api.util.EntityUtils;
 import org.opensrp.api.util.LocationTree;
@@ -213,7 +206,7 @@ public class mCarePNCSmartRegisterFragment extends SecuredNativeSmartRegisterCur
     private DialogOption[] getEditOptions() {
         return ((mCareANCSmartRegisterActivity)getActivity()).getEditOptions();
     }
-    private DialogOption[] getEditOptionsforanc(String pncvisittext,String pncvisitstatus) {
+    private DialogOption[] getEditOptionsforanc(String pncvisittext, String pncvisitstatus) {
         return ((mCarePNCSmartRegisterActivity)getActivity()).getEditOptionsforpnc(pncvisittext, pncvisitstatus);
     }
 
@@ -314,7 +307,7 @@ public class mCarePNCSmartRegisterFragment extends SecuredNativeSmartRegisterCur
             }
         });
     }
-    public void addChildToList(ArrayList<DialogOption> dialogOptionslist,Map<String,TreeNode<String, Location>> locationMap){
+    public void addChildToList(ArrayList<DialogOption> dialogOptionslist, Map<String,TreeNode<String, Location>> locationMap){
         for(Map.Entry<String, TreeNode<String, Location>> entry : locationMap.entrySet()) {
 
             if(entry.getValue().getChildren() != null) {
@@ -328,7 +321,7 @@ public class mCarePNCSmartRegisterFragment extends SecuredNativeSmartRegisterCur
             }
         }
     }
-    class pncControllerfiltermap extends ControllerFilterMap{
+    class pncControllerfiltermap extends ControllerFilterMap {
 
         @Override
         public boolean filtermapLogic(CommonPersonObject commonPersonObject) {

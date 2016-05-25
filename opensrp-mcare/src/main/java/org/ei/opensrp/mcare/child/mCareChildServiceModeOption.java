@@ -50,7 +50,7 @@ public class mCareChildServiceModeOption extends ServiceModeOption {
             public int[] headerTextResourceIds() {
                 return new int[]{
                         R.string.elco_profile, R.string.child_mother_unique_id, R.string.mcarechild_dob,
-                        R.string.encc_reminder_status,R.string.encc_due_date};
+                        R.string.encc_reminder_status, R.string.encc_due_date};
             }
         };
     }

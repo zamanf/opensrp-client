@@ -13,7 +13,7 @@ public class CommonObjectFilterOption implements FilterOption {
         byColumn,byDetails;
     }
 
-    public CommonObjectFilterOption(String criteria,String fieldname,ByColumnAndByDetails byColumnAndByDetails,String filteroptionname) {
+    public CommonObjectFilterOption(String criteria, String fieldname, ByColumnAndByDetails byColumnAndByDetails, String filteroptionname) {
         this.criteria = criteria;
         this.fieldname = fieldname;
         this.byColumnAndByDetails= byColumnAndByDetails;

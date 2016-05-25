@@ -26,7 +26,7 @@ public class ClientlessOpenFormOption implements EditOption {
         byColumn,byDetails,bydefault;
     }
 
-    public ClientlessOpenFormOption(String name, String formName, FormController formController,   HashMap<String,String> overrideStringmap,ByColumnAndByDetails byColumnAndByDetails) {
+    public ClientlessOpenFormOption(String name, String formName, FormController formController, HashMap<String,String> overrideStringmap, ByColumnAndByDetails byColumnAndByDetails) {
         this.name = name;
         this.formName = formName;
         this.formController = formController;

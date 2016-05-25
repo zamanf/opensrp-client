@@ -145,7 +145,7 @@ public class mCareANCSmartRegisterActivity extends SecuredNativeSmartRegisterAct
                 new OpenFormOption(getResources().getString(R.string.nbnf), "birthnotificationpregnancystatusfollowup", formController)
         };
     }
-    public DialogOption[] getEditOptionsforanc(String visittext,String alertstatus) {
+    public DialogOption[] getEditOptionsforanc(String visittext, String alertstatus) {
         String ancvisittext = "Not Synced";
         String ancalertstatus = alertstatus;
         ancvisittext = visittext;
@@ -387,7 +387,7 @@ public class mCareANCSmartRegisterActivity extends SecuredNativeSmartRegisterAct
     public DisplayFormFragment getDisplayFormFragmentAtIndex(int index) {
         return  (DisplayFormFragment)findFragmentByPosition(index);
     }
-    public void addChildToList(ArrayList<DialogOption> dialogOptionslist,Map<String,TreeNode<String, Location>> locationMap){
+    public void addChildToList(ArrayList<DialogOption> dialogOptionslist, Map<String,TreeNode<String, Location>> locationMap){
         for(Map.Entry<String, TreeNode<String, Location>> entry : locationMap.entrySet()) {
 
             if(entry.getValue().getChildren() != null) {

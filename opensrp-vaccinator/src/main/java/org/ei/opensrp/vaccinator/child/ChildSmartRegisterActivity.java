@@ -100,6 +100,7 @@ public class ChildSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
     private FragmentPagerAdapter mPagerAdapter;
     private int currentPage;
 
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -275,7 +276,7 @@ public class ChildSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
 
 
 
-    
+
 
    /* private class EditDialogOptionModel implements DialogOptionModel {
         private  HashMap<String,String> overrides1;

@@ -1,12 +1,6 @@
 package org.ei.opensrp.cursoradapter;
 
-import net.sqlcipher.Cursor;
-
-import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
-import org.ei.opensrp.view.dialog.FilterOption;
-
-import static org.ei.opensrp.util.StringUtil.humanize;
 
 public class CursorCommonObjectFilterOption implements CursorFilterOption {
 
@@ -14,7 +8,7 @@ public class CursorCommonObjectFilterOption implements CursorFilterOption {
     String filterString;
 
 
-    public CursorCommonObjectFilterOption(String filteroptionname,String filterString) {
+    public CursorCommonObjectFilterOption(String filteroptionname, String filterString) {
        this.filterString = filterString;
         this.filterOptionName = filteroptionname;
     }

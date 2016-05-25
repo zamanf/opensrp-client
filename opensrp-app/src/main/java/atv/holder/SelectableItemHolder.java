@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.johnkil.print.PrintView;
 
@@ -24,7 +23,7 @@ public class SelectableItemHolder extends TreeNode.BaseNodeViewHolder<String> {
     private String level;
     private com.github.johnkil.print.PrintView arrowView;
     private Context context;
-    public SelectableItemHolder(Context context,String Level) {
+    public SelectableItemHolder(Context context, String Level) {
         super(context);
         level = Level;
         this.context = context;

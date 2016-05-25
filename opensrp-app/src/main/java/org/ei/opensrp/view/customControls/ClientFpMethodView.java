@@ -7,14 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import org.apache.commons.lang3.StringUtils;
 import org.ei.opensrp.R;
 import org.ei.opensrp.domain.FPMethod;
 import org.ei.opensrp.view.contract.BaseFPSmartRegisterClient;
-import org.ei.opensrp.view.contract.ECSmartRegisterClient;
-import org.ei.opensrp.view.contract.FPSmartRegisterClient;
-
-import java.text.DateFormat;
 
 import static org.ei.opensrp.Context.getInstance;
 

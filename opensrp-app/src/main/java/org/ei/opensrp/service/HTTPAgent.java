@@ -185,7 +185,7 @@ public class HTTPAgent {
         }
     }
 
-    public String httpImagePost(String url,ProfileImage image){
+    public String httpImagePost(String url, ProfileImage image){
 
         String responseString = "";
         try {

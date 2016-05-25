@@ -1,10 +1,8 @@
 package org.ei.opensrp.mcare;
 
-import android.app.ActionBar;
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.util.Log;
 import android.database.Cursor;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,10 +21,8 @@ import org.ei.opensrp.mcare.anc.anc2handler;
 import org.ei.opensrp.mcare.anc.anc3handler;
 import org.ei.opensrp.mcare.anc.anc4handler;
 import org.ei.opensrp.mcare.anc.nbnfhandler;
-import org.ei.opensrp.mcare.elco.ElcoPSRFDueDateSort;
 import org.ei.opensrp.mcare.elco.PSRFHandler;
 import org.ei.opensrp.mcare.household.CensusEnrollmentHandler;
-import org.ei.opensrp.mcare.household.HouseholdCensusDueDateSort;
 import org.ei.opensrp.mcare.household.tutorial.tutorialCircleViewFlow;
 import org.ei.opensrp.service.PendingFormSubmissionService;
 import org.ei.opensrp.sync.SyncAfterFetchListener;
@@ -37,8 +33,6 @@ import org.ei.opensrp.view.contract.HomeContext;
 import org.ei.opensrp.view.controller.NativeAfterANMDetailsFetchListener;
 import org.ei.opensrp.view.controller.NativeUpdateANMDetailsTask;
 import org.ei.opensrp.view.fragment.DisplayFormFragment;
-
-import java.util.ArrayList;
 
 import static android.widget.Toast.LENGTH_SHORT;
 import static java.lang.String.valueOf;
@@ -342,7 +336,7 @@ public class NativeHomeActivity extends SecuredActivity {
             return returnvalue;
         }
     }
-    class ancControllerfiltermap extends ControllerFilterMap{
+    class ancControllerfiltermap extends ControllerFilterMap {
 
         @Override
         public boolean filtermapLogic(CommonPersonObject commonPersonObject) {

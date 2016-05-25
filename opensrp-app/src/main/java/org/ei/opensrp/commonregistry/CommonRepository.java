@@ -2,13 +2,11 @@ package org.ei.opensrp.commonregistry;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import net.sqlcipher.database.SQLiteDatabase;
-import net.sqlcipher.database.SQLiteQueryBuilder;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.ei.opensrp.repository.DrishtiRepository;
@@ -31,7 +29,7 @@ public class CommonRepository extends DrishtiRepository {
     public static final String DETAILS_COLUMN = "details";
     public String TABLE_NAME = "common";
     public  String[] common_TABLE_COLUMNS = new String[]{ID_COLUMN,Relational_ID,DETAILS_COLUMN};
-    public String [] additionalcolumns;
+    public String[] additionalcolumns;
     public CommonRepository(String tablename, String[] columns) {
         super();
         additionalcolumns = columns;
@@ -144,7 +142,7 @@ public class CommonRepository extends DrishtiRepository {
         List<CommonPersonObject> commons = new ArrayList<CommonPersonObject>();
         while (!cursor.isAfterLast()) {
             int columncount = cursor.getColumnCount();
-            HashMap <String, String> columns = new HashMap<String, String>();
+            HashMap<String, String> columns = new HashMap<String, String>();
             for (int i = 3;i < columncount;i++ ){
                 columns.put(additionalcolumns[i-3],cursor.getString(i));
             }
@@ -181,12 +179,12 @@ public class CommonRepository extends DrishtiRepository {
     }
 
 
-    public void updateColumn(String tableName,ContentValues contentValues,String caseId){
+    public void updateColumn(String tableName, ContentValues contentValues, String caseId){
         SQLiteDatabase database = masterRepository.getWritableDatabase();
         database.update(tableName, contentValues, ID_COLUMN + " = ?", new String[]{caseId});
     }
 
-    public  List<CommonPersonObject> customQuery(String sql ,String[] selections,String tableName){
+    public List<CommonPersonObject> customQuery(String sql , String[] selections, String tableName){
 
         SQLiteDatabase database = masterRepository.getReadableDatabase();
         Cursor cursor = database.rawQuery(sql,selections);
@@ -195,7 +193,7 @@ public class CommonRepository extends DrishtiRepository {
     }
 
 
-    public List<CommonPersonObject> readAllcommonForField(Cursor cursor ,String tableName) {
+    public List<CommonPersonObject> readAllcommonForField(Cursor cursor , String tableName) {
         List<CommonPersonObject> commons = new ArrayList<CommonPersonObject>();
         try {
             cursor.moveToFirst();
@@ -221,7 +219,7 @@ public class CommonRepository extends DrishtiRepository {
         return commons;
     }
 
-    public  List<CommonPersonObject> customQueryForCompleteRow(String sql ,String[] selections,String tableName){
+    public List<CommonPersonObject> customQueryForCompleteRow(String sql , String[] selections, String tableName){
 
         SQLiteDatabase database = masterRepository.getReadableDatabase();
         Cursor cursor = database.rawQuery(sql,selections);
@@ -229,7 +227,7 @@ public class CommonRepository extends DrishtiRepository {
         return readAllcommonFor(cursor, tableName);
     }
 
-    private List<CommonPersonObject> readAllcommonFor(Cursor cursor ,String tableName) {
+    private List<CommonPersonObject> readAllcommonFor(Cursor cursor , String tableName) {
         List<CommonPersonObject> commons = new ArrayList<CommonPersonObject>();
         try {
             cursor.moveToFirst();
@@ -255,7 +253,7 @@ public class CommonRepository extends DrishtiRepository {
 
         return commons;
     }
-    public Cursor CustomQueryForAdapter(String[] columns,String tableName,String limit,String offset){
+    public Cursor CustomQueryForAdapter(String[] columns, String tableName, String limit, String offset){
 
         SQLiteDatabase database = masterRepository.getReadableDatabase();
     Cursor cursor = database.query(tableName, columns, null, null, null, null, null, offset + "," + limit);
@@ -272,7 +270,7 @@ public class CommonRepository extends DrishtiRepository {
 
 
             int columncount = cursor.getColumnCount();
-            HashMap <String, String> columns = new HashMap<String, String>();
+            HashMap<String, String> columns = new HashMap<String, String>();
             for (int i = 3;i < columncount;i++ ){
                 columns.put(additionalcolumns[i-3],cursor.getString(i));
             }

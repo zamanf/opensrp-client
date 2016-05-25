@@ -18,7 +18,6 @@ import org.ei.opensrp.mcare.R;
 import org.ei.opensrp.mcare.elco.ElcoMauzaCommonObjectFilterOption;
 import org.ei.opensrp.mcare.elco.ElcoSearchOption;
 import org.ei.opensrp.mcare.fragment.mCareChildSmartRegisterFragment;
-import org.ei.opensrp.mcare.fragment.mCarePNCSmartRegisterFragment;
 import org.ei.opensrp.mcare.pageradapter.BaseRegisterActivityPagerAdapter;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.repository.AllSharedPreferences;
@@ -138,7 +137,7 @@ public class mCareChildSmartRegisterActivity extends SecuredNativeSmartRegisterA
     public void startRegistration() {
     }
 
-    public DialogOption[] getEditOptionsforChild(String visittext,String alertstatus) {
+    public DialogOption[] getEditOptionsforChild(String visittext, String alertstatus) {
         String ancvisittext = "Not Synced";
         String ancalertstatus = alertstatus;
         ancvisittext = visittext;
@@ -364,7 +363,7 @@ public class mCareChildSmartRegisterActivity extends SecuredNativeSmartRegisterA
     public DisplayFormFragment getDisplayFormFragmentAtIndex(int index) {
         return  (DisplayFormFragment)findFragmentByPosition(index);
     }
-    public void addChildToList(ArrayList<DialogOption> dialogOptionslist,Map<String,TreeNode<String, Location>> locationMap){
+    public void addChildToList(ArrayList<DialogOption> dialogOptionslist, Map<String,TreeNode<String, Location>> locationMap){
         for(Map.Entry<String, TreeNode<String, Location>> entry : locationMap.entrySet()) {
 
             if(entry.getValue().getChildren() != null) {

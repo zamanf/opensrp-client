@@ -99,7 +99,7 @@ public class McareLocationSelectorDialogFragment extends DialogFragment {
         return node;
     }
 
-    public void addChildToParentNode(TreeNode parent,TreeNode [] nodes){
+    public void addChildToParentNode(TreeNode parent, TreeNode[] nodes){
         for (int i = 0;i<nodes.length;i++){
             parent.addChild(nodes[i]);
         }
@@ -128,7 +128,7 @@ public class McareLocationSelectorDialogFragment extends DialogFragment {
 //            }
 //        });
 //    }
-    public void addselectlistener (TreeNode node,final String id){
+    public void addselectlistener (TreeNode node, final String id){
         node.setClickListener(new TreeNode.TreeNodeClickListener() {
             @Override
             public void onClick(TreeNode node, Object value) {

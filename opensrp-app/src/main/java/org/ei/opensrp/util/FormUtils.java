@@ -58,7 +58,7 @@ public class FormUtils {
         return instance;
     }
 
-    public FormSubmission generateFormSubmisionFromXMLString(String entity_id, String formData, String formName, JSONObject overrides) throws Exception{
+    public FormSubmission generateFormSubmisionFromXMLString(String entity_id, String formData, String formName, JSONObject overrides) throws Exception {
         JSONObject formSubmission = XML.toJSONObject(formData);
 
         FileUtilities fu = new FileUtilities();
@@ -389,7 +389,7 @@ public class FormUtils {
         return getXPath(parent) + "/";
     }
 
-    private List<String> getSubFormNames(JSONObject formDefinition) throws Exception{
+    private List<String> getSubFormNames(JSONObject formDefinition) throws Exception {
         List<String> subFormNames = new ArrayList<String>();
         if (formDefinition.has("form") && formDefinition.getJSONObject("form").has("sub_forms")){
             JSONArray subForms = formDefinition.getJSONObject("form").getJSONArray("sub_forms");
@@ -404,7 +404,7 @@ public class FormUtils {
         return subFormNames;
     }
 
-    private JSONObject retriveSubformDefinitionForBindPath(JSONArray subForms, String fieldName) throws Exception{
+    private JSONObject retriveSubformDefinitionForBindPath(JSONArray subForms, String fieldName) throws Exception {
         for (int i = 0; i< subForms.length() ; i++){
             JSONObject subForm = subForms.getJSONObject(i);
             String subFormNameStr = subForm.getString("default_bind_path");
@@ -449,7 +449,7 @@ public class FormUtils {
         return UUID.randomUUID().toString();
     }
 
-    private String retrieveIdForSubmission(JSONObject jsonObject) throws Exception{
+    private String retrieveIdForSubmission(JSONObject jsonObject) throws Exception {
         JSONArray fields = jsonObject.getJSONObject("form").getJSONArray("fields");
         for (int i = 0; i < fields.length(); i++){
             JSONObject field = fields.getJSONObject(i);
@@ -460,7 +460,7 @@ public class FormUtils {
         return null;
     }
 
-    public Object getObjectAtPath(String[] path, JSONObject jsonObject) throws Exception{
+    public Object getObjectAtPath(String[] path, JSONObject jsonObject) throws Exception {
         JSONObject object = jsonObject;
         int i = 0;
         while (i < path.length - 1) {
@@ -478,7 +478,7 @@ public class FormUtils {
         return object.has(path[i]) ? object.get(path[i]) : null;
     }
 
-    public JSONArray getPopulatedFieldsForArray(JSONObject fieldsDefinition, String entityId, JSONObject jsonObject, JSONObject overrides) throws  Exception{
+    public JSONArray getPopulatedFieldsForArray(JSONObject fieldsDefinition, String entityId, JSONObject jsonObject, JSONObject overrides) throws Exception {
         String bindPath = fieldsDefinition.getString("bind_type");
         String sql = "select * from " + bindPath + " where id='" + entityId + "'";
         String dbEntity = theAppContext.formDataRepository().queryUniqueResult(sql);
@@ -557,7 +557,7 @@ public class FormUtils {
         return fieldsArray;
     }
 
-    private boolean isForeignIdPath(JSONObject item) throws Exception{
+    private boolean isForeignIdPath(JSONObject item) throws Exception {
         return item.has("source") && item.getString("source").split("\\.").length > 2;  // e.g ibu.anak.id
     }
 
@@ -600,7 +600,7 @@ public class FormUtils {
         return null;
     }
 
-    private static JSONObject retrieveRelationshipJsonForLink(String link,JSONArray array) throws Exception{
+    private static JSONObject retrieveRelationshipJsonForLink(String link, JSONArray array) throws Exception {
         for(int i = 0; i < array.length(); i++){
             JSONObject object = array.getJSONObject(i);
             if (relationShipExist(link, object)) {
@@ -633,7 +633,7 @@ public class FormUtils {
         return false;
     }
 
-    public JSONArray getFieldsArrayForSubFormDefinition(JSONObject fieldsDefinition) throws  Exception{
+    public JSONArray getFieldsArrayForSubFormDefinition(JSONObject fieldsDefinition) throws Exception {
         JSONArray fieldsArray = fieldsDefinition.getJSONArray("fields");
         String bindPath = fieldsDefinition.getString("bind_type");
 
@@ -658,7 +658,7 @@ public class FormUtils {
         return subFormFieldsArray;
     }
 
-    public JSONObject getFieldValuesForSubFormDefinition(JSONObject fieldsDefinition,String relationalId, String entityId, JSONObject jsonObject, JSONObject overrides) throws  Exception{
+    public JSONObject getFieldValuesForSubFormDefinition(JSONObject fieldsDefinition, String relationalId, String entityId, JSONObject jsonObject, JSONObject overrides) throws Exception {
 
         JSONArray fieldsArray = fieldsDefinition.getJSONArray("fields");
 
@@ -697,7 +697,7 @@ public class FormUtils {
         return fieldsValues;
     }
 
-    public String getValueForPath(String[] path, JSONObject jsonObject) throws Exception{
+    public String getValueForPath(String[] path, JSONObject jsonObject) throws Exception {
         JSONObject object = jsonObject;
         String value = null;
         int i = 0;

@@ -4,51 +4,32 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import org.ei.opensrp.Context;
-import org.ei.opensrp.adapter.SmartRegisterPaginatedAdapter;
-import org.ei.opensrp.commonregistry.AllCommonsRepository;
-import org.ei.opensrp.commonregistry.CommonObjectFilterOption;
-import org.ei.opensrp.commonregistry.CommonObjectSort;
-import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
-import org.ei.opensrp.commonregistry.CommonPersonObjectClients;
 import org.ei.opensrp.commonregistry.CommonPersonObjectController;
 import org.ei.opensrp.commonregistry.CommonRepository;
 import org.ei.opensrp.cursoradapter.CursorCommonObjectFilterOption;
 import org.ei.opensrp.cursoradapter.CursorCommonObjectSort;
-import org.ei.opensrp.cursoradapter.CursorFilterOption;
-import org.ei.opensrp.cursoradapter.CursorSortOption;
 import org.ei.opensrp.cursoradapter.SecuredNativeSmartRegisterCursorAdapterFragment;
 import org.ei.opensrp.cursoradapter.SmartRegisterPaginatedCursorAdapter;
 import org.ei.opensrp.cursoradapter.SmartRegisterQueryBuilder;
 import org.ei.opensrp.mcare.LoginActivity;
-import org.ei.opensrp.mcare.NativeHomeActivity;
 import org.ei.opensrp.mcare.R;
 import org.ei.opensrp.mcare.household.CensusEnrollmentHandler;
-import org.ei.opensrp.mcare.household.HHMWRAEXISTFilterOption;
 import org.ei.opensrp.mcare.household.HHMauzaCommonObjectFilterOption;
-import org.ei.opensrp.mcare.household.HHSearchOption;
 import org.ei.opensrp.mcare.household.HouseHoldDetailActivity;
 import org.ei.opensrp.mcare.household.HouseHoldServiceModeOption;
 import org.ei.opensrp.mcare.household.HouseHoldSmartClientsProvider;
 import org.ei.opensrp.mcare.household.HouseHoldSmartRegisterActivity;
 import org.ei.opensrp.mcare.household.HouseholdCensusDueDateSort;
-import org.ei.opensrp.mcare.household.NOHHMWRAEXISTFilterOption;
-import org.ei.opensrp.mcare.household.noNIDFilter;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.util.StringUtil;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
@@ -60,20 +41,16 @@ import org.ei.opensrp.view.dialog.AllClientsFilter;
 import org.ei.opensrp.view.dialog.DialogOption;
 import org.ei.opensrp.view.dialog.DialogOptionMapper;
 import org.ei.opensrp.view.dialog.DialogOptionModel;
-import org.ei.opensrp.view.dialog.ECSearchOption;
 import org.ei.opensrp.view.dialog.EditOption;
 import org.ei.opensrp.view.dialog.FilterOption;
-import org.ei.opensrp.view.dialog.LocationSelectorDialogFragment;
 import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
-import org.ei.opensrp.view.fragment.SecuredNativeSmartRegisterFragment;
 import org.opensrp.api.domain.Location;
 import org.opensrp.api.util.EntityUtils;
 import org.opensrp.api.util.LocationTree;
 import org.opensrp.api.util.TreeNode;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import util.AsyncTask;
@@ -441,7 +418,7 @@ public class HouseHoldSmartRegisterFragment extends SecuredNativeSmartRegisterCu
             }
         });
     }
-    public void addChildToList(ArrayList<DialogOption> dialogOptionslist,Map<String,TreeNode<String, Location>> locationMap){
+    public void addChildToList(ArrayList<DialogOption> dialogOptionslist, Map<String,TreeNode<String, Location>> locationMap){
         for(Map.Entry<String, TreeNode<String, Location>> entry : locationMap.entrySet()) {
 
             if(entry.getValue().getChildren() != null) {
@@ -475,7 +452,7 @@ public class HouseHoldSmartRegisterFragment extends SecuredNativeSmartRegisterCu
             warn.setBackground(null);
             warn.setId(R.id.warnid);
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-            layoutParams.addRule(RelativeLayout.LEFT_OF,R.id.sort_selection);
+            layoutParams.addRule(RelativeLayout.LEFT_OF, R.id.sort_selection);
             layoutParams_separator.addRule(RelativeLayout.RIGHT_OF,warn.getId());
             titlelayout.addView(warn, layoutParams);
             titlelayout.addView(border, layoutParams_separator);

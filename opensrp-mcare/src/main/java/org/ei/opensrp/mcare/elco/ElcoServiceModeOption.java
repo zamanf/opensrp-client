@@ -50,7 +50,7 @@ public class ElcoServiceModeOption extends ServiceModeOption {
             public int[] headerTextResourceIds() {
                 return new int[]{
                         R.string.elco_profile, R.string.elco_unique_id, R.string.elco_lmp,
-                        R.string.elco_psrf_due_date,R.string.mis_elco_due};
+                        R.string.elco_psrf_due_date, R.string.mis_elco_due};
             }
         };
     }
