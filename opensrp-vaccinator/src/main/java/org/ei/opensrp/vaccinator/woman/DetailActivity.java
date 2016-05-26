@@ -6,13 +6,9 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.graphics.RectF;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -38,9 +34,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import util.Utils;
+
 import static util.Utils.convertDateFormat;
-import static util.Utils.profiePic;
-import static util.Utils.setProfiePic;
 
 public abstract class DetailActivity extends Activity {
     static final int REQUEST_TAKE_PHOTO = 1;
@@ -66,7 +62,9 @@ public abstract class DetailActivity extends Activity {
 
     protected abstract Class onBackActivity();
 
-    protected abstract int profilePicResId();
+    protected abstract Integer profilePicContainerId();
+
+    protected abstract Integer defaultProfilePicResId();
 
     protected abstract String bindType();
 
@@ -98,32 +96,22 @@ public abstract class DetailActivity extends Activity {
         });
 
         if(allowImageCapture()){
-            mImageView = (ImageView)findViewById(profilePicResId());
+            mImageView = (ImageView)findViewById(profilePicContainerId());
             mImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     dispatchTakePictureIntent(mImageView);
                 }
             });
-        }
 
-        if(allowImageCapture()){
+
             ProfileImage photo = ((ImageRepository) org.ei.opensrp.Context.getInstance().imageRepository()).findByEntityId(client.entityId(), "dp");
+
             if(photo != null){
-                Bitmap ppic = profiePic(photo.getFilepath(), false);
-                mImageView.setImageBitmap(addWatermark(getResources(), ppic, false));
+                Utils.setProfiePicFromPath(this, mImageView, photo.getFilepath(), R.drawable.ic_pencil);
             }
             else {
-                Bitmap bitmap;
-                if (mImageView.getDrawable() instanceof BitmapDrawable) {
-                    bitmap = ((BitmapDrawable) mImageView.getDrawable()).getBitmap();
-                } else {
-                    Drawable d = mImageView.getDrawable();
-                    bitmap = Bitmap.createBitmap(d.getIntrinsicWidth(), d.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-                    Canvas canvas = new Canvas(bitmap);
-                    d.draw(canvas);
-                }
-                mImageView.setImageBitmap(addWatermark(getResources(), bitmap, false));
+                Utils.setProfiePic(this, mImageView, defaultProfilePicResId(), R.drawable.ic_pencil);
             }
         }
     }
@@ -179,7 +167,7 @@ public abstract class DetailActivity extends Activity {
             HashMap<String,String> details = new HashMap<String,String>();
             details.put("profilepic", currentPhoto.getAbsolutePath());
             saveImageReference(bindType(), client.entityId(), details);
-            mImageView.setImageBitmap(addWatermark(getResources(), profiePic(currentPhoto.getAbsolutePath(), false), false));
+            Utils.setProfiePicFromPath(this, mImageView, currentPhoto.getAbsolutePath(), R.drawable.ic_pencil);
         }
     }
 

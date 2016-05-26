@@ -1,6 +1,7 @@
 package org.ei.opensrp.service;
 
 import android.content.Context;
+import android.os.Environment;
 import android.util.Log;
 
 import org.apache.commons.io.IOUtils;
@@ -17,6 +18,8 @@ import org.apache.http.conn.scheme.SocketFactory;
 import org.apache.http.conn.ssl.AbstractVerifier;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.conn.ssl.X509HostnameVerifier;
+import org.apache.http.entity.BufferedHttpEntity;
+import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
@@ -39,11 +42,24 @@ import org.ei.opensrp.repository.AllSettings;
 import org.ei.opensrp.repository.AllSharedPreferences;
 import org.ei.opensrp.util.DownloadForm;
 import org.ei.opensrp.util.FileUtilities;
+import org.joda.time.DateTime;
 
+import java.io.ByteArrayInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyStore;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 import javax.net.ssl.SSLException;
 
@@ -93,17 +109,82 @@ public class HTTPAgent {
         }
     }
 
+    public static Response<String> post(String postURLPath, String jsonPayload, Map requestHeaders)  {
+        try {
+            // open url connection
+            URL url = new URL(postURLPath);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+
+            // set up url connection to post information and
+            // retrieve information back
+            con.setRequestMethod("POST");
+            con.setDoInput(true);
+            con.setDoOutput(true);
+            con.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+            con.setRequestProperty("Accept", "application/json");
+
+            // add all the request headers
+            if (requestHeaders != null) {
+                Set headers = requestHeaders.keySet();
+                for (Iterator it = headers.iterator(); it.hasNext(); ) {
+                    String headerName = (String) it.next();
+                    String headerValue = (String) requestHeaders.get(headerName);
+                    con.setRequestProperty(headerName, headerValue);
+                }
+            }
+
+            // add url form parameters
+            DataOutputStream ostream = null;
+            try {
+                ostream = new DataOutputStream(con.getOutputStream());
+
+                if (jsonPayload != null) {
+                    ostream.writeBytes(jsonPayload);
+                }
+            } finally {
+                if (ostream != null) {
+                    ostream.flush();
+                    ostream.close();
+                }
+            }
+
+            if(con.getResponseCode() == HttpStatus.SC_CREATED) {
+                con.disconnect();
+                return new Response<String>(ResponseStatus.success, null);
+            }
+        }
+        catch (Exception  e){
+            e.printStackTrace();
+        }
+        return new Response<String>(ResponseStatus.failure, null);
+    }
+
     public Response<String> post(String postURLPath, String jsonPayload) {
         try {
             setCredentials(allSharedPreferences.fetchRegisteredANM(), settings.fetchANMPassword());
+            System.setProperty("http.keepAlive", "false");
             HttpPost httpPost = new HttpPost(postURLPath);
             Log.v("jsonpayload", jsonPayload);
             FileUtilities fu = new FileUtilities();
-            fu.write("jsonpayload.txt", jsonPayload);
+            fu.write("jsonpayload" + DateTime.now().toString("yyyyMMddHHmmss")+ ".txt", jsonPayload);
 
-            StringEntity entity = new StringEntity(jsonPayload, HTTP.UTF_8);
+           /* StringEntity entity = new StringEntity(jsonPayload, HTTP.UTF_8);
             entity.setContentType("application/json; charset=utf-8");
-            httpPost.setEntity(entity);
+            httpPost.setEntity(entity);*/
+
+            InputStreamEntity reqEntity = new InputStreamEntity(new ByteArrayInputStream(jsonPayload.getBytes("UTF-8")), -1);
+            reqEntity.setContentType("application/json; charset=utf-8");
+            reqEntity.setChunked(true); // Send in multiple parts if needed
+
+            httpPost.setHeader("connection", "close");
+
+            BufferedHttpEntity be = null;
+            try {
+                be = new BufferedHttpEntity(reqEntity);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            httpPost.setEntity(be);
 
             HttpResponse response = httpClient.postContent(httpPost);
 
@@ -111,6 +192,7 @@ public class HTTPAgent {
             response.getEntity().consumeContent();
             return new Response<String>(responseStatus, null);
         } catch (Exception e) {
+            e.printStackTrace();
             logWarn(e.toString());
             return new Response<String>(ResponseStatus.failure, null);
         }

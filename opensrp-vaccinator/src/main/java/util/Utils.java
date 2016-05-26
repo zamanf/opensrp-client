@@ -18,8 +18,6 @@ package util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -56,6 +54,11 @@ import org.ei.opensrp.repository.ImageRepository;
 import org.ei.opensrp.util.IntegerUtil;
 import org.ei.opensrp.util.StringUtil;
 import org.ei.opensrp.vaccinator.R;
+import org.ei.opensrp.vaccinator.db.CESQLiteHelper;
+import org.ei.opensrp.vaccinator.db.Client;
+import org.ei.opensrp.vaccinator.db.Obs;
+import org.ei.opensrp.vaccinator.db.VaccineRepo;
+import org.ei.opensrp.vaccinator.db.VaccineRepo.Vaccine;
 import org.ei.opensrp.vaccinator.fragment.SmartRegisterFragment;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.joda.time.DateTime;
@@ -235,6 +238,14 @@ public class Utils {
         return formatValue(pc.getDetails().get(field), humanize);
     }
 
+    public static String getObsValue(CESQLiteHelper cedb, Client client, boolean humanize, String... fields) throws JSONException, ParseException {
+        List<Obs> ol = cedb.getObs(client.getBaseEntityId(), null, "eventDate DESC", fields);
+        if(ol == null || ol.size() == 0){
+            return "";
+        }
+        return formatValue(ol.get(0).getValue(), humanize);
+    }
+
     public static String getValue(CommonPersonObjectClient pc, String field, String defaultV, boolean humanize){
         String val = formatValue(pc.getDetails().get(field), humanize);
         if(StringUtils.isNotBlank(defaultV) && StringUtils.isBlank(val)){
@@ -269,11 +280,11 @@ public class Utils {
         return "";
     }
 
-    public static boolean hasAnyEmptyValue(Map<String, String> cm, String... fields){
+    public static boolean hasAnyEmptyValue(Map<String, String> cm, String postFix, String... fields){
         List<String> l = Arrays.asList(fields);
         for (String f : l) {
             String v = getValue(cm, f, false);
-            if (v == "") {
+            if (v == "" && (StringUtils.isBlank(postFix) || StringUtils.isBlank(getValue(cm, f+postFix, false)))) {
                 return true;
             }
         }
@@ -336,7 +347,7 @@ public class Utils {
 
         for (HashMap<String, String> v: getUsed(startDate, endDate, table, vaccines)) {
             for (String k: v.keySet()) {
-                totalUsed += Integer.parseInt(v.get(k) == null?"0":v.get(k));
+                totalUsed += Integer.parseInt(v.get(k) == null ? "0" : v.get(k));
             }
         }
         Log.i("", "TOTAL USED: "+totalUsed);
@@ -423,8 +434,11 @@ public class Utils {
         tr.setPadding(15, 5, 0, 0);
         table.addView(tr);
     }
+    public static void addVaccineDetail(Context context, TableLayout table, String status, Vaccine vaccine, DateTime vaccineDate, Alert alert, boolean compact) {
+        addVaccineDetail(context, table, status, vaccine.display(), vaccineDate != null ? vaccineDate.toString("yyyy-MM-dd") : "", alert, compact);
+    }
 
-    public static void addVaccineDetail(Context context, TableLayout table, String vaccine, String vaccineDate, Alert alert, boolean compact){
+    public static void addVaccineDetail(Context context, TableLayout table, String status, String vaccine, String vaccineDate, Alert alert, boolean compact){
         TableRow tr = new TableRow(context);
         TableRow.LayoutParams trlp = new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         tr.setLayoutParams(trlp);
@@ -443,12 +457,22 @@ public class Utils {
         tr.addView(label);
 
         String color = "";
-        if(StringUtils.isBlank(vaccineDate) && alert != null) {
-            color = Utils.getColorValue(context, alert.status());
-            vaccineDate = "<due : "+convertDateFormat(alert.startDate(), true)+">";
+        if(status.equalsIgnoreCase("due")) {
+            if(alert != null){
+                color = Utils.getColorValue(context, alert.status());
+                vaccineDate = "<due : "+convertDateFormat(vaccineDate, true)+">";
+            }
+            else if(StringUtils.isNotBlank(vaccineDate)){
+                color = Utils.getColorValue(context, AlertStatus.inProcess);
+                vaccineDate = "<due : "+convertDateFormat(vaccineDate, true)+">";
+            }
         }
-        else if(StringUtils.isNotBlank(vaccineDate)){
+        else if(status.equalsIgnoreCase("done")){
             color = "#31B404";
+        }
+        else if(status.equalsIgnoreCase("expired")){
+            color = Utils.getColorValue(context, AlertStatus.inProcess);
+            vaccineDate = "<exp : "+convertDateFormat(vaccineDate, true)+">";
         }
 
         LinearLayout l = new LinearLayout(context);
@@ -507,47 +531,115 @@ public class Utils {
         }
     }
 
-    public static void setProfiePic(Context context, ImageView mImageView, String entityId, boolean highQuality){
+    public static void setProfiePic(Context context, ImageView mImageView, String entityId, Object watermark){
         ProfileImage photo = ((ImageRepository) org.ei.opensrp.Context.getInstance().imageRepository()).findByEntityId(entityId, "dp");
         if(photo != null){
-            mImageView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-            Picasso.with(context).load(new File(photo.getFilepath())).resize(mImageView.getMeasuredWidth(), mImageView.getMeasuredHeight()).into(mImageView);
-            //mImageView.setImageBitmap(profiePic(photo.getFilepath(), highQuality));
+            setProfiePicFromPath(context, mImageView, photo.getFilepath(), watermark);
         }
     }
 
-    public static Bitmap profiePic(String photoPath, boolean highQuality){
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inPreferredConfig = highQuality?Bitmap.Config.ARGB_8888:Bitmap.Config.ARGB_4444;
-        Bitmap bitmap = BitmapFactory.decodeFile(photoPath, options);
-        return bitmap;
+    public static void setProfiePicFromPath(Context context, ImageView mImageView, String photoPath, Object watermark){
+        mImageView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        if(watermark == null){
+            Picasso.with(context).load(new File(photoPath)).resize(mImageView.getMeasuredWidth(), mImageView.getMeasuredHeight()).into(mImageView);
+        }
+        else {
+            Picasso.with(context).load(new File(photoPath))
+                    .resize(mImageView.getMeasuredWidth(), mImageView.getMeasuredHeight())
+                    .transform(new WatermarkTransformation(watermark))
+                    .into(mImageView);
+        }
     }
 
-    public static void setThumbnail(ImageView mImageView, String entityId){
-        ProfileImage photo = ((ImageRepository) org.ei.opensrp.Context.getInstance().imageRepository()).findByEntityId(entityId, "dp");
-        if(photo != null){
-            // Get the dimensions of the View
-            int targetW = mImageView.getWidth();
-            int targetH = mImageView.getHeight();
-
-            // Get the dimensions of the bitmap
-            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-            bmOptions.inJustDecodeBounds = true;
-            BitmapFactory.decodeFile(photo.getFilepath(), bmOptions);
-            int photoW = bmOptions.outWidth;
-            int photoH = bmOptions.outHeight;
-
-            // Determine how much to scale down the image
-            int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
-
-            // Decode the image file into a Bitmap sized to fill the View
-            bmOptions.inJustDecodeBounds = false;
-            bmOptions.inSampleSize = scaleFactor;
-            bmOptions.inPurgeable = true;
-
-            Bitmap bitmap = BitmapFactory.decodeFile(photo.getFilepath(), bmOptions);
-            mImageView.setImageBitmap(bitmap);
+    public static void setProfiePic(Context context, ImageView mImageView, int photoResId, Object watermark){
+        mImageView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        if(watermark == null){
+            Picasso.with(context).load(photoResId).resize(mImageView.getMeasuredWidth(), mImageView.getMeasuredHeight()).into(mImageView);
         }
+        else {
+            Picasso.with(context).load(photoResId)
+                    .resize(mImageView.getMeasuredWidth(), mImageView.getMeasuredHeight())
+                    .transform(new WatermarkTransformation(watermark))
+                    .into(mImageView);
+        }
+    }
+
+    private static DateTime getReceivedDate(Map<String, String> received, Vaccine v){
+        if (received.get(v.name()) != null){
+            return new DateTime(received.get(v.name()));
+        }
+        else if(received.get(v.name()+"_retro") != null){
+            return new DateTime(received.get(v.name()+"_retro"));
+        }
+        return null;
+    }
+
+    public static List<Map<String, Object>> generateSchedule(String category, DateTime milestoneDate, Map<String, String> received, List<Alert> alerts){
+        ArrayList<Vaccine> vl = VaccineRepo.getVaccines(category);
+        List<Map<String, Object>> schedule = new ArrayList();
+        for (Vaccine v: vl) {
+            Map<String, Object> m = new HashMap<>();
+            DateTime recDate = getReceivedDate(received, v);
+            if (recDate != null) {
+                m = createVaccineMap("done", null, recDate, v);
+            }
+            else if(milestoneDate != null && milestoneDate.plusDays(v.expiryDays()).isBefore(DateTime.now())){
+                m = createVaccineMap("expired", null, milestoneDate.plusDays(v.expiryDays()), v);
+            }
+            else if (alerts.size() > 0) {
+                for (Alert a : alerts) {
+                    if (a.scheduleName().replaceAll(" ", "").equalsIgnoreCase(v.name())
+                            || a.visitCode().replaceAll(" ", "").equalsIgnoreCase(v.name())) {
+                        m = createVaccineMap("due", a, new DateTime(a.startDate()), v);
+                    }
+                }
+            }
+
+            if (m.isEmpty()) {
+                if (v.prerequisite() != null) {
+                    DateTime prereq = getReceivedDate(received, v.prerequisite());
+                    if (prereq != null) {
+                        prereq = prereq.plusDays(v.prerequisiteGapDays());
+                        m = createVaccineMap("due", null, prereq, v);
+                    }
+                    else {
+                        m = createVaccineMap("due", null, null, v);
+                    }
+                } else if(milestoneDate != null){
+                    m = createVaccineMap("due", null, milestoneDate.plusDays(v.milestoneGapDays()), v);
+                }
+                else {
+                    m = createVaccineMap("na", null, null, v);
+                }
+            }
+
+            schedule.add(m);
+        }
+        return schedule;
+    }
+
+    private static Map<String, Object> createVaccineMap(String status, Alert a, DateTime date, Vaccine v){
+        Map<String, Object> m = new HashMap<>();
+        m.put("status", status);
+        m.put("alert", a);
+        m.put("date", date);
+        m.put("vaccine", v);
+
+        return m;
+    }
+
+    public static Map<String, Object> nextVaccineDue(List<Map<String, Object>> schedule){
+        Map<String, Object> v = null;
+        for (Map<String, Object> m: schedule) {
+            if(m != null && m.get("status") != null && m.get("status").toString().equalsIgnoreCase("due")){
+                if (v == null) {
+                    v = m;
+                } else if (m.get("date") != null && ((DateTime) m.get("date")).isBefore((DateTime) v.get("date"))) {
+                    v = m;
+                }
+            }
+        }
+        return v;
     }
 
     public static boolean hasFroyo() {

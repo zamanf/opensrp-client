@@ -15,7 +15,9 @@ import org.ei.opensrp.commonregistry.CommonPersonObjectController;
 import org.ei.opensrp.domain.Alert;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.service.AlertService;
+import org.ei.opensrp.util.StringUtil;
 import org.ei.opensrp.vaccinator.R;
+import org.ei.opensrp.vaccinator.db.VaccineRepo;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.contract.SmartRegisterClients;
 import org.ei.opensrp.view.dialog.FilterOption;
@@ -26,11 +28,14 @@ import org.joda.time.DateTime;
 import org.joda.time.Years;
 
 import java.util.List;
+import java.util.Map;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static util.Utils.convertDateFormat;
 import static util.Utils.fillValue;
+import static util.Utils.generateSchedule;
 import static util.Utils.getValue;
+import static util.Utils.nextVaccineDue;
 import static util.Utils.nonEmptyValue;
 import static util.Utils.setProfiePic;
 
@@ -72,8 +77,14 @@ public class WomanSmartClientsProvider implements SmartRegisterClientsProvider {
         fillValue((TextView) convertView.findViewById(R.id.woman_husbandname), getValue(pc, "husband_name", true));
         fillValue((TextView) convertView.findViewById(R.id.woman_fathername), getValue(pc, "father_name", true));
 
-        int age = Years.yearsBetween(new DateTime(getValue(pc.getColumnmaps(), "dob", false)), DateTime.now()).getYears();
-        fillValue((TextView) convertView.findViewById(R.id.woman_age),  age+ " years");
+        int age = -1;
+        try{
+            age = Years.yearsBetween(new DateTime(getValue(pc.getColumnmaps(), "dob", false)), DateTime.now()).getYears();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        fillValue((TextView) convertView.findViewById(R.id.woman_age),  age<0?"No DoB":(age+ " years"));
         fillValue((TextView) convertView.findViewById(R.id.woman_epi_number), pc, "epi_card_number", false);
         String edd = convertDateFormat(getValue(pc, "final_edd", false),true);
         fillValue((TextView) convertView.findViewById(R.id.woman_edd), edd == ""?"N/A":edd);
@@ -93,37 +104,44 @@ public class WomanSmartClientsProvider implements SmartRegisterClientsProvider {
 
         List<Alert> alertlist_for_client = alertService.findByEntityIdAndAlertNames(pc.entityId(), "TT 1", "TT 2", "TT 3", "TT 4", "TT 5", "tt1", "tt2", "tt3", "tt4", "tt5");
 
-        if(StringUtils.isNotBlank(getValue(pc.getColumnmaps(), "tt5", false))){
+        if(age < 0){
+            deactivateNextVaccine("Invalid DoB", "", R.color.alert_na, convertView);
+        }
+        else if(StringUtils.isNotBlank(getValue(pc.getColumnmaps(), "tt5", false))){
             deactivateNextVaccine("Fully Immunized", "", R.color.alert_na, convertView);
         }
         else if(age > 49 && StringUtils.isBlank(getValue(pc.getColumnmaps(), "tt5", false))){
             deactivateNextVaccine("Partially Immunized", "", R.color.alert_na, convertView);
         }
-        else if (alertlist_for_client.size() == 0) {
-            fillValue((TextView) convertView.findViewById(R.id.woman_next_visit_vaccine), "Waiting");
-            deactivateNextVaccine("Waiting", "", R.color.alert_na, convertView);
-        }
         else {
-            for (int i = 0; i < alertlist_for_client.size(); i++) {
-                String vaccine = alertlist_for_client.get(i).scheduleName().replaceAll(" ", "");
-                if (alertlist_for_client.get(i).status().value().equalsIgnoreCase("normal")) {
-                    String dueDate = alertlist_for_client.get(i).startDate();
+            List<Map<String, Object>> sch = generateSchedule("woman", null, pc.getColumnmaps(), alertlist_for_client);
+            Map<String, Object> nv = nextVaccineDue(sch);
+            if(nv != null){
+                DateTime dueDate = (DateTime)nv.get("date");
+                VaccineRepo.Vaccine vaccine = (VaccineRepo.Vaccine) nv.get("vaccine");
+                if(nv.get("alert") == null){
+                    activateNextVaccine(dueDate, (VaccineRepo.Vaccine)nv.get("vaccine"), Color.BLACK, R.color.alert_na, onClickListener, client, convertView);
+                }
+                else if (((Alert)nv.get("alert")).status().value().equalsIgnoreCase("normal")) {
                     activateNextVaccine(dueDate, vaccine, Color.WHITE, R.color.alert_normal, onClickListener, client, convertView);
                 }
-                if (alertlist_for_client.get(i).status().value().equalsIgnoreCase("upcoming")) {
-                    String dueDate = alertlist_for_client.get(i).startDate();
+                else if (((Alert)nv.get("alert")).status().value().equalsIgnoreCase("upcoming")) {
                     activateNextVaccine(dueDate, vaccine, Color.BLACK, R.color.alert_upcoming, onClickListener, client, convertView);
                 }
-                if (alertlist_for_client.get(i).status().value().equalsIgnoreCase("urgent")) {
-                    String dueDate = alertlist_for_client.get(i).startDate();
+                else if (((Alert)nv.get("alert")).status().value().equalsIgnoreCase("urgent")) {
                     activateNextVaccine(dueDate, vaccine, Color.WHITE, R.color.alert_urgent, onClickListener, client, convertView);
                 }
-                if (alertlist_for_client.get(i).status().value().equalsIgnoreCase("expired")) {
-                    deactivateNextVaccine(vaccine + " Expired", alertlist_for_client.get(i).expiryDate(), R.color.alert_expired, convertView);
+                else if (((Alert)nv.get("alert")).status().value().equalsIgnoreCase("expired")) {
+                    deactivateNextVaccine(vaccine + " Expired", "", R.color.alert_expired, convertView);
                 }
             }
+            else {
+                fillValue((TextView) convertView.findViewById(R.id.woman_next_visit_vaccine), "Waiting");
+                deactivateNextVaccine("Waiting", "", R.color.alert_na, convertView);
+            }
         }
-        setProfiePic(convertView.getContext(), (ImageView) convertView.findViewById(R.id.woman_profilepic), client.entityId(), false);
+
+        setProfiePic(convertView.getContext(), (ImageView) convertView.findViewById(R.id.woman_profilepic), client.entityId(), null);
 
         convertView.findViewById(R.id.woman_profile_info_layout).setTag(client);
         convertView.findViewById(R.id.woman_profile_info_layout).setOnClickListener(onClickListener);
@@ -148,6 +166,11 @@ public class WomanSmartClientsProvider implements SmartRegisterClientsProvider {
         convertView.findViewById(R.id.woman_next_visit_holder).setBackgroundColor(context.getResources().getColor(backColor));
         convertView.findViewById(R.id.woman_next_visit_holder).setOnClickListener(onClickListener);
         convertView.findViewById(R.id.woman_next_visit_holder).setTag(client);
+    }
+
+    private void activateNextVaccine(DateTime dueDate, VaccineRepo.Vaccine vaccine, int foreColor, int backColor, View.OnClickListener onClickListener,
+                                     SmartRegisterClient client, View convertView){
+        activateNextVaccine(dueDate.toString("yyyy-MM-dd"), StringUtil.humanize(vaccine.display()), foreColor, backColor, onClickListener, client, convertView);
     }
 
     @Override

@@ -9,7 +9,6 @@ import org.ei.opensrp.commonregistry.CommonPersonObjectController;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.vaccinator.R;
 import org.ei.opensrp.vaccinator.db.Client;
-import org.ei.opensrp.vaccinator.db.Event;
 import org.ei.opensrp.vaccinator.woman.DetailActivity;
 import org.ei.opensrp.vaccinator.woman.WomanDetailActivity;
 import org.ei.opensrp.vaccinator.woman.WomanFollowupHandler;
@@ -22,12 +21,13 @@ import org.ei.opensrp.view.dialog.AllClientsFilter;
 import org.ei.opensrp.view.dialog.FilterOption;
 import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
+import org.json.JSONException;
 
+import java.text.ParseException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import static util.Utils.formatValue;
+import static util.Utils.getObsValue;
 import static util.Utils.getValue;
 import static util.Utils.nonEmptyValue;
 
@@ -134,13 +134,13 @@ public class WomanSmartRegisterFragment extends SmartClientRegisterFragment {
         return map;
     }
 
-    private HashMap<String, String> getPreloadVaccineData(Event e) {
+    private HashMap<String, String> getPreloadVaccineData(Client client) throws JSONException, ParseException {
         HashMap<String, String> map = new HashMap<>();
-        map.put("e_tt1", formatValue(e.findObs(null, true, "tt1", "tt1_retro").getValue(), false));
-        map.put("e_tt2", formatValue(e.findObs(null, true, "tt2", "tt2_retro").getValue(), false));
-        map.put("e_tt3", formatValue(e.findObs(null, true, "tt3", "tt3_retro").getValue(), false));
-        map.put("e_tt4", formatValue(e.findObs(null, true, "tt4", "tt4_retro").getValue(), false));
-        map.put("e_tt5", formatValue(e.findObs(null, true, "tt5", "tt5_retro").getValue(), false));
+        map.put("e_tt1", getObsValue(getClientEventDb(), client, true, "tt1", "tt1_retro"));
+        map.put("e_tt2", getObsValue(getClientEventDb(), client, true, "tt2", "tt2_retro"));
+        map.put("e_tt3", getObsValue(getClientEventDb(), client, true, "tt3", "tt3_retro"));
+        map.put("e_tt4", getObsValue(getClientEventDb(), client, true, "tt4", "tt4_retro"));
+        map.put("e_tt5", getObsValue(getClientEventDb(), client, true, "tt5", "tt5_retro"));
 
         return map;
     }
@@ -182,12 +182,11 @@ public class WomanSmartRegisterFragment extends SmartClientRegisterFragment {
         map.put("existing_gender", getValue(client.getDetails(), "gender", true));
         map.put("existing_father_name", getValue(client.getDetails(), "father_name", true));
         map.put("existing_husband_name", getValue(client.getDetails(), "husband_name", true));
-        map.put("existing_birth_date", getValue(client.getDetails(), "dob", false));
-        map.put("existing_calc_dob_confirm", getValue(client.getDetails(), "dob", false));
+        map.put("existing_birth_date", getValue(client.getColumnmaps(), "dob", false));
+        map.put("existing_epi_card_number", getValue(client.getDetails(), "epi_card_number", false));
         map.put("existing_marriage", getValue(client.getDetails(), "marriage", true));
         map.put("existing_ethnicity", getValue(client.getDetails(), "ethnicity", true));
         map.put("existing_client_reg_date", getValue(client.getDetails(), "client_reg_date", false));
-        map.put("existing_epi_card_number", getValue(client.getDetails(), "epi_card_number", false));
         map.put("existing_reminders_approval", getValue(client.getDetails(), "reminders_approval", false));
         map.put("existing_contact_phone_number", getValue(client.getDetails(), "contact_phone_number", false));
 
@@ -214,26 +213,25 @@ public class WomanSmartRegisterFragment extends SmartClientRegisterFragment {
         map.put("existing_last_name", client.getLastName());
         map.put("existing_gender", client.getGender());
         map.put("existing_birth_date", client.getBirthdate().toString("yyyy-MM-dd"));
+        Object epi = client.getAttribute("EPI Card Number");
+        map.put("existing_epi_card_number", epi == null ? "" : epi.toString());
+
         try{
-            List<Event> el = getClientEventDb().getEvents(client.getBaseEntityId(), "Women TT enrollment", "eventDate DESC");
+            map.put("existing_father_name", getObsValue(getClientEventDb(), client, true, "father_name", "1594AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
+            map.put("existing_husband_name", getObsValue(getClientEventDb(), client, true, "husband_name", "5617AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
+            map.put("existing_marriage", getObsValue(getClientEventDb(), client, true, "marriage"));
+            map.put("existing_ethnicity", getObsValue(getClientEventDb(), client, true, "ethnicity", "163153AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
+            map.put("existing_client_reg_date", getObsValue(getClientEventDb(), client, false, "client_reg_date", "1594AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
+            map.put("existing_reminders_approval", getObsValue(getClientEventDb(), client, true, "reminders_approval", "163089AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
+            map.put("existing_contact_phone_number", getObsValue(getClientEventDb(), client, true, "contact_phone_number", "159635AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
 
-            if(el.size() > 0) {
-                Event e = el.get(0);
-                map.put("existing_father_name", formatValue(e.findObs(null, true, "father_name", "1594AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA").getValue(), true));
-                map.put("existing_husband_name", formatValue(e.findObs(null, true, "husband_name", "5617AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA").getValue(), true));
-                map.put("existing_marriage", formatValue(e.findObs(null, true, "marriage").getValue(), true));
-                map.put("existing_ethnicity", formatValue(e.findObs(null, true, "ethnicity", "163153AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA").getValue(), true));
-                map.put("existing_client_reg_date", formatValue(e.findObs(null, true, "client_reg_date", "1594AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA").getValue(), true));
-                map.put("existing_epi_card_number", formatValue(e.findObs(null, true, "epi_card_number").getValue(), true));
-                map.put("existing_reminders_approval", formatValue(e.findObs(null, true, "reminders_approval", "163089AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA").getValue(), false));
-                map.put("existing_contact_phone_number", formatValue(e.findObs(null, true, "contact_phone_number", "159635AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA").getValue(), false));
-
-                map.putAll(getPreloadVaccineData(e));
-            }
+            map.putAll(getPreloadVaccineData(client));
         }
         catch (Exception e){
             e.printStackTrace();
         }
         return map;
     }
+
+
 }
