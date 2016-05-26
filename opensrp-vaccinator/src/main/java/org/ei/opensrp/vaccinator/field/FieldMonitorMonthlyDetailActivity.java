@@ -45,9 +45,10 @@ public class FieldMonitorMonthlyDetailActivity extends DetailActivity {
     }
 
     @Override
-    protected int profilePicResId() {
-        return -1;
-    }
+    protected Integer profilePicContainerId() { return null; }
+
+    @Override
+    protected Integer defaultProfilePicResId() { return null; }
 
     @Override
     protected String bindType() {

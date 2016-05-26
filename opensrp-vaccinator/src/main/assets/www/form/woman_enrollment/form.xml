@@ -3,7 +3,7 @@
     <section class="form-logo"> </section>
     <h3 id="form-title">خواتین انرولمنٹ فارم برائے ٹی ٹی ٹیکاجات - Woman TT Enrollment Form</h3>
     <select id="form-languages" data-default-lang="en">
-        <option value="ur">Urdu</option> <option value="en">English</option>  <option value="Roman Urdu">Roman Urdu</option> </select>        <label class="note non-select ">
+        <option value="ur">Urdu</option> <option value="en">English</option> <option value="Roman Urdu">Roman Urdu</option> </select>        <label class="note non-select ">
     <span lang="ur" class="question-label " data-itext-id="/Woman_TT_Enrollment_Form/provider_location_note:label">شہر: <span class="or-output" data-value=" /Woman_TT_Enrollment_Form/provider_city ">            </span> ; ٹائون: <span class="or-output" data-value=" /Woman_TT_Enrollment_Form/provider_town ">            </span> ; یوسی: <span class="or-output" data-value=" /Woman_TT_Enrollment_Form/provider_uc ">            </span> ; سینٹرکا نام: <span class="or-output" data-value=" /Woman_TT_Enrollment_Form/provider_location_name ">            </span>
     </span>
     <span lang="en" class="question-label active" data-itext-id="/Woman_TT_Enrollment_Form/provider_location_note:label">City: <span class="or-output" data-value=" /Woman_TT_Enrollment_Form/provider_city ">            </span> ; Town: <span class="or-output" data-value=" /Woman_TT_Enrollment_Form/provider_town ">            </span> ; UC: <span class="or-output" data-value=" /Woman_TT_Enrollment_Form/provider_uc ">            </span> ; Center Name: <span class="or-output" data-value=" /Woman_TT_Enrollment_Form/provider_location_name ">            </span>
@@ -1379,23 +1379,23 @@
             <span class="itemset-labels" data-value-ref="name" data-label-type="itext" data-label-ref="itextId">
                 <span lang="ur" class="option-label " data-itext-id="static_instance-vaccines-0">ٹی ٹی 1</span>
                 <span lang="en" class="option-label active" data-itext-id="static_instance-vaccines-0">TT1</span>
-
+                <span lang="openmrs_code" class="option-label " data-itext-id="static_instance-vaccines-0">84880AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</span>
                 <span lang="Roman Urdu" class="option-label " data-itext-id="static_instance-vaccines-0">TT1</span>
                 <span lang="ur" class="option-label " data-itext-id="static_instance-vaccines-1">ٹی ٹی 2</span>
                 <span lang="en" class="option-label active" data-itext-id="static_instance-vaccines-1">TT2</span>
-
+                <span lang="openmrs_code" class="option-label " data-itext-id="static_instance-vaccines-1">84880AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</span>
                 <span lang="Roman Urdu" class="option-label " data-itext-id="static_instance-vaccines-1">TT2</span>
                 <span lang="ur" class="option-label " data-itext-id="static_instance-vaccines-2">ٹی ٹی 3</span>
                 <span lang="en" class="option-label active" data-itext-id="static_instance-vaccines-2">TT3</span>
-
+                <span lang="openmrs_code" class="option-label " data-itext-id="static_instance-vaccines-2">84880AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</span>
                 <span lang="Roman Urdu" class="option-label " data-itext-id="static_instance-vaccines-2">TT3</span>
                 <span lang="ur" class="option-label " data-itext-id="static_instance-vaccines-3">ٹی ٹی 4</span>
                 <span lang="en" class="option-label active" data-itext-id="static_instance-vaccines-3">TT4</span>
-
+                <span lang="openmrs_code" class="option-label " data-itext-id="static_instance-vaccines-3">84880AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</span>
                 <span lang="Roman Urdu" class="option-label " data-itext-id="static_instance-vaccines-3">TT4</span>
                 <span lang="ur" class="option-label " data-itext-id="static_instance-vaccines-4">ٹی ٹی 5</span>
                 <span lang="en" class="option-label active" data-itext-id="static_instance-vaccines-4">TT5</span>
-
+                <span lang="openmrs_code" class="option-label " data-itext-id="static_instance-vaccines-4">84880AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</span>
                 <span lang="Roman Urdu" class="option-label " data-itext-id="static_instance-vaccines-4">TT5</span>            </span>
         </div>
     </fieldset>

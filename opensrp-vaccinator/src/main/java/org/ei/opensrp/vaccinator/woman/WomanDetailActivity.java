@@ -1,22 +1,23 @@
 package org.ei.opensrp.vaccinator.woman;
 
-import android.graphics.Color;
-import android.view.ViewGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
-import android.widget.TextView;
 
+import org.apache.commons.lang3.StringUtils;
 import org.ei.opensrp.Context;
 import org.ei.opensrp.domain.Alert;
 import org.ei.opensrp.vaccinator.R;
+import org.ei.opensrp.vaccinator.db.VaccineRepo;
 import org.joda.time.DateTime;
 import org.joda.time.Years;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
+import static util.Utils.addStatusTag;
+import static util.Utils.addVaccineDetail;
 import static util.Utils.convertDateFormat;
+import static util.Utils.generateSchedule;
 import static util.Utils.getDataRow;
 import static util.Utils.getValue;
 import static util.Utils.nonEmptyValue;
@@ -47,8 +48,13 @@ public class WomanDetailActivity extends DetailActivity {
     }
 
     @Override
-    protected int profilePicResId() {
+    protected Integer profilePicContainerId() {
         return R.id.woman_profilepic;
+    }
+
+    @Override
+    protected Integer defaultProfilePicResId() {
+        return R.drawable.pk_woman_icon;
     }
 
     @Override
@@ -80,8 +86,14 @@ public class WomanDetailActivity extends DetailActivity {
         tr = getDataRow(this, "Woman`s Name", getValue(client, "first_name", true), null);
         dt.addView(tr);
 
-        int age = Years.yearsBetween(new DateTime(getValue(client.getColumnmaps(), "dob", false)), DateTime.now()).getYears();
-        tr = getDataRow(this, "Birthdate (Age)", convertDateFormat(getValue(client.getColumnmaps(), "dob", false), true) + " (" + age + " years)", null);
+        int age = -1;
+        try{
+            age = Years.yearsBetween(new DateTime(getValue(client.getColumnmaps(), "dob", false)), DateTime.now()).getYears();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        tr = getDataRow(this, "Birthdate (Age)", convertDateFormat(getValue(client.getColumnmaps(), "dob", false), "No DoB", true) + " (" + age + " years)", null);
         dt.addView(tr);
 
         tr = getDataRow(this, "Father`s Name", getValue(client, "father_name", true), null);
@@ -97,7 +109,7 @@ public class WomanDetailActivity extends DetailActivity {
         dt2.addView(tr);
         tr = getDataRow(this, "Contact Number", getValue(client, "contact_phone_number", true), null);
         dt2.addView(tr);
-        tr = getDataRow(this, "Address", getValue(client, "house_number", true)+ " "+ getValue(client, "street", true)
+        tr = getDataRow(this, "Address", getValue(client, "address1", true)
                 +", \nUC: "+ getValue(client, "union_council", true)
                 +", \nTown: "+ getValue(client, "town", true)
                 +", \nCity: "+ getValue(client, "city_village", true)
@@ -107,38 +119,20 @@ public class WomanDetailActivity extends DetailActivity {
 
         //VACCINES INFORMATION
         TableLayout table = (TableLayout) findViewById(R.id.woman_vaccine_table);
-        for (int i=1; i <= 5; i++){
-            tr = new TableRow(this);
-            TableRow.LayoutParams trlp = new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            tr.setLayoutParams(trlp);
-            tr.setPadding(10, 5, 10, 5);
+        List<Alert> al = Context.getInstance().alertService().findByEntityIdAndAlertNames(client.entityId(), "TT 1", "TT 2", "TT 3", "TT 4", "TT 5", "tt1", "tt2", "tt3", "tt4", "tt5");
+        List<Map<String, Object>> sch = generateSchedule("woman", null, client.getColumnmaps(), al);
+        for (Map<String, Object> m : sch){
+            addVaccineDetail(this, table, m.get("status").toString(), (VaccineRepo.Vaccine) m.get("vaccine"), (DateTime) m.get("date"), (Alert) m.get("alert"), false);
+        }
 
-            TextView label = new TextView(this);
-            label.setText("TT "+i);
-            label.setPadding(20, 5, 70, 5);
-            label.setTextColor(Color.BLACK);
-            label.setBackgroundColor(Color.WHITE);
-            tr.addView(label);
-
-            String val = convertDateFormat(nonEmptyValue(client.getColumnmaps(), true, false, "tt" + i, "tt" + i + "_retro"), true);
-            if(val == "") {
-                try{
-                    List<Alert> al = Context.getInstance().alertService().findByEntityIdAndAlertNames(client.entityId(), "tt" + i, "TT " + i);
-                    if(al.size() > 0){
-                        val = "<due : "+convertDateFormat(al.get(0).startDate(), true)+">";
-                    }
-                }catch(Exception e){
-                    e.printStackTrace();
-                }
-            }
-            TextView v = new TextView(this);
-            v.setText(val);
-            v.setPadding(70, 5, 20, 5);
-            v.setTextColor(Color.BLACK);
-            v.setBackgroundColor(Color.WHITE);
-            tr.addView(v);
-
-            table.addView(tr);
+        if(age < 0){
+            addStatusTag(this, table, "No DoB", true);
+        }
+        if(StringUtils.isNotBlank(getValue(client.getColumnmaps(), "tt5", false))){
+            addStatusTag(this, table, "Fully Immunized", true);
+        }
+        else if(age > 49 && StringUtils.isBlank(getValue(client.getColumnmaps(), "tt5", false))){
+            addStatusTag(this, table, "Partially Immunized", true);
         }
 
         TableLayout pt = (TableLayout) findViewById(R.id.woman_pregnancy_table);

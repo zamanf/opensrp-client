@@ -2,8 +2,13 @@ package org.ei.opensrp.vaccinator.woman;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.RectF;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -29,8 +34,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import util.Utils;
+
 import static util.Utils.convertDateFormat;
-import static util.Utils.setProfiePic;
 
 public abstract class DetailActivity extends Activity {
     static final int REQUEST_TAKE_PHOTO = 1;
@@ -56,7 +62,9 @@ public abstract class DetailActivity extends Activity {
 
     protected abstract Class onBackActivity();
 
-    protected abstract int profilePicResId();
+    protected abstract Integer profilePicContainerId();
+
+    protected abstract Integer defaultProfilePicResId();
 
     protected abstract String bindType();
 
@@ -88,17 +96,23 @@ public abstract class DetailActivity extends Activity {
         });
 
         if(allowImageCapture()){
-            mImageView = (ImageView)findViewById(profilePicResId());
+            mImageView = (ImageView)findViewById(profilePicContainerId());
             mImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     dispatchTakePictureIntent(mImageView);
                 }
             });
-        }
 
-        if(allowImageCapture()){
-            setProfiePic(mImageView, client.entityId());
+
+            ProfileImage photo = ((ImageRepository) org.ei.opensrp.Context.getInstance().imageRepository()).findByEntityId(client.entityId(), "dp");
+
+            if(photo != null){
+                Utils.setProfiePicFromPath(this, mImageView, photo.getFilepath(), R.drawable.ic_pencil);
+            }
+            else {
+                Utils.setProfiePic(this, mImageView, defaultProfilePicResId(), R.drawable.ic_pencil);
+            }
         }
     }
 
@@ -153,10 +167,54 @@ public abstract class DetailActivity extends Activity {
             HashMap<String,String> details = new HashMap<String,String>();
             details.put("profilepic", currentPhoto.getAbsolutePath());
             saveImageReference(bindType(), client.entityId(), details);
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-            Bitmap bitmap = BitmapFactory.decodeFile(currentPhoto.getPath(), options);
-            mImageView.setImageBitmap(bitmap);
+            Utils.setProfiePicFromPath(this, mImageView, currentPhoto.getAbsolutePath(), R.drawable.ic_pencil);
         }
+    }
+
+    /**
+     * Adds a watermark on the given image.
+     */
+    public Bitmap addWatermark(Resources res, Bitmap source, boolean highQuality) {
+        int w, h;
+        Canvas c;
+        Paint paint;
+        Bitmap bmp, watermark;
+
+        Matrix matrix;
+        RectF r;
+
+        w = source.getWidth();
+        h = source.getHeight();
+
+        // Create the new bitmap
+        bmp = Bitmap.createBitmap(w, h, highQuality?Bitmap.Config.ARGB_8888:Bitmap.Config.ARGB_4444);
+
+        paint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG | Paint.FILTER_BITMAP_FLAG);
+
+        // Copy the original bitmap into the new one
+        c = new Canvas(bmp);
+        c.drawBitmap(source, 0, 0, paint);
+
+        // Load the watermark
+        watermark = BitmapFactory.decodeResource(res, R.drawable.ic_pencil);
+        // Scale the watermark to be approximately 20% of the source image height
+        float scaley = (float) (((float) h * 0.20) / (float) watermark.getHeight());
+        float scalex = (float) (((float) w * 0.20) / (float) watermark.getWidth());
+
+        // Create the matrix
+        matrix = new Matrix();
+        matrix.postScale(scalex, scaley);
+        // Determine the post-scaled size of the watermark
+        r = new RectF(0, 0, watermark.getWidth(), watermark.getHeight());
+        matrix.mapRect(r);
+        // Move the watermark to the bottom right corner
+        matrix.postTranslate(0, 0);
+
+        // Draw the watermark
+        c.drawBitmap(watermark, matrix, paint);
+        // Free up the bitmap memory
+        watermark.recycle();
+
+        return bmp;
     }
 }

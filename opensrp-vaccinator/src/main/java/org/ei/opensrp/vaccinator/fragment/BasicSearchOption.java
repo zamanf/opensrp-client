@@ -27,11 +27,15 @@ public class BasicSearchOption implements FilterOption {
             return true;
         }
         if(currentclient.getDetails().get("epi_card_number") != null
-                && currentclient.getDetails().get("epi_card_number").equalsIgnoreCase(criteria)) {
+                && currentclient.getDetails().get("epi_card_number").contains(criteria)) {
             return true;
         }
         if(currentclient.getDetails().get("father_name") != null
                 && currentclient.getDetails().get("father_name").contains(criteria)) {
+            return true;
+        }
+        if(currentclient.getDetails().get("mother_name") != null
+                && currentclient.getDetails().get("mother_name").contains(criteria)) {
             return true;
         }
         if(currentclient.getDetails().get("husband_name") != null

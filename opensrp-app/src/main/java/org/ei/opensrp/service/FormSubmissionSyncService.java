@@ -15,6 +15,8 @@ import org.ei.opensrp.repository.FormDataRepository;
 import org.ei.opensrp.repository.ImageRepository;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import static java.text.MessageFormat.format;
@@ -49,22 +51,39 @@ public class FormSubmissionSyncService {
         return pullFromServer();
     }
 
+    public static <T> List<List<T>> getPages(Collection<T> c, Integer pageSize) {
+        if (c == null)
+            return Collections.emptyList();
+        List<T> list = new ArrayList<T>(c);
+        if (pageSize == null || pageSize <= 0 || pageSize > list.size())
+            pageSize = list.size();
+        int numPages = (int) Math.ceil((double)list.size() / (double)pageSize);
+        List<List<T>> pages = new ArrayList<List<T>>(numPages);
+        for (int pageNum = 0; pageNum < numPages;)
+            pages.add(list.subList(pageNum * pageSize, Math.min(++pageNum * pageSize, list.size())));
+        return pages;
+    }
+
     public void pushToServer() {
         List<FormSubmission> pendingFormSubmissions = formDataRepository.getPendingFormSubmissions();
         if (pendingFormSubmissions.isEmpty()) {
             return;
         }
-        String jsonPayload = mapToFormSubmissionDTO(pendingFormSubmissions);
-        Response<String> response = httpAgent.post(
-                format("{0}/{1}",
-                        configuration.dristhiBaseURL(),
-                        FORM_SUBMISSIONS_PATH),
-                jsonPayload);
-        if (response.isFailure()) {
-            logError(format("Form submissions sync failed. Submissions:  {0}", pendingFormSubmissions));
-            return;
+
+        for (List<FormSubmission> sublist: getPages(pendingFormSubmissions, 50)) {
+            String jsonPayload = mapToFormSubmissionDTO(sublist);
+            Response<String> response = httpAgent.post(
+                    format("{0}/{1}",
+                            configuration.dristhiBaseURL(),
+                            FORM_SUBMISSIONS_PATH),
+                    jsonPayload);
+            if (response.isFailure()) {
+                logError(format("Form submissions sync failed. Submissions:  {0}", pendingFormSubmissions));
+                return;
+            }
+            formDataRepository.markFormSubmissionsAsSynced(pendingFormSubmissions);
         }
-        formDataRepository.markFormSubmissionsAsSynced(pendingFormSubmissions);
+
         logInfo(format("Form submissions sync successfully. Submissions:  {0}", pendingFormSubmissions));
     }
 
