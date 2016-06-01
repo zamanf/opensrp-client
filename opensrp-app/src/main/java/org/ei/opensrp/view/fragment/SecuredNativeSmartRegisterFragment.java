@@ -7,11 +7,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-<<<<<<< HEAD
 import android.util.Log;
-=======
 import android.view.Gravity;
->>>>>>> f9b3600... client app 1.0.0b
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

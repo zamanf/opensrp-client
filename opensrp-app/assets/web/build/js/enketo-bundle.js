@@ -5961,7 +5961,9 @@ var XPathJS = (function(){
 			
 			// HACK: track current expression being evaluated
 			currentExpression = this;
-			
+
+			console.log('EVALUATINGGGGG::'+contextNode+'--'+type+'--'+result);
+
 			// check if our implementation supports this node type
 			nodeSupported(contextNode);
 			

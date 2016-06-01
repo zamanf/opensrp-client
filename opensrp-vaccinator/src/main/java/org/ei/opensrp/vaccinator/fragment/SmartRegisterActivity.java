@@ -149,7 +149,7 @@ public abstract class SmartRegisterActivity extends SecuredNativeSmartRegisterAc
             if (entityId != null || metaData != null){
                 String data = null;
                 //check if there is previously saved data for the form
-                data = getPreviouslySavedDataForForm(formName, metaData, entityId);
+                //todo removed to fix preloaded form data = getPreviouslySavedDataForForm(formName, metaData, entityId);
                 if (data == null){
                     data = FormUtils.getInstance(getApplicationContext()).generateXMLInputForFormWithEntityId(entityId, formName, metaData);
                 }
@@ -157,7 +157,6 @@ public abstract class SmartRegisterActivity extends SecuredNativeSmartRegisterAc
                 DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(formIndex);
                 if (displayFormFragment != null) {
                     displayFormFragment.setFormData(data);
-                    displayFormFragment.loadFormData();
                     displayFormFragment.setRecordId(entityId);
                     displayFormFragment.setFieldOverides(metaData);
                 }
@@ -187,7 +186,6 @@ public abstract class SmartRegisterActivity extends SecuredNativeSmartRegisterAc
                 if (displayFormFragment != null) {
                     displayFormFragment.hideTranslucentProgressDialog();
                     displayFormFragment.setFormData(null);
-                    displayFormFragment.loadFormData();
                 }
 
                 displayFormFragment.setRecordId(null);
