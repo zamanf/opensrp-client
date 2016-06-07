@@ -89,7 +89,6 @@ public abstract class SmartRegisterFragment extends SecuredNativeSmartRegisterFr
             } else {
                 StringUtil.humanize(entry.getValue().getLabel());
                 String name = StringUtil.humanize(entry.getValue().getLabel());
-                Log.d("ANM Details", "location name :" + name);
                 dialogOptionslist.add(new CommonObjectFilterOption(name.replace(" ", "_"), "location_name", CommonObjectFilterOption.ByColumnAndByDetails.byDetails, name));
             }
         }

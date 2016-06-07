@@ -33,7 +33,6 @@ public abstract class SmartRegisterActivity extends SecuredNativeSmartRegisterAc
 
     private String[] formNames = new String[]{};
     private android.support.v4.app.Fragment mBaseFragment = null;
-    private android.support.v4.app.Fragment mProfileFragment = null;
 
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -99,7 +98,7 @@ public abstract class SmartRegisterActivity extends SecuredNativeSmartRegisterAc
     public void startRegistration() {    }
 
     @Override
-    public void saveFormSubmission(final String formSubmission, String id, String formName, JSONObject fieldOverrides) {
+    public void saveFormSubmission(final String formSubmission, String id, final String formName, JSONObject fieldOverrides) {
         Log.v("fieldoverride", fieldOverrides.toString());
         // save the form
         try {
@@ -117,8 +116,8 @@ public abstract class SmartRegisterActivity extends SecuredNativeSmartRegisterAc
                     .setPositiveButton(R.string.ok_button_label,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-                            //switch to forms list fragment
-                            switchToBaseFragment(formSubmission); // Unnecessary!! passing on data
+                                int formIndex = FormUtils.getIndexForFormName(formName, formNames) + 1;
+                                switchToBaseFragment(null, formIndex); // Unnecessary!! passing on data
                             }
                         })
                     .show();
@@ -135,8 +134,7 @@ public abstract class SmartRegisterActivity extends SecuredNativeSmartRegisterAc
                                     displayFormFragment.hideTranslucentProgressDialog();
                                 }
                             }
-                        })
-                            .show();
+                        }).show();
             e.printStackTrace();
         }
     }
@@ -146,49 +144,32 @@ public abstract class SmartRegisterActivity extends SecuredNativeSmartRegisterAc
         Log.v("fieldoverride", metaData);
         try {
             int formIndex = FormUtils.getIndexForFormName(formName, formNames) + 1; // add the offset
-            if (entityId != null || metaData != null){
-                String data = null;
-                //check if there is previously saved data for the form
-                //todo removed to fix preloaded form data = getPreviouslySavedDataForForm(formName, metaData, entityId);
-                if (data == null){
-                    data = FormUtils.getInstance(getApplicationContext()).generateXMLInputForFormWithEntityId(entityId, formName, metaData);
-                }
-
-                DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(formIndex);
-                if (displayFormFragment != null) {
-                    displayFormFragment.setFormData(data);
-                    displayFormFragment.setRecordId(entityId);
-                    displayFormFragment.setFieldOverides(metaData);
-                }
-            }
-
-            mPager.setCurrentItem(formIndex, false); //Don't animate the view on orientation change the view disapears
-
+            DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(formIndex);
+            displayFormFragment.showForm(mPager, formIndex, entityId, metaData, false);
         }catch (Exception e){
             e.printStackTrace();
         }
 
     }
 
-    public void switchToBaseFragment(final String data) {
-        final int prevPageIndex = currentPage;
+    public void switchToBaseFragment(final String data, final int pageIndex) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                //hack reset the form
+                DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(pageIndex);
+                if (displayFormFragment != null) {
+                    displayFormFragment.hideTranslucentProgressDialog();
+                    displayFormFragment.setFormData(null);
+                    displayFormFragment.setRecordId(null);
+                    displayFormFragment.setFieldOverides(null);
+                }
+
                 mPager.setCurrentItem(0, false);
                 SecuredNativeSmartRegisterFragment registerFragment = (SecuredNativeSmartRegisterFragment) findFragmentByPosition(0);
                 if (registerFragment != null && data != null) {
                     registerFragment.refreshListView();
                 }
-
-                //hack reset the form
-                DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(prevPageIndex);
-                if (displayFormFragment != null) {
-                    displayFormFragment.hideTranslucentProgressDialog();
-                    displayFormFragment.setFormData(null);
-                }
-
-                displayFormFragment.setRecordId(null);
             }
         });
     }
@@ -221,7 +202,7 @@ public abstract class SmartRegisterActivity extends SecuredNativeSmartRegisterAc
                     .setPositiveButton(R.string.yes_button_label,
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {
-                                    switchToBaseFragment(null);
+                                    switchToBaseFragment(null, currentPage);
                                 }
                             })
                     .setNegativeButton(R.string.no_button_label,

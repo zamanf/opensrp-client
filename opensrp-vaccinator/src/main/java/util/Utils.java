@@ -469,6 +469,7 @@ public class Utils {
         }
         else if(status.equalsIgnoreCase("done")){
             color = "#31B404";
+            vaccineDate = convertDateFormat(vaccineDate, true);
         }
         else if(status.equalsIgnoreCase("expired")){
             color = Utils.getColorValue(context, AlertStatus.inProcess);

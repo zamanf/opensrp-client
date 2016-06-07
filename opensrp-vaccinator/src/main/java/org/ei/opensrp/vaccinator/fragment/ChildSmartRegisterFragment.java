@@ -115,7 +115,7 @@ public class ChildSmartRegisterFragment extends SmartClientRegisterFragment {
                     CommonPersonObjectClient client = (CommonPersonObjectClient) view.getTag();
                     map.putAll(followupOverrides(client));
                     map.putAll(providerOverrides());
-                    startFollowupForm("child_followup", (SmartRegisterClient) view.getTag(), map, SmartRegisterFragment.ByColumnAndByDetails.byDefault);
+                    startForm("child_followup", (SmartRegisterClient) view.getTag(), map);
                     break;
             }
         }
@@ -180,9 +180,12 @@ public class ChildSmartRegisterFragment extends SmartClientRegisterFragment {
     private Map<String, String> followupOverrides(CommonPersonObjectClient client){
         Map<String, String> map = new HashMap<>();
         map.put("existing_full_address", getValue(client.getDetails(), "address1", true)+
-                ", UC: "+getValue(client.getDetails(), "union_council", true)+
-                ", Town: "+getValue(client.getDetails(), "town", true)+
-                ", City: "+getValue(client.getDetails(), "city_village", true)+ " - " + getValue(client.getDetails(), "landmark", true));
+                ", UC: "+getValue(client.getDetails(), "union_councilname", true)+
+                ", Town: "+getValue(client.getDetails(), "townname", true)+
+                ", City: "+getValue(client.getDetails(), "city_villagename", true)+ " - " + getValue(client.getDetails(), "landmark", true));
+
+        map.put("existing_program_client_id", getValue(client.getDetails(), "program_client_id", false));
+        map.put("program_client_id", getValue(client.getDetails(), "program_client_id", false));
 
         int days = 0;
         try{
@@ -216,10 +219,21 @@ public class ChildSmartRegisterFragment extends SmartClientRegisterFragment {
                 ", City: "+client.getAddress("usual_residence").getCityVillage()+
                 " - "+client.getAddress("usual_residence").getAddressField("landmark"));
 
+        map.put("existing_program_client_id", client.getIdentifier("Program Client ID"));
+        map.put("program_client_id", client.getIdentifier("Program Client ID"));
+
         map.put("existing_first_name", client.getFirstName());
         map.put("existing_last_name", client.getLastName());
         map.put("existing_gender", client.getGender());
         map.put("existing_birth_date", client.getBirthdate().toString("yyyy-MM-dd"));
+        int days = 0;
+        try{
+            days = Days.daysBetween(client.getBirthdate(), DateTime.now()).getDays();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        map.put("existing_age", days+"");
         Object epi = client.getAttribute("EPI Card Number");
         map.put("existing_epi_card_number", epi == null ? "" : epi.toString());
 

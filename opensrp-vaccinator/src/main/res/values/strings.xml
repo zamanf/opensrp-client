@@ -57,7 +57,7 @@
 
     <string name="field_entries">Stock Register</string>
     <string name="field_title">Stock Register</string>
-    <string name="str_field_search_hint">Search Field Register</string>
+    <string name="str_field_search_hint">Search Register</string>
     <string name="pick_report">Report</string>
     <string name="field_details_title">Stock Position</string>
     <string name="title_activity_vaccine_report">VaccineReport</string>

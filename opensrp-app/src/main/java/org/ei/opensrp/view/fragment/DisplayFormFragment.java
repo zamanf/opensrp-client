@@ -8,6 +8,8 @@ import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
+
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
@@ -18,6 +20,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.GeolocationPermissions;
 import android.webkit.JavascriptInterface;
+import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -28,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.ei.opensrp.R;
+import org.ei.opensrp.util.FormUtils;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
 import org.json.JSONObject;
 
@@ -40,6 +44,10 @@ import java.io.InputStream;
 public class DisplayFormFragment extends Fragment {
 
     public static final String TAG = "DisplayFormFragment";
+
+    private boolean formDataLoaded = false;
+
+    public boolean isFormDataLoaded(){return formDataLoaded;}
 
     WebView webView;
     ProgressBar progressBar;
@@ -99,6 +107,19 @@ public class DisplayFormFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.display_form_fragment, container, false);
         webView = (WebView)view.findViewById(R.id.webview);
+
+        // Enable/disable hardware acceleration:
+        if (Build.VERSION.SDK_INT >= 19) {
+            // chromium, enable hardware acceleration
+           /* webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+        } else {*/
+            // older android version, disable hardware acceleration
+            webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
+
+        // Disable the cache:
+        webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+
         progressBar = (ProgressBar)view.findViewById(R.id.progressBar);
         initWebViewSettings();
         loadHtml();
@@ -210,6 +231,49 @@ public class DisplayFormFragment extends Fragment {
         });
     }
 
+    public void showForm(final ViewPager viewPager, final int formIndex, String entityId, final String metaData, boolean loadPrevious){
+        viewPager.setCurrentItem(formIndex, false); //Don't animate the view on orientation change the view disapears
+
+        showTranslucentProgressDialog();
+
+        if (entityId != null || metaData != null){
+            String data = null;
+            //check if there is previously saved data for the form
+            if(loadPrevious){
+                data = FormUtils.getInstance(getActivity()).getPreviouslySavedDataForForm(formName, metaData, entityId);
+            }
+
+            if (data == null){
+                data = FormUtils.getInstance(getActivity()).generateXMLInputForFormWithEntityId(entityId, formName, metaData);
+            }
+
+            setRecordId(entityId);
+            setFieldOverides(metaData);
+
+            final String finalData = data;
+            Thread tm = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        // Wait for the page to initialize
+                        while (!javascriptLoaded) {
+                            Thread.sleep(100);
+                        }
+
+                        if (finalData != null && !finalData.isEmpty()) {
+                            postXmlDataToFormWWait(finalData);
+                        } else {
+                            resetForm();
+                        }
+                    } catch (Exception e) {
+                        Log.e(TAG, e.toString(), e);
+                    }
+                }
+            });
+            tm.start();
+        }
+    }
+
     public void setFormData(final String data){
         new Thread(new Runnable() {
             @Override
@@ -225,12 +289,32 @@ public class DisplayFormFragment extends Fragment {
                     }else{
                         resetForm();
                     }
-
                 }catch(Exception e){
                     Log.e(TAG, e.toString(), e);
                 }
             }
         }).start();
+    }
+
+    private void postXmlDataToFormWWait(final String data) throws InterruptedException {
+        Runnable t = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    webView.evaluateJavascript("javascript:loadDraft('" + data + "')", new ValueCallback<String>() {
+                        @Override
+                        public void onReceiveValue(String s) {
+                            Log.d("RECEIVED VALUE : ", s); // Returns the value from the function
+                            hideTranslucentProgressDialog();
+                        }
+                    });
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        };
+        webView.post(t);
     }
 
     private void postXmlDataToForm(final String data){
@@ -271,14 +355,12 @@ public class DisplayFormFragment extends Fragment {
         }
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            // TODO Auto-generated method stub
             view.loadUrl(url);
             return true;
         }
 
         @Override
         public void onPageFinished(WebView view, String url) {
-            // TODO Auto-generated method stub
             super.onPageFinished(view, url);
             progressBar.setVisibility(View.GONE);
             dismissProgressDialog();

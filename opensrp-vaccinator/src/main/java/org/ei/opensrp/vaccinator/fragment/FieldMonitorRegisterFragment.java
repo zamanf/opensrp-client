@@ -149,7 +149,15 @@ public class FieldMonitorRegisterFragment extends SmartRegisterFragment {
 
         mView.findViewById(org.ei.opensrp.R.id.filter_selection).setVisibility(View.GONE);
 
-        ((TextView)mView.findViewById(org.ei.opensrp.R.id.statusbar_today)).setText("Today: " + Utils.convertDateFormat(DateTime.now()));
+        mView.findViewById(org.ei.opensrp.R.id.village).setVisibility(View.GONE);
+
+        mView.findViewById(org.ei.opensrp.R.id.sort_selection).setVisibility(View.GONE);
+
+        mView.findViewById(org.ei.opensrp.R.id.sorted_by).setVisibility(View.GONE);
+
+        mView.findViewById(org.ei.opensrp.R.id.label_sorted_by).setVisibility(View.GONE);
+
+        ((TextView)mView.findViewById(org.ei.opensrp.R.id.statusbar_today)).setText(Utils.convertDateFormat(DateTime.now()));
     }
 
     @Override
