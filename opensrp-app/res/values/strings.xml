@@ -119,9 +119,9 @@
     <string name="str_register_anc_investigations_form">ANC Investigations</string>
     <string name="str_register_anc_close_form">ANC Close</string>
 
-    <string name="str_reporting">Reporting</string>
+    <string name="str_reporting">Reports</string>
     <string name="str_videos">Videos</string>
-    <string name="str_provider_profile">My Profile</string>
+    <string name="str_provider_profile">Profile</string>
 
     <string name="child_register_title_in_short">Child:</string>
     <string name="child_service_mode_overview">Overview</string>
