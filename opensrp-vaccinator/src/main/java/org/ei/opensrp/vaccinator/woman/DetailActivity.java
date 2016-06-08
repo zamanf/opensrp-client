@@ -81,7 +81,7 @@ public abstract class DetailActivity extends Activity {
 
         ((TextView)findViewById(R.id.details_id_label)).setText(titleBarId());
 
-        ((TextView)findViewById(R.id.detail_today)).setText("Today: "+ convertDateFormat(new SimpleDateFormat("yyyy-MM-dd").format(new Date()), true));
+        ((TextView)findViewById(R.id.detail_today)).setText(convertDateFormat(new SimpleDateFormat("yyyy-MM-dd").format(new Date()), true));
 
         generateView();
 

@@ -45,6 +45,7 @@ import com.google.gson.JsonParseException;
 import com.squareup.picasso.Picasso;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.text.WordUtils;
 import org.ei.drishti.dto.AlertStatus;
 import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
@@ -225,14 +226,14 @@ public class Utils {
         if(value == null){
             value = "";
         }
-        return humanize? StringUtil.humanize(value):value;
+        return humanize? WordUtils.capitalize(StringUtil.humanize(value)):value;
     }
 
     public static String formatValue(Object value, boolean humanize){
         if(value == null){
             value = "";
         }
-        return humanize? StringUtil.humanize(value.toString()):value.toString();
+        return humanize? WordUtils.capitalize(StringUtil.humanize(value.toString())):value.toString();
     }
     public static String getValue(CommonPersonObjectClient pc, String field, boolean humanize){
         return formatValue(pc.getDetails().get(field), humanize);
@@ -460,11 +461,11 @@ public class Utils {
         if(status.equalsIgnoreCase("due")) {
             if(alert != null){
                 color = Utils.getColorValue(context, alert.status());
-                vaccineDate = "<due : "+convertDateFormat(vaccineDate, true)+">";
+                vaccineDate = "due: "+convertDateFormat(vaccineDate, true)+"";
             }
             else if(StringUtils.isNotBlank(vaccineDate)){
                 color = Utils.getColorValue(context, AlertStatus.inProcess);
-                vaccineDate = "<due : "+convertDateFormat(vaccineDate, true)+">";
+                vaccineDate = "due: "+convertDateFormat(vaccineDate, true)+"";
             }
         }
         else if(status.equalsIgnoreCase("done")){
@@ -473,7 +474,7 @@ public class Utils {
         }
         else if(status.equalsIgnoreCase("expired")){
             color = Utils.getColorValue(context, AlertStatus.inProcess);
-            vaccineDate = "<exp : "+convertDateFormat(vaccineDate, true)+">";
+            vaccineDate = "exp: "+convertDateFormat(vaccineDate, true)+"";
         }
 
         LinearLayout l = new LinearLayout(context);

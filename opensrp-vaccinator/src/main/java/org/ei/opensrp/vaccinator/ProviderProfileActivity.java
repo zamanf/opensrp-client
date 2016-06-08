@@ -31,20 +31,20 @@ public class ProviderProfileActivity extends Activity {
         String programId = nonEmptyValue(providerdt, true, false, "provider_id");
         ((TextView)findViewById(R.id.details_id_label)).setText(programId);
 
-        ((TextView)findViewById(R.id.report_detail_today)).setText("Today: "+convertDateFormat(new SimpleDateFormat("yyyy-MM-dd").format(new Date()), true));
+        ((TextView)findViewById(R.id.detail_today)).setText(convertDateFormat(new SimpleDateFormat("yyyy-MM-dd").format(new Date()), true));
 
         //BASIC INFORMATION
         TableLayout dt = (TableLayout) findViewById(R.id.report_detail_info_table1);
 
-        dt.addView(getDataRow(this, "ID  ", programId, null));
-        dt.addView(getDataRow(this, "Name  ", getValue(providerdt, "provider_name", true), null));
-        dt.addView(getDataRow(this, "Team Identifier  ", getValue(providerdt, "provider_identifier", false), null));
-        dt.addView(getDataRow(this, "Team  ", getValue(providerdt, "provider_team", true), null));
+        dt.addView(getDataRow(this, "ID", programId, null));
+        dt.addView(getDataRow(this, "Name", getValue(providerdt, "provider_name", true), null));
+        dt.addView(getDataRow(this, "Team Identifier", getValue(providerdt, "provider_identifier", false), null));
+        dt.addView(getDataRow(this, "Team", getValue(providerdt, "provider_team", true), null));
 
-        dt.addView(getDataRow(this, "Province  ", getValue(providerdt, "provider_province", true), null));
-        dt.addView(getDataRow(this, "City  ", getValue(providerdt, "provider_city", true), null));
-        dt.addView(getDataRow(this, "Town  ", getValue(providerdt, "provider_town", true), null));
-        dt.addView(getDataRow(this, "UC  ", getValue(providerdt, "provider_uc", true), null));
-        dt.addView(getDataRow(this, "Center  ", getValue(providerdt, "provider_location_id", true), null));
+        dt.addView(getDataRow(this, "Province", getValue(providerdt, "provider_province", true), null));
+        dt.addView(getDataRow(this, "City", getValue(providerdt, "provider_city", true), null));
+        dt.addView(getDataRow(this, "Town", getValue(providerdt, "provider_town", true), null));
+        dt.addView(getDataRow(this, "UC", getValue(providerdt, "provider_uc", true), null));
+        dt.addView(getDataRow(this, "Center", getValue(providerdt, "provider_location_id", true), null));
     }
 }

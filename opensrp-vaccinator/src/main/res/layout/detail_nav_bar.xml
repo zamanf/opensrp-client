@@ -1,21 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical">
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="fill_parent"
                 android:layout_height="@dimen/ec_main_header_height"
                 android:background="@color/light_blue"
                 android:focusableInTouchMode="true">
 
-    <ImageButton
+    <LinearLayout android:id="@+id/homestacklayout"
+        android:layout_width="55dp"
+        android:layout_height="match_parent"
+        android:orientation="horizontal" android:padding="3dp">
+
+        <ImageButton
             android:id="@+id/btn_back_to_home"
-            android:layout_width="62dp"
-            android:layout_height="50dp"
-            android:layout_alignParentLeft="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:scaleType="fitXY"
+            android:layout_alignParentLeft="true"
             android:src="@drawable/homestacks"
             android:background="@drawable/transparent_gray_background"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"/>
+            android:padding="8dp" />
+
+    </LinearLayout>
 
     <ImageView
             android:id="@+id/home_title_separator"
@@ -23,7 +30,7 @@
             android:layout_height="fill_parent"
             android:src="@drawable/separator"
             android:scaleType="fitXY"
-            android:layout_toRightOf="@+id/btn_back_to_home"/>
+            android:layout_toRightOf="@+id/homestacklayout"/>
 
     <LinearLayout
             android:id="@+id/title_layout"
@@ -66,4 +73,61 @@
             android:layout_height="fill_parent"
             android:src="@drawable/separator"
             android:scaleType="fitXY" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/smart_register_client_divider_height"
+        android:src="@color/smart_register_client_divider_color"
+        android:id="@+id/imageView5" />
+
 </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:orientation="horizontal">
+
+        <org.ei.opensrp.view.customControls.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text=""
+            android:id="@+id/detail_information"
+            style="@style/CustomFontTextViewStyle.ListView.Medium"
+            android:textColor="@color/alert_urgent_red"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp"
+            android:textStyle="bold"
+            android:textSize="14sp" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            />
+
+        <org.ei.opensrp.view.customControls.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Today:"
+            android:id="@+id/detail_today_string"
+            style="@style/CustomFontTextViewStyle.ListView.Normal"
+            android:layout_gravity="right"
+            android:textColor="@color/text_black"
+            android:textSize="14sp"/>
+
+        <org.ei.opensrp.view.customControls.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Today Date is today"
+            android:id="@+id/detail_today"
+            style="@style/CustomFontTextViewStyle.ListView.Medium"
+            android:layout_gravity="right"
+            android:textColor="@color/text_black"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:layout_marginRight="35dp" />
+    </LinearLayout>
+
+</LinearLayout>

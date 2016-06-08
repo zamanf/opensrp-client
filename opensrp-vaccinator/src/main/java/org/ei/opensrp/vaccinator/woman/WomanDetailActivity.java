@@ -83,7 +83,7 @@ public class WomanDetailActivity extends DetailActivity {
         tr = getDataRow(this, "EPI Card Number", getValue(client, "epi_card_number", false), null);
         dt.addView(tr);
 
-        tr = getDataRow(this, "Woman`s Name", getValue(client, "first_name", true), null);
+        tr = getDataRow(this, "Woman's Name", getValue(client, "first_name", true), null);
         dt.addView(tr);
 
         int age = -1;
@@ -96,10 +96,10 @@ public class WomanDetailActivity extends DetailActivity {
         tr = getDataRow(this, "Birthdate (Age)", convertDateFormat(getValue(client.getColumnmaps(), "dob", false), "No DoB", true) + " (" + age + " years)", null);
         dt.addView(tr);
 
-        tr = getDataRow(this, "Father`s Name", getValue(client, "father_name", true), null);
+        tr = getDataRow(this, "Father's Name", getValue(client, "father_name", true), null);
         dt.addView(tr);
 
-        tr = getDataRow(this, "Husband`s Name", getValue(client, "husband_name", true), null);
+        tr = getDataRow(this, "Husband's Name", getValue(client, "husband_name", true), null);
         dt.addView(tr);
 
         TableLayout dt2 = (TableLayout) findViewById(R.id.woman_detail_info_table2);
