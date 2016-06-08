@@ -54,7 +54,7 @@ public class WomanDetailActivity extends DetailActivity {
 
     @Override
     protected Integer defaultProfilePicResId() {
-        return R.drawable.pk_woman_icon;
+        return R.drawable.pk_woman_avtar;
     }
 
     @Override
