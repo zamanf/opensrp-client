@@ -56,8 +56,8 @@ public class WatermarkTransformation implements Transformation {
         // Load the watermark
         watermark = BitmapFactory.decodeResource(Context.getInstance().applicationContext().getResources(), Integer.parseInt(waterMark.toString()));
         // Scale the watermark to be approximately 10% of the source image
-        float scaley = (float) (((float) h * 0.10) / (float) watermark.getHeight());
-        float scalex = (float) (((float) w * 0.10) / (float) watermark.getWidth());
+        float scaley = (float) (((float) h * 0.20) / (float) watermark.getHeight());
+        float scalex = (float) (((float) w * 0.20) / (float) watermark.getWidth());
 
         // Create the matrix
         matrix = new Matrix();
@@ -66,7 +66,7 @@ public class WatermarkTransformation implements Transformation {
         r = new RectF(0, 0, watermark.getWidth(), watermark.getHeight());
         matrix.mapRect(r);
         // Move the watermark to the bottom right corner
-        matrix.postTranslate(0, 0);
+        matrix.postTranslate(10, 10);
 
         // Draw the watermark
         canvas.drawBitmap(watermark, matrix, paint);

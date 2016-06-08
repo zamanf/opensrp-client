@@ -8,9 +8,9 @@
                 android:focusableInTouchMode="true">
 
     <LinearLayout android:id="@+id/homestacklayout"
-        android:layout_width="55dp"
+        android:layout_width="65dp"
         android:layout_height="match_parent"
-        android:orientation="horizontal" android:padding="3dp">
+        android:orientation="horizontal" android:padding="5dp">
 
         <ImageButton
             android:id="@+id/btn_back_to_home"
