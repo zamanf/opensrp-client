@@ -60,7 +60,7 @@ import org.ei.opensrp.vaccinator.db.Client;
 import org.ei.opensrp.vaccinator.db.Obs;
 import org.ei.opensrp.vaccinator.db.VaccineRepo;
 import org.ei.opensrp.vaccinator.db.VaccineRepo.Vaccine;
-import org.ei.opensrp.vaccinator.fragment.SmartRegisterFragment;
+import org.ei.opensrp.vaccinator.application.template.SmartRegisterFragment;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.joda.time.DateTime;
 import org.json.JSONException;

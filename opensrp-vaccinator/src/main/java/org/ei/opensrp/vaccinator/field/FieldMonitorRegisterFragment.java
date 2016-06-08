@@ -1,6 +1,5 @@
-package org.ei.opensrp.vaccinator.fragment;
+package org.ei.opensrp.vaccinator.field;
 
-import android.content.Intent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -10,13 +9,16 @@ import org.ei.opensrp.commonregistry.CommonPersonObjectController;
 import org.ei.opensrp.domain.form.FieldOverrides;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.vaccinator.R;
+import org.ei.opensrp.vaccinator.application.common.DateSort;
+import org.ei.opensrp.vaccinator.application.common.ReportFilterOption;
 import org.ei.opensrp.vaccinator.db.Client;
 import org.ei.opensrp.vaccinator.field.FieldMonitorDailyDetailActivity;
 import org.ei.opensrp.vaccinator.field.FieldMonitorMonthlyDetailActivity;
 import org.ei.opensrp.vaccinator.field.FieldMonitorSmartClientsProvider;
 import org.ei.opensrp.vaccinator.field.StockDailyServiceModeOption;
 import org.ei.opensrp.vaccinator.field.StockMonthlyServiceModeOption;
-import org.ei.opensrp.vaccinator.woman.DetailActivity;
+import org.ei.opensrp.vaccinator.application.template.DetailActivity;
+import org.ei.opensrp.vaccinator.application.template.SmartRegisterFragment;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
 import org.ei.opensrp.view.controller.FormController;
 import org.ei.opensrp.view.dialog.AllClientsFilter;

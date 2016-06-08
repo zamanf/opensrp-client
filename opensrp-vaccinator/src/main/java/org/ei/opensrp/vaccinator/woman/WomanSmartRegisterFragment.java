@@ -1,4 +1,4 @@
-package org.ei.opensrp.vaccinator.fragment;
+package org.ei.opensrp.vaccinator.woman;
 
 import android.view.View;
 
@@ -8,12 +8,10 @@ import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.commonregistry.CommonPersonObjectController;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.vaccinator.R;
+import org.ei.opensrp.vaccinator.application.template.SmartClientRegisterFragment;
 import org.ei.opensrp.vaccinator.db.Client;
-import org.ei.opensrp.vaccinator.woman.DetailActivity;
-import org.ei.opensrp.vaccinator.woman.WomanDetailActivity;
-import org.ei.opensrp.vaccinator.woman.WomanFollowupHandler;
-import org.ei.opensrp.vaccinator.woman.WomanService;
-import org.ei.opensrp.vaccinator.woman.WomanSmartClientsProvider;
+import org.ei.opensrp.vaccinator.application.template.DetailActivity;
+import org.ei.opensrp.vaccinator.application.common.VaccinationServiceModeOption;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.controller.FormController;
@@ -22,7 +20,6 @@ import org.ei.opensrp.view.dialog.FilterOption;
 import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
 import org.joda.time.DateTime;
-import org.joda.time.Days;
 import org.joda.time.Years;
 import org.json.JSONException;
 

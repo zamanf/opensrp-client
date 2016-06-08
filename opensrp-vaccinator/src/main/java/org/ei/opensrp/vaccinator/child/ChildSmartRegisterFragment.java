@@ -1,4 +1,4 @@
-package org.ei.opensrp.vaccinator.fragment;
+package org.ei.opensrp.vaccinator.child;
 
 import android.view.View;
 
@@ -8,12 +8,10 @@ import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.commonregistry.CommonPersonObjectController;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.vaccinator.R;
-import org.ei.opensrp.vaccinator.child.ChildDetailActivity;
-import org.ei.opensrp.vaccinator.child.ChildFollowupHandler;
-import org.ei.opensrp.vaccinator.child.ChildService;
-import org.ei.opensrp.vaccinator.child.ChildSmartClientsProvider;
+import org.ei.opensrp.vaccinator.application.template.SmartClientRegisterFragment;
 import org.ei.opensrp.vaccinator.db.Client;
-import org.ei.opensrp.vaccinator.woman.DetailActivity;
+import org.ei.opensrp.vaccinator.application.template.DetailActivity;
+import org.ei.opensrp.vaccinator.application.common.VaccinationServiceModeOption;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.controller.FormController;
@@ -23,7 +21,6 @@ import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
-import org.joda.time.Months;
 import org.json.JSONException;
 
 import java.text.ParseException;

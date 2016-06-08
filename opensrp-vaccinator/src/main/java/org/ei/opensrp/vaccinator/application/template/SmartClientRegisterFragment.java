@@ -1,4 +1,4 @@
-package org.ei.opensrp.vaccinator.fragment;
+package org.ei.opensrp.vaccinator.application.template;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -13,8 +13,12 @@ import org.ei.opensrp.commonregistry.CommonObjectSort;
 import org.ei.opensrp.domain.form.FieldOverrides;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.vaccinator.R;
+import org.ei.opensrp.vaccinator.application.common.BasicSearchOption;
+import org.ei.opensrp.vaccinator.application.common.DateSort;
+import org.ei.opensrp.vaccinator.application.common.StatusSort;
 import org.ei.opensrp.vaccinator.db.CESQLiteHelper;
 import org.ei.opensrp.vaccinator.db.Client;
+import org.ei.opensrp.vaccinator.application.template.SmartRegisterFragment;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.contract.SmartRegisterClients;

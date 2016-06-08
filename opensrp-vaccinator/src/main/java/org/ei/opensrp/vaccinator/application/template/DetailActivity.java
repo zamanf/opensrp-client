@@ -1,4 +1,4 @@
-package org.ei.opensrp.vaccinator.woman;
+package org.ei.opensrp.vaccinator.application.template;
 
 import android.app.Activity;
 import android.content.Intent;

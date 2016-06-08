@@ -1,4 +1,4 @@
-package org.ei.opensrp.vaccinator.fragment;
+package org.ei.opensrp.vaccinator.application.template;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -12,6 +12,7 @@ import org.ei.opensrp.commonregistry.CommonObjectFilterOption;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.util.StringUtil;
 import org.ei.opensrp.vaccinator.db.Client;
+import org.ei.opensrp.vaccinator.application.common.BasicSearchOption;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
 import org.ei.opensrp.view.contract.SmartRegisterClients;
 import org.ei.opensrp.view.controller.FormController;
@@ -147,7 +148,7 @@ public abstract class SmartRegisterFragment extends SecuredNativeSmartRegisterFr
 
     protected void showMessageDialog(String message, DialogInterface.OnClickListener ok) {
         AlertDialog dialog = new AlertDialog.Builder(Context.getInstance().applicationContext())
-                .setTitle(getString(org.ei.opensrp.R.string.login_failed_dialog_title))
+                .setTitle(org.ei.opensrp.R.string.login_failed_dialog_title)
                 .setMessage(message)
                 .setPositiveButton("OK", ok)
                 .create();
@@ -157,7 +158,7 @@ public abstract class SmartRegisterFragment extends SecuredNativeSmartRegisterFr
 
     protected void showMessageDialog(String message, DialogInterface.OnClickListener ok, DialogInterface.OnClickListener cancel) {
         AlertDialog dialog = new AlertDialog.Builder(Context.getInstance().applicationContext())
-                .setTitle(getString(org.ei.opensrp.R.string.login_failed_dialog_title))
+                .setTitle(org.ei.opensrp.R.string.login_failed_dialog_title)
                 .setMessage(message)
                 .setPositiveButton("OK", ok)
                 .setNegativeButton("Cancel", cancel)
