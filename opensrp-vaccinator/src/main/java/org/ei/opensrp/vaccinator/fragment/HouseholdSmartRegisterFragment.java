@@ -100,7 +100,7 @@ public class HouseholdSmartRegisterFragment extends SmartClientRegisterGroupFrag
 
     @Override
     protected String getOAFollowupForm(Client client, HashMap<String, String> overridemap) {
-        return null;
+        return "new_member_registration_without_qr";
     }
 
     @Override
@@ -193,7 +193,7 @@ public class HouseholdSmartRegisterFragment extends SmartClientRegisterGroupFrag
                                     if (noQRCode.isChecked()) {
                                         HashMap<String, String> map = new HashMap<>();
                                         map.putAll(followupOverrides(client));
-                                        startFollowupForm("new_member_registration", client, map, ByColumnAndByDetails.byDefault);
+                                        startFollowupForm("new_member_registration_without_qr", client, map, ByColumnAndByDetails.byDefault);
                                     } else if (hasQRCode.isChecked()) {
                                         HashMap<String, String> map = new HashMap<>();
                                         map.putAll(followupOverrides(client));

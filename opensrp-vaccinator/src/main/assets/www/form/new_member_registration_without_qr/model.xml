@@ -1,7 +1,7 @@
 <model>
     <instance>
-        <New_Member_Registration_v1 encounter_type="New Member Registration"
-            id="new_member_registration_form" version="201605250738">
+        <new_member_registration_form_without_qr encounter_type="New Member Registration"
+            id="new_member_registration_form_without_qr" version="201606080606">
             <formhub>
                 <uuid />
             </formhub>
@@ -84,6 +84,6 @@
             <meta>
                 <instanceID />
             </meta>
-        </New_Member_Registration_v1>
+        </new_member_registration_form_without_qr>
     </instance>
 </model>

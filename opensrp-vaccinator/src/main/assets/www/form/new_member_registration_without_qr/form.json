@@ -1,13 +1,13 @@
 {
-  "name": "New_Member_Registration_v1",
+  "name": "new_member_registration_form_without_qr",
   "title": "نئے فرد کے اندراج کا فارم - New Member Registration Form",
-  "sms_keyword": "new_member_registration_form",
+  "sms_keyword": "new_member_registration_form_without_qr",
   "default_language": "English",
   "instance": {
     "encounter_type": "New Member Registration"
   },
-  "version": "201605250738",
-  "id_string": "new_member_registration_form",
+  "version": "201606080606",
+  "id_string": "new_member_registration_form_without_qr",
   "type": "survey",
   "children": [
     {
@@ -231,12 +231,15 @@
       "type": "group",
       "children": [
         {
-          "type": "note",
+          "bind": {
+            "required": "yes"
+          },
+          "type": "text",
           "name": "program_client_id",
           "label": {
-            "Urdu": "پروگرام آئی ڈی: ${existing_program_client_id}",
-            "English": "Program ID: ${existing_program_client_id}",
-            "Roman Urdu": "Program ID: ${existing_program_client_id}"
+            "Urdu": "پروگرام آئی ڈی:",
+            "Roman Urdu": "Program ID:",
+            "English": "Program ID:"
           }
         },
         {

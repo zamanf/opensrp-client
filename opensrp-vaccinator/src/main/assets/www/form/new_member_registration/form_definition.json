@@ -91,7 +91,8 @@
       "shouldLoadValue" : true
     }, {
       "name" : "provider_location_note",
-      "bind" : "/model/instance/New_Member_Registration_v1/provider_location_note"
+      "bind" : "/model/instance/New_Member_Registration_v1/provider_location_note",
+      "shouldLoadValue" : true
     }, {
       "name" : "start",
       "bind" : "/model/instance/New_Member_Registration_v1/start"
