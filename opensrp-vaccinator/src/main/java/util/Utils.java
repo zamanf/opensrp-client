@@ -77,6 +77,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -102,6 +103,16 @@ public class Utils {
             if(!suppressException) throw new RuntimeException(e);
         }
         return "";
+    }
+
+    public static Date toDate(String date, boolean suppressException){
+        try{
+            return DB_DF.parse(date);
+        }
+        catch (ParseException e) {
+            if(!suppressException) throw new RuntimeException(e);
+        }
+        return null;
     }
 
     public static String convertDateFormat(String date, String defaultV, boolean suppressException){
@@ -630,13 +641,16 @@ public class Utils {
         return m;
     }
 
-    public static Map<String, Object> nextVaccineDue(List<Map<String, Object>> schedule){
+    public static Map<String, Object> nextVaccineDue(List<Map<String, Object>> schedule, Date lastVisit){
         Map<String, Object> v = null;
         for (Map<String, Object> m: schedule) {
             if(m != null && m.get("status") != null && m.get("status").toString().equalsIgnoreCase("due")){
                 if (v == null) {
                     v = m;
-                } else if (m.get("date") != null && ((DateTime) m.get("date")).isBefore((DateTime) v.get("date"))) {
+                } else if (m.get("date") != null && v.get("date") != null
+                        && ((DateTime) m.get("date")).isBefore((DateTime) v.get("date"))
+                        && (lastVisit == null
+                            || lastVisit.before(((DateTime) m.get("date")).toDate()))) {
                     v = m;
                 }
             }
