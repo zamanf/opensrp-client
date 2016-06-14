@@ -99,7 +99,12 @@ public class WomanSmartRegisterFragment extends SmartClientRegisterFragment {
                     CommonPersonObjectController.ByColumnAndByDetails.byDetails.byDetails);
         }
 
-        context.formSubmissionRouter().getHandlerMap().put("woman_followup", new WomanFollowupHandler(new WomanService(context.allTimelineEvents(), context.allCommonsRepositoryobjects("pkwoman"), context.alertService())));
+        try{
+         //   context.formSubmissionRouter().getHandlerMap().put("woman_followup", new WomanFollowupHandler(new WomanService(context.allTimelineEvents(), context.allCommonsRepositoryobjects("pkwoman"), context.alertService())));
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
     }//end of method
 
     @Override

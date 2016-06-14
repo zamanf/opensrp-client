@@ -93,7 +93,12 @@ public class ChildSmartRegisterFragment extends SmartClientRegisterFragment {
                     CommonPersonObjectController.ByColumnAndByDetails.byDetails.byDetails);
 
         }
-        context.formSubmissionRouter().getHandlerMap().put("child_followup", new ChildFollowupHandler(new ChildService(context.allBeneficiaries(), context.allTimelineEvents(), context.allCommonsRepositoryobjects("pkchild"), context.alertService())));
+        try{
+         //   context.formSubmissionRouter().getHandlerMap().put("child_followup", new ChildFollowupHandler(new ChildService(context.allBeneficiaries(), context.allTimelineEvents(), context.allCommonsRepositoryobjects("pkchild"), context.alertService())));
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override
