@@ -90,10 +90,7 @@
                     android:id="@+id/txt_woman_register_client_count"
                     style="@style/CustomFontTextViewStyle.Badge"
                     android:layout_width="wrap_content"
-
-
                     android:layout_height="wrap_content"
-
                     android:gravity="center"
                     android:text="32" />
 

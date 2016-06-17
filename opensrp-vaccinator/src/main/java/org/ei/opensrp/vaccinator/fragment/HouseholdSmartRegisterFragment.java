@@ -34,6 +34,8 @@ import org.ei.opensrp.view.dialog.SortOption;
 import java.util.HashMap;
 import java.util.Map;
 
+import util.Utils;
+
 import static util.Utils.getValue;
 
 /**
@@ -100,7 +102,7 @@ public class HouseholdSmartRegisterFragment extends SmartClientRegisterGroupFrag
 
     @Override
     protected String getOAFollowupForm(Client client, HashMap<String, String> overridemap) {
-        return "new_member_registration_without_qr";
+        return "";
     }
 
     @Override
@@ -153,61 +155,64 @@ public class HouseholdSmartRegisterFragment extends SmartClientRegisterGroupFrag
                     getActivity().finish();
                     break;
                 case R.id.household_add_member:
-                    client = (CommonPersonObjectClient) view.getTag();
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    Utils.providerDetails();
+                    // change the below contains value according to your requirement
+                    if(!Utils.userRoles.contains("Vaccinator")) {
+                        client = (CommonPersonObjectClient) view.getTag();
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-                    LinearLayout ly = new LinearLayout(getActivity());
-                    ly.setOrientation(LinearLayout.VERTICAL);
-                    final RadioButton hasQRCode = new RadioButton(getActivity());
-                    final RadioButton noQRCode = new RadioButton(getActivity());
-                    RadioGroup rG = new RadioGroup(getActivity());
-                    hasQRCode.setText("Yes");
-                    noQRCode.setText("No");
-                    final LinearLayout layout = new LinearLayout(getActivity());
+                        LinearLayout ly = new LinearLayout(getActivity());
+                        ly.setOrientation(LinearLayout.VERTICAL);
+                        final RadioButton hasQRCode = new RadioButton(getActivity());
+                        final RadioButton noQRCode = new RadioButton(getActivity());
+                        RadioGroup rG = new RadioGroup(getActivity());
+                        hasQRCode.setText("Yes");
+                        noQRCode.setText("No");
+                        final LinearLayout layout = new LinearLayout(getActivity());
 
 
-                    layout.setOrientation(LinearLayout.HORIZONTAL);
-                    //layout.setWeightSum(5);
-                    TextView memberCodeQuestion = new TextView(getActivity());
-                    memberCodeQuestion.setText("Does member QR code exists?");
-                    memberCodeQuestion.setTextSize(20);
-                    layout.addView(memberCodeQuestion);
+                        layout.setOrientation(LinearLayout.HORIZONTAL);
+                        //layout.setWeightSum(5);
+                        TextView memberCodeQuestion = new TextView(getActivity());
+                        memberCodeQuestion.setText("Have you ever been registered in any other OpenSRP program and have card?");
+                        memberCodeQuestion.setTextSize(20);
+                        layout.addView(memberCodeQuestion);
 
-                    rG.addView(hasQRCode);
-                    rG.addView(noQRCode);
-                    ly.addView(layout);
-                    ly.addView(rG);
+                        rG.addView(hasQRCode);
+                        rG.addView(noQRCode);
+                        ly.addView(layout);
+                        ly.addView(rG);
 
-                    builder.setView(ly);
+                        builder.setView(ly);
 
-                    final AlertDialog alertDialog = builder.setPositiveButton("OK", null).setNegativeButton("Cancel", null).create();
-                    alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                        final AlertDialog alertDialog = builder.setPositiveButton("OK", null).setNegativeButton("Cancel", null).create();
+                        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
 
-                        @Override
-                        public void onShow(final DialogInterface dialog) {
-                            Button b = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-                            b.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onShow(final DialogInterface dialog) {
+                                Button b = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                                b.setOnClickListener(new View.OnClickListener() {
 
-                                @Override
-                                public void onClick(View view) {
-                                    if (noQRCode.isChecked()) {
-                                        HashMap<String, String> map = new HashMap<>();
-                                        map.putAll(followupOverrides(client));
-                                        startFollowupForm("new_member_registration_without_qr", client, map, ByColumnAndByDetails.byDefault);
-                                    } else if (hasQRCode.isChecked()) {
-                                        HashMap<String, String> map = new HashMap<>();
-                                        map.putAll(followupOverrides(client));
-                                        startFollowupForm("new_member_registration", client, map, ByColumnAndByDetails.byDefault);
-                                        startRegistration();
+                                    @Override
+                                    public void onClick(View view) {
+                                        if (noQRCode.isChecked()) {
+                                            HashMap<String, String> map = new HashMap<>();
+                                            map.putAll(followupOverrides(client));
+                                            startFollowupForm("new_member_registration_without_qr", client, map, ByColumnAndByDetails.byDefault);
+                                        } else if (hasQRCode.isChecked()) {
+                                            HashMap<String, String> map = new HashMap<>();
+                                            map.putAll(followupOverrides(client));
+                                            //startFollowupForm("new_member_registration", client, map, ByColumnAndByDetails.byDefault);
+                                            startRegistration();
+                                        }
+                                        dialog.dismiss();
                                     }
-                                    dialog.dismiss();
-                                }
-                            });
+                                });
 
-                        }
-                    });
-                    alertDialog.show();
-
+                            }
+                        });
+                        alertDialog.show();
+                    }
 
                     break;
 
@@ -218,14 +223,16 @@ public class HouseholdSmartRegisterFragment extends SmartClientRegisterGroupFrag
     private Map<String, String> followupOverrides(CommonPersonObjectClient client){
         Map<String, String> map = new HashMap<>();
 
-        map.put("relationalid",client.getCaseId());
+        map.put("relationalid", client.getCaseId());
         map.put("existing_first_name_hhh", getValue(client.getDetails(), "first_name_hhh", true));
         map.put("existing_last_name_hhh", getValue(client.getDetails(), "last_name_hhh", true));
-        map.put("existing_household_id", getValue(client.getDetails(), "existing_household_id", true));
+        map.put("existing_household_id", getValue(client.getColumnmaps(), "existing_household_id", true));
         map.put("existing_union_councilname", getValue(client.getDetails(), "union_council", true));
         map.put("existing_townname", getValue(client.getDetails(), "town", true));
         map.put("existing_city_villagename", getValue(client.getDetails(), "city_village", true));
         map.put("existing_provincename", getValue(client.getDetails(), "province", true));
+        map.put("existing_landmark", getValue(client.getDetails(), "landmark", true));
+        map.put("existing_address1", getValue(client.getDetails(), "adderss1", true));
 
 
 

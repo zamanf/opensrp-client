@@ -205,6 +205,11 @@ public class NativeHomeActivity extends SecuredActivity {
                 context.personObjectClientsCache(), "first_name_hhh", "pkhousehold", "date",
                 CommonPersonObjectController.ByColumnAndByDetails.byDetails.byDetails );
 
+        CommonPersonObjectController individualController = new CommonPersonObjectController(context.allCommonsRepositoryobjects("pkindividual"),
+                context.allBeneficiaries(), context.listCache(),
+                context.personObjectClientsCache(), "first_name", "pkindividual", "date",
+                CommonPersonObjectController.ByColumnAndByDetails.byDetails.byDetails );
+
         CommonPersonObjectController fieldControllerD = new CommonPersonObjectController(context.allCommonsRepositoryobjects("stock"),
                 context.allBeneficiaries(), context.listCache(),
                 context.personObjectClientsCache(), "date", "stock", "report", "daily", CommonPersonObjectController.ByColumnAndByDetails.byColumn, "report",
@@ -215,13 +220,15 @@ public class NativeHomeActivity extends SecuredActivity {
                 context.personObjectClientsCache(), "date", "stock", "report", "monthly", CommonPersonObjectController.ByColumnAndByDetails.byColumn, "report",
                 CommonPersonObjectController.ByColumnAndByDetails.byColumn );
 
+
+
        // ecRegisterClientCountView.setText(valueOf(hhcontroller.getClients().size()));
         womanRegisterClientCountView.setText(valueOf(womanController.getClients().size()));
      //   pncRegisterClientCountView.setText(valueOf(homeContext.pncCount()));
      //   fpRegisterClientCountView.setText(valueOf(elcocontroller.getClients().size()));
 //        Log.d("child count cin ", childController.getClients().size()+"");
         childRegisterClientCountView.setText(valueOf(childController.getClients().size()));
-        householdRegisterClientCountView.setText(valueOf(householdController.getClients().size()));
+        householdRegisterClientCountView.setText(valueOf(householdController.getClients().size()) + valueOf(individaulController.getClients().size()));
         fieldRegisterClientCountDView.setText(valueOf(fieldControllerD.getClients().size())+" D");
         fieldRegisterClientCountMView.setText(valueOf(fieldControllerM.getClients().size()) + " M");
     }

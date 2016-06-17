@@ -42,6 +42,11 @@ public class BasicSearchOption implements FilterOption {
                 && currentclient.getDetails().get("contact_phone_number").contains(criteria)) {
             return true;
         }
+        if(currentclient.getColumnmaps().get("existing_household_id") != null
+                && currentclient.getColumnmaps().get("existing_household_id").toLowerCase().contains(criteria.toLowerCase())) {
+            return true;
+        }
+
         return false;
     }
 

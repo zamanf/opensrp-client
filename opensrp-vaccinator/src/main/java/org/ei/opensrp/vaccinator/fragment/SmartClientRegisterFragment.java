@@ -99,9 +99,13 @@ public abstract class SmartClientRegisterFragment extends SmartRegisterFragment 
 
     @Override
     protected void startRegistration() {
-        Intent intent = new Intent(Barcode.BARCODE_INTENT);
-        intent.putExtra(Barcode.SCAN_MODE, Barcode.QR_MODE);
-        startActivityForResult(intent, Barcode.BARCODE_REQUEST_CODE);
+        /*Utils.providerDetails();
+        // change the below contains value according to your requirement
+        if (!Utils.userRoles.contains("Authenticated")) {*/
+            Intent intent = new Intent(Barcode.BARCODE_INTENT);
+            intent.putExtra(Barcode.SCAN_MODE, Barcode.QR_MODE);
+            startActivityForResult(intent, Barcode.BARCODE_REQUEST_CODE);
+        //}
     }//end of method
 
     protected abstract String getRegisterLabel();

@@ -88,6 +88,8 @@ public class Utils {
     private static final SimpleDateFormat DB_DF = new SimpleDateFormat("yyyy-MM-dd");
     private static final SimpleDateFormat DB_DTF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
+    public static String userRoles = null;
+
     private Utils() {};
 
     public static String convertDateFormat(String date, boolean suppressException){
@@ -156,6 +158,9 @@ public class Utils {
         org.ei.opensrp.Context context = org.ei.opensrp.Context.getInstance();
         org.ei.opensrp.util.Log.logDebug("ANM DETAILS" + context.anmController().get());
         org.ei.opensrp.util.Log.logDebug("USER DETAILS" + context.allSettings().fetchUserInformation());
+        String[] user = context.allSettings().fetchUserInformation().split("roles");
+        userRoles = user[1];
+        org.ei.opensrp.util.Log.logDebug("USER DETAILS" + context.allSettings().fetchUserInformation().split(","));
         org.ei.opensrp.util.Log.logDebug("TEAM DETAILS" + getPreference(context.applicationContext(), "team", "{}"));
 
         String locationJson = context.anmLocationController().get();

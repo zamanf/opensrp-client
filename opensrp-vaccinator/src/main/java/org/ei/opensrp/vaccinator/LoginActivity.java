@@ -86,6 +86,7 @@ public class LoginActivity extends Activity {
         getActionBar().setDisplayShowTitleEnabled(false);
 
         context = Context.getInstance().updateApplicationContext(this.getApplicationContext());
+
         initializeLoginFields();
         initializeBuildDetails();
         setDoneActionHandlerOnPasswordField();

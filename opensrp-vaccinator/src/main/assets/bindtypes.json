@@ -71,13 +71,15 @@
    {
      "name":"pkhousehold",
      "columns":[
-       {"name":"person_id_hhh"}
+       {"name":"person_id_hhh"},
+       {"name":"existing_household_id"}
      ]
    },
 
    {
      "name":"pkindividual",
      "columns":[
+       {"name":"existing_program_client_id"}
      ]
    }
 

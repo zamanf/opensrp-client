@@ -59,7 +59,7 @@ public class HouseholdDetailActivity extends DetailActivity {
 
     @Override
     protected String pageTitle() {
-        return "Household Members' Details";
+        return "Household Details";
     }
 
     @Override
@@ -96,7 +96,7 @@ public class HouseholdDetailActivity extends DetailActivity {
         dt.addView(tr);
 
         TableLayout dt2 = (TableLayout) findViewById(R.id.household_detail_info_table2);
-        tr = getDataRow(this, "Household ID", getValue(client, "existing_household_id", true), null);
+        tr = getDataRow(this, "Household ID", getValue(client.getColumnmaps(), "existing_household_id", true), null);
         dt2.addView(tr);
         tr = getDataRow(this, "Number of Members", "" + individualList.size() + "", null);
         dt2.addView(tr);
@@ -108,7 +108,7 @@ public class HouseholdDetailActivity extends DetailActivity {
                 + ", \nUC: " + getValue(client, "union_council", true)
                 + ", \nTown: " + getValue(client, "town", true)
                 + ", \nCity: " + getValue(client, "city_village", true)
-                + ", \nProvince: " + getValue(client, "province", true), null);
+                /*+ ", \nProvince: " + getValue(client, "province", true)*/, null);
         dt2.addView(tr);
 
 
@@ -136,7 +136,7 @@ public class HouseholdDetailActivity extends DetailActivity {
 
 
             member.setMemberId(getValue(individual.getDetails(), "person_id", false));
-            member.setMemberName(StringUtil.humanizeAndDoUPPERCASE(getValue(individual.getDetails(), "first_name", false)));
+            member.setMemberName(StringUtil.humanizeAndDoUPPERCASE(getValue(individual.getDetails(), "first_name", false) + " " + getValue(individual.getDetails(), "last_name", false)));
             member.setMemberRelationWithHousehold(getValue(individual.getDetails(), "relationship", false));
             member.setMemberAge(convertDateFormat(getValue(individual.getDetails(), "calc_dob_confirm", false), true) + " (" + memberAge + " years)");
             memberDetails.add(member);
@@ -231,6 +231,6 @@ public class HouseholdDetailActivity extends DetailActivity {
     }
 
     public String getEntityIdentifier() {
-        return nonEmptyValue(client.getDetails(), true, false, "existing_household_id", "household_id");
+        return nonEmptyValue(client.getColumnmaps(), true, false, "existing_household_id", "household_id");
     }
 }

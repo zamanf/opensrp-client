@@ -11,6 +11,7 @@ import org.ei.opensrp.service.AlertService;
 import org.joda.time.LocalDate;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -26,7 +27,6 @@ public class WomanService {
         this.allTimelines = allTimelines;
         this.allCommonsRepository = allCommonsRepository;
         this.alertService = alertService;
-
     }
 
     public void followup(FormSubmission submission) {

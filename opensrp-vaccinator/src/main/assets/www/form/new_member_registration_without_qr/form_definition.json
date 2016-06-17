@@ -9,7 +9,7 @@
     }, {
       "name": "relationalid",
       "shouldLoadValue": true
-    }, it{
+    }, {
       "name" : "provider_uc",
       "bind" : "/model/instance/new_member_registration_form_without_qr/provider_uc",
       "shouldLoadValue" : true

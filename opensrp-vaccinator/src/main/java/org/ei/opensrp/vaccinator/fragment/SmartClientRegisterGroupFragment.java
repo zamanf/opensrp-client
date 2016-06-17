@@ -10,7 +10,9 @@ import android.widget.TextView;
 
 import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.CommonObjectSort;
+import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
+import org.ei.opensrp.commonregistry.CommonPersonObjectController;
 import org.ei.opensrp.domain.form.FieldOverrides;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.vaccinator.R;
@@ -25,6 +27,7 @@ import org.joda.time.Years;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import util.Utils;
@@ -34,6 +37,10 @@ import static util.Utils.getValue;
 
 public abstract class SmartClientRegisterGroupFragment extends SmartRegisterFragment {
     private FormController formController1;
+
+    CommonPersonObject householdMember;
+
+    CommonPersonObject householdData;
 
     public CESQLiteHelper getClientEventDb() {
         return ceDb;
@@ -101,9 +108,13 @@ public abstract class SmartClientRegisterGroupFragment extends SmartRegisterFrag
 
     @Override
     protected void startRegistration() {
-        Intent intent = new Intent(Barcode.BARCODE_INTENT);
-        intent.putExtra(Barcode.SCAN_MODE, Barcode.QR_MODE);
-        startActivityForResult(intent, Barcode.BARCODE_REQUEST_CODE);
+        Utils.providerDetails();
+        // change the below contains value according to your requirement
+        if (!Utils.userRoles.contains("Vaccinator")) {
+            Intent intent = new Intent(Barcode.BARCODE_INTENT);
+            intent.putExtra(Barcode.SCAN_MODE, Barcode.QR_MODE);
+            startActivityForResult(intent, Barcode.BARCODE_REQUEST_CODE);
+        }
     }//end of method
 
     protected abstract String getRegisterLabel();
@@ -172,9 +183,21 @@ public abstract class SmartClientRegisterGroupFragment extends SmartRegisterFrag
 
         CommonPersonObjectClient client = null;
         SmartRegisterClients fc = getFilteredClients(qrCode);
+        CommonPersonObject member = householdMember(qrCode);
         if(fc.size() > 0) {
             getSearchView().setText(qrCode);
         }
+         else if(member != null){
+
+            getSearchView().setText(householdData.getColumnmaps().get("person_id_hhh"));
+            showMessageDialog("Member with scanned ID already exists under this Household Head", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+            });
+        }
+
         else {
             Client c = null;
             try{
@@ -220,12 +243,12 @@ public abstract class SmartClientRegisterGroupFragment extends SmartRegisterFrag
                 map.put("relationalid",client.getCaseId());
                 map.put("existing_first_name_hhh", getValue(client.getDetails(), "first_name_hhh", true));
                 map.put("existing_last_name_hhh", getValue(client.getDetails(), "last_name_hhh", true));
-                map.put("existing_household_id", getValue(client.getDetails(), "existing_household_id", true));
+                map.put("existing_household_id", getValue(client.getColumnmaps(), "existing_household_id", true));
                 map.put("existing_address1", getValue(client.getDetails(), "adderss1", true));
-                map.put("existing_union_council", getValue(client.getDetails(), "union_council", true));
-                map.put("existing_town", getValue(client.getDetails(), "town", true));
-                map.put("existing_city_village", getValue(client.getDetails(), "city_village", true));
-                map.put("existing_province", getValue(client.getDetails(), "province", true));
+                map.put("existing_union_councilname", getValue(client.getDetails(), "union_councilname", true));
+                map.put("existing_townname", getValue(client.getDetails(), "townname", true));
+                map.put("existing_city_villagename", getValue(client.getDetails(), "city_village", true));
+                map.put("existing_provincename", getValue(client.getDetails(), "provincename", true));
                 map.put("existing_landmark", getValue(client.getDetails(), "landmark", true));
             } else {
                 map.put("existing_household_id", qrCode);
@@ -258,4 +281,26 @@ public abstract class SmartClientRegisterGroupFragment extends SmartRegisterFrag
                         getCurrentSearchFilter(), getCurrentSortOption());
         return filteredClients;
     }//end of method
+
+    public CommonPersonObject householdMember(String qrCode){
+        String memberExistQuery = "select * from pkindividual where existing_program_client_id = " + qrCode;
+
+        //CommonPersonObject memberObject = null;
+
+        //String json = memberObject.getColumnmaps().get("details");
+
+        List<CommonPersonObject> memberData = context.allCommonsRepositoryobjects("pkindividual").customQueryForCompleteRow(memberExistQuery, new String[]{}, "pkindividual");
+        if (memberData.size() < 1) {
+            householdMember = null;
+        } else {
+
+            householdMember = memberData.get(0);
+            String householdQuery = "select * from pkhousehold where existing_household_id = " + householdMember.getDetails().get("existing_household_id");
+            householdData = context.allCommonsRepositoryobjects("pkhousehold").customQueryForCompleteRow(householdQuery, new String[]{}, "pkhousehold").get(0);
+        }
+
+        return householdMember;
+    }
+
+
 }
