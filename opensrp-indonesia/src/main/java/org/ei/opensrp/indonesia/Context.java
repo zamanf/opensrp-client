@@ -10,6 +10,7 @@ import org.ei.opensrp.indonesia.repository.IbuRepository;
 import org.ei.opensrp.indonesia.repository.KartuIbuRepository;
 import org.ei.opensrp.indonesia.repository.UniqueIdRepository;
 import org.ei.opensrp.indonesia.service.BidanService;
+import org.ei.opensrp.indonesia.service.BidanUserService;
 import org.ei.opensrp.indonesia.service.KartuAnakService;
 import org.ei.opensrp.indonesia.service.KartuIbuService;
 import org.ei.opensrp.indonesia.service.UniqueIdService;
@@ -25,6 +26,7 @@ import org.ei.opensrp.indonesia.view.controller.KartuIbuRegisterController;
 import org.ei.opensrp.indonesia.view.controller.UniqueIdController;
 import org.ei.opensrp.repository.FormDataRepository;
 import org.ei.opensrp.repository.Repository;
+import org.ei.opensrp.service.UserService;
 import org.ei.opensrp.util.Cache;
 
 import java.util.List;
@@ -64,6 +66,7 @@ public class Context extends org.ei.opensrp.Context{
 
     private KartuIbuService kartuIbuService;
     private KartuAnakService kartuAnakService;
+    private  BidanUserService userService;
 
     public Context getContext() {
         return this;
@@ -276,5 +279,15 @@ public class Context extends org.ei.opensrp.Context{
             configuration = new BidanConfiguration(getInstance().applicationContext().getAssets());
         }
         return configuration;
+    }
+
+    @Override
+    public BidanUserService userService() {
+
+        if (userService == null) {
+            Repository repo = initRepository();
+            userService = new BidanUserService(repo, allSettings(), allSharedPreferences(), httpAgent(), session(), configuration(), saveANMLocationTask(),saveUserInfoTask());
+        }
+        return userService;
     }
 }

@@ -24,6 +24,10 @@ import org.ei.opensrp.sync.UpdateActionsTask;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import static android.widget.Toast.LENGTH_SHORT;
 import static java.lang.String.valueOf;
 import static org.ei.opensrp.AllConstants.ENGLISH_LANGUAGE;
@@ -184,8 +188,15 @@ public class BidanHomeActivity extends org.ei.opensrp.view.activity.SecuredActiv
         FlurryFacade.logEvent("clicked_update_from_server");
         UpdateActionsTask updateActionsTask = new UpdateActionsTask(
                 this, context.actionService(), context.formSubmissionSyncService(), new SyncProgressIndicator(), context.allFormVersionSyncService());
-        updateActionsTask.setAdditionalSyncService(((Context)context).uniqueIdService());
-        updateActionsTask.updateFromServer(new SyncAfterFetchListener());
+        updateActionsTask.setAdditionalSyncService(((Context) context).uniqueIdService());
+        String locationAnmids=context.allSharedPreferences().getPreference(AllConstantsINA.LoginResponse.LOCATION_ANMIDS);
+
+        locationAnmids = locationAnmids.replaceAll("\\[", "").replaceAll("\\]", "");
+        locationAnmids=locationAnmids.replaceAll("\",\"", "-").replaceAll("\"", "");
+
+        final Map<String, String> syncParams= new HashMap<String, String>();
+        syncParams.put(AllConstantsINA.LoginResponse.LOCATION_ANMIDS,locationAnmids);
+        updateActionsTask.updateFromServer(new SyncAfterFetchListener(),syncParams);
     }
 
     @Override

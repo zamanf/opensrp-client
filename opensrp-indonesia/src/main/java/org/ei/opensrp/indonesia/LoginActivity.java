@@ -44,7 +44,7 @@ import static org.ei.opensrp.util.Log.logError;
 import static org.ei.opensrp.util.Log.logVerbose;
 
 public class LoginActivity extends Activity {
-    private org.ei.opensrp.Context context;
+    private  org.ei.opensrp.indonesia.Context context;
     private EditText userNameEditText;
     private EditText passwordEditText;
     private ProgressDialog progressDialog;
@@ -56,7 +56,7 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.login_ind);
 
         context = Context.getInstance().setApplicationContextChild(this.getApplicationContext());
-        context = Context.setInstance(context);
+        context = (Context) Context.setInstance(context);
 
         initializeLoginFields();
         initializeBuildDetails();

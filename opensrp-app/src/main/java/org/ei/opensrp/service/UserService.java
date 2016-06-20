@@ -21,7 +21,7 @@ import static org.ei.opensrp.event.Event.ON_LOGOUT;
 public class UserService {
     private final Repository repository;
     private final AllSettings allSettings;
-    private final AllSharedPreferences allSharedPreferences;
+    protected final AllSharedPreferences allSharedPreferences;
     private HTTPAgent httpAgent;
     private Session session;
     private DristhiConfiguration configuration;
@@ -98,6 +98,7 @@ public class UserService {
     }
 
     public void saveUserInfo(String userInfo) { saveUserInfoTask.save(userInfo); }
+    public void saveUserInfo(String userInfo,String userInfoKey) { saveUserInfoTask.save(userInfo,userInfoKey); }
 
     public boolean hasARegisteredUser() {
         return !allSharedPreferences.fetchRegisteredANM().equals("");

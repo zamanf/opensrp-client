@@ -205,4 +205,7 @@ public class AllConstantsINA {
         public static final String CHILD_VISIT_DATE = "tanggalKunjunganBayiPerbulan";
         public static final String CHILD_CURRENT_WEIGTH = "beratBadanBayiSetiapKunjunganBayiPerbulan";
     }
+    public class LoginResponse {
+        public static final String LOCATION_ANMIDS = "locationAnmids";
+    }
 }
