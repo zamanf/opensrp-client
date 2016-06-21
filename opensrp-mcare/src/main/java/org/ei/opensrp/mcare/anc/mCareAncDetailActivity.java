@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.Html;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -64,6 +65,7 @@ public class mCareAncDetailActivity extends Activity {
         setContentView(R.layout.anc_detail_activity);
         TextView name = (TextView) findViewById(R.id.name);
         TextView brid = (TextView) findViewById(R.id.brid);
+        TextView nid = (TextView) findViewById(R.id.womannid);
         TextView husbandname = (TextView) findViewById(R.id.husbandname);
         TextView age = (TextView) findViewById(R.id.age);
         TextView jivitahhid = (TextView) findViewById(R.id.jivitahhid);
@@ -86,17 +88,19 @@ public class mCareAncDetailActivity extends Activity {
             }
         });
 
-        name.setText(humanize((ancclient.getDetails().get("FWWOMFNAME") != null ? ancclient.getDetails().get("FWWOMFNAME") : "").replace("+", "_")));
+        name.setText(humanize((ancclient.getColumnmaps().get("FWWOMFNAME") != null ? ancclient.getColumnmaps().get("FWWOMFNAME") : "").replace("+", "_")));
 
-        brid.setText(getString(R.string.BRID) +humanize((ancclient.getDetails().get("FWWOMBID") != null ? ancclient.getDetails().get("FWWOMBID") : "").replace("+", "_")));
-        husbandname.setText(getString(R.string.elco_details_husband_name_label)+(ancclient.getDetails().get("FWHUSNAME") != null ? ancclient.getDetails().get("FWHUSNAME") : ""));
-        age.setText(getString(R.string.elco_age_label) + (ancclient.getDetails().get("FWWOMAGE") != null ? ancclient.getDetails().get("FWWOMAGE") : ""));
-        jivitahhid.setText(getString(R.string.hhiid_jivita_elco_label)+(ancclient.getDetails().get("JiVitAHHID") != null ? ancclient.getDetails().get("JiVitAHHID") : ""));
-        godhhid.setText(getString(R.string.hhid_gob_elco_label) + (ancclient.getDetails().get("GOBHHID") != null ? ancclient.getDetails().get("GOBHHID") : ""));
+        brid.setText(Html.fromHtml(getString(R.string.BRID) +"<b> " + humanize((ancclient.getDetails().get("FWWOMBID") != null ? ancclient.getDetails().get("FWWOMBID") : "").replace("+", "_"))+ "</b>"));
+        nid.setText(Html.fromHtml(getString(R.string.NID) +"<b> "+humanize((ancclient.getDetails().get("FWWOMNID") != null ? ancclient.getDetails().get("FWWOMNID") : "").replace("+", "_"))+ "</b>"));
+
+        husbandname.setText(Html.fromHtml(getString(R.string.elco_details_husband_name_label)+"<b> "+humanize(ancclient.getDetails().get("FWHUSNAME") != null ? ancclient.getDetails().get("FWHUSNAME") : "")+ "</b>"));
+        age.setText(Html.fromHtml(getString(R.string.elco_age_label)+"<b> " + (ancclient.getDetails().get("FWWOMAGE") != null ? ancclient.getDetails().get("FWWOMAGE") : "")+ "</b>"));
+        jivitahhid.setText(Html.fromHtml(getString(R.string.hhiid_jivita_elco_label)+"<b> " +(ancclient.getColumnmaps().get("JiVitAHHID") != null ? ancclient.getColumnmaps().get("JiVitAHHID") : "")+ "</b>"));
+        godhhid.setText(Html.fromHtml(getString(R.string.hhid_gob_elco_label) +"<b> " + (ancclient.getColumnmaps().get("GOBHHID") != null ? ancclient.getColumnmaps().get("GOBHHID") : "")+ "</b>"));
 //        psf_due_date.setText(Elcoclient.getDetails().get("FWPSRDATE") != null ? Elcoclient.getDetails().get("FWPSRDATE") : "");
 
 
-        village.setText(humanize(ancclient.getDetails().get("location_name") != null ? ancclient.getDetails().get("location_name") : ""));
+        village.setText(Html.fromHtml(getString(R.string.elco_details_mauza) + "<b> " + humanize(ancclient.getDetails().get("mauza") != null ? ancclient.getDetails().get("mauza") : "")+ "</b>"));
             /////from househld
         AllCommonsRepository allancRepository = Context.getInstance().allCommonsRepositoryobjects("mcaremother");
         CommonPersonObject ancobject = allancRepository.findByCaseID(ancclient.entityId());
@@ -154,7 +158,7 @@ public class mCareAncDetailActivity extends Activity {
         TextView edd = (TextView)findViewById(R.id.edd_date);
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         try {
-            Date edd_date = format.parse(ancclient.getDetails().get("FWPSRLMP")!=null?ancclient.getDetails().get("FWPSRLMP"):"");
+            Date edd_date = format.parse(ancclient.getColumnmaps().get("FWPSRLMP")!=null?ancclient.getColumnmaps().get("FWPSRLMP"):"");
             GregorianCalendar calendar = new GregorianCalendar();
             calendar.setTime(edd_date);
             calendar.add(Calendar.DATE, 259);
@@ -168,13 +172,13 @@ public class mCareAncDetailActivity extends Activity {
 
     private void pregnancyin2years(CommonPersonObject ecclient) {
         String text = ecclient.getDetails().get("FWPSRPREGTWYRS")!=null?ecclient.getDetails().get("FWPSRPREGTWYRS"):"";
-        TextView stillbirth = (TextView)findViewById(R.id.history_of_mr);
+        TextView stillbirth = (TextView)findViewById(R.id.number_of_pregnancy);
         stillbirth.setText(text);
     }
 
     private void historyofsb(CommonPersonObject ecclient) {
         String text = ecclient.getDetails().get("FWPSRPRSB")!=null?ecclient.getDetails().get("FWPSRPRSB"):"";
-        TextView stillbirth = (TextView)findViewById(R.id.history_of_mr);
+        TextView stillbirth = (TextView)findViewById(R.id.history_of_sb);
         stillbirth.setText(text);
     }
 
@@ -200,7 +204,7 @@ public class mCareAncDetailActivity extends Activity {
     private void checkAnc4view(CommonPersonObjectClient ecclient) {
         LinearLayout anc1layout = (LinearLayout)findViewById(R.id.anc4_layout);
         List<Alert> alertlist = org.ei.opensrp.Context.getInstance().alertService().findByEntityIdAndAlertNames(ecclient.entityId(), "ancrv_4");
-        if(alertlist.size()!=0){
+        if(alertlist.size()!=0 && ecclient.getDetails().get("FWANC4DATE")!=null){
 //            alerttextstatus = setAlertStatus("ANC1",alertlist);
             for(int i = 0;i<alertlist.size();i++){
                 String status = alertlist.get(i).status().value();
@@ -221,7 +225,7 @@ public class mCareAncDetailActivity extends Activity {
     private void checkAnc3view(CommonPersonObjectClient ecclient) {
         LinearLayout anc1layout = (LinearLayout)findViewById(R.id.anc3_layout);
         List<Alert> alertlist = org.ei.opensrp.Context.getInstance().alertService().findByEntityIdAndAlertNames(ecclient.entityId(), "ancrv_3");
-        if(alertlist.size()!=0){
+        if(alertlist.size()!=0 && ecclient.getDetails().get("FWANC3DATE")!=null){
 //            alerttextstatus = setAlertStatus("ANC1",alertlist);
             for(int i = 0;i<alertlist.size();i++){
                 String status = alertlist.get(i).status().value();
@@ -243,7 +247,7 @@ public class mCareAncDetailActivity extends Activity {
     private void checkAnc2view(CommonPersonObjectClient ecclient) {
         LinearLayout anc1layout = (LinearLayout)findViewById(R.id.anc2_layout);
         List<Alert> alertlist = org.ei.opensrp.Context.getInstance().alertService().findByEntityIdAndAlertNames(ecclient.entityId(), "ancrv_2");
-        if(alertlist.size()!=0){
+        if(alertlist.size()!=0 && ecclient.getDetails().get("FWANC2DATE")!=null){
 //            alerttextstatus = setAlertStatus("ANC1",alertlist);
             for(int i = 0;i<alertlist.size();i++){
                 String status = alertlist.get(i).status().value();
@@ -265,7 +269,7 @@ public class mCareAncDetailActivity extends Activity {
     private void checkAnc1view(CommonPersonObjectClient ecclient) {
         LinearLayout anc1layout = (LinearLayout)findViewById(R.id.anc1_layout);
         List<Alert> alertlist = org.ei.opensrp.Context.getInstance().alertService().findByEntityIdAndAlertNames(ecclient.entityId(), "ancrv_1");
-        if(alertlist.size()!=0){
+        if(alertlist.size()!=0 && ecclient.getDetails().get("FWANC1DATE")!=null){
 //            alerttextstatus = setAlertStatus("ANC1",alertlist);
             for(int i = 0;i<alertlist.size();i++){
                 String status = alertlist.get(i).status().value();

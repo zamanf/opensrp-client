@@ -83,7 +83,7 @@
       "bind" : "/model/instance/Offsite_Woman_Followup_Form/existing_marriage",
       "shouldLoadValue" : true
     }, {
-      "name" : "existing_birthdate",
+      "name" : "existing_birth_date",
       "bind" : "/model/instance/Offsite_Woman_Followup_Form/existing_birth_date",
       "shouldLoadValue" : true
     }, {

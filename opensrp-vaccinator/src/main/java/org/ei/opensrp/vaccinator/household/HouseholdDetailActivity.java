@@ -216,8 +216,13 @@ public class HouseholdDetailActivity extends DetailActivity {
     }
 
     @Override
-    protected int profilePicResId() {
+    protected Integer profilePicContainerId() {
         return R.id.household_profilepic;
+    }
+
+    @Override
+    protected Integer defaultProfilePicResId() {
+        return R.drawable.household_profile;
     }
 
     @Override

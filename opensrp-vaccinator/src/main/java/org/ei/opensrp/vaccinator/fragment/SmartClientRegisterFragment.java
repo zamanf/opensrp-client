@@ -99,13 +99,9 @@ public abstract class SmartClientRegisterFragment extends SmartRegisterFragment 
 
     @Override
     protected void startRegistration() {
-        /*Utils.providerDetails();
-        // change the below contains value according to your requirement
-        if (!Utils.userRoles.contains("Authenticated")) {*/
-            Intent intent = new Intent(Barcode.BARCODE_INTENT);
-            intent.putExtra(Barcode.SCAN_MODE, Barcode.QR_MODE);
-            startActivityForResult(intent, Barcode.BARCODE_REQUEST_CODE);
-        //}
+        Intent intent = new Intent(Barcode.BARCODE_INTENT);
+        intent.putExtra(Barcode.SCAN_MODE, Barcode.QR_MODE);
+        startActivityForResult(intent, Barcode.BARCODE_REQUEST_CODE);
     }//end of method
 
     protected abstract String getRegisterLabel();
@@ -134,6 +130,20 @@ public abstract class SmartClientRegisterFragment extends SmartRegisterFragment 
         imv.setAdjustViewBounds(true);
         imv.setScaleType(ImageView.ScaleType.FIT_XY);
     }//end of method
+
+    protected void startFollowupForm(String formName, SmartRegisterClient client, HashMap<String, String> overrideStringmap, ByColumnAndByDetails byColumnAndByDetails) {
+        if (overrideStringmap == null) {
+            org.ei.opensrp.util.Log.logDebug("overrides data is null");
+            formController1.startFormActivity(formName, client.entityId(), null);
+        } else {
+            overrideStringmap.putAll(providerOverrides());
+
+            String overrides = Utils.overridesToString(overrideStringmap, client, byColumnAndByDetails);
+            FieldOverrides fieldOverrides = new FieldOverrides(overrides);
+            org.ei.opensrp.util.Log.logDebug("fieldOverrides data is : " + fieldOverrides.getJSONString());
+            formController1.startFormActivity(formName, client.entityId(), fieldOverrides.getJSONString());
+        }
+    }
 
     protected abstract String getRegistrationForm(HashMap<String, String> overridemap);
 
@@ -180,7 +190,7 @@ public abstract class SmartClientRegisterFragment extends SmartRegisterFragment 
 
             if(c != null && getRegisterLabel().toLowerCase().contains("woman")
                     && c.getBirthdate() != null && Years.yearsBetween(c.getBirthdate(), DateTime.now()).getYears() < 8){
-                 showMessageDialog("Scanned ID already exists and is not a woman. Person is "+Years.yearsBetween(c.getBirthdate(), DateTime.now()).getYears()+" years only.", new DialogInterface.OnClickListener() {
+                showMessageDialog("Scanned ID already exists and is not a woman.", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
@@ -191,7 +201,7 @@ public abstract class SmartClientRegisterFragment extends SmartRegisterFragment 
 
             if(c != null && getRegisterLabel().toLowerCase().contains("child")
                     && c.getBirthdate() != null && Years.yearsBetween(c.getBirthdate(), DateTime.now()).getYears() >= 8){
-                showMessageDialog("Scanned ID already exists and is not a child. Person is "+Years.yearsBetween(c.getBirthdate(), DateTime.now()).getYears()+" years", new DialogInterface.OnClickListener() {
+                showMessageDialog("Scanned ID already exists and is not a child.", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 

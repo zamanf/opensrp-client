@@ -53,9 +53,11 @@ public class DateSort implements SortOption {
 
                         return date2.compareTo(date1);
                     } catch (Exception e) {
-                        break;
+                        if(commonPersonObjectClient.getColumnmaps().get(field) == null){
+                            return -1;
+                        }
+                        else return 1;
                     }
-
 
                 case byDetails:
                     try {
@@ -64,9 +66,11 @@ public class DateSort implements SortOption {
                         Date date2 = dateFormat.parse(commonPersonObjectClient2.getDetails().get(field));
                         return date2.compareTo(date1);
                     } catch (Exception e) {
-                        break;
+                        if(commonPersonObjectClient.getDetails().get(field) == null){
+                            return -1;
+                        }
+                        else return 1;
                     }
-
             }
             return 0;
         }

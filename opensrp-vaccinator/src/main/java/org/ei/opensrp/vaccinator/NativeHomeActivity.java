@@ -20,6 +20,7 @@ import org.ei.opensrp.sync.SyncProgressIndicator;
 import org.ei.opensrp.sync.UpdateActionsTask;
 import org.ei.opensrp.vaccinator.analytics.CountlyAnalytics;
 import org.ei.opensrp.vaccinator.analytics.Events;
+import org.ei.opensrp.vaccinator.household.HouseholdSmartRegisterActivity;
 import org.ei.opensrp.view.activity.SecuredActivity;
 import org.ei.opensrp.view.contract.HomeContext;
 import org.ei.opensrp.view.controller.NativeAfterANMDetailsFetchListener;
@@ -228,7 +229,7 @@ public class NativeHomeActivity extends SecuredActivity {
      //   fpRegisterClientCountView.setText(valueOf(elcocontroller.getClients().size()));
 //        Log.d("child count cin ", childController.getClients().size()+"");
         childRegisterClientCountView.setText(valueOf(childController.getClients().size()));
-        householdRegisterClientCountView.setText(valueOf(householdController.getClients().size()) + valueOf(individaulController.getClients().size()));
+        householdRegisterClientCountView.setText(valueOf(householdController.getClients().size()) /*+ valueOf(individualController.getClients().size())*/);
         fieldRegisterClientCountDView.setText(valueOf(fieldControllerD.getClients().size())+" D");
         fieldRegisterClientCountMView.setText(valueOf(fieldControllerM.getClients().size()) + " M");
     }
@@ -326,7 +327,7 @@ public class NativeHomeActivity extends SecuredActivity {
                     break;
 
                 case R.id.btn_household_register:
-                    navigationController.startPNCSmartRegistry();
+                    activity.startActivity(new Intent(activity, HouseholdSmartRegisterActivity.class));
                     break;
 
                 case R.id.btn_child_register_new:

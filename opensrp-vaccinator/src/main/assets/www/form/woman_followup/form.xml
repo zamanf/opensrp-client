@@ -1057,9 +1057,8 @@
     <span lang="Roman Urdu" class="question-label " data-itext-id="/Woman_TT_Followup_Form/center_gps:label">Hasil karda malomaat ki jaga ke GPS coordinates darj karain</span>
 
     <span lang="en" class="question-label active" data-itext-id="/Woman_TT_Followup_Form/center_gps:label">Collect GPS coordinates of data entry location:</span>
-    <span class="required">*</span>
     <span lang="" class="or-hint active">GPS coordinates can only be collected when outside.</span>
-    <input type="text" name="/Woman_TT_Followup_Form/center_gps" required="required" data-type-xml="geopoint"/>
+    <input type="text" name="/Woman_TT_Followup_Form/center_gps" data-type-xml="geopoint"/>
 </label>    <fieldset class="question ">
     <fieldset>
         <legend>
@@ -1269,23 +1268,23 @@
             <span class="itemset-labels" data-value-ref="name" data-label-type="itext" data-label-ref="itextId">
                 <span lang="ur" class="option-label " data-itext-id="static_instance-vaccines-0">ٹی ٹی 1</span>
                 <span lang="Roman Urdu" class="option-label " data-itext-id="static_instance-vaccines-0">TT1</span>
-
+                <span lang="openmrs_code" class="option-label " data-itext-id="static_instance-vaccines-0">84880AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</span>
                 <span lang="en" class="option-label active" data-itext-id="static_instance-vaccines-0">TT1</span>
                 <span lang="ur" class="option-label " data-itext-id="static_instance-vaccines-1">ٹی ٹی 2</span>
                 <span lang="Roman Urdu" class="option-label " data-itext-id="static_instance-vaccines-1">TT2</span>
-
+                <span lang="openmrs_code" class="option-label " data-itext-id="static_instance-vaccines-1">84880AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</span>
                 <span lang="en" class="option-label active" data-itext-id="static_instance-vaccines-1">TT2</span>
                 <span lang="ur" class="option-label " data-itext-id="static_instance-vaccines-2">ٹی ٹی 3</span>
                 <span lang="Roman Urdu" class="option-label " data-itext-id="static_instance-vaccines-2">TT3</span>
-
+                <span lang="openmrs_code" class="option-label " data-itext-id="static_instance-vaccines-2">84880AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</span>
                 <span lang="en" class="option-label active" data-itext-id="static_instance-vaccines-2">TT3</span>
                 <span lang="ur" class="option-label " data-itext-id="static_instance-vaccines-3">ٹی ٹی 4</span>
                 <span lang="Roman Urdu" class="option-label " data-itext-id="static_instance-vaccines-3">TT4</span>
-
+                <span lang="openmrs_code" class="option-label " data-itext-id="static_instance-vaccines-3">84880AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</span>
                 <span lang="en" class="option-label active" data-itext-id="static_instance-vaccines-3">TT4</span>
                 <span lang="ur" class="option-label " data-itext-id="static_instance-vaccines-4">ٹی ٹی 5</span>
                 <span lang="Roman Urdu" class="option-label " data-itext-id="static_instance-vaccines-4">TT5</span>
-
+                <span lang="openmrs_code" class="option-label " data-itext-id="static_instance-vaccines-4">84880AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</span>
                 <span lang="en" class="option-label active" data-itext-id="static_instance-vaccines-4">TT5</span>            </span>
         </div>
     </fieldset>
@@ -1344,23 +1343,23 @@
             <span class="itemset-labels" data-value-ref="name" data-label-type="itext" data-label-ref="itextId">
                 <span lang="ur" class="option-label " data-itext-id="static_instance-vaccines-0">ٹی ٹی 1</span>
                 <span lang="Roman Urdu" class="option-label " data-itext-id="static_instance-vaccines-0">TT1</span>
-
+                <span lang="openmrs_code" class="option-label " data-itext-id="static_instance-vaccines-0">84880AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</span>
                 <span lang="en" class="option-label active" data-itext-id="static_instance-vaccines-0">TT1</span>
                 <span lang="ur" class="option-label " data-itext-id="static_instance-vaccines-1">ٹی ٹی 2</span>
                 <span lang="Roman Urdu" class="option-label " data-itext-id="static_instance-vaccines-1">TT2</span>
-
+                <span lang="openmrs_code" class="option-label " data-itext-id="static_instance-vaccines-1">84880AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</span>
                 <span lang="en" class="option-label active" data-itext-id="static_instance-vaccines-1">TT2</span>
                 <span lang="ur" class="option-label " data-itext-id="static_instance-vaccines-2">ٹی ٹی 3</span>
                 <span lang="Roman Urdu" class="option-label " data-itext-id="static_instance-vaccines-2">TT3</span>
-
+                <span lang="openmrs_code" class="option-label " data-itext-id="static_instance-vaccines-2">84880AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</span>
                 <span lang="en" class="option-label active" data-itext-id="static_instance-vaccines-2">TT3</span>
                 <span lang="ur" class="option-label " data-itext-id="static_instance-vaccines-3">ٹی ٹی 4</span>
                 <span lang="Roman Urdu" class="option-label " data-itext-id="static_instance-vaccines-3">TT4</span>
-
+                <span lang="openmrs_code" class="option-label " data-itext-id="static_instance-vaccines-3">84880AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</span>
                 <span lang="en" class="option-label active" data-itext-id="static_instance-vaccines-3">TT4</span>
                 <span lang="ur" class="option-label " data-itext-id="static_instance-vaccines-4">ٹی ٹی 5</span>
                 <span lang="Roman Urdu" class="option-label " data-itext-id="static_instance-vaccines-4">TT5</span>
-
+                <span lang="openmrs_code" class="option-label " data-itext-id="static_instance-vaccines-4">84880AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</span>
                 <span lang="en" class="option-label active" data-itext-id="static_instance-vaccines-4">TT5</span>            </span>
         </div>
     </fieldset>

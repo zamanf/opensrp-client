@@ -6,10 +6,6 @@
     <color name="alert_urgent">#D13F3F</color>
     <color name="alert_completed">#4FB45B</color>
     <color name="alert_expired">#ECECEC</color>
-    <color name="IRDBackground">#490A3D</color>
-    <color name="IRDText">#9CA336</color>
-    <color name="IRDTitle">#F58220</color>
-    <color name="IRDHighlight">#A9A9A9</color>
 
     <color name="Transparent">#00000000</color>
     <color name="Snow">#FFFAFA</color>

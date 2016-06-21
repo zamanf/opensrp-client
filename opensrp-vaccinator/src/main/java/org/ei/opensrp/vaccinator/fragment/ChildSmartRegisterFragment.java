@@ -13,21 +13,24 @@ import org.ei.opensrp.vaccinator.child.ChildFollowupHandler;
 import org.ei.opensrp.vaccinator.child.ChildService;
 import org.ei.opensrp.vaccinator.child.ChildSmartClientsProvider;
 import org.ei.opensrp.vaccinator.db.Client;
-import org.ei.opensrp.vaccinator.db.Event;
 import org.ei.opensrp.vaccinator.woman.DetailActivity;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.controller.FormController;
 import org.ei.opensrp.view.dialog.AllClientsFilter;
+import org.ei.opensrp.view.dialog.DialogOptionMapper;
 import org.ei.opensrp.view.dialog.FilterOption;
 import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.json.JSONException;
 
+import java.text.ParseException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import static util.Utils.formatValue;
+import static util.Utils.getObsValue;
 import static util.Utils.getValue;
 import static util.Utils.nonEmptyValue;
 
@@ -38,6 +41,8 @@ public class ChildSmartRegisterFragment extends SmartClientRegisterFragment {
     private SmartRegisterClientsProvider clientProvider = null;
     private final ClientActionHandler clientActionHandler = new ClientActionHandler();
     private CommonPersonObjectController controller;
+    private DialogOptionMapper dialogOptionMapper;
+    private Map<String, String> locations = new HashMap<String, String>();
 
     public ChildSmartRegisterFragment(){   super(null);   }
 
@@ -100,7 +105,7 @@ public class ChildSmartRegisterFragment extends SmartClientRegisterFragment {
     }
 
     @Override
-    protected void onCreation() { }
+    protected void onCreation() {}
 
     private class ClientActionHandler implements View.OnClickListener {
         @Override
@@ -134,28 +139,28 @@ public class ChildSmartRegisterFragment extends SmartClientRegisterFragment {
         map.put("e_penta3", nonEmptyValue(client.getColumnmaps(), true, false, "penta3", "penta3_retro"));
         map.put("e_opv3", nonEmptyValue(client.getColumnmaps(), true, false, "opv3", "opv3_retro"));
         map.put("e_pcv3", nonEmptyValue(client.getColumnmaps(), true, false, "pcv3", "pcv3_retro"));
+        map.put("e_ipv", nonEmptyValue(client.getColumnmaps(), true, false, "ipv", "ipv_retro"));
         map.put("e_measles1", nonEmptyValue(client.getColumnmaps(), true, false, "measles1", "measles1_retro"));
         map.put("e_measles2", nonEmptyValue(client.getColumnmaps(), true, false, "measles2", "measles2_retro"));
-        map.put("e_ipv", nonEmptyValue(client.getColumnmaps(), true, false, "ipv", "ipv_retro"));
         return map;
     }
 
-    private HashMap<String, String> getPreloadVaccineData(Event e) {
+    private HashMap<String, String> getPreloadVaccineData(Client client) throws JSONException, ParseException {
         HashMap<String, String> map = new HashMap<>();
-        map.put("e_bcg", formatValue(e.findObs(null, true, "bcg", "bcg_retro").getValue(), false));
-        map.put("e_opv0", formatValue(e.findObs(null, true, "opv0", "opv0_retro").getValue(), false));
-        map.put("e_penta1", formatValue(e.findObs(null, true, "penta1", "penta1_retro").getValue(), false));
-        map.put("e_opv1", formatValue(e.findObs(null, true, "opv1", "opv1_retro").getValue(), false));
-        map.put("e_pcv1", formatValue(e.findObs(null, true, "pcv1", "pcv1_retro").getValue(), false));
-        map.put("e_penta2", formatValue(e.findObs(null, true, "penta2", "penta2_retro").getValue(), false));
-        map.put("e_opv2", formatValue(e.findObs(null, true, "opv2", "opv2_retro").getValue(), false));
-        map.put("e_pcv2", formatValue(e.findObs(null, true, "pcv2", "pcv2_retro").getValue(), false));
-        map.put("e_penta3", formatValue(e.findObs(null, true, "penta3", "penta3_retro").getValue(), false));
-        map.put("e_opv3", formatValue(e.findObs(null, true, "opv3", "opv3_retro").getValue(), false));
-        map.put("e_pcv3", formatValue(e.findObs(null, true, "pcv3", "pcv3_retro").getValue(), false));
-        map.put("e_measles1", formatValue(e.findObs(null, true, "measles1", "measles1_retro").getValue(), false));
-        map.put("e_measles2", formatValue(e.findObs(null, true, "measles2", "measles2_retro").getValue(), false));
-        map.put("e_ipv", formatValue(e.findObs(null, true, "ipv", "ipv_retro").getValue(), false));
+        map.put("e_bcg", getObsValue(getClientEventDb(), client, true, "bcg", "bcg_retro"));
+        map.put("e_opv0", getObsValue(getClientEventDb(), client, true, "opv0", "opv0_retro"));
+        map.put("e_penta1", getObsValue(getClientEventDb(), client, true, "penta1", "penta1_retro"));
+        map.put("e_opv1", getObsValue(getClientEventDb(), client, true, "opv1", "opv1_retro"));
+        map.put("e_pcv1", getObsValue(getClientEventDb(), client, true, "pcv1", "pcv1_retro"));
+        map.put("e_penta2", getObsValue(getClientEventDb(), client, true, "penta2", "penta2_retro"));
+        map.put("e_opv2", getObsValue(getClientEventDb(), client, true, "opv2", "opv2_retro"));
+        map.put("e_pcv2", getObsValue(getClientEventDb(), client, true, "pcv2", "pcv2_retro"));
+        map.put("e_penta3", getObsValue(getClientEventDb(), client, true, "penta3", "penta3_retro"));
+        map.put("e_opv3", getObsValue(getClientEventDb(), client, true, "opv3", "opv3_retro"));
+        map.put("e_pcv3", getObsValue(getClientEventDb(), client, true, "pcv3", "pcv3_retro"));
+        map.put("e_ipv", getObsValue(getClientEventDb(), client, true, "ipv", "ipv_retro"));
+        map.put("e_measles1", getObsValue(getClientEventDb(), client, true, "measles1", "measles1_retro"));
+        map.put("e_measles2", getObsValue(getClientEventDb(), client, true, "measles2", "measles2_retro"));
 
         return map;
     }
@@ -179,30 +184,29 @@ public class ChildSmartRegisterFragment extends SmartClientRegisterFragment {
 
     private Map<String, String> followupOverrides(CommonPersonObjectClient client){
         Map<String, String> map = new HashMap<>();
-        map.put("existing_address1", getValue(client.getDetails(), "adderss1", true));
-        map.put("existing_union_council", getValue(client.getDetails(), "union_council", true));
-        map.put("existing_town", getValue(client.getDetails(), "town", true));
-        map.put("existing_city_village", getValue(client.getDetails(), "city_village", true));
-        map.put("existing_province", getValue(client.getDetails(), "province", true));
-        map.put("existing_landmark", getValue(client.getDetails(), "landmark", true));
+        map.put("existing_full_address", getValue(client.getDetails(), "address1", true)+
+                ", UC: "+getValue(client.getDetails(), "union_council", true)+
+                ", Town: "+getValue(client.getDetails(), "town", true)+
+                ", City: "+getValue(client.getDetails(), "city_village", true)+ " - " + getValue(client.getDetails(), "landmark", true));
 
-        map.put("existing_union_councilname", getValue(client.getDetails(), "union_council", true));
-        map.put("existing_townname", getValue(client.getDetails(), "town", true));
-        map.put("existing_city_villagename", getValue(client.getDetails(), "city_village", true));
-        map.put("existing_provincename", getValue(client.getDetails(), "province", true));
+        int days = 0;
+        try{
+            days = Days.daysBetween(new DateTime(getValue(client.getColumnmaps(), "dob", false)), DateTime.now()).getDays();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
 
         map.put("existing_first_name", getValue(client.getDetails(), "first_name", true));
         map.put("existing_last_name", getValue(client.getDetails(), "last_name", true));
         map.put("existing_gender", getValue(client.getDetails(), "gender", true));
         map.put("existing_mother_name", getValue(client.getDetails(), "mother_name", true));
         map.put("existing_father_name", getValue(client.getDetails(), "father_name", true));
-        map.put("existing_birth_date", getValue(client.getDetails(), "dob", false));
-        map.put("existing_ethnicity", getValue(client.getDetails(), "ethnicity", true));
-        map.put("existing_client_reg_date", getValue(client.getDetails(), "client_reg_date", false));
+        map.put("existing_birth_date", getValue(client.getColumnmaps(), "dob", false));
+        map.put("existing_age", days+"");
         map.put("existing_epi_card_number", getValue(client.getDetails(), "epi_card_number", false));
-        map.put("existing_child_was_suffering_from_a_disease_at_birth", getValue(client.getDetails(), "child_was_suffering_from_a_disease_at_birth", true));
-        map.put("existing_reminders_approval", getValue(client.getDetails(), "reminders_approval", false));
-        map.put("existing_contact_phone_number", getValue(client.getDetails(), "contact_phone_number", false));
+        map.put("reminders_approval", getValue(client.getDetails(), "reminders_approval", false));
+        map.put("contact_phone_number", getValue(client.getDetails(), "contact_phone_number", false));
 
         map.putAll(getPreloadVaccineData(client));
 
@@ -211,45 +215,32 @@ public class ChildSmartRegisterFragment extends SmartClientRegisterFragment {
 
     private Map<String, String> followupOverrides(Client client){
         Map<String, String> map = new HashMap<>();
-        map.put("existing_address1", client.getAddress("usual_residence").getAddressField("address1"));
-        map.put("existing_union_council", client.getAddress("usual_residence").getSubTown());
-        map.put("existing_town", client.getAddress("usual_residence").getTown());
-        map.put("existing_city_village", client.getAddress("usual_residence").getCityVillage());
-        map.put("existing_province", client.getAddress("usual_residence").getStateProvince());
-        map.put("existing_landmark", client.getAddress("usual_residence").getAddressField("landmark"));
-
-        map.put("existing_union_councilname", client.getAddress("usual_residence").getSubTown());
-        map.put("existing_townname", client.getAddress("usual_residence").getTown());
-        map.put("existing_city_villagename", client.getAddress("usual_residence").getCityVillage());
-        map.put("existing_provincename", client.getAddress("usual_residence").getStateProvince());
+        map.put("existing_full_address", client.getAddress("usual_residence").getAddressField("address1")+
+                ", UC: "+client.getAddress("usual_residence").getSubTown()+
+                ", Town: "+client.getAddress("usual_residence").getTown()+
+                ", City: "+client.getAddress("usual_residence").getCityVillage()+
+                " - "+client.getAddress("usual_residence").getAddressField("landmark"));
 
         map.put("existing_first_name", client.getFirstName());
         map.put("existing_last_name", client.getLastName());
         map.put("existing_gender", client.getGender());
         map.put("existing_birth_date", client.getBirthdate().toString("yyyy-MM-dd"));
+        Object epi = client.getAttribute("EPI Card Number");
+        map.put("existing_epi_card_number", epi == null ? "" : epi.toString());
 
         try{
-            List<Event> el = getClientEventDb().getEvents(client.getBaseEntityId(), "Child Vaccination enrollment", "eventDate DESC");
+            map.put("existing_father_name", getObsValue(getClientEventDb(), client, true, "father_name", "1594AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
+            map.put("existing_mother_name", getObsValue(getClientEventDb(), client, true, "mother_name", "1593AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
 
-            if(el.size() > 0) {
-                Event e = el.get(0);
-                map.put("existing_father_name", formatValue(e.findObs(null, true, "father_name", "1594AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA").getValue(), true));
-                map.put("existing_mother_name", formatValue(e.findObs(null, true, "mother_name", "1593AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA").getValue(), true));
+            map.put("reminders_approval", getObsValue(getClientEventDb(), client, true, "reminders_approval", "163089AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
+            map.put("contact_phone_number", getObsValue(getClientEventDb(), client, true, "contact_phone_number", "159635AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
 
-                map.put("existing_marriage", formatValue(e.findObs(null, true, "marriage").getValue(), true));
-                map.put("existing_ethnicity", formatValue(e.findObs(null, true, "ethnicity", "163153AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA").getValue(), true));
-                map.put("existing_client_reg_date", formatValue(e.findObs(null, true, "client_reg_date", "1594AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA").getValue(), true));
-                map.put("existing_epi_card_number", formatValue(e.findObs(null, true, "epi_card_number").getValue(), true));
-                map.put("existing_child_was_suffering_from_a_disease_at_birth", formatValue(e.findObs(null, true, "existing_child_was_suffering_from_a_disease_at_birth", "159926AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA").getValue(), false));
-                map.put("existing_reminders_approval", formatValue(e.findObs(null, true, "reminders_approval", "163089AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA").getValue(), false));
-                map.put("existing_contact_phone_number", formatValue(e.findObs(null, true, "contact_phone_number", "159635AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA").getValue(), false));
-
-                map.putAll(getPreloadVaccineData(e));
-            }
+            map.putAll(getPreloadVaccineData(client));
         }
         catch (Exception e){
             e.printStackTrace();
         }
         return map;
+
     }
 }

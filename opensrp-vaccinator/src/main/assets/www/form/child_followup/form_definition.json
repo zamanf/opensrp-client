@@ -39,56 +39,16 @@
       "bind" : "/model/instance/Child_Vaccination_Followup/existing_gender",
       "shouldLoadValue" : true
     }, {
+      "name" : "existing_age",
+      "bind" : "/model/instance/Child_Vaccination_Followup/existing_age",
+      "shouldLoadValue" : true
+    }, {
       "name" : "existing_birth_date",
-      "bind" : "/model/instance/Child_Vaccination_Followup/existing_birth_date",
+      "bind" : "/model/instance/Child_Vaccination_Followup/existing_client_birth_date",
       "shouldLoadValue" : true
     }, {
-      "name" : "existing_client_reg_date",
-      "bind" : "/model/instance/Child_Vaccination_Followup/existing_client_reg_date",
-      "shouldLoadValue" : true
-    }, {
-      "name" : "existing_landmark",
-      "bind" : "/model/instance/Child_Vaccination_Followup/existing_landmark",
-      "shouldLoadValue" : true
-    }, {
-      "name" : "existing_address1",
-      "bind" : "/model/instance/Child_Vaccination_Followup/existing_address1",
-      "shouldLoadValue" : true
-    }, {
-      "name" : "existing_union_council",
-      "bind" : "/model/instance/Child_Vaccination_Followup/existing_union_council",
-      "shouldLoadValue" : true
-    }, {
-      "name" : "existing_town",
-      "bind" : "/model/instance/Child_Vaccination_Followup/existing_town",
-      "shouldLoadValue" : true
-    }, {
-      "name" : "existing_city_village",
-      "bind" : "/model/instance/Child_Vaccination_Followup/existing_city_village",
-      "shouldLoadValue" : true
-    }, {
-      "name" : "existing_province",
-      "bind" : "/model/instance/Child_Vaccination_Followup/existing_province",
-      "shouldLoadValue" : true
-    }, {
-      "name" : "existing_union_councilname",
-      "bind" : "/model/instance/Child_Vaccination_Followup/existing_union_councilname",
-      "shouldLoadValue" : true
-    }, {
-      "name" : "existing_townname",
-      "bind" : "/model/instance/Child_Vaccination_Followup/existing_townname",
-      "shouldLoadValue" : true
-    }, {
-      "name" : "existing_city_villagename",
-      "bind" : "/model/instance/Child_Vaccination_Followup/existing_city_villagename",
-      "shouldLoadValue" : true
-    }, {
-      "name" : "existing_provincename",
-      "bind" : "/model/instance/Child_Vaccination_Followup/existing_provincename",
-      "shouldLoadValue" : true
-    }, {
-      "name" : "existing_ethnicity",
-      "bind" : "/model/instance/Child_Vaccination_Followup/existing_ethnicity",
+      "name" : "existing_full_address",
+      "bind" : "/model/instance/Child_Vaccination_Followup/existing_full_address",
       "shouldLoadValue" : true
     }, {
       "name" : "existing_program_client_id",
@@ -99,18 +59,6 @@
       "bind" : "/model/instance/Child_Vaccination_Followup/existing_epi_card_number",
       "shouldLoadValue" : true
     }, {
-      "name" : "existing_child_was_suffering_from_a_disease_at_birth",
-      "bind" : "/model/instance/Child_Vaccination_Followup/existing_child_was_suffering_from_a_disease_at_birth",
-      "shouldLoadValue" : true
-    }, {
-      "name" : "existing_reminders_approval",
-      "bind" : "/model/instance/Child_Vaccination_Followup/existing_reminders_approval",
-      "shouldLoadValue" : true
-    }, {
-      "name" : "existing_contact_phone_number",
-      "bind" : "/model/instance/Child_Vaccination_Followup/existing_contact_phone_number",
-      "shouldLoadValue" : true
-    }, {
       "name" : "e_bcg",
       "bind" : "/model/instance/Child_Vaccination_Followup/e_bcg",
       "shouldLoadValue" : true
@@ -119,40 +67,40 @@
       "bind" : "/model/instance/Child_Vaccination_Followup/e_opv0",
       "shouldLoadValue" : true
     }, {
-      "name" : "e_penta2",
-      "bind" : "/model/instance/Child_Vaccination_Followup/e_penta2",
-      "shouldLoadValue" : true
-    }, {
-      "name" : "e_penta1",
-      "bind" : "/model/instance/Child_Vaccination_Followup/e_penta1",
-      "shouldLoadValue" : true
-    }, {
-      "name" : "e_penta3",
-      "bind" : "/model/instance/Child_Vaccination_Followup/e_penta3",
-      "shouldLoadValue" : true
-    }, {
       "name" : "e_opv1",
       "bind" : "/model/instance/Child_Vaccination_Followup/e_opv1",
-      "shouldLoadValue" : true
-    }, {
-      "name" : "e_opv2",
-      "bind" : "/model/instance/Child_Vaccination_Followup/e_opv2",
-      "shouldLoadValue" : true
-    }, {
-      "name" : "e_opv3",
-      "bind" : "/model/instance/Child_Vaccination_Followup/e_opv3",
       "shouldLoadValue" : true
     }, {
       "name" : "e_pcv1",
       "bind" : "/model/instance/Child_Vaccination_Followup/e_pcv1",
       "shouldLoadValue" : true
     }, {
+      "name" : "e_penta1",
+      "bind" : "/model/instance/Child_Vaccination_Followup/e_penta1",
+      "shouldLoadValue" : true
+    }, {
+      "name" : "e_opv2",
+      "bind" : "/model/instance/Child_Vaccination_Followup/e_opv2",
+      "shouldLoadValue" : true
+    }, {
       "name" : "e_pcv2",
       "bind" : "/model/instance/Child_Vaccination_Followup/e_pcv2",
       "shouldLoadValue" : true
     }, {
+      "name" : "e_penta2",
+      "bind" : "/model/instance/Child_Vaccination_Followup/e_penta2",
+      "shouldLoadValue" : true
+    }, {
+      "name" : "e_opv3",
+      "bind" : "/model/instance/Child_Vaccination_Followup/e_opv3",
+      "shouldLoadValue" : true
+    }, {
       "name" : "e_pcv3",
       "bind" : "/model/instance/Child_Vaccination_Followup/e_pcv3",
+      "shouldLoadValue" : true
+    }, {
+      "name" : "e_penta3",
+      "bind" : "/model/instance/Child_Vaccination_Followup/e_penta3",
       "shouldLoadValue" : true
     }, {
       "name" : "e_ipv",
@@ -203,9 +151,6 @@
       "name" : "phonenumber",
       "bind" : "/model/instance/Child_Vaccination_Followup/phonenumber"
     }, {
-      "name" : "existing_client_reg_date_note",
-      "bind" : "/model/instance/Child_Vaccination_Followup/existing_client_reg_date_note"
-    }, {
       "name" : "program_client_id_note",
       "bind" : "/model/instance/Child_Vaccination_Followup/program_client_id_note"
     }, {
@@ -218,11 +163,11 @@
       "name" : "last_name_note",
       "bind" : "/model/instance/Child_Vaccination_Followup/last_name_note"
     }, {
-      "name" : "child_age",
-      "bind" : "/model/instance/Child_Vaccination_Followup/child_age"
+      "name" : "calc_age_months",
+      "bind" : "/model/instance/Child_Vaccination_Followup/calc_age_months"
     }, {
-      "name" : "calc_dob_note",
-      "bind" : "/model/instance/Child_Vaccination_Followup/calc_dob_note"
+      "name" : "dob_note",
+      "bind" : "/model/instance/Child_Vaccination_Followup/dob_note"
     }, {
       "name" : "gender_note",
       "bind" : "/model/instance/Child_Vaccination_Followup/gender_note"
@@ -230,11 +175,8 @@
       "name" : "mother_name_note",
       "bind" : "/model/instance/Child_Vaccination_Followup/mother_name_note"
     }, {
-      "name" : "exisiting_ethnicity_note",
-      "bind" : "/model/instance/Child_Vaccination_Followup/exisiting_ethnicity_note"
-    }, {
-      "name" : "address",
-      "bind" : "/model/instance/Child_Vaccination_Followup/address"
+      "name" : "address_note",
+      "bind" : "/model/instance/Child_Vaccination_Followup/address_note"
     }, {
       "name" : "address_change",
       "bind" : "/model/instance/Child_Vaccination_Followup/address_change"
@@ -260,32 +202,56 @@
       "name" : "center_gps",
       "bind" : "/model/instance/Child_Vaccination_Followup/center_gps"
     }, {
-      "name" : "child_was_suffering_from_a_disease_at_birth_note",
-      "bind" : "/model/instance/Child_Vaccination_Followup/child_was_suffering_from_a_disease_at_birth_note"
-    }, {
-      "name" : "aefi",
-      "bind" : "/model/instance/Child_Vaccination_Followup/aefi"
-    }, {
       "name" : "reminders_approval",
       "bind" : "/model/instance/Child_Vaccination_Followup/reminders_approval"
     }, {
       "name" : "contact_phone_number",
       "bind" : "/model/instance/Child_Vaccination_Followup/contact_phone_number"
     }, {
-      "name" : "six_weeks",
-      "bind" : "/model/instance/Child_Vaccination_Followup/six_weeks"
+      "name" : "aefi",
+      "bind" : "/model/instance/Child_Vaccination_Followup/aefi"
     }, {
-      "name" : "ten_weeks",
-      "bind" : "/model/instance/Child_Vaccination_Followup/ten_weeks"
+      "name" : "bcg_note",
+      "bind" : "/model/instance/Child_Vaccination_Followup/bcg_note"
     }, {
-      "name" : "forteen_weeks",
-      "bind" : "/model/instance/Child_Vaccination_Followup/forteen_weeks"
+      "name" : "opv0_note",
+      "bind" : "/model/instance/Child_Vaccination_Followup/opv0_note"
     }, {
-      "name" : "nine_months",
-      "bind" : "/model/instance/Child_Vaccination_Followup/nine_months"
+      "name" : "opv1_note",
+      "bind" : "/model/instance/Child_Vaccination_Followup/opv1_note"
     }, {
-      "name" : "fifteen_months",
-      "bind" : "/model/instance/Child_Vaccination_Followup/fifteen_months"
+      "name" : "pcv1_note",
+      "bind" : "/model/instance/Child_Vaccination_Followup/pcv1_note"
+    }, {
+      "name" : "penta1_note",
+      "bind" : "/model/instance/Child_Vaccination_Followup/penta1_note"
+    }, {
+      "name" : "opv2_note",
+      "bind" : "/model/instance/Child_Vaccination_Followup/opv2_note"
+    }, {
+      "name" : "pcv2_note",
+      "bind" : "/model/instance/Child_Vaccination_Followup/pcv2_note"
+    }, {
+      "name" : "penta2_note",
+      "bind" : "/model/instance/Child_Vaccination_Followup/penta2_note"
+    }, {
+      "name" : "opv3_note",
+      "bind" : "/model/instance/Child_Vaccination_Followup/opv3_note"
+    }, {
+      "name" : "pcv3_note",
+      "bind" : "/model/instance/Child_Vaccination_Followup/pcv3_note"
+    }, {
+      "name" : "penta3_note",
+      "bind" : "/model/instance/Child_Vaccination_Followup/penta3_note"
+    }, {
+      "name" : "ipv_note",
+      "bind" : "/model/instance/Child_Vaccination_Followup/ipv_note"
+    }, {
+      "name" : "measles1_note",
+      "bind" : "/model/instance/Child_Vaccination_Followup/measles1_note"
+    }, {
+      "name" : "measles2_note",
+      "bind" : "/model/instance/Child_Vaccination_Followup/measles2_note"
     }, {
       "name" : "vaccines",
       "bind" : "/model/instance/Child_Vaccination_Followup/vaccines"

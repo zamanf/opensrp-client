@@ -1,23 +1,24 @@
 package org.ei.opensrp.vaccinator.child;
 
-import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
 import org.ei.opensrp.Context;
 import org.ei.opensrp.domain.Alert;
-import org.ei.opensrp.util.StringUtil;
 import org.ei.opensrp.vaccinator.R;
+import org.ei.opensrp.vaccinator.db.VaccineRepo;
 import org.ei.opensrp.vaccinator.woman.DetailActivity;
 import org.joda.time.DateTime;
 import org.joda.time.Months;
 import org.joda.time.Years;
 
 import java.util.List;
+import java.util.Map;
 
 import static util.Utils.addStatusTag;
 import static util.Utils.addVaccineDetail;
 import static util.Utils.convertDateFormat;
+import static util.Utils.generateSchedule;
 import static util.Utils.getDataRow;
 import static util.Utils.getValue;
 import static util.Utils.hasAnyEmptyValue;
@@ -45,8 +46,21 @@ public class ChildDetailActivity extends DetailActivity {
     }
 
     @Override
-    protected int profilePicResId() {
+    protected Integer profilePicContainerId() {
         return R.id.child_profilepic;
+    }
+
+    @Override
+    protected Integer defaultProfilePicResId() {
+        String gender = getValue(client, "gender", true);
+        if(gender.equalsIgnoreCase("female")){
+            return R.drawable.child_girl_infant;
+        }
+        else if(gender.toLowerCase().contains("trans")){
+            return R.drawable.child_transgender_inflant;
+        }
+
+        return R.drawable.child_boy_infant;
     }
 
     @Override
@@ -65,21 +79,10 @@ public class ChildDetailActivity extends DetailActivity {
 
     @Override
     protected void generateView() {
-        String gender = getValue(client, "gender", true);
-        if(gender.equalsIgnoreCase("male")){
-            ((ImageView)findViewById(R.id.child_profilepic)).setImageResource(R.drawable.child_boy_infant);
-        }
-        else if(gender.equalsIgnoreCase("female")){
-            ((ImageView)findViewById(R.id.child_profilepic)).setImageResource(R.drawable.child_girl_infant);
-        }
-        else if(gender.toLowerCase().contains("trans")){
-            ((ImageView)findViewById(R.id.child_profilepic)).setImageResource(R.drawable.child_transgender_inflant);
-        }
-
         //BASIC INFORMATION
         TableLayout dt = (TableLayout) findViewById(R.id.child_detail_info_table1);
 
-        //setting value in WOMAN basic information textviews
+        //setting value in basic information textviews
         TableRow tr = getDataRow(this, "Program ID", getEntityIdentifier(), null);
         dt.addView(tr);
 
@@ -89,7 +92,14 @@ public class ChildDetailActivity extends DetailActivity {
         tr = getDataRow(this, "Child`s Name", getValue(client, "first_name", true)+" "+getValue(client, "last_name", true), null);
         dt.addView(tr);
 
-        tr = getDataRow(this, "Birthdate (Age)", convertDateFormat(getValue(client.getColumnmaps(), "dob", false), true) + " (" + Months.monthsBetween(new DateTime(getValue(client.getColumnmaps(), "dob", false)), DateTime.now()).getMonths() + " months" + ")", null);
+        int months = -1;
+        try{
+            months = Months.monthsBetween(new DateTime(getValue(client.getColumnmaps(), "dob", false)), DateTime.now()).getMonths();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        tr = getDataRow(this, "Birthdate (Age)", convertDateFormat(getValue(client.getColumnmaps(), "dob", false), "No DoB", true) + " (" + (months < 0? "":(months+"")) + " months" + ")", null);
         dt.addView(tr);
 
         tr = getDataRow(this, "Gender", getValue(client, "gender", true), null);
@@ -120,24 +130,40 @@ public class ChildDetailActivity extends DetailActivity {
 
         //VACCINES INFORMATION
         TableLayout table = null;
-        for (int i=0; i < vl.length; i++) {
+
+        List<Alert> al = Context.getInstance().alertService().findByEntityIdAndAlertNames(client.entityId(),
+                "BCG", "OPV 0", "Penta 1", "OPV 1", "PCV 1", "Penta 2", "OPV 2", "PCV 2",
+                "Penta 3", "OPV 3", "PCV 3", "IPV", "Measles 1", "Measles2",
+                "bcg", "opv0", "penta1", "opv1", "pcv1", "penta2", "opv2", "pcv2",
+                "penta3", "opv3", "pcv3", "ipv", "measles1", "measles2");
+
+        List<Map<String, Object>> sch = generateSchedule("child", months < 0 ? null:new DateTime(client.getColumnmaps().get("dob")), client.getColumnmaps(), al);
+        int i = 0;
+        for (Map<String, Object> m : sch){
             if (i <= 7) {
                 table = (TableLayout) findViewById(R.id.child_vaccine_table1);
             } else {
                 table = (TableLayout) findViewById(R.id.child_vaccine_table2);
             }
-
-            String val = convertDateFormat(nonEmptyValue(client.getColumnmaps(), true, false, vl[i], vl[i] + "_retro"), true);
-            List<Alert> al = Context.getInstance().alertService().findByEntityIdAndAlertNames(client.entityId(), vl[i], vl[i].toUpperCase(), StringUtil.humanize(vl[i]));
-            addVaccineDetail(this, table, vl[i].length() <= 4 ? vl[i].toUpperCase() : StringUtil.humanize(vl[i]), val, al.size()>0?al.get(0):null, true);
+            addVaccineDetail(this, table, m.get("status").toString(), (VaccineRepo.Vaccine)m.get("vaccine"), (DateTime)m.get("date"), (Alert)m.get("alert"), true);
+            i++;
         }
 
-        int agey = Years.yearsBetween(new DateTime(getValue(client.getColumnmaps(), "dob", false)), DateTime.now()).getYears();
+        int agey = -1;
+        try{
+            agey = Years.yearsBetween(new DateTime(getValue(client.getColumnmaps(), "dob", false)), DateTime.now()).getYears();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
 
-        if(!hasAnyEmptyValue(client.getColumnmaps(), vl)){
+        if(agey < 0){
+            addStatusTag(this, table, "No DoB", true);
+        }
+        else if(!hasAnyEmptyValue(client.getColumnmaps(), "_retro", vl)){
             addStatusTag(this, table, "Fully Immunized", true);
         }
-        else if(agey >= 5 && hasAnyEmptyValue(client.getColumnmaps(), vl)){
+        else if(agey >= 5 && hasAnyEmptyValue(client.getColumnmaps(), "_retro", vl)){
             addStatusTag(this, table, "Partially Immunized", true);
         }
     }

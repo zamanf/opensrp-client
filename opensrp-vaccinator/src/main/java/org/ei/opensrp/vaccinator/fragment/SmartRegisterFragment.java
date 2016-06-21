@@ -7,14 +7,12 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 
+import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.CommonObjectFilterOption;
-import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
-import org.ei.opensrp.domain.form.FieldOverrides;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.util.StringUtil;
 import org.ei.opensrp.vaccinator.db.Client;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
-import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.contract.SmartRegisterClients;
 import org.ei.opensrp.view.controller.FormController;
 import org.ei.opensrp.view.dialog.DialogOption;
@@ -42,21 +40,6 @@ public abstract class SmartRegisterFragment extends SecuredNativeSmartRegisterFr
         super();
         this.formController1 = formController;
     }
-
-
-    public void startFollowupForm(String formName, SmartRegisterClient client, HashMap<String, String> overrideStringmap, ByColumnAndByDetails byColumnAndByDetails) {
-        if (overrideStringmap == null) {
-            org.ei.opensrp.util.Log.logDebug("overrides data is null");
-            formController1.startFormActivity(formName, client.entityId(), null);
-        } else {
-            overrideStringmap.putAll(providerOverrides());
-            String overrides = Utils.overridesToString(overrideStringmap, client, byColumnAndByDetails);
-            FieldOverrides fieldOverrides = new FieldOverrides(overrides);
-            org.ei.opensrp.util.Log.logDebug("fieldOverrides data is : " + fieldOverrides.getJSONString());
-            formController1.startFormActivity(formName, client.entityId(), fieldOverrides.getJSONString());
-        }
-    }
-
 
     @Override
     protected abstract SecuredNativeSmartRegisterActivity.DefaultOptionsProvider getDefaultOptionsProvider() ;
@@ -164,8 +147,8 @@ public abstract class SmartRegisterFragment extends SecuredNativeSmartRegisterFr
     protected abstract Map<String, String> customFieldOverrides();
 
     protected void showMessageDialog(String message, DialogInterface.OnClickListener ok) {
-        AlertDialog dialog = new AlertDialog.Builder(getActivity())
-                .setTitle(getString(org.ei.opensrp.R.string.error_title))
+        AlertDialog dialog = new AlertDialog.Builder(Context.getInstance().applicationContext())
+                .setTitle(getString(org.ei.opensrp.R.string.login_failed_dialog_title))
                 .setMessage(message)
                 .setPositiveButton("OK", ok)
                 .create();
@@ -174,8 +157,8 @@ public abstract class SmartRegisterFragment extends SecuredNativeSmartRegisterFr
     }
 
     protected void showMessageDialog(String message, DialogInterface.OnClickListener ok, DialogInterface.OnClickListener cancel) {
-        AlertDialog dialog = new AlertDialog.Builder(getActivity())
-                .setTitle(getString(org.ei.opensrp.R.string.error_title))
+        AlertDialog dialog = new AlertDialog.Builder(Context.getInstance().applicationContext())
+                .setTitle(getString(org.ei.opensrp.R.string.login_failed_dialog_title))
                 .setMessage(message)
                 .setPositiveButton("OK", ok)
                 .setNegativeButton("Cancel", cancel)

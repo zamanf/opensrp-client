@@ -22,7 +22,7 @@
             android:padding="1dp"
             android:adjustViewBounds="false" />
 
-        <TableLayout
+            <TableLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="4"

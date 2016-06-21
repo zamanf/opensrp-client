@@ -1,5 +1,6 @@
 package org.ei.opensrp.vaccinator.fragment;
 
+import android.content.Intent;
 import android.view.View;
 import android.widget.TextView;
 

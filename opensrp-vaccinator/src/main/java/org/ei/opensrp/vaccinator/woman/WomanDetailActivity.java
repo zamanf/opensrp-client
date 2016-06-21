@@ -7,14 +7,17 @@ import org.apache.commons.lang3.StringUtils;
 import org.ei.opensrp.Context;
 import org.ei.opensrp.domain.Alert;
 import org.ei.opensrp.vaccinator.R;
+import org.ei.opensrp.vaccinator.db.VaccineRepo;
 import org.joda.time.DateTime;
 import org.joda.time.Years;
 
 import java.util.List;
+import java.util.Map;
 
 import static util.Utils.addStatusTag;
 import static util.Utils.addVaccineDetail;
 import static util.Utils.convertDateFormat;
+import static util.Utils.generateSchedule;
 import static util.Utils.getDataRow;
 import static util.Utils.getValue;
 import static util.Utils.nonEmptyValue;
@@ -45,8 +48,13 @@ public class WomanDetailActivity extends DetailActivity {
     }
 
     @Override
-    protected int profilePicResId() {
+    protected Integer profilePicContainerId() {
         return R.id.woman_profilepic;
+    }
+
+    @Override
+    protected Integer defaultProfilePicResId() {
+        return R.drawable.pk_woman_icon;
     }
 
     @Override
@@ -78,8 +86,14 @@ public class WomanDetailActivity extends DetailActivity {
         tr = getDataRow(this, "Woman`s Name", getValue(client, "first_name", true), null);
         dt.addView(tr);
 
-        int age = Years.yearsBetween(new DateTime(getValue(client.getColumnmaps(), "dob", false)), DateTime.now()).getYears();
-        tr = getDataRow(this, "Birthdate (Age)", convertDateFormat(getValue(client.getColumnmaps(), "calc_dob_confirm_hhh", false), true) + " (" + age + " years)", null);
+        int age = -1;
+        try{
+            age = Years.yearsBetween(new DateTime(getValue(client.getColumnmaps(), "dob", false)), DateTime.now()).getYears();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        tr = getDataRow(this, "Birthdate (Age)", convertDateFormat(getValue(client.getColumnmaps(), "dob", false), "No DoB", true) + " (" + age + " years)", null);
         dt.addView(tr);
 
         tr = getDataRow(this, "Father`s Name", getValue(client, "father_name", true), null);
@@ -105,12 +119,15 @@ public class WomanDetailActivity extends DetailActivity {
 
         //VACCINES INFORMATION
         TableLayout table = (TableLayout) findViewById(R.id.woman_vaccine_table);
-        for (int i=1; i <= 5; i++){
-            String val = convertDateFormat(nonEmptyValue(client.getColumnmaps(), true, false, "tt" + i, "tt" + i + "_retro"), true);
-            List<Alert> al = Context.getInstance().alertService().findByEntityIdAndAlertNames(client.entityId(), "tt" + i, "TT " + i);
-            addVaccineDetail(this, table, "TT "+i, val, al.size()>0?al.get(0):null, false);
+        List<Alert> al = Context.getInstance().alertService().findByEntityIdAndAlertNames(client.entityId(), "TT 1", "TT 2", "TT 3", "TT 4", "TT 5", "tt1", "tt2", "tt3", "tt4", "tt5");
+        List<Map<String, Object>> sch = generateSchedule("woman", null, client.getColumnmaps(), al);
+        for (Map<String, Object> m : sch){
+            addVaccineDetail(this, table, m.get("status").toString(), (VaccineRepo.Vaccine) m.get("vaccine"), (DateTime) m.get("date"), (Alert) m.get("alert"), false);
         }
 
+        if(age < 0){
+            addStatusTag(this, table, "No DoB", true);
+        }
         if(StringUtils.isNotBlank(getValue(client.getColumnmaps(), "tt5", false))){
             addStatusTag(this, table, "Fully Immunized", true);
         }

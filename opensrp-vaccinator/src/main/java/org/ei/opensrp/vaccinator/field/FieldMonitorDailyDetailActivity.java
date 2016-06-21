@@ -12,10 +12,12 @@ import org.joda.time.DateTime;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 import static util.Utils.addToRow;
+import static util.Utils.convertDateFormat;
 import static util.Utils.getDataRow;
 import static util.Utils.getTotalUsed;
 import static util.Utils.getValue;
@@ -43,9 +45,10 @@ public class FieldMonitorDailyDetailActivity extends DetailActivity {
     }
 
     @Override
-    protected int profilePicResId() {
-        return -1;
-    }
+    protected Integer profilePicContainerId() { return null; }
+
+    @Override
+    protected Integer defaultProfilePicResId(){ return null; };
 
     @Override
     protected String bindType() {

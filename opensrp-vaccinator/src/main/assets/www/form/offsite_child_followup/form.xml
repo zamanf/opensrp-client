@@ -3,7 +3,7 @@
     <section class="form-logo"> </section>
     <h3 id="form-title">دوسرے سینٹر میں رجسٹرڈ بچّوں کا فالو اپ رجسٹر برائے ٹیکاجات - Off Site Child Follow Up Vaccination Register</h3>
     <select id="form-languages" data-default-lang="en">
-        <option value="ur">Urdu</option> <option value="en">English</option>  <option value="Roman Urdu">Roman Urdu</option> </select>        <label class="note non-select ">
+        <option value="ur">Urdu</option> <option value="en">English</option> <option value="Roman Urdu">Roman Urdu</option> </select>        <label class="note non-select ">
     <span lang="ur" class="question-label " data-itext-id="/Offsite_Child_Vaccination_Followup/provider_location_note:label">شہر: <span class="or-output" data-value=" /Offsite_Child_Vaccination_Followup/provider_city ">            </span> ; ٹائون: <span class="or-output" data-value=" /Offsite_Child_Vaccination_Followup/provider_town ">            </span> ; یوسی: <span class="or-output" data-value=" /Offsite_Child_Vaccination_Followup/provider_uc ">            </span> ; سینٹرکا نام: <span class="or-output" data-value=" /Offsite_Child_Vaccination_Followup/provider_location_name ">            </span>
     </span>
     <span lang="en" class="question-label active" data-itext-id="/Offsite_Child_Vaccination_Followup/provider_location_note:label">City: <span class="or-output" data-value=" /Offsite_Child_Vaccination_Followup/provider_city ">            </span> ; Town: <span class="or-output" data-value=" /Offsite_Child_Vaccination_Followup/provider_town ">            </span> ; UC: <span class="or-output" data-value=" /Offsite_Child_Vaccination_Followup/provider_uc ">            </span> ; Center Name: <span class="or-output" data-value=" /Offsite_Child_Vaccination_Followup/provider_location_name ">            </span>
@@ -1049,9 +1049,8 @@
     <span lang="en" class="question-label active" data-itext-id="/Offsite_Child_Vaccination_Followup/center_gps:label">Collect GPS coordinates of data entry location:</span>
 
     <span lang="Roman Urdu" class="question-label " data-itext-id="/Offsite_Child_Vaccination_Followup/center_gps:label">Hasil karda malomaat ki jaga ke GPS coordinates darj karain</span>
-    <span class="required">*</span>
     <span lang="" class="or-hint active">GPS coordinates can only be collected when outside.</span>
-    <input type="text" name="/Offsite_Child_Vaccination_Followup/center_gps" required="required" data-type-xml="geopoint"/>
+    <input type="text" name="/Offsite_Child_Vaccination_Followup/center_gps" data-type-xml="geopoint"/>
 </label>    <label class="note non-select ">
     <span lang="ur" class="question-label " data-itext-id="/Offsite_Child_Vaccination_Followup/child_was_suffering_from_a_disease_at_birth_note:label">کیا بچہ پیدائش کے وقت کسی مرض میں مبتلا تھا؟ <span class="or-output" data-value=" /Offsite_Child_Vaccination_Followup/existing_child_was_suffering_from_a_disease_at_birth ">            </span>
     </span>
@@ -1246,59 +1245,59 @@
     <span class="itemset-labels" data-value-ref="name" data-label-type="itext" data-label-ref="itextId">
         <span lang="ur" class="option-label " data-itext-id="static_instance-vaccines-0">بی سی جی</span>
         <span lang="en" class="option-label active" data-itext-id="static_instance-vaccines-0">BCG</span>
-
+        <span lang="openmrs_code" class="option-label " data-itext-id="static_instance-vaccines-0">1570AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</span>
         <span lang="Roman Urdu" class="option-label " data-itext-id="static_instance-vaccines-0">BCG</span>
         <span lang="ur" class="option-label " data-itext-id="static_instance-vaccines-1">او پی وی 0</span>
         <span lang="en" class="option-label active" data-itext-id="static_instance-vaccines-1">OPV 0</span>
-
+        <span lang="openmrs_code" class="option-label " data-itext-id="static_instance-vaccines-1">783AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</span>
         <span lang="Roman Urdu" class="option-label " data-itext-id="static_instance-vaccines-1">OPV 0</span>
         <span lang="ur" class="option-label " data-itext-id="static_instance-vaccines-2">پی سی وی 1</span>
         <span lang="en" class="option-label active" data-itext-id="static_instance-vaccines-2">PCV 1</span>
-
+        <span lang="openmrs_code" class="option-label " data-itext-id="static_instance-vaccines-2">162342AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</span>
         <span lang="Roman Urdu" class="option-label " data-itext-id="static_instance-vaccines-2">PCV 1</span>
         <span lang="ur" class="option-label " data-itext-id="static_instance-vaccines-3">او پی وی 1</span>
         <span lang="en" class="option-label active" data-itext-id="static_instance-vaccines-3">OPV 1</span>
-
+        <span lang="openmrs_code" class="option-label " data-itext-id="static_instance-vaccines-3">783AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</span>
         <span lang="Roman Urdu" class="option-label " data-itext-id="static_instance-vaccines-3">OPV 1</span>
         <span lang="ur" class="option-label " data-itext-id="static_instance-vaccines-4">پینٹا ویلنٹ 1</span>
         <span lang="en" class="option-label active" data-itext-id="static_instance-vaccines-4">Pentavalent 1</span>
-
+        <span lang="openmrs_code" class="option-label " data-itext-id="static_instance-vaccines-4">162339AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</span>
         <span lang="Roman Urdu" class="option-label " data-itext-id="static_instance-vaccines-4">Pentavalent 1</span>
         <span lang="ur" class="option-label " data-itext-id="static_instance-vaccines-5">پی سی وی 2</span>
         <span lang="en" class="option-label active" data-itext-id="static_instance-vaccines-5">PCV 2</span>
-
+        <span lang="openmrs_code" class="option-label " data-itext-id="static_instance-vaccines-5">162342AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</span>
         <span lang="Roman Urdu" class="option-label " data-itext-id="static_instance-vaccines-5">PCV 2</span>
         <span lang="ur" class="option-label " data-itext-id="static_instance-vaccines-6">او پی وی 2</span>
         <span lang="en" class="option-label active" data-itext-id="static_instance-vaccines-6">OPV 2</span>
-
+        <span lang="openmrs_code" class="option-label " data-itext-id="static_instance-vaccines-6">783AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</span>
         <span lang="Roman Urdu" class="option-label " data-itext-id="static_instance-vaccines-6">OPV 2</span>
         <span lang="ur" class="option-label " data-itext-id="static_instance-vaccines-7">پینٹا ویلنٹ 2</span>
         <span lang="en" class="option-label active" data-itext-id="static_instance-vaccines-7">Pentavalent 2</span>
-
+        <span lang="openmrs_code" class="option-label " data-itext-id="static_instance-vaccines-7">162339AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</span>
         <span lang="Roman Urdu" class="option-label " data-itext-id="static_instance-vaccines-7">Pentavalent 2</span>
         <span lang="ur" class="option-label " data-itext-id="static_instance-vaccines-8">پی سی وی 3</span>
         <span lang="en" class="option-label active" data-itext-id="static_instance-vaccines-8">PCV 3</span>
-
+        <span lang="openmrs_code" class="option-label " data-itext-id="static_instance-vaccines-8">162342AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</span>
         <span lang="Roman Urdu" class="option-label " data-itext-id="static_instance-vaccines-8">PCV 3</span>
         <span lang="ur" class="option-label " data-itext-id="static_instance-vaccines-9">او پی وی 3</span>
         <span lang="en" class="option-label active" data-itext-id="static_instance-vaccines-9">OPV 3</span>
-
+        <span lang="openmrs_code" class="option-label " data-itext-id="static_instance-vaccines-9">783AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</span>
         <span lang="Roman Urdu" class="option-label " data-itext-id="static_instance-vaccines-9">OPV 3</span>
         <span lang="ur" class="option-label " data-itext-id="static_instance-vaccines-10">پینٹا ویلنٹ 3</span>
         <span lang="en" class="option-label active" data-itext-id="static_instance-vaccines-10">Pentavalent 3</span>
-
+        <span lang="openmrs_code" class="option-label " data-itext-id="static_instance-vaccines-10">162339AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</span>
         <span lang="Roman Urdu" class="option-label " data-itext-id="static_instance-vaccines-10">Pentavalent 3</span>
         <span lang="ur" class="option-label " data-itext-id="static_instance-vaccines-11">آئی پی وی</span>
         <span lang="en" class="option-label active" data-itext-id="static_instance-vaccines-11">IPV</span>
-
+        <span lang="openmrs_code" class="option-label " data-itext-id="static_instance-vaccines-11">82242AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</span>
         <span lang="Roman Urdu" class="option-label " data-itext-id="static_instance-vaccines-11">IPV</span>
         <span lang="ur" class="option-label " data-itext-id="static_instance-vaccines-12">خسرہ 1</span>
         <span lang="en" class="option-label active" data-itext-id="static_instance-vaccines-12">Measles 1</span>
-
+        <span lang="openmrs_code" class="option-label " data-itext-id="static_instance-vaccines-12">79409AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</span>
         <span lang="Roman Urdu" class="option-label " data-itext-id="static_instance-vaccines-12">Khasra 1</span>
         <span lang="ur" class="option-label " data-itext-id="static_instance-vaccines-13">خسرہ 2</span>
         <span lang="en" class="option-label active" data-itext-id="static_instance-vaccines-13">Measles 2</span>
-
+        <span lang="openmrs_code" class="option-label " data-itext-id="static_instance-vaccines-13">79409AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</span>
         <span lang="Roman Urdu" class="option-label " data-itext-id="static_instance-vaccines-13">Khasra 2</span>            </span>
 </label>    <section class="or-group-data " name="/Offsite_Child_Vaccination_Followup/vaccines_group">
     <label class="question or-branch pre-init non-select ">
@@ -1468,59 +1467,59 @@
     <span class="itemset-labels" data-value-ref="name" data-label-type="itext" data-label-ref="itextId">
         <span lang="ur" class="option-label " data-itext-id="static_instance-vaccines-0">بی سی جی</span>
         <span lang="en" class="option-label active" data-itext-id="static_instance-vaccines-0">BCG</span>
-
+        <span lang="openmrs_code" class="option-label " data-itext-id="static_instance-vaccines-0">1570AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</span>
         <span lang="Roman Urdu" class="option-label " data-itext-id="static_instance-vaccines-0">BCG</span>
         <span lang="ur" class="option-label " data-itext-id="static_instance-vaccines-1">او پی وی 0</span>
         <span lang="en" class="option-label active" data-itext-id="static_instance-vaccines-1">OPV 0</span>
-
+        <span lang="openmrs_code" class="option-label " data-itext-id="static_instance-vaccines-1">783AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</span>
         <span lang="Roman Urdu" class="option-label " data-itext-id="static_instance-vaccines-1">OPV 0</span>
         <span lang="ur" class="option-label " data-itext-id="static_instance-vaccines-2">پی سی وی 1</span>
         <span lang="en" class="option-label active" data-itext-id="static_instance-vaccines-2">PCV 1</span>
-
+        <span lang="openmrs_code" class="option-label " data-itext-id="static_instance-vaccines-2">162342AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</span>
         <span lang="Roman Urdu" class="option-label " data-itext-id="static_instance-vaccines-2">PCV 1</span>
         <span lang="ur" class="option-label " data-itext-id="static_instance-vaccines-3">او پی وی 1</span>
         <span lang="en" class="option-label active" data-itext-id="static_instance-vaccines-3">OPV 1</span>
-
+        <span lang="openmrs_code" class="option-label " data-itext-id="static_instance-vaccines-3">783AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</span>
         <span lang="Roman Urdu" class="option-label " data-itext-id="static_instance-vaccines-3">OPV 1</span>
         <span lang="ur" class="option-label " data-itext-id="static_instance-vaccines-4">پینٹا ویلنٹ 1</span>
         <span lang="en" class="option-label active" data-itext-id="static_instance-vaccines-4">Pentavalent 1</span>
-
+        <span lang="openmrs_code" class="option-label " data-itext-id="static_instance-vaccines-4">162339AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</span>
         <span lang="Roman Urdu" class="option-label " data-itext-id="static_instance-vaccines-4">Pentavalent 1</span>
         <span lang="ur" class="option-label " data-itext-id="static_instance-vaccines-5">پی سی وی 2</span>
         <span lang="en" class="option-label active" data-itext-id="static_instance-vaccines-5">PCV 2</span>
-
+        <span lang="openmrs_code" class="option-label " data-itext-id="static_instance-vaccines-5">162342AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</span>
         <span lang="Roman Urdu" class="option-label " data-itext-id="static_instance-vaccines-5">PCV 2</span>
         <span lang="ur" class="option-label " data-itext-id="static_instance-vaccines-6">او پی وی 2</span>
         <span lang="en" class="option-label active" data-itext-id="static_instance-vaccines-6">OPV 2</span>
-
+        <span lang="openmrs_code" class="option-label " data-itext-id="static_instance-vaccines-6">783AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</span>
         <span lang="Roman Urdu" class="option-label " data-itext-id="static_instance-vaccines-6">OPV 2</span>
         <span lang="ur" class="option-label " data-itext-id="static_instance-vaccines-7">پینٹا ویلنٹ 2</span>
         <span lang="en" class="option-label active" data-itext-id="static_instance-vaccines-7">Pentavalent 2</span>
-
+        <span lang="openmrs_code" class="option-label " data-itext-id="static_instance-vaccines-7">162339AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</span>
         <span lang="Roman Urdu" class="option-label " data-itext-id="static_instance-vaccines-7">Pentavalent 2</span>
         <span lang="ur" class="option-label " data-itext-id="static_instance-vaccines-8">پی سی وی 3</span>
         <span lang="en" class="option-label active" data-itext-id="static_instance-vaccines-8">PCV 3</span>
-
+        <span lang="openmrs_code" class="option-label " data-itext-id="static_instance-vaccines-8">162342AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</span>
         <span lang="Roman Urdu" class="option-label " data-itext-id="static_instance-vaccines-8">PCV 3</span>
         <span lang="ur" class="option-label " data-itext-id="static_instance-vaccines-9">او پی وی 3</span>
         <span lang="en" class="option-label active" data-itext-id="static_instance-vaccines-9">OPV 3</span>
-
+        <span lang="openmrs_code" class="option-label " data-itext-id="static_instance-vaccines-9">783AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</span>
         <span lang="Roman Urdu" class="option-label " data-itext-id="static_instance-vaccines-9">OPV 3</span>
         <span lang="ur" class="option-label " data-itext-id="static_instance-vaccines-10">پینٹا ویلنٹ 3</span>
         <span lang="en" class="option-label active" data-itext-id="static_instance-vaccines-10">Pentavalent 3</span>
-
+        <span lang="openmrs_code" class="option-label " data-itext-id="static_instance-vaccines-10">162339AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</span>
         <span lang="Roman Urdu" class="option-label " data-itext-id="static_instance-vaccines-10">Pentavalent 3</span>
         <span lang="ur" class="option-label " data-itext-id="static_instance-vaccines-11">آئی پی وی</span>
         <span lang="en" class="option-label active" data-itext-id="static_instance-vaccines-11">IPV</span>
-
+        <span lang="openmrs_code" class="option-label " data-itext-id="static_instance-vaccines-11">82242AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</span>
         <span lang="Roman Urdu" class="option-label " data-itext-id="static_instance-vaccines-11">IPV</span>
         <span lang="ur" class="option-label " data-itext-id="static_instance-vaccines-12">خسرہ 1</span>
         <span lang="en" class="option-label active" data-itext-id="static_instance-vaccines-12">Measles 1</span>
-
+        <span lang="openmrs_code" class="option-label " data-itext-id="static_instance-vaccines-12">79409AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</span>
         <span lang="Roman Urdu" class="option-label " data-itext-id="static_instance-vaccines-12">Khasra 1</span>
         <span lang="ur" class="option-label " data-itext-id="static_instance-vaccines-13">خسرہ 2</span>
         <span lang="en" class="option-label active" data-itext-id="static_instance-vaccines-13">Measles 2</span>
-
+        <span lang="openmrs_code" class="option-label " data-itext-id="static_instance-vaccines-13">79409AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</span>
         <span lang="Roman Urdu" class="option-label " data-itext-id="static_instance-vaccines-13">Khasra 2</span>            </span>
 </label>    <label class="question non-select ">
     <span lang="ur" class="question-label " data-itext-id="/Offsite_Child_Vaccination_Followup/vaccination_date:label">تاریخ</span>

@@ -403,6 +403,37 @@ public class CESQLiteHelper extends SQLiteOpenHelper {
 		}
 		return elist;
 	}
+
+	public List<Obs> getObs(String baseEntityId, String eventType, String order, String... fields) throws JSONException, ParseException {
+		List<Obs> olist = new ArrayList<Obs>();
+		Cursor ores = getDatabase().rawQuery("SELECT * FROM " + Table.obs.name() +" obs "+
+				" JOIN "+Table.event.name()+" e ON e."+event_column.eventId.name()+"= obs."+obs_column.eventId.name()+
+				" WHERE e." + event_column.baseEntityId.name() + "='" + baseEntityId + "' " +
+				" AND obs."+obs_column.values.name()+" IS NOT NULL " +
+				" AND obs."+obs_column.values.name()+" <> '' " +
+				" AND obs."+obs_column.values.name()+" <> '[]' " +
+				(StringUtils.isBlank(eventType)?"":" AND e."+event_column.eventType.name()+"='"+eventType+"' ")+
+				(fields != null && fields.length > 0? (" AND (obs."+obs_column.fieldCode.name()+" IN ("+StringUtils.join(fields)+") " +
+						" OR obs."+obs_column.formSubmissionField.name()+" IN ("+StringUtils.join(fields)+") )"):"")+
+				(StringUtils.isBlank(order)?"":" ORDER BY "+order+"' ")
+				, null);
+		while (ores.moveToNext()) {
+			JSONObject ov = new JSONObject();
+			for (Column oc : Table.obs.columns()) {
+				ov.put(oc.name(), getValue(ores, oc));
+			}
+
+			Log.i("mytag", "HHHHHHHHHHHHHHHHH"+ov.toString());
+			Gson g = new GsonBuilder().registerTypeAdapter(DateTime.class, new JsonDeserializer<DateTime>() {
+				@Override
+				public DateTime deserialize(JsonElement e, java.lang.reflect.Type t, JsonDeserializationContext jd) throws JsonParseException {
+					return new DateTime(e.getAsString());
+				}
+			}).create();
+			olist.add(g.fromJson(ov.toString(), Obs.class));
+		}
+		return olist;
+	}
 	
 	private Object getValue(Cursor cur, Column c) throws JSONException, ParseException {
 		int ind = cur.getColumnIndex(c.name());

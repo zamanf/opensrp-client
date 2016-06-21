@@ -25,7 +25,7 @@
             android:layout_weight="5"
             android:id="@+id/woman_detail_info_table1"
             android:background="@drawable/listview_background_rounded"
-            android:layout_margin="10dp"
+            android:layout_margin="20dp"
             android:layout_gravity="center_horizontal"
             android:padding="10dp">
         </TableLayout>
@@ -36,7 +36,7 @@
             android:layout_weight="6"
             android:id="@+id/woman_detail_info_table2"
             android:background="@drawable/listview_background_rounded"
-            android:layout_margin="10dp"
+            android:layout_margin="20dp"
             android:layout_gravity="center_horizontal"
             android:padding="10dp">
         </TableLayout>

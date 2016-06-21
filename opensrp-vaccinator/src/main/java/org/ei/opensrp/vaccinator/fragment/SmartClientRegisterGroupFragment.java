@@ -19,6 +19,7 @@ import org.ei.opensrp.vaccinator.R;
 import org.ei.opensrp.vaccinator.db.CESQLiteHelper;
 import org.ei.opensrp.vaccinator.db.Client;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
+import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.contract.SmartRegisterClients;
 import org.ei.opensrp.view.controller.FormController;
 import org.ei.opensrp.view.dialog.DialogOption;
@@ -167,9 +168,23 @@ public abstract class SmartClientRegisterGroupFragment extends SmartRegisterFrag
         formController1.startFormActivity(getRegistrationForm(overrides), null, new FieldOverrides(new JSONObject(overrides).toString()).getJSONString());
     }
 
-    private void startFollowupForm(Client client, HashMap<String, String> overrides){
+    public void startFollowupForm(Client client, HashMap<String, String> overrides){
         overrides.putAll(providerOverrides());
         formController1.startFormActivity(getOAFollowupForm(client, overrides), client.getBaseEntityId(), new FieldOverrides(new JSONObject(overrides).toString()).getJSONString());
+    }
+
+    protected void startFollowupForm(String formName, SmartRegisterClient client, HashMap<String, String> overrideStringmap, ByColumnAndByDetails byColumnAndByDetails) {
+        if (overrideStringmap == null) {
+            org.ei.opensrp.util.Log.logDebug("overrides data is null");
+            formController1.startFormActivity(formName, client.entityId(), null);
+        } else {
+            overrideStringmap.putAll(providerOverrides());
+
+            String overrides = Utils.overridesToString(overrideStringmap, client, byColumnAndByDetails);
+            FieldOverrides fieldOverrides = new FieldOverrides(overrides);
+            org.ei.opensrp.util.Log.logDebug("fieldOverrides data is : " + fieldOverrides.getJSONString());
+            formController1.startFormActivity(formName, client.entityId(), fieldOverrides.getJSONString());
+        }
     }
 
     private void startNewMemberRegistrationForm( HashMap<String, String> overrides){

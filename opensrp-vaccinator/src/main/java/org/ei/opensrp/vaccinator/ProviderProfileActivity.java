@@ -31,7 +31,7 @@ public class ProviderProfileActivity extends Activity {
         String programId = nonEmptyValue(providerdt, true, false, "provider_id");
         ((TextView)findViewById(R.id.details_id_label)).setText(programId);
 
-        ((TextView)findViewById(R.id.detail_today)).setText("Today: "+convertDateFormat(new SimpleDateFormat("yyyy-MM-dd").format(new Date()), true));
+        ((TextView)findViewById(R.id.report_detail_today)).setText("Today: "+convertDateFormat(new SimpleDateFormat("yyyy-MM-dd").format(new Date()), true));
 
         //BASIC INFORMATION
         TableLayout dt = (TableLayout) findViewById(R.id.report_detail_info_table1);
