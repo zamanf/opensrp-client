@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <model>
     <instance>
 		<Offsite_Child_Vaccination_Followup encounter_type="Off Site Child Vaccination Follow Up" id="offsite_child_vaccination_followup" version="201606060554">

@@ -31,13 +31,14 @@ import java.util.List;
 import java.util.Map;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
-import static util.Utils.*;
+import static util.Utils.convertDateFormat;
 import static util.Utils.fillValue;
 import static util.Utils.generateSchedule;
 import static util.Utils.getValue;
 import static util.Utils.nextVaccineDue;
 import static util.Utils.nonEmptyValue;
 import static util.Utils.setProfiePic;
+import static util.Utils.toDate;
 
 /**
  * Created by Ahmed on 19-Oct-15.

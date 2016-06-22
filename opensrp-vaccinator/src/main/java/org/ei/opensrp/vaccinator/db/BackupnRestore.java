@@ -3,12 +3,13 @@ package org.ei.opensrp.vaccinator.db;
 /**
  * Created by Safwan on 5/5/2016.
  */
+
+import android.os.Environment;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.channels.FileChannel;
-
-import android.os.Environment;
 
 public class BackupnRestore {
 

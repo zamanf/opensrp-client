@@ -18,10 +18,42 @@
                 android:orientation="horizontal"
             android:layout_gravity="center_vertical"
             android:layout_marginBottom="30dp">
+
             <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
-                android:layout_weight="1"></FrameLayout>
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1">
+
+                <ImageButton
+                    android:id="@+id/btn_household_register"
+                    style="@style/ImageButton.Home.Register"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/register_household" />
+
+                <org.ei.opensrp.view.customControls.CustomFontTextView
+                    style="@style/CustomFontTextViewStyle.Home.RegisterName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/home_household_label" />
+
+                <org.ei.opensrp.view.customControls.CustomFontTextView
+                    style="@style/CustomFontTextViewStyle.Home.RegisterLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/register_label" />
+
+                <org.ei.opensrp.view.customControls.CustomFontTextView
+                    android:id="@+id/txt_household_register_client_count"
+                    style="@style/CustomFontTextViewStyle.Badge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="20" />
+
+            </FrameLayout>
 
             <FrameLayout
                 android:layout_width="0dp"

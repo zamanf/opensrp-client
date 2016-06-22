@@ -18,8 +18,6 @@ import org.ei.opensrp.service.PendingFormSubmissionService;
 import org.ei.opensrp.sync.SyncAfterFetchListener;
 import org.ei.opensrp.sync.SyncProgressIndicator;
 import org.ei.opensrp.sync.UpdateActionsTask;
-import org.ei.opensrp.vaccinator.analytics.CountlyAnalytics;
-import org.ei.opensrp.vaccinator.analytics.Events;
 import org.ei.opensrp.vaccinator.household.HouseholdSmartRegisterActivity;
 import org.ei.opensrp.view.activity.SecuredActivity;
 import org.ei.opensrp.view.contract.HomeContext;
@@ -27,8 +25,6 @@ import org.ei.opensrp.view.controller.NativeAfterANMDetailsFetchListener;
 import org.ei.opensrp.view.controller.NativeUpdateANMDetailsTask;
 
 import java.util.HashMap;
-
-//import ly.count.android.sdk.Countly;
 
 import ly.count.android.sdk.Countly;
 
@@ -38,6 +34,8 @@ import static org.ei.opensrp.event.Event.ACTION_HANDLED;
 import static org.ei.opensrp.event.Event.FORM_SUBMITTED;
 import static org.ei.opensrp.event.Event.SYNC_COMPLETED;
 import static org.ei.opensrp.event.Event.SYNC_STARTED;
+
+//import ly.count.android.sdk.Countly;
 
 public class NativeHomeActivity extends SecuredActivity {
     private MenuItem updateMenuItem;
@@ -220,8 +218,6 @@ public class NativeHomeActivity extends SecuredActivity {
                 context.allBeneficiaries(), context.listCache(),
                 context.personObjectClientsCache(), "date", "stock", "report", "monthly", CommonPersonObjectController.ByColumnAndByDetails.byColumn, "report",
                 CommonPersonObjectController.ByColumnAndByDetails.byColumn );
-
-
 
        // ecRegisterClientCountView.setText(valueOf(hhcontroller.getClients().size()));
         womanRegisterClientCountView.setText(valueOf(womanController.getClients().size()));

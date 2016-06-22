@@ -7,8 +7,8 @@ import org.ei.opensrp.Context;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import ly.count.android.sdk.Countly;
 
+import ly.count.android.sdk.Countly;
 import util.Utils;
 
 /**

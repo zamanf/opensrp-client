@@ -18,7 +18,6 @@ import org.ei.opensrp.vaccinator.application.common.DateSort;
 import org.ei.opensrp.vaccinator.application.common.StatusSort;
 import org.ei.opensrp.vaccinator.db.CESQLiteHelper;
 import org.ei.opensrp.vaccinator.db.Client;
-import org.ei.opensrp.vaccinator.application.template.SmartRegisterFragment;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.contract.SmartRegisterClients;

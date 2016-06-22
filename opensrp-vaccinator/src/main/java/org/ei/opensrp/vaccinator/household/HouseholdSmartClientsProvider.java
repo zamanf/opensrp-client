@@ -77,7 +77,7 @@ public class HouseholdSmartClientsProvider implements SmartRegisterClientsProvid
         memberAdd.setBackgroundColor(context.getResources().getColor(R.color.alert_normal));
 
 
-        setProfiePic(parentView.getContext(), (ImageView) parentView.findViewById(R.id.household_profilepic), client.entityId(), false);
+        setProfiePic(parentView.getContext(), (ImageView) parentView.findViewById(R.id.household_profilepic), client.entityId(), null);
 
         parentView.findViewById(R.id.household_profile_info_layout).setTag(client);
         parentView.findViewById(R.id.household_profile_info_layout).setOnClickListener(onClickListener);

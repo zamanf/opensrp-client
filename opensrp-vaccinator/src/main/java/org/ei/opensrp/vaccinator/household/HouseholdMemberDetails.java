@@ -1,7 +1,5 @@
 package org.ei.opensrp.vaccinator.household;
 
-import android.graphics.drawable.Drawable;
-
 /**
  * Created by Safwan on 5/10/2016.
  */

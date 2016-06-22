@@ -1,9 +1,8 @@
 package org.ei.opensrp.vaccinator.household;
 
-import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
+import org.ei.opensrp.vaccinator.application.template.SmartRegisterActivity;
+import org.ei.opensrp.vaccinator.application.template.SmartRegisterFragment;
 import org.ei.opensrp.vaccinator.fragment.HouseholdSmartRegisterFragment;
-import org.ei.opensrp.vaccinator.fragment.SmartRegisterActivity;
-import org.ei.opensrp.vaccinator.fragment.SmartRegisterFragment;
 import org.ei.opensrp.view.controller.FormController;
 
 import java.util.ArrayList;

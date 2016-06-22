@@ -1,9 +1,6 @@
 package org.ei.opensrp.vaccinator.household;
 
-import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -11,25 +8,15 @@ import android.widget.TextView;
 
 import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.CommonPersonObject;
-import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
-import org.ei.opensrp.domain.form.FieldOverrides;
 import org.ei.opensrp.util.StringUtil;
 import org.ei.opensrp.vaccinator.R;
 import org.ei.opensrp.vaccinator.adapter.HouseholdMemberAdapter;
-import org.ei.opensrp.vaccinator.fragment.HouseholdSmartRegisterFragment;
-import org.ei.opensrp.vaccinator.fragment.SmartRegisterFragment;
-import org.ei.opensrp.vaccinator.woman.DetailActivity;
-import org.ei.opensrp.view.contract.SmartRegisterClient;
-import org.ei.opensrp.view.controller.FormController;
+import org.ei.opensrp.vaccinator.application.template.DetailActivity;
 import org.joda.time.DateTime;
 import org.joda.time.Years;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import util.Utils;
 
 import static util.Utils.convertDateFormat;
 import static util.Utils.getDataRow;

@@ -8,15 +8,14 @@ import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.commonregistry.CommonPersonObjectController;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.vaccinator.R;
+import org.ei.opensrp.vaccinator.application.common.VaccinationServiceModeOption;
+import org.ei.opensrp.vaccinator.application.template.DetailActivity;
 import org.ei.opensrp.vaccinator.application.template.SmartClientRegisterFragment;
 import org.ei.opensrp.vaccinator.db.Client;
-import org.ei.opensrp.vaccinator.application.template.DetailActivity;
-import org.ei.opensrp.vaccinator.application.common.VaccinationServiceModeOption;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.controller.FormController;
 import org.ei.opensrp.view.dialog.AllClientsFilter;
-import org.ei.opensrp.view.dialog.DialogOptionMapper;
 import org.ei.opensrp.view.dialog.FilterOption;
 import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
@@ -32,15 +31,10 @@ import static util.Utils.getObsValue;
 import static util.Utils.getValue;
 import static util.Utils.nonEmptyValue;
 
-/**
- * Created by Safwan on 2/12/2016.
- */
 public class ChildSmartRegisterFragment extends SmartClientRegisterFragment {
     private SmartRegisterClientsProvider clientProvider = null;
     private final ClientActionHandler clientActionHandler = new ClientActionHandler();
     private CommonPersonObjectController controller;
-    private DialogOptionMapper dialogOptionMapper;
-    private Map<String, String> locations = new HashMap<String, String>();
 
     public ChildSmartRegisterFragment(){   super(null);   }
 
@@ -108,7 +102,7 @@ public class ChildSmartRegisterFragment extends SmartClientRegisterFragment {
     }
 
     @Override
-    protected void onCreation() {}
+    protected void onCreation() { }
 
     private class ClientActionHandler implements View.OnClickListener {
         @Override
@@ -258,6 +252,5 @@ public class ChildSmartRegisterFragment extends SmartClientRegisterFragment {
             e.printStackTrace();
         }
         return map;
-
     }
 }
