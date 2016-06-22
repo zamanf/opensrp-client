@@ -236,6 +236,6 @@ public class HouseholdDetailActivity extends DetailActivity {
     }
 
     public String getEntityIdentifier() {
-        return nonEmptyValue(client.getColumnmaps(), true, false, "existing_household_id", "household_id");
+        return nonEmptyValue(client.getColumnmaps(), true, false, "existing_household_id");
     }
 }
