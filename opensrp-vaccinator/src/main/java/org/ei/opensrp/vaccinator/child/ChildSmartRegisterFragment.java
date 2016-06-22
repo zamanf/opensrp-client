@@ -1,4 +1,4 @@
-package org.ei.opensrp.vaccinator.fragment;
+package org.ei.opensrp.vaccinator.child;
 
 import android.view.View;
 
@@ -8,12 +8,10 @@ import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.commonregistry.CommonPersonObjectController;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.vaccinator.R;
-import org.ei.opensrp.vaccinator.child.ChildDetailActivity;
-import org.ei.opensrp.vaccinator.child.ChildFollowupHandler;
-import org.ei.opensrp.vaccinator.child.ChildService;
-import org.ei.opensrp.vaccinator.child.ChildSmartClientsProvider;
+import org.ei.opensrp.vaccinator.application.template.SmartClientRegisterFragment;
 import org.ei.opensrp.vaccinator.db.Client;
-import org.ei.opensrp.vaccinator.woman.DetailActivity;
+import org.ei.opensrp.vaccinator.application.template.DetailActivity;
+import org.ei.opensrp.vaccinator.application.common.VaccinationServiceModeOption;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.controller.FormController;
@@ -101,7 +99,12 @@ public class ChildSmartRegisterFragment extends SmartClientRegisterFragment {
                     CommonPersonObjectController.ByColumnAndByDetails.byDetails.byDetails);
 
         }
-        context.formSubmissionRouter().getHandlerMap().put("child_followup", new ChildFollowupHandler(new ChildService(context.allBeneficiaries(), context.allTimelineEvents(), context.allCommonsRepositoryobjects("pkchild"), context.alertService())));
+        try{
+         //   context.formSubmissionRouter().getHandlerMap().put("child_followup", new ChildFollowupHandler(new ChildService(context.allBeneficiaries(), context.allTimelineEvents(), context.allCommonsRepositoryobjects("pkchild"), context.alertService())));
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -120,7 +123,7 @@ public class ChildSmartRegisterFragment extends SmartClientRegisterFragment {
                     CommonPersonObjectClient client = (CommonPersonObjectClient) view.getTag();
                     map.putAll(followupOverrides(client));
                     map.putAll(providerOverrides());
-                    startFollowupForm("child_followup", (SmartRegisterClient) view.getTag(), map, SmartRegisterFragment.ByColumnAndByDetails.byDefault);
+                    startForm("child_followup", (SmartRegisterClient) view.getTag(), map);
                     break;
             }
         }
@@ -185,9 +188,12 @@ public class ChildSmartRegisterFragment extends SmartClientRegisterFragment {
     private Map<String, String> followupOverrides(CommonPersonObjectClient client){
         Map<String, String> map = new HashMap<>();
         map.put("existing_full_address", getValue(client.getDetails(), "address1", true)+
-                ", UC: "+getValue(client.getDetails(), "union_council", true)+
-                ", Town: "+getValue(client.getDetails(), "town", true)+
-                ", City: "+getValue(client.getDetails(), "city_village", true)+ " - " + getValue(client.getDetails(), "landmark", true));
+                ", UC: "+getValue(client.getDetails(), "union_councilname", true)+
+                ", Town: "+getValue(client.getDetails(), "townname", true)+
+                ", City: "+getValue(client.getDetails(), "city_villagename", true)+ " - " + getValue(client.getDetails(), "landmark", true));
+
+        map.put("existing_program_client_id", getValue(client.getDetails(), "program_client_id", false));
+        map.put("program_client_id", getValue(client.getDetails(), "program_client_id", false));
 
         int days = 0;
         try{
@@ -221,10 +227,21 @@ public class ChildSmartRegisterFragment extends SmartClientRegisterFragment {
                 ", City: "+client.getAddress("usual_residence").getCityVillage()+
                 " - "+client.getAddress("usual_residence").getAddressField("landmark"));
 
+        map.put("existing_program_client_id", client.getIdentifier("Program Client ID"));
+        map.put("program_client_id", client.getIdentifier("Program Client ID"));
+
         map.put("existing_first_name", client.getFirstName());
         map.put("existing_last_name", client.getLastName());
         map.put("existing_gender", client.getGender());
         map.put("existing_birth_date", client.getBirthdate().toString("yyyy-MM-dd"));
+        int days = 0;
+        try{
+            days = Days.daysBetween(client.getBirthdate(), DateTime.now()).getDays();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        map.put("existing_age", days+"");
         Object epi = client.getAttribute("EPI Card Number");
         map.put("existing_epi_card_number", epi == null ? "" : epi.toString());
 

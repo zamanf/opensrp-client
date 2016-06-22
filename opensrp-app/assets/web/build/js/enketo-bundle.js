@@ -36669,7 +36669,7 @@ define( function( require, exports, module ) {
         // try native to see if that works... (will not work if the expr contains custom OpenRosa functions)
         if ( tryNative && typeof doc.evaluate !== 'undefined' && !this.OPENROSA.test( expr ) ) {
             try {
-                // console.log( 'trying the blazing fast native XPath Evaluator for', expr, index );
+                 console.log( 'trying the blazing fast native XPath Evaluator for', expr, index );
                 result = doc.evaluate( expr, context, this.nsResolver, resTypeNum, null );
             } catch ( e ) {
                 console.log( '%cWell native XPath evaluation did not work... No worries, worth a shot, the expression probably ' +
@@ -36683,7 +36683,7 @@ define( function( require, exports, module ) {
                 if ( typeof doc.jsEvaluate === 'undefined' ) {
                     this.bindJsEvaluator();
                 }
-                // console.log( 'trying the slow enketo-xpathjs "openrosa" evaluator for', expr, index );
+                 console.log( 'trying the slow enketo-xpathjs "openrosa" evaluator for', expr, index );
                 result = doc.jsEvaluate( expr, context, this.nsResolver, resTypeNum, null );
             } catch ( e ) {
                 throw new FormLogicError( 'Could not evaluate: ' + expr + ', message: ' + e.message );

@@ -1,8 +1,7 @@
 package org.ei.opensrp.vaccinator.woman;
 
-import org.ei.opensrp.vaccinator.fragment.SmartRegisterActivity;
-import org.ei.opensrp.vaccinator.fragment.SmartRegisterFragment;
-import org.ei.opensrp.vaccinator.fragment.WomanSmartRegisterFragment;
+import org.ei.opensrp.vaccinator.application.template.SmartRegisterActivity;
+import org.ei.opensrp.vaccinator.application.template.SmartRegisterFragment;
 import org.ei.opensrp.view.controller.FormController;
 
 import java.util.ArrayList;

@@ -109,7 +109,9 @@ public abstract class SecuredActivity extends ActionBarActivity {
 
         Intent intent = new Intent(this, formType);
         intent.putExtra(FORM_NAME_PARAM, formName);
-        intent.putExtra(ENTITY_ID_PARAM, entityId);
+        if(entityId != null && !entityId.trim().equalsIgnoreCase("")){
+            intent.putExtra(ENTITY_ID_PARAM, entityId);
+        }
         addFieldOverridesIfExist(intent);
         startActivityForResult(intent, FORM_SUCCESSFULLY_SUBMITTED_RESULT_CODE);
     }

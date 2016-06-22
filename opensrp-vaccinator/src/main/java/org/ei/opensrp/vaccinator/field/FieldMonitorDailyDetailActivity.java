@@ -7,12 +7,11 @@ import android.widget.TextView;
 import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.vaccinator.R;
-import org.ei.opensrp.vaccinator.woman.DetailActivity;
+import org.ei.opensrp.vaccinator.application.template.DetailActivity;
 import org.joda.time.DateTime;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 

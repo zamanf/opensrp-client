@@ -47,6 +47,7 @@ import com.google.gson.JsonParseException;
 import com.squareup.picasso.Picasso;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.text.WordUtils;
 import org.ei.drishti.dto.AlertStatus;
 import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
@@ -61,7 +62,7 @@ import org.ei.opensrp.vaccinator.db.Client;
 import org.ei.opensrp.vaccinator.db.Obs;
 import org.ei.opensrp.vaccinator.db.VaccineRepo;
 import org.ei.opensrp.vaccinator.db.VaccineRepo.Vaccine;
-import org.ei.opensrp.vaccinator.fragment.SmartRegisterFragment;
+import org.ei.opensrp.vaccinator.application.template.SmartRegisterFragment;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.joda.time.DateTime;
 import org.json.JSONException;
@@ -78,6 +79,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -105,6 +107,16 @@ public class Utils {
             if(!suppressException) throw new RuntimeException(e);
         }
         return "";
+    }
+
+    public static Date toDate(String date, boolean suppressException){
+        try{
+            return DB_DF.parse(date);
+        }
+        catch (ParseException e) {
+            if(!suppressException) throw new RuntimeException(e);
+        }
+        return null;
     }
 
     public static String convertDateFormat(String date, String defaultV, boolean suppressException){
@@ -231,14 +243,14 @@ public class Utils {
         if(value == null){
             value = "";
         }
-        return humanize? StringUtil.humanize(value):value;
+        return humanize? WordUtils.capitalize(StringUtil.humanize(value)):value;
     }
 
     public static String formatValue(Object value, boolean humanize){
         if(value == null){
             value = "";
         }
-        return humanize? StringUtil.humanize(value.toString()):value.toString();
+        return humanize? WordUtils.capitalize(StringUtil.humanize(value.toString())):value.toString();
     }
     public static String getValue(CommonPersonObjectClient pc, String field, boolean humanize){
         return formatValue(pc.getDetails().get(field), humanize);
@@ -466,19 +478,20 @@ public class Utils {
         if(status.equalsIgnoreCase("due")) {
             if(alert != null){
                 color = Utils.getColorValue(context, alert.status());
-                vaccineDate = "<due : "+convertDateFormat(vaccineDate, true)+">";
+                vaccineDate = "due: "+convertDateFormat(vaccineDate, true)+"";
             }
             else if(StringUtils.isNotBlank(vaccineDate)){
                 color = Utils.getColorValue(context, AlertStatus.inProcess);
-                vaccineDate = "<due : "+convertDateFormat(vaccineDate, true)+">";
+                vaccineDate = "due: "+convertDateFormat(vaccineDate, true)+"";
             }
         }
         else if(status.equalsIgnoreCase("done")){
             color = "#31B404";
+            vaccineDate = convertDateFormat(vaccineDate, true);
         }
         else if(status.equalsIgnoreCase("expired")){
             color = Utils.getColorValue(context, AlertStatus.inProcess);
-            vaccineDate = "<exp : "+convertDateFormat(vaccineDate, true)+">";
+            vaccineDate = "exp: "+convertDateFormat(vaccineDate, true)+"";
         }
 
         LinearLayout l = new LinearLayout(context);
@@ -634,13 +647,16 @@ public class Utils {
         return m;
     }
 
-    public static Map<String, Object> nextVaccineDue(List<Map<String, Object>> schedule){
+    public static Map<String, Object> nextVaccineDue(List<Map<String, Object>> schedule, Date lastVisit){
         Map<String, Object> v = null;
         for (Map<String, Object> m: schedule) {
             if(m != null && m.get("status") != null && m.get("status").toString().equalsIgnoreCase("due")){
                 if (v == null) {
                     v = m;
-                } else if (m.get("date") != null && ((DateTime) m.get("date")).isBefore((DateTime) v.get("date"))) {
+                } else if (m.get("date") != null && v.get("date") != null
+                        && ((DateTime) m.get("date")).isBefore((DateTime) v.get("date"))
+                        && (lastVisit == null
+                            || lastVisit.before(((DateTime) m.get("date")).toDate()))) {
                     v = m;
                 }
             }

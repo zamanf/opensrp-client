@@ -7,7 +7,7 @@ import org.ei.opensrp.Context;
 import org.ei.opensrp.domain.Alert;
 import org.ei.opensrp.vaccinator.R;
 import org.ei.opensrp.vaccinator.db.VaccineRepo;
-import org.ei.opensrp.vaccinator.woman.DetailActivity;
+import org.ei.opensrp.vaccinator.application.template.DetailActivity;
 import org.joda.time.DateTime;
 import org.joda.time.Months;
 import org.joda.time.Years;
@@ -89,7 +89,7 @@ public class ChildDetailActivity extends DetailActivity {
         tr = getDataRow(this, "EPI Card Number", getValue(client, "epi_card_number", false), null);
         dt.addView(tr);
 
-        tr = getDataRow(this, "Child`s Name", getValue(client, "first_name", true)+" "+getValue(client, "last_name", true), null);
+        tr = getDataRow(this, "Child's Name", getValue(client, "first_name", true)+" "+getValue(client, "last_name", true), null);
         dt.addView(tr);
 
         int months = -1;
@@ -110,10 +110,10 @@ public class ChildDetailActivity extends DetailActivity {
 
         TableLayout dt2 = (TableLayout) findViewById(R.id.child_detail_info_table2);
 
-        tr = getDataRow(this, "Mother`s Name", getValue(client, "mother_name", true), null);
+        tr = getDataRow(this, "Mother's Name", getValue(client, "mother_name", true), null);
         dt2.addView(tr);
 
-        tr = getDataRow(this, "Father`s Name", getValue(client, "father_name", true), null);
+        tr = getDataRow(this, "Father's Name", getValue(client, "father_name", true), null);
         dt2.addView(tr);
 
         tr = getDataRow(this, "Contact Number", getValue(client, "contact_phone_number", false), null);

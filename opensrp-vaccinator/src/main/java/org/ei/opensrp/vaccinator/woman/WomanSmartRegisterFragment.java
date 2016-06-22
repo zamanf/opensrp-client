@@ -1,4 +1,4 @@
-package org.ei.opensrp.vaccinator.fragment;
+package org.ei.opensrp.vaccinator.woman;
 
 import android.view.View;
 
@@ -8,12 +8,10 @@ import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.commonregistry.CommonPersonObjectController;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.vaccinator.R;
+import org.ei.opensrp.vaccinator.application.template.SmartClientRegisterFragment;
 import org.ei.opensrp.vaccinator.db.Client;
-import org.ei.opensrp.vaccinator.woman.DetailActivity;
-import org.ei.opensrp.vaccinator.woman.WomanDetailActivity;
-import org.ei.opensrp.vaccinator.woman.WomanFollowupHandler;
-import org.ei.opensrp.vaccinator.woman.WomanService;
-import org.ei.opensrp.vaccinator.woman.WomanSmartClientsProvider;
+import org.ei.opensrp.vaccinator.application.template.DetailActivity;
+import org.ei.opensrp.vaccinator.application.common.VaccinationServiceModeOption;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.controller.FormController;
@@ -21,6 +19,8 @@ import org.ei.opensrp.view.dialog.AllClientsFilter;
 import org.ei.opensrp.view.dialog.FilterOption;
 import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
+import org.joda.time.DateTime;
+import org.joda.time.Years;
 import org.json.JSONException;
 
 import java.text.ParseException;
@@ -99,7 +99,12 @@ public class WomanSmartRegisterFragment extends SmartClientRegisterFragment {
                     CommonPersonObjectController.ByColumnAndByDetails.byDetails.byDetails);
         }
 
-        context.formSubmissionRouter().getHandlerMap().put("woman_followup", new WomanFollowupHandler(new WomanService(context.allTimelineEvents(), context.allCommonsRepositoryobjects("pkwoman"), context.alertService())));
+        try{
+         //   context.formSubmissionRouter().getHandlerMap().put("woman_followup", new WomanFollowupHandler(new WomanService(context.allTimelineEvents(), context.allCommonsRepositoryobjects("pkwoman"), context.alertService())));
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
     }//end of method
 
     @Override
@@ -117,7 +122,7 @@ public class WomanSmartRegisterFragment extends SmartClientRegisterFragment {
                     HashMap<String, String> map = new HashMap<>();
                     CommonPersonObjectClient client = (CommonPersonObjectClient) view.getTag();
                     map.putAll(followupOverrides(client));
-                    startFollowupForm("woman_followup", (SmartRegisterClient) view.getTag(), map, ByColumnAndByDetails.byDefault);
+                    startForm("woman_followup", (SmartRegisterClient) view.getTag(), map);
                     break;
             }
         }
@@ -165,31 +170,31 @@ public class WomanSmartRegisterFragment extends SmartClientRegisterFragment {
 
     private Map<String, String> followupOverrides(CommonPersonObjectClient client){
         Map<String, String> map = new HashMap<>();
-        map.put("existing_house_number", getValue(client.getDetails(), "house_number", true));
-        map.put("existing_street", getValue(client.getDetails(), "street", true));
-        map.put("existing_union_council", getValue(client.getDetails(), "union_council", true));
-        map.put("existing_town", getValue(client.getDetails(), "town", true));
-        map.put("existing_city_village", getValue(client.getDetails(), "city_village", true));
-        map.put("existing_province", getValue(client.getDetails(), "province", true));
-        map.put("existing_landmark", getValue(client.getDetails(), "landmark", true));
+        map.put("existing_full_address", getValue(client.getDetails(), "address1", true)+
+                ", UC: "+getValue(client.getDetails(), "union_councilname", true)+
+                ", Town: "+getValue(client.getDetails(), "townname", true)+
+                ", City: "+getValue(client.getDetails(), "city_villagename", true)+ " - " + getValue(client.getDetails(), "landmark", true));
 
-        map.put("existing_union_councilname", getValue(client.getDetails(), "union_council", true));
-        map.put("existing_townname", getValue(client.getDetails(), "town", true));
-        map.put("existing_city_villagename", getValue(client.getDetails(), "city_village", true));
-        map.put("existing_provincename", getValue(client.getDetails(), "province", true));
+        map.put("existing_program_client_id", getValue(client.getDetails(), "program_client_id", false));
+        map.put("program_client_id", getValue(client.getDetails(), "program_client_id", false));
 
         map.put("existing_first_name", getValue(client.getDetails(), "first_name", true));
-        map.put("existing_last_name", getValue(client.getDetails(), "last_name", true));
-        map.put("existing_gender", getValue(client.getDetails(), "gender", true));
         map.put("existing_father_name", getValue(client.getDetails(), "father_name", true));
         map.put("existing_husband_name", getValue(client.getDetails(), "husband_name", true));
+        map.put("husband_name", getValue(client.getDetails(), "husband_name", true));
         map.put("existing_birth_date", getValue(client.getColumnmaps(), "dob", false));
+        int years = 0;
+        try{
+            years = Years.yearsBetween(new DateTime(getValue(client.getColumnmaps(), "dob", false)), DateTime.now()).getYears();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        map.put("existing_age", years+"");
         map.put("existing_epi_card_number", getValue(client.getDetails(), "epi_card_number", false));
-        map.put("existing_marriage", getValue(client.getDetails(), "marriage", true));
-        map.put("existing_ethnicity", getValue(client.getDetails(), "ethnicity", true));
-        map.put("existing_client_reg_date", getValue(client.getDetails(), "client_reg_date", false));
-        map.put("existing_reminders_approval", getValue(client.getDetails(), "reminders_approval", false));
-        map.put("existing_contact_phone_number", getValue(client.getDetails(), "contact_phone_number", false));
+        map.put("marriage", getValue(client.getDetails(), "marriage", false));
+        map.put("reminders_approval", getValue(client.getDetails(), "reminders_approval", false));
+        map.put("contact_phone_number", getValue(client.getDetails(), "contact_phone_number", false));
 
         map.putAll(getPreloadVaccineData(client));
 
@@ -198,34 +203,35 @@ public class WomanSmartRegisterFragment extends SmartClientRegisterFragment {
 
     private Map<String, String> followupOverrides(Client client){
         Map<String, String> map = new HashMap<>();
-        map.put("existing_house_number", client.getAddress("usual_residence").getAddressField("house_number"));
-        map.put("existing_street", client.getAddress("usual_residence").getAddressField("street"));
-        map.put("existing_union_council", client.getAddress("usual_residence").getSubTown());
-        map.put("existing_town", client.getAddress("usual_residence").getTown());
-        map.put("existing_city_village", client.getAddress("usual_residence").getCityVillage());
-        map.put("existing_province", client.getAddress("usual_residence").getStateProvince());
-        map.put("existing_landmark", client.getAddress("usual_residence").getAddressField("landmark"));
+        map.put("existing_full_address", client.getAddress("usual_residence").getAddressField("address1")+
+                ", UC: "+client.getAddress("usual_residence").getSubTown()+
+                ", Town: "+client.getAddress("usual_residence").getTown()+
+                ", City: "+client.getAddress("usual_residence").getCityVillage()+
+                " - "+client.getAddress("usual_residence").getAddressField("landmark"));
 
-        map.put("existing_union_councilname", client.getAddress("usual_residence").getSubTown());
-        map.put("existing_townname", client.getAddress("usual_residence").getTown());
-        map.put("existing_city_villagename", client.getAddress("usual_residence").getCityVillage());
-        map.put("existing_provincename", client.getAddress("usual_residence").getStateProvince());
+        map.put("existing_program_client_id", client.getIdentifier("Program Client ID"));
+        map.put("program_client_id", client.getIdentifier("Program Client ID"));
 
         map.put("existing_first_name", client.getFirstName());
-        map.put("existing_last_name", client.getLastName());
-        map.put("existing_gender", client.getGender());
         map.put("existing_birth_date", client.getBirthdate().toString("yyyy-MM-dd"));
+        int years = 0;
+        try{
+            years = Years.yearsBetween(client.getBirthdate(), DateTime.now()).getYears();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        map.put("existing_age", years+"");
         Object epi = client.getAttribute("EPI Card Number");
         map.put("existing_epi_card_number", epi == null ? "" : epi.toString());
 
         try{
             map.put("existing_father_name", getObsValue(getClientEventDb(), client, true, "father_name", "1594AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
             map.put("existing_husband_name", getObsValue(getClientEventDb(), client, true, "husband_name", "5617AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
-            map.put("existing_marriage", getObsValue(getClientEventDb(), client, true, "marriage"));
-            map.put("existing_ethnicity", getObsValue(getClientEventDb(), client, true, "ethnicity", "163153AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
-            map.put("existing_client_reg_date", getObsValue(getClientEventDb(), client, false, "client_reg_date", "1594AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
-            map.put("existing_reminders_approval", getObsValue(getClientEventDb(), client, true, "reminders_approval", "163089AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
-            map.put("existing_contact_phone_number", getObsValue(getClientEventDb(), client, true, "contact_phone_number", "159635AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
+            map.put("husband_name", getObsValue(getClientEventDb(), client, true, "husband_name", "5617AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
+            map.put("marriage", getObsValue(getClientEventDb(), client, false, "marriage"));
+            map.put("reminders_approval", getObsValue(getClientEventDb(), client, false, "reminders_approval", "163089AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
+            map.put("contact_phone_number", getObsValue(getClientEventDb(), client, true, "contact_phone_number", "159635AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
 
             map.putAll(getPreloadVaccineData(client));
         }

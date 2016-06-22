@@ -1,4 +1,4 @@
-package org.ei.opensrp.vaccinator.pageadapter;
+package org.ei.opensrp.vaccinator.application.template;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

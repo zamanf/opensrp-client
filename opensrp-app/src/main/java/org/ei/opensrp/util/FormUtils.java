@@ -1,6 +1,9 @@
 package org.ei.opensrp.util;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.util.Xml;
 
 import org.ei.opensrp.domain.SyncStatus;
@@ -26,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.prefs.Preferences;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -200,6 +204,46 @@ public class FormUtils {
             e.printStackTrace();
         }
         return "";
+    }
+
+    public String getPreviouslySavedDataForForm(String formName, String overridesStr, String id){
+        try {
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
+            String savedDataKey = formName + "savedPartialData";
+            String overridesKey = formName + "overrides";
+            String idKey = formName + "id";
+
+            JSONObject overrides = new JSONObject();
+
+            if (overrides != null){
+                JSONObject json = new JSONObject(overridesStr);
+                String s = json.getString("fieldOverrides");
+                overrides = new JSONObject(s);
+            }
+
+            boolean idIsConsistent = id == null && !sharedPref.contains(idKey) ||
+                    id != null && sharedPref.contains(idKey) && sharedPref.getString(idKey, null).equals(id);
+
+            if (sharedPref.contains(savedDataKey) && sharedPref.contains(overridesKey) && idIsConsistent){
+                String savedDataStr = sharedPref.getString(savedDataKey, null);
+                String savedOverridesStr = sharedPref.getString(overridesKey, null);
+
+
+                // the previously saved data is only returned if the overrides and id are the same ones used previously
+                if (savedOverridesStr.equals(overrides.toString())) {
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    //after retrieving the value delete it from shared pref.
+                    editor.remove(savedDataKey);
+                    editor.remove(overridesKey);
+                    editor.remove(idKey);
+                    editor.apply();
+                    return savedDataStr;
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private void writeXML(Element node, XmlSerializer serializer, JSONObject fieldOverrides, JSONObject formDefinition, JSONObject entityJson, String parentId){
@@ -506,7 +550,7 @@ public class FormUtils {
                 item.put("value", value);
             }
 
-            if (shouldLoadValue && overrides.has(item.getString("name"))){
+            if (shouldLoadValue && overrides.has(itemName)){
                 if (!item.has("value")) // if the value is not set use the value in the overrides filed
                     item.put("value", overrides.getString(item.getString("name")));
             }

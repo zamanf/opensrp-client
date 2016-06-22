@@ -1,4 +1,4 @@
-package org.ei.opensrp.vaccinator.fragment;
+package org.ei.opensrp.vaccinator.application.template;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -13,8 +13,12 @@ import org.ei.opensrp.commonregistry.CommonObjectSort;
 import org.ei.opensrp.domain.form.FieldOverrides;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.vaccinator.R;
+import org.ei.opensrp.vaccinator.application.common.BasicSearchOption;
+import org.ei.opensrp.vaccinator.application.common.DateSort;
+import org.ei.opensrp.vaccinator.application.common.StatusSort;
 import org.ei.opensrp.vaccinator.db.CESQLiteHelper;
 import org.ei.opensrp.vaccinator.db.Client;
+import org.ei.opensrp.vaccinator.application.template.SmartRegisterFragment;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.contract.SmartRegisterClients;
@@ -114,7 +118,7 @@ public abstract class SmartClientRegisterFragment extends SmartRegisterFragment 
 
         ((TextView)mView.findViewById(org.ei.opensrp.R.id.txt_title_label)).setText(getRegisterLabel());
 
-        ((TextView)mView.findViewById(org.ei.opensrp.R.id.statusbar_today)).setText("Today: "+Utils.convertDateFormat(DateTime.now()));
+        ((TextView)mView.findViewById(org.ei.opensrp.R.id.statusbar_today)).setText(Utils.convertDateFormat(DateTime.now()));
 
         mView.findViewById(org.ei.opensrp.R.id.filter_selection).setVisibility(View.GONE);
 
@@ -131,18 +135,21 @@ public abstract class SmartClientRegisterFragment extends SmartRegisterFragment 
         imv.setScaleType(ImageView.ScaleType.FIT_XY);
     }//end of method
 
-    protected void startFollowupForm(String formName, SmartRegisterClient client, HashMap<String, String> overrideStringmap, ByColumnAndByDetails byColumnAndByDetails) {
+    protected void startForm(String formName, SmartRegisterClient client, HashMap<String, String> overrideStringmap) {
+        startForm(formName, client.entityId(), overrideStringmap);
+    }
+
+    protected void startForm(String formName, String entityId, HashMap<String, String> overrideStringmap) {
         if (overrideStringmap == null) {
             org.ei.opensrp.util.Log.logDebug("overrides data is null");
-            formController1.startFormActivity(formName, client.entityId(), null);
-        } else {
-            overrideStringmap.putAll(providerOverrides());
-
-            String overrides = Utils.overridesToString(overrideStringmap, client, byColumnAndByDetails);
-            FieldOverrides fieldOverrides = new FieldOverrides(overrides);
-            org.ei.opensrp.util.Log.logDebug("fieldOverrides data is : " + fieldOverrides.getJSONString());
-            formController1.startFormActivity(formName, client.entityId(), fieldOverrides.getJSONString());
+            overrideStringmap = new HashMap<>();
         }
+
+        overrideStringmap.putAll(providerOverrides());
+
+        String fieldOverrides =  new FieldOverrides(new JSONObject(overrideStringmap).toString()).getJSONString();
+        org.ei.opensrp.util.Log.logDebug("fieldOverrides data is : " + fieldOverrides);
+        formController1.startFormActivity(formName, entityId, fieldOverrides);
     }
 
     protected abstract String getRegistrationForm(HashMap<String, String> overridemap);
@@ -162,13 +169,11 @@ public abstract class SmartClientRegisterFragment extends SmartRegisterFragment 
     }//end of the method
 
     private void startEnrollmentForm(HashMap<String, String> overrides){
-        overrides.putAll(providerOverrides());
-        formController1.startFormActivity(getRegistrationForm(overrides), null, new FieldOverrides(new JSONObject(overrides).toString()).getJSONString());
+        startForm(getRegistrationForm(overrides), "", overrides);
     }
 
     private void startOffSiteFollowupForm(Client client, HashMap<String, String> overrides){
-        overrides.putAll(providerOverrides());
-        formController1.startFormActivity(getOAFollowupForm(client, overrides), client.getBaseEntityId(), new FieldOverrides(new JSONObject(overrides).toString()).getJSONString());
+        startForm(getOAFollowupForm(client, overrides), client.getBaseEntityId(), overrides);
     }
 
     private void onQRCodeSucessfullyScanned(String qrCode) {

@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
-import static util.Utils.convertDateFormat;
+import static util.Utils.*;
 import static util.Utils.fillValue;
 import static util.Utils.generateSchedule;
 import static util.Utils.getValue;
@@ -115,7 +115,7 @@ public class WomanSmartClientsProvider implements SmartRegisterClientsProvider {
         }
         else {
             List<Map<String, Object>> sch = generateSchedule("woman", null, pc.getColumnmaps(), alertlist_for_client);
-            Map<String, Object> nv = nextVaccineDue(sch);
+            Map<String, Object> nv = nextVaccineDue(sch, toDate(lastVaccine, true));
             if(nv != null){
                 DateTime dueDate = (DateTime)nv.get("date");
                 VaccineRepo.Vaccine vaccine = (VaccineRepo.Vaccine) nv.get("vaccine");
@@ -158,7 +158,7 @@ public class WomanSmartClientsProvider implements SmartRegisterClientsProvider {
 
     private void activateNextVaccine(String dueDate, String vaccine, int foreColor, int backColor, View.OnClickListener onClickListener,
                                      SmartRegisterClient client, View convertView){
-        fillValue((TextView) convertView.findViewById(R.id.woman_next_visit_vaccine), vaccine);
+        fillValue((TextView) convertView.findViewById(R.id.woman_next_visit_vaccine), vaccine==null?"":vaccine.replaceAll(" ", ""));
         fillValue((TextView) convertView.findViewById(R.id.woman_next_visit_date), convertDateFormat(dueDate, true));
         ((TextView) convertView.findViewById(R.id.woman_next_visit_vaccine)).setTextColor(foreColor);
         ((TextView) convertView.findViewById(R.id.woman_next_visit_date)).setTextColor(foreColor);
@@ -170,7 +170,7 @@ public class WomanSmartClientsProvider implements SmartRegisterClientsProvider {
 
     private void activateNextVaccine(DateTime dueDate, VaccineRepo.Vaccine vaccine, int foreColor, int backColor, View.OnClickListener onClickListener,
                                      SmartRegisterClient client, View convertView){
-        activateNextVaccine(dueDate.toString("yyyy-MM-dd"), StringUtil.humanize(vaccine.display()), foreColor, backColor, onClickListener, client, convertView);
+        activateNextVaccine(dueDate==null?"":dueDate.toString("yyyy-MM-dd"), vaccine==null?"":StringUtil.humanize(vaccine.display().replaceAll(" ", "")), foreColor, backColor, onClickListener, client, convertView);
     }
 
     @Override

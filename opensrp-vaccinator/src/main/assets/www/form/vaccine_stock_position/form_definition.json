@@ -11,32 +11,25 @@
       "value" : true
     }, {
       "name" : "provider_uc",
-      "bind" : "/model/instance/Vaccine_Stock_Position/provider_uc",
-      "shouldLoadValue" : true
+      "bind" : "/model/instance/Vaccine_Stock_Position/provider_uc"
     }, {
       "name" : "provider_town",
-      "bind" : "/model/instance/Vaccine_Stock_Position/provider_town",
-      "shouldLoadValue" : true
+      "bind" : "/model/instance/Vaccine_Stock_Position/provider_town"
     }, {
       "name" : "provider_city",
-      "bind" : "/model/instance/Vaccine_Stock_Position/provider_city",
-      "shouldLoadValue" : true
+      "bind" : "/model/instance/Vaccine_Stock_Position/provider_city"
     }, {
       "name" : "provider_province",
-      "bind" : "/model/instance/Vaccine_Stock_Position/provider_province",
-      "shouldLoadValue" : true
+      "bind" : "/model/instance/Vaccine_Stock_Position/provider_province"
     }, {
       "name" : "provider_id",
-      "bind" : "/model/instance/Vaccine_Stock_Position/provider_id",
-      "shouldLoadValue" : true
+      "bind" : "/model/instance/Vaccine_Stock_Position/provider_id"
     }, {
       "name" : "provider_location_id",
-      "bind" : "/model/instance/Vaccine_Stock_Position/provider_location_id",
-      "shouldLoadValue" : true
+      "bind" : "/model/instance/Vaccine_Stock_Position/provider_location_id"
     }, {
       "name" : "provider_location_name",
-      "bind" : "/model/instance/Vaccine_Stock_Position/provider_location_name",
-      "shouldLoadValue" : true
+      "bind" : "/model/instance/Vaccine_Stock_Position/provider_location_name"
     }, {
       "name" : "provider_location_note",
       "bind" : "/model/instance/Vaccine_Stock_Position/provider_location_note"

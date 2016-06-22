@@ -1,4 +1,4 @@
-package org.ei.opensrp.vaccinator.fragment;
+package org.ei.opensrp.vaccinator.application.common;
 
 import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
