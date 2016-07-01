@@ -1,45 +1,32 @@
 package org.ei.opensrp.vaccinator.household;
 
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
+import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 
-import org.ei.opensrp.Context;
-import org.ei.opensrp.commonregistry.CommonPersonObject;
-import org.ei.opensrp.util.StringUtil;
+import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.vaccinator.R;
-import org.ei.opensrp.vaccinator.adapter.HouseholdMemberAdapter;
-import org.ei.opensrp.vaccinator.application.template.DetailActivity;
-import org.joda.time.DateTime;
-import org.joda.time.Years;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static util.Utils.convertDateFormat;
-import static util.Utils.getDataRow;
-import static util.Utils.getValue;
-import static util.Utils.nonEmptyValue;
 
 /**
  * Created by Safwan on 4/21/2016.
  */
-public class HouseholdDetailActivity extends DetailActivity {
+public class HouseholdDetailActivity extends FragmentActivity {
 
-    String sql;
-   // private FormController formController1;
 
-   /* public HouseholdDetailActivity(FormController formController){
-        super();
-        this.formController1 = formController;
-    }*/
 
-    ArrayAdapter<CommonPersonObject> arrayAdapter;
-    List<HouseholdMemberDetails> memberDetails = new ArrayList<HouseholdMemberDetails>();
+    public static CommonPersonObjectClient householdClient;
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.household_detail_activity);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
+    /*@Override
     protected int layoutResId() {
         return R.layout.household_detail_activity;
     }
@@ -52,55 +39,64 @@ public class HouseholdDetailActivity extends DetailActivity {
     @Override
     protected String titleBarId() {
         return getEntityIdentifier();
-    }
+    }*/
 
-    @Override
-    protected void generateView() {
-        TableLayout dt = (TableLayout) findViewById(R.id.household_detail_info_table1);
+   /* public static void startDetailActivity(android.content.Context context, CommonPersonObjectClient clientobj, Class<? extends DetailActivity> detailActivity) {
+        householdClient = clientobj;
+        context.startActivity(new Intent(context, detailActivity));
+    }*/
+
+    /*@Override
+    protected void generateView() {*/
+        /*TableLayout dt = (TableLayout) findViewById(R.id.household_detail_info_table1);
 
         //setting value in Household basic information textviews
 
-        sql = "select * from pkindividual where relationalid = '" + client.getCaseId() + "'";
+        sql = "select * from pkindividual where relationalid = '" + householdClient.getCaseId() + "'";
         List<CommonPersonObject> individualList = Context.getInstance().allCommonsRepositoryobjects("pkindividual").customQueryForCompleteRow(sql, new String[]{}, "pkindividual");
+        sql = "select * from pkwoman";
+        List<CommonPersonObject> womanList = Context.getInstance().allCommonsRepositoryobjects("pkwoman").customQueryForCompleteRow(sql, new String[]{}, "pkwoman");
+        sql = "select * from pkchild";
+        List<CommonPersonObject> childList = Context.getInstance().allCommonsRepositoryobjects("pkchild").customQueryForCompleteRow(sql, new String[]{}, "pkchild");
 
-        TableRow tr = getDataRow(this, "Person ID", getValue(client.getColumnmaps(), "person_id_hhh", true), null);
+        TableRow tr = getDataRow(context, "Person ID", getValue(householdClient.getColumnmaps(), "person_id_hhh", true), null);
         dt.addView(tr);
 
-        tr = getDataRow(this, "Name", StringUtil.humanizeAndDoUPPERCASE(getValue(client, "first_name_hhh", false) + " " + getValue(client, "last_name_hhh", true)), null);
+        tr = getDataRow(context, "Name", StringUtil.humanizeAndDoUPPERCASE(getValue(householdClient, "first_name_hhh", false) + " " + getValue(householdClient, "last_name_hhh", true)), null);
         dt.addView(tr);
 
-        int age = Years.yearsBetween(new DateTime(getValue(client, "calc_dob_confirm_hhh", false)), DateTime.now()).getYears();
-        tr = getDataRow(this, "DOB (Age)", convertDateFormat(getValue(client, "calc_dob_confirm_hhh", false), true) + " (" + age + " years)", null);
+        int age = Years.yearsBetween(new DateTime(getValue(householdClient, "calc_dob_confirm_hhh", false)), DateTime.now()).getYears();
+        tr = getDataRow(context, "DOB (Age)", convertDateFormat(getValue(householdClient, "calc_dob_confirm_hhh", false), true) + " (" + age + " years)", null);
         dt.addView(tr);
 
-        tr = getDataRow(this, "Gender", getValue(client, "gender_hhh", true), null);
+        tr = getDataRow(context, "Gender", getValue(householdClient, "gender_hhh", true), null);
         dt.addView(tr);
 
-        tr = getDataRow(this, "Ethnicity", getValue(client, "ethnicity_hhh", true), null);
+        tr = getDataRow(context, "Ethnicity", getValue(householdClient, "ethnicity_hhh", true), null);
         dt.addView(tr);
 
-        tr = getDataRow(this, "Contact Phone Number", getValue(client, "contact_phone_number_hhh", true), null);
+        tr = getDataRow(context, "Contact Phone Number", getValue(householdClient, "contact_phone_number_hhh", true), null);
         dt.addView(tr);
 
         TableLayout dt2 = (TableLayout) findViewById(R.id.household_detail_info_table2);
-        tr = getDataRow(this, "Household ID", getValue(client.getColumnmaps(), "existing_household_id", true), null);
+        tr = getDataRow(context, "Household ID", getValue(householdClient.getColumnmaps(), "existing_household_id", true), null);
         dt2.addView(tr);
-        tr = getDataRow(this, "Number of Members", "" + individualList.size() + "", null);
+        tr = getDataRow(context, "Number of Members", "" + individualList.size() + "", null);
         dt2.addView(tr);
-        tr = getDataRow(this, "Source of Drinking Water", getValue(client, "water_source", true), null);
+        tr = getDataRow(context, "Source of Drinking Water", getValue(householdClient, "water_source", true), null);
         dt2.addView(tr);
-        tr = getDataRow(this, "Latrine System", getValue(client, "latrine_system", true), null);
+        tr = getDataRow(context, "Latrine System", getValue(householdClient, "latrine_system", true), null);
         dt2.addView(tr);
-        tr = getDataRow(this, "Address", getValue(client, "address1", true)
-                + ", \nUC: " + getValue(client, "union_council", true)
-                + ", \nTown: " + getValue(client, "town", true)
-                + ", \nCity: " + getValue(client, "city_village", true)
-                /*+ ", \nProvince: " + getValue(client, "province", true)*/, null);
+        tr = getDataRow(context, "Address", getValue(householdClient, "address1", true)
+                + ", \nUC: " + getValue(householdClient, "union_council", true)
+                + ", \nTown: " + getValue(householdClient, "town", true)
+                + ", \nCity: " + getValue(householdClient, "city_village", true)
+                /*+ ", \nProvince: " + getValue(client, "province", true), null);
         dt2.addView(tr);
 
 
         arrayAdapter = new ArrayAdapter<CommonPersonObject>
-                (this, android.R.layout.simple_list_item_1, individualList);
+                (context, android.R.layout.simple_list_item_1, individualList);
 
         ListView list = (ListView) findViewById(R.id.individualList);
 
@@ -112,13 +108,13 @@ public class HouseholdDetailActivity extends DetailActivity {
             int memberAge = Years.yearsBetween(new DateTime(getValue(individual.getDetails(), "calc_dob_confirm", false)), DateTime.now()).getYears();
             //tr = getDataRow(this, "DOB (Age)", convertDateFormat(getValue(individual.getDetails(), "calc_dob_confirm", false), true) + " (" + age + " years)", null);
 
-            if(memberAge < 10 && getValue(individual.getDetails(), "gender", false).equalsIgnoreCase("male"))
+            if (memberAge < 10 && getValue(individual.getDetails(), "gender", false).equalsIgnoreCase("male"))
                 member.setMemberImageId(R.drawable.child_boy_infant);
-            else if(memberAge > 10 && getValue(individual.getDetails(), "gender", false).equalsIgnoreCase("male"))
+            else if (memberAge > 10 && getValue(individual.getDetails(), "gender", false).equalsIgnoreCase("male"))
                 member.setMemberImageId(R.drawable.household_profile);
-            else if(memberAge < 10 && getValue(individual.getDetails(), "gender", false).equalsIgnoreCase("female"))
+            else if (memberAge < 10 && getValue(individual.getDetails(), "gender", false).equalsIgnoreCase("female"))
                 member.setMemberImageId(R.drawable.child_girl_infant);
-            else if(memberAge > 10 && getValue(individual.getDetails(), "gender", false).equalsIgnoreCase("female"))
+            else if (memberAge > 10 && getValue(individual.getDetails(), "gender", false).equalsIgnoreCase("female"))
                 member.setMemberImageId(R.drawable.pk_woman_icon);
 
 
@@ -127,8 +123,16 @@ public class HouseholdDetailActivity extends DetailActivity {
             member.setMemberRelationWithHousehold(getValue(individual.getDetails(), "relationship", false));
             member.setMemberAge(convertDateFormat(getValue(individual.getDetails(), "calc_dob_confirm", false), true) + " (" + memberAge + " years)");
             memberDetails.add(member);
+
+            for (CommonPersonObject woman : womanList) {
+                if (woman.getDetails().get("existing_program_client_id") != individual.getColumnmaps().get("existing_program_client_id")) {
+
+                }
+            }
         }
-        list.setAdapter(new HouseholdMemberAdapter(HouseholdDetailActivity.this, memberDetails));
+        list.setAdapter(new HouseholdMemberAdapter(context, memberDetails));*/
+
+
 
        /* Button addMember = (Button) findViewById(R.id.btnAddMember);
         addMember.setOnClickListener(new View.OnClickListener() {
@@ -141,9 +145,7 @@ public class HouseholdDetailActivity extends DetailActivity {
                 parentSmartRegisterFragment.startFollowupForm("new_member_registration", client, map, SmartRegisterFragment.ByColumnAndByDetails.byDefault);
             }
         });*/
-    }
-
-
+  //  }
 
 
 /*    protected void startFollowupForm(String formName, SmartRegisterClient client, HashMap<String, String> overrideStringmap, SmartRegisterFragment.ByColumnAndByDetails byColumnAndByDetails) {
@@ -197,7 +199,7 @@ public class HouseholdDetailActivity extends DetailActivity {
         return map;
     }*/
 
-    @Override
+   /* @Override
     protected Class onBackActivity() {
         return HouseholdSmartRegisterActivity.class;
     }
@@ -224,5 +226,22 @@ public class HouseholdDetailActivity extends DetailActivity {
 
     public String getEntityIdentifier() {
         return nonEmptyValue(client.getColumnmaps(), true, false, "existing_household_id");
+    }*/
+
+
+    /*protected View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.household_detail_activity, container, false);
+        mView = view;
+        return view;
+    }*/
+
+    /*@Override
+    protected void onCreation() {
+
     }
+
+    // @Override
+    protected void onResumption() {
+
+    }*/
 }

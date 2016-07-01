@@ -2,6 +2,8 @@ package org.ei.opensrp.vaccinator.fragment;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -11,6 +13,7 @@ import android.widget.TextView;
 
 import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.CommonObjectSort;
+import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.commonregistry.CommonPersonObjectController;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
@@ -20,6 +23,7 @@ import org.ei.opensrp.vaccinator.application.template.DetailActivity;
 import org.ei.opensrp.vaccinator.db.Client;
 import org.ei.opensrp.vaccinator.household.HouseholdDetailActivity;
 import org.ei.opensrp.vaccinator.household.HouseholdSmartClientsProvider;
+import org.ei.opensrp.vaccinator.household.HouseholdSmartRegisterActivity;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
 import org.ei.opensrp.view.controller.FormController;
 import org.ei.opensrp.view.dialog.AllClientsFilter;
@@ -147,7 +151,9 @@ public class HouseholdSmartRegisterFragment extends SmartClientRegisterGroupFrag
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.household_profile_info_layout:
-                    DetailActivity.startDetailActivity(getActivity(), (CommonPersonObjectClient) view.getTag(), HouseholdDetailActivity.class);
+                    HouseholdDetailActivity.householdClient = (CommonPersonObjectClient) view.getTag();
+                    Intent intent = new Intent((HouseholdSmartRegisterActivity) getActivity(), HouseholdDetailActivity.class);
+                    startActivity(intent);
                     getActivity().finish();
                     break;
                 case R.id.household_add_member:
@@ -168,7 +174,6 @@ public class HouseholdSmartRegisterFragment extends SmartClientRegisterGroupFrag
 
 
                         layout.setOrientation(LinearLayout.HORIZONTAL);
-                        //layout.setWeightSum(5);
                         TextView memberCodeQuestion = new TextView(getActivity());
                         memberCodeQuestion.setText("Have you ever been registered in any other OpenSRP program and have card?");
                         memberCodeQuestion.setTextSize(20);
@@ -198,7 +203,6 @@ public class HouseholdSmartRegisterFragment extends SmartClientRegisterGroupFrag
                                         } else if (hasQRCode.isChecked()) {
                                             HashMap<String, String> map = new HashMap<>();
                                             map.putAll(followupOverrides(client));
-                                            //startFollowupForm("new_member_registration", client, map, ByColumnAndByDetails.byDefault);
                                             startRegistration();
                                         }
                                         dialog.dismiss();
@@ -229,20 +233,6 @@ public class HouseholdSmartRegisterFragment extends SmartClientRegisterGroupFrag
         map.put("existing_provincename", getValue(client.getDetails(), "province", true));
         map.put("existing_landmark", getValue(client.getDetails(), "landmark", true));
         map.put("existing_address1", getValue(client.getDetails(), "adderss1", true));
-
-
-
-        /*map.put("existing_gender", getValue(client.getDetails(), "gender", true));
-        map.put("existing_mother_name", getValue(client.getDetails(), "mother_name", true));
-        map.put("existing_father_name", getValue(client.getDetails(), "father_name", true));
-        map.put("existing_birth_date", getValue(client.getDetails(), "dob", false));
-        map.put("existing_ethnicity", getValue(client.getDetails(), "ethnicity", true));
-        map.put("existing_client_reg_date", getValue(client.getDetails(), "client_reg_date", false));
-        map.put("existing_epi_card_number", getValue(client.getDetails(), "epi_card_number", false));
-        map.put("existing_child_was_suffering_from_a_disease_at_birth", getValue(client.getDetails(), "child_was_suffering_from_a_disease_at_birth", true));
-        map.put("existing_reminders_approval", getValue(client.getDetails(), "reminders_approval", false));
-        map.put("existing_contact_phone_number", getValue(client.getDetails(), "contact_phone_number", false));*/
-
 
         return map;
     }

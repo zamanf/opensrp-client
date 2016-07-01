@@ -26,7 +26,7 @@ import org.ei.opensrp.view.controller.NativeUpdateANMDetailsTask;
 
 import java.util.HashMap;
 
-import ly.count.android.sdk.Countly;
+//import ly.count.android.sdk.Countly;
 
 import static android.widget.Toast.LENGTH_SHORT;
 import static java.lang.String.valueOf;
@@ -105,10 +105,10 @@ public class NativeHomeActivity extends SecuredActivity {
                 .newInstance(this, new EditDialogOptionModel(), context.anmLocationController().get(), "new_household_registration")
                 .show(ft, locationDialogTAG);*/
 
-        Countly.sharedInstance().init(this, "https://cloud.count.ly", "dc5dfb412bdbd91792b29f66e5a4bd2ee226cfb6");
+        //Countly.sharedInstance().init(this, "https://cloud.count.ly", "dc5dfb412bdbd91792b29f66e5a4bd2ee226cfb6");
     }
 
-    @Override
+    /*@Override
     protected void onStart(){
         super.onStart();
         HashMap<String,String> segments = new HashMap<String, String>();
@@ -122,7 +122,7 @@ public class NativeHomeActivity extends SecuredActivity {
         super.onStop();
 //        CountlyAnalytics.stopAnalytics();
         //FlurryAgent.onEndSession(this);
-    }
+    }*/
 
 
 

@@ -14,6 +14,7 @@ import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.service.ZiggyService;
 import org.ei.opensrp.util.FormUtils;
 import org.ei.opensrp.vaccinator.R;
+import org.ei.opensrp.vaccinator.household.HouseholdDetailActivity;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
 import org.ei.opensrp.view.fragment.DisplayFormFragment;
 import org.ei.opensrp.view.fragment.SecuredNativeSmartRegisterFragment;
@@ -214,4 +215,5 @@ public abstract class SmartRegisterActivity extends SecuredNativeSmartRegisterAc
             super.onBackPressed(); // allow back key only if we are
         }
     }
+
 }

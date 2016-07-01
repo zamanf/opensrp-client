@@ -26,4 +26,5 @@ public class HouseholdSmartRegisterActivity extends SmartRegisterActivity {
 
         return formNames.toArray(new String[formNames.size()]);
     }
+
 }

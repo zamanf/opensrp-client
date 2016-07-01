@@ -177,13 +177,6 @@
 
             </FrameLayout>
 
-            <FrameLayout
-                android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:layout_weight="1"></FrameLayout>
-
-        </LinearLayout>
-
     </LinearLayout>
 
     <LinearLayout
@@ -219,6 +212,8 @@
                 android:paddingRight="150dp"
                 android:text="@string/str_provider_profile"
                 style="@style/CustomFontTextViewStyle.Home.Buttons" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

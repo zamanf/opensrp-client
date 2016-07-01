@@ -1,5 +1,8 @@
 package org.ei.opensrp.vaccinator.household;
 
+import org.ei.opensrp.commonregistry.CommonPersonObject;
+import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
+
 /**
  * Created by Safwan on 5/10/2016.
  */
@@ -16,6 +19,12 @@ public class HouseholdMemberDetails {
     public String memberRelationWithHousehold;
 
     public int memberImageId;
+
+    public String btnFollowup;
+
+    public boolean memberExists;
+
+    public CommonPersonObject client;
 
     public String getMemberId() {
         return memberId;
@@ -64,4 +73,29 @@ public class HouseholdMemberDetails {
     public void setMemberImageId(int memberImageId) {
         this.memberImageId = memberImageId;
     }
+
+    public String getBtnFollowup() {
+        return btnFollowup;
+    }
+
+    public void setBtnFollowup(String btnFollowup) {
+        this.btnFollowup = btnFollowup;
+    }
+
+    public boolean isMemberExists() {
+        return memberExists;
+    }
+
+    public void setMemberExists(boolean memberExists) {
+        this.memberExists = memberExists;
+    }
+
+    public CommonPersonObject getClient() {
+        return client;
+    }
+
+    public void setClient(CommonPersonObject client) {
+        this.client = client;
+    }
+
 }

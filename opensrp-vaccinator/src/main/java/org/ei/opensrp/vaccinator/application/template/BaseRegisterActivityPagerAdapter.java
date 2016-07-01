@@ -13,12 +13,25 @@ public class BaseRegisterActivityPagerAdapter extends FragmentPagerAdapter {
     public static final String ARG_PAGE = "page";
     String[] dialogOptions;
     Fragment mBaseFragment;
+    //Fragment mProfileFragment;
+    public int offset = 0;
+
 
     public BaseRegisterActivityPagerAdapter(FragmentManager fragmentManager, String[] dialogOptions, Fragment baseFragment) {
         super(fragmentManager);
         this.dialogOptions = dialogOptions;
         this.mBaseFragment = baseFragment;
+        //offset += 1;
     }
+
+    /*public BaseRegisterActivityPagerAdapter(FragmentManager fragmentManager, String[] dialogOptions, Fragment baseFragment, Fragment mProfileFragment) {
+        super(fragmentManager);
+        this.dialogOptions = dialogOptions;
+        this.mBaseFragment = baseFragment;
+        this.mProfileFragment = mProfileFragment;
+        offset += 2;
+    }*/
+
 
     @Override
     public Fragment getItem(int position) {
@@ -46,4 +59,8 @@ public class BaseRegisterActivityPagerAdapter extends FragmentPagerAdapter {
     public int getCount() {
         return dialogOptions.length + 1; // index 0 is always occupied by the base fragment
     }
+
+    /*public int getOffset(){
+        return offset;
+    }*/
 }
