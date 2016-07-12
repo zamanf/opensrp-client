@@ -67,6 +67,10 @@
             android:screenOrientation="landscape"
             android:theme="@style/AppThemeNoTitle" />
         <activity
+            android:name=".household.BridgingActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppThemeNoTitle" />
+        <activity
             android:name=".report.VaccineReport"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.NoActionBar"></activity>

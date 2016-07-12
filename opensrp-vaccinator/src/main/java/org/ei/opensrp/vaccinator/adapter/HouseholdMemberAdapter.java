@@ -1,6 +1,11 @@
 package org.ei.opensrp.vaccinator.adapter;
 
+import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,20 +17,30 @@ import android.widget.TextView;
 import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.domain.form.FieldOverrides;
+import org.ei.opensrp.util.FormUtils;
 import org.ei.opensrp.vaccinator.R;
 import org.ei.opensrp.vaccinator.application.template.SmartRegisterFragment;
 import org.ei.opensrp.vaccinator.db.Client;
+import org.ei.opensrp.vaccinator.household.BridgingActivity;
 import org.ei.opensrp.vaccinator.household.HouseholdDetailActivity;
 import org.ei.opensrp.vaccinator.household.HouseholdMemberDetails;
 import org.ei.opensrp.vaccinator.woman.WomanSmartRegisterActivity;
+import org.ei.opensrp.vaccinator.woman.WomanSmartRegisterFragment;
+import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
+import org.ei.opensrp.view.activity.SmartRegisterActivity;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.controller.FormController;
+import org.ei.opensrp.view.fragment.DisplayFormFragment;
+import org.ei.opensrp.view.viewpager.OpenSRPViewPager;
 import org.json.JSONObject;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import butterknife.Bind;
 import util.Utils;
 
 import static util.Utils.getValue;
@@ -33,11 +48,16 @@ import static util.Utils.getValue;
 /**
  * Created by Safwan on 5/10/2016.
  */
-public class HouseholdMemberAdapter extends ArrayAdapter<HouseholdMemberDetails> {
+public class HouseholdMemberAdapter extends ArrayAdapter<HouseholdMemberDetails> implements Serializable {
 
     private final Context context;
     private final List<HouseholdMemberDetails> list;
+    private final Fragment fragment;
     private FormController formController;
+
+    @Bind(R.id.view_pager)
+    OpenSRPViewPager mPager;
+    private FragmentPagerAdapter mPagerAdapter;
 
     TextView memberId;
     TextView memberName;
@@ -48,16 +68,22 @@ public class HouseholdMemberAdapter extends ArrayAdapter<HouseholdMemberDetails>
     CommonPersonObjectClient client;
 
 
+    public String[] formNames = new String[3];
+    //List<String> formNames = new ArrayList<String>();
 
-    public HouseholdMemberAdapter(Context context, List<HouseholdMemberDetails> list){
+
+
+
+    public HouseholdMemberAdapter(Fragment fragment, Context context, List<HouseholdMemberDetails> list){
         super(context, R.layout.list_individual, list);
+        this.fragment = fragment;
         this.context = context;
         this.list = list;
     }
 
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, final View convertView, ViewGroup parent) {
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -96,15 +122,46 @@ public class HouseholdMemberAdapter extends ArrayAdapter<HouseholdMemberDetails>
                 person = list.get(position).getClient();
                 map.putAll(followupOverrides(person));
 
-                //startFollowupForm("new_member_registration_without_qr", client, map, SmartRegisterFragment.ByColumnAndByDetails.byDefault);
+                try {
+                    formController = new FormController(WomanSmartRegisterActivity.class.newInstance());
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
 
-                //((WomanSmartRegisterActivity) getActivity()).startFormActivity("woman_followup", ((CommonPersonObjectClient) v.getTag()).entityId(), null);
+                client = new CommonPersonObjectClient(person.getCaseId(),person.getDetails(),person.getDetails().get("first_name"));
+
+                client.setColumnmaps(person.getColumnmaps());
+                //client.setDetails(person.getDetails());
+                client.setCaseId(person.getCaseId());
+
+                //startFollowupForm("woman_followup", client, map, SmartRegisterFragment.ByColumnAndByDetails.byDefault);
+
+                Intent intent = new Intent(getContext(), BridgingActivity.class);
+                intent.putExtra("woman", "woman");
+                BridgingActivity.person  = person;
+                /*intent.putExtra("client", client);*/
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                v.getContext().startActivity(intent);
+
+                /*formNames[1] = "woman_enrollment";
+                formNames[2] = "woman_followup";
+                formNames[3] = "offsite_woman_followup";*/
+
+
+                //client.setName();
+
+                //startFormActivity("woman_followup", null, null);
+
+
+                ((WomanSmartRegisterActivity) fragment.getActivity()).startFormActivity("woman_followup", ((CommonPersonObjectClient) v.getTag()).entityId(), null);
             }
         });
         return row;
     }
 
-    /*protected void startFollowupForm(String formName, SmartRegisterClient client, HashMap<String, String> overrideStringmap, SmartRegisterFragment.ByColumnAndByDetails byColumnAndByDetails) {
+    protected void startFollowupForm(String formName, SmartRegisterClient client, HashMap<String, String> overrideStringmap, SmartRegisterFragment.ByColumnAndByDetails byColumnAndByDetails) {
         if (overrideStringmap == null) {
             org.ei.opensrp.util.Log.logDebug("overrides data is null");
             formController.startFormActivity(formName, client.entityId(), null);
@@ -116,8 +173,33 @@ public class HouseholdMemberAdapter extends ArrayAdapter<HouseholdMemberDetails>
             org.ei.opensrp.util.Log.logDebug("fieldOverrides data is : " + fieldOverrides.getJSONString());
             formController.startFormActivity(formName, client.entityId(), fieldOverrides.getJSONString());
         }
+    }
+
+
+    /*public void startFormActivity(String formName, String entityId, String metaData) {
+        //Log.v("fieldoverride", metaData);
+        try {
+            int formIndex = FormUtils.getIndexForFormName(formName, formNames) + 2; // add the offset
+            DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(formIndex);
+            displayFormFragment.showForm(mPager, formIndex, entityId, metaData, false);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+    public android.support.v4.app.Fragment findFragmentByPosition(int position) {
+        FragmentPagerAdapter fragmentPagerAdapter = mPagerAdapter;
+        return getSupportFragmentManager().findFragmentByTag("android:switcher:" + mPager.getId() + ":" + fragmentPagerAdapter.getItemId(position));
+    }
+
+    public DisplayFormFragment getDisplayFormFragmentAtIndex(int index) {
+        return  (DisplayFormFragment)findFragmentByPosition(index);
     }*/
 
+   /* protected SmartRegisterFragment getBaseFragment() {
+        return new WomanSmartRegisterFragment(new FormController(WomanSmartRegisterActivity));
+    }*/
 
     private Map<String, String> followupOverrides(CommonPersonObject client){
         Map<String, String> map = new HashMap<>();

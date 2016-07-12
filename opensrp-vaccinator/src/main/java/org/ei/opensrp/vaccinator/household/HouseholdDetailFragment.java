@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -17,6 +18,7 @@ import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.util.StringUtil;
 import org.ei.opensrp.vaccinator.R;
 import org.ei.opensrp.vaccinator.adapter.HouseholdMemberAdapter;
+import org.ei.opensrp.view.fragment.SecuredFragment;
 import org.joda.time.DateTime;
 import org.joda.time.Years;
 
@@ -26,11 +28,12 @@ import java.util.List;
 import static util.Utils.convertDateFormat;
 import static util.Utils.getDataRow;
 import static util.Utils.getValue;
+import static util.Utils.setProfiePic;
 
 /**
  * Created by Safwan on 6/24/2016.
  */
-public class HouseholdDetailFragment extends Fragment {
+public class HouseholdDetailFragment extends SecuredFragment {
 
     ArrayAdapter<CommonPersonObject> arrayAdapter;
     List<HouseholdMemberDetails> memberDetails = new ArrayList<HouseholdMemberDetails>();
@@ -118,6 +121,8 @@ public class HouseholdDetailFragment extends Fragment {
             else if (memberAge > 10 && getValue(individual.getDetails(), "gender", false).equalsIgnoreCase("female"))
                 member.setMemberImageId(R.drawable.pk_woman_icon);
 
+            setProfiePic(view.getContext(), (ImageView) view.findViewById(R.id.household_profilepic), householdClient.entityId(), null);
+
 
             member.setMemberId(getValue(individual.getDetails(), "person_id", false));
             member.setMemberName(StringUtil.humanizeAndDoUPPERCASE(getValue(individual.getDetails(), "first_name", false) + " " + getValue(individual.getDetails(), "last_name", false)));
@@ -134,8 +139,18 @@ public class HouseholdDetailFragment extends Fragment {
                 }
             }
         }
-        list.setAdapter(new HouseholdMemberAdapter(context, memberDetails));
+        //list.setAdapter(new HouseholdMemberAdapter(this, context, memberDetails));
         return view;
+    }
+
+    @Override
+    protected void onCreation() {
+
+    }
+
+    @Override
+    protected void onResumption() {
+
     }
 
 

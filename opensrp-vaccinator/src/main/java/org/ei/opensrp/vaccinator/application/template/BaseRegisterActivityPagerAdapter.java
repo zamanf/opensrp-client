@@ -13,7 +13,7 @@ public class BaseRegisterActivityPagerAdapter extends FragmentPagerAdapter {
     public static final String ARG_PAGE = "page";
     String[] dialogOptions;
     Fragment mBaseFragment;
-    //Fragment mProfileFragment;
+    Fragment mProfileFragment;
     public int offset = 0;
 
 
@@ -21,16 +21,17 @@ public class BaseRegisterActivityPagerAdapter extends FragmentPagerAdapter {
         super(fragmentManager);
         this.dialogOptions = dialogOptions;
         this.mBaseFragment = baseFragment;
-        //offset += 1;
+        //SAFWAN
+        offset += 1;
     }
-
-    /*public BaseRegisterActivityPagerAdapter(FragmentManager fragmentManager, String[] dialogOptions, Fragment baseFragment, Fragment mProfileFragment) {
+    //SAFWAN
+    public BaseRegisterActivityPagerAdapter(FragmentManager fragmentManager, String[] dialogOptions, Fragment baseFragment, Fragment mProfileFragment) {
         super(fragmentManager);
         this.dialogOptions = dialogOptions;
         this.mBaseFragment = baseFragment;
         this.mProfileFragment = mProfileFragment;
         offset += 2;
-    }*/
+    }
 
 
     @Override

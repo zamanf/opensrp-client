@@ -34,6 +34,11 @@ public abstract class SmartRegisterActivity extends SecuredNativeSmartRegisterAc
     private String[] formNames = new String[]{};
     private android.support.v4.app.Fragment mBaseFragment = null;
 
+    //SAFWAN
+    private android.support.v4.app.Fragment mProfileFragment = null;
+
+
+
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
@@ -46,12 +51,13 @@ public abstract class SmartRegisterActivity extends SecuredNativeSmartRegisterAc
         getSupportActionBar().setDisplayShowHomeEnabled(false);
         getSupportActionBar().hide();
 //        getWindow().getDecorView().setBackgroundDrawable(null);
-
+;
         formNames = this.buildFormNameList();
         mBaseFragment = getBaseFragment();
 
         // Instantiate a ViewPager and a PagerAdapter.
-        mPagerAdapter = new BaseRegisterActivityPagerAdapter(getSupportFragmentManager(), formNames, mBaseFragment);
+        //SAFWAN
+        mPagerAdapter = new BaseRegisterActivityPagerAdapter(getSupportFragmentManager(), formNames, mBaseFragment, mProfileFragment);
         mPager.setOffscreenPageLimit(formNames.length);
         mPager.setAdapter(mPagerAdapter);
         mPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
@@ -143,7 +149,7 @@ public abstract class SmartRegisterActivity extends SecuredNativeSmartRegisterAc
     public void startFormActivity(String formName, String entityId, String metaData) {
         Log.v("fieldoverride", metaData);
         try {
-            int formIndex = FormUtils.getIndexForFormName(formName, formNames) + 1; // add the offset
+            int formIndex = FormUtils.getIndexForFormName(formName, formNames) + ((BaseRegisterActivityPagerAdapter)mPagerAdapter).offset; // add the offset
             DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(formIndex);
             displayFormFragment.showForm(mPager, formIndex, entityId, metaData, false);
         }catch (Exception e){
