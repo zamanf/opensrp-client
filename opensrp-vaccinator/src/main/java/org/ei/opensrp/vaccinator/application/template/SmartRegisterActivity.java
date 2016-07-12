@@ -17,6 +17,7 @@ import org.ei.opensrp.vaccinator.R;
 import org.ei.opensrp.vaccinator.household.HouseholdDetailActivity;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
 import org.ei.opensrp.view.fragment.DisplayFormFragment;
+import org.ei.opensrp.view.fragment.SecuredFragment;
 import org.ei.opensrp.view.fragment.SecuredNativeSmartRegisterFragment;
 import org.ei.opensrp.view.viewpager.OpenSRPViewPager;
 import org.json.JSONObject;
@@ -159,22 +160,40 @@ public abstract class SmartRegisterActivity extends SecuredNativeSmartRegisterAc
     }
 
     public void switchToBaseFragment(final String data, final int pageIndex) {
+        final int prevPageIndex = currentPage;
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 //hack reset the form
-                DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(pageIndex);
-                if (displayFormFragment != null) {
-                    displayFormFragment.hideTranslucentProgressDialog();
-                    displayFormFragment.setFormData(null);
-                    displayFormFragment.setRecordId(null);
-                    displayFormFragment.setFieldOverides(null);
-                }
+                if (prevPageIndex != 1) {
+                    DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(pageIndex);
+                    if (displayFormFragment != null) {
+                        displayFormFragment.hideTranslucentProgressDialog();
+                        displayFormFragment.setFormData(null);
+                        displayFormFragment.setRecordId(null);
+                        displayFormFragment.setFieldOverides(null);
+                    }
 
-                mPager.setCurrentItem(0, false);
-                SecuredNativeSmartRegisterFragment registerFragment = (SecuredNativeSmartRegisterFragment) findFragmentByPosition(0);
-                if (registerFragment != null && data != null) {
-                    registerFragment.refreshListView();
+                    mPager.setCurrentItem(0, false);
+                    SecuredNativeSmartRegisterFragment registerFragment = (SecuredNativeSmartRegisterFragment) findFragmentByPosition(0);
+                    if (registerFragment != null && data != null) {
+                        registerFragment.refreshListView();
+                    }
+                } else if (prevPageIndex == 4) {
+                    DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(prevPageIndex);
+                    if (displayFormFragment != null) {
+                        displayFormFragment.hideTranslucentProgressDialog();
+                        displayFormFragment.setFormData(null);
+                        displayFormFragment.setRecordId(null);
+                        displayFormFragment.setFieldOverides(null);
+                    }
+
+                    mPager.setCurrentItem(0, false);
+                    SecuredFragment registerFragment = (SecuredFragment) findFragmentByPosition(1);
+
+
+                    ((HouseholdDetailActivity) mProfileFragment).initialize();
+                    showProfileView();
                 }
             }
         });
@@ -220,6 +239,12 @@ public abstract class SmartRegisterActivity extends SecuredNativeSmartRegisterAc
         } else if (currentPage == 0) {
             super.onBackPressed(); // allow back key only if we are
         }
+    }
+
+    public void showProfileView() {
+        HouseholdDetailActivity profile = (HouseholdDetailActivity)findFragmentByPosition(1);
+        profile.initialize();
+        mPager.setCurrentItem(1);
     }
 
 }

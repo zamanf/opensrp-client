@@ -23,6 +23,10 @@ public class HouseholdSmartRegisterActivity extends SmartRegisterActivity {
         formNames.add("family_registration");
         formNames.add("new_member_registration");
         formNames.add("new_member_registration_without_qr");
+        //SAFWAN
+        formNames.add("woman_followup");
+        formNames.add("child_followup");
+
 
         return formNames.toArray(new String[formNames.size()]);
     }
