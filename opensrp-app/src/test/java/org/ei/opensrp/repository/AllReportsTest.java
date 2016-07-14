@@ -1,21 +1,15 @@
 package org.ei.opensrp.repository;
 
-import org.robolectric.RobolectricTestRunner;
-import org.ei.opensrp.domain.Report;
 import org.ei.drishti.dto.Action;
+import org.ei.opensrp.domain.Report;
 import org.ei.opensrp.util.ActionBuilder;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.robolectric.RobolectricTestRunner;
 
-import java.util.List;
-
-import static java.util.Arrays.asList;
-import static junit.framework.Assert.assertEquals;
-import static org.ei.opensrp.domain.ReportIndicator.*;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 @RunWith(RobolectricTestRunner.class)
@@ -37,15 +31,5 @@ public class AllReportsTest {
         allReports.handleAction(iudAction);
 
         verify(repository).update(new Report("IUD", "40", "some-month-summary-json"));
-    }
-
-    @Test
-    public void shouldGetReportsForGivenIndicators() throws Exception {
-        List<Report> expectedReports = asList(new Report("IUD", "40", "some-month-summary-json"), new Report("ANC_LT_12", "30", "some-month-summary-json"));
-        when(repository.allFor("IUD", "CONDOM", "ANC_LT_12")).thenReturn(expectedReports);
-
-        List<Report> reports = allReports.allFor(asList(IUD, CONDOM, EARLY_ANC_REGISTRATIONS));
-
-        assertEquals(expectedReports, reports);
     }
 }

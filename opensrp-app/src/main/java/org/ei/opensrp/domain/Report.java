@@ -2,6 +2,7 @@ package org.ei.opensrp.domain;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -9,8 +10,6 @@ import org.ei.drishti.dto.MonthSummaryDatum;
 
 import java.io.Serializable;
 import java.util.List;
-
-import static org.ei.opensrp.domain.ReportIndicator.parseToReportIndicator;
 
 public class Report implements Serializable {
     private final String indicator;
@@ -28,7 +27,7 @@ public class Report implements Serializable {
     }
 
     public ReportIndicator reportIndicator() {
-        return parseToReportIndicator(indicator);
+        return new ReportIndicator(indicator, "no value processed yet", "no desc availabl in Report class");
     }
 
     public String annualTarget() {
