@@ -2,26 +2,30 @@ package org.ei.opensrp.adapter;
 
 import android.view.View;
 import android.view.ViewGroup;
-import org.ei.opensrp.provider.SmartRegisterClientsProvider;
+
 import org.ei.opensrp.view.contract.ECClient;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.contract.SmartRegisterClients;
 import org.ei.opensrp.view.dialog.FilterOption;
+import org.ei.opensrp.view.dialog.SearchFilterOption;
 import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
+import org.ei.opensrp.view.template.SmartRegisterClientsProvider;
 import org.ei.opensrp.view.viewHolder.OnClickFormLauncher;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
 public class SmartRegisterPaginatedAdapterTest {
 
     @Test
     public void shouldReturn0PageCountFor0Clients() {
-        SmartRegisterPaginatedAdapter adapter = getAdapterWithFakeClients(0);
+        SmartRegisterInMemoryPaginatedAdapter adapter = getAdapterWithFakeClients(0);
 
         assertEquals(adapter.getCount(), 0);
         assertEquals(adapter.pageCount(), 0);
@@ -32,7 +36,7 @@ public class SmartRegisterPaginatedAdapterTest {
 
     @Test
     public void shouldReturn1PageCountFor20Clients() {
-        SmartRegisterPaginatedAdapter adapter = getAdapterWithFakeClients(20);
+        SmartRegisterInMemoryPaginatedAdapter adapter = getAdapterWithFakeClients(20);
         assertEquals(adapter.getCount(), 20);
         assertEquals(adapter.pageCount(), 1);
         assertEquals(adapter.currentPage(), 0);
@@ -42,7 +46,7 @@ public class SmartRegisterPaginatedAdapterTest {
 
     @Test
     public void shouldReturn2PageCountFor21Clients() {
-        SmartRegisterPaginatedAdapter adapter = getAdapterWithFakeClients(21);
+        SmartRegisterInMemoryPaginatedAdapter adapter = getAdapterWithFakeClients(21);
         assertEquals(adapter.getCount(), 20);
         assertEquals(adapter.pageCount(), 2);
         assertEquals(adapter.currentPage(), 0);
@@ -65,13 +69,13 @@ public class SmartRegisterPaginatedAdapterTest {
 
     @Test
     public void shouldReturn3PageCountFor50Clients() {
-        SmartRegisterPaginatedAdapter adapter = getAdapterWithFakeClients(50);
+        SmartRegisterInMemoryPaginatedAdapter adapter = getAdapterWithFakeClients(50);
         assertEquals(adapter.pageCount(), 3);
     }
 
     @Test
     public void getItemShouldReturnRespectiveItem() {
-        SmartRegisterPaginatedAdapter adapter = getAdapterWithFakeClients(50);
+        SmartRegisterInMemoryPaginatedAdapter adapter = getAdapterWithFakeClients(50);
         assertEquals(((ECClient) adapter.getItem(0)).name(), "Name0");
         assertEquals(((ECClient) adapter.getItem(49)).name(), "Name49");
     }
@@ -79,7 +83,7 @@ public class SmartRegisterPaginatedAdapterTest {
     @Test
     public void getViewShouldDelegateCallToProviderGetViewWithProperClient() {
         FakeClientsProvider fakeClientsProvider = new FakeClientsProvider(getSmartRegisterClients(50));
-        SmartRegisterPaginatedAdapter adapter = getAdapter(fakeClientsProvider);
+        SmartRegisterInMemoryPaginatedAdapter adapter = getAdapter(fakeClientsProvider);
 
         adapter.getView(0, null, null);
         assertEquals("Name0", fakeClientsProvider.getViewCurrentClient.name());
@@ -91,7 +95,7 @@ public class SmartRegisterPaginatedAdapterTest {
     @Test
     public void getItemIdShouldReturnTheActualPositionWithoutPagination() {
         FakeClientsProvider fakeClientsProvider = new FakeClientsProvider(getSmartRegisterClients(50));
-        SmartRegisterPaginatedAdapter adapter = getAdapter(fakeClientsProvider);
+        SmartRegisterInMemoryPaginatedAdapter adapter = getAdapter(fakeClientsProvider);
 
         assertEquals(0, adapter.getItemId(0));
         assertEquals(19, adapter.getItemId(19));
@@ -105,7 +109,7 @@ public class SmartRegisterPaginatedAdapterTest {
 
     @Test
     public void updateClientsShouldApplyFilterToShowOnlyFiveClients() {
-        SmartRegisterPaginatedAdapter adapter = getAdapterWithFakeClients(50);
+        SmartRegisterInMemoryPaginatedAdapter adapter = getAdapterWithFakeClients(50);
         assertEquals(3, adapter.pageCount());
         assertEquals(20, adapter.getCount());
 
@@ -117,16 +121,16 @@ public class SmartRegisterPaginatedAdapterTest {
 
     @Test
     public void paginationShouldWorkFor25ClientsPerPage() {
-        SmartRegisterPaginatedAdapter adapter = getAdapterWithFakeClients(50, 25);
+        SmartRegisterInMemoryPaginatedAdapter adapter = getAdapterWithFakeClients(50, 25);
         assertEquals(2, adapter.pageCount());
         assertEquals(25, adapter.getCount());
     }
 
-    private SmartRegisterPaginatedAdapter getAdapterWithFakeClients(int clientsCount) {
+    private SmartRegisterInMemoryPaginatedAdapter getAdapterWithFakeClients(int clientsCount) {
         return getAdapter(getFakeProvider(getSmartRegisterClients(clientsCount)));
     }
 
-    private SmartRegisterPaginatedAdapter getAdapterWithFakeClients(int clientsCount, int clientsPerPage) {
+    private SmartRegisterInMemoryPaginatedAdapter getAdapterWithFakeClients(int clientsCount, int clientsPerPage) {
         return getAdapter(clientsPerPage, getFakeProvider(getSmartRegisterClients(clientsCount)));
     }
 
@@ -146,12 +150,12 @@ public class SmartRegisterPaginatedAdapterTest {
         return new FakeClientsProvider(clients);
     }
 
-    private SmartRegisterPaginatedAdapter getAdapter(FakeClientsProvider provider) {
-        return new SmartRegisterPaginatedAdapter(provider);
+    private SmartRegisterInMemoryPaginatedAdapter getAdapter(FakeClientsProvider provider) {
+        return new SmartRegisterInMemoryPaginatedAdapter(20, provider);
     }
 
-    private SmartRegisterPaginatedAdapter getAdapter(int clientsPerPage, FakeClientsProvider provider) {
-        return new SmartRegisterPaginatedAdapter(clientsPerPage, provider);
+    private SmartRegisterInMemoryPaginatedAdapter getAdapter(int clientsPerPage, FakeClientsProvider provider) {
+        return new SmartRegisterInMemoryPaginatedAdapter(clientsPerPage, provider);
     }
 
     private class FakeClientsProvider implements SmartRegisterClientsProvider {
@@ -177,7 +181,7 @@ public class SmartRegisterPaginatedAdapterTest {
         @Override
         public SmartRegisterClients updateClients(
                 FilterOption villageFilter, ServiceModeOption serviceModeOption,
-                FilterOption searchFilter, SortOption sortOption) {
+                SearchFilterOption searchFilter, SortOption sortOption) {
             return getSmartRegisterClients(5);
         }
 
@@ -188,6 +192,11 @@ public class SmartRegisterPaginatedAdapterTest {
 
         @Override
         public OnClickFormLauncher newFormLauncher(String formName, String entityId, String metaData) {
+            return null;
+        }
+
+        @Override
+        public View inflateLayoutForAdapter() {
             return null;
         }
     }

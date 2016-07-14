@@ -1,4 +1,4 @@
-package util;
+package org.ei.opensrp.util;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
