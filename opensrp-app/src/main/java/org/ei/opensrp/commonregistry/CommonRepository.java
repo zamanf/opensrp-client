@@ -2,13 +2,11 @@ package org.ei.opensrp.commonregistry;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import net.sqlcipher.database.SQLiteDatabase;
-import net.sqlcipher.database.SQLiteQueryBuilder;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.ei.opensrp.repository.DrishtiRepository;
@@ -283,24 +281,25 @@ public class CommonRepository extends DrishtiRepository {
         return cursor;
     }
     public Cursor RawCustomQueryForAdapter(String query){
-
         SQLiteDatabase database = masterRepository.getReadableDatabase();
-        Cursor cursor = database.rawQuery(query,null);
-          return cursor;
+        Cursor cursor = database.rawQuery(query, null);
+        return cursor;
     }
     public CommonPersonObject readAllcommonforCursorAdapter (Cursor cursor) {
-
-
-            int columncount = cursor.getColumnCount();
-            HashMap <String, String> columns = new HashMap<String, String>();
-            for (int i = 3;i < columncount;i++ ){
-                columns.put(additionalcolumns[i-3],cursor.getString(i));
+        int columncount = cursor.getColumnCount();
+        HashMap <String, String> columns = new HashMap<String, String>();
+        for (int i = 0;i < columncount;i++ ){
+            String cname = cursor.getColumnName(i);
+            if(!cname.equalsIgnoreCase("details")) {
+                columns.put(cname, cursor.getString(i));
             }
-            CommonPersonObject common = new CommonPersonObject(cursor.getString(0),cursor.getString(1),new Gson().<Map<String, String>>fromJson(cursor.getString(2), new TypeToken<Map<String, String>>() {
-            }.getType()),TABLE_NAME);
-            common.setColumnmaps(columns);
+        }
 
+        CommonPersonObject common = new CommonPersonObject(columns.get(ID_COLUMN), columns.get(Relational_ID),
+                new Gson().<Map<String, String>>fromJson(cursor.getString(cursor.getColumnIndex(DETAILS_COLUMN)), new TypeToken<Map<String, String>>() {
+        }.getType()),TABLE_NAME);
 
+        common.setColumnmaps(columns);
         return common;
     }
 }
