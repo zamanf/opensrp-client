@@ -1,6 +1,7 @@
 package org.ei.opensrp.vaccinator.field;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -9,16 +10,15 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
-import org.ei.opensrp.commonregistry.CommonPersonObjectController;
-import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.service.AlertService;
 import org.ei.opensrp.vaccinator.R;
-import org.ei.opensrp.vaccinator.application.template.SmartRegisterFragment;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.contract.SmartRegisterClients;
 import org.ei.opensrp.view.dialog.FilterOption;
+import org.ei.opensrp.view.dialog.SearchFilterOption;
 import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
+import org.ei.opensrp.view.template.SmartRegisterClientsProvider;
 import org.ei.opensrp.view.viewHolder.OnClickFormLauncher;
 import org.joda.time.DateTime;
 
@@ -26,10 +26,13 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Map;
 
-import static util.Utils.addToRow;
-import static util.Utils.getDataRow;
-import static util.Utils.getValue;
+import static org.ei.opensrp.util.Utils.addToRow;
+import static org.ei.opensrp.util.Utils.*;
+import static org.ei.opensrp.util.Utils.getDataRow;
+import static org.ei.opensrp.util.Utils.getValue;
 
 public class FieldMonitorSmartClientsProvider implements SmartRegisterClientsProvider {
 
@@ -37,30 +40,18 @@ public class FieldMonitorSmartClientsProvider implements SmartRegisterClientsPro
     private final Context context;
     private final OnClickListener onClickListener;
     AlertService alertService;
-    //private final AbsListView.LayoutParams clientViewLayoutParams;
-    private org.ei.opensrp.Context context1;
 
     private ByMonthByDay byMonthlyAndByDaily;
 
     public enum ByMonthByDay {ByMonth, ByDay}
 
-    public SmartRegisterFragment parent;
-
-    protected CommonPersonObjectController controller;
-
-    public FieldMonitorSmartClientsProvider(Context context, OnClickListener onClickListener, CommonPersonObjectController controller,
-                                            AlertService alertService, ByMonthByDay byMonthlyAndByDaily,
-                                            org.ei.opensrp.Context context1, SmartRegisterFragment parent) {
+    public FieldMonitorSmartClientsProvider(Context context, OnClickListener onClickListener,
+              AlertService alertService, ByMonthByDay byMonthlyAndByDaily) {
         this.onClickListener = onClickListener;
-        this.controller = controller;
         this.context = context;
-        this.context1 = context1;
         this.alertService = alertService;
         this.byMonthlyAndByDaily = byMonthlyAndByDaily;
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.parent = parent;
-
-       // clientViewLayoutParams = new AbsListView.LayoutParams(MATCH_PARENT, (int) context.getResources().getDimension(org.ei.opensrp.R.dimen.list_item_height));
     }
 
     private int getTotalWasted(String startDate, String endDate, String type){
@@ -76,6 +67,16 @@ public class FieldMonitorSmartClientsProvider implements SmartRegisterClientsPro
 
     private ArrayList<HashMap<String, String>> getWasted(String startDate, String endDate, String type){
         String sqlWasted = "select sum (total_wasted)as total_wasted from stock where `report` ='"+type+"' and `date` between '" + startDate + "' and '" + endDate + "'";
+        return org.ei.opensrp.Context.getInstance().commonrepository("stock").rawQuery(sqlWasted);
+    }
+
+    private ArrayList<HashMap<String, String>> getWastedByVaccine(String startDate, String endDate, String type){
+        String sqlWasted = "select " +
+                " sum(ifnull(bcg_wasted, 0)) bcg, sum(ifnull(opv_wasted, 0)) opv," +
+                " sum(ifnull(ipv_wasted, 0)) ipv, sum(ifnull(penta_wasted, 0)) penta," +
+                " sum(ifnull(measles_wasted, 0)) measles, sum(ifnull(pcv_wasted, 0)) pcv," +
+                " sum(ifnull(tt_wasted, 0)) tt, sum(ifnull(total_wasted, 0)) total" +
+                " from stock where `report` ='"+type+"' and `date` between '" + startDate + "' and '" + endDate + "'";
         return org.ei.opensrp.Context.getInstance().commonrepository("stock").rawQuery(sqlWasted);
     }
 
@@ -102,18 +103,19 @@ public class FieldMonitorSmartClientsProvider implements SmartRegisterClientsPro
 
         String sqlChild = "select (" +
                 "select count(*) c from pkchild where bcg between '" + startDate + "' and '" + endDate + "') bcg," +
-                "(select count(*) c from pkchild where opv0 between '" + startDate + "' and '" + endDate + "') opv_0," +
-                "(select count(*) c from pkchild where opv1 between '" + startDate + "' and '" + endDate + "') opv_1," +
-                "(select count(*) c from pkchild where opv2 between '" + startDate + "' and '" + endDate + "') opv_2," +
-                "(select count(*) c from pkchild where opv3 between '" + startDate + "' and '" + endDate + "') opv_3, " +
-                "(select count(*) c from pkchild where pcv1 between '" + startDate + "' and '" + endDate + "') pcv_1," +
-                "(select count(*) c from pkchild where pcv2 between '" + startDate + "' and '" + endDate + "') pcv_2," +
-                "(select count(*) c from pkchild where pcv3 between '" + startDate + "' and '" + endDate + "') pcv_3, " +
-                "(select count(*) c from pkchild where measles1 between '" + startDate + "' and '" + endDate + "') measles_1, " +
-                "(select count(*) c from pkchild where measles2 between '" + startDate + "' and '" + endDate + "') measles_2," +
-                "(select count(*) c from pkchild where penta1 between '" + startDate + "' and '" + endDate + "') pentavalent_1," +
-                "(select count(*) c from pkchild where penta2 between '" + startDate + "' and '" + endDate + "') pentavalent_2," +
-                "(select count(*) c from pkchild where penta3 between '" + startDate + "' and '" + endDate + "') pentavalent_3 " +
+                "(select count(*) c from pkchild where opv0 between '" + startDate + "' and '" + endDate + "') opv0," +
+                "(select count(*) c from pkchild where opv1 between '" + startDate + "' and '" + endDate + "') opv1," +
+                "(select count(*) c from pkchild where opv2 between '" + startDate + "' and '" + endDate + "') opv2," +
+                "(select count(*) c from pkchild where opv3 between '" + startDate + "' and '" + endDate + "') opv3, " +
+                "(select count(*) c from pkchild where ipv between '" + startDate + "' and '" + endDate + "') ipv, " +
+                "(select count(*) c from pkchild where pcv1 between '" + startDate + "' and '" + endDate + "') pcv1," +
+                "(select count(*) c from pkchild where pcv2 between '" + startDate + "' and '" + endDate + "') pcv2," +
+                "(select count(*) c from pkchild where pcv3 between '" + startDate + "' and '" + endDate + "') pcv3, " +
+                "(select count(*) c from pkchild where measles1 between '" + startDate + "' and '" + endDate + "') measles1, " +
+                "(select count(*) c from pkchild where measles2 between '" + startDate + "' and '" + endDate + "') measles2," +
+                "(select count(*) c from pkchild where penta1 between '" + startDate + "' and '" + endDate + "') penta1," +
+                "(select count(*) c from pkchild where penta2 between '" + startDate + "' and '" + endDate + "') penta2," +
+                "(select count(*) c from pkchild where penta3 between '" + startDate + "' and '" + endDate + "') penta3 " +
                 "from pkchild limit 1 ;";
 
         ArrayList<HashMap<String, String>> ttVaccinesUsed = org.ei.opensrp.Context.getInstance().commonrepository("pkwoman").rawQuery(sqlWoman);
@@ -122,17 +124,26 @@ public class FieldMonitorSmartClientsProvider implements SmartRegisterClientsPro
         ttVaccinesUsed.addAll(childVaccinesUsed);
         return ttVaccinesUsed;
     }
+
+    //todo refactor above method
+    private Map<String, String> getUsedByVaccine(String startDate, String endDate){
+        Map<String, String> m = new HashMap<>();
+        ArrayList<HashMap<String, String>> al = getUsed(startDate, endDate);
+        for (HashMap<String, String> s : al){
+            m.putAll(s);
+        }
+        return m;
+    }
     
     @Override
     public View getView(SmartRegisterClient client, View parentView, ViewGroup viewGroup) {
         CommonPersonObjectClient pc = (CommonPersonObjectClient) client;
-        parentView = (ViewGroup) inflater().inflate(R.layout.smart_register_field_client, null);
 
-        String date_entered = pc.getColumnmaps().get("date");
+        String dateentered = pc.getColumnmaps().get("date");
 
         DateTime date = null;
         try {
-            date = new DateTime(new SimpleDateFormat("yyyy-MM-dd").parse(date_entered).getTime());
+            date = new DateTime(new SimpleDateFormat("yyyy-MM-dd").parse(dateentered).getTime());
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -147,37 +158,28 @@ public class FieldMonitorSmartClientsProvider implements SmartRegisterClientsPro
             String endDate = date.withDayOfMonth(1).plusMonths(1).minusDays(1).toString("yyyy-MM-dd");
 
             addToRow(context, date.toString("MMMM (yyyy)"), tr);
-            addToRow(context, pc.getDetails().get("Target_assigned_for_vaccination_at_each_month"), tr);
+            addToRow(context, pc.getColumnmaps().get("Target_assigned_for_vaccination_at_each_month"), tr);
 
-            int bcgBalanceInHand = Integer.parseInt(getValue(pc, "bcg_balance_in_hand", "0", false));
-            int bcgReceived = Integer.parseInt(getValue(pc, "bcg_received", "0", false));
+            int bcgBalanceInHand = Integer.parseInt(getValue(pc.getColumnmaps(), "bcg_balance_in_hand", "0", false));
+            int bcgReceived = Integer.parseInt(getValue(pc.getColumnmaps(), "bcg_received", "0", false));
 
-            int opv_balance_in_hand = Integer.parseInt(getValue(pc, "opv_balance_in_hand", "0", false));
-            int opv_received = Integer.parseInt(getValue(pc, "opv_received", "0", false));
+            int opv_balance_in_hand = Integer.parseInt(getValue(pc.getColumnmaps(), "opv_balance_in_hand", "0", false));
+            int opv_received = Integer.parseInt(getValue(pc.getColumnmaps(), "opv_received", "0", false));
 
-            int ipv_balance_in_hand = Integer.parseInt(getValue(pc, "ipv_balance_in_hand", "0", false));
-            int ipv_received = Integer.parseInt(getValue(pc, "ipv_received", "0", false));
+            int ipv_balance_in_hand = Integer.parseInt(getValue(pc.getColumnmaps(), "ipv_balance_in_hand", "0", false));
+            int ipv_received = Integer.parseInt(getValue(pc.getColumnmaps(), "ipv_received", "0", false));
 
-            int pcv_balance_in_hand = Integer.parseInt(getValue(pc, "pcv_balance_in_hand", "0", false));
-            int pcv_received = Integer.parseInt(getValue(pc, "pcv_received", "0", false));
+            int pcv_balance_in_hand = Integer.parseInt(getValue(pc.getColumnmaps(), "pcv_balance_in_hand", "0", false));
+            int pcv_received = Integer.parseInt(getValue(pc.getColumnmaps(), "pcv_received", "0", false));
 
-            int penta_balance_in_hand = Integer.parseInt(getValue(pc, "penta_balance_in_hand", "0", false));
-            int penta_received = Integer.parseInt(getValue(pc, "penta_received", "0", false));
+            int penta_balance_in_hand = Integer.parseInt(getValue(pc.getColumnmaps(), "penta_balance_in_hand", "0", false));
+            int penta_received = Integer.parseInt(getValue(pc.getColumnmaps(), "penta_received", "0", false));
 
-            int measles_balance_in_hand = Integer.parseInt(getValue(pc, "measles_balance_in_hand", "0", false));
-            int measles_received = Integer.parseInt(getValue(pc, "measles_received", "0", false));
+            int measles_balance_in_hand = Integer.parseInt(getValue(pc.getColumnmaps(), "measles_balance_in_hand", "0", false));
+            int measles_received = Integer.parseInt(getValue(pc.getColumnmaps(), "measles_received", "0", false));
 
-            int tt_balance_in_hand = Integer.parseInt(getValue(pc, "tt_balance_in_hand", "0", false));
-            int tt_received = Integer.parseInt(getValue(pc, "tt_received", "0", false));
-
-//                int dilutants_balance_in_hand = Integer.parseInt(getValue(pc, "dilutants_balance_in_hand", "0", false)("dilutants_balance_in_hand") : "0");
-//              int dilutants_received = Integer.parseInt(getValue(pc, "dilutants_received", "0", false)("dilutants_received") : "0");
-
-//            int syringes_balance_in_hand = Integer.parseInt(getValue(pc, "syringes_balance_in_hand", "0", false)("syringes_balance_in_hand") : "0");
-  //          int syringes_received = Integer.parseInt(getValue(pc, "syringes_received", "0", false)("syringes_received") : "0");
-
-    //        int safety_boxes_balance_in_hand = Integer.parseInt(getValue(pc, "safety_boxes_balance_in_hand", "0", false)("safety_boxes_balance_in_hand") : "0");
-      //      int safety_boxes_received = Integer.parseInt(getValue(pc, "safety_boxes_received") != null ? pc.getDetails().get("safety_boxes_received") : "0");
+            int tt_balance_in_hand = Integer.parseInt(getValue(pc.getColumnmaps(), "tt_balance_in_hand", "0", false));
+            int tt_received = Integer.parseInt(getValue(pc.getColumnmaps(), "tt_received", "0", false));
 
             //#TODO get Total balance,wasted and received from total variables instead of calculating here.
             int balanceInHand = bcgBalanceInHand + opv_balance_in_hand + ipv_balance_in_hand +
@@ -197,9 +199,35 @@ public class FieldMonitorSmartClientsProvider implements SmartRegisterClientsPro
             String startDate = date.toString("yyyy-MM-dd");
             String endDate = date.toString("yyyy-MM-dd");
 
-            addToRow(context, date.toString("dd-MM-yyyy"), tr);
-            addToRow(context, getTotalUsed(startDate, endDate) + "", tr);
+            Map<String, String> m = getUsedByVaccine(startDate, endDate);
+            //ArrayList<HashMap<String, String>> wl = getWastedByVaccine(startDate, startDate, "daily");
+            //HashMap<String, String> w = wl.size() > 0 ? wl.get(0) : new HashMap<String, String>();
 
+            addToRow(context, "<b>"+date.toString("dd-MM-yyyy")+"<b>", tr, 2);
+
+            addToRow(context, m.get("bcg"), tr);
+            //addToRow(context, w.get("bcg"), tr);
+
+            addToRow(context, addAsInts(true, m.get("opv0"), m.get("opv1"), m.get("opv2"), m.get("opv3"))+"", tr);
+            //addToRow(context, w.get("opv"), tr);
+
+            addToRow(context, addAsInts(true, m.get("ipv"))+"", tr);
+            //addToRow(context, w.get("ipv"), tr);
+
+            addToRow(context, addAsInts(true, m.get("penta1"), m.get("penta2"), m.get("penta3"))+"", tr);
+            //addToRow(context, w.get("penta"), tr);
+
+            addToRow(context, addAsInts(true, m.get("measles1"), m.get("measles2"))+"", tr);
+            //addToRow(context, w.get("measles"), tr);
+
+            addToRow(context, addAsInts(true, m.get("pcv1"), m.get("pcv2"), m.get("pcv3"))+"", tr);
+            //addToRow(context, w.get("pcv"), tr);
+
+            addToRow(context, addAsInts(true, m.get("tt1"), m.get("tt2"), m.get("tt3"), m.get("tt4"), m.get("tt5"))+"", tr);
+            //addToRow(context, w.get("tt"), tr);
+
+            addToRow(context, getTotalUsed(startDate, endDate) + "", tr);
+//            addToRow(context, w.get("total") + "", tr);
             addToRow(context, getTotalWasted(startDate, endDate, "daily") + "", tr);
 
             tr.setTag(R.id.client_details_tag, client);
@@ -215,22 +243,29 @@ public class FieldMonitorSmartClientsProvider implements SmartRegisterClientsPro
 
     @Override
     public SmartRegisterClients getClients() {
-        return controller.getClients();
+        throw new UnsupportedOperationException("Operation not supported");
     }
 
     @Override
-    public SmartRegisterClients updateClients(FilterOption villageFilter, ServiceModeOption serviceModeOption, FilterOption searchFilter, SortOption sortOption) {
-        return getClients().applyFilter(villageFilter, serviceModeOption, searchFilter, sortOption);
+    public SmartRegisterClients updateClients(FilterOption villageFilter, ServiceModeOption serviceModeOption,
+               SearchFilterOption searchFilter, SortOption sortOption) {
+        throw new UnsupportedOperationException("Operation not supported");
     }
 
     @Override
     public void onServiceModeSelected(ServiceModeOption serviceModeOption) {
-        parent.refreshListView();
+        Log.i("", "NOTHING TO DO IN CLIENT PROVIDER WHEN SERVICE CHANGES");
     }
 
     @Override
     public OnClickFormLauncher newFormLauncher(String formName, String entityId, String metaData) {
-        return null;
+        throw new UnsupportedOperationException("Operation not supported");
+    }
+
+    @Override
+    public View inflateLayoutForAdapter() {
+        ViewGroup view = (ViewGroup) inflater().inflate(R.layout.smart_register_field_client, null);
+        return view;
     }
 
     public LayoutInflater inflater() {

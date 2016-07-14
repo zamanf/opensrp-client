@@ -10,9 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
-import org.ei.opensrp.commonregistry.CommonPersonObjectController;
+import org.ei.opensrp.cursoradapter.SmartRegisterPaginatedCursorAdapter;
 import org.ei.opensrp.domain.Alert;
-import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.service.AlertService;
 import org.ei.opensrp.util.StringUtil;
 import org.ei.opensrp.vaccinator.R;
@@ -20,8 +19,10 @@ import org.ei.opensrp.vaccinator.db.VaccineRepo;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.contract.SmartRegisterClients;
 import org.ei.opensrp.view.dialog.FilterOption;
+import org.ei.opensrp.view.dialog.SearchFilterOption;
 import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
+import org.ei.opensrp.view.template.SmartRegisterClientsProvider;
 import org.ei.opensrp.view.viewHolder.OnClickFormLauncher;
 import org.joda.time.DateTime;
 import org.joda.time.Months;
@@ -31,14 +32,15 @@ import java.util.List;
 import java.util.Map;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
-import static util.Utils.*;
-import static util.Utils.fillValue;
-import static util.Utils.generateSchedule;
-import static util.Utils.getValue;
-import static util.Utils.hasAnyEmptyValue;
-import static util.Utils.nextVaccineDue;
-import static util.Utils.nonEmptyValue;
-import static util.Utils.setProfiePic;
+import static org.ei.opensrp.util.Utils.convertDateFormat;
+import static org.ei.opensrp.util.Utils.fillValue;
+import static org.ei.opensrp.util.Utils.getValue;
+import static org.ei.opensrp.util.Utils.hasAnyEmptyValue;
+import static org.ei.opensrp.util.Utils.nonEmptyValue;
+import static org.ei.opensrp.util.Utils.setProfiePic;
+import static org.ei.opensrp.util.Utils.toDate;
+import static util.VaccinatorUtils.generateSchedule;
+import static util.VaccinatorUtils.nextVaccineDue;
 
 /**
  * Created by Ahmed on 13-Oct-15.
@@ -48,34 +50,27 @@ public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
     private final Context context;
     private final View.OnClickListener onClickListener;
     AlertService alertService;
-    private final int txtColorBlack;
     private final AbsListView.LayoutParams clientViewLayoutParams;
 
-    protected CommonPersonObjectController controller;
-
     public ChildSmartClientsProvider(Context context, View.OnClickListener onClickListener,
-                                     CommonPersonObjectController controller, AlertService alertService) {
+             AlertService alertService) {
         this.onClickListener = onClickListener;
-        this.controller = controller;
         this.context = context;
         this.alertService = alertService;
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         clientViewLayoutParams = new AbsListView.LayoutParams(MATCH_PARENT, (int) context.getResources().getDimension(org.ei.opensrp.R.dimen.list_item_height));
-        txtColorBlack = context.getResources().getColor(org.ei.opensrp.R.color.text_black);
     }
-
 
     @Override
     public View getView(SmartRegisterClient client, View convertView, ViewGroup viewGroup) {
         CommonPersonObjectClient pc = (CommonPersonObjectClient) client;
 
-        convertView = (ViewGroup) inflater().inflate(R.layout.smart_register_child_client, null);
-        fillValue((TextView) convertView.findViewById(R.id.child_id), pc, "existing_program_client_id", false);
-        fillValue((TextView) convertView.findViewById(R.id.child_name), getValue(pc, "first_name", true)+" "+getValue(pc, "last_name", true));
-        fillValue((TextView) convertView.findViewById(R.id.child_mothername), getValue(pc, "mother_name", true));
-        fillValue((TextView) convertView.findViewById(R.id.child_fathername), getValue(pc, "father_name", true));
-        String gender = getValue(pc, "gender", true);
+        fillValue((TextView) convertView.findViewById(R.id.child_id), pc.getColumnmaps(), "program_client_id", false);
+        fillValue((TextView) convertView.findViewById(R.id.child_name), getValue(pc.getColumnmaps(), "first_name", true)+" "+getValue(pc, "last_name", true));
+        fillValue((TextView) convertView.findViewById(R.id.child_mothername), getValue(pc.getColumnmaps(), "mother_name", true));
+        fillValue((TextView) convertView.findViewById(R.id.child_fathername), getValue(pc.getColumnmaps(), "father_name", true));
+        String gender = getValue(pc.getColumnmaps(), "gender", true);
         if(gender.equalsIgnoreCase("male")){
             ((ImageView)convertView.findViewById(R.id.child_profilepic)).setImageResource(R.drawable.child_boy_infant);
         }
@@ -90,9 +85,7 @@ public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
         try{
             agey = Years.yearsBetween(new DateTime(getValue(pc.getColumnmaps(), "dob", false)), DateTime.now()).getYears();
         }
-        catch (Exception e){
-            e.printStackTrace();
-        }
+        catch (Exception e){ }
 
         fillValue((TextView) convertView.findViewById(R.id.child_birthdate), convertDateFormat(getValue(pc.getColumnmaps(), "dob", false), "No DoB", true));
         int months = -1;
@@ -103,7 +96,8 @@ public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
             e.printStackTrace();
         }
         fillValue((TextView) convertView.findViewById(R.id.child_age), (months < 0?"":(months+ " months") ));
-        fillValue((TextView) convertView.findViewById(R.id.child_epi_number), pc, "epi_card_number", false);
+        fillValue((TextView) convertView.findViewById(R.id.child_epi_number), pc.getColumnmaps(), "epi_card_number", false);
+        fillValue((TextView) convertView.findViewById(R.id.child_contact_number), pc.getColumnmaps(), "contact_phone_number", false);
 
         String vaccineretro = getValue(pc.getColumnmaps(), "vaccines", false);
         String vaccine2 = getValue(pc.getColumnmaps(), "vaccines_2", false);
@@ -172,7 +166,11 @@ public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
     private void deactivateNextVaccine(String vaccineViewText, String vaccineDateText, int color, View convertView){
         fillValue((TextView) convertView.findViewById(R.id.child_next_visit_vaccine), vaccineViewText);
         ((TextView) convertView.findViewById(R.id.child_next_visit_date)).setText(convertDateFormat(vaccineDateText, true));
+        ((TextView) convertView.findViewById(R.id.child_next_visit_vaccine)).setTextColor(Color.BLACK);
+        ((TextView) convertView.findViewById(R.id.child_next_visit_date)).setTextColor(Color.BLACK);
         convertView.findViewById(R.id.child_next_visit_holder).setBackgroundColor(context.getResources().getColor(color));
+        convertView.findViewById(R.id.child_next_visit_holder).setOnClickListener(null);
+        convertView.findViewById(R.id.child_next_visit_holder).setTag(null);
     }
 
     private void activateNextVaccine(String dueDate, String vaccine, int foreColor, int backColor, View.OnClickListener onClickListener,
@@ -194,12 +192,13 @@ public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
 
     @Override
     public SmartRegisterClients getClients() {
-        return controller.getClients();
+
+        throw new UnsupportedOperationException("Operation not supported");
     }
 
     @Override
-    public SmartRegisterClients updateClients(FilterOption villageFilter, ServiceModeOption serviceModeOption, FilterOption searchFilter, SortOption sortOption) {
-        return getClients().applyFilter(villageFilter, serviceModeOption, searchFilter, sortOption);
+    public SmartRegisterClients updateClients(FilterOption villageFilter, ServiceModeOption serviceModeOption, SearchFilterOption searchFilter, SortOption sortOption) {
+        throw new UnsupportedOperationException("Operation not supported");
     }
 
     @Override
@@ -209,7 +208,13 @@ public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
 
     @Override
     public OnClickFormLauncher newFormLauncher(String formName, String entityId, String metaData) {
-        return null;
+        throw new UnsupportedOperationException("Operation not supported");
+    }
+
+    @Override
+    public View inflateLayoutForAdapter() {
+        ViewGroup view = (ViewGroup) inflater().inflate(R.layout.smart_register_child_client, null);
+        return view;
     }
 
     public LayoutInflater inflater() {
