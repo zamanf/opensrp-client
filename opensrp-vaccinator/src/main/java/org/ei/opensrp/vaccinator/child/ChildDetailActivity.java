@@ -7,7 +7,7 @@ import org.ei.opensrp.Context;
 import org.ei.opensrp.domain.Alert;
 import org.ei.opensrp.vaccinator.R;
 import org.ei.opensrp.vaccinator.db.VaccineRepo;
-import org.ei.opensrp.vaccinator.application.template.DetailActivity;
+import org.ei.opensrp.view.template.DetailActivity;
 import org.joda.time.DateTime;
 import org.joda.time.Months;
 import org.joda.time.Years;
@@ -15,14 +15,14 @@ import org.joda.time.Years;
 import java.util.List;
 import java.util.Map;
 
-import static util.Utils.addStatusTag;
-import static util.Utils.addVaccineDetail;
-import static util.Utils.convertDateFormat;
-import static util.Utils.generateSchedule;
-import static util.Utils.getDataRow;
-import static util.Utils.getValue;
-import static util.Utils.hasAnyEmptyValue;
-import static util.Utils.nonEmptyValue;
+import static org.ei.opensrp.util.Utils.convertDateFormat;
+import static org.ei.opensrp.util.Utils.getDataRow;
+import static org.ei.opensrp.util.Utils.getValue;
+import static org.ei.opensrp.util.Utils.hasAnyEmptyValue;
+import static org.ei.opensrp.util.Utils.nonEmptyValue;
+import static util.VaccinatorUtils.addStatusTag;
+import static util.VaccinatorUtils.addVaccineDetail;
+import static util.VaccinatorUtils.generateSchedule;
 
 public class ChildDetailActivity extends DetailActivity {
     @Override
@@ -74,7 +74,7 @@ public class ChildDetailActivity extends DetailActivity {
     }
 
     public String getEntityIdentifier() {
-        return nonEmptyValue(client.getDetails(), true, false, "existing_program_client_id", "program_client_id");
+        return nonEmptyValue(client.getColumnmaps(), true, false, "existing_program_client_id", "program_client_id");
     }
 
     @Override
@@ -86,10 +86,10 @@ public class ChildDetailActivity extends DetailActivity {
         TableRow tr = getDataRow(this, "Program ID", getEntityIdentifier(), null);
         dt.addView(tr);
 
-        tr = getDataRow(this, "EPI Card Number", getValue(client, "epi_card_number", false), null);
+        tr = getDataRow(this, "EPI Card Number", getValue(client.getColumnmaps(), "epi_card_number", false), null);
         dt.addView(tr);
 
-        tr = getDataRow(this, "Child's Name", getValue(client, "first_name", true)+" "+getValue(client, "last_name", true), null);
+        tr = getDataRow(this, "Child's Name", getValue(client.getColumnmaps(), "first_name", true)+" "+getValue(client.getColumnmaps(), "last_name", true), null);
         dt.addView(tr);
 
         int months = -1;
@@ -102,7 +102,7 @@ public class ChildDetailActivity extends DetailActivity {
         tr = getDataRow(this, "Birthdate (Age)", convertDateFormat(getValue(client.getColumnmaps(), "dob", false), "No DoB", true) + " (" + (months < 0? "":(months+"")) + " months" + ")", null);
         dt.addView(tr);
 
-        tr = getDataRow(this, "Gender", getValue(client, "gender", true), null);
+        tr = getDataRow(this, "Gender", getValue(client.getColumnmaps(), "gender", true), null);
         dt.addView(tr);
 
         tr = getDataRow(this, "Ethnicity", getValue(client, "ethnicity", true), null);
@@ -110,17 +110,17 @@ public class ChildDetailActivity extends DetailActivity {
 
         TableLayout dt2 = (TableLayout) findViewById(R.id.child_detail_info_table2);
 
-        tr = getDataRow(this, "Mother's Name", getValue(client, "mother_name", true), null);
+        tr = getDataRow(this, "Mother's Name", getValue(client.getColumnmaps(), "mother_name", true), null);
         dt2.addView(tr);
 
-        tr = getDataRow(this, "Father's Name", getValue(client, "father_name", true), null);
+        tr = getDataRow(this, "Father's Name", getValue(client.getColumnmaps(), "father_name", true), null);
         dt2.addView(tr);
 
-        tr = getDataRow(this, "Contact Number", getValue(client, "contact_phone_number", false), null);
+        tr = getDataRow(this, "Contact Number", getValue(client.getColumnmaps(), "contact_phone_number", false), null);
         dt2.addView(tr);
-        tr = getDataRow(this, "Address", getValue(client, "address1", true)
-                +", \nUC: "+ getValue(client, "union_council", true)
-                +", \nTown: "+ getValue(client, "town", true)
+        tr = getDataRow(this, "Address", getValue(client.getColumnmaps(), "address1", true)
+                +", \nUC: "+ getValue(client.getColumnmaps(), "union_council", true)
+                +", \nTown: "+ getValue(client.getColumnmaps(), "town", true)
                 +", \nCity: "+ getValue(client, "city_village", true)
                 +", \nProvince: "+ getValue(client, "province", true), null);
         dt2.addView(tr);
