@@ -1,8 +1,11 @@
 package org.ei.opensrp.view.activity;
 
 import android.test.ActivityInstrumentationTestCase2;
+
 import org.ei.opensrp.Context;
-import org.ei.opensrp.util.*;
+import org.ei.opensrp.util.DrishtiSolo;
+import org.ei.opensrp.util.FakeDrishtiService;
+import org.ei.opensrp.util.FakeUserService;
 
 import java.util.Date;
 

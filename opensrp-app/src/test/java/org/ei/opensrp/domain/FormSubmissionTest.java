@@ -1,10 +1,15 @@
 package org.ei.opensrp.domain;
 
 import com.google.gson.Gson;
-import org.robolectric.RobolectricTestRunner;
-import org.ei.opensrp.domain.form.*;
+
+import org.ei.opensrp.domain.form.FormData;
+import org.ei.opensrp.domain.form.FormField;
+import org.ei.opensrp.domain.form.FormInstance;
+import org.ei.opensrp.domain.form.FormSubmission;
+import org.ei.opensrp.domain.form.SubForm;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
 import static java.util.Arrays.asList;
 import static org.ei.opensrp.util.FormSubmissionBuilder.create;

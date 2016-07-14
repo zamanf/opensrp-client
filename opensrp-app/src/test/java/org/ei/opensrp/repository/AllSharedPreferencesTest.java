@@ -1,15 +1,22 @@
 package org.ei.opensrp.repository;
 
 import android.content.SharedPreferences;
+
 import junit.framework.TestCase;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.robolectric.RobolectricTestRunner;
 
-import static org.ei.opensrp.AllConstants.*;
-import static org.mockito.Mockito.*;
+import static org.ei.opensrp.AllConstants.DEFAULT_LOCALE;
+import static org.ei.opensrp.AllConstants.ENGLISH_LANGUAGE;
+import static org.ei.opensrp.AllConstants.IS_SYNC_IN_PROGRESS_PREFERENCE_KEY;
+import static org.ei.opensrp.AllConstants.LANGUAGE_PREFERENCE_KEY;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 @RunWith(RobolectricTestRunner.class)

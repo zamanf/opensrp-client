@@ -1,6 +1,7 @@
 package org.ei.opensrp.service;
 
 import com.google.gson.Gson;
+
 import org.ei.opensrp.domain.form.FormSubmission;
 import org.ei.opensrp.repository.AllSettings;
 import org.ei.opensrp.repository.FormDataRepository;
@@ -15,7 +16,9 @@ import static java.util.Arrays.asList;
 import static org.ei.opensrp.domain.SyncStatus.SYNCED;
 import static org.ei.opensrp.util.EasyMap.create;
 import static org.ei.opensrp.util.FormSubmissionBuilder.create;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class FormSubmissionServiceTest {

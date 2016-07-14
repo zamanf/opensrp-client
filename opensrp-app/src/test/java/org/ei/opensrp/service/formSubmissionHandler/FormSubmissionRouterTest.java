@@ -1,6 +1,5 @@
 package org.ei.opensrp.service.formSubmissionHandler;
 
-import org.robolectric.RobolectricTestRunner;
 import org.ei.opensrp.domain.form.FormSubmission;
 import org.ei.opensrp.event.Listener;
 import org.ei.opensrp.repository.FormDataRepository;
@@ -9,10 +8,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.robolectric.RobolectricTestRunner;
 
 import static org.ei.opensrp.event.Event.FORM_SUBMITTED;
 import static org.ei.opensrp.util.FormSubmissionBuilder.create;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 @RunWith(RobolectricTestRunner.class)

@@ -1,29 +1,40 @@
 package org.ei.opensrp.service;
 
-import org.robolectric.RobolectricTestRunner;
 import org.ei.opensrp.domain.Child;
 import org.ei.opensrp.domain.Mother;
 import org.ei.opensrp.domain.ServiceProvided;
 import org.ei.opensrp.domain.TimelineEvent;
 import org.ei.opensrp.domain.form.FormSubmission;
 import org.ei.opensrp.domain.form.SubForm;
-import org.ei.opensrp.repository.*;
+import org.ei.opensrp.repository.AllAlerts;
+import org.ei.opensrp.repository.AllBeneficiaries;
+import org.ei.opensrp.repository.AllTimelineEvents;
+import org.ei.opensrp.repository.ChildRepository;
+import org.ei.opensrp.repository.MotherRepository;
 import org.ei.opensrp.util.EasyMap;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.robolectric.RobolectricTestRunner;
 
 import java.util.ArrayList;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
-import static org.ei.opensrp.domain.ServiceProvided.*;
+import static org.ei.opensrp.domain.ServiceProvided.forChildIllnessVisit;
 import static org.ei.opensrp.domain.ServiceProvided.forChildImmunization;
-import static org.ei.opensrp.domain.TimelineEvent.*;
+import static org.ei.opensrp.domain.ServiceProvided.forVitaminAProvided;
+import static org.ei.opensrp.domain.TimelineEvent.forChildBirthInChildProfile;
+import static org.ei.opensrp.domain.TimelineEvent.forChildBirthInECProfile;
+import static org.ei.opensrp.domain.TimelineEvent.forChildBirthInMotherProfile;
 import static org.ei.opensrp.util.EasyMap.create;
 import static org.ei.opensrp.util.EasyMap.mapOf;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 @RunWith(RobolectricTestRunner.class)

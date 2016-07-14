@@ -3,18 +3,14 @@ package org.ei.opensrp.commonregistry;
 import org.ei.opensrp.repository.AllBeneficiaries;
 import org.ei.opensrp.util.Cache;
 import org.junit.Before;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.robolectric.RobolectricTestRunner;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 
-import static org.ei.opensrp.util.EasyMap.create;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static junit.framework.Assert.assertEquals;
 
 
 /*

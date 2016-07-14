@@ -1,14 +1,16 @@
 package org.ei.opensrp.view.contract;
 
-import org.ei.opensrp.util.DateUtil;
 import org.joda.time.DateTimeUtils;
-import java.util.Calendar;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
-import static org.junit.Assert.*;
+import java.util.Calendar;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
 public class ECClientTest {

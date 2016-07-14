@@ -1,14 +1,11 @@
 package org.ei.opensrp;
 
 import android.content.res.AssetManager;
-import android.util.Log;
 
-import org.apache.commons.io.IOUtils;
 import org.ei.opensrp.repository.AllSharedPreferences;
 import org.ei.opensrp.util.IntegerUtil;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Properties;
 
 public class DristhiConfiguration {

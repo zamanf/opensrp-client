@@ -1,11 +1,7 @@
 package org.ei.opensrp.util;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import junit.framework.Assert;
-
-import org.ei.drishti.dto.form.FormSubmissionDTO;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,16 +9,12 @@ import org.junit.runner.RunWith;
 import org.opensrp.api.domain.Location;
 import org.opensrp.api.util.EntityUtils;
 import org.opensrp.api.util.LocationTree;
-import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
-
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.validateMockitoUsage;
-import static org.mockito.MockitoAnnotations.initMocks;
 
 /**
  * Created by Dimas Ciputra on 3/23/15.

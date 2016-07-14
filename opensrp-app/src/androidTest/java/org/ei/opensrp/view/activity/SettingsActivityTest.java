@@ -2,6 +2,7 @@ package org.ei.opensrp.view.activity;
 
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.Suppress;
+
 import org.ei.opensrp.Context;
 import org.ei.opensrp.repository.AllSettings;
 import org.ei.opensrp.repository.AllSharedPreferences;

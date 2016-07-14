@@ -1,14 +1,14 @@
 package org.ei.opensrp.service;
 
-import org.robolectric.RobolectricTestRunner;
 import org.apache.commons.io.IOUtils;
+import org.ei.drishti.dto.Action;
 import org.ei.opensrp.domain.Response;
 import org.ei.opensrp.domain.ResponseStatus;
-import org.ei.drishti.dto.Action;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.robolectric.RobolectricTestRunner;
 
 import java.util.List;
 

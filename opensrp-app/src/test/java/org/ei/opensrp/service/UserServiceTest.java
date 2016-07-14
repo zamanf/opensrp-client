@@ -1,22 +1,24 @@
 package org.ei.opensrp.service;
 
-import org.ei.opensrp.repository.*;
+import org.ei.opensrp.DristhiConfiguration;
+import org.ei.opensrp.repository.AllAlerts;
+import org.ei.opensrp.repository.AllEligibleCouples;
+import org.ei.opensrp.repository.AllSettings;
+import org.ei.opensrp.repository.AllSharedPreferences;
+import org.ei.opensrp.repository.Repository;
+import org.ei.opensrp.sync.SaveANMLocationTask;
 import org.ei.opensrp.sync.SaveUserInfoTask;
-import org.json.JSONObject;
-import org.mockito.Spy;
+import org.ei.opensrp.util.Session;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.opensrp.api.domain.Location;
 import org.opensrp.api.domain.User;
 import org.opensrp.api.util.EntityUtils;
 import org.opensrp.api.util.LocationTree;
 import org.opensrp.api.util.TreeNode;
 import org.robolectric.RobolectricTestRunner;
-import org.ei.opensrp.DristhiConfiguration;
-import org.ei.opensrp.sync.SaveANMLocationTask;
-import org.ei.opensrp.util.Session;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
 
 import java.util.Map;
 
@@ -26,7 +28,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 @RunWith(RobolectricTestRunner.class)
