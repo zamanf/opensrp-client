@@ -7,20 +7,11 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.View;
 
 import org.ei.opensrp.domain.form.FormSubmission;
-import org.ei.opensrp.indonesia.AllConstantsINA;
 import org.ei.opensrp.indonesia.Context;
 import org.ei.opensrp.indonesia.R;
-import org.ei.opensrp.adapter.SmartRegisterPaginatedAdapter;
 import org.ei.opensrp.indonesia.lib.FlurryFacade;
-import org.ei.opensrp.indonesia.provider.KIANCClientsProvider;
-import org.ei.opensrp.indonesia.view.contract.KIANCClient;
-import org.ei.opensrp.indonesia.view.controller.BidanVillageController;
-import org.ei.opensrp.indonesia.view.controller.KIANCRegisterController;
-import org.ei.opensrp.indonesia.view.dialog.AllHighRiskSort;
-import org.ei.opensrp.indonesia.view.dialog.EstimatedDateOfDeliverySortKIANC;
 import org.ei.opensrp.indonesia.view.dialog.KIANCOverviewServiceMode;
 import org.ei.opensrp.indonesia.view.fragment.MotherProfileViewFragment;
 import org.ei.opensrp.indonesia.view.fragment.NativeKIANCSmartRegisterFragment;
@@ -28,12 +19,8 @@ import org.ei.opensrp.indonesia.view.pageradapter.BaseRegisterActivityPagerAdapt
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.service.ZiggyService;
 import org.ei.opensrp.util.FormUtils;
-import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.dialog.AllClientsFilter;
 import org.ei.opensrp.view.dialog.DialogOption;
-import org.ei.opensrp.view.dialog.DialogOptionMapper;
-import org.ei.opensrp.view.dialog.DialogOptionModel;
-import org.ei.opensrp.view.dialog.EditOption;
 import org.ei.opensrp.view.dialog.FilterOption;
 import org.ei.opensrp.view.dialog.NameSort;
 import org.ei.opensrp.view.dialog.OpenFormOption;
@@ -45,14 +32,11 @@ import org.ei.opensrp.view.viewpager.OpenSRPViewPager;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-import static com.google.common.collect.Iterables.concat;
 import static com.google.common.collect.Iterables.toArray;
 import static org.ei.opensrp.R.string.form_back_confirm_dialog_message;
 import static org.ei.opensrp.R.string.form_back_confirm_dialog_title;
