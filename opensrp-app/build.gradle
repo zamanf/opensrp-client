@@ -50,7 +50,7 @@ android {
     defaultConfig {
         // multiDexEnabled = true
         //applicationId "org.ei.opensrp"
-        minSdkVersion 19
+        minSdkVersion 18
         targetSdkVersion 21
         versionCode 1
         versionName "3.0.1"
@@ -108,6 +108,8 @@ configurations.all {
 }
 
 dependencies {
+    compile 'com.squareup.picasso:picasso:2.5.2'
+
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile "org.apache.httpcomponents:httpmime:4.2.3"
     compile 'commons-io:commons-io:2.1'
