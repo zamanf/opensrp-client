@@ -3,21 +3,26 @@ package org.ei.opensrp.vaccinator.application.common;
 import android.util.Log;
 
 import org.ei.opensrp.Context;
+import org.ei.opensrp.cursoradapter.CursorSortOption;
 import org.ei.opensrp.domain.Alert;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.contract.SmartRegisterClients;
-import org.ei.opensrp.view.dialog.SortOption;
 
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
-public class StatusSort implements SortOption {
+public class StatusSort implements CursorSortOption {
     private String name;
 
     public StatusSort(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String sort() {
+        return "";
     }
 
     @Override
