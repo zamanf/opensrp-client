@@ -9,6 +9,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
@@ -28,6 +29,7 @@ import org.ei.opensrp.event.Listener;
 import org.ei.opensrp.repository.AllSharedPreferences;
 import org.ei.opensrp.sync.DrishtiSyncScheduler;
 import org.ei.opensrp.util.Log;
+import org.ei.opensrp.util.Utils;
 import org.ei.opensrp.vaccinator.application.ConfigSyncReceiver;
 import org.ei.opensrp.view.BackgroundAction;
 import org.ei.opensrp.view.LockingBackgroundTask;
@@ -42,8 +44,6 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-
-import util.Utils;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 import static android.view.inputmethod.InputMethodManager.HIDE_NOT_ALWAYS;
@@ -133,6 +133,7 @@ public class LoginActivity extends Activity {
     }
 
     public void login(final View view) {
+        android.util.Log.i(getClass().getName(), "Hiding Keyboard "+DateTime.now().toString());
         hideKeyboard();
         view.setClickable(false);
 
@@ -144,6 +145,7 @@ public class LoginActivity extends Activity {
         } else {
             remoteLogin(view, userName, password);
         }
+        android.util.Log.i(getClass().getName(), "Login result finished "+DateTime.now().toString());
     }
 
     private void initializeLoginFields() {
@@ -173,7 +175,7 @@ public class LoginActivity extends Activity {
     private void localLogin(final View view, final String userName, final String password) {
         String ld = Utils.getPreference(Context.getInstance().applicationContext(), "serverDatetime", "1970-01-01").replace(" ", "T");
         int hrs = Hours.hoursBetween(new DateTime(ld), DateTime.now()).getHours();
-        if(hrs > 8 || hrs < -8){// since server datetime sync is not predictable user should have option to ignore and proceed
+        if(false/* todo hrs > 8 || hrs < -8*/){// since server datetime sync is not predictable user should have option to ignore and proceed
             showMessageDialog(getResources().getString(R.string.invalid_device_date) + Utils.convertDateTimeFormat(ld, true) +". Press Cancel to ignore and proceed",
                     new DialogInterface.OnClickListener() {
                         @Override
@@ -327,7 +329,14 @@ public class LoginActivity extends Activity {
     private void localLoginWith(String userName, String password) {
         context.userService().localLogin(userName, password);
         goToHome();
-        DrishtiSyncScheduler.startOnlyIfConnectedToNetwork(getApplicationContext());
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                android.util.Log.i(getClass().getName(), "Starting DrishtiSyncScheduler "+DateTime.now().toString());
+                DrishtiSyncScheduler.startOnlyIfConnectedToNetwork(getApplicationContext());
+                android.util.Log.i(getClass().getName(), "Started DrishtiSyncScheduler "+DateTime.now().toString());
+            }
+        }).start();
     }
 
     private void remoteLoginWith(String userName, String password, String userInfo) {
