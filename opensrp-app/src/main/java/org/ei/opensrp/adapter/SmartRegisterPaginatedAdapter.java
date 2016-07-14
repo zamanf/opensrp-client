@@ -1,114 +1,42 @@
 package org.ei.opensrp.adapter;
 
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import org.ei.opensrp.provider.SmartRegisterClientsProvider;
-import org.ei.opensrp.view.contract.SmartRegisterClient;
+import android.widget.ListAdapter;
+
+import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.view.contract.SmartRegisterClients;
 import org.ei.opensrp.view.dialog.FilterOption;
+import org.ei.opensrp.view.dialog.SearchFilterOption;
 import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
+import org.ei.opensrp.view.template.SmartRegisterClientsProvider;
 
-public class SmartRegisterPaginatedAdapter extends BaseAdapter {
-    private static final int CLIENTS_PER_PAGE = 20;
+import java.util.List;
 
-    private int clientCount;
-    private int pageCount;
-    private int currentPage = 0;
-    private SmartRegisterClients filteredClients;
+public interface SmartRegisterPaginatedAdapter extends ListAdapter{
+    int limitPerPage();
 
-    private final int clientsPerPage;
-    private final SmartRegisterClientsProvider listItemProvider;
+    int refreshTotalCount();
 
-    public SmartRegisterPaginatedAdapter(SmartRegisterClientsProvider listItemProvider) {
-        this(CLIENTS_PER_PAGE, listItemProvider);
-    }
+    int getTotalCount();
 
-    public SmartRegisterPaginatedAdapter(
-            int clientsPerPage, SmartRegisterClientsProvider listItemProvider) {
-        this.clientsPerPage = clientsPerPage;
-        this.listItemProvider = listItemProvider;
-        refreshClients(listItemProvider.getClients());
-    }
+    int getCount();
 
-    public void refreshClients(SmartRegisterClients filteredClients) {
-        this.filteredClients = filteredClients;
-        clientCount = filteredClients.size();
-        pageCount = (int) Math.ceil((double) clientCount / (double) clientsPerPage);
-        currentPage = 0;
-    }
+    int pageCount();
 
-    @Override
-    public int getCount() {
-        if (clientCount <= clientsPerPage) {
-            return clientCount;
-        } else if (currentPage == pageCount() - 1) {
-            return clientCount - currentPage * clientsPerPage;
-        }
-        return clientsPerPage;
-    }
+    int currentPage();
 
-    @Override
-    public Object getItem(int i) {
-        return filteredClients.get(i);
-    }
+    boolean hasNextPage();
 
-    @Override
-    public long getItemId(int i) {
-        return actualPosition(i);
-    }
+    boolean hasPreviousPage();
 
-    @Override
-    public View getView(int i, View parentView, ViewGroup viewGroup) {
-        return listItemProvider.getView((SmartRegisterClient) getItem(actualPosition(i)), parentView, viewGroup);
-    }
+    void gotoNextPage();
 
-    private int actualPosition(int i) {
-        if (clientCount <= clientsPerPage) {
-            return i;
-        } else {
-            return i + (currentPage * clientsPerPage);
-        }
-    }
+    void goBackToPreviousPage();
 
-    public int pageCount() {
-        return pageCount;
-    }
+    void refreshList(FilterOption villageFilter, ServiceModeOption serviceModeOption,
+                     SearchFilterOption searchFilter, SortOption sortOption);
 
-    public int currentPage() {
-        return currentPage;
-    }
+    SmartRegisterClients currentPageList();
 
-    public void nextPage() {
-        if (hasNextPage()) {
-            currentPage++;
-        }
-    }
-
-    public void previousPage() {
-        if (hasPreviousPage()) {
-            currentPage--;
-        }
-    }
-
-    public boolean hasNextPage() {
-        return currentPage < pageCount() - 1;
-    }
-
-    public boolean hasPreviousPage() {
-        return currentPage > 0;
-    }
-
-    public void refreshList(FilterOption villageFilter, ServiceModeOption serviceModeOption,
-                            FilterOption searchFilter, SortOption sortOption) {
-        SmartRegisterClients filteredClients = listItemProvider
-                .updateClients(villageFilter, serviceModeOption, searchFilter, sortOption);
-        refreshClients(filteredClients);
-        notifyDataSetChanged();
-    }
-
-    public SmartRegisterClientsProvider getListItemProvider() {
-        return listItemProvider;
-    }
+    SmartRegisterClientsProvider getListItemProvider();
 }

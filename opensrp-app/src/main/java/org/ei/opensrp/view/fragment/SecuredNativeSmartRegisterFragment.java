@@ -1,5 +1,7 @@
 package org.ei.opensrp.view.fragment;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.database.DataSetObserver;
 import android.graphics.drawable.Drawable;
@@ -21,51 +23,65 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.ei.opensrp.Context;
 import org.ei.opensrp.R;
 import org.ei.opensrp.adapter.SmartRegisterPaginatedAdapter;
-import org.ei.opensrp.domain.ReportMonth;
-import org.ei.opensrp.provider.SmartRegisterClientsProvider;
+import org.ei.opensrp.commonregistry.CommonObjectFilterOption;
+import org.ei.opensrp.domain.form.FieldOverrides;
+import org.ei.opensrp.util.StringUtil;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
+import org.ei.opensrp.view.controller.FormController;
 import org.ei.opensrp.view.customControls.CustomFontTextView;
 import org.ei.opensrp.view.customControls.FontVariant;
-import org.ei.opensrp.view.dialog.AllClientsFilter;
 import org.ei.opensrp.view.dialog.DialogOption;
 import org.ei.opensrp.view.dialog.DialogOptionModel;
 import org.ei.opensrp.view.dialog.ECSearchOption;
 import org.ei.opensrp.view.dialog.EditOption;
 import org.ei.opensrp.view.dialog.FilterOption;
+import org.ei.opensrp.view.dialog.SearchFilterOption;
 import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
-import org.joda.time.LocalDate;
+import org.ei.opensrp.view.template.SmartRegisterClientsProvider;
+import org.ei.opensrp.view.template.SmartRegisterSecuredActivity;
+import org.joda.time.DateTime;
+import org.json.JSONObject;
+import org.opensrp.api.domain.Location;
+import org.opensrp.api.util.LocationTree;
+import org.opensrp.api.util.TreeNode;
 
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import static android.os.AsyncTask.THREAD_POOL_EXECUTOR;
 import static android.view.View.INVISIBLE;
 import static android.view.View.TEXT_ALIGNMENT_CENTER;
 import static android.view.View.VISIBLE;
 import static java.text.MessageFormat.format;
-import static java.util.Arrays.asList;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
-import static org.ei.opensrp.AllConstants.SHORT_DATE_FORMAT;
 
 /**
  * Created by koros on 10/12/15.
  */
 public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment {
+    private ListView clientsView;
+    private ProgressBar clientsProgressView;
+    private TextView serviceModeView;
+    private TextView appliedVillageFilterView;
+    private TextView appliedSortView;
+    private EditText searchView;
+    private View searchCancelView;
+    private TextView titleLabelView;
+    private FormController formController;
 
-    public static final String DIALOG_TAG = "dialog";
-    public static final List<? extends DialogOption> DEFAULT_FILTER_OPTIONS = asList(new AllClientsFilter());
+    public SecuredNativeSmartRegisterFragment(FormController formController){
+        this.formController = formController;
+    }
 
-    public ListView clientsView;
-    public ProgressBar clientsProgressView;
-    public TextView serviceModeView;
-    public TextView appliedVillageFilterView;
-    public TextView appliedSortView;
-    public EditText searchView;
-    public View searchCancelView;
-    public TextView titleLabelView;
+    public FormController getFormController(){return formController;}
 
     public EditText getSearchView() {
         return searchView;
@@ -79,7 +95,7 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
         return currentVillageFilter;
     }
 
-    public FilterOption getCurrentSearchFilter() {
+    public SearchFilterOption getCurrentSearchFilter() {
         return currentSearchFilter;
     }
 
@@ -95,10 +111,6 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
         return clientsAdapter;
     }
 
-    public void setClientsAdapter(SmartRegisterPaginatedAdapter clientsAdapter) {
-        this.clientsAdapter = clientsAdapter;
-    }
-
     private SmartRegisterPaginatedAdapter clientsAdapter;
 
     private FilterOption currentVillageFilter;
@@ -106,11 +118,11 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
 
     public View mView;
 
-    public void setCurrentSearchFilter(FilterOption currentSearchFilter) {
+    public void setCurrentSearchFilter(SearchFilterOption currentSearchFilter) {
         this.currentSearchFilter = currentSearchFilter;
     }
 
-    private FilterOption currentSearchFilter;
+    private SearchFilterOption currentSearchFilter;
     private ServiceModeOption currentServiceModeOption;
 
     private final PaginationViewHandler paginationViewHandler = new PaginationViewHandler();
@@ -127,6 +139,7 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
         mView = view;
         onInitialization();
         setupViews(view);
+        setupAdapter();
         onResumption();
         return view;
     }
@@ -154,7 +167,7 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
             @Override
             protected Void doInBackground(Void... params) {
                 publishProgress();
-                setupAdapter();
+                //todo moved to post execute setupAdapter();
                 return null;
             }
 
@@ -167,6 +180,7 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
 
             @Override
             protected void onPostExecute(Void result) {
+                // todo setupAdapter(); moved to oncreate and along with setupviews so that it doesnot refresh on resumption
                 clientsView.setAdapter(clientsAdapter);
                 if(isAdded()) {
                     paginationViewHandler.refresh();
@@ -181,6 +195,7 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
     private void setupStatusBarViews(View view) {
         appliedSortView = (TextView) view.findViewById(R.id.sorted_by);
         appliedVillageFilterView = (TextView) view.findViewById(R.id.village);
+        ((TextView)mView.findViewById(org.ei.opensrp.R.id.statusbar_today)).setText(DateTime.now().toString("dd-MM-yyyy"));
     }
 
     private void setupNavBarViews(View view) {
@@ -211,9 +226,6 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
         titleLayout.setOnClickListener(navBarActionsHandler);
 
         titleLabelView = (TextView) view.findViewById(R.id.txt_title_label);
-
-        TextView reportMonthStartView = (TextView) view.findViewById(R.id.btn_report_month);
-        setReportDates(reportMonthStartView);
     }
 
     public void setupSearchView(View view) {
@@ -226,10 +238,14 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
 
             @Override
             public void onTextChanged(CharSequence cs, int start, int before, int count) {
-                currentSearchFilter = new ECSearchOption(cs.toString());
-                clientsAdapter
-                        .refreshList(currentVillageFilter, currentServiceModeOption,
-                                currentSearchFilter, currentSortOption);
+                if(currentSearchFilter == null){
+                    currentSearchFilter = new ECSearchOption(cs.toString());
+                }
+                else {
+                    currentSearchFilter.setFilter(cs.toString());
+                }
+                clientsAdapter.refreshList(currentVillageFilter, currentServiceModeOption,
+                        currentSearchFilter, currentSortOption);
 
                 searchCancelView.setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
             }
@@ -242,17 +258,10 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
         searchCancelView.setOnClickListener(searchCancelHandler);
     }
 
-    private void setReportDates(TextView titleView) {
-        ReportMonth report = new ReportMonth();
-        titleView.setText(report.startOfCurrentReportMonth(LocalDate.now()).toString(SHORT_DATE_FORMAT)
-                + " - "
-                + report.endOfCurrentReportMonth(LocalDate.now()).toString(SHORT_DATE_FORMAT));
-    }
-
     private void updateDefaultOptions() {
-        currentSearchFilter = new ECSearchOption(null);
-        currentVillageFilter = getDefaultOptionsProvider().villageFilter();
         currentServiceModeOption = getDefaultOptionsProvider().serviceMode();
+        currentSearchFilter = getDefaultOptionsProvider().searchFilterOption();
+        currentVillageFilter = getDefaultOptionsProvider().villageFilter();
         currentSortOption = getDefaultOptionsProvider().sortOption();
 
         appliedSortView.setText(currentSortOption.name());
@@ -261,7 +270,7 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
         titleLabelView.setText(getDefaultOptionsProvider().nameInShortFormForTitle());
     }
 
-    private void populateClientListHeaderView(SecuredNativeSmartRegisterActivity.ClientsHeaderProvider headerProvider, View view) {
+    protected void populateClientListHeaderView(SecuredNativeSmartRegisterActivity.ClientsHeaderProvider headerProvider, View view) {
         LinearLayout clientsHeaderLayout = (LinearLayout) view.findViewById(R.id.clients_header_layout);
         clientsHeaderLayout.removeAllViewsInLayout();
         int columnCount = headerProvider.count();
@@ -274,7 +283,7 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
         }
     }
 
-    private View getColumnHeaderView(int i, int[] weights, int[] headerTxtResIds) {
+    protected View getColumnHeaderView(int i, int[] weights, int[] headerTxtResIds) {
         CustomFontTextView header = new CustomFontTextView(getActivity(), null, R.style.CustomFontTextViewStyle_Header_Black);
         header.setFontVariant(FontVariant.BLACK);
         header.setTextSize(16);
@@ -302,16 +311,15 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
         });
     }
 
-    protected SmartRegisterPaginatedAdapter adapter() {
-        return new SmartRegisterPaginatedAdapter(clientsProvider());
-    }
+    protected abstract SmartRegisterPaginatedAdapter adapter(); /* todo {
+        return new SmartRegisterInMemoryPaginatedAdapter(clientsProvider());
+    }*/
 
     protected void onServiceModeSelection(ServiceModeOption serviceModeOption, View view) {
         currentServiceModeOption = serviceModeOption;
         serviceModeView.setText(serviceModeOption.name());
-        clientsAdapter
-                .refreshList(currentVillageFilter, currentServiceModeOption,
-                        currentSearchFilter, currentSortOption);
+        adapter(); // refresh data adapter
+        clientsAdapter.refreshList(currentVillageFilter, currentServiceModeOption, currentSearchFilter, currentSortOption);
 
         populateClientListHeaderView(serviceModeOption.getHeaderProvider(), view);
     }
@@ -320,17 +328,18 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
         Log.v("he pressed this",sortBy.name());
         currentSortOption = sortBy;
         appliedSortView.setText(sortBy.name());
-        clientsAdapter
-                .refreshList(currentVillageFilter, currentServiceModeOption,
-                        currentSearchFilter, currentSortOption);
+        clientsAdapter.refreshList(currentVillageFilter, currentServiceModeOption, currentSearchFilter, currentSortOption);
     }
 
     public void onFilterSelection(FilterOption filter) {
         currentVillageFilter = filter;
         appliedVillageFilterView.setText(filter.name());
-        clientsAdapter
-                .refreshList(currentVillageFilter, currentServiceModeOption,
-                        currentSearchFilter, currentSortOption);
+        clientsAdapter.refreshList(currentVillageFilter, currentServiceModeOption, currentSearchFilter, currentSortOption);
+    }
+
+    public void onFilterManual(String filter) {
+        currentSearchFilter.setFilter(filter);
+        clientsAdapter.refreshList(currentVillageFilter, currentServiceModeOption, currentSearchFilter, currentSortOption);
     }
 
     protected void onEditSelection(EditOption editOption, SmartRegisterClient client) {
@@ -347,7 +356,7 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
     }
 
     protected void showFragmentDialog(DialogOptionModel dialogOptionModel, Object tag) {
-        ((SecuredNativeSmartRegisterActivity)getActivity()).showFragmentDialog(dialogOptionModel, tag);
+        ((SmartRegisterSecuredActivity)getActivity()).showFragmentDialog(dialogOptionModel, tag);
     }
 
     protected abstract SecuredNativeSmartRegisterActivity.DefaultOptionsProvider getDefaultOptionsProvider();
@@ -396,7 +405,7 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
         }
     }
 
-    private class PaginationViewHandler implements View.OnClickListener {
+    protected class PaginationViewHandler implements View.OnClickListener {
         private Button nextPageView;
         private Button previousPageView;
         private TextView pageInfoView;
@@ -421,15 +430,11 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
             return (ViewGroup) getActivity().getLayoutInflater().inflate(R.layout.smart_register_pagination, null);
         }
 
-        private int getCurrentPageCount() {
-            return clientsAdapter.currentPage() + 1 > clientsAdapter.pageCount() ? clientsAdapter.pageCount() : clientsAdapter.currentPage() + 1;
-        }
-
         public void refresh() {
             pageInfoView.setText(
                     format(getResources().getString(R.string.str_page_info),
-                            (getCurrentPageCount()),
-                            (clientsAdapter.pageCount())));
+                            clientsAdapter.currentPage(),
+                            clientsAdapter.pageCount()));
             nextPageView.setVisibility(clientsAdapter.hasNextPage() ? VISIBLE : INVISIBLE);
             previousPageView.setVisibility(clientsAdapter.hasPreviousPage() ? VISIBLE : INVISIBLE);
         }
@@ -438,31 +443,21 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
         public void onClick(View view) {
             int i = view.getId();
             if (i == R.id.btn_next_page) {
-                gotoNextPage();
+                clientsAdapter.gotoNextPage();
 
             } else if (i == R.id.btn_previous_page) {
-                goBackToPreviousPage();
+                clientsAdapter.goBackToPreviousPage();
 
             }
         }
 
     }
 
-    public void gotoNextPage() {
-        clientsAdapter.nextPage();
-        clientsAdapter.notifyDataSetChanged();
-    }
-
-    public void goBackToPreviousPage() {
-        clientsAdapter.previousPage();
-        clientsAdapter.notifyDataSetChanged();
-    }
-
     public class NavBarActionsHandler implements View.OnClickListener {
         @Override
         public void onClick(View view) {
             int i = view.getId();
-            if (i == R.id.title_layout || i == R.id.btn_back_to_home) {
+            if (i == R.id.homestacklayout || i == R.id.btn_back_to_home) {
                 goBack();
             } else if (i == R.id.register_client) {
                 startRegistration();
@@ -484,6 +479,76 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
 
         private void clearSearchText() {
             searchView.setText("");
+        }
+    }
+
+    protected void startForm(String formName, SmartRegisterClient client, HashMap<String, String> overrideStringmap) {
+        startForm(formName, client.entityId(), overrideStringmap);
+    }
+
+    protected void startForm(String formName, String entityId, HashMap<String, String> overrideStringmap) {
+        if (overrideStringmap == null) {
+            org.ei.opensrp.util.Log.logDebug("overrides data is null");
+            overrideStringmap = new HashMap<>();
+        }
+
+        String fieldOverrides =  new FieldOverrides(new JSONObject(overrideStringmap).toString()).getJSONString();
+        org.ei.opensrp.util.Log.logDebug("fieldOverrides data is : " + fieldOverrides);
+        formController.startFormActivity(formName, entityId, fieldOverrides);
+    }
+
+    protected void showMessageDialog(String message, DialogInterface.OnClickListener ok) {
+        AlertDialog dialog = new AlertDialog.Builder(Context.getInstance().applicationContext())
+                .setTitle("Alert")
+                .setMessage(message)
+                .setPositiveButton("OK", ok)
+                .create();
+
+        dialog.show();
+    }
+
+    protected void showMessageDialog(String message, DialogInterface.OnClickListener ok, DialogInterface.OnClickListener cancel) {
+        AlertDialog dialog = new AlertDialog.Builder(Context.getInstance().applicationContext())
+                .setTitle("Alert")
+                .setMessage(message)
+                .setPositiveButton("OK", ok)
+                .setNegativeButton("Cancel", cancel)
+                .create();
+
+        dialog.show();
+    }
+    //This would be used in displaying location dialog box in anm location selector
+    public String getLocationNameByAttribute(LocationTree locationTree, String tag) {
+        //locationTree.
+        Map<String, TreeNode<String, Location>> locationMap =
+                locationTree.getLocationsHierarchy();
+        Collection<TreeNode<String, Location>> collection = locationMap.values();
+        Iterator iterator = collection.iterator();
+        while (iterator.hasNext()) {
+            TreeNode<String, Location> treeNode = (TreeNode<String, Location>) iterator.next();
+            Location location = treeNode.getNode();
+
+            for (String s : location.getTags()) {
+
+                if (s.equalsIgnoreCase(tag)) {
+                    return location.getName();
+                }
+            }
+        }
+        Log.d("Amn Locations", "No location found");
+        return null;
+    }
+
+    public void addToList(ArrayList<DialogOption> dialogOptionslist, Map<String, TreeNode<String, Location>> locationMap) {
+        for (Map.Entry<String, TreeNode<String, Location>> entry : locationMap.entrySet()) {
+
+            if (entry.getValue().getChildren() != null) {
+                addToList(dialogOptionslist, entry.getValue().getChildren());
+            } else {
+                StringUtil.humanize(entry.getValue().getLabel());
+                String name = StringUtil.humanize(entry.getValue().getLabel());
+                dialogOptionslist.add(new CommonObjectFilterOption(name.replace(" ", "_"), "location_name", CommonObjectFilterOption.ByColumnAndByDetails.byDetails, name));
+            }
         }
     }
 }
