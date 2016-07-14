@@ -9,7 +9,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
@@ -28,11 +27,11 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.ei.opensrp.R;
 import org.ei.opensrp.util.FormUtils;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
+import org.ei.opensrp.view.template.SmartRegisterSecuredActivity;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -403,7 +402,12 @@ public class DisplayFormFragment extends Fragment {
         @JavascriptInterface
         public void processFormSubmission(String formSubmission){
             showTranslucentProgressDialog();
-            ((SecuredNativeSmartRegisterActivity)getActivity()).saveFormSubmission(formSubmission, recordId, formName, getFormFieldsOverrides());
+            if(getActivity() instanceof SmartRegisterSecuredActivity){
+                ((SmartRegisterSecuredActivity)getActivity()).saveFormSubmission(formSubmission, recordId, formName, getFormFieldsOverrides());
+            }
+            else{
+                ((SecuredNativeSmartRegisterActivity)getActivity()).saveFormSubmission(formSubmission, recordId, formName, getFormFieldsOverrides());
+            }
         }
 
         @JavascriptInterface
@@ -415,14 +419,18 @@ public class DisplayFormFragment extends Fragment {
         @JavascriptInterface
         public void savePartialFormData(String partialData){
             //Toast.makeText(mContext, "saving un-submitted form data", Toast.LENGTH_LONG).show();
-            ((SecuredNativeSmartRegisterActivity)getActivity()).savePartialFormData(partialData, recordId, formName, getFormFieldsOverrides());
+            if(getActivity() instanceof SmartRegisterSecuredActivity){
+                ((SmartRegisterSecuredActivity)getActivity()).savePartialFormData(partialData, recordId, formName, getFormFieldsOverrides());
+            }
+            else {
+                ((SecuredNativeSmartRegisterActivity)getActivity()).savePartialFormData(partialData, recordId, formName, getFormFieldsOverrides());
+            }
         }
 
         @JavascriptInterface
         public void log(String message){
             Log.d(JAVASCRIPT_LOG_TAG, message);
             //Toast.makeText(mContext, message, Toast.LENGTH_LONG).show();
-            //((SecuredNativeSmartRegisterActivity)getActivity()).savePartialFormData(partialData, recordId, formName, getFormFieldsOverrides());
         }
     }
 
