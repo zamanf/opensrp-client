@@ -2,17 +2,15 @@ package org.ei.opensrp.view.controller;
 
 import android.app.Activity;
 import android.content.Intent;
-import org.ei.opensrp.view.activity.*;
 
-import static org.ei.opensrp.view.controller.ProfileNavigationController.*;
+import org.ei.opensrp.view.activity.ReportsActivity;
+import org.ei.opensrp.view.activity.VideosActivity;
 
 public class NavigationController {
     private Activity activity;
-    private ANMController anmController;
 
-    public NavigationController(Activity activity, ANMController anmController) {
+    public NavigationController(Activity activity) {
         this.activity = activity;
-        this.anmController = anmController;
     }
 
     public void startReports() {
@@ -23,47 +21,7 @@ public class NavigationController {
         activity.startActivity(new Intent(activity, VideosActivity.class));
     }
 
-    public void startECSmartRegistry() {
-        activity.startActivity(new Intent(activity, NativeECSmartRegisterActivity.class));
-    }
-
-    public void startFPSmartRegistry() {
-        activity.startActivity(new Intent(activity, NativeFPSmartRegisterActivity.class));
-    }
-
-    public void startANCSmartRegistry() {
-        activity.startActivity(new Intent(activity, NativeANCSmartRegisterActivity.class));
-    }
-
-    public void startPNCSmartRegistry() {
-        activity.startActivity(new Intent(activity, NativePNCSmartRegisterActivity.class));
-    }
-
-    public void startChildSmartRegistry() {
-        activity.startActivity(new Intent(activity, NativeChildSmartRegisterActivity.class));
-    }
-
-    public String get() {
-        return anmController.get();
-    }
-
     public void goBack() {
         activity.finish();
-    }
-
-    public void startEC(String entityId) {
-        navigateToECProfile(activity, entityId);
-    }
-
-    public void startANC(String entityId) {
-        navigateToANCProfile(activity, entityId);
-    }
-
-    public void startPNC(String entityId) {
-        navigateToPNCProfile(activity, entityId);
-    }
-
-    public void startChild(String entityId) {
-        navigateToChildProfile(activity, entityId);
     }
 }
