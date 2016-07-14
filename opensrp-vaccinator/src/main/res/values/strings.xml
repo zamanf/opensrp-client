@@ -26,6 +26,7 @@
     <string name="address">Address</string>
     <string name="birthdate_age">DOB (AGE)</string>
     <string name="epi_number">EPI CARD</string>
+    <string name="child_contact_number">CONTACT</string>
 
     <string name="marital_status">Marital Status</string>
 
@@ -36,13 +37,24 @@
     <string name="str_woman_search_hint">Search Woman Register</string>
     <string name="woman_profile">WOMAN PROFILE</string>
     <string name="woman_title">Woman</string>
+    <string name="woman_contact_number">CONTACT</string>
     <string name="woman_edd">EDD and GA</string>
-    <string name="woman_last_vaccine">LAST VACCINE GIVEN</string>
+    <string name="woman_last_vaccine">LAST VACCINE</string>
     <string name="woman_next_vaacine">NEXT VACCINE DUE</string>
     <string name="woman_alphabetical_sort">Alphabetical (Name)</string>
     <string name="id_sort">Program ID </string>
     <string name="woman_details_title">Woman Profile</string>
-    <string name="day">DAY</string>
+    <string name="day">DAY\n</string>
+    <string name="bcg">BCG\n</string>
+    <string name="opv">OPV\n</string>
+    <string name="ipv">IPV\n</string>
+    <string name="penta">PENTA\n</string>
+    <string name="measles">MEASLES\n</string>
+    <string name="pcv">PCV\n</string>
+    <string name="tt">TT\n</string>
+    <string name="total">TOTAL\n</string>
+    <string name="used">USED</string>
+    <string name="wasted">WASTED</string>
 
     <string name="month">MONTH</string>
     <string name="month_target">MONTHLY TARGET</string>
