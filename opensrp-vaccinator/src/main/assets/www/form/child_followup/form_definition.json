@@ -1,5 +1,5 @@
 {
-  "form_data_definition_version" : "2",
+  "form_data_definition_version" : "3",
   "form" : {
     "bind_type" : "pkchild",
     "default_bind_path" : "/model/instance/Child_Vaccination_Followup/",
@@ -166,9 +166,6 @@
       "name" : "address1",
       "bind" : "/model/instance/Child_Vaccination_Followup/address1"
     }, {
-      "name" : "landmark",
-      "bind" : "/model/instance/Child_Vaccination_Followup/landmark"
-    }, {
       "name" : "center_gps",
       "bind" : "/model/instance/Child_Vaccination_Followup/center_gps"
     }, {
@@ -306,9 +303,6 @@
     }, {
       "name" : "vaccines_2",
       "bind" : "/model/instance/Child_Vaccination_Followup/vaccines_2"
-    }, {
-      "name" : "vaccination_date",
-      "bind" : "/model/instance/Child_Vaccination_Followup/vaccination_date"
     }, {
       "name" : "bcg",
       "bind" : "/model/instance/Child_Vaccination_Followup/bcg"

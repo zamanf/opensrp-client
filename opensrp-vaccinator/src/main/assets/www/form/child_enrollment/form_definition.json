@@ -1,5 +1,5 @@
 {
-  "form_data_definition_version" : "2",
+  "form_data_definition_version" : "3",
   "form" : {
     "bind_type" : "pkchild",
     "default_bind_path" : "/model/instance/Child_Vaccination_Enrollment/",
@@ -55,11 +55,11 @@
       "name" : "phonenumber",
       "bind" : "/model/instance/Child_Vaccination_Enrollment/phonenumber"
     }, {
-      "name" : "client_reg_date",
-      "bind" : "/model/instance/Child_Vaccination_Enrollment/client_reg_date"
-    }, {
       "name" : "program_client_id",
       "bind" : "/model/instance/Child_Vaccination_Enrollment/program_client_id"
+    }, {
+      "name" : "client_reg_date",
+      "bind" : "/model/instance/Child_Vaccination_Enrollment/client_reg_date"
     }, {
       "name" : "epi_card_number",
       "bind" : "/model/instance/Child_Vaccination_Enrollment/epi_card_number"
@@ -103,6 +103,9 @@
       "name" : "mother_name",
       "bind" : "/model/instance/Child_Vaccination_Enrollment/mother_name"
     }, {
+      "name" : "father_name",
+      "bind" : "/model/instance/Child_Vaccination_Enrollment/father_name"
+    }, {
       "name" : "ethnicity",
       "bind" : "/model/instance/Child_Vaccination_Enrollment/ethnicity"
     }, {
@@ -123,9 +126,6 @@
     }, {
       "name" : "address1",
       "bind" : "/model/instance/Child_Vaccination_Enrollment/address1"
-    }, {
-      "name" : "landmark",
-      "bind" : "/model/instance/Child_Vaccination_Enrollment/landmark"
     }, {
       "name" : "provincename",
       "bind" : "/model/instance/Child_Vaccination_Enrollment/provincename"
@@ -237,9 +237,6 @@
     }, {
       "name" : "vaccines_2",
       "bind" : "/model/instance/Child_Vaccination_Enrollment/vaccines_2"
-    }, {
-      "name" : "vaccination_date",
-      "bind" : "/model/instance/Child_Vaccination_Enrollment/vaccination_date"
     }, {
       "name" : "bcg",
       "bind" : "/model/instance/Child_Vaccination_Enrollment/bcg"

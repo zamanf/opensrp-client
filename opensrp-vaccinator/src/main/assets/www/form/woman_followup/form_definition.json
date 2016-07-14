@@ -1,5 +1,5 @@
 {
-  "form_data_definition_version" : "2",
+  "form_data_definition_version" : "3",
   "form" : {
     "bind_type" : "pkwoman",
     "default_bind_path" : "/model/instance/Woman_TT_Followup_Form/",
@@ -112,9 +112,6 @@
       "name" : "address_note",
       "bind" : "/model/instance/Woman_TT_Followup_Form/address_note"
     }, {
-      "name" : "vaccination_date",
-      "bind" : "/model/instance/Woman_TT_Followup_Form/vaccination_date"
-    }, {
       "name" : "address_change",
       "bind" : "/model/instance/Woman_TT_Followup_Form/address_change"
     }, {
@@ -132,9 +129,6 @@
     }, {
       "name" : "address1",
       "bind" : "/model/instance/Woman_TT_Followup_Form/address1"
-    }, {
-      "name" : "landmark",
-      "bind" : "/model/instance/Woman_TT_Followup_Form/landmark"
     }, {
       "name" : "center_gps",
       "bind" : "/model/instance/Woman_TT_Followup_Form/center_gps"
