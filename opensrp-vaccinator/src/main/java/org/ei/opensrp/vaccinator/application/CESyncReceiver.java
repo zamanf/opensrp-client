@@ -10,6 +10,7 @@ import android.util.Log;
 
 import org.ei.opensrp.domain.Response;
 import org.ei.opensrp.service.HTTPAgent;
+import org.ei.opensrp.util.Utils;
 import org.ei.opensrp.vaccinator.db.CESQLiteHelper;
 import org.ei.opensrp.vaccinator.db.Client;
 import org.ei.opensrp.vaccinator.db.Event;
@@ -23,8 +24,6 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Calendar;
-
-import util.Utils;
 
 public class CESyncReceiver extends BroadcastReceiver {
     public static final String CLIENT_SEARCH_URL = "/rest/client";
