@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:paddingLeft="5dp"
-            style="@style/CustomFontTextViewStyle.StatusBar.Bold"/>
+            style="@style/CustomFontTextViewStyle.StatusBar.Bold" />
 
     <org.ei.opensrp.view.customControls.CustomFontTextView
             android:layout_width="wrap_content"
@@ -43,8 +43,9 @@
     <org.ei.opensrp.view.customControls.CustomFontTextView
         android:id="@+id/statusbar_today_str"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent" android:text="Today: "
+        android:layout_height="match_parent" android:text="Today:"
         android:paddingLeft="5dp"
+        android:paddingRight="5dp"
         style="@style/CustomFontTextViewStyle.StatusBar"
         android:layout_gravity="right" />
 
