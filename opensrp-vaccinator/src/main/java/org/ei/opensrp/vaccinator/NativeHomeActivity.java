@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,16 +14,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.ei.opensrp.Context;
-import org.ei.opensrp.commonregistry.CommonPersonObjectController;
 import org.ei.opensrp.event.Listener;
 import org.ei.opensrp.service.PendingFormSubmissionService;
 import org.ei.opensrp.sync.SyncAfterFetchListener;
 import org.ei.opensrp.sync.SyncProgressIndicator;
 import org.ei.opensrp.sync.UpdateActionsTask;
+import org.ei.opensrp.vaccinator.child.ChildSmartRegisterActivity;
+import org.ei.opensrp.vaccinator.field.FieldMonitorSmartRegisterActivity;
+import org.ei.opensrp.vaccinator.woman.WomanSmartRegisterActivity;
 import org.ei.opensrp.view.activity.SecuredActivity;
 import org.ei.opensrp.view.contract.HomeContext;
 import org.ei.opensrp.view.controller.NativeAfterANMDetailsFetchListener;
 import org.ei.opensrp.view.controller.NativeUpdateANMDetailsTask;
+import org.joda.time.DateTime;
 
 import static android.widget.Toast.LENGTH_SHORT;
 import static java.lang.String.valueOf;
@@ -72,18 +77,18 @@ public class NativeHomeActivity extends SecuredActivity {
         }
     };
 
-    private TextView ecRegisterClientCountView;
     private TextView womanRegisterClientCountView;
-    private TextView pncRegisterClientCountView;
-    private TextView fpRegisterClientCountView;
     private TextView childRegisterClientCountView;
     private TextView fieldRegisterClientCountMView;
     private TextView fieldRegisterClientCountDView;
+    private final String TAG = getClass().getName();
 
     @Override
     protected void onCreation() {
+        Log.i(TAG, "Creating Home Activity Views:");
         setContentView(R.layout.smart_registers_home);
-        navigationController = new VaccinatorNavigationController(this,anmController);
+        navigationController = new VaccinatorNavigationController(this);
+
         setupViews();
         initialize();
 
@@ -96,18 +101,10 @@ public class NativeHomeActivity extends SecuredActivity {
       /*  LocationSelectorDialogFragment
                 .newInstance(this, new EditDialogOptionModel(), context.anmLocationController().get(), "new_household_registration")
                 .show(ft, locationDialogTAG);*/
+        Log.i(TAG, "Created Home Activity views:");
     }
 
-
-
-
-
     private void setupViews() {
-     //  findViewById(R.id.btn_ec_register).setOnClickListener(onRegisterStartListener);
-     //   findViewById(R.id.btn_pnc_register).setOnClickListener(onRegisterStartListener);
-  //      findViewById(R.id.btn_anc_register).setOnClickListener(onRegisterStartListener);
-     //   findViewById(R.id.btn_fp_register).setOnClickListener(onRegisterStartListener);
-      // findViewById(R.id.btn_child_register_new).setOnClickListener(onRegisterStartListener);
         ImageButton imgButtonChild=(ImageButton)findViewById(R.id.btn_child_register_new);
         ImageButton imgButtonWoman=(ImageButton)findViewById(R.id.btn_woman_register);
         ImageButton imgButtonField=(ImageButton)findViewById(R.id.btn_field_register);
@@ -116,13 +113,11 @@ public class NativeHomeActivity extends SecuredActivity {
             imgButtonWoman.setOnClickListener(onRegisterStartListener);
             imgButtonChild.setOnClickListener(onRegisterStartListener);
         }
-            findViewById(R.id.btn_reporting).setOnClickListener(onButtonsClickListener);
+
+        findViewById(R.id.btn_reporting).setOnClickListener(onButtonsClickListener);
         findViewById(R.id.btn_provider_profile).setOnClickListener(onButtonsClickListener);
 
-     //   ecRegisterClientCountView = (TextView) findViewById(R.id.txt_ec_register_client_count);
-     //   pncRegisterClientCountView = (TextView) findViewById(R.id.txt_pnc_register_client_count);
         womanRegisterClientCountView = (TextView) findViewById(R.id.txt_woman_register_client_count);
-     //   fpRegisterClientCountView = (TextView) findViewById(R.id.txt_fp_register_client_count);txt_field_register_client_count
         childRegisterClientCountView = (TextView) findViewById(R.id.txt_child_register_client_count);
         fieldRegisterClientCountDView = (TextView) findViewById(R.id.txt_field_register_client_countd);
         fieldRegisterClientCountMView = (TextView) findViewById(R.id.txt_field_register_client_countm);
@@ -141,15 +136,18 @@ public class NativeHomeActivity extends SecuredActivity {
         getSupportActionBar().setDisplayUseLogoEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         LoginActivity.setLanguage();
-//        getActionBar().setBackgroundDrawable(getReso
-// urces().getDrawable(R.color.action_bar_background));
     }
 
     @Override
     protected void onResumption() {
+        Log.i(getClass().getName(), "Updating Counts");
+
         updateRegisterCounts();
         updateSyncIndicator();
-        updateRemainingFormsToSyncCount();
+        // already inplace in onPrepareOptionsMenu
+        // updateRemainingFormsToSyncCount();
+
+        Log.i(getClass().getName(), "Updated ALL Counts but updateRemainingFormsToSyncCount ");
     }
 
     private void updateRegisterCounts() {
@@ -163,43 +161,35 @@ public class NativeHomeActivity extends SecuredActivity {
     }
 
     private void updateRegisterCounts(HomeContext homeContext) {
-        CommonPersonObjectController childController = new CommonPersonObjectController(context.allCommonsRepositoryobjects("pkchild"),
-                context.allBeneficiaries(), context.listCache(),
-                context.personObjectClientsCache(), "first_name", "pkchild", "client_reg_date",
-                CommonPersonObjectController.ByColumnAndByDetails.byDetails );
-        CommonPersonObjectController womanController = new CommonPersonObjectController(context.allCommonsRepositoryobjects("pkwoman"),
-                context.allBeneficiaries(), context.listCache(),
-                context.personObjectClientsCache(), "first_name", "pkwoman", "client_reg_date",
-                CommonPersonObjectController.ByColumnAndByDetails.byDetails.byDetails );
+        String childCount = context.commonrepository("pkchild").rawQuery("SELECT COUNT(*) c FROM pkchild").get(0).get("c");
+        String womanCount = context.commonrepository("pkwoman").rawQuery("SELECT COUNT(*) c FROM pkwoman").get(0).get("c");
+        String stockCountD = context.commonrepository("stock").rawQuery("SELECT COUNT(*) c FROM stock WHERE report='daily'").get(0).get("c");
+        String stockCountM = context.commonrepository("stock").rawQuery("SELECT COUNT(*) c FROM stock WHERE report='monthly'").get(0).get("c");
 
-        CommonPersonObjectController fieldControllerD = new CommonPersonObjectController(context.allCommonsRepositoryobjects("stock"),
-                context.allBeneficiaries(), context.listCache(),
-                context.personObjectClientsCache(), "date", "stock", "report", "daily", CommonPersonObjectController.ByColumnAndByDetails.byColumn, "report",
-                CommonPersonObjectController.ByColumnAndByDetails.byColumn );
-
-        CommonPersonObjectController fieldControllerM = new CommonPersonObjectController(context.allCommonsRepositoryobjects("stock"),
-                context.allBeneficiaries(), context.listCache(),
-                context.personObjectClientsCache(), "date", "stock", "report", "monthly", CommonPersonObjectController.ByColumnAndByDetails.byColumn, "report",
-                CommonPersonObjectController.ByColumnAndByDetails.byColumn );
-
-       // ecRegisterClientCountView.setText(valueOf(hhcontroller.getClients().size()));
-        womanRegisterClientCountView.setText(valueOf(womanController.getClients().size()));
-     //   pncRegisterClientCountView.setText(valueOf(homeContext.pncCount()));
-     //   fpRegisterClientCountView.setText(valueOf(elcocontroller.getClients().size()));
-//        Log.d("child count cin ", childController.getClients().size()+"");
-        childRegisterClientCountView.setText(valueOf(childController.getClients().size()));
-        fieldRegisterClientCountDView.setText(valueOf(fieldControllerD.getClients().size())+" D");
-        fieldRegisterClientCountMView.setText(valueOf(fieldControllerM.getClients().size())+" M");
+        womanRegisterClientCountView.setText(womanCount);
+        childRegisterClientCountView.setText(childCount);
+        fieldRegisterClientCountDView.setText(stockCountD+" D");
+        fieldRegisterClientCountMView.setText(stockCountM+" M");
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
+
+        Log.i(getClass().getName(), "Updating menu items");
+
         updateMenuItem = menu.findItem(R.id.updateMenuItem);
         remainingFormsToSyncMenuItem = menu.findItem(R.id.remainingFormsToSyncMenuItem);
 
+        remainingFormsToSyncMenuItem.setTitle("Loading counts ...");
+        remainingFormsToSyncMenuItem.setVisible(true);
+
         updateSyncIndicator();
+
         updateRemainingFormsToSyncCount();
+
+        Log.i(getClass().getName(), "Updated menu items");
+
         return true;
     }
 
@@ -227,7 +217,6 @@ public class NativeHomeActivity extends SecuredActivity {
         updateActionsTask.updateFromServer(new SyncAfterFetchListener());
     }
 
-    @Override
     protected void onDestroy() {
         super.onDestroy();
 
@@ -247,17 +236,25 @@ public class NativeHomeActivity extends SecuredActivity {
     }
 
     private void updateRemainingFormsToSyncCount() {
-        if (remainingFormsToSyncMenuItem == null) {
-            return;
-        }
+        // Get a handler that can be used to post to the main thread
+        boolean success = new Handler(getMainLooper())
+                .post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (remainingFormsToSyncMenuItem == null) {
+                            return;
+                        }
 
-        long size = pendingFormSubmissionService.pendingFormSubmissionCount();
-        if (size > 0) {
-            remainingFormsToSyncMenuItem.setTitle(valueOf(size) + " " + getString(R.string.unsynced_forms_count_message));
-            remainingFormsToSyncMenuItem.setVisible(true);
-        } else {
-            remainingFormsToSyncMenuItem.setVisible(false);
-        }
+                        long size = pendingFormSubmissionService.pendingFormSubmissionCount();
+                        if (size > 0) {
+                            remainingFormsToSyncMenuItem.setTitle(valueOf(size) + " " + getString(R.string.unsynced_forms_count_message));
+                        } else {
+                            remainingFormsToSyncMenuItem.setTitle("0 " + getString(R.string.unsynced_forms_count_message));
+                        }
+                    }
+                });
+
+        Log.i(getClass().getName(), "updateRemainingFormsToSyncCount placed to queue "+success);
     }
 
     private View.OnClickListener onRegisterStartListener = new View.OnClickListener() {
@@ -266,30 +263,15 @@ public class NativeHomeActivity extends SecuredActivity {
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.btn_field_register:
-                    /*AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                    builder.setTitle(R.string.pick_report);
-                    builder.setItems(new String[]{"Monthly", "Daily"}, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            //if()
-                           //Toast.makeText(activity, "selected item :" + which, Toast.LENGTH_LONG).show();
-                            if (which == 0) {
-                                FieldMonitorSmartRegisterActivity.sortbymonth = true;
-                            } else {
-                                FieldMonitorSmartRegisterActivity.sortbymonth = false;
-                            } // The 'which' argument contains the index position
-                            // of the selected item
-                            dialog.dismiss();*/
-                            navigationController.startFPSmartRegistry();
-//                        }
-//                    }).show();
+                    activity.startActivity(new Intent(activity, FieldMonitorSmartRegisterActivity.class));
                     break;
 
                 case R.id.btn_child_register_new:
-                    navigationController.startChildSmartRegistry();
+                    activity.startActivity(new Intent(activity, ChildSmartRegisterActivity.class));
                     break;
 
                 case R.id.btn_woman_register:
-                    navigationController.startANCSmartRegistry();
+                    activity.startActivity(new Intent(activity, WomanSmartRegisterActivity.class));
                     break;
             }
         }
