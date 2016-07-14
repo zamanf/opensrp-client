@@ -1,6 +1,5 @@
 package org.ei.opensrp.view.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -9,21 +8,26 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
 import org.ei.opensrp.AllConstants;
 import org.ei.opensrp.Context;
 import org.ei.opensrp.R;
 import org.ei.opensrp.event.Listener;
-import org.ei.opensrp.view.controller.ANMController;
 import org.ei.opensrp.view.controller.FormController;
 import org.ei.opensrp.view.controller.NavigationController;
-import android.support.v7.app.ActionBarActivity;
 
 import java.util.Map;
 
 import static android.widget.Toast.LENGTH_SHORT;
-import static org.ei.opensrp.AllConstants.*;
+import static org.ei.opensrp.AllConstants.ALERT_NAME_PARAM;
+import static org.ei.opensrp.AllConstants.ENTITY_ID;
+import static org.ei.opensrp.AllConstants.ENTITY_ID_PARAM;
+import static org.ei.opensrp.AllConstants.FIELD_OVERRIDES_PARAM;
+import static org.ei.opensrp.AllConstants.FORM_NAME_PARAM;
+import static org.ei.opensrp.AllConstants.FORM_SUCCESSFULLY_SUBMITTED_RESULT_CODE;
 import static org.ei.opensrp.event.Event.ON_LOGOUT;
 import static org.ei.opensrp.util.Log.logInfo;
 
@@ -31,7 +35,6 @@ public abstract class SecuredActivity extends ActionBarActivity {
     protected Context context;
     protected Listener<Boolean> logoutListener;
     protected FormController formController;
-    protected ANMController anmController;
     protected NavigationController navigationController;
     private String metaData;
 
@@ -55,9 +58,13 @@ public abstract class SecuredActivity extends ActionBarActivity {
         }
 
         formController = new FormController(this);
-        anmController = context.anmController();
-        navigationController = new NavigationController(this, anmController);
+        navigationController = new NavigationController(this);
         onCreation();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -89,6 +96,9 @@ public abstract class SecuredActivity extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
+
+        Log.i(getClass().getName(), "Inflated main_menu");
+
         return true;
     }
 
