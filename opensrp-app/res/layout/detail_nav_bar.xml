@@ -110,7 +110,7 @@
         <org.ei.opensrp.view.customControls.CustomFontTextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="Today:"
+            android:text="Today: "
             android:id="@+id/detail_today_string"
             style="@style/CustomFontTextViewStyle.ListView.Normal"
             android:layout_gravity="right"
@@ -127,6 +127,7 @@
             android:textColor="@color/text_black"
             android:textStyle="bold"
             android:textSize="14sp"
+            android:paddingLeft="0dp"
             android:layout_marginRight="35dp" />
     </LinearLayout>
 
