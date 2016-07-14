@@ -2,6 +2,13 @@
 <resources>
     <color name="light_blue">#1a93d2</color>
 
+    <color name="alert_na">#ECECEC</color>
+    <color name="alert_upcoming">#D3EAF4</color>
+    <color name="alert_normal">#389CCA</color>
+    <color name="alert_urgent">#D13F3F</color>
+    <color name="alert_completed">#4FB45B</color>
+    <color name="alert_expired">#ECECEC</color>
+
     <color name="smart_register_client_divider_color">#d9d9d9</color>
     <color name="status_bar_background_dark_grey">#494949</color>
     <color name="status_bar_text_almost_white">#f5f5f5</color>
