@@ -1,8 +1,8 @@
 package org.ei.opensrp.vaccinator.child;
 
-import org.ei.opensrp.vaccinator.application.template.SmartRegisterActivity;
-import org.ei.opensrp.vaccinator.application.template.SmartRegisterFragment;
+import org.ei.opensrp.vaccinator.application.common.SmartClientRegisterFragment;
 import org.ei.opensrp.view.controller.FormController;
+import org.ei.opensrp.view.template.SmartRegisterSecuredActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,9 +10,10 @@ import java.util.List;
 /**
  * Created by Ahmed on 13-Oct-15.
  */
-public class ChildSmartRegisterActivity extends SmartRegisterActivity {
+public class ChildSmartRegisterActivity extends SmartRegisterSecuredActivity {
+
     @Override
-    protected SmartRegisterFragment getBaseFragment() {
+    public SmartClientRegisterFragment getBaseFragment() {
         return new ChildSmartRegisterFragment(new FormController(this));
     }
 
@@ -24,5 +25,10 @@ public class ChildSmartRegisterActivity extends SmartRegisterActivity {
         formNames.add("offsite_child_followup");
 
         return formNames.toArray(new String[formNames.size()]);
+    }
+
+    @Override
+    protected void onResumption() {
+
     }
 }

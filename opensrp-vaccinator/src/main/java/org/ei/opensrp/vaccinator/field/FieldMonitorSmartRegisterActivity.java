@@ -1,15 +1,16 @@
 package org.ei.opensrp.vaccinator.field;
 
-import org.ei.opensrp.vaccinator.application.template.SmartRegisterActivity;
-import org.ei.opensrp.vaccinator.application.template.SmartRegisterFragment;
 import org.ei.opensrp.view.controller.FormController;
+import org.ei.opensrp.view.fragment.SecuredNativeSmartRegisterFragment;
+import org.ei.opensrp.view.template.SmartRegisterSecuredActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FieldMonitorSmartRegisterActivity extends SmartRegisterActivity {
+public class FieldMonitorSmartRegisterActivity extends SmartRegisterSecuredActivity {
+
     @Override
-    protected SmartRegisterFragment getBaseFragment() {
+    public SecuredNativeSmartRegisterFragment getBaseFragment() {
         return new FieldMonitorRegisterFragment(new FormController(this));
     }
 
@@ -18,5 +19,10 @@ public class FieldMonitorSmartRegisterActivity extends SmartRegisterActivity {
         formNames.add("vaccine_stock_position");
 
         return formNames.toArray(new String[formNames.size()]);
+    }
+
+    @Override
+    protected void onResumption() {
+
     }
 }
