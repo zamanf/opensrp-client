@@ -5,6 +5,8 @@
     android:layout_height="match_parent"
     android:weightSum="1">
 
+    <include layout="@layout/smart_register_jurim_nav_bar"/>
+
     <GridLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -52,26 +54,26 @@
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="216dp"
-                android:layout_weight="0.23">
+                android:layout_weight="0.16">
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="Hb 1 (0-7 days)"
+                    android:text="HB 0 (0-7 days)"
                     android:id="@+id/textView17"
                     android:textSize="16dp" />
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="Hb 1 (>7) days"
+                    android:text="HB 0 (>7) days"
                     android:id="@+id/textView18"
                     android:textSize="16dp" />
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="BCG"
@@ -79,7 +81,7 @@
                     android:textSize="16dp" />
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="Pol 1"
@@ -87,15 +89,15 @@
                     android:textSize="16dp" />
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="DPT/Hb 1"
+                    android:text="DPT/HB 1"
                     android:id="@+id/textView21"
                     android:textSize="16dp" />
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="Pol 2"
@@ -103,11 +105,19 @@
                     android:textSize="16dp" />
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="DPT/Hb 2"
+                    android:text="DPT/HB 2"
                     android:id="@+id/textView23"
+                    android:textSize="16dp" />
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="Pol 3"
+                    android:id="@+id/textView42"
                     android:textSize="16dp" />
             </LinearLayout>
 
@@ -122,7 +132,7 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="0"
-                    android:id="@+id/textView24"
+                    android:id="@+id/hbunder7recap"
                     android:textSize="16dp" />
 
                 <TextView
@@ -130,7 +140,7 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="0"
-                    android:id="@+id/textView36"
+                    android:id="@+id/hbover7recap"
                     android:textSize="16dp" />
 
                 <TextView
@@ -138,7 +148,7 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="0"
-                    android:id="@+id/textView37"
+                    android:id="@+id/bcgrecap"
                     android:textSize="16dp" />
 
                 <TextView
@@ -146,7 +156,7 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="0"
-                    android:id="@+id/textView38"
+                    android:id="@+id/pol1recap"
                     android:textSize="16dp" />
 
                 <TextView
@@ -154,7 +164,7 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="0"
-                    android:id="@+id/textView39"
+                    android:id="@+id/hb1recap"
                     android:textSize="16dp" />
 
                 <TextView
@@ -162,7 +172,7 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="0"
-                    android:id="@+id/textView40"
+                    android:id="@+id/pol2recap"
                     android:textSize="16dp" />
 
                 <TextView
@@ -170,34 +180,33 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="0"
-                    android:id="@+id/textView41"
+                    android:id="@+id/hb2recap"
+                    android:textSize="16dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="0"
+                    android:id="@+id/pol3recap"
                     android:textSize="16dp" />
             </LinearLayout>
 
             <LinearLayout
                 android:orientation="vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="233dp"
-                android:layout_weight="0.08">
+                android:layout_width="194dp"
+                android:layout_height="200dp">
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="Pol 3"
-                    android:id="@+id/textView42"
-                    android:textSize="16dp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="DPT/Hb 3"
+                    android:text="DPT/HB 3"
                     android:id="@+id/textView43"
                     android:textSize="16dp" />
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="Pol 4"
@@ -205,7 +214,14 @@
                     android:textSize="16dp" />
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="IPV"
+                    android:id="@+id/textView3" />
+
+                <TextView
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="Measles"
@@ -213,7 +229,7 @@
                     android:textSize="16dp" />
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="Mutation/Died &lt; 30 days"
@@ -221,7 +237,7 @@
                     android:textSize="16dp" />
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="Mutation/Died > 30 days"
@@ -229,12 +245,13 @@
                     android:textSize="16dp" />
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="Mutation/Moving"
                     android:id="@+id/textView48"
                     android:textSize="16dp" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -248,7 +265,7 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="0"
-                    android:id="@+id/textView49"
+                    android:id="@+id/hb3recap"
                     android:textSize="16dp" />
 
                 <TextView
@@ -256,7 +273,7 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="0"
-                    android:id="@+id/textView50"
+                    android:id="@+id/pol4recap"
                     android:textSize="16dp" />
 
                 <TextView
@@ -264,7 +281,7 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="0"
-                    android:id="@+id/textView51"
+                    android:id="@+id/ipvrecap"
                     android:textSize="16dp" />
 
                 <TextView
@@ -272,7 +289,7 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="0"
-                    android:id="@+id/textView52"
+                    android:id="@+id/measlesrecap"
                     android:textSize="16dp" />
 
                 <TextView
@@ -280,7 +297,7 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="0"
-                    android:id="@+id/textView53"
+                    android:id="@+id/diedunder30recap"
                     android:textSize="16dp" />
 
                 <TextView
@@ -288,7 +305,7 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="0"
-                    android:id="@+id/textView54"
+                    android:id="@+id/diedover30recap"
                     android:textSize="16dp" />
 
                 <TextView
@@ -296,10 +313,19 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="0"
-                    android:id="@+id/textView55"
+                    android:id="@+id/movingrecap"
                     android:textSize="16dp" />
             </LinearLayout>
         </LinearLayout>
+
+        <TextView
+            android:layout_width="382dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Small Text"
+            android:id="@+id/ket"
+            android:layout_row="3"
+            android:layout_column="0" />
 
     </GridLayout>
 </LinearLayout>
