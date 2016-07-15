@@ -7,6 +7,7 @@ import android.database.DataSetObserver;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -60,6 +61,7 @@ import static android.os.AsyncTask.THREAD_POOL_EXECUTOR;
 import static android.view.View.INVISIBLE;
 import static android.view.View.TEXT_ALIGNMENT_CENTER;
 import static android.view.View.VISIBLE;
+import static java.lang.String.valueOf;
 import static java.text.MessageFormat.format;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
@@ -140,7 +142,6 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
         onInitialization();
         setupViews(view);
         setupAdapter();
-        onResumption();
         return view;
     }
 
@@ -157,30 +158,62 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
         updateDefaultOptions();
     }
 
-    public void refreshListView(){
-        this.onResumption();
+    private void setupAdapter() {
+        if (clientsAdapter != null) {
+            clientsAdapter.notifyDataSetInvalidated();
+        }
+        clientsView.setAdapter(null);
+        clientsProgressView.setVisibility(VISIBLE);
+        clientsView.setVisibility(INVISIBLE);
+
+        boolean success = new Handler(getActivity().getMainLooper())
+                .post(new Runnable() {
+                    @Override
+                    public void run() {
+                    clientsAdapter = adapter();
+                    clientsAdapter.registerDataSetObserver(new DataSetObserver() {
+                        @Override
+                        public void onChanged() {
+                            paginationViewHandler.refresh();
+                        }
+                    });
+
+                    clientsView.setAdapter(clientsAdapter);
+                    if(isAdded()) {
+                        paginationViewHandler.refresh();
+                        clientsProgressView.setVisibility(View.GONE);
+                        clientsView.setVisibility(VISIBLE);
+                    }
+                    }
+                });
+
+        Log.i(getClass().getName(), "setting up adapter placed to queue "+success);
     }
 
     @Override
     protected void onResumption() {
-        new AsyncTask<Void, Void, Void>() {
+        /*new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
                 publishProgress();
-                //todo moved to post execute setupAdapter();
+                setupAdapter();
                 return null;
             }
 
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
+                if (clientsAdapter != null) {
+                    clientsAdapter.notifyDataSetInvalidated();
+                }
+                clientsView.setAdapter(null);
                 clientsProgressView.setVisibility(VISIBLE);
                 clientsView.setVisibility(INVISIBLE);
             }
 
             @Override
             protected void onPostExecute(Void result) {
-                // todo setupAdapter(); moved to oncreate and along with setupviews so that it doesnot refresh on resumption
+                // setupAdapter(); //todo enabled again ; moved to oncreate and along with setupviews so that it doesnot refresh on resumption
                 clientsView.setAdapter(clientsAdapter);
                 if(isAdded()) {
                     paginationViewHandler.refresh();
@@ -189,7 +222,7 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
                 }
 
             }
-        }.executeOnExecutor(THREAD_POOL_EXECUTOR);
+        }.executeOnExecutor(THREAD_POOL_EXECUTOR);*/
     }
 
     private void setupStatusBarViews(View view) {
@@ -301,16 +334,6 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
         return header;
     }
 
-    private void setupAdapter() {
-        clientsAdapter = adapter();
-        clientsAdapter.registerDataSetObserver(new DataSetObserver() {
-            @Override
-            public void onChanged() {
-                paginationViewHandler.refresh();
-            }
-        });
-    }
-
     protected abstract SmartRegisterPaginatedAdapter adapter(); /* todo {
         return new SmartRegisterInMemoryPaginatedAdapter(clientsProvider());
     }*/
@@ -318,7 +341,7 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
     protected void onServiceModeSelection(ServiceModeOption serviceModeOption, View view) {
         currentServiceModeOption = serviceModeOption;
         serviceModeView.setText(serviceModeOption.name());
-        adapter(); // refresh data adapter
+        setupAdapter(); // reset client views , refresh data adapter etc
         clientsAdapter.refreshList(currentVillageFilter, currentServiceModeOption, currentSearchFilter, currentSortOption);
 
         populateClientListHeaderView(serviceModeOption.getHeaderProvider(), view);

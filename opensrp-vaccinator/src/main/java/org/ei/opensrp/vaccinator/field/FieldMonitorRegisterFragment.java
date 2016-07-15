@@ -29,7 +29,10 @@ import org.ei.opensrp.view.fragment.SecuredNativeSmartRegisterFragment;
 import org.ei.opensrp.view.template.DetailActivity;
 import org.ei.opensrp.view.template.SmartRegisterClientsProvider;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import util.VaccinatorUtils;
 
@@ -39,8 +42,6 @@ import static android.view.View.TEXT_ALIGNMENT_CENTER;
  * Created by Safwan on 2/15/2016.
  */
 public class FieldMonitorRegisterFragment extends SecuredNativeSmartRegisterFragment {
-    private SmartRegisterClientsProvider clientProvider;
-
     private final ClientActionHandler clientActionHandler = new ClientActionHandler();
 
     public FieldMonitorRegisterFragment(){
@@ -62,7 +63,7 @@ public class FieldMonitorRegisterFragment extends SecuredNativeSmartRegisterFrag
 
             @Override
             public ServiceModeOption serviceMode() {
-                return new StockDailyServiceModeOption(clientProvider);
+                return new StockDailyServiceModeOption(null);
             }
 
             @Override
@@ -113,13 +114,13 @@ public class FieldMonitorRegisterFragment extends SecuredNativeSmartRegisterFrag
     @Override
     protected void onServiceModeSelection(ServiceModeOption serviceModeOption, View view) {
         super.onServiceModeSelection(serviceModeOption, view);
-
-        add2ndColumnHeaderView(serviceModeOption);
+        add2ndColumnHeaderView();
     }
 
-    protected void add2ndColumnHeaderView(ServiceModeOption serviceModeOption) {
-        if (serviceModeOption.name().toLowerCase().contains("dail")){
-            LinearLayout cl = (LinearLayout) mView.findViewById(org.ei.opensrp.R.id.clients_upper_header_layout);
+    protected void add2ndColumnHeaderView() {
+        LinearLayout cl = (LinearLayout) mView.findViewById(org.ei.opensrp.R.id.clients_upper_header_layout);
+        if (isDailyRegister()){
+            cl.getLayoutParams().height = 50;
             cl.setVisibility(View.VISIBLE);
             cl.removeAllViewsInLayout();
 
@@ -127,47 +128,37 @@ public class FieldMonitorRegisterFragment extends SecuredNativeSmartRegisterFrag
             cl.addView(addHeaderItem("Vaccine Stock Used or Consumed over the Period", 7));
             cl.addView(addHeaderItem("TOTAL", 2));
         }
+        else {
+            cl.setVisibility(View.GONE);
+            cl.removeAllViewsInLayout();
+        }
     }
 
     private CustomFontTextView addHeaderItem(String text, int weight){
         CustomFontTextView header = new CustomFontTextView(getActivity(), null, org.ei.opensrp.R.style.CustomFontTextViewStyle_ListView_Medium);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, weight);
         lp.gravity = Gravity.CENTER_HORIZONTAL;
-        lp.setMargins(3,0,0,0);
+        lp.setMargins(3,0,0,2);
         header.setLayoutParams(lp);
         header.setGravity(TEXT_ALIGNMENT_CENTER);
         header.setText(text);
-        header.setPadding(weight*3,0,0,1);
-        header.setTextSize(21);
+        header.setPadding(weight*3,0,0,4);
+        header.setTextSize(20);
         header.setTextAlignment(TEXT_ALIGNMENT_CENTER);
         header.setBackgroundColor(Color.LTGRAY);
 
         return header;
     }
 
-    @Override
     protected SmartRegisterClientsProvider clientsProvider() {
-        if(getCurrentServiceModeOption() == null || getCurrentServiceModeOption().name().toLowerCase().contains("daily")) {
-            clientProvider = clientsProvider(FieldMonitorSmartClientsProvider.ByMonthByDay.ByDay);
-        }
-        else {
-            clientProvider =  clientsProvider(FieldMonitorSmartClientsProvider.ByMonthByDay.ByMonth);
-        }
-        return clientProvider;
-    }
-
-    private SmartRegisterClientsProvider clientsProvider(FieldMonitorSmartClientsProvider.ByMonthByDay type) {
-        if (type.equals(FieldMonitorSmartClientsProvider.ByMonthByDay.ByMonth)) {
-            setCurrentSearchFilter(new ReportFilterOption(FieldMonitorSmartClientsProvider.ByMonthByDay.ByMonth, ""));
-            clientProvider = new FieldMonitorSmartClientsProvider(
-                    getActivity().getApplicationContext(), clientActionHandler, context.alertService(), FieldMonitorSmartClientsProvider.ByMonthByDay.ByMonth);
-        }
-        else {
-            setCurrentSearchFilter(new ReportFilterOption(FieldMonitorSmartClientsProvider.ByMonthByDay.ByDay, ""));
-            clientProvider = new FieldMonitorSmartClientsProvider(
+        if (isDailyRegister()){
+            return new FieldMonitorSmartClientsProvider(
                     getActivity().getApplicationContext(), clientActionHandler, context.alertService(), FieldMonitorSmartClientsProvider.ByMonthByDay.ByDay);
         }
-        return clientProvider;
+        else {
+            return new FieldMonitorSmartClientsProvider(
+                    getActivity().getApplicationContext(), clientActionHandler, context.alertService(), FieldMonitorSmartClientsProvider.ByMonthByDay.ByMonth);
+        }
     }
 
     @Override
@@ -200,14 +191,65 @@ public class FieldMonitorRegisterFragment extends SecuredNativeSmartRegisterFrag
         super.onResumption();
         getDefaultOptionsProvider();
 
-        add2ndColumnHeaderView(getCurrentServiceModeOption());
+        add2ndColumnHeaderView();
     }//end of method
+
+    private List<String> customColumnsDaily = new ArrayList<String>(){{
+            add("(select count(*) c from pkwoman where tt1 between t.date and t.date) tt1");
+            add("(select count(*) c from pkwoman where tt2 between t.date and t.date) tt2");
+            add("(select count(*) c from pkwoman where tt3 between t.date and t.date) tt3");
+            add("(select count(*) c from pkwoman where tt4 between t.date and t.date) tt4");
+            add("(select count(*) c from pkwoman where tt5 between t.date and t.date) tt5");
+            add("(select count(*) c from pkchild where bcg between t.date and t.date) bcg");
+            add("(select count(*) c from pkchild where opv0 between t.date and t.date) opv0");
+            add("(select count(*) c from pkchild where opv1 between t.date and t.date) opv1");
+            add("(select count(*) c from pkchild where opv2 between t.date and t.date) opv2");
+            add("(select count(*) c from pkchild where opv3 between t.date and t.date) opv3");
+            add("(select count(*) c from pkchild where ipv between t.date and t.date) ipv");
+            add("(select count(*) c from pkchild where pcv1 between t.date and t.date) pcv1");
+            add("(select count(*) c from pkchild where pcv2 between t.date and t.date) pcv2");
+            add("(select count(*) c from pkchild where pcv3 between t.date and t.date) pcv3");
+            add("(select count(*) c from pkchild where measles1 between t.date and t.date) measles1");
+            add("(select count(*) c from pkchild where measles2 between t.date and t.date) measles2");
+            add("(select count(*) c from pkchild where penta1 between t.date and t.date) penta1");
+            add("(select count(*) c from pkchild where penta2 between t.date and t.date) penta2");
+            add("(select count(*) c from pkchild where penta3 between t.date and t.date) penta3");
+    }};
+
+    private List<String> customColumnsMonthly = new ArrayList<String>(){{
+        add("(select count(*) c from pkwoman where SUBSTR(tt1,1,7) = SUBSTR(t.date,1,7)) tt1");
+        add("(select count(*) c from pkwoman where SUBSTR(tt2,1,7) = SUBSTR(t.date,1,7)) tt2");
+        add("(select count(*) c from pkwoman where SUBSTR(tt3,1,7) = SUBSTR(t.date,1,7)) tt3");
+        add("(select count(*) c from pkwoman where SUBSTR(tt4,1,7) = SUBSTR(t.date,1,7)) tt4");
+        add("(select count(*) c from pkwoman where SUBSTR(tt5,1,7) = SUBSTR(t.date,1,7)) tt5");
+        add("(select count(*) c from pkchild where SUBSTR(bcg,1,7) = SUBSTR(t.date,1,7)) bcg");
+        add("(select count(*) c from pkchild where SUBSTR(opv0,1,7) = SUBSTR(t.date,1,7)) opv0");
+        add("(select count(*) c from pkchild where SUBSTR(opv1,1,7) = SUBSTR(t.date,1,7)) opv1");
+        add("(select count(*) c from pkchild where SUBSTR(opv2,1,7) = SUBSTR(t.date,1,7)) opv2");
+        add("(select count(*) c from pkchild where SUBSTR(opv3,1,7) = SUBSTR(t.date,1,7)) opv3");
+        add("(select count(*) c from pkchild where SUBSTR(ipv,1,7) = SUBSTR(t.date,1,7)) ipv");
+        add("(select count(*) c from pkchild where SUBSTR(pcv1,1,7) = SUBSTR(t.date,1,7)) pcv1");
+        add("(select count(*) c from pkchild where SUBSTR(pcv2,1,7) = SUBSTR(t.date,1,7)) pcv2");
+        add("(select count(*) c from pkchild where SUBSTR(pcv3,1,7) = SUBSTR(t.date,1,7)) pcv3");
+        add("(select count(*) c from pkchild where SUBSTR(measles1,1,7) = SUBSTR(t.date,1,7)) measles1");
+        add("(select count(*) c from pkchild where SUBSTR(measles2,1,7) = SUBSTR(t.date,1,7)) measles2");
+        add("(select count(*) c from pkchild where SUBSTR(penta1,1,7) = SUBSTR(t.date,1,7)) penta1");
+        add("(select count(*) c from pkchild where SUBSTR(penta2,1,7) = SUBSTR(t.date,1,7)) penta2");
+        add("(select count(*) c from pkchild where SUBSTR(penta3,1,7) = SUBSTR(t.date,1,7)) penta3");
+        add("(select sum(total_wasted) c from stock where report='daily' and SUBSTR(date,1,7)=SUBSTR(t.date,1,7)) total_monthly_wasted");
+    }};
 
     @Override
     protected SmartRegisterPaginatedAdapter adapter() {
+        setCurrentSearchFilter(new ReportFilterOption(""));
         return new SmartRegisterPaginatedCursorAdapter(getActivity(),
-                new SmartRegisterCursorBuilder("stock", getCurrentServiceModeOption().name().toLowerCase().contains("dail")?"report='daily'":"report='monthly'", (CursorSortOption) getDefaultOptionsProvider().sortOption())
+                new SmartRegisterCursorBuilder("stock", isDailyRegister()?"report='daily'":"report='monthly'",
+                        "t", (isDailyRegister()?customColumnsDaily:customColumnsMonthly).toArray(new String[]{}), (CursorSortOption) getDefaultOptionsProvider().sortOption())
                 , clientsProvider());
+    }
+
+    private boolean isDailyRegister(){
+        return getCurrentServiceModeOption() == null || getCurrentServiceModeOption().name().toLowerCase().contains("dail");
     }
 
     @Override
@@ -218,11 +260,11 @@ public class FieldMonitorRegisterFragment extends SecuredNativeSmartRegisterFrag
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.stock_detail_holder:
-                    if (getCurrentServiceModeOption().name().toLowerCase().contains("month")) {
-                        DetailActivity.startDetailActivity(getActivity(), (CommonPersonObjectClient) view.getTag(R.id.client_details_tag), FieldMonitorMonthlyDetailActivity.class);
+                    if(isDailyRegister()) {
+                        DetailActivity.startDetailActivity(getActivity(), (CommonPersonObjectClient) view.getTag(R.id.client_details_tag), FieldMonitorDailyDetailActivity.class);
                     }
                     else {
-                        DetailActivity.startDetailActivity(getActivity(), (CommonPersonObjectClient) view.getTag(R.id.client_details_tag), FieldMonitorDailyDetailActivity.class);
+                        DetailActivity.startDetailActivity(getActivity(), (CommonPersonObjectClient) view.getTag(R.id.client_details_tag), FieldMonitorMonthlyDetailActivity.class);
                     }
 
                     getActivity().finish();

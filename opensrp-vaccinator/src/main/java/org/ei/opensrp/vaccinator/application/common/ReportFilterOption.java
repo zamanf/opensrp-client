@@ -8,11 +8,9 @@ import org.ei.opensrp.view.dialog.SearchFilterOption;
 
 public class ReportFilterOption implements SearchFilterOption {
     private String filter;
-    private FieldMonitorSmartClientsProvider.ByMonthByDay type;
 
-    public ReportFilterOption(FieldMonitorSmartClientsProvider.ByMonthByDay type, String filter){
+    public ReportFilterOption(String filter){
         this.filter=filter;
-        this.type = type;
     }
 
     @Override
@@ -22,11 +20,10 @@ public class ReportFilterOption implements SearchFilterOption {
 
     @Override
     public String getCriteria() {
-        String c =  type == FieldMonitorSmartClientsProvider.ByMonthByDay.ByDay?" report='daily' ":" report='monthly' ";
         if(StringUtils.isNotBlank(filter)){
-            c += " AND date LIKE '"+filter+"%'";
+            return " date LIKE '"+filter+"%'";
         }
-        return c;
+        return "";
     }
 
     @Override
