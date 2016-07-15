@@ -25,12 +25,12 @@ public class StockMonthlyServiceModeOption extends ServiceModeOption {
 
             @Override
             public int weightSum() {
-                return 12;
+                return 6;
             }
 
             @Override
             public int[] weights() {
-                return new int[]{2,2,2,2,2,2};
+                return new int[]{1,1,1,1,1,1};
             }
 
             @Override
