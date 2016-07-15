@@ -1,5 +1,6 @@
 package org.ei.opensrp.adapter;
 
+import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 
 import org.ei.opensrp.commonregistry.CommonPersonObject;
@@ -32,6 +33,8 @@ public interface SmartRegisterPaginatedAdapter extends ListAdapter{
     void gotoNextPage();
 
     void goBackToPreviousPage();
+
+    void notifyDataSetInvalidated();
 
     void refreshList(FilterOption villageFilter, ServiceModeOption serviceModeOption,
                      SearchFilterOption searchFilter, SortOption sortOption);
