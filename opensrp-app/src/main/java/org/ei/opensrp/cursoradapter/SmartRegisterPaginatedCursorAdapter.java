@@ -42,6 +42,17 @@ public class SmartRegisterPaginatedCursorAdapter extends CursorAdapter implement
     }
 
     @Override
+    public void notifyDataSetInvalidated() {
+        Log.i(getClass().getName(), "Invalidating dataset and closing cursors");
+        super.notifyDataSetInvalidated();
+        if (getCursor() != null && !getCursor().isClosed()) {
+            getCursor().close();
+        }
+
+        SmartRegisterCursorBuilder.closeCursor();
+    }
+
+    @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         clients = new SmartRegisterClients();
         return  listItemProvider.inflateLayoutForAdapter();
@@ -80,12 +91,12 @@ public class SmartRegisterPaginatedCursorAdapter extends CursorAdapter implement
     }
 
     public int pageCount() {
-        return totalcount/limitPerPage();
+        return (int) Math.round(1.0*totalcount/limitPerPage());
     }
 
     public int currentPage() {
         if(currentoffset() != 0) {
-            return (int)Math.ceil(pageCount()-((totalcount-currentoffset())/(1.0*limitPerPage())));
+            return (int)Math.round(pageCount()-((totalcount-currentoffset())/(1.0*limitPerPage())));
         }else{
             return 1;
         }
@@ -117,8 +128,8 @@ public class SmartRegisterPaginatedCursorAdapter extends CursorAdapter implement
 
     public void refreshList(FilterOption villageFilter, ServiceModeOption serviceModeOption,
                             SearchFilterOption searchFilter, SortOption sortOption) {
-        filterandSortExecute(((CursorFilterOption)villageFilter).filter(), searchFilter.getCriteria(),
-                ((CursorSortOption)sortOption).sort());
+        filterandSortExecute(villageFilter==null?null:((CursorFilterOption)villageFilter).filter(), searchFilter==null?null:searchFilter.getCriteria(),
+                sortOption==null?null:((CursorSortOption)sortOption).sort());
         notifyDataSetChanged();
     }
 
@@ -166,6 +177,8 @@ public class SmartRegisterPaginatedCursorAdapter extends CursorAdapter implement
         clients = new SmartRegisterClients();
 
         String query = lastQuery.toString();
+        Log.i(getClass().getName(), query);
+
         Cursor c = commonRepository.RawCustomQueryForAdapter(query);
         swapCursorWithNew(c);
     }

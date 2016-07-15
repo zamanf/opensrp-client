@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
  * Created by raihan on 3/17/16.
  */
 public class SmartRegisterQueryBuilder {
+    private String alias;
     private String Selectquery;
     private String table;
     private String mainFilter = "";
@@ -52,18 +53,25 @@ public class SmartRegisterQueryBuilder {
 
     /**
      * @param table
-     * @param columns
+     * @param additionalColumns
      * @param mainFilter optional
      */
-    public SmartRegisterQueryBuilder(String table, String [] columns, String mainFilter){
+    public SmartRegisterQueryBuilder(String table, String alias, String [] additionalColumns, String mainFilter){
         this.table = table;
+        alias = StringUtils.isBlank(alias)?"t":alias;
+        this.alias = alias;
         if(StringUtils.isNotBlank(mainFilter)){
             this.mainFilter = mainFilter;
-        }        Selectquery = "SELECT id AS _id";
-        for(int i = 0;i<columns.length;i++){
-            Selectquery= Selectquery + " , " + columns[i];
         }
-        Selectquery = Selectquery+ " FROM " + table +" t ";
+
+        Selectquery = "SELECT id AS _id";
+
+        if (additionalColumns != null) {
+            for (int i = 0; i < additionalColumns.length; i++) {
+                Selectquery = Selectquery + " , " + additionalColumns[i];
+            }
+        }
+        Selectquery = Selectquery+ ", "+alias+".* FROM " + table +" AS "+alias;
     }
 
     /*
@@ -99,7 +107,10 @@ public class SmartRegisterQueryBuilder {
     }
 
     public SmartRegisterQueryBuilder addCondition(String condition){
-        mainFilter += condition ;
+        if (StringUtils.isNotBlank(mainFilter) && !condition.toLowerCase().trim().startsWith("and")){
+            mainFilter += " AND ";
+        }
+        mainFilter += " "+condition ;
         return this;
     }
     public SmartRegisterQueryBuilder addOrder(String orderCondition){
@@ -112,11 +123,11 @@ public class SmartRegisterQueryBuilder {
         return this;
     }
     public SmartRegisterQueryBuilder joinwithALerts(String alertname){
-        joins += " LEFT JOIN alerts ON t._id = alerts.caseID and alerts.scheduleName = '"+alertname+"'" ;
+        joins += " LEFT JOIN alerts ON "+alias+"._id = alerts.caseID and alerts.scheduleName = '"+alertname+"'" ;
         return this;
     }
     public SmartRegisterQueryBuilder joinwithALerts(){
-        joins += " LEFT JOIN alerts ON t._id = alerts.caseID " ;
+        joins += " LEFT JOIN alerts ON "+alias+"._id = alerts.caseID " ;
         return this;
     }
 

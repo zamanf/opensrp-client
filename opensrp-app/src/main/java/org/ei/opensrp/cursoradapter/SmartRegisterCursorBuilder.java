@@ -2,6 +2,7 @@ package org.ei.opensrp.cursoradapter;
 
 import android.app.Activity;
 import android.database.Cursor;
+import android.util.Log;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ei.opensrp.commonregistry.CommonRepository;
@@ -18,17 +19,26 @@ public class SmartRegisterCursorBuilder {
         return query;
     }
 
+    public static void closeCursor(){
+        Log.i(SmartRegisterCursorBuilder.class.getName(), "Invalidating and closing cursor");
+        if (cursor != null && !cursor.isClosed()) cursor.close();
+    }
+
     public SmartRegisterCursorBuilder(String table, String mainFilter, String sort){
-        this(table, mainFilter, null, null, sort);
+        this(table, mainFilter, null, null, null, null, sort);
     }
 
     public SmartRegisterCursorBuilder(String table, String mainFilter, CursorSortOption sort){
-        this(table, mainFilter, null, null, sort==null?null:sort.sort());
+        this(table, mainFilter, null, null, null, null, sort==null?null:sort.sort());
     }
 
-    public SmartRegisterCursorBuilder(String table, String mainFilter, String vilageFilter, String searchFilter, String sort){
+    public SmartRegisterCursorBuilder(String table, String mainFilter, String alias, String[] customColumns, CursorSortOption sort){
+        this(table, mainFilter, alias, customColumns, null, null, sort==null?null:sort.sort());
+    }
+
+    public SmartRegisterCursorBuilder(String table, String mainFilter, String alias, String[] customColumns, String vilageFilter, String searchFilter, String sort){
         this.table = table;
-        query = new SmartRegisterQueryBuilder(table, mainFilter);
+        query = new SmartRegisterQueryBuilder(table, alias, customColumns, mainFilter);
         if (StringUtils.isNotBlank(vilageFilter)){
             query.addCondition(vilageFilter);
         }
@@ -42,7 +52,7 @@ public class SmartRegisterCursorBuilder {
 
     SmartRegisterCursorBuilder(String table, String mainFilter, CursorFilterOption villageFilter,
                                SearchFilterOption searchFilter, CursorSortOption sortOption){
-        this(table, mainFilter, villageFilter==null?null:villageFilter.filter(), searchFilter==null?null:searchFilter.getCriteria(), sortOption==null?null:sortOption.sort());
+        this(table, mainFilter, null, null, villageFilter==null?null:villageFilter.filter(), searchFilter==null?null:searchFilter.getCriteria(), sortOption==null?null:sortOption.sort());
     }
     SmartRegisterCursorBuilder(SmartRegisterQueryBuilder query){
         this.table = query.table();
@@ -55,7 +65,9 @@ public class SmartRegisterCursorBuilder {
     }
 
     public Cursor buildCursor(){
-        if (cursor != null && !cursor.isClosed()) cursor.close();
+        closeCursor();
+
+        Log.i(getClass().getName(), "Building a new cursor");
 
         CommonRepository commonRepository = org.ei.opensrp.Context.getInstance().commonrepository(table);
         cursor = commonRepository.RawCustomQueryForAdapter(query.toString());
