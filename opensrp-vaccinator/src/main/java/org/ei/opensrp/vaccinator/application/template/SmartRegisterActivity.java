@@ -33,7 +33,7 @@ public abstract class SmartRegisterActivity extends SecuredNativeSmartRegisterAc
     private int currentPage;
 
     private String[] formNames = new String[]{};
-    private android.support.v4.app.Fragment mBaseFragment = null;
+    protected android.support.v4.app.Fragment mBaseFragment = null;
 
     //SAFWAN
     private android.support.v4.app.Fragment mProfileFragment = null;
@@ -256,24 +256,7 @@ public abstract class SmartRegisterActivity extends SecuredNativeSmartRegisterAc
     public void showProfileView() {
         HouseholdDetailActivity profile = (HouseholdDetailActivity)findFragmentByPosition(1);
         profile.initialize();
-        //profile.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-
-        /*FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        FragmentManager fm = getSupportFragmentManager();
-        SecuredFragment fragment1 = (SecuredFragment) findFragmentByPosition(1);
-        DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(2);
-        ft.hide(fragment1);
-        ft.hide(displayFormFragment);
-        fm.beginTransaction().hide(fragment1);
-        fm.beginTransaction().hide(displayFormFragment);
-        fm.beginTransaction().remove(fragment1);*/
         mPager.setCurrentItem(1, false);
-       // mPager.setOffscreenPageLimit(1);
-        //mPager.setPageMargin(100);
-        /*ft.hide(fragment1);
-        ft.hide(displayFormFragment);
-        fm.beginTransaction().hide(fragment1);
-        fm.beginTransaction().hide(displayFormFragment);*/
     }
 
 }

@@ -1,11 +1,10 @@
 package org.ei.opensrp.vaccinator.adapter;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,26 +16,19 @@ import android.widget.TextView;
 import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.domain.form.FieldOverrides;
-import org.ei.opensrp.util.FormUtils;
 import org.ei.opensrp.vaccinator.R;
 import org.ei.opensrp.vaccinator.application.template.SmartRegisterFragment;
-import org.ei.opensrp.vaccinator.db.Client;
-import org.ei.opensrp.vaccinator.household.BridgingActivity;
-import org.ei.opensrp.vaccinator.household.HouseholdDetailActivity;
 import org.ei.opensrp.vaccinator.household.HouseholdMemberDetails;
 import org.ei.opensrp.vaccinator.household.HouseholdSmartRegisterActivity;
 import org.ei.opensrp.vaccinator.woman.WomanSmartRegisterActivity;
 import org.ei.opensrp.vaccinator.woman.WomanSmartRegisterFragment;
-import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
-import org.ei.opensrp.view.activity.SmartRegisterActivity;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
+import org.ei.opensrp.view.controller.ANMController;
 import org.ei.opensrp.view.controller.FormController;
-import org.ei.opensrp.view.fragment.DisplayFormFragment;
+import org.ei.opensrp.view.controller.NavigationController;
 import org.ei.opensrp.view.viewpager.OpenSRPViewPager;
-import org.json.JSONObject;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +47,9 @@ public class HouseholdMemberAdapter extends ArrayAdapter<HouseholdMemberDetails>
     private final List<HouseholdMemberDetails> list;
     private final Fragment fragment;
     private FormController formController;
+    protected ANMController anmController;
+    protected NavigationController navigationController;
+
 
     @Bind(R.id.view_pager)
     OpenSRPViewPager mPager;
@@ -70,10 +65,6 @@ public class HouseholdMemberAdapter extends ArrayAdapter<HouseholdMemberDetails>
 
 
     public String[] formNames = new String[3];
-    //List<String> formNames = new ArrayList<String>();
-
-
-
 
     public HouseholdMemberAdapter(Fragment fragment, Context context, List<HouseholdMemberDetails> list){
         super(context, R.layout.list_individual, list);
@@ -136,11 +127,16 @@ public class HouseholdMemberAdapter extends ArrayAdapter<HouseholdMemberDetails>
                 client.setColumnmaps(person.getColumnmaps());
                 //client.setDetails(person.getDetails());
                 client.setCaseId(person.getCaseId());
-               /* HouseholdDetailActivity activity = new HouseholdDetailActivity();
-                activity.startFormActivity("woman_followup", client.entityId(), null);*/
+
+                Intent intent = new Intent(fragment.getActivity(), WomanSmartRegisterActivity.class);
+                //intent.putExtra("program_client_id", client.getDetails().get("program_client_id").toString());
+                intent.putExtra("program_client_id", client.getDetails().get("program_client_id").toString());
+                fragment.getActivity().startActivity(intent);
+
 
                 //((HouseholdDetailActivity) fragment.).startFormActivity("woman_followup", ((CommonPersonObjectClient) v.getTag()).entityId(), null);
-                startFollowupForm("woman_followup", client, map, SmartRegisterFragment.ByColumnAndByDetails.byDefault);
+
+                //startFollowupForm("woman_followup", client, map, SmartRegisterFragment.ByColumnAndByDetails.byDefault);
 
                 /*Intent intent = new Intent(getContext(), BridgingActivity.class);
                 intent.putExtra("woman", "woman");

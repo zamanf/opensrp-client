@@ -1,5 +1,6 @@
 package org.ei.opensrp.vaccinator.woman;
 
+import android.os.Bundle;
 import android.view.View;
 
 import org.ei.opensrp.Context;
@@ -39,6 +40,9 @@ public class WomanSmartRegisterFragment extends SmartClientRegisterFragment {
     private final ClientActionHandler clientActionHandler = new ClientActionHandler();
     private WomanSmartClientsProvider clientProvider;
 
+    public static String clientId;
+
+    String text ;
     public WomanSmartRegisterFragment(){
         super(null);
     }
@@ -82,6 +86,13 @@ public class WomanSmartRegisterFragment extends SmartClientRegisterFragment {
     }
 
     @Override
+    public void updateSearchView() {
+        super.updateSearchView();
+        if(!clientId.equals(null))
+            getSearchView().setText(clientId);
+    }
+
+    @Override
     protected SmartRegisterClientsProvider clientsProvider() {
         if (clientProvider == null) {
             clientProvider = new WomanSmartClientsProvider(
@@ -92,6 +103,7 @@ public class WomanSmartRegisterFragment extends SmartClientRegisterFragment {
 
     @Override
     protected void onInitialization() {
+        //text = this.getArguments().getString("program_client_id");
         if (controller == null) {
             controller = new CommonPersonObjectController(context.allCommonsRepositoryobjects("pkwoman"),
                     context.allBeneficiaries(), context.listCache(),
@@ -105,10 +117,8 @@ public class WomanSmartRegisterFragment extends SmartClientRegisterFragment {
         catch (Exception e){
             e.printStackTrace();
         }
-    }//end of method
 
-    @Override
-    protected void onCreation() { }
+    }//end of method
 
     private class ClientActionHandler implements View.OnClickListener {
         @Override
