@@ -151,11 +151,13 @@ public class HouseholdSmartRegisterFragment extends SmartClientRegisterGroupFrag
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.household_profile_info_layout:
+                    //SAFWAN
                     HouseholdDetailActivity.householdClient = (CommonPersonObjectClient) view.getTag();
                     ((HouseholdSmartRegisterActivity)getActivity()).showProfileView();
                     /*Intent intent = new Intent((HouseholdSmartRegisterActivity) getActivity(), HouseholdDetailActivity.class);
                     startActivity(intent);
                     getActivity().finish();*/
+                    //((HouseholdSmartRegisterActivity)getActivity()).startRegistration();
                     break;
                 case R.id.household_add_member:
                     Utils.providerDetails();

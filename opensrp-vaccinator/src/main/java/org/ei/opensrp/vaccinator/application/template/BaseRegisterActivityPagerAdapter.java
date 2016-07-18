@@ -37,14 +37,29 @@ public class BaseRegisterActivityPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         Fragment fragment = null;
+        DisplayFormFragment f;
+        String formName;
         switch (position) {
             case 0:
                 fragment = mBaseFragment;
                 break;
 
+            case 1:
+                if(mProfileFragment != null) {
+                    fragment = mProfileFragment;
+                    break;
+                }
+
+            case 6:
+                formName = dialogOptions[position - offset]; // account for the base fragment
+                f = new DisplayFormFragment();
+                f.setFormName(formName);
+                fragment = f;
+                break;
+
             default:
-                String formName = dialogOptions[position - 1]; // account for the base fragment
-                DisplayFormFragment f = new DisplayFormFragment();
+                formName = dialogOptions[position - offset]; // account for the base fragment
+                f = new DisplayFormFragment();
                 f.setFormName(formName);
                 fragment = f;
                 break;
@@ -58,10 +73,10 @@ public class BaseRegisterActivityPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return dialogOptions.length + 1; // index 0 is always occupied by the base fragment
+        return dialogOptions.length + offset; // index 0 is always occupied by the base fragment
     }
 
-    /*public int getOffset(){
+    public int getOffset(){
         return offset;
-    }*/
+    }
 }

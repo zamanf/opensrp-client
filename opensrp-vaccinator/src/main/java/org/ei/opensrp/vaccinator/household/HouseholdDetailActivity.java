@@ -17,6 +17,7 @@ import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.util.StringUtil;
 import org.ei.opensrp.vaccinator.R;
+import org.ei.opensrp.vaccinator.adapter.HouseholdMemberAdapter;
 import org.ei.opensrp.view.fragment.SecuredFragment;
 import org.joda.time.DateTime;
 import org.joda.time.Years;
@@ -60,6 +61,7 @@ public class HouseholdDetailActivity extends SecuredFragment {
 
     }
 
+    //SAFWAN
     public void initialize(){
         context = Context.getInstance();
         TableLayout dt = (TableLayout) mView.findViewById(R.id.household_detail_info_table1);
@@ -150,7 +152,7 @@ public class HouseholdDetailActivity extends SecuredFragment {
                 }
             }
         }
-        //list.setAdapter(new HouseholdMemberAdapter(this, context, memberDetails));
+        list.setAdapter(new HouseholdMemberAdapter(this, context, memberDetails));
     }
 
 

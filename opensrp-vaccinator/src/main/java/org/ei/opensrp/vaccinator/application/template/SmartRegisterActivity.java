@@ -55,6 +55,7 @@ public abstract class SmartRegisterActivity extends SecuredNativeSmartRegisterAc
 ;
         formNames = this.buildFormNameList();
         mBaseFragment = getBaseFragment();
+        mProfileFragment = new HouseholdDetailActivity();
 
         // Instantiate a ViewPager and a PagerAdapter.
         //SAFWAN
@@ -179,7 +180,10 @@ public abstract class SmartRegisterActivity extends SecuredNativeSmartRegisterAc
                     if (registerFragment != null && data != null) {
                         registerFragment.refreshListView();
                     }
+                    //SAFWAN
                 } else if (prevPageIndex == 4) {
+                    mPager.setCurrentItem(1, false);
+                    SecuredFragment registerFragment = (SecuredFragment) findFragmentByPosition(1);
                     DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(prevPageIndex);
                     if (displayFormFragment != null) {
                         displayFormFragment.hideTranslucentProgressDialog();
@@ -188,12 +192,19 @@ public abstract class SmartRegisterActivity extends SecuredNativeSmartRegisterAc
                         displayFormFragment.setFieldOverides(null);
                     }
 
-                    mPager.setCurrentItem(0, false);
-                    SecuredFragment registerFragment = (SecuredFragment) findFragmentByPosition(1);
 
 
+
+                    displayFormFragment.setRecordId(null);
                     ((HouseholdDetailActivity) mProfileFragment).initialize();
                     showProfileView();
+                    //SAFWAN
+                } else {
+                    mPager.setCurrentItem(0, false);
+                    SecuredNativeSmartRegisterFragment registerFragment = (SecuredNativeSmartRegisterFragment) findFragmentByPosition(0);
+                    if (registerFragment != null && data != null) {
+                        registerFragment.refreshListView();
+                    }
                 }
             }
         });
@@ -241,10 +252,28 @@ public abstract class SmartRegisterActivity extends SecuredNativeSmartRegisterAc
         }
     }
 
+    //SAFWAN
     public void showProfileView() {
         HouseholdDetailActivity profile = (HouseholdDetailActivity)findFragmentByPosition(1);
         profile.initialize();
-        mPager.setCurrentItem(1);
+        //profile.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+        /*FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        FragmentManager fm = getSupportFragmentManager();
+        SecuredFragment fragment1 = (SecuredFragment) findFragmentByPosition(1);
+        DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(2);
+        ft.hide(fragment1);
+        ft.hide(displayFormFragment);
+        fm.beginTransaction().hide(fragment1);
+        fm.beginTransaction().hide(displayFormFragment);
+        fm.beginTransaction().remove(fragment1);*/
+        mPager.setCurrentItem(1, false);
+       // mPager.setOffscreenPageLimit(1);
+        //mPager.setPageMargin(100);
+        /*ft.hide(fragment1);
+        ft.hide(displayFormFragment);
+        fm.beginTransaction().hide(fragment1);
+        fm.beginTransaction().hide(displayFormFragment);*/
     }
 
 }

@@ -24,6 +24,7 @@ import org.ei.opensrp.vaccinator.db.Client;
 import org.ei.opensrp.vaccinator.household.BridgingActivity;
 import org.ei.opensrp.vaccinator.household.HouseholdDetailActivity;
 import org.ei.opensrp.vaccinator.household.HouseholdMemberDetails;
+import org.ei.opensrp.vaccinator.household.HouseholdSmartRegisterActivity;
 import org.ei.opensrp.vaccinator.woman.WomanSmartRegisterActivity;
 import org.ei.opensrp.vaccinator.woman.WomanSmartRegisterFragment;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
@@ -135,15 +136,18 @@ public class HouseholdMemberAdapter extends ArrayAdapter<HouseholdMemberDetails>
                 client.setColumnmaps(person.getColumnmaps());
                 //client.setDetails(person.getDetails());
                 client.setCaseId(person.getCaseId());
+               /* HouseholdDetailActivity activity = new HouseholdDetailActivity();
+                activity.startFormActivity("woman_followup", client.entityId(), null);*/
 
-                //startFollowupForm("woman_followup", client, map, SmartRegisterFragment.ByColumnAndByDetails.byDefault);
+                //((HouseholdDetailActivity) fragment.).startFormActivity("woman_followup", ((CommonPersonObjectClient) v.getTag()).entityId(), null);
+                startFollowupForm("woman_followup", client, map, SmartRegisterFragment.ByColumnAndByDetails.byDefault);
 
-                Intent intent = new Intent(getContext(), BridgingActivity.class);
+                /*Intent intent = new Intent(getContext(), BridgingActivity.class);
                 intent.putExtra("woman", "woman");
                 BridgingActivity.person  = person;
-                /*intent.putExtra("client", client);*/
+                /*intent.putExtra("client", client);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                v.getContext().startActivity(intent);
+                v.getContext().startActivity(intent);*/
 
                 /*formNames[1] = "woman_enrollment";
                 formNames[2] = "woman_followup";
@@ -155,7 +159,7 @@ public class HouseholdMemberAdapter extends ArrayAdapter<HouseholdMemberDetails>
                 //startFormActivity("woman_followup", null, null);
 
 
-                ((WomanSmartRegisterActivity) fragment.getActivity()).startFormActivity("woman_followup", ((CommonPersonObjectClient) v.getTag()).entityId(), null);
+                //((WomanSmartRegisterActivity) fragment.getActivity()).startFormActivity("woman_followup", ((CommonPersonObjectClient) v.getTag()).entityId(), null);
             }
         });
         return row;
