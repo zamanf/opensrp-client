@@ -9,7 +9,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
@@ -355,7 +354,7 @@ public class LoginActivity extends Activity {
     }
 
     private void goToHome() {
-        startActivity(new Intent(this, NativeHomeActivity.class));
+        startActivity(new Intent(this, VaccinatorHomeActivity.class));
         finish();
     }
 

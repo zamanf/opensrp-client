@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".NativeHomeActivity"
+            android:name=".VaccinatorHomeActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="landscape"
             android:theme="@style/AppThemeNoTitle" />

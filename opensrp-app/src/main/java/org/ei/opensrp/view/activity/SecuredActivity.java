@@ -35,7 +35,7 @@ public abstract class SecuredActivity extends ActionBarActivity {
     protected Context context;
     protected Listener<Boolean> logoutListener;
     protected FormController formController;
-    protected NavigationController navigationController;
+    protected NavigationController navigationController;//todo refactor
     private String metaData;
 
     @Override

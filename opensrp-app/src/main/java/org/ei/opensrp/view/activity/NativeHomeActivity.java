@@ -1,5 +1,8 @@
 package org.ei.opensrp.view.activity;
 
+import android.app.Activity;
+import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,89 +25,100 @@ import static org.ei.opensrp.event.Event.FORM_SUBMITTED;
 import static org.ei.opensrp.event.Event.SYNC_COMPLETED;
 import static org.ei.opensrp.event.Event.SYNC_STARTED;
 
-public class NativeHomeActivity extends SecuredActivity {
+public abstract class NativeHomeActivity extends SecuredActivity {
     private MenuItem updateMenuItem;
     private MenuItem remainingFormsToSyncMenuItem;
+    private String locationDialogTAG = "locationDialogTAG";
     private PendingFormSubmissionService pendingFormSubmissionService;
+    Activity activity=this;
+    private Listener<Boolean> onSyncStartListener;
+    private Listener<Boolean> onSyncCompleteListener;
+    private Listener<String> onFormSubmittedListener;
+    private Listener<String> updateANMDetailsListener;
 
-    private Listener<Boolean> onSyncStartListener = new Listener<Boolean>() {
-        @Override
-        public void onEvent(Boolean data) {
-            if (updateMenuItem != null) {
-                updateMenuItem.setActionView(R.layout.progress);
+    protected Listener<Boolean> onSyncStartListener(){
+        return new Listener<Boolean>() {
+            @Override
+            public void onEvent(Boolean data) {
+                if (updateMenuItem != null) {
+                    updateMenuItem.setActionView(R.layout.progress);
+                }
             }
-        }
-    };
+        };
+    }
 
-    private Listener<Boolean> onSyncCompleteListener = new Listener<Boolean>() {
-        @Override
-        public void onEvent(Boolean data) {
-            //#TODO: RemainingFormsToSyncCount cannot be updated from a back ground thread!!
-            updateRemainingFormsToSyncCount();
-            if (updateMenuItem != null) {
-                updateMenuItem.setActionView(null);
+    protected Listener<Boolean> onSyncCompleteListener(){
+        return new Listener<Boolean>() {
+            @Override
+            public void onEvent(Boolean data) {
+                //#TODO: RemainingFormsToSyncCount cannot be updated from a back ground thread!!
+                updateRemainingFormsToSyncCount();
+                if (updateMenuItem != null) {
+                    updateMenuItem.setActionView(null);
+                }
+                updateRegisterCounts();
             }
-            updateRegisterCounts();
-        }
-    };
+        };
+    }
 
-    private Listener<String> onFormSubmittedListener = new Listener<String>() {
-        @Override
-        public void onEvent(String instanceId) {
-            updateRegisterCounts();
-        }
-    };
+    protected Listener<String> onFormSubmittedListener(){
+        return new Listener<String>() {
+            @Override
+            public void onEvent(String instanceId) {
+                updateRegisterCounts();
+            }
+        };
+    }
 
-    private Listener<String> updateANMDetailsListener = new Listener<String>() {
-        @Override
-        public void onEvent(String data) {
-            updateRegisterCounts();
-        }
-    };
+    protected Listener<String> updateANMDetailsListener(){
+        return new Listener<String>() {
+            @Override
+            public void onEvent(String data) {
+                updateRegisterCounts();
+            }
+        };
+    }
 
-    private TextView ecRegisterClientCountView;
-    private TextView ancRegisterClientCountView;
-    private TextView pncRegisterClientCountView;
-    private TextView fpRegisterClientCountView;
-    private TextView childRegisterClientCountView;
+    public abstract int smartRegistersHomeLayout();
 
     @Override
     protected void onCreation() {
-        setContentView(R.layout.smart_registers_home);
-        setupViews();
+        Log.i(getClass().getName(), "Creating Home Activity Views:");
+
+        setContentView(smartRegistersHomeLayout());
+        setupViewsAndListeners();
         initialize();
     }
 
-    private void setupViews() {
-        findViewById(R.id.btn_ec_register).setOnClickListener(onRegisterStartListener);
-        findViewById(R.id.btn_pnc_register).setOnClickListener(onRegisterStartListener);
-        findViewById(R.id.btn_anc_register).setOnClickListener(onRegisterStartListener);
-        findViewById(R.id.btn_fp_register).setOnClickListener(onRegisterStartListener);
-        findViewById(R.id.btn_child_register).setOnClickListener(onRegisterStartListener);
+    public abstract void setupViewsAndListeners();
 
-        findViewById(R.id.btn_reporting).setOnClickListener(onButtonsClickListener);
-        findViewById(R.id.btn_videos).setOnClickListener(onButtonsClickListener);
-
-        ecRegisterClientCountView = (TextView) findViewById(R.id.txt_ec_register_client_count);
-        pncRegisterClientCountView = (TextView) findViewById(R.id.txt_pnc_register_client_count);
-        ancRegisterClientCountView = (TextView) findViewById(R.id.txt_anc_register_client_count);
-        fpRegisterClientCountView = (TextView) findViewById(R.id.txt_fp_register_client_count);
-        childRegisterClientCountView = (TextView) findViewById(R.id.txt_child_register_client_count);
-    }
-
-    private void initialize() {
+    protected void initialize() {
         pendingFormSubmissionService = context.pendingFormSubmissionService();
+        onSyncStartListener = onSyncStartListener();
+        onSyncCompleteListener = onSyncCompleteListener();
+        onFormSubmittedListener = onFormSubmittedListener();
+        updateANMDetailsListener = updateANMDetailsListener();
+
         SYNC_STARTED.addListener(onSyncStartListener);
         SYNC_COMPLETED.addListener(onSyncCompleteListener);
         FORM_SUBMITTED.addListener(onFormSubmittedListener);
         ACTION_HANDLED.addListener(updateANMDetailsListener);
+
+        getSupportActionBar().setTitle("");
+        getSupportActionBar().setIcon(getResources().getDrawable(R.drawable.logo_header));
+        getSupportActionBar().setLogo(R.drawable.logo_header);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
     @Override
     protected void onResumption() {
+        Log.i(getClass().getName(), "Updating Counts");
+
         updateRegisterCounts();
         updateSyncIndicator();
-        updateRemainingFormsToSyncCount();
+
+        Log.i(getClass().getName(), "Updated ALL Counts but updateRemainingFormsToSyncCount ");
     }
 
     private void updateRegisterCounts() {
@@ -117,22 +131,25 @@ public class NativeHomeActivity extends SecuredActivity {
         });
     }
 
-    private void updateRegisterCounts(HomeContext homeContext) {
-        ecRegisterClientCountView.setText(valueOf(homeContext.eligibleCoupleCount()));
-        ancRegisterClientCountView.setText(valueOf(homeContext.ancCount()));
-        pncRegisterClientCountView.setText(valueOf(homeContext.pncCount()));
-        fpRegisterClientCountView.setText(valueOf(homeContext.fpCount()));
-        childRegisterClientCountView.setText(valueOf(homeContext.childCount()));
-    }
+    protected abstract void updateRegisterCounts(HomeContext homeContext);
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
+        Log.i(getClass().getName(), "Updating menu items");
+
         updateMenuItem = menu.findItem(R.id.updateMenuItem);
         remainingFormsToSyncMenuItem = menu.findItem(R.id.remainingFormsToSyncMenuItem);
 
+        remainingFormsToSyncMenuItem.setTitle("Loading counts ...");
+        remainingFormsToSyncMenuItem.setVisible(true);
+
         updateSyncIndicator();
+
         updateRemainingFormsToSyncCount();
+
+        Log.i(getClass().getName(), "Updated menu items");
+
         return true;
     }
 
@@ -142,7 +159,12 @@ public class NativeHomeActivity extends SecuredActivity {
         if (i == R.id.updateMenuItem) {
             updateFromServer();
             return true;
-        } else {
+        }
+        else if(i == R.id.switchLanguageMenuItem){
+            //todo
+            return true;
+        }
+        else {
             return super.onOptionsItemSelected(item);
         }
     }
@@ -164,7 +186,7 @@ public class NativeHomeActivity extends SecuredActivity {
         ACTION_HANDLED.removeListener(updateANMDetailsListener);
     }
 
-    private void updateSyncIndicator() {
+    protected void updateSyncIndicator() {
         if (updateMenuItem != null) {
             if (context.allSharedPreferences().fetchIsSyncInProgress()) {
                 updateMenuItem.setActionView(R.layout.progress);
@@ -173,56 +195,25 @@ public class NativeHomeActivity extends SecuredActivity {
         }
     }
 
-    private void updateRemainingFormsToSyncCount() {
-        if (remainingFormsToSyncMenuItem == null) {
-            return;
-        }
+    protected void updateRemainingFormsToSyncCount() {
+        // Get a handler that can be used to post to the main thread
+        boolean success = new Handler(getMainLooper())
+            .post(new Runnable() {
+                @Override
+                public void run() {
+                if (remainingFormsToSyncMenuItem == null) {
+                    return;
+                }
 
-        long size = pendingFormSubmissionService.pendingFormSubmissionCount();
-        if (size > 0) {
-            remainingFormsToSyncMenuItem.setTitle(valueOf(size) + " " + getString(R.string.unsynced_forms_count_message));
-            remainingFormsToSyncMenuItem.setVisible(true);
-        } else {
-            remainingFormsToSyncMenuItem.setVisible(false);
-        }
+                long size = pendingFormSubmissionService.pendingFormSubmissionCount();
+                if (size > 0) {
+                    remainingFormsToSyncMenuItem.setTitle(valueOf(size) + " " + getString(R.string.unsynced_forms_count_message));
+                } else {
+                    remainingFormsToSyncMenuItem.setTitle("0 " + getString(R.string.unsynced_forms_count_message));
+                }
+                }
+            });
+
+        Log.i(getClass().getName(), "updateRemainingFormsToSyncCount placed to queue "+success);
     }
-
-    private View.OnClickListener onRegisterStartListener = new View.OnClickListener() {
-
-        @Override
-        public void onClick(View view) {
-            int i = view.getId();
-            //TODO add code to open corresponding activities
-            if (i == R.id.btn_ec_register) {
-
-
-            } else if (i == R.id.btn_anc_register) {
-
-
-            } else if (i == R.id.btn_pnc_register) {
-
-
-            } else if (i == R.id.btn_child_register) {
-
-
-            } else if (i == R.id.btn_fp_register) {
-
-            }
-        }
-    };
-
-    private View.OnClickListener onButtonsClickListener = new View.OnClickListener() {
-
-        @Override
-        public void onClick(View view) {
-            int i = view.getId();
-            if (i == R.id.btn_reporting) {
-                navigationController.startReports();
-
-            } else if (i == R.id.btn_videos) {
-                navigationController.startVideos();
-
-            }
-        }
-    };
 }
