@@ -36,6 +36,9 @@ public class ChildSmartRegisterFragment extends SmartClientRegisterFragment {
     private final ClientActionHandler clientActionHandler = new ClientActionHandler();
     private CommonPersonObjectController controller;
 
+    //SAFWAN
+    public static String clientId = "";
+
     public ChildSmartRegisterFragment(){   super(null);   }
 
     public ChildSmartRegisterFragment(FormController formController) {
@@ -99,6 +102,13 @@ public class ChildSmartRegisterFragment extends SmartClientRegisterFragment {
         catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void updateSearchView() {
+        super.updateSearchView();
+        if(!clientId.equals(""))
+            getSearchView().setText(clientId);
     }
 
     @Override

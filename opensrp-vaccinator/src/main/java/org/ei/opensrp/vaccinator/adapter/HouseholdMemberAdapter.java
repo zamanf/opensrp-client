@@ -18,6 +18,7 @@ import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.domain.form.FieldOverrides;
 import org.ei.opensrp.vaccinator.R;
 import org.ei.opensrp.vaccinator.application.template.SmartRegisterFragment;
+import org.ei.opensrp.vaccinator.child.ChildSmartRegisterActivity;
 import org.ei.opensrp.vaccinator.household.HouseholdMemberDetails;
 import org.ei.opensrp.vaccinator.household.HouseholdSmartRegisterActivity;
 import org.ei.opensrp.vaccinator.woman.WomanSmartRegisterActivity;
@@ -32,6 +33,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Handler;
 
 import butterknife.Bind;
 import util.Utils;
@@ -128,10 +130,18 @@ public class HouseholdMemberAdapter extends ArrayAdapter<HouseholdMemberDetails>
                 //client.setDetails(person.getDetails());
                 client.setCaseId(person.getCaseId());
 
-                Intent intent = new Intent(fragment.getActivity(), WomanSmartRegisterActivity.class);
+                final Intent intent;
+                if(client.getColumnmaps().containsKey("tt1")){
+                    intent = new Intent(fragment.getActivity(), WomanSmartRegisterActivity.class);
+                } else {
+                    intent = new Intent(fragment.getActivity(), ChildSmartRegisterActivity.class);
+                }
+
                 //intent.putExtra("program_client_id", client.getDetails().get("program_client_id").toString());
                 intent.putExtra("program_client_id", client.getDetails().get("program_client_id").toString());
+
                 fragment.getActivity().startActivity(intent);
+
 
 
                 //((HouseholdDetailActivity) fragment.).startFormActivity("woman_followup", ((CommonPersonObjectClient) v.getTag()).entityId(), null);

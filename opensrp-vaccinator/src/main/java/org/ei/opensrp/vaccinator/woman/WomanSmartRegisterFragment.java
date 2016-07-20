@@ -40,6 +40,7 @@ public class WomanSmartRegisterFragment extends SmartClientRegisterFragment {
     private final ClientActionHandler clientActionHandler = new ClientActionHandler();
     private WomanSmartClientsProvider clientProvider;
 
+    //SAFWAN
     public static String clientId;
 
     String text ;
@@ -85,10 +86,11 @@ public class WomanSmartRegisterFragment extends SmartClientRegisterFragment {
         return getResources().getString(R.string.woman_register_title);
     }
 
+    //SAFWAN
     @Override
     public void updateSearchView() {
         super.updateSearchView();
-        if(!clientId.equals(null))
+        if(!clientId.isEmpty())
             getSearchView().setText(clientId);
     }
 

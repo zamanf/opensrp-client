@@ -97,6 +97,7 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
 
     public void setClientsAdapter(SmartRegisterPaginatedAdapter clientsAdapter) {
         this.clientsAdapter = clientsAdapter;
+        Log.d("Constructor", clientsAdapter.toString());
     }
 
     private SmartRegisterPaginatedAdapter clientsAdapter;
@@ -225,13 +226,16 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
             }
 
             @Override
-            public void onTextChanged(CharSequence cs, int start, int before, int count) {
+            public void onTextChanged(final CharSequence cs, int start, int before, int count) {
+                setupAdapter();
                 currentSearchFilter = new ECSearchOption(cs.toString());
                 clientsAdapter
                         .refreshList(currentVillageFilter, currentServiceModeOption,
                                 currentSearchFilter, currentSortOption);
-
                 searchCancelView.setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
+
+
+
             }
 
             @Override

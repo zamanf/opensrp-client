@@ -1,5 +1,7 @@
 package org.ei.opensrp.vaccinator.child;
 
+import android.os.Bundle;
+
 import org.ei.opensrp.vaccinator.application.template.SmartRegisterActivity;
 import org.ei.opensrp.vaccinator.application.template.SmartRegisterFragment;
 import org.ei.opensrp.view.controller.FormController;
@@ -11,6 +13,12 @@ import java.util.List;
  * Created by Ahmed on 13-Oct-15.
  */
 public class ChildSmartRegisterActivity extends SmartRegisterActivity {
+    //SAFWAN
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ChildSmartRegisterFragment.clientId = getIntent().getStringExtra("program_client_id");;
+    }
     @Override
     protected SmartRegisterFragment getBaseFragment() {
         return new ChildSmartRegisterFragment(new FormController(this));

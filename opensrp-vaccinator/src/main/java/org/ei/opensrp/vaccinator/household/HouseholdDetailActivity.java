@@ -63,7 +63,7 @@ public class HouseholdDetailActivity extends SecuredFragment {
 
     //SAFWAN
     public void initialize(){
-        context = Context.getInstance();
+        memberDetails.clear();
         TableLayout dt = (TableLayout) mView.findViewById(R.id.household_detail_info_table1);
 
         android.content.Context context = getActivity().getApplicationContext();
@@ -76,6 +76,7 @@ public class HouseholdDetailActivity extends SecuredFragment {
         List<CommonPersonObject> womanList = Context.getInstance().allCommonsRepositoryobjects("pkwoman").customQueryForCompleteRow(sql, new String[]{}, "pkwoman");
         sql = "select * from pkchild";
         List<CommonPersonObject> childList = Context.getInstance().allCommonsRepositoryobjects("pkchild").customQueryForCompleteRow(sql, new String[]{}, "pkchild");
+
 
         TableRow tr = getDataRow(context, "Person ID", getValue(householdClient.getColumnmaps(), "person_id_hhh", true), null);
         dt.addView(tr);
@@ -141,16 +142,26 @@ public class HouseholdDetailActivity extends SecuredFragment {
             member.setMemberName(StringUtil.humanizeAndDoUPPERCASE(getValue(individual.getDetails(), "first_name", false) + " " + getValue(individual.getDetails(), "last_name", false)));
             member.setMemberRelationWithHousehold(getValue(individual.getDetails(), "relationship", false));
             member.setMemberAge(convertDateFormat(getValue(individual.getDetails(), "calc_dob_confirm", false), true) + " (" + memberAge + " years)");
-            memberDetails.add(member);
 
-            existence = false;
 
-            for (CommonPersonObject woman : womanList) {
-                if (woman.getDetails().get("existing_program_client_id").equals(individual.getColumnmaps().get("existing_program_client_id"))) {
-                    member.setMemberExists(true);
-                    member.setClient(woman);
+            if(!womanList.isEmpty()) {
+                for (CommonPersonObject woman : womanList) {
+                    if (woman.getDetails().get("existing_program_client_id").equals(individual.getColumnmaps().get("existing_program_client_id"))) {
+                        member.setMemberExists(true);
+                        member.setClient(woman);
+                    }
                 }
             }
+
+            if(!childList.isEmpty()) {
+                for (CommonPersonObject child : childList) {
+                    if (child.getDetails().get("existing_program_client_id").equals(individual.getColumnmaps().get("existing_program_client_id"))) {
+                        member.setMemberExists(true);
+                        member.setClient(child);
+                    }
+                }
+            }
+            memberDetails.add(member);
         }
         list.setAdapter(new HouseholdMemberAdapter(this, context, memberDetails));
     }
