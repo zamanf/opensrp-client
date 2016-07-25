@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.CommonObjectSort;
@@ -114,11 +115,11 @@ public abstract class SmartClientRegisterGroupFragment extends SmartRegisterFrag
     protected void startRegistration() {
         Utils.providerDetails();
         // change the below contains value according to your requirement
-        if (!Utils.userRoles.contains("Vaccinator")) {
+        //if (!Utils.userRoles.contains("Vaccinator")) {
             Intent intent = new Intent(Barcode.BARCODE_INTENT);
             intent.putExtra(Barcode.SCAN_MODE, Barcode.QR_MODE);
             startActivityForResult(intent, Barcode.BARCODE_REQUEST_CODE);
-        }
+        //}
     }//end of method
 
     protected abstract String getRegisterLabel();
@@ -207,13 +208,17 @@ public abstract class SmartClientRegisterGroupFragment extends SmartRegisterFrag
         }
          else if(member != null){
 
-            getSearchView().setText(householdData.getColumnmaps().get("person_id_hhh"));
-            showMessageDialog("Member with scanned ID already exists under this Household Head", new DialogInterface.OnClickListener() {
+            getSearchView().setText(householdData.getColumnmaps().get("existing_household_id"));
+            /*showMessageDialog("Member with scanned ID already exists under this Household Head", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
 
                 }
-            });
+            });*/
+
+            Toast.makeText(getActivity(), "Member with scanned ID already exists under this Household Head",
+                    Toast.LENGTH_LONG).show();
+            return;
         }
 
         else {

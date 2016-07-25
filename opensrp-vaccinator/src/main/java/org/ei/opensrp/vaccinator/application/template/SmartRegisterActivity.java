@@ -1,5 +1,6 @@
 package org.ei.opensrp.vaccinator.application.template;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
@@ -39,7 +40,6 @@ public abstract class SmartRegisterActivity extends SecuredNativeSmartRegisterAc
     private android.support.v4.app.Fragment mProfileFragment = null;
 
 
-
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
@@ -52,9 +52,10 @@ public abstract class SmartRegisterActivity extends SecuredNativeSmartRegisterAc
         getSupportActionBar().setDisplayShowHomeEnabled(false);
         getSupportActionBar().hide();
 //        getWindow().getDecorView().setBackgroundDrawable(null);
-;
+        ;
         formNames = this.buildFormNameList();
         mBaseFragment = getBaseFragment();
+        //SAFWAN
         mProfileFragment = new HouseholdDetailActivity();
 
         // Instantiate a ViewPager and a PagerAdapter.
@@ -92,7 +93,7 @@ public abstract class SmartRegisterActivity extends SecuredNativeSmartRegisterAc
         return null;
     }
 
-    protected abstract String[] buildFormNameList() ;
+    protected abstract String[] buildFormNameList();
 
     @Override
     protected void onCreation() {
@@ -103,7 +104,8 @@ public abstract class SmartRegisterActivity extends SecuredNativeSmartRegisterAc
     }
 
     @Override
-    public void startRegistration() {    }
+    public void startRegistration() {
+    }
 
     @Override
     public void saveFormSubmission(final String formSubmission, String id, final String formName, JSONObject fieldOverrides) {
@@ -122,27 +124,27 @@ public abstract class SmartRegisterActivity extends SecuredNativeSmartRegisterAc
                     .setTitle(R.string.form_saved_dialog_title)
                     .setCancelable(false)
                     .setPositiveButton(R.string.ok_button_label,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                int formIndex = FormUtils.getIndexForFormName(formName, formNames) + 1;
-                                switchToBaseFragment(null, formIndex); // Unnecessary!! passing on data
-                            }
-                        })
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    int formIndex = FormUtils.getIndexForFormName(formName, formNames) + 1;
+                                    switchToBaseFragment(null, formIndex); // Unnecessary!! passing on data
+                                }
+                            })
                     .show();
         } catch (Exception e) {
             new AlertDialog.Builder(this)
-                    .setMessage((getResources().getString(R.string.form_saved_failed_dialog_message))+" : "+e.getMessage())
+                    .setMessage((getResources().getString(R.string.form_saved_failed_dialog_message)) + " : " + e.getMessage())
                     .setTitle(R.string.form_saved_dialog_title)
                     .setCancelable(false)
                     .setPositiveButton(R.string.ok_button_label,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(currentPage);
-                                if (displayFormFragment != null) {
-                                    displayFormFragment.hideTranslucentProgressDialog();
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(currentPage);
+                                    if (displayFormFragment != null) {
+                                        displayFormFragment.hideTranslucentProgressDialog();
+                                    }
                                 }
-                            }
-                        }).show();
+                            }).show();
             e.printStackTrace();
         }
     }
@@ -151,10 +153,11 @@ public abstract class SmartRegisterActivity extends SecuredNativeSmartRegisterAc
     public void startFormActivity(String formName, String entityId, String metaData) {
         Log.v("fieldoverride", metaData);
         try {
-            int formIndex = FormUtils.getIndexForFormName(formName, formNames) + ((BaseRegisterActivityPagerAdapter)mPagerAdapter).offset; // add the offset
+            //SAFWAN
+            int formIndex = FormUtils.getIndexForFormName(formName, formNames) + ((BaseRegisterActivityPagerAdapter) mPagerAdapter).offset; // add the offset
             DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(formIndex);
             displayFormFragment.showForm(mPager, formIndex, entityId, metaData, false);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -193,8 +196,6 @@ public abstract class SmartRegisterActivity extends SecuredNativeSmartRegisterAc
                     }
 
 
-
-
                     displayFormFragment.setRecordId(null);
                     ((HouseholdDetailActivity) mProfileFragment).initialize();
                     showProfileView();
@@ -225,7 +226,7 @@ public abstract class SmartRegisterActivity extends SecuredNativeSmartRegisterAc
     }
 
     public DisplayFormFragment getDisplayFormFragmentAtIndex(int index) {
-        return  (DisplayFormFragment)findFragmentByPosition(index);
+        return (DisplayFormFragment) findFragmentByPosition(index);
     }
 
     @Override
@@ -254,7 +255,7 @@ public abstract class SmartRegisterActivity extends SecuredNativeSmartRegisterAc
 
     //SAFWAN
     public void showProfileView() {
-        HouseholdDetailActivity profile = (HouseholdDetailActivity)findFragmentByPosition(1);
+        HouseholdDetailActivity profile = (HouseholdDetailActivity) findFragmentByPosition(1);
         profile.initialize();
         mPager.setCurrentItem(1, false);
     }

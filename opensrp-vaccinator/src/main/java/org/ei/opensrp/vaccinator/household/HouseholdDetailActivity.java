@@ -2,6 +2,7 @@ package org.ei.opensrp.vaccinator.household;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import org.apache.commons.lang3.StringUtils;
 import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
@@ -27,6 +29,7 @@ import java.util.List;
 
 import static util.Utils.convertDateFormat;
 import static util.Utils.getDataRow;
+import static util.Utils.getDataRowHousehold;
 import static util.Utils.getValue;
 import static util.Utils.setProfiePic;
 
@@ -63,9 +66,10 @@ public class HouseholdDetailActivity extends SecuredFragment {
 
     //SAFWAN
     public void initialize(){
+        //onResumption();
         memberDetails.clear();
         TableLayout dt = (TableLayout) mView.findViewById(R.id.household_detail_info_table1);
-
+        dt.removeAllViews();
         android.content.Context context = getActivity().getApplicationContext();
 
         //setting value in Household basic information textviews
@@ -78,35 +82,36 @@ public class HouseholdDetailActivity extends SecuredFragment {
         List<CommonPersonObject> childList = Context.getInstance().allCommonsRepositoryobjects("pkchild").customQueryForCompleteRow(sql, new String[]{}, "pkchild");
 
 
-        TableRow tr = getDataRow(context, "Person ID", getValue(householdClient.getColumnmaps(), "person_id_hhh", true), null);
+        TableRow tr = getDataRowHousehold(context, "Person ID", getValue(householdClient.getColumnmaps(), "person_id_hhh", true), null);
         dt.addView(tr);
 
-        tr = getDataRow(context, "Name", StringUtil.humanizeAndDoUPPERCASE(getValue(householdClient, "first_name_hhh", false) + " " + getValue(householdClient, "last_name_hhh", true)), null);
+        tr = getDataRowHousehold(context, "Name", StringUtils.capitalize(getValue(householdClient, "first_name_hhh", false)) + " " + StringUtils.capitalize(getValue(householdClient, "last_name_hhh", false)), null);
         dt.addView(tr);
 
         int age = Years.yearsBetween(new DateTime(getValue(householdClient, "calc_dob_confirm_hhh", false)), DateTime.now()).getYears();
-        tr = getDataRow(context, "DOB (Age)", convertDateFormat(getValue(householdClient, "calc_dob_confirm_hhh", false), true) + " (" + age + " years)", null);
+        tr = getDataRowHousehold(context, "DOB (Age)", convertDateFormat(getValue(householdClient, "calc_dob_confirm_hhh", false), true) + " (" + age + " years)", null);
         dt.addView(tr);
 
-        tr = getDataRow(context, "Gender", getValue(householdClient, "gender_hhh", true), null);
+        tr = getDataRowHousehold(context, "Gender", getValue(householdClient, "gender_hhh", true), null);
         dt.addView(tr);
 
-        tr = getDataRow(context, "Ethnicity", getValue(householdClient, "ethnicity_hhh", true), null);
+        tr = getDataRowHousehold(context, "Ethnicity", getValue(householdClient, "ethnicity_hhh", true), null);
         dt.addView(tr);
 
-        tr = getDataRow(context, "Contact Phone Number", getValue(householdClient, "contact_phone_number_hhh", true), null);
+        tr = getDataRowHousehold(context, "Contact", getValue(householdClient, "contact_phone_number_hhh", true), null);
         dt.addView(tr);
 
         TableLayout dt2 = (TableLayout) mView.findViewById(R.id.household_detail_info_table2);
-        tr = getDataRow(context, "Household ID", getValue(householdClient.getColumnmaps(), "existing_household_id", true), null);
+        dt2.removeAllViews();
+        tr = getDataRowHousehold(context, "Household ID", getValue(householdClient.getColumnmaps(), "existing_household_id", true), null);
         dt2.addView(tr);
-        tr = getDataRow(context, "Number of Members", "" + individualList.size() + "", null);
+        tr = getDataRowHousehold(context, "Number of Members", "" + individualList.size() + "", null);
         dt2.addView(tr);
-        tr = getDataRow(context, "Source of Drinking Water", getValue(householdClient, "water_source", true), null);
+        tr = getDataRowHousehold(context, "Source of Drinking Water", getValue(householdClient, "water_source", true), null);
         dt2.addView(tr);
-        tr = getDataRow(context, "Latrine System", getValue(householdClient, "latrine_system", true), null);
+        tr = getDataRowHousehold(context, "Latrine System", getValue(householdClient, "latrine_system", true), null);
         dt2.addView(tr);
-        tr = getDataRow(context, "Address", getValue(householdClient, "address1", true)
+        tr = getDataRowHousehold(context, "Address", getValue(householdClient, "address1", true)
                 + ", \nUC: " + getValue(householdClient, "union_council", true)
                 + ", \nTown: " + getValue(householdClient, "town", true)
                 + ", \nCity: " + getValue(householdClient, "city_village", true)
@@ -139,7 +144,7 @@ public class HouseholdDetailActivity extends SecuredFragment {
 
 
             member.setMemberId(getValue(individual.getDetails(), "person_id", false));
-            member.setMemberName(StringUtil.humanizeAndDoUPPERCASE(getValue(individual.getDetails(), "first_name", false) + " " + getValue(individual.getDetails(), "last_name", false)));
+            member.setMemberName(StringUtils.capitalize(getValue(individual.getDetails(), "first_name", false)) + " " + StringUtils.capitalize(getValue(individual.getDetails(), "last_name", false)));
             member.setMemberRelationWithHousehold(getValue(individual.getDetails(), "relationship", false));
             member.setMemberAge(convertDateFormat(getValue(individual.getDetails(), "calc_dob_confirm", false), true) + " (" + memberAge + " years)");
 
@@ -177,7 +182,7 @@ public class HouseholdDetailActivity extends SecuredFragment {
 
     @Override
     protected void onResumption() {
-
+        Log.d("resume", "resume");
     }
 
 

@@ -34,15 +34,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/id"
-            android:paddingLeft="10dp"
             android:textSize="@dimen/household_detail_activity"
-            android:textColor="@color/Black"/>
+            android:textColor="@color/Black"
+            android:textStyle="bold"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/memberId"
-            android:paddingLeft="70sp"
+            android:paddingLeft="40sp"
             android:text="hello"
             android:textSize="@dimen/household_detail_activity"
             android:textColor="@color/Black"/>
@@ -57,15 +57,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/name"
-            android:paddingLeft="10dp"
             android:textSize="@dimen/household_detail_activity"
-            android:textColor="@color/Black"/>
+            android:textColor="@color/Black"
+            android:textStyle="bold"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/memberName"
-            android:paddingLeft="40dp"
+            android:paddingLeft="13dp"
             android:text="hello"
             android:textSize="@dimen/household_detail_activity"
             android:textColor="@color/Black"/>
@@ -89,14 +89,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/household_member_dob"
-            android:paddingLeft="10dp"
             android:textSize="@dimen/household_detail_activity"
-            android:textColor="@color/Black"/>
+            android:textColor="@color/Black"
+            android:textStyle="bold"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/memberDate"
+            android:text="hello"
             android:paddingLeft="10dp"
             android:textSize="@dimen/household_detail_activity"
             android:textColor="@color/Black"/>
@@ -111,14 +112,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/household_relationship"
-            android:paddingLeft="10dp"
             android:textSize="@dimen/household_detail_activity"
-            android:textColor="@color/Black"/>
+            android:textColor="@color/Black"
+            android:textStyle="bold"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/relationship"
+            android:text="hello"
             android:paddingLeft="10dp"
             android:textSize="@dimen/household_detail_activity"
             android:textColor="@color/Black"/>

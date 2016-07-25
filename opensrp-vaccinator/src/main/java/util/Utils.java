@@ -399,6 +399,34 @@ public class Utils {
         return tr;
     }
 
+    public static TableRow getDataRowHousehold(Context context, String label, String value, TableRow row){
+        TableRow tr = row;
+        if(row == null){
+            tr = new TableRow(context);
+            TableRow.LayoutParams trlp = new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            tr.setLayoutParams(trlp);
+            tr.setPadding(15, 0, 10, 10);
+        }
+
+        TextView l = new TextView(context);
+        l.setText(label + ": ");
+        //l.setPadding(20, 2, 20, 2);
+        l.setTextColor(Color.BLACK);
+        l.setTextSize(14);
+        l.setBackgroundColor(Color.WHITE);
+        tr.addView(l);
+
+        TextView v = new TextView(context);
+        v.setText(value);
+        //v.setPadding(20, 2, 20, 2);
+        v.setTextColor(Color.BLACK);
+        v.setTextSize(14);
+        v.setBackgroundColor(Color.WHITE);
+        tr.addView(v);
+
+        return tr;
+    }
+
     public static TableRow getDataRow(Context context){
         TableRow tr = new TableRow(context);
         TableRow.LayoutParams trlp = new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);

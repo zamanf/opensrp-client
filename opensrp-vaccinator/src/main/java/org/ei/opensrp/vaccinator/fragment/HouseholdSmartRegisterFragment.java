@@ -162,7 +162,7 @@ public class HouseholdSmartRegisterFragment extends SmartClientRegisterGroupFrag
                 case R.id.household_add_member:
                     Utils.providerDetails();
                     // change the below contains value according to your requirement
-                    if(!Utils.userRoles.contains("Vaccinator")) {
+                    //if(!Utils.userRoles.contains("Vaccinator")) {
                         client = (CommonPersonObjectClient) view.getTag();
                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
@@ -215,7 +215,7 @@ public class HouseholdSmartRegisterFragment extends SmartClientRegisterGroupFrag
                             }
                         });
                         alertDialog.show();
-                    }
+                    //}
 
                     break;
 
