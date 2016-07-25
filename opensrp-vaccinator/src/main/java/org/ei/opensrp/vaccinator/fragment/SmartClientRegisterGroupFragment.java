@@ -207,7 +207,7 @@ public abstract class SmartClientRegisterGroupFragment extends SmartRegisterFrag
             getSearchView().setText(qrCode);
         }
          else if(member != null){
-
+            //SAFWAN
             getSearchView().setText(householdData.getColumnmaps().get("existing_household_id"));
             /*showMessageDialog("Member with scanned ID already exists under this Household Head", new DialogInterface.OnClickListener() {
                 @Override
@@ -215,7 +215,7 @@ public abstract class SmartClientRegisterGroupFragment extends SmartRegisterFrag
 
                 }
             });*/
-
+            //SAFWAN
             Toast.makeText(getActivity(), "Member with scanned ID already exists under this Household Head",
                     Toast.LENGTH_LONG).show();
             return;

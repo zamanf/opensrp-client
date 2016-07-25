@@ -1,6 +1,5 @@
 package org.ei.opensrp.vaccinator.application.template;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
@@ -15,7 +14,7 @@ import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.service.ZiggyService;
 import org.ei.opensrp.util.FormUtils;
 import org.ei.opensrp.vaccinator.R;
-import org.ei.opensrp.vaccinator.household.HouseholdDetailActivity;
+import org.ei.opensrp.vaccinator.household.HouseholdDetailFragment;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
 import org.ei.opensrp.view.fragment.DisplayFormFragment;
 import org.ei.opensrp.view.fragment.SecuredFragment;
@@ -56,7 +55,7 @@ public abstract class SmartRegisterActivity extends SecuredNativeSmartRegisterAc
         formNames = this.buildFormNameList();
         mBaseFragment = getBaseFragment();
         //SAFWAN
-        mProfileFragment = new HouseholdDetailActivity();
+        mProfileFragment = new HouseholdDetailFragment();
 
         // Instantiate a ViewPager and a PagerAdapter.
         //SAFWAN
@@ -197,7 +196,7 @@ public abstract class SmartRegisterActivity extends SecuredNativeSmartRegisterAc
 
 
                     displayFormFragment.setRecordId(null);
-                    ((HouseholdDetailActivity) mProfileFragment).initialize();
+                    ((HouseholdDetailFragment) mProfileFragment).initialize();
                     showProfileView();
                     //SAFWAN
                 } else {
@@ -255,7 +254,7 @@ public abstract class SmartRegisterActivity extends SecuredNativeSmartRegisterAc
 
     //SAFWAN
     public void showProfileView() {
-        HouseholdDetailActivity profile = (HouseholdDetailActivity) findFragmentByPosition(1);
+        HouseholdDetailFragment profile = (HouseholdDetailFragment) findFragmentByPosition(1);
         profile.initialize();
         mPager.setCurrentItem(1, false);
     }

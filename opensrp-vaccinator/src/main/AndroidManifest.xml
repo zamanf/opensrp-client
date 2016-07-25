@@ -63,7 +63,7 @@
             android:screenOrientation="landscape"
             android:theme="@style/AppThemeNoTitle" />
         <activity
-            android:name=".household.HouseholdDetailActivity"
+            android:name=".household.HouseholdDetailFragment"
             android:screenOrientation="landscape"
             android:theme="@style/AppThemeNoTitle" />
         <activity

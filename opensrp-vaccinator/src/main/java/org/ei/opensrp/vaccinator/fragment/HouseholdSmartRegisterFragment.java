@@ -2,8 +2,6 @@ package org.ei.opensrp.vaccinator.fragment;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -13,15 +11,13 @@ import android.widget.TextView;
 
 import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.CommonObjectSort;
-import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.commonregistry.CommonPersonObjectController;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.vaccinator.R;
 import org.ei.opensrp.vaccinator.application.common.VaccinationServiceModeOption;
-import org.ei.opensrp.vaccinator.application.template.DetailActivity;
 import org.ei.opensrp.vaccinator.db.Client;
-import org.ei.opensrp.vaccinator.household.HouseholdDetailActivity;
+import org.ei.opensrp.vaccinator.household.HouseholdDetailFragment;
 import org.ei.opensrp.vaccinator.household.HouseholdSmartClientsProvider;
 import org.ei.opensrp.vaccinator.household.HouseholdSmartRegisterActivity;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
@@ -152,9 +148,9 @@ public class HouseholdSmartRegisterFragment extends SmartClientRegisterGroupFrag
             switch (view.getId()) {
                 case R.id.household_profile_info_layout:
                     //SAFWAN
-                    HouseholdDetailActivity.householdClient = (CommonPersonObjectClient) view.getTag();
+                    HouseholdDetailFragment.householdClient = (CommonPersonObjectClient) view.getTag();
                     ((HouseholdSmartRegisterActivity)getActivity()).showProfileView();
-                    /*Intent intent = new Intent((HouseholdSmartRegisterActivity) getActivity(), HouseholdDetailActivity.class);
+                    /*Intent intent = new Intent((HouseholdSmartRegisterActivity) getActivity(), HouseholdDetailFragment.class);
                     startActivity(intent);
                     getActivity().finish();*/
                     //((HouseholdSmartRegisterActivity)getActivity()).startRegistration();

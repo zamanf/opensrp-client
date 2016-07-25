@@ -144,7 +144,7 @@ public class HouseholdMemberAdapter extends ArrayAdapter<HouseholdMemberDetails>
 
 
 
-                //((HouseholdDetailActivity) fragment.).startFormActivity("woman_followup", ((CommonPersonObjectClient) v.getTag()).entityId(), null);
+                //((HouseholdDetailFragment) fragment.).startFormActivity("woman_followup", ((CommonPersonObjectClient) v.getTag()).entityId(), null);
 
                 //startFollowupForm("woman_followup", client, map, SmartRegisterFragment.ByColumnAndByDetails.byDefault);
 
