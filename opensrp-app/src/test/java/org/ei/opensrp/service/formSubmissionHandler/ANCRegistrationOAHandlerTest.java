@@ -1,12 +1,12 @@
 package org.ei.opensrp.service.formSubmissionHandler;
 
-import org.robolectric.RobolectricTestRunner;
 import org.ei.opensrp.domain.form.FormSubmission;
 import org.ei.opensrp.service.MotherService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.robolectric.RobolectricTestRunner;
 
 import static org.ei.opensrp.util.FormSubmissionBuilder.create;
 import static org.mockito.Mockito.verify;

@@ -10,7 +10,15 @@ import java.util.Map;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
-import static org.ei.opensrp.domain.TimelineEvent.*;
+import static org.ei.opensrp.domain.TimelineEvent.forChildBirthInChildProfile;
+import static org.ei.opensrp.domain.TimelineEvent.forChildBirthInECProfile;
+import static org.ei.opensrp.domain.TimelineEvent.forChildBirthInMotherProfile;
+import static org.ei.opensrp.domain.TimelineEvent.forChildImmunization;
+import static org.ei.opensrp.domain.TimelineEvent.forDeliveryPlan;
+import static org.ei.opensrp.domain.TimelineEvent.forFPCondomRenew;
+import static org.ei.opensrp.domain.TimelineEvent.forFPDMPARenew;
+import static org.ei.opensrp.domain.TimelineEvent.forFPIUDRenew;
+import static org.ei.opensrp.domain.TimelineEvent.forFPOCPRenew;
 import static org.ei.opensrp.util.EasyMap.create;
 
 public class TimelineEventTest {

@@ -1,11 +1,7 @@
 package org.ei.opensrp.mcare.household;
 
-import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.cursoradapter.CursorFilterOption;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
-import org.ei.opensrp.view.dialog.FilterOption;
-
-import static org.ei.opensrp.util.StringUtil.humanize;
 
 public class HHMauzaCommonObjectFilterOption implements CursorFilterOption {
     public final String criteria;

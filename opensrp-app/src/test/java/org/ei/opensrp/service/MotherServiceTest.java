@@ -14,10 +14,16 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.robolectric.RobolectricTestRunner;
 
-import static org.ei.opensrp.domain.TimelineEvent.*;
+import static org.ei.opensrp.domain.TimelineEvent.forDeliveryPlan;
+import static org.ei.opensrp.domain.TimelineEvent.forIFATabletsGiven;
+import static org.ei.opensrp.domain.TimelineEvent.forTTShotProvided;
 import static org.ei.opensrp.util.EasyMap.create;
 import static org.ei.opensrp.util.EasyMap.mapOf;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 @RunWith(RobolectricTestRunner.class)

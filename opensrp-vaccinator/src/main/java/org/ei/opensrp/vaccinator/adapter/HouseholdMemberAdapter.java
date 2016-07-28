@@ -2,9 +2,7 @@ package org.ei.opensrp.vaccinator.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,29 +14,24 @@ import android.widget.TextView;
 import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.domain.form.FieldOverrides;
+import org.ei.opensrp.util.Utils;
 import org.ei.opensrp.vaccinator.R;
 import org.ei.opensrp.vaccinator.application.template.SmartRegisterFragment;
 import org.ei.opensrp.vaccinator.child.ChildSmartRegisterActivity;
 import org.ei.opensrp.vaccinator.household.HouseholdMemberDetails;
-import org.ei.opensrp.vaccinator.household.HouseholdSmartRegisterActivity;
 import org.ei.opensrp.vaccinator.woman.WomanSmartRegisterActivity;
-import org.ei.opensrp.vaccinator.woman.WomanSmartRegisterFragment;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.controller.ANMController;
 import org.ei.opensrp.view.controller.FormController;
 import org.ei.opensrp.view.controller.NavigationController;
-import org.ei.opensrp.view.viewpager.OpenSRPViewPager;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Handler;
 
-import butterknife.Bind;
-import util.Utils;
+import static org.ei.opensrp.util.Utils.getValue;
 
-import static util.Utils.getValue;
 
 /**
  * Created by Safwan on 5/10/2016.
@@ -52,10 +45,6 @@ public class HouseholdMemberAdapter extends ArrayAdapter<HouseholdMemberDetails>
     protected ANMController anmController;
     protected NavigationController navigationController;
 
-
-    @Bind(R.id.view_pager)
-    OpenSRPViewPager mPager;
-    private FragmentPagerAdapter mPagerAdapter;
 
     TextView memberId;
     TextView memberName;
@@ -138,7 +127,7 @@ public class HouseholdMemberAdapter extends ArrayAdapter<HouseholdMemberDetails>
                 }
 
                 //intent.putExtra("program_client_id", client.getDetails().get("program_client_id").toString());
-                intent.putExtra("program_client_id", client.getDetails().get("program_client_id").toString());
+                intent.putExtra("program_client_id", client.getColumnmaps().get("program_client_id").toString());
 
                 fragment.getActivity().startActivity(intent);
 
@@ -171,7 +160,7 @@ public class HouseholdMemberAdapter extends ArrayAdapter<HouseholdMemberDetails>
         return row;
     }
 
-    protected void startFollowupForm(String formName, SmartRegisterClient client, HashMap<String, String> overrideStringmap, SmartRegisterFragment.ByColumnAndByDetails byColumnAndByDetails) {
+   /* protected void startFollowupForm(String formName, SmartRegisterClient client, HashMap<String, String> overrideStringmap, SmartRegisterFragment.ByColumnAndByDetails byColumnAndByDetails) {
         if (overrideStringmap == null) {
             org.ei.opensrp.util.Log.logDebug("overrides data is null");
             formController.startFormActivity(formName, client.entityId(), null);
@@ -183,7 +172,7 @@ public class HouseholdMemberAdapter extends ArrayAdapter<HouseholdMemberDetails>
             org.ei.opensrp.util.Log.logDebug("fieldOverrides data is : " + fieldOverrides.getJSONString());
             formController.startFormActivity(formName, client.entityId(), fieldOverrides.getJSONString());
         }
-    }
+    }*/
 
 
     /*public void startFormActivity(String formName, String entityId, String metaData) {

@@ -1,6 +1,7 @@
 package org.ei.opensrp.view.contract;
 
 import junit.framework.Assert;
+
 import org.ei.opensrp.util.EasyMap;
 import org.ei.opensrp.view.contract.pnc.PNCClient;
 import org.junit.Test;

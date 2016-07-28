@@ -33,14 +33,8 @@ import static org.ei.opensrp.domain.ServiceProvided.ANC_1_SERVICE_PROVIDED_NAME;
 import static org.ei.opensrp.domain.ServiceProvided.ANC_2_SERVICE_PROVIDED_NAME;
 import static org.ei.opensrp.domain.ServiceProvided.ANC_3_SERVICE_PROVIDED_NAME;
 import static org.ei.opensrp.domain.ServiceProvided.ANC_4_SERVICE_PROVIDED_NAME;
-import static org.ei.opensrp.domain.ServiceProvided.DELIVERY_PLAN_SERVICE_PROVIDED_NAME;
-import static org.ei.opensrp.domain.ServiceProvided.HB_TEST_SERVICE_PROVIDED_NAME;
-import static org.ei.opensrp.domain.ServiceProvided.IFA_SERVICE_PROVIDED_NAME;
-import static org.ei.opensrp.domain.ServiceProvided.TT_1_SERVICE_PROVIDED_NAME;
-import static org.ei.opensrp.domain.ServiceProvided.TT_2_SERVICE_PROVIDED_NAME;
-import static org.ei.opensrp.domain.ServiceProvided.TT_BOOSTER_SERVICE_PROVIDED_NAME;
-import static org.ei.opensrp.indonesia.AllConstantsINA.KartuIbuFields.*;
 import static org.ei.opensrp.indonesia.AllConstantsINA.KartuANCFields.*;
+import static org.ei.opensrp.indonesia.AllConstantsINA.KartuIbuFields.*;
 
 /**
  * Created by Dimas Ciputra on 3/4/15.

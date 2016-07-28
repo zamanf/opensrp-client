@@ -9,8 +9,8 @@ import android.util.Log;
 
 import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.CommonObjectFilterOption;
-import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.util.StringUtil;
+import org.ei.opensrp.util.Utils;
 import org.ei.opensrp.vaccinator.application.common.BasicSearchOption;
 import org.ei.opensrp.vaccinator.db.Client;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
@@ -28,7 +28,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import util.Utils;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
@@ -38,15 +37,12 @@ public abstract class SmartRegisterFragment extends SecuredNativeSmartRegisterFr
     private FormController formController1;
 
     public SmartRegisterFragment(FormController formController) {
-        super();
+        super(formController);
         this.formController1 = formController;
     }
 
     @Override
     protected abstract SecuredNativeSmartRegisterActivity.DefaultOptionsProvider getDefaultOptionsProvider() ;
-
-    @Override
-    protected abstract SmartRegisterClientsProvider clientsProvider() ;
 
     @Override
     protected abstract void onInitialization() ;
@@ -61,7 +57,7 @@ public abstract class SmartRegisterFragment extends SecuredNativeSmartRegisterFr
     protected abstract String getRegisterLabel();
 
     //This would be used in displaying location dialog box in anm location selector
-    private String getLocationNameByAttribute(LocationTree locationTree, String tag) {
+    public String getLocationNameByAttribute(LocationTree locationTree, String tag) {
         //locationTree.
         Map<String, TreeNode<String, Location>> locationMap =
                 locationTree.getLocationsHierarchy();
@@ -113,20 +109,20 @@ public abstract class SmartRegisterFragment extends SecuredNativeSmartRegisterFr
                     @Override
                     protected Object doInBackground(Object[] params) {
 //                        currentSearchFilter =
-                        setCurrentSearchFilter(new BasicSearchOption(cs.toString()));
+                        setCurrentSearchFilter(new BasicSearchOption(cs.toString(), BasicSearchOption.Type.getByRegisterName(getDefaultOptionsProvider().nameInShortFormForTitle())));
                         filteredClients = getClientsAdapter().getListItemProvider()
                                 .updateClients(getCurrentVillageFilter(), getCurrentServiceModeOption(),
                                         getCurrentSearchFilter(), getCurrentSortOption());
                         return null;
                     }
 
-                    @Override
+                    /*@Override
                     protected void onPostExecute(Object o) {
                         getClientsAdapter().refreshClients(filteredClients);
                         getClientsAdapter().notifyDataSetChanged();
                         getSearchCancelView().setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
                         super.onPostExecute(o);
-                    }
+                    }*/
                 }).execute();
             }
 

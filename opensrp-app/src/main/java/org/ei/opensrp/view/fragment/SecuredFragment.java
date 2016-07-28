@@ -9,7 +9,6 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.ei.opensrp.AllConstants;
 import org.ei.opensrp.Context;
 import org.ei.opensrp.R;
 import org.ei.opensrp.event.Listener;
@@ -17,7 +16,6 @@ import org.ei.opensrp.view.activity.FormActivity;
 import org.ei.opensrp.view.activity.LoginActivity;
 import org.ei.opensrp.view.activity.MicroFormActivity;
 import org.ei.opensrp.view.activity.SecuredActivity;
-import org.ei.opensrp.view.controller.ANMController;
 import org.ei.opensrp.view.controller.FormController;
 import org.ei.opensrp.view.controller.NavigationController;
 
@@ -38,7 +36,6 @@ public abstract class SecuredFragment extends Fragment {
     protected Context context;
     protected Listener<Boolean> logoutListener;
     protected FormController formController;
-    protected ANMController anmController;
     protected NavigationController navigationController;
     private String metaData;
 
@@ -56,13 +53,11 @@ public abstract class SecuredFragment extends Fragment {
         ON_LOGOUT.addListener(logoutListener);
 
         if (context.IsUserLoggedOut()) {
-            startActivity(new Intent(getActivity(), LoginActivity.class));
-            context.userService().logoutSession();
+            logoutUserSession();
             return;
         }
         formController = new FormController((SecuredActivity)getActivity());
-        anmController = context.anmController();
-        navigationController = new NavigationController(getActivity(), anmController);
+        navigationController = new NavigationController(getActivity());
         onCreation();
     }
 
@@ -70,8 +65,7 @@ public abstract class SecuredFragment extends Fragment {
     public void onResume() {
         super.onResume();
         if (context.IsUserLoggedOut()) {
-            context.userService().logoutSession();
-            startActivity(new Intent(getActivity(), LoginActivity.class));
+            logoutUserSession();
             return;
         }
 
@@ -90,6 +84,12 @@ public abstract class SecuredFragment extends Fragment {
             return super.onOptionsItemSelected(item);
         }
     }
+
+    public void logoutUserSession() {
+        context.userService().logoutSession();
+        startActivity(new Intent(getActivity(), LoginActivity.class));
+    }
+
 
     public void logoutUser() {
         context.userService().logout();
@@ -127,10 +127,6 @@ public abstract class SecuredFragment extends Fragment {
                 intent.putExtra(FIELD_OVERRIDES_PARAM, metaDataMap.get(FIELD_OVERRIDES_PARAM));
             }
         }
-    }
-
-    private boolean isSuccessfulFormSubmission(int resultCode) {
-        return resultCode == AllConstants.FORM_SUCCESSFULLY_SUBMITTED_RESULT_CODE;
     }
 
     private boolean hasMetadata() {

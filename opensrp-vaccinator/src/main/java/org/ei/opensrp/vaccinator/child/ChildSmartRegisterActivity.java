@@ -1,10 +1,21 @@
 package org.ei.opensrp.vaccinator.child;
 
+/*<<<<<<< HEAD
 import android.os.Bundle;
 
 import org.ei.opensrp.vaccinator.application.template.SmartRegisterActivity;
 import org.ei.opensrp.vaccinator.application.template.SmartRegisterFragment;
+=======*/
+import android.os.Bundle;
+
+import org.ei.opensrp.vaccinator.application.common.SmartClientRegisterFragment;
+/*
+>>>>>>> pk_vaccinator_merge
+*/
 import org.ei.opensrp.view.controller.FormController;
+import org.ei.opensrp.view.fragment.SecuredFragment;
+import org.ei.opensrp.view.fragment.SecuredNativeSmartRegisterFragment;
+import org.ei.opensrp.view.template.SmartRegisterSecuredActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +23,7 @@ import java.util.List;
 /**
  * Created by Ahmed on 13-Oct-15.
  */
+/*<<<<<<< HEAD
 public class ChildSmartRegisterActivity extends SmartRegisterActivity {
     //SAFWAN
     @Override
@@ -19,9 +31,32 @@ public class ChildSmartRegisterActivity extends SmartRegisterActivity {
         super.onCreate(savedInstanceState);
         ChildSmartRegisterFragment.clientId = getIntent().getStringExtra("program_client_id");;
     }
+=======*/
+public class ChildSmartRegisterActivity extends SmartRegisterSecuredActivity {
     @Override
-    protected SmartRegisterFragment getBaseFragment() {
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        //ChildSmartRegisterFragment.clientId = getIntent().getStringExtra("program_client_id");
+        String id = getIntent().getStringExtra("program_client_id");
+
+        SecuredNativeSmartRegisterFragment registerFragment = (SecuredNativeSmartRegisterFragment) findFragmentByPosition(0);
+        if(id != null){
+            registerFragment.getSearchView().setText(id);
+            registerFragment.onFilterManual(id);
+        }
+
+    }
+/*
+>>>>>>> pk_vaccinator_merge
+*/
+    @Override
+    public SmartClientRegisterFragment getBaseFragment() {
         return new ChildSmartRegisterFragment(new FormController(this));
+    }
+
+    @Override
+    public SecuredFragment getProfileFragment() {
+        return null;
     }
 
     @Override
@@ -32,5 +67,10 @@ public class ChildSmartRegisterActivity extends SmartRegisterActivity {
         formNames.add("offsite_child_followup");
 
         return formNames.toArray(new String[formNames.size()]);
+    }
+
+    @Override
+    protected void onResumption() {
+
     }
 }

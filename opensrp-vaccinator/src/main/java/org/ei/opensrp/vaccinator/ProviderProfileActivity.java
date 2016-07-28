@@ -10,11 +10,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
-import static util.Utils.convertDateFormat;
-import static util.Utils.getDataRow;
-import static util.Utils.getValue;
-import static util.Utils.nonEmptyValue;
-import static util.Utils.providerDetails;
+import util.VaccinatorUtils;
+
+import static org.ei.opensrp.util.Utils.convertDateFormat;
+import static org.ei.opensrp.util.Utils.getDataRow;
+import static org.ei.opensrp.util.Utils.getValue;
+import static org.ei.opensrp.util.Utils.nonEmptyValue;
 
 public class ProviderProfileActivity extends Activity {
 
@@ -24,7 +25,7 @@ public class ProviderProfileActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.provider_profile);
 
-        HashMap<String, String> providerdt = providerDetails();
+        HashMap<String, String> providerdt = VaccinatorUtils.providerDetails();
 
         ((TextView)findViewById(R.id.detail_heading)).setText("Provider Details");
 

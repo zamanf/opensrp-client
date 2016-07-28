@@ -25,10 +25,10 @@ import java.util.LinkedHashSet;
 import java.util.List;
 
 import static java.util.Collections.sort;
-import static org.ei.opensrp.indonesia.AllConstantsINA.KartuIbuFields.*;
-import static org.ei.opensrp.indonesia.AllConstantsINA.KeluargaBerencanaFields.*;
 import static org.ei.opensrp.indonesia.AllConstantsINA.KartuANCFields.*;
+import static org.ei.opensrp.indonesia.AllConstantsINA.KartuIbuFields.*;
 import static org.ei.opensrp.indonesia.AllConstantsINA.KartuPNCFields.*;
+import static org.ei.opensrp.indonesia.AllConstantsINA.KeluargaBerencanaFields.*;
 
 /**
  * Created by Dimas Ciputra on 2/18/15.

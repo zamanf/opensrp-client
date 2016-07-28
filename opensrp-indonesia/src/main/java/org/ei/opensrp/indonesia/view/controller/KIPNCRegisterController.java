@@ -24,11 +24,11 @@ import java.util.LinkedHashSet;
 import java.util.List;
 
 import static java.util.Collections.sort;
+import static org.ei.opensrp.indonesia.AllConstantsINA.KartuANCFields.*;
 import static org.ei.opensrp.indonesia.AllConstantsINA.KartuAnakFields.BIRTH_CONDITION;
 import static org.ei.opensrp.indonesia.AllConstantsINA.KartuAnakFields.BIRTH_WEIGHT;
-import static org.ei.opensrp.indonesia.AllConstantsINA.KartuPNCFields.*;
-import static org.ei.opensrp.indonesia.AllConstantsINA.KartuANCFields.*;
 import static org.ei.opensrp.indonesia.AllConstantsINA.KartuIbuFields.*;
+import static org.ei.opensrp.indonesia.AllConstantsINA.KartuPNCFields.*;
 import static org.ei.opensrp.indonesia.AllConstantsINA.KeluargaBerencanaFields.*;
 
 /**

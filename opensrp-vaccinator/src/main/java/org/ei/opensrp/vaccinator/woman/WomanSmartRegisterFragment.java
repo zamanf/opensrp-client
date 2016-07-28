@@ -1,25 +1,35 @@
 package org.ei.opensrp.vaccinator.woman;
 
-import android.os.Bundle;
+
+import android.annotation.SuppressLint;
+
+import android.util.Log;
 import android.view.View;
 
 import org.ei.opensrp.Context;
-import org.ei.opensrp.commonregistry.CommonObjectSort;
+import org.ei.opensrp.adapter.SmartRegisterPaginatedAdapter;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
-import org.ei.opensrp.commonregistry.CommonPersonObjectController;
-import org.ei.opensrp.provider.SmartRegisterClientsProvider;
+import org.ei.opensrp.cursoradapter.CursorCommonObjectFilterOption;
+import org.ei.opensrp.cursoradapter.CursorCommonObjectSort;
+import org.ei.opensrp.cursoradapter.CursorSortOption;
+import org.ei.opensrp.cursoradapter.SmartRegisterCursorBuilder;
+import org.ei.opensrp.cursoradapter.SmartRegisterPaginatedCursorAdapter;
 import org.ei.opensrp.vaccinator.R;
+
+import org.ei.opensrp.vaccinator.application.common.BasicSearchOption;
+import org.ei.opensrp.vaccinator.application.common.SmartClientRegisterFragment;
 import org.ei.opensrp.vaccinator.application.common.VaccinationServiceModeOption;
-import org.ei.opensrp.vaccinator.application.template.DetailActivity;
-import org.ei.opensrp.vaccinator.application.template.SmartClientRegisterFragment;
+
 import org.ei.opensrp.vaccinator.db.Client;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.controller.FormController;
-import org.ei.opensrp.view.dialog.AllClientsFilter;
 import org.ei.opensrp.view.dialog.FilterOption;
+import org.ei.opensrp.view.dialog.SearchFilterOption;
 import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
+import org.ei.opensrp.view.template.DetailActivity;
+import org.ei.opensrp.view.template.SmartRegisterClientsProvider;
 import org.joda.time.DateTime;
 import org.joda.time.Years;
 import org.json.JSONException;
@@ -28,28 +38,32 @@ import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static util.Utils.getObsValue;
-import static util.Utils.getValue;
-import static util.Utils.nonEmptyValue;
+import static org.ei.opensrp.util.Utils.getValue;
+import static org.ei.opensrp.util.Utils.nonEmptyValue;
+import static util.VaccinatorUtils.getObsValue;
+import static util.VaccinatorUtils.providerDetails;
 
-/**
- * Created by muhammad.ahmed@ihsinformatics.com on 05-Jan-16.
- */
 public class WomanSmartRegisterFragment extends SmartClientRegisterFragment {
-    private CommonPersonObjectController controller;
     private final ClientActionHandler clientActionHandler = new ClientActionHandler();
-    private WomanSmartClientsProvider clientProvider;
 
-    //SAFWAN
-    public static String clientId;
 
-    String text ;
-    public WomanSmartRegisterFragment(){
+    String text;
+
+    public WomanSmartRegisterFragment() {
         super(null);
     }
 
+    @SuppressLint("ValidFragment")
     public WomanSmartRegisterFragment(FormController formController) {
         super(formController);
+    }
+
+    @Override
+    protected SmartRegisterPaginatedAdapter adapter() {
+        Log.d("women fragment", "here");
+        return new SmartRegisterPaginatedCursorAdapter(getActivity(),
+                new SmartRegisterCursorBuilder("pkwoman", null, (CursorSortOption) getDefaultOptionsProvider().sortOption())
+                , clientsProvider());
     }
 
     @Override
@@ -57,70 +71,54 @@ public class WomanSmartRegisterFragment extends SmartClientRegisterFragment {
         return new SecuredNativeSmartRegisterActivity.DefaultOptionsProvider() {
 
             @Override
+            public SearchFilterOption searchFilterOption() {
+                return new BasicSearchOption("", BasicSearchOption.Type.getByRegisterName(getDefaultOptionsProvider().nameInShortFormForTitle()));
+            }
+
+            @Override
             public ServiceModeOption serviceMode() {
-                return new VaccinationServiceModeOption(clientsProvider(), "TT", new int[]{
-                        R.string.woman_profile , R.string.age, R.string.epi_number,
-                        R.string.woman_edd, R.string.woman_last_vaccine, R.string.woman_next_vaacine
-                }, new int[]{3,1,1,2,2,2});
+                return new VaccinationServiceModeOption(null, "TT", new int[]{
+                        R.string.woman_profile, R.string.age, R.string.epi_number,
+                        R.string.woman_edd, R.string.woman_contact_number, R.string.woman_last_vaccine, R.string.woman_next_vaacine
+                }, new int[]{6, 2, 2, 3, 3, 3, 4});
             }
 
             @Override
             public FilterOption villageFilter() {
-                return new AllClientsFilter();
+                return new CursorCommonObjectFilterOption("no village filter", "");
             }
 
             @Override
             public SortOption sortOption() {
-                return new CommonObjectSort(CommonObjectSort.ByColumnAndByDetails.byDetails, false, "first_name", getResources().getString(R.string.woman_alphabetical_sort));
+                return new CursorCommonObjectSort(getResources().getString(R.string.woman_alphabetical_sort), "first_name");
             }
 
             @Override
             public String nameInShortFormForTitle() {
-                return Context.getInstance().getStringResource(R.string.woman_title);
+                return Context.getInstance().getStringResource(R.string.woman_register_title);
             }
         };
-    }//end of method
-
-    @Override
-    protected String getRegisterLabel() {
-        return getResources().getString(R.string.woman_register_title);
     }
 
-    //SAFWAN
-    @Override
-    public void updateSearchView() {
-        super.updateSearchView();
-        if(!clientId.isEmpty())
-            getSearchView().setText(clientId);
-    }
 
     @Override
     protected SmartRegisterClientsProvider clientsProvider() {
-        if (clientProvider == null) {
-            clientProvider = new WomanSmartClientsProvider(
-                    getActivity(), clientActionHandler, controller, context.alertService());
-        }
-        return clientProvider;
-    }//end of method
+        return new WomanSmartClientsProvider(getActivity(), clientActionHandler, context.alertService());
+    }
 
     @Override
     protected void onInitialization() {
-        //text = this.getArguments().getString("program_client_id");
-        if (controller == null) {
-            controller = new CommonPersonObjectController(context.allCommonsRepositoryobjects("pkwoman"),
-                    context.allBeneficiaries(), context.listCache(),
-                    context.personObjectClientsCache(), "first_name", "pkwoman", "client_reg_date",
-                    CommonPersonObjectController.ByColumnAndByDetails.byDetails.byDetails);
-        }
 
-        try{
-         //   context.formSubmissionRouter().getHandlerMap().put("woman_followup", new WomanFollowupHandler(new WomanService(context.allTimelineEvents(), context.allCommonsRepositoryobjects("pkwoman"), context.alertService())));
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
+        //   context.formSubmissionRouter().getHandlerMap().put("woman_followup", new WomanFollowupHandler(new WomanService(context.allTimelineEvents(), context.allCommonsRepositoryobjects("pkwoman"), context.alertService())));
+    }
 
-    }//end of method
+    @Override
+    protected void onCreation() {
+
+    }
+
+
+    //end of method
 
     private class ClientActionHandler implements View.OnClickListener {
         @Override
@@ -134,11 +132,12 @@ public class WomanSmartRegisterFragment extends SmartClientRegisterFragment {
                     HashMap<String, String> map = new HashMap<>();
                     CommonPersonObjectClient client = (CommonPersonObjectClient) view.getTag();
                     map.putAll(followupOverrides(client));
+                    map.putAll(providerDetails());
                     startForm("woman_followup", (SmartRegisterClient) view.getTag(), map);
                     break;
             }
         }
-    }//end of method
+    }
 
     private HashMap<String, String> getPreloadVaccineData(CommonPersonObjectClient client) {
         HashMap<String, String> map = new HashMap<>();
@@ -180,46 +179,45 @@ public class WomanSmartRegisterFragment extends SmartClientRegisterFragment {
         return m;
     }
 
-    private Map<String, String> followupOverrides(CommonPersonObjectClient client){
+    private Map<String, String> followupOverrides(CommonPersonObjectClient client) {
         Map<String, String> map = new HashMap<>();
-        map.put("existing_full_address", getValue(client.getDetails(), "address1", true)+
-                ", UC: "+getValue(client.getDetails(), "union_councilname", true)+
-                ", Town: "+getValue(client.getDetails(), "townname", true)+
-                ", City: "+getValue(client.getDetails(), "city_villagename", true)+ " - " + getValue(client.getDetails(), "landmark", true));
+        map.put("existing_full_address", getValue(client.getColumnmaps(), "address1", true)
+                + ", UC: " + getValue(client.getColumnmaps(), "union_council", true)
+                + ", Town: " + getValue(client.getColumnmaps(), "town", true)
+                + ", City: " + getValue(client, "city_village", true)
+                + ", Province: " + getValue(client, "province", true));
+        map.put("existing_program_client_id", getValue(client.getColumnmaps(), "program_client_id", false));
+        map.put("program_client_id", getValue(client.getColumnmaps(), "program_client_id", false));
 
-        map.put("existing_program_client_id", getValue(client.getDetails(), "program_client_id", false));
-        map.put("program_client_id", getValue(client.getDetails(), "program_client_id", false));
-
-        map.put("existing_first_name", getValue(client.getDetails(), "first_name", true));
-        map.put("existing_father_name", getValue(client.getDetails(), "father_name", true));
-        map.put("existing_husband_name", getValue(client.getDetails(), "husband_name", true));
-        map.put("husband_name", getValue(client.getDetails(), "husband_name", true));
+        map.put("existing_first_name", getValue(client.getColumnmaps(), "first_name", true));
+        map.put("existing_father_name", getValue(client.getColumnmaps(), "father_name", true));
+        map.put("existing_husband_name", getValue(client.getColumnmaps(), "husband_name", true));
+        map.put("husband_name", getValue(client.getColumnmaps(), "husband_name", true));
         map.put("existing_birth_date", getValue(client.getColumnmaps(), "dob", false));
         int years = 0;
-        try{
+        try {
             years = Years.yearsBetween(new DateTime(getValue(client.getColumnmaps(), "dob", false)), DateTime.now()).getYears();
+        } catch (Exception e) {
         }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-        map.put("existing_age", years+"");
-        map.put("existing_epi_card_number", getValue(client.getDetails(), "epi_card_number", false));
-        map.put("marriage", getValue(client.getDetails(), "marriage", false));
-        map.put("reminders_approval", getValue(client.getDetails(), "reminders_approval", false));
-        map.put("contact_phone_number", getValue(client.getDetails(), "contact_phone_number", false));
+
+        map.put("existing_age", years + "");
+        map.put("existing_epi_card_number", getValue(client.getColumnmaps(), "epi_card_number", false));
+        map.put("marriage", getValue(client.getColumnmaps(), "marriage", false));
+        map.put("reminders_approval", getValue(client.getColumnmaps(), "reminders_approval", false));
+        map.put("contact_phone_number", getValue(client.getColumnmaps(), "contact_phone_number", false));
 
         map.putAll(getPreloadVaccineData(client));
 
         return map;
     }
 
-    private Map<String, String> followupOverrides(Client client){
+    private Map<String, String> followupOverrides(Client client) {
         Map<String, String> map = new HashMap<>();
-        map.put("existing_full_address", client.getAddress("usual_residence").getAddressField("address1")+
-                ", UC: "+client.getAddress("usual_residence").getSubTown()+
-                ", Town: "+client.getAddress("usual_residence").getTown()+
-                ", City: "+client.getAddress("usual_residence").getCityVillage()+
-                " - "+client.getAddress("usual_residence").getAddressField("landmark"));
+        map.put("existing_full_address", client.getAddress("usual_residence").getAddressField("address1") +
+                ", UC: " + client.getAddress("usual_residence").getSubTown() +
+                ", Town: " + client.getAddress("usual_residence").getTown() +
+                ", City: " + client.getAddress("usual_residence").getCityVillage() +
+                " - " + client.getAddress("usual_residence").getAddressField("landmark"));
 
         map.put("existing_program_client_id", client.getIdentifier("Program Client ID"));
         map.put("program_client_id", client.getIdentifier("Program Client ID"));
@@ -227,17 +225,16 @@ public class WomanSmartRegisterFragment extends SmartClientRegisterFragment {
         map.put("existing_first_name", client.getFirstName());
         map.put("existing_birth_date", client.getBirthdate().toString("yyyy-MM-dd"));
         int years = 0;
-        try{
+        try {
             years = Years.yearsBetween(client.getBirthdate(), DateTime.now()).getYears();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        map.put("existing_age", years+"");
+        map.put("existing_age", years + "");
         Object epi = client.getAttribute("EPI Card Number");
         map.put("existing_epi_card_number", epi == null ? "" : epi.toString());
 
-        try{
+        try {
             map.put("existing_father_name", getObsValue(getClientEventDb(), client, true, "father_name", "1594AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
             map.put("existing_husband_name", getObsValue(getClientEventDb(), client, true, "husband_name", "5617AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
             map.put("husband_name", getObsValue(getClientEventDb(), client, true, "husband_name", "5617AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
@@ -246,12 +243,10 @@ public class WomanSmartRegisterFragment extends SmartClientRegisterFragment {
             map.put("contact_phone_number", getObsValue(getClientEventDb(), client, true, "contact_phone_number", "159635AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
 
             map.putAll(getPreloadVaccineData(client));
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return map;
     }
-
-
 }
+

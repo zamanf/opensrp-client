@@ -5,12 +5,12 @@ import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.ei.opensrp.AllConstants;
+import org.ei.opensrp.domain.Alert;
+import org.ei.opensrp.domain.ServiceProvided;
 import org.ei.opensrp.indonesia.AllConstantsINA;
 import org.ei.opensrp.indonesia.domain.Anak;
 import org.ei.opensrp.indonesia.repository.AllKohort;
 import org.ei.opensrp.indonesia.view.contract.AnakClient;
-import org.ei.opensrp.domain.Alert;
-import org.ei.opensrp.domain.ServiceProvided;
 import org.ei.opensrp.service.AlertService;
 import org.ei.opensrp.service.ServiceProvidedService;
 import org.ei.opensrp.util.Cache;
@@ -33,7 +33,6 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.ei.opensrp.domain.ServiceProvided.CHILD_ILLNESS_SERVICE_PROVIDED_NAME;
 import static org.ei.opensrp.domain.ServiceProvided.PNC_SERVICE_PROVIDED_NAME;
 import static org.ei.opensrp.domain.ServiceProvided.VITAMIN_A_SERVICE_PROVIDED_NAME;
-
 import static org.ei.opensrp.indonesia.AllConstantsINA.KartuAnakFields.*;
 import static org.ei.opensrp.indonesia.AllConstantsINA.KartuIbuFields.*;
 

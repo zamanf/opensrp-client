@@ -12,22 +12,24 @@ import android.widget.TextView;
 import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.commonregistry.CommonPersonObjectController;
-import org.ei.opensrp.provider.SmartRegisterClientsProvider;
+import static org.ei.opensrp.util.Utils.fillValue;
 import org.ei.opensrp.service.AlertService;
 import org.ei.opensrp.vaccinator.R;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.contract.SmartRegisterClients;
 import org.ei.opensrp.view.dialog.FilterOption;
+import org.ei.opensrp.view.dialog.SearchFilterOption;
 import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
+import org.ei.opensrp.view.template.SmartRegisterClientsProvider;
 import org.ei.opensrp.view.viewHolder.OnClickFormLauncher;
 
 import java.util.List;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
-import static util.Utils.fillValue;
-import static util.Utils.getValue;
-import static util.Utils.setProfiePic;
+
+import static org.ei.opensrp.util.Utils.getValue;
+import static org.ei.opensrp.util.Utils.setProfiePic;
 
 /**
  * Created by Safwan on 4/22/2016.
@@ -43,10 +45,9 @@ public class HouseholdSmartClientsProvider implements SmartRegisterClientsProvid
 
     protected CommonPersonObjectController controller;
 
-    public HouseholdSmartClientsProvider(Context context, View.OnClickListener onClickListener,
-                                     CommonPersonObjectController controller, AlertService alertService) {
+    public HouseholdSmartClientsProvider(Context context, View.OnClickListener onClickListener
+                                     ,AlertService alertService) {
         this.onClickListener = onClickListener;
-        this.controller = controller;
         this.context = context;
         this.alertService = alertService;
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -63,14 +64,14 @@ public class HouseholdSmartClientsProvider implements SmartRegisterClientsProvid
         String sql = "select * from pkindividual where relationalid = '" + pc.getCaseId() + "'";
         List<CommonPersonObject> individualList = org.ei.opensrp.Context.getInstance().allCommonsRepositoryobjects("pkindividual").customQueryForCompleteRow(sql, new String[]{}, "pkindividual");
 
-        parentView = (ViewGroup) inflater().inflate(R.layout.smart_register_household_client, null);
-        fillValue((TextView)parentView.findViewById(R.id.household_id), pc, "existing_household_id", false);
-        fillValue((TextView) parentView.findViewById(R.id.household_name), getValue(pc, "first_name_hhh", true) + " " + getValue(pc, "last_name_hhh", true));
+        //parentView = (ViewGroup) inflater().inflate(R.layout.smart_register_household_client, null);
+        fillValue((TextView) parentView.findViewById(R.id.household_id), pc.getColumnmaps(), "existing_household_id", false);
+        fillValue((TextView) parentView.findViewById(R.id.household_name), getValue(pc.getColumnmaps(), "first_name_hhh", true) + " " + getValue(pc.getColumnmaps(), "last_name_hhh", true));
         fillValue((TextView) parentView.findViewById(R.id.household_member_count), "" + individualList.size() + "");
-        fillValue((TextView) parentView.findViewById(R.id.household_address), getValue(pc, "address1", true) + ", " + getValue(pc, "union_council", true) + ", " +
-                getValue(pc, "town", true) + ",\n " + getValue(pc, "city_village", true) + ", " +
-                getValue(pc, "province", true) + ", ");
-        fillValue((TextView) parentView.findViewById(R.id.household_contact), getValue(pc, "contact_phone_number_hhh", true));
+        fillValue((TextView) parentView.findViewById(R.id.household_address), getValue(pc.getColumnmaps(), "address1", true) + ", " + getValue(pc.getColumnmaps(), "union_council", true) + ", " +
+                getValue(pc.getColumnmaps(), "town", true) + ",\n " + getValue(pc.getColumnmaps(), "city_village", true) + ", " +
+                getValue(pc.getColumnmaps(), "province", true));
+        fillValue((TextView) parentView.findViewById(R.id.household_contact), getValue(pc.getColumnmaps(), "contact_phone_number_hhh", true));
 
 
         LinearLayout memberAdd = (LinearLayout) parentView.findViewById(R.id.household_add_member);
@@ -96,9 +97,14 @@ public class HouseholdSmartClientsProvider implements SmartRegisterClientsProvid
     }
 
     @Override
+    public SmartRegisterClients updateClients(FilterOption villageFilter, ServiceModeOption serviceModeOption, SearchFilterOption searchFilter, SortOption sortOption) {
+        throw new UnsupportedOperationException("Operation not supported");
+    }
+
+    /*@Override
     public SmartRegisterClients updateClients(FilterOption villageFilter, ServiceModeOption serviceModeOption, FilterOption searchFilter, SortOption sortOption) {
         return getClients().applyFilter(villageFilter, serviceModeOption, searchFilter, sortOption);
-    }
+    }*/
 
     @Override
     public void onServiceModeSelected(ServiceModeOption serviceModeOption) {
@@ -108,6 +114,11 @@ public class HouseholdSmartClientsProvider implements SmartRegisterClientsProvid
     @Override
     public OnClickFormLauncher newFormLauncher(String formName, String entityId, String metaData) {
         return null;
+    }
+
+    @Override
+    public View inflateLayoutForAdapter() {
+        return inflater().inflate(R.layout.smart_register_household_client, null);
     }
 
     public LayoutInflater inflater() {

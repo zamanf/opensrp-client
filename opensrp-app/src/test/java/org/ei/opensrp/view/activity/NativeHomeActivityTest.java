@@ -29,31 +29,6 @@ public class NativeHomeActivityTest {
     }
 
     @Test
-    public void shouldLaunchEcRegisterOnPressingEcRegisterButton() {
-        verifyLaunchOfActivityOnPressingButton(R.id.btn_ec_register, NativeECSmartRegisterActivity.class);
-    }
-
-    @Test
-    public void shouldLaunchAncRegisterOnPressingAncRegisterButton() {
-        verifyLaunchOfActivityOnPressingButton(R.id.btn_anc_register, NativeANCSmartRegisterActivity.class);
-    }
-
-    @Test
-    public void shouldLaunchPncRegisterOnPressingPncRegisterButton() {
-        verifyLaunchOfActivityOnPressingButton(R.id.btn_pnc_register, NativePNCSmartRegisterActivity.class);
-    }
-
-    @Test
-    public void shouldLaunchFpRegisterOnPressingFpRegisterButton() {
-        verifyLaunchOfActivityOnPressingButton(R.id.btn_fp_register, NativeFPSmartRegisterActivity.class);
-    }
-
-    @Test
-    public void shouldLaunchChildRegisterOnPressingChildRegisterButton() {
-        verifyLaunchOfActivityOnPressingButton(R.id.btn_child_register, NativeChildSmartRegisterActivity.class);
-    }
-
-    @Test
     public void shouldLaunchReportingActivityOnPressingReportingButton() {
         verifyLaunchOfActivityOnPressingButton(R.id.btn_reporting, ReportsActivity.class);
     }

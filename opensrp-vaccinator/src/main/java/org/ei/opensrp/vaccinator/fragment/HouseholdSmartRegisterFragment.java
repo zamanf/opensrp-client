@@ -1,5 +1,6 @@
 package org.ei.opensrp.vaccinator.fragment;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.view.View;
@@ -10,11 +11,17 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import org.ei.opensrp.Context;
-import org.ei.opensrp.commonregistry.CommonObjectSort;
+import org.ei.opensrp.adapter.SmartRegisterPaginatedAdapter;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.commonregistry.CommonPersonObjectController;
-import org.ei.opensrp.provider.SmartRegisterClientsProvider;
+import org.ei.opensrp.cursoradapter.CursorCommonObjectFilterOption;
+import org.ei.opensrp.cursoradapter.CursorCommonObjectSort;
+import org.ei.opensrp.cursoradapter.CursorSortOption;
+import org.ei.opensrp.cursoradapter.SmartRegisterCursorBuilder;
+import org.ei.opensrp.cursoradapter.SmartRegisterPaginatedCursorAdapter;
+import org.ei.opensrp.util.Utils;
 import org.ei.opensrp.vaccinator.R;
+import org.ei.opensrp.vaccinator.application.common.HouseholdSearchOption;
 import org.ei.opensrp.vaccinator.application.common.VaccinationServiceModeOption;
 import org.ei.opensrp.vaccinator.db.Client;
 import org.ei.opensrp.vaccinator.household.HouseholdDetailFragment;
@@ -22,17 +29,16 @@ import org.ei.opensrp.vaccinator.household.HouseholdSmartClientsProvider;
 import org.ei.opensrp.vaccinator.household.HouseholdSmartRegisterActivity;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
 import org.ei.opensrp.view.controller.FormController;
-import org.ei.opensrp.view.dialog.AllClientsFilter;
 import org.ei.opensrp.view.dialog.FilterOption;
+import org.ei.opensrp.view.dialog.SearchFilterOption;
 import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
+import org.ei.opensrp.view.template.SmartRegisterClientsProvider;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import util.Utils;
-
-import static util.Utils.getValue;
+import static org.ei.opensrp.util.Utils.getValue;
 
 /**
  * Created by Safwan on 4/25/2016.
@@ -41,18 +47,26 @@ import static util.Utils.getValue;
 public class HouseholdSmartRegisterFragment extends SmartClientRegisterGroupFragment {
 
     private CommonPersonObjectController controller;
-    private final ClientActionHandler clientActionHandler;
+    private final ClientActionHandler clientActionHandler = new ClientActionHandler();
     private HouseholdSmartClientsProvider clientProvider;
     public static CommonPersonObjectClient client;
 
+
     public HouseholdSmartRegisterFragment(){
         super(null);
-        clientActionHandler = new ClientActionHandler(this);
     }
 
+
+    @SuppressLint("ValidFragment")
     public HouseholdSmartRegisterFragment(FormController householdFormController) {
         super(householdFormController);
-        clientActionHandler = new ClientActionHandler(this);
+    }
+
+    @Override
+    protected SmartRegisterPaginatedAdapter adapter() {
+        return new SmartRegisterPaginatedCursorAdapter(getActivity(),
+                new SmartRegisterCursorBuilder("pkhousehold", null, (CursorSortOption) getDefaultOptionsProvider().sortOption())
+                , clientsProvider());
     }
 
 
@@ -61,8 +75,13 @@ public class HouseholdSmartRegisterFragment extends SmartClientRegisterGroupFrag
         return new SecuredNativeSmartRegisterActivity.DefaultOptionsProvider() {
 
             @Override
+            public SearchFilterOption searchFilterOption() {
+                return new HouseholdSearchOption("");
+            }
+
+            @Override
             public ServiceModeOption serviceMode() {
-                return new VaccinationServiceModeOption(clientsProvider(), "Household", new int[]{
+                return new VaccinationServiceModeOption(null, "Household", new int[]{
                         R.string.household_profile , R.string.household_members, R.string.household_address, R.string.contactNumber, R.string.household_add_member
                         /*R.string.household_last_visit, R.string.household_due_date,*/
                 }, new int[]{3,2,2,2,2});
@@ -70,12 +89,12 @@ public class HouseholdSmartRegisterFragment extends SmartClientRegisterGroupFrag
 
             @Override
             public FilterOption villageFilter() {
-                return new AllClientsFilter();
+                return new CursorCommonObjectFilterOption("no village filter", "");
             }
 
             @Override
             public SortOption sortOption() {
-                return new CommonObjectSort(CommonObjectSort.ByColumnAndByDetails.byDetails, false, "first_name_hhh", ""/*getResources().getString(R.string.household_search_hint)*/);
+                return new CursorCommonObjectSort(getResources().getString(R.string.household_alphabetical_sort), "first_name_hhh");
             }
 
             @Override
@@ -85,9 +104,14 @@ public class HouseholdSmartRegisterFragment extends SmartClientRegisterGroupFrag
         };
     }//end of method
 
-    @Override
+    //@Override
     protected String getRegisterLabel() {
         return getResources().getString(R.string.household_register_title);
+    }
+
+    @Override
+    protected SmartRegisterClientsProvider clientsProvider() {
+        return new HouseholdSmartClientsProvider(getActivity(), clientActionHandler, context.alertService());
     }
 
     @Override
@@ -111,23 +135,23 @@ public class HouseholdSmartRegisterFragment extends SmartClientRegisterGroupFrag
         return null;
     }
 
-    @Override
+    /*@Override
     protected SmartRegisterClientsProvider clientsProvider() {
         if (clientProvider == null) {
             clientProvider = new HouseholdSmartClientsProvider(
                     getActivity(), clientActionHandler, controller, context.alertService());
         }
         return clientProvider;
-    }//end of method
+    }//end of method*/
 
     @Override
     protected void onInitialization() {
-        if (controller == null) {
+       /* if (controller == null) {
                 controller = new CommonPersonObjectController(context.allCommonsRepositoryobjects("pkhousehold"),
                         context.allBeneficiaries(), context.listCache(),
                         context.personObjectClientsCache(), "first_name_hhh", "pkhousehold", "first_name_hhh",
                         CommonPersonObjectController.ByColumnAndByDetails.byDetails.byDetails);
-        }
+        }*/
 
        //todo context.formSubmissionRouter().getHandlerMap().put("new_member_registration", new HouseholdFollowupHandler(new HouseholdService(context.allTimelineEvents(), context.allCommonsRepositoryobjects("pkindividual"), context.alertService())));
     }//end of method
@@ -139,7 +163,7 @@ public class HouseholdSmartRegisterFragment extends SmartClientRegisterGroupFrag
     private class ClientActionHandler implements View.OnClickListener {
         private HouseholdSmartRegisterFragment householdSmartRegisterFragment;
 
-        public ClientActionHandler(HouseholdSmartRegisterFragment householdSmartRegisterFragment) {
+        public ClientActionHandler() {
             this.householdSmartRegisterFragment = householdSmartRegisterFragment;
         }
 
@@ -195,14 +219,14 @@ public class HouseholdSmartRegisterFragment extends SmartClientRegisterGroupFrag
 
                                     @Override
                                     public void onClick(View view) {
+                                        HashMap<String, String> map = new HashMap<>();
+                                        map.putAll(followupOverrides(client));
                                         if (noQRCode.isChecked()) {
-                                            HashMap<String, String> map = new HashMap<>();
-                                            map.putAll(followupOverrides(client));
-                                            startFollowupForm("new_member_registration_without_qr", client, map, ByColumnAndByDetails.byDefault);
+                                            startMemberRegistrationForm(false, map);
+                                            //startFollowupForm("new_member_registration_without_qr", client, map, org.ei.opensrp.ByColumnAndByDetails.byDefault);
                                         } else if (hasQRCode.isChecked()) {
-                                            HashMap<String, String> map = new HashMap<>();
-                                            map.putAll(followupOverrides(client));
-                                            startRegistration();
+                                            startMemberRegistrationForm(true, map);
+                                            //startRegistration();
                                         }
                                         dialog.dismiss();
                                     }
@@ -223,17 +247,19 @@ public class HouseholdSmartRegisterFragment extends SmartClientRegisterGroupFrag
         Map<String, String> map = new HashMap<>();
 
         map.put("relationalid", client.getCaseId());
-        map.put("existing_first_name_hhh", getValue(client.getDetails(), "first_name_hhh", true));
-        map.put("existing_last_name_hhh", getValue(client.getDetails(), "last_name_hhh", true));
+        map.put("existing_first_name_hhh", getValue(client.getColumnmaps(), "first_name_hhh", true));
+        map.put("existing_last_name_hhh", getValue(client.getColumnmaps(), "last_name_hhh", true));
         map.put("existing_household_id", getValue(client.getColumnmaps(), "existing_household_id", true));
-        map.put("existing_union_councilname", getValue(client.getDetails(), "union_council", true));
-        map.put("existing_townname", getValue(client.getDetails(), "town", true));
-        map.put("existing_city_villagename", getValue(client.getDetails(), "city_village", true));
-        map.put("existing_provincename", getValue(client.getDetails(), "province", true));
-        map.put("existing_landmark", getValue(client.getDetails(), "landmark", true));
-        map.put("existing_address1", getValue(client.getDetails(), "adderss1", true));
+        map.put("existing_union_councilname", getValue(client.getColumnmaps(), "union_council", true));
+        map.put("existing_townname", getValue(client.getColumnmaps(), "town", true));
+        map.put("existing_city_villagename", getValue(client.getColumnmaps(), "city_village", true));
+        map.put("existing_provincename", getValue(client.getColumnmaps(), "province", true));
+        map.put("existing_landmark", getValue(client.getColumnmaps(), "landmark", true));
+        map.put("existing_address1", getValue(client.getColumnmaps(), "adderss1", true));
 
         return map;
     }
+
+
 
 }

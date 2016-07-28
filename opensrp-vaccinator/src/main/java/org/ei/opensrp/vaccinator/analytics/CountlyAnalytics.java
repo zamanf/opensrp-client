@@ -3,13 +3,13 @@ package org.ei.opensrp.vaccinator.analytics;
 import android.app.Activity;
 
 import org.ei.opensrp.Context;
+import org.ei.opensrp.util.Utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
 //import ly.count.android.sdk.Countly;
-import util.Utils;
 
 /**
  * Created by Safwan on 5/3/2016.

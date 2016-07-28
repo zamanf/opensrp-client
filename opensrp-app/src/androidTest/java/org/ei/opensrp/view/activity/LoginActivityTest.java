@@ -1,13 +1,16 @@
 package org.ei.opensrp.view.activity;
 
 import android.test.ActivityInstrumentationTestCase2;
+
 import org.ei.opensrp.Context;
-import org.ei.opensrp.util.*;
+import org.ei.opensrp.util.DrishtiSolo;
+import org.ei.opensrp.util.FakeDrishtiService;
+import org.ei.opensrp.util.FakeUserService;
 
 import java.util.Date;
 
-import static org.ei.opensrp.domain.LoginResponse.UNKNOWN_RESPONSE;
 import static org.ei.opensrp.domain.LoginResponse.SUCCESS;
+import static org.ei.opensrp.domain.LoginResponse.UNKNOWN_RESPONSE;
 import static org.ei.opensrp.util.FakeContext.setupService;
 import static org.ei.opensrp.util.Wait.waitForFilteringToFinish;
 import static org.ei.opensrp.util.Wait.waitForProgressBarToGoAway;

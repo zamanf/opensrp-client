@@ -1,13 +1,12 @@
 package org.ei.opensrp.service;
 
-import org.ei.opensrp.repository.AllSharedPreferences;
-import org.robolectric.RobolectricTestRunner;
+import org.ei.drishti.dto.Action;
 import org.ei.opensrp.domain.Response;
 import org.ei.opensrp.domain.ResponseStatus;
-import org.ei.drishti.dto.Action;
 import org.ei.opensrp.repository.AllEligibleCouples;
 import org.ei.opensrp.repository.AllReports;
 import org.ei.opensrp.repository.AllSettings;
+import org.ei.opensrp.repository.AllSharedPreferences;
 import org.ei.opensrp.router.ActionRouter;
 import org.ei.opensrp.util.ActionBuilder;
 import org.junit.Before;
@@ -15,17 +14,26 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.robolectric.RobolectricTestRunner;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
-import static org.ei.opensrp.domain.FetchStatus.*;
+import static org.ei.opensrp.domain.FetchStatus.fetched;
+import static org.ei.opensrp.domain.FetchStatus.fetchedFailed;
+import static org.ei.opensrp.domain.FetchStatus.nothingFetched;
 import static org.ei.opensrp.domain.ResponseStatus.failure;
 import static org.ei.opensrp.domain.ResponseStatus.success;
-import static org.ei.opensrp.util.ActionBuilder.*;
-import static org.mockito.Mockito.*;
+import static org.ei.opensrp.util.ActionBuilder.actionForCloseAlert;
+import static org.ei.opensrp.util.ActionBuilder.actionForCloseMother;
+import static org.ei.opensrp.util.ActionBuilder.actionForCreateAlert;
+import static org.ei.opensrp.util.ActionBuilder.actionForReport;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 @RunWith(RobolectricTestRunner.class)

@@ -3,7 +3,6 @@ package org.ei.opensrp.indonesia;
 import android.content.res.AssetManager;
 
 import org.apache.commons.io.IOUtils;
-import org.ei.opensrp.*;
 
 import java.io.IOException;
 import java.io.InputStream;

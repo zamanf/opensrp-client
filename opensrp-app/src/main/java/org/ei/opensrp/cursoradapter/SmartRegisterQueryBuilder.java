@@ -1,24 +1,77 @@
 package org.ei.opensrp.cursoradapter;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * Created by raihan on 3/17/16.
  */
 public class SmartRegisterQueryBuilder {
-    String Selectquery;
+    private String alias;
+    private String Selectquery;
+    private String table;
+    private String mainFilter = "";
+    private String order = "";
+    private String joins = "";
+    private int pageSize = 20;
+    private int offset = 0;
 
-    public String getSelectquery() {
-        return Selectquery;
+    public String table() {
+        return table;
     }
 
-    public void setSelectquery(String selectquery) {
-        Selectquery = selectquery;
+    public String mainFilter() {
+        return mainFilter;
     }
 
-    public SmartRegisterQueryBuilder(String selectquery) {
-        Selectquery = selectquery;
+    public String order() {
+        return order;
     }
 
-    public SmartRegisterQueryBuilder() {
+    public String joins() {
+        return joins;
+    }
+
+    public int pageSize() {
+        return pageSize;
+    }
+
+    public int offset() {
+        return offset;
+    }
+
+    /**
+     * @param table
+     * @param mainFilter optional
+     */
+    public SmartRegisterQueryBuilder(String table, String mainFilter) {
+        Selectquery = "SELECT id AS _id, t.* FROM "+table+" t ";
+        this.table = table;
+        if(StringUtils.isNotBlank(mainFilter)){
+            this.mainFilter = mainFilter;
+        }
+    }
+
+    /**
+     * @param table
+     * @param additionalColumns
+     * @param mainFilter optional
+     */
+    public SmartRegisterQueryBuilder(String table, String alias, String [] additionalColumns, String mainFilter){
+        this.table = table;
+        alias = StringUtils.isBlank(alias)?"t":alias;
+        this.alias = alias;
+        if(StringUtils.isNotBlank(mainFilter)){
+            this.mainFilter = mainFilter;
+        }
+
+        Selectquery = "SELECT id AS _id";
+
+        if (additionalColumns != null) {
+            for (int i = 0; i < additionalColumns.length; i++) {
+                Selectquery = Selectquery + " , " + additionalColumns[i];
+            }
+        }
+        Selectquery = Selectquery+ ", "+alias+".* FROM " + table +" AS "+alias;
     }
 
     /*
@@ -46,60 +99,65 @@ public class SmartRegisterQueryBuilder {
                 "Else alerts.status END ASC";
         return Selectquery;
     }
-    public String queryForCountOnRegisters(String tablename,String condition){
-        String Selectquery = "Select Count (*) ";
-        Selectquery= Selectquery+ " From " + tablename;
-        if(condition != null){
-            Selectquery= Selectquery+ " Where " + condition ;
+
+    public SmartRegisterQueryBuilder limitAndOffset(int limit, int offset){
+        this.pageSize = limit;
+        this.offset = offset;
+        return this;
+    }
+
+    public SmartRegisterQueryBuilder addCondition(String condition){
+        if (StringUtils.isNotBlank(mainFilter) && !condition.toLowerCase().trim().startsWith("and")){
+            mainFilter += " AND ";
         }
-        return Selectquery;
+        mainFilter += " "+condition ;
+        return this;
     }
-    public String addlimitandOffset(String selectquery,int limit,int offset){
-        return selectquery + " Limit " +offset+","+limit;
-    }
-    public String limitandOffset(int limit,int offset){
-        return Selectquery + " Limit " +offset+","+limit;
-    }
-    public  String Endquery(String selectquery){
-        return selectquery+";";
-    }
-    public String SelectInitiateMainTable(String tablename,String [] columns){
-        Selectquery = "Select id as _id";
-        for(int i = 0;i<columns.length;i++){
-            Selectquery= Selectquery + " , " + columns[i];
+    public SmartRegisterQueryBuilder addOrder(String orderCondition){
+        if (StringUtils.isNotBlank(order)){
+            this.order += ", "+orderCondition;
         }
-        Selectquery= Selectquery+ " From " + tablename;
-        return Selectquery;
+        else {
+            this.order = orderCondition;
+        }
+        return this;
     }
-    public String SelectInitiateMainTableCounts(String tablename){
-        Selectquery = "Select Count(*)";
-        Selectquery= Selectquery+ " From " + tablename;
-        return Selectquery;
+    public SmartRegisterQueryBuilder joinwithALerts(String alertname){
+        joins += " LEFT JOIN alerts ON "+alias+"._id = alerts.caseID and alerts.scheduleName = '"+alertname+"'" ;
+        return this;
     }
-    public String mainCondition(String condition){
-        Selectquery= Selectquery+ " Where " + condition ;
-        return Selectquery;
+    public SmartRegisterQueryBuilder joinwithALerts(){
+        joins += " LEFT JOIN alerts ON "+alias+"._id = alerts.caseID " ;
+        return this;
     }
-    public String addCondition(String condition){
-        Selectquery= Selectquery + condition ;
-        return Selectquery;
-    }
-    public String orderbyCondition(String condition){
-        Selectquery= Selectquery + " ORDER BY " + condition;
-        return Selectquery;
-    }
-    public String joinwithALerts(String tablename,String alertname){
-        Selectquery = Selectquery+ " LEFT JOIN alerts ";
-        Selectquery = Selectquery+ " ON "+ tablename +".id = alerts.caseID and  alerts.scheduleName = '"+alertname+"'" ;
-        return Selectquery;
-    }
-    public String joinwithALerts(String tablename){
-        Selectquery = Selectquery+ " LEFT JOIN alerts ";
-        Selectquery = Selectquery+ " ON "+ tablename +".id = alerts.caseID " ;
-        return Selectquery;
-    }
+
     @Override
     public String toString(){
-        return Selectquery;
+        String res = Selectquery;
+        if (StringUtils.isNotBlank(joins)){
+            res += " "+ joins;
+        }
+        if (StringUtils.isNotBlank(mainFilter)){
+            res += " WHERE "+mainFilter;
+        }
+        if (StringUtils.isNotBlank(order)){
+            res += " ORDER BY " + order;
+        }
+
+        res += " LIMIT "+offset+","+pageSize;
+
+        return res;
+    }
+
+    public String countQuery(){
+        String res = "SELECT COUNT(*) FROM "+table;
+        if (StringUtils.isNotBlank(joins)){
+            res += " "+ joins;
+        }
+        if (StringUtils.isNotBlank(mainFilter)){
+            res += " WHERE "+mainFilter;
+        }
+
+        return res;
     }
 }

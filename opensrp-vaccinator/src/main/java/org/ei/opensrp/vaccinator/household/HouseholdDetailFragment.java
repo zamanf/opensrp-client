@@ -24,14 +24,17 @@ import org.ei.opensrp.view.fragment.SecuredFragment;
 import org.joda.time.DateTime;
 import org.joda.time.Years;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
-import static util.Utils.convertDateFormat;
-import static util.Utils.getDataRow;
-import static util.Utils.getDataRowHousehold;
-import static util.Utils.getValue;
-import static util.Utils.setProfiePic;
+import static org.ei.opensrp.util.Utils.convertDateFormat;
+import static org.ei.opensrp.util.Utils.getDataRowHousehold;
+import static org.ei.opensrp.util.Utils.getValue;
+import static org.ei.opensrp.util.Utils.setProfiePic;
+
 
 /**
  * Created by Safwan on 4/21/2016.
@@ -68,6 +71,11 @@ public class HouseholdDetailFragment extends SecuredFragment {
     public void initialize(){
         //onResumption();
         memberDetails.clear();
+        ((TextView) mView.findViewById(org.ei.opensrp.R.id.detail_heading)).setText("Household Details");
+
+        ((TextView)  mView.findViewById(org.ei.opensrp.R.id.details_id_label)).setText(getValue(householdClient.getColumnmaps(), "existing_household_id", true));
+
+        ((TextView)  mView.findViewById(org.ei.opensrp.R.id.detail_today)).setText(convertDateFormat(new SimpleDateFormat("yyyy-MM-dd").format(new Date()), true));
         TableLayout dt = (TableLayout) mView.findViewById(R.id.household_detail_info_table1);
         dt.removeAllViews();
         android.content.Context context = getActivity().getApplicationContext();
@@ -85,20 +93,20 @@ public class HouseholdDetailFragment extends SecuredFragment {
         TableRow tr = getDataRowHousehold(context, "Person ID", getValue(householdClient.getColumnmaps(), "person_id_hhh", true), null);
         dt.addView(tr);
 
-        tr = getDataRowHousehold(context, "Name", StringUtils.capitalize(getValue(householdClient, "first_name_hhh", false)) + " " + StringUtils.capitalize(getValue(householdClient, "last_name_hhh", false)), null);
+        tr = getDataRowHousehold(context, "Name", StringUtils.capitalize(getValue(householdClient.getColumnmaps(), "first_name_hhh", false)) + " " + StringUtils.capitalize(getValue(householdClient.getColumnmaps(), "last_name_hhh", false)), null);
         dt.addView(tr);
 
-        int age = Years.yearsBetween(new DateTime(getValue(householdClient, "calc_dob_confirm_hhh", false)), DateTime.now()).getYears();
+        int age = Years.yearsBetween(new DateTime(getValue(householdClient.getDetails(), "calc_dob_confirm_hhh", false)), DateTime.now()).getYears();
         tr = getDataRowHousehold(context, "DOB (Age)", convertDateFormat(getValue(householdClient, "calc_dob_confirm_hhh", false), true) + " (" + age + " years)", null);
         dt.addView(tr);
 
-        tr = getDataRowHousehold(context, "Gender", getValue(householdClient, "gender_hhh", true), null);
+        tr = getDataRowHousehold(context, "Gender", getValue(householdClient.getColumnmaps(), "gender_hhh", true), null);
         dt.addView(tr);
 
-        tr = getDataRowHousehold(context, "Ethnicity", getValue(householdClient, "ethnicity_hhh", true), null);
+        tr = getDataRowHousehold(context, "Ethnicity", getValue(householdClient.getColumnmaps(), "ethnicity_hhh", true), null);
         dt.addView(tr);
 
-        tr = getDataRowHousehold(context, "Contact", getValue(householdClient, "contact_phone_number_hhh", true), null);
+        tr = getDataRowHousehold(context, "Contact", getValue(householdClient.getColumnmaps(), "contact_phone_number_hhh", true), null);
         dt.addView(tr);
 
         TableLayout dt2 = (TableLayout) mView.findViewById(R.id.household_detail_info_table2);
@@ -107,14 +115,14 @@ public class HouseholdDetailFragment extends SecuredFragment {
         dt2.addView(tr);
         tr = getDataRowHousehold(context, "Number of Members", "" + individualList.size() + "", null);
         dt2.addView(tr);
-        tr = getDataRowHousehold(context, "Source of Drinking Water", getValue(householdClient, "water_source", true), null);
+        tr = getDataRowHousehold(context, "Source of Drinking Water", getValue(householdClient.getColumnmaps(), "water_source", true), null);
         dt2.addView(tr);
-        tr = getDataRowHousehold(context, "Latrine System", getValue(householdClient, "latrine_system", true), null);
+        tr = getDataRowHousehold(context, "Latrine System", getValue(householdClient.getColumnmaps(), "latrine_system", true), null);
         dt2.addView(tr);
-        tr = getDataRowHousehold(context, "Address", getValue(householdClient, "address1", true)
-                + ", \nUC: " + getValue(householdClient, "union_council", true)
-                + ", \nTown: " + getValue(householdClient, "town", true)
-                + ", \nCity: " + getValue(householdClient, "city_village", true)
+        tr = getDataRowHousehold(context, "Address", getValue(householdClient.getColumnmaps(), "address1", true)
+                + ", \nUC: " + getValue(householdClient.getColumnmaps(), "union_council", true)
+                + ", \nTown: " + getValue(householdClient.getColumnmaps(), "town", true)
+                + ", \nCity: " + getValue(householdClient.getColumnmaps(), "city_village", true)
                 /*+ ", \nProvince: " + getValue(client, "province", true)*/, null);
         dt2.addView(tr);
 
@@ -143,9 +151,9 @@ public class HouseholdDetailFragment extends SecuredFragment {
             setProfiePic(mView.getContext(), (ImageView) mView.findViewById(R.id.household_profilepic), householdClient.entityId(), null);
 
 
-            member.setMemberId(getValue(individual.getDetails(), "person_id", false));
-            member.setMemberName(StringUtils.capitalize(getValue(individual.getDetails(), "first_name", false)) + " " + StringUtils.capitalize(getValue(individual.getDetails(), "last_name", false)));
-            member.setMemberRelationWithHousehold(getValue(individual.getDetails(), "relationship", false));
+            member.setMemberId(getValue(individual.getColumnmaps(), "person_id", false));
+            member.setMemberName(StringUtils.capitalize(getValue(individual.getColumnmaps(), "first_name", false)) + " " + StringUtils.capitalize(getValue(individual.getDetails(), "last_name", false)));
+            member.setMemberRelationWithHousehold(getValue(individual.getColumnmaps(), "relationship", false));
             member.setMemberAge(convertDateFormat(getValue(individual.getDetails(), "calc_dob_confirm", false), true) + " (" + memberAge + " years)");
 
 
@@ -170,8 +178,6 @@ public class HouseholdDetailFragment extends SecuredFragment {
         }
         list.setAdapter(new HouseholdMemberAdapter(this, context, memberDetails));
     }
-
-
 
 
 

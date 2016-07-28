@@ -12,7 +12,6 @@ import org.ei.opensrp.view.dialog.SortOption;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 
 import static java.util.Collections.sort;

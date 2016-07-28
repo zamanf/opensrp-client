@@ -1,20 +1,21 @@
 package org.ei.opensrp.service;
 
 import com.google.gson.Gson;
-import org.ei.opensrp.repository.AllSharedPreferences;
-import org.robolectric.RobolectricTestRunner;
+
+import org.ei.drishti.dto.form.FormSubmissionDTO;
 import org.ei.opensrp.DristhiConfiguration;
 import org.ei.opensrp.domain.FetchStatus;
 import org.ei.opensrp.domain.Response;
 import org.ei.opensrp.domain.ResponseStatus;
 import org.ei.opensrp.domain.form.FormSubmission;
-import org.ei.drishti.dto.form.FormSubmissionDTO;
 import org.ei.opensrp.repository.AllSettings;
+import org.ei.opensrp.repository.AllSharedPreferences;
 import org.ei.opensrp.repository.FormDataRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.robolectric.RobolectricTestRunner;
 
 import java.util.Collections;
 import java.util.List;
@@ -27,7 +28,12 @@ import static org.ei.opensrp.domain.ResponseStatus.failure;
 import static org.ei.opensrp.domain.ResponseStatus.success;
 import static org.ei.opensrp.domain.SyncStatus.PENDING;
 import static org.ei.opensrp.domain.SyncStatus.SYNCED;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 @RunWith(RobolectricTestRunner.class)

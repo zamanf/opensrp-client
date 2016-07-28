@@ -1,5 +1,6 @@
 package org.ei.opensrp.view.dialog;
 
+import android.annotation.SuppressLint;
 import android.app.DialogFragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,16 +10,19 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import org.ei.opensrp.R;
+import org.ei.opensrp.view.activity.SecuredActivity;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
 
+@SuppressLint("ValidFragment")
 public class SmartRegisterDialogFragment extends DialogFragment {
-    private final SecuredNativeSmartRegisterActivity parentActivity;
+    private final SecuredActivity parentActivity;
     private final DialogOption[] options;
     private final DialogOptionModel dialogOptionModel;
     private final Object tag;
 
-    private SmartRegisterDialogFragment(SecuredNativeSmartRegisterActivity activity,
+    private SmartRegisterDialogFragment(SecuredActivity activity,
                                         DialogOptionModel dialogOptionModel,
                                         Object tag) {
         this.parentActivity = activity;
@@ -28,7 +32,7 @@ public class SmartRegisterDialogFragment extends DialogFragment {
     }
 
     public static SmartRegisterDialogFragment newInstance(
-            SecuredNativeSmartRegisterActivity activity,
+            SecuredActivity activity,
             DialogOptionModel dialogOptionModel, Object tag) {
         return new SmartRegisterDialogFragment(activity, dialogOptionModel, tag);
     }

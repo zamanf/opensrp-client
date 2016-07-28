@@ -27,6 +27,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
+import org.ei.opensrp.view.activity.SecuredActivity;
+import org.ei.opensrp.view.fragment.SecuredFragment;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -173,7 +176,8 @@ public class BarcodeIntentIntegrator
 																						// intent?
 																		);
 
-	private final Activity					activity;
+	private final SecuredFragment fragment;
+	private final SecuredActivity activity;
 	private String							title;
 	private String							message;
 	private String							buttonYes;
@@ -181,9 +185,10 @@ public class BarcodeIntentIntegrator
 	private List<String>					targetApplications;
 	private final Map<String, Object>		moreExtras;
 
-	public BarcodeIntentIntegrator (Activity activity)
+	public BarcodeIntentIntegrator (SecuredFragment fragment)
 	{
-		this.activity = activity;
+		this.fragment = fragment;
+		this.activity = null;
 		title = DEFAULT_TITLE;
 		message = DEFAULT_MESSAGE;
 		buttonYes = DEFAULT_YES;
@@ -192,64 +197,16 @@ public class BarcodeIntentIntegrator
 		moreExtras = new HashMap<String, Object> (3);
 	}
 
-	public String getTitle ()
+	public BarcodeIntentIntegrator (SecuredActivity activity)
 	{
-		return title;
-	}
-
-	public void setTitle (String title)
-	{
-		this.title = title;
-	}
-
-	public void setTitleByID (int titleID)
-	{
-		title = activity.getString (titleID);
-	}
-
-	public String getMessage ()
-	{
-		return message;
-	}
-
-	public void setMessage (String message)
-	{
-		this.message = message;
-	}
-
-	public void setMessageByID (int messageID)
-	{
-		message = activity.getString (messageID);
-	}
-
-	public String getButtonYes ()
-	{
-		return buttonYes;
-	}
-
-	public void setButtonYes (String buttonYes)
-	{
-		this.buttonYes = buttonYes;
-	}
-
-	public void setButtonYesByID (int buttonYesID)
-	{
-		buttonYes = activity.getString (buttonYesID);
-	}
-
-	public String getButtonNo ()
-	{
-		return buttonNo;
-	}
-
-	public void setButtonNo (String buttonNo)
-	{
-		this.buttonNo = buttonNo;
-	}
-
-	public void setButtonNoByID (int buttonNoID)
-	{
-		buttonNo = activity.getString (buttonNoID);
+		this.activity = activity;
+		this.fragment = null;
+		title = DEFAULT_TITLE;
+		message = DEFAULT_MESSAGE;
+		buttonYes = DEFAULT_YES;
+		buttonNo = DEFAULT_NO;
+		targetApplications = TARGET_ALL_KNOWN;
+		moreExtras = new HashMap<String, Object> (3);
 	}
 
 	public Collection<String> getTargetApplications ()
@@ -359,12 +316,15 @@ public class BarcodeIntentIntegrator
 	 */
 	protected void startActivityForResult (Intent intent, int code)
 	{
-		activity.startActivityForResult (intent, code);
+		if (fragment != null) {
+			fragment.startActivityForResult(intent, code);
+		}
+		else activity.startActivityForResult(intent, code);
 	}
 
 	private String findTargetAppPackage (Intent intent)
 	{
-		PackageManager pm = activity.getPackageManager ();
+		PackageManager pm = fragment != null?fragment.getActivity().getPackageManager ():activity.getPackageManager();
 		List<ResolveInfo> availableApps = pm.queryIntentActivities (intent, PackageManager.MATCH_DEFAULT_ONLY);
 		if (availableApps != null)
 		{
@@ -382,7 +342,7 @@ public class BarcodeIntentIntegrator
 
 	private AlertDialog showDownloadDialog ()
 	{
-		AlertDialog.Builder downloadDialog = new AlertDialog.Builder (activity);
+		AlertDialog.Builder downloadDialog = new AlertDialog.Builder (fragment!=null?fragment.getActivity():activity);
 		downloadDialog.setTitle (title);
 		downloadDialog.setMessage (message);
 		downloadDialog.setPositiveButton (buttonYes, new DialogInterface.OnClickListener ()
@@ -395,7 +355,10 @@ public class BarcodeIntentIntegrator
 				Intent intent = new Intent (Intent.ACTION_VIEW, uri);
 				try
 				{
-					activity.startActivity (intent);
+					if (fragment != null) {
+						fragment.getActivity().startActivity(intent);
+					}
+					else activity.startActivity(intent);
 				}
 				catch (ActivityNotFoundException anfe)
 				{
@@ -478,7 +441,10 @@ public class BarcodeIntentIntegrator
 		intent.addFlags (Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		intent.addFlags (Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 		attachMoreExtras (intent);
-		activity.startActivity (intent);
+		if(fragment != null){
+			fragment.getActivity().startActivity (intent);
+		}
+		else activity.startActivity(intent);
 		return null;
 	}
 

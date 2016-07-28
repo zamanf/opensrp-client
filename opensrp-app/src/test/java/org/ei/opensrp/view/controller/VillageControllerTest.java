@@ -2,6 +2,7 @@ package org.ei.opensrp.view.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
 import org.ei.opensrp.repository.AllEligibleCouples;
 import org.ei.opensrp.util.Cache;
 import org.ei.opensrp.view.contract.Village;

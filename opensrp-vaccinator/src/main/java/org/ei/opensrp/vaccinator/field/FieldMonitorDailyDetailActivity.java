@@ -7,7 +7,7 @@ import android.widget.TextView;
 import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.vaccinator.R;
-import org.ei.opensrp.vaccinator.application.template.DetailActivity;
+import org.ei.opensrp.view.template.DetailActivity;
 import org.joda.time.DateTime;
 
 import java.text.ParseException;
@@ -15,11 +15,11 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 
-import static util.Utils.addToRow;
-import static util.Utils.getDataRow;
-import static util.Utils.getTotalUsed;
-import static util.Utils.getValue;
-import static util.Utils.providerDetails;
+import static org.ei.opensrp.util.Utils.addToRow;
+import static org.ei.opensrp.util.Utils.getDataRow;
+import static org.ei.opensrp.util.Utils.getValue;
+import static util.VaccinatorUtils.getTotalUsed;
+import static util.VaccinatorUtils.providerDetails;
 
 public class FieldMonitorDailyDetailActivity extends DetailActivity {
     @Override
@@ -104,61 +104,61 @@ public class FieldMonitorDailyDetailActivity extends DetailActivity {
         tr = getDataRow(this);
         addToRow(this, "BCG", tr, true);
         addToRow(this, getTotalUsed(startDate, endDate, childTable, "bcg") + "", tr, true);
-        addToRow(this, getValue(client, "bcg_wasted", "0", false), tr, true);
+        addToRow(this, getValue(client.getColumnmaps(), "bcg_wasted", "0", false), tr, true);
         tb.addView(tr);
 
         tr = getDataRow(this);
         addToRow(this, "OPV", tr, true);
         addToRow(this, getTotalUsed(startDate, endDate, childTable, "opv0", "opv1", "opv2", "opv3") + "", tr, true);
-        addToRow(this, getValue(client, "opv_wasted", "0", false), tr, true);
+        addToRow(this, getValue(client.getColumnmaps(), "opv_wasted", "0", false), tr, true);
         tb.addView(tr);
 
         tr = getDataRow(this);
         addToRow(this, "IPV", tr, true);
         addToRow(this, getTotalUsed(startDate, endDate, childTable, "ipv") + "", tr, true);
-        addToRow(this, getValue(client, "ipv_wasted", "0", false), tr, true);
+        addToRow(this, getValue(client.getColumnmaps(), "ipv_wasted", "0", false), tr, true);
         tb.addView(tr);
 
         tr = getDataRow(this);
         addToRow(this, "PCV", tr, true);
         addToRow(this, getTotalUsed(startDate, endDate, childTable, "pcv1", "pcv2", "pcv3") + "", tr, true);
-        addToRow(this, getValue(client, "pcv_wasted", "0", false), tr, true);
+        addToRow(this, getValue(client.getColumnmaps(), "pcv_wasted", "0", false), tr, true);
         tb.addView(tr);
 
         tr = getDataRow(this);
         addToRow(this, "PENTAVALENT", tr, true);
         addToRow(this, getTotalUsed(startDate, endDate, childTable, "penta1", "penta2", "penta3") + "", tr, true);
-        addToRow(this, getValue(client, "penta_wasted", "0", false), tr, true);
+        addToRow(this, getValue(client.getColumnmaps(), "penta_wasted", "0", false), tr, true);
         tb.addView(tr);
 
         tr = getDataRow(this);
         addToRow(this, "MEASLES", tr, true);
         addToRow(this, getTotalUsed(startDate, endDate, childTable, "measles1", "measles2") + "", tr, true);
-        addToRow(this, getValue(client, "measles_wasted", "0", false), tr, true);
+        addToRow(this, getValue(client.getColumnmaps(), "measles_wasted", "0", false), tr, true);
         tb.addView(tr);
 
         tr = getDataRow(this);
         addToRow(this, "TETNUS", tr, true);
         addToRow(this, getTotalUsed(startDate, endDate, womanTable, "tt1", "tt2", "tt3", "tt4", "tt5") + "", tr, true);
-        addToRow(this, getValue(client, "tt_wasted", "0", false), tr, true);
+        addToRow(this, getValue(client.getColumnmaps(), "tt_wasted", "0", false), tr, true);
         tb.addView(tr);
 
         tr = getDataRow(this);
         addToRow(this, "DILUTANTS", tr, true);
         addToRow(this, "N/A", tr, true);
-        addToRow(this, getValue(client, "dilutants_wasted", "0", false), tr, true);
+        addToRow(this, getValue(client.getColumnmaps(), "dilutants_wasted", "0", false), tr, true);
         tb.addView(tr);
 
         tr = getDataRow(this);
         addToRow(this, "SYRINGES", tr, true);
         addToRow(this, "N/A", tr, true);
-        addToRow(this, getValue(client, "syringes_wasted", "0", false), tr, true);
+        addToRow(this, getValue(client.getColumnmaps(), "syringes_wasted", "0", false), tr, true);
         tb.addView(tr);
 
         tr = getDataRow(this);
         addToRow(this, "SAFETY BOXES", tr, true);
         addToRow(this, "N/A", tr, true);
-        addToRow(this, getValue(client, "safety_boxes_wasted", "0" , false), tr, true);
+        addToRow(this, getValue(client.getColumnmaps(), "safety_boxes_wasted", "0" , false), tr, true);
         tb.addView(tr);
     }
 }

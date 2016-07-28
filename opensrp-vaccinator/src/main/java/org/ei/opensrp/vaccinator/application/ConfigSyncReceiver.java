@@ -11,14 +11,13 @@ import android.util.Log;
 import org.apache.commons.lang3.StringUtils;
 import org.ei.opensrp.domain.Response;
 import org.ei.opensrp.service.HTTPAgent;
+import org.ei.opensrp.util.Utils;
 import org.joda.time.DateTime;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Calendar;
 import java.util.Iterator;
-
-import util.Utils;
 
 public class ConfigSyncReceiver extends BroadcastReceiver {
     public static final String LAST_SYNC_SERVER_DATETIME = "LAST_SYNC_SERVER_DATETIME";

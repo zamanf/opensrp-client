@@ -5,11 +5,12 @@ import org.ei.opensrp.Context;
 import org.ei.opensrp.R;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
 
-public class ECSearchOption implements FilterOption {
-    private final String criteria;
+public class ECSearchOption implements SearchFilterOption {
+    private String filter;
 
-    public ECSearchOption(String criteria) {
-        this.criteria = criteria;
+
+    public ECSearchOption(String filter) {
+        this.filter = filter;
     }
 
     @Override
@@ -18,7 +19,17 @@ public class ECSearchOption implements FilterOption {
     }
 
     @Override
+    public void setFilter(String filter) {
+        this.filter = filter;
+    }
+
+    @Override
+    public String getCriteria() {
+        return filter;
+    }
+
+    @Override
     public boolean filter(SmartRegisterClient client) {
-        return StringUtils.isBlank(criteria) || client.satisfiesFilter(criteria);
+        return StringUtils.isBlank(filter) || client.satisfiesFilter(filter);
     }
 }

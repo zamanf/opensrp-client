@@ -2,11 +2,21 @@ package org.ei.opensrp.repository;
 
 import android.test.AndroidTestCase;
 import android.test.RenamingDelegatingContext;
-import org.ei.opensrp.domain.*;
+
 import org.ei.drishti.dto.AlertStatus;
+import org.ei.opensrp.domain.Alert;
+import org.ei.opensrp.domain.Child;
+import org.ei.opensrp.domain.EligibleCouple;
+import org.ei.opensrp.domain.Mother;
+import org.ei.opensrp.domain.TimelineEvent;
 import org.ei.opensrp.util.Session;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static org.ei.opensrp.util.EasyMap.create;
