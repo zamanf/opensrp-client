@@ -375,7 +375,7 @@ public class CRVSChildSmartRegisterFragment extends SecuredNativeSmartRegisterCu
                 "Else alerts.status END ASC";
     }
     public String childMainSelectWithJoins(){
-        return "Select crvschild.id as _id,crvschild.relationalid,crvschild.details,crvschild.name_english \n" +
+        return "Select crvschild.id as _id,crvschild.relationalid,crvschild.details,crvschild.name_english,crvschild.mother_name_english,crvschild.father_name_english,crvschild.child_dob \n" +
                 "from mcarechild\n";
     }
     public String childMainCountWithJoins() {
