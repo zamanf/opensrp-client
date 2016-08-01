@@ -18,7 +18,7 @@ android {
     buildToolsVersion androidBuildToolsVersion
 
     defaultConfig {
-        applicationId "org.ei.opensrp.crvs"
+        applicationId "com.opensrp.crvs"
         minSdkVersion 16
         targetSdkVersion 21
 

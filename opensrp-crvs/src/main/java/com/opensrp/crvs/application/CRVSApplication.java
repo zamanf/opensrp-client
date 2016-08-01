@@ -3,10 +3,11 @@ package com.opensrp.crvs.application;
 import android.content.Intent;
 import android.content.res.Configuration;
 
+import com.opensrp.crvs.LoginActivity;
+
 import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
 import org.ei.opensrp.Context;
-import org.ei.opensrp.mcare.LoginActivity;
 import org.ei.opensrp.sync.DrishtiSyncScheduler;
 import org.ei.opensrp.view.activity.DrishtiApplication;
 import org.ei.opensrp.view.receiver.SyncBroadcastReceiver;

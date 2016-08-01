@@ -1,0 +1,93 @@
+{
+  "form_data_definition_version": "1",
+  "form": {
+    "default_bind_path": "/model/instance/ChildRegistration.xls",
+    "bind_type": "child",
+    "fields": [
+      {
+        "name": "id",
+        "shouldLoadValue": true
+      },
+      {
+        "name": "start",
+        "bind": "/model/instance/ChildRegistration.xls/start"
+      },
+      {
+        "name": "today",
+        "bind": "/model/instance/ChildRegistration.xls/today"
+      },
+      {
+        "name": "child_nid",
+        "bind": "/model/instance/ChildRegistration.xls/child_nid"
+      },
+      {
+        "name": "name_english",
+        "bind": "/model/instance/ChildRegistration.xls/name_english"
+      },
+      {
+        "name": "name_bengali",
+        "bind": "/model/instance/ChildRegistration.xls/name_bengali"
+      },
+      {
+        "name": "father_nid",
+        "bind": "/model/instance/ChildRegistration.xls/Father_Information/father_nid"
+      },
+      {
+        "name": "father_name_english",
+        "bind": "/model/instance/ChildRegistration.xls/Father_Information/father_name_english"
+      },
+      {
+        "name": "father_name_bengali",
+        "bind": "/model/instance/ChildRegistration.xls/Father_Information/father_name_bengali"
+      },
+      {
+        "name": "father_dob",
+        "bind": "/model/instance/ChildRegistration.xls/Father_Information/father_dob"
+      },
+      {
+        "name": "mother_nid",
+        "bind": "/model/instance/ChildRegistration.xls/Mother_Information/mother_nid"
+      },
+      {
+        "name": "mother_name_english",
+        "bind": "/model/instance/ChildRegistration.xls/Mother_Information/mother_name_english"
+      },
+      {
+        "name": "mother_name_bengali",
+        "bind": "/model/instance/ChildRegistration.xls/Mother_Information/mother_name_bengali"
+      },
+      {
+        "name": "mother_dob",
+        "bind": "/model/instance/ChildRegistration.xls/Mother_Information/mother_dob"
+      },
+      {
+        "name": "child_dob",
+        "bind": "/model/instance/ChildRegistration.xls/child_dob"
+      },
+      {
+        "name": "place_of_birth",
+        "bind": "/model/instance/ChildRegistration.xls/place_of_birth"
+      },
+      {
+        "name": "nationality",
+        "bind": "/model/instance/ChildRegistration.xls/nationality"
+      },
+      {
+        "name": "gender",
+        "bind": "/model/instance/ChildRegistration.xls/gender"
+      },
+      {
+        "name": "present_address",
+        "bind": "/model/instance/ChildRegistration.xls/present_address"
+      },
+      {
+        "name": "permanent_address",
+        "bind": "/model/instance/ChildRegistration.xls/permanent_address"
+      },
+      {
+        "name": "end",
+        "bind": "/model/instance/ChildRegistration.xls/end"
+      }
+    ]
+  }
+}

@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.InputType;
@@ -50,6 +51,7 @@ import static org.ei.opensrp.domain.LoginResponse.UNKNOWN_RESPONSE;
 import static org.ei.opensrp.util.Log.logError;
 import static org.ei.opensrp.util.Log.logVerbose;
 
+
 public class LoginActivity extends Activity {
     private Context context;
     private EditText userNameEditText;
@@ -73,14 +75,14 @@ public class LoginActivity extends Activity {
             Resources res = Context.getInstance().applicationContext().getResources();
             // Change locale settings in the app.
             DisplayMetrics dm = res.getDisplayMetrics();
-            android.content.res.Configuration conf = res.getConfiguration();
+            Configuration conf = res.getConfiguration();
             conf.locale = new Locale(preferredLocale);
             res.updateConfiguration(conf, dm);
         }catch(Exception e){
 
         }
         setContentView(org.ei.opensrp.R.layout.login);
-        ImageView loginglogo = (ImageView)findViewById(R.id.login_logo);
+        ImageView loginglogo = (ImageView)findViewById(org.ei.opensrp.R.id.login_logo);
         loginglogo.setImageDrawable(getResources().getDrawable(R.mipmap.login_logo));
         context = Context.getInstance().updateApplicationContext(this.getApplicationContext());
         initializeLoginFields();
@@ -89,7 +91,7 @@ public class LoginActivity extends Activity {
         initializeProgressDialog();
         getActionBar().setTitle("");
         getActionBar().setIcon(getResources().getDrawable(R.mipmap.login_header_logo));
-        getActionBar().setBackgroundDrawable(getResources().getDrawable(org.ei.opensrp.mcare.R.color.action_bar_background));
+        getActionBar().setBackgroundDrawable(getResources().getDrawable(com.opensrp.crvs.R.color.action_bar_background));
         setLanguage();
 
     }

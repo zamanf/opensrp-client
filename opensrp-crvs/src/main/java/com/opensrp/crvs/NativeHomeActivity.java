@@ -16,20 +16,6 @@ import org.ei.opensrp.commonregistry.CommonPersonObjectController;
 import org.ei.opensrp.commonregistry.ControllerFilterMap;
 import org.ei.opensrp.cursoradapter.SmartRegisterQueryBuilder;
 import org.ei.opensrp.event.Listener;
-import org.ei.opensrp.mcare.anc.anc1handler;
-import org.ei.opensrp.mcare.anc.anc2handler;
-import org.ei.opensrp.mcare.anc.anc3handler;
-import org.ei.opensrp.mcare.anc.anc4handler;
-import org.ei.opensrp.mcare.anc.nbnfhandler;
-import org.ei.opensrp.mcare.child.encc1handler;
-import org.ei.opensrp.mcare.child.encc2handler;
-import org.ei.opensrp.mcare.child.encc3handler;
-import org.ei.opensrp.mcare.elco.PSRFHandler;
-import org.ei.opensrp.mcare.household.CensusEnrollmentHandler;
-import org.ei.opensrp.mcare.household.tutorial.tutorialCircleViewFlow;
-import org.ei.opensrp.mcare.pnc.pnc1handler;
-import org.ei.opensrp.mcare.pnc.pnc2handler;
-import org.ei.opensrp.mcare.pnc.pnc3handler;
 import org.ei.opensrp.service.PendingFormSubmissionService;
 import org.ei.opensrp.sync.SyncAfterFetchListener;
 import org.ei.opensrp.sync.SyncProgressIndicator;
@@ -111,38 +97,25 @@ public class NativeHomeActivity extends SecuredActivity {
         initialize();
         DisplayFormFragment.formInputErrorMessage = getResources().getString(R.string.forminputerror);
         DisplayFormFragment.okMessage = getResources().getString(R.string.okforminputerror);
-        context.formSubmissionRouter().getHandlerMap().put("census_enrollment_form", new CensusEnrollmentHandler());
-        context.formSubmissionRouter().getHandlerMap().put("psrf_form", new PSRFHandler());
-        context.formSubmissionRouter().getHandlerMap().put("anc_reminder_visit_1", new anc1handler());
-        context.formSubmissionRouter().getHandlerMap().put("anc_reminder_visit_2", new anc2handler());
-        context.formSubmissionRouter().getHandlerMap().put("anc_reminder_visit_3", new anc3handler());
-        context.formSubmissionRouter().getHandlerMap().put("anc_reminder_visit_4", new anc4handler());
-        context.formSubmissionRouter().getHandlerMap().put("pnc_reminder_visit_1", new pnc1handler());
-        context.formSubmissionRouter().getHandlerMap().put("pnc_reminder_visit_2", new pnc2handler());
-        context.formSubmissionRouter().getHandlerMap().put("pnc_reminder_visit_3", new pnc3handler());
-        context.formSubmissionRouter().getHandlerMap().put("encc_visit_1", new encc1handler());
-        context.formSubmissionRouter().getHandlerMap().put("encc_visit_2", new encc2handler());
-        context.formSubmissionRouter().getHandlerMap().put("encc_visit_3", new encc3handler());
 
 
-        context.formSubmissionRouter().getHandlerMap().put("birthnotificationpregnancystatusfollowup", new nbnfhandler());
 
     }
 
     private void setupViews() {
-        findViewById(R.id.btn_ec_register).setOnClickListener(onRegisterStartListener);
-        findViewById(R.id.btn_pnc_register).setOnClickListener(onRegisterStartListener);
-        findViewById(R.id.btn_anc_register).setOnClickListener(onRegisterStartListener);
-        findViewById(R.id.btn_fp_register).setOnClickListener(onRegisterStartListener);
+//        findViewById(R.id.btn_ec_register).setOnClickListener(onRegisterStartListener);
+//        findViewById(R.id.btn_pnc_register).setOnClickListener(onRegisterStartListener);
+//        findViewById(R.id.btn_anc_register).setOnClickListener(onRegisterStartListener);
+//        findViewById(R.id.btn_fp_register).setOnClickListener(onRegisterStartListener);
         findViewById(R.id.btn_child_register).setOnClickListener(onRegisterStartListener);
 
         findViewById(R.id.btn_reporting).setOnClickListener(onButtonsClickListener);
         findViewById(R.id.btn_videos).setOnClickListener(onButtonsClickListener);
-
-        ecRegisterClientCountView = (TextView) findViewById(R.id.txt_ec_register_client_count);
-        pncRegisterClientCountView = (TextView) findViewById(R.id.txt_pnc_register_client_count);
-        ancRegisterClientCountView = (TextView) findViewById(R.id.txt_anc_register_client_count);
-        fpRegisterClientCountView = (TextView) findViewById(R.id.txt_fp_register_client_count);
+//
+//        ecRegisterClientCountView = (TextView) findViewById(R.id.txt_ec_register_client_count);
+//        pncRegisterClientCountView = (TextView) findViewById(R.id.txt_pnc_register_client_count);
+//        ancRegisterClientCountView = (TextView) findViewById(R.id.txt_anc_register_client_count);
+//        fpRegisterClientCountView = (TextView) findViewById(R.id.txt_fp_register_client_count);
         childRegisterClientCountView = (TextView) findViewById(R.id.txt_child_register_client_count);
     }
 
@@ -153,8 +126,8 @@ public class NativeHomeActivity extends SecuredActivity {
         FORM_SUBMITTED.addListener(onFormSubmittedListener);
         ACTION_HANDLED.addListener(updateANMDetailsListener);
         getSupportActionBar().setTitle("");
-        getSupportActionBar().setIcon(getResources().getDrawable(org.ei.opensrp.mcare.R.mipmap.logo));
-        getSupportActionBar().setLogo(org.ei.opensrp.mcare.R.mipmap.logo);
+        getSupportActionBar().setIcon(getResources().getDrawable(R.mipmap.logo));
+        getSupportActionBar().setLogo(R.mipmap.logo);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         LoginActivity.setLanguage();
@@ -200,10 +173,10 @@ public class NativeHomeActivity extends SecuredActivity {
         childcountcursor.moveToFirst();
         childcount= childcountcursor.getInt(0);
         childcountcursor.close();
-        pncRegisterClientCountView.setText(valueOf(pnccount));
-        ecRegisterClientCountView.setText(valueOf(hhcount));
-        ancRegisterClientCountView.setText(valueOf(anccount));
-        fpRegisterClientCountView.setText(valueOf(elcocount));
+//        pncRegisterClientCountView.setText(valueOf(pnccount));
+//        ecRegisterClientCountView.setText(valueOf(hhcount));
+//        ancRegisterClientCountView.setText(valueOf(anccount));
+//        fpRegisterClientCountView.setText(valueOf(elcocount));
         childRegisterClientCountView.setText(valueOf(childcount));
     }
 
@@ -237,9 +210,9 @@ public class NativeHomeActivity extends SecuredActivity {
                 Toast.makeText(this, "Language preference set to " + newLanguagePreference + ". Please restart the application.", LENGTH_SHORT).show();
                 this.recreate();
                 return true;
-            case R.id.help:
-                startActivity(new Intent(this, tutorialCircleViewFlow.class));
-                return true;
+//            case R.id.help:
+//                startActivity(new Intent(this, tutorialCircleViewFlow.class));
+//                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -290,25 +263,13 @@ public class NativeHomeActivity extends SecuredActivity {
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
-                case R.id.btn_ec_register:
-                    navigationController.startECSmartRegistry();
-                    break;
 
-                case R.id.btn_anc_register:
-                    navigationController.startANCSmartRegistry();
-                    break;
-
-                case R.id.btn_pnc_register:
-                    navigationController.startPNCSmartRegistry();
-                    break;
 
                 case R.id.btn_child_register:
                     navigationController.startChildSmartRegistry();
                     break;
 
-                case R.id.btn_fp_register:
-                    navigationController.startFPSmartRegistry();
-                    break;
+
             }
         }
     };

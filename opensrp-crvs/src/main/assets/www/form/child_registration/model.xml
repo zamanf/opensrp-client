@@ -1,0 +1,36 @@
+<model>
+    <instance>
+        <ChildRegistration.xls encounter_type="Child Registartion" id="ChildRegistration" version="201607270816">
+          <formhub>
+            <uuid/>
+          </formhub>
+          <start openmrs_entity="163137AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" openmrs_entity_parent="concept"/>
+          <today openmrs_entity="163286AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" openmrs_entity_parent="concept"/>
+          <child_nid openmrs_entity="person_attribute" openmrs_entity_id="nid"/>
+          <name_english openmrs_entity="person" openmrs_entity_id="english_name"/>
+          <name_bengali openmrs_entity="person" openmrs_entity_id="bengali_name"/>
+          <Father_Information>
+            <father_nid/>
+            <father_name_english/>
+            <father_name_bengali/>
+            <father_dob/>
+          </Father_Information>
+          <Mother_Information>
+            <mother_nid/>
+            <mother_name_english/>
+            <mother_name_bengali/>
+            <mother_dob/>
+          </Mother_Information>
+          <child_dob openmrs_entity="person" openmrs_entity_id="birthdate"/>
+          <place_of_birth openmrs_entity="person" openmrs_entity_id="placeofbirth"/>
+          <nationality openmrs_entity="person_attribute" openmrs_entity_id="nationality">Banglaeshi</nationality>
+          <gender openmrs_entity="person" openmrs_entity_id="gender"/>
+          <present_address/>
+          <permanent_address/>
+          <end openmrs_entity="163138AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" openmrs_entity_parent="concept"/>
+          <meta>
+            <instanceID/>
+          </meta>
+        </ChildRegistration.xls>
+      </instance>
+  </model>
