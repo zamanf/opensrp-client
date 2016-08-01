@@ -403,9 +403,13 @@
     <string name="launch_mis_census_form">MIS Census</string>
     <string name="pregnancy_outcome">Pregnancy Outcome</string>
     <string name="pnc_typeofdelivery">Type of Delivery</string>
-    <string name="date_of_birth">Date of Birth</string>
+    <string name="date_of_birth">DATE OF BIRTH</string>
     <string name="child_details_mothers_name_label">Mother\'s Name:</string>
     <string name="pnc_Details_date_of_outcome">Date of Outcome</string>
+    <string name="childregister">Child Register</string>
+    <string name="member_name">MEMBER NAMES</string>
+    <string name="place_of_birth">PLACE OF BIRTH</string>
+    <string name="nid">NID</string>
 
 
 </resources>

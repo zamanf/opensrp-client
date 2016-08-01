@@ -20,7 +20,7 @@ public class McareNavigationController extends org.ei.opensrp.view.controller.Na
     }
 
     public void startChildSmartRegistry() {
-//        activity.startActivity(new Intent(activity, mCareChildSmartRegisterActivity.class));
+//        activity.startActivity(new Intent(activity, CRVSChildSmartRegisterActivity.class));
     }
 
 
