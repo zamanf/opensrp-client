@@ -15,12 +15,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.opensrp.crvs.R;
+
 import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.AllCommonsRepository;
 import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.domain.Alert;
-import org.ei.opensrp.mcare.R;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,8 +34,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import util.ImageCache;
-import util.ImageFetcher;
 
 import static org.ei.opensrp.util.StringUtil.humanize;
 
@@ -50,7 +49,6 @@ public class ChildDetailActivity extends Activity {
     private static int mImageThumbSize;
     private static int mImageThumbSpacing;
 
-    private static ImageFetcher mImageFetcher;
 
 
 
@@ -63,15 +61,25 @@ public class ChildDetailActivity extends Activity {
         super.onCreate(savedInstanceState);
         Context context = Context.getInstance();
         setContentView(R.layout.child_detail_activity);
-        TextView name = (TextView) findViewById(R.id.childid);
-        TextView fathersname = (TextView) findViewById(R.id.fathersname);
-        TextView mothersname = (TextView) findViewById(R.id.mothersname);
+        TextView name = (TextView) findViewById(R.id.name_english);
+        TextView nameinbengali = (TextView) findViewById(R.id.name_in_bengali);
+        TextView dob = (TextView) findViewById(R.id.dob);
+        TextView nid = (TextView) findViewById(R.id.nid);
+        TextView nationality = (TextView) findViewById(R.id.nationality);
+        TextView placeofbirth = (TextView) findViewById(R.id.placeofbirth);
+        TextView presentaddress = (TextView) findViewById(R.id.presentaddress);
+        TextView permanentaddress = (TextView) findViewById(R.id.permanentaddress);
 
-        TextView age = (TextView) findViewById(R.id.age);
-        TextView jivitahhid = (TextView) findViewById(R.id.jivitahhid);
-        TextView godhhid = (TextView) findViewById(R.id.gobhhid);
-        TextView village = (TextView) findViewById(R.id.village);
-        TextView TypeOfDelivery = (TextView) findViewById(R.id.preganancy_type_of_delivery);
+        TextView father_name = (TextView) findViewById(R.id.father_name_english);
+        TextView father_name_bengali = (TextView) findViewById(R.id.father_name_bengali);
+        TextView father_dob = (TextView) findViewById(R.id.father_dob);
+        TextView father_nid = (TextView) findViewById(R.id.father_nid);
+        TextView mother_name = (TextView) findViewById(R.id.mother_name_english);
+        TextView mother_name_bengali = (TextView) findViewById(R.id.mother_name_bengali);
+        TextView mother_dob = (TextView) findViewById(R.id.mother_dob);
+        TextView mother_nid = (TextView) findViewById(R.id.mother_nid);
+
+
 
         ImageButton back = (ImageButton) findViewById(org.ei.opensrp.R.id.btn_back_to_home);
         back.setOnClickListener(new View.OnClickListener() {
@@ -81,43 +89,14 @@ public class ChildDetailActivity extends Activity {
             }
         });
 
-        AllCommonsRepository allchildRepository = Context.getInstance().allCommonsRepositoryobjects("mcarechild");
-        CommonPersonObject childobject = allchildRepository.findByCaseID(ChildClient.entityId());
-        AllCommonsRepository motherrep = Context.getInstance().allCommonsRepositoryobjects("mcaremother");
-        final CommonPersonObject mcaremotherObject = motherrep.findByCaseID(childobject.getRelationalId());
-
 
         name.setText(humanize((ChildClient.getDetails().get("FWBNFCHILDNAME") != null ? ChildClient.getDetails().get("FWBNFCHILDNAME") : "").replace("+", "_")));
-        fathersname.setText(Html.fromHtml(getString(R.string.child_details_fathers_name_label) + "<b> " + humanize((mcaremotherObject.getDetails().get("FWHUSNAME") != null ? mcaremotherObject.getDetails().get("FWHUSNAME") : "")) + "</b>"));
-        mothersname.setText(Html.fromHtml(getString(R.string.child_details_mothers_name_label) +"<b> "+ humanize((mcaremotherObject.getColumnmaps().get("FWWOMFNAME") != null ? mcaremotherObject.getColumnmaps().get("FWWOMFNAME") : ""))+ "</b>"));
-
-        age.setText(Html.fromHtml(getString(R.string.elco_age_label) +"<b> "+ age(ChildClient) + " days "+ "</b>"));
-        godhhid.setText(Html.fromHtml(getString(R.string.hhid_gob_elco_label) +"<b> "+ (mcaremotherObject.getColumnmaps().get("GOBHHID")!=null?mcaremotherObject.getColumnmaps().get("GOBHHID"):"")+ "</b>"));
-        jivitahhid.setText(Html.fromHtml(getString(R.string.hhiid_jivita_elco_label)+"<b> "+(mcaremotherObject.getColumnmaps().get("JiVitAHHID")!=null?mcaremotherObject.getColumnmaps().get("JiVitAHHID"):"")+ "</b>"));
-        village.setText(Html.fromHtml(getString(R.string.elco_details_mauza) + "<b> " + humanize((mcaremotherObject.getDetails().get("mauza") != null ? mcaremotherObject.getDetails().get("mauza") : "").replace("+", "_"))+ "</b>"));
-        String type_of_delivery = mcaremotherObject.getDetails().get("FWPNC1DELTYPE") != null ? mcaremotherObject.getDetails().get("FWPNC1DELTYPE") : "";
-        if (type_of_delivery.equalsIgnoreCase("1")){
-            TypeOfDelivery.setText(getString(R.string.norma_birth));
-        } else if (type_of_delivery.equalsIgnoreCase("2")){
-            TypeOfDelivery.setText(getString(R.string.Caeserian_section));
-        }else{
-            TypeOfDelivery.setText(getString(R.string.dont_know));
-        }
+        
 
 
 
 
 
-       checkEncc1view(ChildClient);
-       checkEncc2view(ChildClient);
-        checkEncc3view(ChildClient);
-//        checktempView(ChildClient);
-       doolay(ChildClient);
-//        final ImageView householdview = (ImageView) findViewById(R.id.householdprofileview);
-//
-//        if (ChildClient.getDetails().get("profilepic") != null) {
-//            setImagetoHolder(ChildDetailActivity.this, ChildClient.getDetails().get("profilepic"), householdview, R.mipmap.woman_placeholder);
-//        }
 
 
 
@@ -140,134 +119,6 @@ public class ChildDetailActivity extends Activity {
         } catch (ParseException e) {
             e.printStackTrace();
             return null;
-        }
-
-    }
-    private void doolay(CommonPersonObjectClient ancclient) {
-
-        TextView edd = (TextView)findViewById(R.id.date_of_outcome);
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            Date edd_date = format.parse(ancclient.getDetails().get("FWBNFDOB")!=null?ancclient.getDetails().get("FWBNFDOB"):"");
-            GregorianCalendar calendar = new GregorianCalendar();
-            calendar.setTime(edd_date);
-            edd_date.setTime(calendar.getTime().getTime());
-            edd.setText(format.format(edd_date));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    private void pregnancyin2years(CommonPersonObject ecclient) {
-        String text = ecclient.getDetails().get("FWPSRPREGTWYRS")!=null?ecclient.getDetails().get("FWPSRPREGTWYRS"):"0";
-        TextView stillbirth = (TextView)findViewById(R.id.history_of_mr);
-        stillbirth.setText(text);
-    }
-
-    private void historyofsb(CommonPersonObject ecclient) {
-        String text = ecclient.getDetails().get("FWPSRPRSB")!=null?ecclient.getDetails().get("FWPSRPRSB"):"0";
-        TextView stillbirth = (TextView)findViewById(R.id.history_of_mr);
-        stillbirth.setText(text);
-    }
-
-    private void historyofmr(CommonPersonObject ecclient) {
-        String text = ecclient.getDetails().get("FWPSRPRMC")!=null?ecclient.getDetails().get("FWPSRPRMC"):"0";
-        TextView stillbirth = (TextView)findViewById(R.id.history_of_mr);
-        stillbirth.setText(text);
-
-    }
-
-    private void numberofstillbirthview(CommonPersonObject ecclient) {
-        String text = ecclient.getDetails().get("FWPSRNBDTH")!=null?ecclient.getDetails().get("FWPSRNBDTH"):"0";
-        TextView stillbirth = (TextView)findViewById(R.id.preganancy_type_of_delivery);
-        stillbirth.setText(text);
-    }
-
-    private void numberofChildrenView(CommonPersonObject ecclient) {
-        String text = ecclient.getDetails().get("FWPSRTOTBIRTH")!=null?ecclient.getDetails().get("FWPSRTOTBIRTH"):"0";
-        TextView numberofChildren = (TextView)findViewById(R.id.livechildren);
-        numberofChildren.setText(text);
-
-    }
-    private void checktempView(CommonPersonObjectClient ecclient) {
-        LinearLayout templayout = (LinearLayout)findViewById(R.id.temperature_layout);
-        TextView anc1date = (TextView)findViewById(R.id.temperature);
-        List<Alert> alertlist = Context.getInstance().alertService().findByEntityIdAndAlertNames(ecclient.entityId(), "ancrv_4");
-        if(ecclient.getDetails().get("FWPNC3TEMP")!=null){
-            anc1date.setText(ecclient.getDetails().get("FWPNC3TEMP")!=null?ecclient.getDetails().get("FWPNC3TEMP"):"");
-        }else if(ecclient.getDetails().get("FWPNC2TEMP")!=null){
-            anc1date.setText(ecclient.getDetails().get("FWPNC2TEMP")!=null?ecclient.getDetails().get("FWPNC2TEMP"):"");
-        }else if(ecclient.getDetails().get("FWPNC1TEMP")!=null){
-            anc1date.setText(ecclient.getDetails().get("FWPNC1TEMP")!=null?ecclient.getDetails().get("FWPNC1TEMP"):"");
-        }else{
-            templayout.setVisibility(View.GONE);
-        }
-
-    }
-    private void checkEncc3view(CommonPersonObjectClient ecclient) {
-        LinearLayout anc1layout = (LinearLayout)findViewById(R.id.encc3_layout);
-        List<Alert> alertlist = Context.getInstance().alertService().findByEntityIdAndAlertNames(ecclient.entityId(), "enccrv_3");
-        if(alertlist.size()!=0 && ecclient.getDetails().get("FWENC3DATE")!=null){
-//            alerttextstatus = setAlertStatus("ANC1",alertlist);
-            for(int i = 0;i<alertlist.size();i++){
-                String status = alertlist.get(i).status().value();
-                String text = ecclient.getDetails().get("FWENC3DATE")!=null?ecclient.getDetails().get("FWENC3DATE"):"";
-                TextView encc3date = (TextView)findViewById(R.id.encc3date);
-                if((ecclient.getDetails().get("encc3_current_formStatus")!=null?ecclient.getDetails().get("encc3_current_formStatus"):"").equalsIgnoreCase("upcoming")){
-                    encc3date.setTextColor(getResources().getColor(R.color.alert_complete_green));
-                }else if((ecclient.getDetails().get("encc3_current_formStatus")!=null?ecclient.getDetails().get("encc3_current_formStatus"):"").equalsIgnoreCase("urgent")){
-                    encc3date.setTextColor(getResources().getColor(R.color.alert_urgent_red));
-                }
-                encc3date.setText(text);
-
-            }
-        }else{
-            anc1layout.setVisibility(View.GONE);
-        }
-    }
-
-    private void checkEncc2view(CommonPersonObjectClient ecclient) {
-        LinearLayout encc2layout = (LinearLayout)findViewById(R.id.encc2_layout);
-        List<Alert> alertlist = Context.getInstance().alertService().findByEntityIdAndAlertNames(ecclient.entityId(), "enccrv_2");
-        if(alertlist.size()!=0 && ecclient.getDetails().get("FWENC2DATE")!=null){
-//            alerttextstatus = setAlertStatus("ANC1",alertlist);
-            for(int i = 0;i<alertlist.size();i++){
-                String status = alertlist.get(i).status().value();
-                String text = ecclient.getDetails().get("FWENC2DATE")!=null?ecclient.getDetails().get("FWENC2DATE"):"";
-                TextView encc2date = (TextView)findViewById(R.id.encc2date);
-                if((ecclient.getDetails().get("encc2_current_formStatus")!=null?ecclient.getDetails().get("encc2_current_formStatus"):"").equalsIgnoreCase("upcoming")){
-                    encc2date.setTextColor(getResources().getColor(R.color.alert_complete_green));
-                }else if((ecclient.getDetails().get("encc2_current_formStatus")!=null?ecclient.getDetails().get("encc2_current_formStatus"):"").equalsIgnoreCase("urgent")){
-                    encc2date.setTextColor(getResources().getColor(R.color.alert_urgent_red));
-                }
-                encc2date.setText(text);
-
-            }
-        }else{
-            encc2layout.setVisibility(View.GONE);
-        }
-    }
-
-    private void checkEncc1view(CommonPersonObjectClient ecclient) {
-        LinearLayout anc1layout = (LinearLayout)findViewById(R.id.encc1_layout);
-        List<Alert> alertlist = Context.getInstance().alertService().findByEntityIdAndAlertNames(ecclient.entityId(), "enccrv_1");
-        if(alertlist.size()!=0 && ecclient.getDetails().get("FWENC1DATE")!=null){
-//            alerttextstatus = setAlertStatus("ANC1",alertlist);
-            for(int i = 0;i<alertlist.size();i++){
-                String status = alertlist.get(i).status().value();
-                String text = ecclient.getDetails().get("FWENC1DATE")!=null?ecclient.getDetails().get("FWENC1DATE"):"";
-                TextView encc1date = (TextView)findViewById(R.id.encc1date);
-                if((ecclient.getDetails().get("encc1_current_formStatus")!=null?ecclient.getDetails().get("encc1_current_formStatus"):"").equalsIgnoreCase("upcoming")){
-                    encc1date.setTextColor(getResources().getColor(R.color.alert_complete_green));
-                }else if((ecclient.getDetails().get("encc1_current_formStatus")!=null?ecclient.getDetails().get("encc1_current_formStatus"):"").equalsIgnoreCase("urgent")){
-                    encc1date.setTextColor(getResources().getColor(R.color.alert_urgent_red));
-                }
-                encc1date.setText(text);
-
-            }
-        }else{
-            anc1layout.setVisibility(View.GONE);
         }
 
     }
@@ -343,14 +194,14 @@ public class ChildDetailActivity extends Activity {
         mImageThumbSpacing = Context.getInstance().applicationContext().getResources().getDimensionPixelSize(R.dimen.image_thumbnail_spacing);
 
 
-        ImageCache.ImageCacheParams cacheParams =
-                new ImageCache.ImageCacheParams(activity, IMAGE_CACHE_DIR);
-             cacheParams.setMemCacheSizePercent(0.50f); // Set memory cache to 25% of app memory
-        mImageFetcher = new ImageFetcher(activity, mImageThumbSize);
-        mImageFetcher.setLoadingImage(placeholder);
-        mImageFetcher.addImageCache(activity.getFragmentManager(), cacheParams);
-//        Toast.makeText(activity,file,Toast.LENGTH_LONG).show();
-        mImageFetcher.loadImage("file:///"+file,view);
+//        ImageCache.ImageCacheParams cacheParams =
+//                new ImageCache.ImageCacheParams(activity, IMAGE_CACHE_DIR);
+//             cacheParams.setMemCacheSizePercent(0.50f); // Set memory cache to 25% of app memory
+//        mImageFetcher = new ImageFetcher(activity, mImageThumbSize);
+//        mImageFetcher.setLoadingImage(placeholder);
+//        mImageFetcher.addImageCache(activity.getFragmentManager(), cacheParams);
+////        Toast.makeText(activity,file,Toast.LENGTH_LONG).show();
+//        mImageFetcher.loadImage("file:///"+file,view);
 
 //        Uri.parse(new File("/sdcard/cats.jpg")
 

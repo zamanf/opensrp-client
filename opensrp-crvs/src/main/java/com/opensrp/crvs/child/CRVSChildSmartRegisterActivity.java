@@ -133,6 +133,7 @@ public class CRVSChildSmartRegisterActivity extends SecuredNativeSmartRegisterAc
 
     @Override
     public void startRegistration() {
+
     }
     @Override
     public void showFragmentDialog(DialogOptionModel dialogOptionModel, Object tag) {
@@ -145,26 +146,10 @@ public class CRVSChildSmartRegisterActivity extends SecuredNativeSmartRegisterAc
     }
 
 
-    public DialogOption[] getEditOptionsforChild(String visittext,String alertstatus) {
-        String ancvisittext = "Not Synced";
-        String ancalertstatus = alertstatus;
-        ancvisittext = visittext;
+    public DialogOption[] getEditOptionsforChild() {
 
-        HashMap<String,String> overridemap = new HashMap<String,String>();
-
-
-        if (ancvisittext.contains("ENCC3")) {
-            overridemap.put("encc3_current_formStatus", alertstatus);
-            return new DialogOption[]{new OpenFormOption(getResources().getString(R.string.encc3form), "encc_visit_3", formController,overridemap, OpenFormOption.ByColumnAndByDetails.bydefault)};
-        } else if (ancvisittext.contains("ENCC2")) {
-            overridemap.put("encc2_current_formStatus", alertstatus);
-            return new DialogOption[]{new OpenFormOption(getResources().getString(R.string.encc2form), "encc_visit_2", formController,overridemap, OpenFormOption.ByColumnAndByDetails.bydefault)};
-        } else if (ancvisittext.contains("ENCC1")) {
-            overridemap.put("encc1_current_formStatus", alertstatus);
-            return new DialogOption[]{new OpenFormOption(getResources().getString(R.string.encc1form), "encc_visit_1", formController,overridemap, OpenFormOption.ByColumnAndByDetails.bydefault)};
-        }else {
             return new DialogOption[]{};
-        }
+
     }
     private class EditDialogOptionModelForChild implements DialogOptionModel {
         String childvisittext ;
@@ -176,7 +161,7 @@ public class CRVSChildSmartRegisterActivity extends SecuredNativeSmartRegisterAc
 
         @Override
         public DialogOption[] getDialogOptions() {
-            return getEditOptionsforChild(childvisittext,childvisitstatus);
+            return getEditOptionsforChild();
         }
 
         @Override

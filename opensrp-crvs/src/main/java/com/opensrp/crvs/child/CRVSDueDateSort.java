@@ -3,10 +3,11 @@ package com.opensrp.crvs.child;
 
 import android.util.Log;
 
+import com.opensrp.crvs.R;
+
 import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.domain.Alert;
-import org.ei.opensrp.mcare.R;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.contract.SmartRegisterClients;
 import org.ei.opensrp.view.dialog.SortOption;

@@ -153,23 +153,8 @@ public class NativeHomeActivity extends SecuredActivity {
 
     private void updateRegisterCounts(HomeContext homeContext) {
                SmartRegisterQueryBuilder sqb = new SmartRegisterQueryBuilder();
-        Cursor hhcountcursor = context.commonrepository("household").RawCustomQueryForAdapter(sqb.queryForCountOnRegisters("household", "household.FWHOHFNAME NOT Null and household.FWHOHFNAME != ''"));
-        hhcountcursor.moveToFirst();
-        hhcount= hhcountcursor.getInt(0);
-        hhcountcursor.close();
-        Cursor elcocountcursor = context.commonrepository("elco").RawCustomQueryForAdapter(sqb.queryForCountOnRegisters("elco","elco.FWWOMFNAME NOT NULL and elco.FWWOMFNAME !=''  AND elco.details  LIKE '%\"FWELIGIBLE\":\"1\"%'"));
-        elcocountcursor.moveToFirst();
-        elcocount= elcocountcursor.getInt(0);
-        elcocountcursor.close();
-        Cursor anccountcursor = context.commonrepository("mcaremother").RawCustomQueryForAdapter(sqb.queryForCountOnRegisters("mcaremother","(mcaremother.Is_PNC is null or mcaremother.Is_PNC = '0') and mcaremother.FWWOMFNAME is not NUll  AND mcaremother.FWWOMFNAME != \"\"      AND mcaremother.details  LIKE '%\"FWWOMVALID\":\"1\"%'"));
-        anccountcursor.moveToFirst();
-        anccount= anccountcursor.getInt(0);
-        anccountcursor.close();
-        Cursor pnccountcursor = context.commonrepository("mcaremother").RawCustomQueryForAdapter(sqb.queryForCountOnRegisters("mcaremother","mcaremother.Is_PNC = '1' and mcaremother.FWWOMFNAME is not NUll  AND mcaremother.FWWOMFNAME != \"\"      AND mcaremother.details  LIKE '%\"FWWOMVALID\":\"1\"%'"));
-        pnccountcursor.moveToFirst();
-        pnccount= pnccountcursor.getInt(0);
-        pnccountcursor.close();
-        Cursor childcountcursor = context.commonrepository("mcarechild").RawCustomQueryForAdapter(sqb.queryForCountOnRegisters("mcarechild"," mcarechild.FWBNFGEN is not NUll "));
+
+        Cursor childcountcursor = context.commonrepository("crvschild").RawCustomQueryForAdapter(sqb.queryForCountOnRegisters("crvschild"," crvschild.name_english is not NUll "));
         childcountcursor.moveToFirst();
         childcount= childcountcursor.getInt(0);
         childcountcursor.close();

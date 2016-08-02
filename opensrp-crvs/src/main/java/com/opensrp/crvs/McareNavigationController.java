@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 
 
+import com.opensrp.crvs.child.CRVSChildSmartRegisterActivity;
+
 import org.ei.opensrp.view.controller.ANMController;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
@@ -20,7 +22,7 @@ public class McareNavigationController extends org.ei.opensrp.view.controller.Na
     }
 
     public void startChildSmartRegistry() {
-//        activity.startActivity(new Intent(activity, CRVSChildSmartRegisterActivity.class));
+        activity.startActivity(new Intent(activity, CRVSChildSmartRegisterActivity.class));
     }
 
 

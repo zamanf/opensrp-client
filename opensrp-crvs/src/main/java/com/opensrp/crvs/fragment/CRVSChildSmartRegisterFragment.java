@@ -1,5 +1,7 @@
 package com.opensrp.crvs.fragment;
 
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
@@ -15,7 +17,7 @@ import com.opensrp.crvs.child.CRVSChildServiceModeOption;
 import com.opensrp.crvs.child.CRVSChildSmartClientsProvider;
 import com.opensrp.crvs.child.CRVSChildSmartRegisterActivity;
 import com.opensrp.crvs.child.CRVSDueDateSort;
-import com.opensrp.crvs.child.ChildDetailActivity;
+//import com.opensrp.crvs.child.ChildDetailActivity;
 
 import org.ei.opensrp.Context;
 import org.ei.opensrp.adapter.SmartRegisterPaginatedAdapter;
@@ -64,6 +66,7 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
  */
 public class CRVSChildSmartRegisterFragment extends SecuredNativeSmartRegisterCursorAdapterFragment {
 
+    private String locationDialogTAG = "locationDialogTAG";
     private SmartRegisterClientsProvider clientProvider = null;
     private CommonPersonObjectController controller;
     private VillageController villageController;
@@ -166,8 +169,18 @@ public class CRVSChildSmartRegisterFragment extends SecuredNativeSmartRegisterCu
 
     @Override
     protected void startRegistration() {
-        ((CRVSChildSmartRegisterActivity)getActivity()).startRegistration();
+//        ((CRVSChildSmartRegisterActivity)getActivity()).startRegistration();
+        FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
+        Fragment prev = getActivity().getFragmentManager().findFragmentByTag(locationDialogTAG);
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+        CRVSLocationSelectorDialogFragment
+                .newInstance((CRVSChildSmartRegisterActivity) getActivity(), new EditDialogOptionModelForChild(), context.anmLocationController().get(), "child_registration")
+                .show(ft, locationDialogTAG);
     }
+
 
     @Override
     protected void onCreation() {
@@ -201,8 +214,8 @@ public class CRVSChildSmartRegisterFragment extends SecuredNativeSmartRegisterCu
         updateSearchView();
     }
 
-    private DialogOption[] getEditOptionsforChild(String childvisittext,String childvisitstatus) {
-        return ((CRVSChildSmartRegisterActivity)getActivity()).getEditOptionsforChild(childvisittext, childvisitstatus);
+    private DialogOption[] getEditOptionsforChild() {
+        return ((CRVSChildSmartRegisterActivity)getActivity()).getEditOptionsforChild();
     }
 
 
@@ -212,9 +225,9 @@ public class CRVSChildSmartRegisterFragment extends SecuredNativeSmartRegisterCu
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.profile_info_layout:
-                    ChildDetailActivity.ChildClient = (CommonPersonObjectClient)view.getTag();
-                    Intent intent = new Intent(getActivity(),ChildDetailActivity.class);
-                    startActivity(intent);
+//                    ChildDetailActivity.ChildClient = (CommonPersonObjectClient)view.getTag();
+//                    Intent intent = new Intent(getActivity(),ChildDetailActivity.class);
+//                    startActivity(intent);
                     break;
 //                case R.id.encc_reminder_due_date:
 //                    CustomFontTextView enccreminderDueDate = (CustomFontTextView)view.findViewById(R.id.encc_reminder_due_date);
@@ -230,16 +243,13 @@ public class CRVSChildSmartRegisterFragment extends SecuredNativeSmartRegisterCu
     }
 
     private class EditDialogOptionModelForChild implements DialogOptionModel {
-        String childvisittext ;;
-        String childvisitstatus;
-        public EditDialogOptionModelForChild(String text,String status) {
-            childvisittext = text;
-            childvisitstatus = status;
+
+        public EditDialogOptionModelForChild() {
         }
 
         @Override
         public DialogOption[] getDialogOptions() {
-            return getEditOptionsforChild(childvisittext,childvisitstatus);
+            return getEditOptionsforChild();
         }
 
         @Override
@@ -247,6 +257,8 @@ public class CRVSChildSmartRegisterFragment extends SecuredNativeSmartRegisterCu
             onEditSelection((EditOption) option, (SmartRegisterClient) tag);
         }
     }
+
+
 
 
 
@@ -357,7 +369,7 @@ public class CRVSChildSmartRegisterFragment extends SecuredNativeSmartRegisterCu
 //        Cursor c = commonRepository.CustomQueryForAdapter(new String[]{"id as _id","relationalid","details"},"household",""+currentlimit,""+currentoffset);
         Cursor c = commonRepository.RawCustomQueryForAdapter(queryBUilder.Endquery(queryBUilder.addlimitandOffset(currentquery, 20, 0)));
         CRVSChildSmartClientsProvider hhscp = new CRVSChildSmartClientsProvider(getActivity(),clientActionHandler,context.alertService());
-        clientAdapter = new SmartRegisterPaginatedCursorAdapter(getActivity(), c, hhscp, new CommonRepository("crvschild",new String []{ "name_english"}));
+        clientAdapter = new SmartRegisterPaginatedCursorAdapter(getActivity(), c, hhscp, new CommonRepository("crvschild",new String []{ "name_english", "mother_name_english", "father_name_english","child_dob"}));
         clientsView.setAdapter(clientAdapter);
 //        setServiceModeViewDrawableRight(null);
 //        updateSearchView();
@@ -376,7 +388,7 @@ public class CRVSChildSmartRegisterFragment extends SecuredNativeSmartRegisterCu
     }
     public String childMainSelectWithJoins(){
         return "Select crvschild.id as _id,crvschild.relationalid,crvschild.details,crvschild.name_english,crvschild.mother_name_english,crvschild.father_name_english,crvschild.child_dob \n" +
-                "from mcarechild\n";
+                "from crvschild\n";
     }
     public String childMainCountWithJoins() {
         return "Select Count(*) \n" +

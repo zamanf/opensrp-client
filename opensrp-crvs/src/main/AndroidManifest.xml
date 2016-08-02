@@ -22,6 +22,16 @@
         <activity android:name=".NativeHomeActivity"
             android:theme="@style/AppTheme"
             android:screenOrientation="landscape"/>
+        <activity android:name=".child.CRVSChildSmartRegisterActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@style/AppThemeNoActionBarAndTitle"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".child.ChildDetailActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@style/AppThemeNoActionBarAndTitle"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="landscape"/>
 
     </application>
 

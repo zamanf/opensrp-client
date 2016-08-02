@@ -1,10 +1,10 @@
 [
   {
-    "parent": "household",
+    "parent": "crvschild",
     "child": "elco",
     "field": "wife",
     "kind": "one_to_many",
-    "from": "household.id",
+    "from": "crvschild.id",
     "to": "elco.relationalid"
   },
   {
