@@ -11,8 +11,8 @@
 
             <ImageView
                 android:id="@+id/individual_profilepic"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_margin="5dp"
                 android:src="@drawable/household_profile"
                 android:scaleType="fitXY" />
@@ -44,7 +44,7 @@
             android:id="@+id/memberId"
             android:paddingLeft="40sp"
             android:text="hello"
-            android:textSize="@dimen/household_detail_activity"
+            android:textSize="13sp"
             android:textColor="@color/Black"/>
 
     </LinearLayout>
@@ -67,7 +67,7 @@
             android:id="@+id/memberName"
             android:paddingLeft="13dp"
             android:text="hello"
-            android:textSize="@dimen/household_detail_activity"
+            android:textSize="13sp"
             android:textColor="@color/Black"/>
 
     </LinearLayout>
@@ -99,7 +99,7 @@
             android:id="@+id/memberDate"
             android:text="hello"
             android:paddingLeft="10dp"
-            android:textSize="@dimen/household_detail_activity"
+            android:textSize="13sp"
             android:textColor="@color/Black"/>
 
     </LinearLayout>
@@ -122,7 +122,7 @@
             android:id="@+id/relationship"
             android:text="hello"
             android:paddingLeft="10dp"
-            android:textSize="@dimen/household_detail_activity"
+            android:textSize="13sp"
             android:textColor="@color/Black"/>
 
     </LinearLayout>

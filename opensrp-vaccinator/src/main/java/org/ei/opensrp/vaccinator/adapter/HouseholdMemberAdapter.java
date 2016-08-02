@@ -54,9 +54,6 @@ public class HouseholdMemberAdapter extends ArrayAdapter<HouseholdMemberDetails>
     Button btnFollowup;
     CommonPersonObjectClient client;
 
-
-    public String[] formNames = new String[3];
-
     public HouseholdMemberAdapter(Fragment fragment, Context context, List<HouseholdMemberDetails> list){
         super(context, R.layout.list_individual, list);
         this.fragment = fragment;

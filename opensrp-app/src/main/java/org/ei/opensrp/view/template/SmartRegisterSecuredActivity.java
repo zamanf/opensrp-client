@@ -266,14 +266,15 @@ public abstract class SmartRegisterSecuredActivity extends SecuredActivity {
             @Override
             public void run() {
                 //hack reset the form
-                DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(pageIndex);
-                if (displayFormFragment != null) {
-                    displayFormFragment.hideTranslucentProgressDialog();
-                    displayFormFragment.setFormData(null);
-                    displayFormFragment.setRecordId(null);
-                    displayFormFragment.setFieldOverides(null);
+                if(mProfileFragment == null) {
+                    DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(pageIndex);
+                    if (displayFormFragment != null) {
+                        displayFormFragment.hideTranslucentProgressDialog();
+                        displayFormFragment.setFormData(null);
+                        displayFormFragment.setRecordId(null);
+                        displayFormFragment.setFieldOverides(null);
+                    }
                 }
-
                 mPager.setCurrentItem(0, false);
                 SecuredNativeSmartRegisterFragment registerFragment = (SecuredNativeSmartRegisterFragment) findFragmentByPosition(0);
                 if (registerFragment != null && data != null) {
@@ -306,7 +307,8 @@ public abstract class SmartRegisterSecuredActivity extends SecuredActivity {
             super.onBackPressed(); // allow back key only if we are
         }
         else if(mProfileFragment != null){
-            mPager.setCurrentItem(0, false);
+            //mPager.setCurrentItem(0, false);
+            switchToBaseFragment(null, 0);
         }
         else  {
             new AlertDialog.Builder(this)

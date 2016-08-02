@@ -198,7 +198,7 @@ public class HouseholdSmartRegisterFragment extends SmartClientRegisterGroupFrag
 
                         layout.setOrientation(LinearLayout.HORIZONTAL);
                         TextView memberCodeQuestion = new TextView(getActivity());
-                        memberCodeQuestion.setText("Have you ever been registered in any other OpenSRP program and have card?");
+                        memberCodeQuestion.setText("Have you ever been registered in any other OpenSRP program and assigned a QR code?");
                         memberCodeQuestion.setTextSize(20);
                         layout.addView(memberCodeQuestion);
 

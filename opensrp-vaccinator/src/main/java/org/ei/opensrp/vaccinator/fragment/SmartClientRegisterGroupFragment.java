@@ -96,7 +96,7 @@ public abstract class SmartClientRegisterGroupFragment extends SecuredNativeSmar
             public DialogOption[] sortingOptions() {
                 return new DialogOption[]{
                         new CursorCommonObjectSort(getResources().getString(R.string.household_alphabetical_sort), "first_name_hhh"),
-                        new DateSort("Age", "dob_hhh"),
+                        new DateSort("Age", "calc_dob_hhh"),
                        // new StatusSort("Due Status"),
                         new CursorCommonObjectSort(getResources().getString(R.string.id_sort), "existing_household_id")
                 };

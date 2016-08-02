@@ -1,12 +1,15 @@
 package org.ei.opensrp.vaccinator.household;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TableLayout;
@@ -20,6 +23,7 @@ import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.util.StringUtil;
 import org.ei.opensrp.vaccinator.R;
 import org.ei.opensrp.vaccinator.adapter.HouseholdMemberAdapter;
+import org.ei.opensrp.vaccinator.child.ChildSmartRegisterActivity;
 import org.ei.opensrp.view.fragment.SecuredFragment;
 import org.joda.time.DateTime;
 import org.joda.time.Years;
@@ -76,6 +80,17 @@ public class HouseholdDetailFragment extends SecuredFragment {
         ((TextView)  mView.findViewById(org.ei.opensrp.R.id.details_id_label)).setText(getValue(householdClient.getColumnmaps(), "existing_household_id", true));
 
         ((TextView)  mView.findViewById(org.ei.opensrp.R.id.detail_today)).setText(convertDateFormat(new SimpleDateFormat("yyyy-MM-dd").format(new Date()), true));
+
+        ImageButton back = (ImageButton) mView.findViewById(org.ei.opensrp.R.id.btn_back_to_home);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /*Intent intent = new Intent(getActivity(), HouseholdSmartRegisterActivity.class);
+                getActivity().startActivity(intent);*/
+                getActivity().onBackPressed();
+            }
+        });
+
         TableLayout dt = (TableLayout) mView.findViewById(R.id.household_detail_info_table1);
         dt.removeAllViews();
         android.content.Context context = getActivity().getApplicationContext();
@@ -152,8 +167,8 @@ public class HouseholdDetailFragment extends SecuredFragment {
 
 
             member.setMemberId(getValue(individual.getColumnmaps(), "person_id", false));
-            member.setMemberName(StringUtils.capitalize(getValue(individual.getColumnmaps(), "first_name", false)) + " " + StringUtils.capitalize(getValue(individual.getDetails(), "last_name", false)));
-            member.setMemberRelationWithHousehold(getValue(individual.getColumnmaps(), "relationship", false));
+            member.setMemberName(StringUtils.capitalize(getValue(individual.getColumnmaps(), "first_name", false)) + " " + StringUtils.capitalize(getValue(individual.getColumnmaps(), "last_name", false)));
+            member.setMemberRelationWithHousehold(StringUtils.upperCase(getValue(individual.getColumnmaps(), "relationship", true)));
             member.setMemberAge(convertDateFormat(getValue(individual.getDetails(), "calc_dob_confirm", false), true) + " (" + memberAge + " years)");
 
 

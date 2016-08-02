@@ -97,7 +97,7 @@
     <string name="register">Register</string>
     <string name="household_member_dob">DOB(Age):</string>
     <string name="gender">Gender</string>
-    <string name="contactNumber">Contact Phone Number</string>
+    <string name="contactNumber">Contact Number</string>
     <string name="household_profile_members">Number of Members</string>
     <string name="household_water">Source of Drinking Water</string>
     <string name="household_latrine">Latrine System</string>

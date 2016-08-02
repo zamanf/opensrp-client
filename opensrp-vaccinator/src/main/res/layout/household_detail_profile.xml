@@ -40,7 +40,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingLeft="50sp">
 
         <ImageView
             android:layout_width="@dimen/client_profile_pic_width"
