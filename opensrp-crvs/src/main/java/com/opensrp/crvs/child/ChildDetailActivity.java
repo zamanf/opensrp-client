@@ -90,8 +90,24 @@ public class ChildDetailActivity extends Activity {
         });
 
 
-        name.setText(humanize((ChildClient.getDetails().get("FWBNFCHILDNAME") != null ? ChildClient.getDetails().get("FWBNFCHILDNAME") : "").replace("+", "_")));
-        
+        name.setText(humanize((ChildClient.getColumnmaps().get("name_english") != null ? ChildClient.getColumnmaps().get("name_english") : "").replace("+", "_")));
+        nameinbengali.setText(humanize((ChildClient.getDetails().get("name_bengali") != null ? ChildClient.getDetails().get("name_bengali") : "").replace("+", "_")));
+        dob.setText(((ChildClient.getColumnmaps().get("child_dob") != null ? ChildClient.getColumnmaps().get("child_dob") : "").replace("+", "_")));
+        nid.setText(((ChildClient.getDetails().get("child_nid") != null ? ChildClient.getDetails().get("child_nid") : "").replace("+", "_")));
+        nationality.setText(((ChildClient.getDetails().get("nationality") != null ? ChildClient.getDetails().get("nationality") : "").replace("+", "_")));
+        placeofbirth.setText(humanize((ChildClient.getDetails().get("place_of_birth") != null ? ChildClient.getDetails().get("place_of_birth") : "").replace("+", "_")));
+        presentaddress.setText(humanize((ChildClient.getDetails().get("present_address") != null ? ChildClient.getDetails().get("present_address") : "").replace("+", "_")));
+        permanentaddress.setText(humanize((ChildClient.getDetails().get("permanent_address") != null ? ChildClient.getDetails().get("permanent_address") : "").replace("+", "_")));
+
+        father_name.setText(humanize((ChildClient.getColumnmaps().get("father_name_english") != null ? ChildClient.getColumnmaps().get("father_name_english") : "").replace("+", "_")));
+        father_name_bengali.setText(humanize((ChildClient.getDetails().get("father_name_bengali") != null ? ChildClient.getDetails().get("father_name_bengali") : "").replace("+", "_")));
+        father_dob.setText(((ChildClient.getDetails().get("father_dob") != null ? ChildClient.getDetails().get("father_dob") : "").replace("+", "_")));
+        father_nid.setText(((ChildClient.getDetails().get("father_nid") != null ? ChildClient.getDetails().get("father_nid") : "").replace("+", "_")));
+        mother_name.setText(humanize((ChildClient.getColumnmaps().get("mother_name_english") != null ? ChildClient.getColumnmaps().get("mother_name_english") : "").replace("+", "_")));
+        mother_name_bengali.setText(humanize((ChildClient.getDetails().get("mother_name_bengali") != null ? ChildClient.getDetails().get("mother_name_bengali") : "").replace("+", "_")));
+        mother_dob.setText(((ChildClient.getDetails().get("mother_dob") != null ? ChildClient.getDetails().get("mother_dob") : "").replace("+", "_")));
+        mother_nid.setText(((ChildClient.getDetails().get("mother_nid") != null ? ChildClient.getDetails().get("mother_nid") : "").replace("+", "_")));
+
 
 
 

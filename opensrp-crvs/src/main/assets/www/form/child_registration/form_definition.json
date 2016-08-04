@@ -9,12 +9,84 @@
         "shouldLoadValue": true
       },
       {
+        "name": "existing_Country",
+        "bind": "/model/instance/ChildRegistration.xls/existing_Country"
+      },
+      {
+        "name": "existing_Division",
+        "bind": "/model/instance/ChildRegistration.xls/existing_Division"
+      },
+      {
+        "name": "existing_District",
+        "bind": "/model/instance/ChildRegistration.xls/existing_District"
+      },
+      {
+        "name": "existing_Upazilla",
+        "bind": "/model/instance/ChildRegistration.xls/existing_Upazilla"
+      },
+      {
+        "name": "existing_Paurasava",
+        "bind": "/model/instance/ChildRegistration.xls/existing_Paurasava"
+      },
+      {
+        "name": "existing_Union",
+        "bind": "/model/instance/ChildRegistration.xls/existing_Union"
+      },
+      {
+        "name": "existing_HIE_facilities",
+        "bind": "/model/instance/ChildRegistration.xls/existing_HIE_facilities"
+      },
+      {
         "name": "start",
         "bind": "/model/instance/ChildRegistration.xls/start"
       },
       {
         "name": "today",
         "bind": "/model/instance/ChildRegistration.xls/today"
+      },
+      {
+        "name": "WARD",
+        "bind": "/model/instance/ChildRegistration.xls/WARD"
+      },
+      {
+        "name": "COUNTRY",
+        "bind": "/model/instance/ChildRegistration.xls/COUNTRY"
+      },
+      {
+        "name": "DIVISION",
+        "bind": "/model/instance/ChildRegistration.xls/DIVISION"
+      },
+      {
+        "name": "DISTRICT",
+        "bind": "/model/instance/ChildRegistration.xls/DISTRICT"
+      },
+      {
+        "name": "UPAZILLA",
+        "bind": "/model/instance/ChildRegistration.xls/UPAZILLA"
+      },
+      {
+        "name": "PAURASAVA",
+        "bind": "/model/instance/ChildRegistration.xls/PAURASAVA"
+      },
+      {
+        "name": "UNION",
+        "bind": "/model/instance/ChildRegistration.xls/UNION"
+      },
+      {
+        "name": "ADDRESS_LINE",
+        "bind": "/model/instance/ChildRegistration.xls/ADDRESS_LINE"
+      },
+      {
+        "name": "HIE_FACILITIES",
+        "bind": "/model/instance/ChildRegistration.xls/HIE_FACILITIES"
+      },
+      {
+        "name": "GPS",
+        "bind": "/model/instance/ChildRegistration.xls/GPS"
+      },
+      {
+        "name": "Date_Of_Reg",
+        "bind": "/model/instance/ChildRegistration.xls/Date_Of_Reg"
       },
       {
         "name": "child_nid",

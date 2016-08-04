@@ -17,6 +17,7 @@ import com.opensrp.crvs.child.CRVSChildServiceModeOption;
 import com.opensrp.crvs.child.CRVSChildSmartClientsProvider;
 import com.opensrp.crvs.child.CRVSChildSmartRegisterActivity;
 import com.opensrp.crvs.child.CRVSDueDateSort;
+import com.opensrp.crvs.child.ChildDetailActivity;
 //import com.opensrp.crvs.child.ChildDetailActivity;
 
 import org.ei.opensrp.Context;
@@ -225,9 +226,9 @@ public class CRVSChildSmartRegisterFragment extends SecuredNativeSmartRegisterCu
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.profile_info_layout:
-//                    ChildDetailActivity.ChildClient = (CommonPersonObjectClient)view.getTag();
-//                    Intent intent = new Intent(getActivity(),ChildDetailActivity.class);
-//                    startActivity(intent);
+                    ChildDetailActivity.ChildClient = (CommonPersonObjectClient)view.getTag();
+                    Intent intent = new Intent(getActivity(),ChildDetailActivity.class);
+                    startActivity(intent);
                     break;
 //                case R.id.encc_reminder_due_date:
 //                    CustomFontTextView enccreminderDueDate = (CustomFontTextView)view.findViewById(R.id.encc_reminder_due_date);
@@ -237,9 +238,7 @@ public class CRVSChildSmartRegisterFragment extends SecuredNativeSmartRegisterCu
             }
         }
 
-        private void showProfileView(ECClient client) {
-            navigationController.startEC(client.entityId());
-        }
+
     }
 
     private class EditDialogOptionModelForChild implements DialogOptionModel {
