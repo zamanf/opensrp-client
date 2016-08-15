@@ -161,7 +161,7 @@ public abstract class SmartClientRegisterGroupFragment extends SecuredNativeSmar
 
     }
 
-    protected abstract String getMemberRegistrationForm(HashMap<String, String> overridemap);
+    protected abstract String getMemberRegistrationForm(boolean qrCode);
 
     private void startEnrollmentForm(HashMap<String, String> overrides){
         overrides.putAll(VaccinatorUtils.providerDetails());
@@ -192,12 +192,12 @@ public abstract class SmartClientRegisterGroupFragment extends SecuredNativeSmar
         if(qrCode)
             startRegistration();
         else
-            startForm(getMemberRegistrationForm(overrides), "", overrides);
+            startForm(getMemberRegistrationForm(false), "", overrides);
     }
 
     private void startNewMemberRegistrationForm(HashMap<String, String> overrides, CommonPersonObjectClient client){
         overrides.putAll(VaccinatorUtils.providerDetails());
-        startForm(getMemberRegistrationForm(overrides), client.getCaseId(), overrides);
+        startForm(getMemberRegistrationForm(true), client.getCaseId(), overrides);
     }
 
     private void onQRCodeSucessfullyScanned(String qrCode) {

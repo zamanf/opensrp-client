@@ -192,7 +192,11 @@ public abstract class SmartRegisterSecuredActivity extends SecuredActivity {
             //SAFWAN
             int formIndex;
             if(mProfileFragment != null) {
-                formIndex = FormUtils.getIndexForFormName(formName, formNames) + ((BaseRegisterActivityPagerAdapter) mPagerAdapter).offset;
+                // TODO remove ...
+                if(formName.equals("new_member_registration_without_qr")){
+                    formIndex = FormUtils.getIndexForFormName(formName, formNames);
+                } else
+                    formIndex = FormUtils.getIndexForFormName(formName, formNames) + ((BaseRegisterActivityPagerAdapter) mPagerAdapter).offset;
             }
             else {
                 formIndex = FormUtils.getIndexForFormName(formName, formNames) + 1;//((BaseRegisterActivityPagerAdapter) mPagerAdapter).offset; // add the offset
