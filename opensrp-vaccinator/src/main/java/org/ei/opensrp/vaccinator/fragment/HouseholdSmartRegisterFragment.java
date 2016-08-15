@@ -23,7 +23,7 @@ import org.ei.opensrp.util.Utils;
 import org.ei.opensrp.vaccinator.R;
 import org.ei.opensrp.vaccinator.application.common.HouseholdSearchOption;
 import org.ei.opensrp.vaccinator.application.common.VaccinationServiceModeOption;
-import org.ei.opensrp.vaccinator.db.Client;
+import org.ei.opensrp.repository.db.Client;
 import org.ei.opensrp.vaccinator.household.HouseholdDetailFragment;
 import org.ei.opensrp.vaccinator.household.HouseholdSmartClientsProvider;
 import org.ei.opensrp.vaccinator.household.HouseholdSmartRegisterActivity;
@@ -64,9 +64,16 @@ public class HouseholdSmartRegisterFragment extends SmartClientRegisterGroupFrag
 
     @Override
     protected SmartRegisterPaginatedAdapter adapter() {
-        return new SmartRegisterPaginatedCursorAdapter(getActivity(),
-                new SmartRegisterCursorBuilder("pkhousehold", null, (CursorSortOption) getDefaultOptionsProvider().sortOption())
-                , clientsProvider());
+        if(Utils.userRoles.contains("Vaccinator")){
+            return new SmartRegisterPaginatedCursorAdapter(getActivity(),
+                    new SmartRegisterCursorBuilder("pkhousehold", null, (CursorSortOption) getDefaultOptionsProvider().sortOption())
+                    , clientsProvider(), SmartRegisterCursorBuilder.DB.OPENSRP);
+        } else {
+            return new SmartRegisterPaginatedCursorAdapter(getActivity(),
+                    new SmartRegisterCursorBuilder("pkhousehold", null, (CursorSortOption) getDefaultOptionsProvider().sortOption())
+                    , clientsProvider(), SmartRegisterCursorBuilder.DB.DRISHTI);
+        }
+
     }
 
 
@@ -81,7 +88,7 @@ public class HouseholdSmartRegisterFragment extends SmartClientRegisterGroupFrag
 
             @Override
             public ServiceModeOption serviceMode() {
-                return new VaccinationServiceModeOption(null, "Household", new int[]{
+                return new VaccinationServiceModeOption(null, "Household Register", new int[]{
                         R.string.household_profile , R.string.household_members, R.string.household_address, R.string.contactNumber, R.string.household_add_member
                         /*R.string.household_last_visit, R.string.household_due_date,*/
                 }, new int[]{3,2,2,2,2});

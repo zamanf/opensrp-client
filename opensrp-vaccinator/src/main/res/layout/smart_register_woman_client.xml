@@ -4,6 +4,7 @@
               android:orientation="horizontal"
               android:layout_width="fill_parent"
               android:layout_height="@dimen/list_item_height"
+    android:id="@+id/llmain"
     android:weightSum="23" android:background="#eeeeee" >
 
     <LinearLayout

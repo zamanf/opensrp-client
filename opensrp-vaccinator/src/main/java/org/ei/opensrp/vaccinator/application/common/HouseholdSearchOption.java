@@ -25,8 +25,8 @@ public class HouseholdSearchOption implements SearchFilterOption  {
 
         @Override
         public String getCriteria() {
-            return " existing_household_id = '" + filter + "' OR first_name_hhh LIKE '%"+filter+"%' " +
-                    " OR last_name_hhh LIKE '%"+filter+"%' OR contact_phone_number_hhh LIKE '%" + filter + "%' ";
+            return " existing_household_id = '" + filter + "' OR first_name_hhh LIKE '%"+filter+"%' " + " OR last_name_hhh LIKE '%" + filter +
+                    "' OR household_id = '"+ filter + "' OR contact_phone_number_hhh LIKE '%" + filter + "%' ";
         }
 
         @Override

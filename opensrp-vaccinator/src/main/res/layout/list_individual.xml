@@ -7,7 +7,7 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:layout_weight="0.75">
 
             <ImageView
                 android:id="@+id/individual_profilepic"
@@ -78,7 +78,7 @@
 <LinearLayout
     android:layout_width="0dp"
     android:layout_height="wrap_content"
-    android:layout_weight="2"
+    android:layout_weight="2.55"
     android:orientation="vertical">
 
     <LinearLayout
@@ -134,13 +134,14 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1">
+        android:layout_weight="1.25">
 
         <Button
             android:id="@+id/followup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Followup"/>
+            android:text="Followup"
+            android:textSize="20sp"/>
 
     </LinearLayout>
 

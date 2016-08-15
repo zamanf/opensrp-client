@@ -11,8 +11,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.ei.opensrp.Context;
 import org.ei.opensrp.cursoradapter.CursorCommonObjectSort;
 import org.ei.opensrp.vaccinator.R;
-import org.ei.opensrp.vaccinator.db.CESQLiteHelper;
-import org.ei.opensrp.vaccinator.db.Client;
+import org.ei.opensrp.repository.db.CESQLiteHelper;
+import org.ei.opensrp.repository.db.Client;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
 import org.ei.opensrp.view.contract.SmartRegisterClients;
 import org.ei.opensrp.view.controller.FormController;
@@ -188,8 +188,7 @@ public abstract class SmartClientRegisterFragment extends SecuredNativeSmartRegi
             HashMap<String,String> map = new HashMap<>();
             map.put("existing_program_client_id", qrCode);
             map.put("program_client_id", qrCode);
-            map.put("existing_household_id", qrCode);
-            map.put("household_id", qrCode);
+
             Map<String, String> m = customFieldOverrides();
             if(m != null){
                 map.putAll(m);

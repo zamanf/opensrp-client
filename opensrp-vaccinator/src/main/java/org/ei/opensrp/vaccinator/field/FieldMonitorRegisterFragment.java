@@ -245,7 +245,7 @@ public class FieldMonitorRegisterFragment extends SecuredNativeSmartRegisterFrag
         return new SmartRegisterPaginatedCursorAdapter(getActivity(),
                 new SmartRegisterCursorBuilder("stock", isDailyRegister()?"report='daily'":"report='monthly'",
                         "t", (isDailyRegister()?customColumnsDaily:customColumnsMonthly).toArray(new String[]{}), (CursorSortOption) getDefaultOptionsProvider().sortOption())
-                , clientsProvider());
+                , clientsProvider(), SmartRegisterCursorBuilder.DB.DRISHTI);
     }
 
     private boolean isDailyRegister(){

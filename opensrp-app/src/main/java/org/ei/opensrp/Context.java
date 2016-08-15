@@ -30,6 +30,7 @@ import org.ei.opensrp.repository.Repository;
 import org.ei.opensrp.repository.ServiceProvidedRepository;
 import org.ei.opensrp.repository.SettingsRepository;
 import org.ei.opensrp.repository.TimelineEventRepository;
+import org.ei.opensrp.repository.db.CESQLiteHelper;
 import org.ei.opensrp.service.ANMService;
 import org.ei.opensrp.service.ActionService;
 import org.ei.opensrp.service.AlertService;
@@ -124,6 +125,7 @@ public class Context {
     private AllServicesProvided allServicesProvided;
     private AllCommonsRepository allCommonPersonObjectsRepository;
     private static ImageRepository imageRepository;
+    private CESQLiteHelper ceDb;
 
 
     private DrishtiService drishtiService;
@@ -840,6 +842,13 @@ public class Context {
         initRepository();
         allCommonPersonObjectsRepository = new AllCommonsRepository(commonrepository(tablename),alertRepository(),timelineEventRepository());
         return allCommonPersonObjectsRepository;
+    }
+
+    public CESQLiteHelper ceDB(){
+        if (ceDb == null){
+            ceDb = new CESQLiteHelper(applicationContext);
+        }
+        return ceDb;
     }
 
     private HashMap <String ,CommonRepository> MapOfCommonRepository;

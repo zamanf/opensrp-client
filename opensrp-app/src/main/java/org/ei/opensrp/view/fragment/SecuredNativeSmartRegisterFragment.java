@@ -78,12 +78,19 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
     private View searchCancelView;
     private TextView titleLabelView;
     private FormController formController;
+    private boolean clientAdapterSetupComplete;
 
-    public SecuredNativeSmartRegisterFragment(FormController formController){
+    public boolean isClientAdapterSetupComplete() {
+        return clientAdapterSetupComplete;
+    }
+
+    public SecuredNativeSmartRegisterFragment(FormController formController) {
         this.formController = formController;
     }
 
-    public FormController getFormController(){return formController;}
+    public FormController getFormController() {
+        return formController;
+    }
 
     public EditText getSearchView() {
         return searchView;
@@ -171,24 +178,25 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
                 .post(new Runnable() {
                     @Override
                     public void run() {
-                    clientsAdapter = adapter();
-                    clientsAdapter.registerDataSetObserver(new DataSetObserver() {
-                        @Override
-                        public void onChanged() {
-                            paginationViewHandler.refresh();
-                        }
-                    });
+                        clientsAdapter = adapter();
+                        clientsAdapter.registerDataSetObserver(new DataSetObserver() {
+                            @Override
+                            public void onChanged() {
+                                paginationViewHandler.refresh();
+                            }
+                        });
 
-                    clientsView.setAdapter(clientsAdapter);
-                    if(isAdded()) {
-                        paginationViewHandler.refresh();
-                        clientsProgressView.setVisibility(View.GONE);
-                        clientsView.setVisibility(VISIBLE);
-                    }
+                        clientsView.setAdapter(clientsAdapter);
+                        if (isAdded()) {
+                            paginationViewHandler.refresh();
+                            clientsProgressView.setVisibility(View.GONE);
+                            clientsView.setVisibility(VISIBLE);
+                        }
+
+                        clientAdapterSetupComplete = true;
                     }
                 });
-
-        Log.i(getClass().getName(), "setting up adapter placed to queue "+success);
+        Log.i(getClass().getName(), "setting up adapter placed to queue " + success);
     }
 
     @Override
@@ -229,7 +237,7 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
     private void setupStatusBarViews(View view) {
         appliedSortView = (TextView) view.findViewById(R.id.sorted_by);
         appliedVillageFilterView = (TextView) view.findViewById(R.id.village);
-        ((TextView)mView.findViewById(org.ei.opensrp.R.id.statusbar_today)).setText(DateTime.now().toString("dd-MM-yyyy"));
+        ((TextView) mView.findViewById(org.ei.opensrp.R.id.statusbar_today)).setText(DateTime.now().toString("dd-MM-yyyy"));
     }
 
     private void setupNavBarViews(View view) {
@@ -243,7 +251,7 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
         View sortView = view.findViewById(R.id.sort_selection);
         sortView.setOnClickListener(navBarActionsHandler);
 
-        serviceModeView = (TextView)view.findViewById(R.id.service_mode_selection);
+        serviceModeView = (TextView) view.findViewById(R.id.service_mode_selection);
         serviceModeView.setOnClickListener(navBarActionsHandler);
 
         view.findViewById(R.id.register_client).setOnClickListener(navBarActionsHandler);
@@ -273,17 +281,15 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
             @Override
 
             public void onTextChanged(CharSequence cs, int start, int before, int count) {
-                if(currentSearchFilter == null){
+                if (currentSearchFilter == null) {
                     currentSearchFilter = new ECSearchOption(cs.toString());
-                }
-                else {
+                } else {
                     currentSearchFilter.setFilter(cs.toString());
                 }
                 clientsAdapter.refreshList(currentVillageFilter, currentServiceModeOption,
                         currentSearchFilter, currentSortOption);
 
                 searchCancelView.setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
-
 
 
             }
@@ -353,7 +359,7 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
     }
 
     public void onSortSelection(SortOption sortBy) {
-        Log.v("he pressed this",sortBy.name());
+        Log.v("he pressed this", sortBy.name());
         currentSortOption = sortBy;
         appliedSortView.setText(sortBy.name());
         clientsAdapter.refreshList(currentVillageFilter, currentServiceModeOption, currentSearchFilter, currentSortOption);
@@ -384,7 +390,7 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
     }
 
     protected void showFragmentDialog(DialogOptionModel dialogOptionModel, Object tag) {
-        ((SmartRegisterSecuredActivity)getActivity()).showFragmentDialog(dialogOptionModel, tag);
+        ((SmartRegisterSecuredActivity) getActivity()).showFragmentDialog(dialogOptionModel, tag);
     }
 
     protected abstract SecuredNativeSmartRegisterActivity.DefaultOptionsProvider getDefaultOptionsProvider();
@@ -520,7 +526,7 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
             overrideStringmap = new HashMap<>();
         }
 
-        String fieldOverrides =  new FieldOverrides(new JSONObject(overrideStringmap).toString()).getJSONString();
+        String fieldOverrides = new FieldOverrides(new JSONObject(overrideStringmap).toString()).getJSONString();
         org.ei.opensrp.util.Log.logDebug("fieldOverrides data is : " + fieldOverrides);
         formController.startFormActivity(formName, entityId, fieldOverrides);
     }
@@ -545,6 +551,7 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
 
         dialog.show();
     }
+
     //This would be used in displaying location dialog box in anm location selector
     public String getLocationNameByAttribute(LocationTree locationTree, String tag) {
         //locationTree.

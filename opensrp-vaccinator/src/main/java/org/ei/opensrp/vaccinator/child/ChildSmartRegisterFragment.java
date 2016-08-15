@@ -15,7 +15,7 @@ import org.ei.opensrp.vaccinator.R;
 import org.ei.opensrp.vaccinator.application.common.BasicSearchOption;
 import org.ei.opensrp.vaccinator.application.common.SmartClientRegisterFragment;
 import org.ei.opensrp.vaccinator.application.common.VaccinationServiceModeOption;
-import org.ei.opensrp.vaccinator.db.Client;
+import org.ei.opensrp.repository.db.Client;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.controller.FormController;
@@ -53,7 +53,7 @@ public class ChildSmartRegisterFragment extends SmartClientRegisterFragment {
     protected SmartRegisterPaginatedAdapter adapter() {
         return new SmartRegisterPaginatedCursorAdapter(getActivity(),
                 new SmartRegisterCursorBuilder("pkchild", null, (CursorSortOption) getDefaultOptionsProvider().sortOption())
-                , clientsProvider());
+                , clientsProvider(), SmartRegisterCursorBuilder.DB.DRISHTI);
     }
 
     @Override
@@ -107,7 +107,7 @@ public class ChildSmartRegisterFragment extends SmartClientRegisterFragment {
             switch (view.getId()) {
                 case R.id.child_profile_info_layout:
                     DetailActivity.startDetailActivity(getActivity(), (CommonPersonObjectClient) view.getTag(), ChildDetailActivity.class);
-                    getActivity().finish();
+                    //getActivity().finish();
                     break;
                 case R.id.child_next_visit_holder:
                     HashMap<String, String> map = new HashMap<>();

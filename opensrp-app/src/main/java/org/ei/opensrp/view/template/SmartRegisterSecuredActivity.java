@@ -89,6 +89,7 @@ public abstract class SmartRegisterSecuredActivity extends SecuredActivity {
         });
 
         mPagerAdapter.switchToBaseFragment(mPager);
+        SecuredNativeSmartRegisterFragment registerFragment = (SecuredNativeSmartRegisterFragment) findFragmentByPosition(0);
     }
 
     public abstract SecuredNativeSmartRegisterFragment getBaseFragment();
@@ -155,8 +156,13 @@ public abstract class SmartRegisterSecuredActivity extends SecuredActivity {
                     .setCancelable(false)
                     .setPositiveButton(R.string.ok_button_label,
                         new DialogInterface.OnClickListener() {
+                            int formIndex;
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                int formIndex = FormUtils.getIndexForFormName(formName, formNames) + 1;
+                                if(mProfileFragment != null){
+                                    formIndex = FormUtils.getIndexForFormName(formName, formNames) + ((BaseRegisterActivityPagerAdapter) mPagerAdapter).offset;
+                                } else {
+                                    formIndex = FormUtils.getIndexForFormName(formName, formNames) + 1;
+                                }
                                 switchToBaseFragment(submission, formIndex); // pass data to let fragment know which record to display
                             }
                         })
@@ -266,21 +272,33 @@ public abstract class SmartRegisterSecuredActivity extends SecuredActivity {
             @Override
             public void run() {
                 //hack reset the form
-                if(mProfileFragment == null) {
-                    DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(pageIndex);
+                DisplayFormFragment displayFormFragment;
+                if(mProfileFragment == null)
+                    displayFormFragment = getDisplayFormFragmentAtIndex(pageIndex);
+                 else
+                    displayFormFragment = getDisplayFormFragmentAtIndex(2);
+
                     if (displayFormFragment != null) {
                         displayFormFragment.hideTranslucentProgressDialog();
                         displayFormFragment.setFormData(null);
                         displayFormFragment.setRecordId(null);
                         displayFormFragment.setFieldOverides(null);
                     }
-                }
+
                 mPager.setCurrentItem(0, false);
                 SecuredNativeSmartRegisterFragment registerFragment = (SecuredNativeSmartRegisterFragment) findFragmentByPosition(0);
                 if (registerFragment != null && data != null) {
-                    String id = data.getFieldValue("program_client_id");
-                    if (StringUtils.isBlank(id)){
-                        id = data.getFieldValue("existing_program_client_id");
+                    String id;
+                    if(mProfileFragment != null){
+                        id = data.getFieldValue("household_id");
+                        if (StringUtils.isBlank(id)){
+                            id = data.getFieldValue("existing_household_id");
+                        }
+                    } else {
+                        id = data.getFieldValue("program_client_id");
+                        if (StringUtils.isBlank(id)){
+                            id = data.getFieldValue("existing_program_client_id");
+                        }
                     }
                     registerFragment.getSearchView().setText(id);
                     registerFragment.onFilterManual(id);

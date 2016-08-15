@@ -5,7 +5,9 @@ import android.database.Cursor;
 import android.util.Log;
 
 import org.apache.commons.lang3.StringUtils;
+import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.CommonRepository;
+import org.ei.opensrp.repository.db.CESQLiteHelper;
 import org.ei.opensrp.view.dialog.SearchFilterOption;
 
 /**
@@ -64,13 +66,22 @@ public class SmartRegisterCursorBuilder {
         return this;
     }
 
-    public Cursor buildCursor(){
+    public Cursor buildCursor(DB db){
         closeCursor();
 
         Log.i(getClass().getName(), "Building a new cursor");
-
-        CommonRepository commonRepository = org.ei.opensrp.Context.getInstance().commonrepository(table);
-        cursor = commonRepository.RawCustomQueryForAdapter(query.toString());
+        if(db == null || db.equals(DB.DRISHTI)){
+            CommonRepository commonRepository = org.ei.opensrp.Context.getInstance().commonrepository(table);
+            cursor = commonRepository.RawCustomQueryForAdapter(query.toString());
+        } else {
+            CESQLiteHelper ceDB = Context.getInstance().ceDB();
+            cursor = ceDB.rawQueryForCursor(query.toString());
+        }
         return cursor;
+    }
+
+    public enum DB{
+        DRISHTI,
+        OPENSRP
     }
 }

@@ -33,18 +33,22 @@ public class ChildSmartRegisterActivity extends SmartRegisterActivity {
     }
 =======*/
 public class ChildSmartRegisterActivity extends SmartRegisterSecuredActivity {
+    String id;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //ChildSmartRegisterFragment.clientId = getIntent().getStringExtra("program_client_id");
-        String id = getIntent().getStringExtra("program_client_id");
+        id = getIntent().getStringExtra("program_client_id");
+    }
 
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
         SecuredNativeSmartRegisterFragment registerFragment = (SecuredNativeSmartRegisterFragment) findFragmentByPosition(0);
         if(id != null){
             registerFragment.getSearchView().setText(id);
             registerFragment.onFilterManual(id);
         }
-
     }
 /*
 >>>>>>> pk_vaccinator_merge

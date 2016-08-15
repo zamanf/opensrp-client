@@ -127,7 +127,7 @@ public class HouseholdMemberAdapter extends ArrayAdapter<HouseholdMemberDetails>
                 intent.putExtra("program_client_id", client.getColumnmaps().get("program_client_id").toString());
 
                 fragment.getActivity().startActivity(intent);
-
+                fragment.getActivity().finish();
 
 
                 //((HouseholdDetailFragment) fragment.).startFormActivity("woman_followup", ((CommonPersonObjectClient) v.getTag()).entityId(), null);

@@ -3,7 +3,6 @@ package org.ei.opensrp.vaccinator.woman;
 
 import android.annotation.SuppressLint;
 
-import android.util.Log;
 import android.view.View;
 
 import org.ei.opensrp.Context;
@@ -20,7 +19,7 @@ import org.ei.opensrp.vaccinator.application.common.BasicSearchOption;
 import org.ei.opensrp.vaccinator.application.common.SmartClientRegisterFragment;
 import org.ei.opensrp.vaccinator.application.common.VaccinationServiceModeOption;
 
-import org.ei.opensrp.vaccinator.db.Client;
+import org.ei.opensrp.repository.db.Client;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.controller.FormController;
@@ -60,10 +59,9 @@ public class WomanSmartRegisterFragment extends SmartClientRegisterFragment {
 
     @Override
     protected SmartRegisterPaginatedAdapter adapter() {
-        Log.d("women fragment", "here");
         return new SmartRegisterPaginatedCursorAdapter(getActivity(),
                 new SmartRegisterCursorBuilder("pkwoman", null, (CursorSortOption) getDefaultOptionsProvider().sortOption())
-                , clientsProvider());
+                , clientsProvider(), SmartRegisterCursorBuilder.DB.DRISHTI);
     }
 
     @Override
@@ -126,7 +124,7 @@ public class WomanSmartRegisterFragment extends SmartClientRegisterFragment {
             switch (view.getId()) {
                 case R.id.woman_profile_info_layout:
                     DetailActivity.startDetailActivity(getActivity(), (CommonPersonObjectClient) view.getTag(), WomanDetailActivity.class);
-                    getActivity().finish();
+                    //getActivity().finish();
                     break;
                 case R.id.woman_next_visit_holder:
                     HashMap<String, String> map = new HashMap<>();

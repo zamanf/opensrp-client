@@ -144,6 +144,7 @@ public class LoginActivity extends Activity {
         } else {
             remoteLogin(view, userName, password);
         }
+
         android.util.Log.i(getClass().getName(), "Login result finished "+DateTime.now().toString());
     }
 
@@ -354,6 +355,7 @@ public class LoginActivity extends Activity {
     }
 
     private void goToHome() {
+        Utils.providerDetails();
         startActivity(new Intent(this, VaccinatorHomeActivity.class));
         finish();
     }

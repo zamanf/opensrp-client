@@ -12,7 +12,7 @@ import org.ei.opensrp.commonregistry.CommonObjectFilterOption;
 import org.ei.opensrp.util.StringUtil;
 import org.ei.opensrp.util.Utils;
 import org.ei.opensrp.vaccinator.application.common.BasicSearchOption;
-import org.ei.opensrp.vaccinator.db.Client;
+import org.ei.opensrp.repository.db.Client;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
 import org.ei.opensrp.view.contract.SmartRegisterClients;
 import org.ei.opensrp.view.controller.FormController;
@@ -27,11 +27,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
-
-import static android.view.View.INVISIBLE;
-import static android.view.View.VISIBLE;
-import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public abstract class SmartRegisterFragment extends SecuredNativeSmartRegisterFragment {
     private FormController formController1;

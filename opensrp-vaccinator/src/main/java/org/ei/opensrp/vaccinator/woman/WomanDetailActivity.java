@@ -7,7 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.ei.opensrp.Context;
 import org.ei.opensrp.domain.Alert;
 import org.ei.opensrp.vaccinator.R;
-import org.ei.opensrp.vaccinator.db.VaccineRepo;
+import org.ei.opensrp.repository.db.VaccineRepo;
 import org.ei.opensrp.view.template.DetailActivity;
 import org.joda.time.DateTime;
 import org.joda.time.Years;

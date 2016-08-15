@@ -134,13 +134,16 @@
       "bind" : "/model/instance/New_Member_Registration_v1/individual/person_id"
     }, {
       "name" : "first_name",
-      "bind" : "/model/instance/New_Member_Registration_v1/individual/first_name"
+      "bind" : "/model/instance/New_Member_Registration_v1/individual/first_name",
+      "shouldLoadValue" : true
     }, {
       "name" : "last_name",
-      "bind" : "/model/instance/New_Member_Registration_v1/individual/last_name"
+      "bind" : "/model/instance/New_Member_Registration_v1/individual/last_name",
+      "shouldLoadValue" : true
     }, {
       "name" : "gender",
-      "bind" : "/model/instance/New_Member_Registration_v1/individual/gender"
+      "bind" : "/model/instance/New_Member_Registration_v1/individual/gender",
+      "shouldLoadValue" : true
     }, {
       "name" : "ethnicity",
       "bind" : "/model/instance/New_Member_Registration_v1/individual/ethnicity"
@@ -158,7 +161,8 @@
       "bind" : "/model/instance/New_Member_Registration_v1/individual/member_birthdate_known"
     }, {
       "name" : "member_birthdate",
-      "bind" : "/model/instance/New_Member_Registration_v1/individual/member_birthdate"
+      "bind" : "/model/instance/New_Member_Registration_v1/individual/member_birthdate",
+      "shouldLoadValue" : true
     }, {
       "name" : "age",
       "bind" : "/model/instance/New_Member_Registration_v1/individual/age"

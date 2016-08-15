@@ -1,7 +1,13 @@
 package org.ei.opensrp.vaccinator.woman;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
+import android.view.ViewTreeObserver;
+import android.widget.LinearLayout;
 
+import org.ei.opensrp.vaccinator.R;
+import org.ei.opensrp.view.activity.SmartRegisterActivity;
 import org.ei.opensrp.view.fragment.SecuredFragment;
 import org.ei.opensrp.view.fragment.SecuredNativeSmartRegisterFragment;
 
@@ -20,21 +26,18 @@ import java.util.List;
 public class WomanSmartRegisterActivity extends SmartRegisterSecuredActivity {
     //SAFWAN
     String id;
-    boolean firstTime = true;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         id = getIntent().getStringExtra("program_client_id");
-
-
     }
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        if(firstTime && id != null) {
-            firstTime = false;
-            SecuredNativeSmartRegisterFragment registerFragment = (SecuredNativeSmartRegisterFragment) findFragmentByPosition(0);
+        SecuredNativeSmartRegisterFragment registerFragment = (SecuredNativeSmartRegisterFragment) findFragmentByPosition(0);
+        if(id != null){
             registerFragment.getSearchView().setText(id);
             registerFragment.onFilterManual(id);
         }

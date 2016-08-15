@@ -118,9 +118,10 @@ public abstract class DetailActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        finish();
+        super.onBackPressed();
+        /*finish();
         startActivity(new Intent(this, onBackActivity()));
-        overridePendingTransition(0, 0);
+        overridePendingTransition(0, 0);*/
     }
 
     private File createImageFile() throws IOException {

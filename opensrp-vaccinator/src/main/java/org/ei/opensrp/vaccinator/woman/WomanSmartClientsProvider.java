@@ -16,7 +16,7 @@ import org.ei.opensrp.domain.Alert;
 import org.ei.opensrp.service.AlertService;
 import org.ei.opensrp.util.StringUtil;
 import org.ei.opensrp.vaccinator.R;
-import org.ei.opensrp.vaccinator.db.VaccineRepo;
+import org.ei.opensrp.repository.db.VaccineRepo;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.contract.SmartRegisterClients;
 import org.ei.opensrp.view.dialog.FilterOption;

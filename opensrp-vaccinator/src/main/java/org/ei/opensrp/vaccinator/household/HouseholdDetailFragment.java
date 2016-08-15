@@ -126,7 +126,7 @@ public class HouseholdDetailFragment extends SecuredFragment {
 
         TableLayout dt2 = (TableLayout) mView.findViewById(R.id.household_detail_info_table2);
         dt2.removeAllViews();
-        tr = getDataRowHousehold(context, "Household ID", getValue(householdClient.getColumnmaps(), "existing_household_id", true), null);
+        tr = getDataRowHousehold(context, "Household ID", getValue(householdClient.getColumnmaps(), "household_id", true), null);
         dt2.addView(tr);
         tr = getDataRowHousehold(context, "Number of Members", "" + individualList.size() + "", null);
         dt2.addView(tr);
@@ -154,13 +154,13 @@ public class HouseholdDetailFragment extends SecuredFragment {
             int memberAge = Years.yearsBetween(new DateTime(getValue(individual.getDetails(), "calc_dob_confirm", false)), DateTime.now()).getYears();
             //tr = getDataRow(this, "DOB (Age)", convertDateFormat(getValue(individual.getDetails(), "calc_dob_confirm", false), true) + " (" + age + " years)", null);
 
-            if (memberAge < 10 && getValue(individual.getDetails(), "gender", false).equalsIgnoreCase("male"))
+            if (memberAge < 10 && getValue(individual.getColumnmaps(), "gender", false).equalsIgnoreCase("male"))
                 member.setMemberImageId(R.drawable.child_boy_infant);
-            else if (memberAge > 10 && getValue(individual.getDetails(), "gender", false).equalsIgnoreCase("male"))
+            else if (memberAge > 10 && getValue(individual.getColumnmaps(), "gender", false).equalsIgnoreCase("male"))
                 member.setMemberImageId(R.drawable.household_profile);
-            else if (memberAge < 10 && getValue(individual.getDetails(), "gender", false).equalsIgnoreCase("female"))
+            else if (memberAge < 10 && getValue(individual.getColumnmaps(), "gender", false).equalsIgnoreCase("female"))
                 member.setMemberImageId(R.drawable.child_girl_infant);
-            else if (memberAge > 10 && getValue(individual.getDetails(), "gender", false).equalsIgnoreCase("female"))
+            else if (memberAge > 10 && getValue(individual.getColumnmaps(), "gender", false).equalsIgnoreCase("female"))
                 member.setMemberImageId(R.drawable.pk_woman_icon);
 
             setProfiePic(mView.getContext(), (ImageView) mView.findViewById(R.id.household_profilepic), householdClient.entityId(), null);
@@ -168,7 +168,7 @@ public class HouseholdDetailFragment extends SecuredFragment {
 
             member.setMemberId(getValue(individual.getColumnmaps(), "person_id", false));
             member.setMemberName(StringUtils.capitalize(getValue(individual.getColumnmaps(), "first_name", false)) + " " + StringUtils.capitalize(getValue(individual.getColumnmaps(), "last_name", false)));
-            member.setMemberRelationWithHousehold(StringUtils.upperCase(getValue(individual.getColumnmaps(), "relationship", true)));
+            member.setMemberRelationWithHousehold(StringUtil.humanize(getValue(individual.getColumnmaps(), "relationship", true)));
             member.setMemberAge(convertDateFormat(getValue(individual.getDetails(), "calc_dob_confirm", false), true) + " (" + memberAge + " years)");
 
 

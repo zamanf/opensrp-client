@@ -12,7 +12,9 @@ import android.widget.TextView;
 import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.commonregistry.CommonPersonObjectController;
+
 import static org.ei.opensrp.util.Utils.fillValue;
+
 import org.ei.opensrp.service.AlertService;
 import org.ei.opensrp.vaccinator.R;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
@@ -23,13 +25,16 @@ import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
 import org.ei.opensrp.view.template.SmartRegisterClientsProvider;
 import org.ei.opensrp.view.viewHolder.OnClickFormLauncher;
+import org.json.JSONException;
 
 import java.util.List;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
+import static org.ei.opensrp.util.Utils.fillWithIdentifier;
 import static org.ei.opensrp.util.Utils.getValue;
 import static org.ei.opensrp.util.Utils.setProfiePic;
+import static org.ei.opensrp.util.Utils.userRoles;
 
 /**
  * Created by Safwan on 4/22/2016.
@@ -46,7 +51,7 @@ public class HouseholdSmartClientsProvider implements SmartRegisterClientsProvid
     protected CommonPersonObjectController controller;
 
     public HouseholdSmartClientsProvider(Context context, View.OnClickListener onClickListener
-                                     ,AlertService alertService) {
+            , AlertService alertService) {
         this.onClickListener = onClickListener;
         this.context = context;
         this.alertService = alertService;
@@ -64,19 +69,15 @@ public class HouseholdSmartClientsProvider implements SmartRegisterClientsProvid
         String sql = "select * from pkindividual where relationalid = '" + pc.getCaseId() + "'";
         List<CommonPersonObject> individualList = org.ei.opensrp.Context.getInstance().allCommonsRepositoryobjects("pkindividual").customQueryForCompleteRow(sql, new String[]{}, "pkindividual");
 
-        //parentView = (ViewGroup) inflater().inflate(R.layout.smart_register_household_client, null);
-        fillValue((TextView) parentView.findViewById(R.id.household_id), pc.getColumnmaps(), "existing_household_id", false);
-        fillValue((TextView) parentView.findViewById(R.id.household_name), getValue(pc.getColumnmaps(), "first_name_hhh", true) + " " + getValue(pc.getColumnmaps(), "last_name_hhh", true));
-        fillValue((TextView) parentView.findViewById(R.id.household_member_count), "" + individualList.size() + "");
-        fillValue((TextView) parentView.findViewById(R.id.household_address), getValue(pc.getColumnmaps(), "address1", true) + ", " + getValue(pc.getColumnmaps(), "union_council", true) + ", " +
-                getValue(pc.getColumnmaps(), "town", true) + ",\n " + getValue(pc.getColumnmaps(), "city_village", true) + ", " +
-                getValue(pc.getColumnmaps(), "province", true));
-        fillValue((TextView) parentView.findViewById(R.id.household_contact), getValue(pc.getColumnmaps(), "contact_phone_number_hhh", true));
+        if (userRoles.contains("Vaccinator")) {
+            valuesForVaccinator(pc, parentView, individualList);
+        } else {
+            valuesForLHW(pc, parentView, individualList);
+        }
 
 
         LinearLayout memberAdd = (LinearLayout) parentView.findViewById(R.id.household_add_member);
         memberAdd.setBackgroundColor(context.getResources().getColor(R.color.alert_normal));
-
 
         setProfiePic(parentView.getContext(), (ImageView) parentView.findViewById(R.id.household_profilepic), client.entityId(), null);
 
@@ -87,6 +88,8 @@ public class HouseholdSmartClientsProvider implements SmartRegisterClientsProvid
         parentView.findViewById(R.id.household_add_member).setOnClickListener(onClickListener);
 
         parentView.setLayoutParams(clientViewLayoutParams);
+
+
 
         return parentView;
     }
@@ -123,5 +126,30 @@ public class HouseholdSmartClientsProvider implements SmartRegisterClientsProvid
 
     public LayoutInflater inflater() {
         return inflater;
+    }
+
+    public void valuesForVaccinator(CommonPersonObjectClient pc, View parentView, List<CommonPersonObject> individualList){
+        try {
+            fillWithIdentifier((TextView) parentView.findViewById(R.id.household_id), pc.getColumnmaps(), "Program Client ID", false);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        fillValue((TextView) parentView.findViewById(R.id.household_name), getValue(pc.getColumnmaps(), "first_name_hhh", true) + " " + getValue(pc.getColumnmaps(), "last_name_hhh", true));
+        fillValue((TextView) parentView.findViewById(R.id.household_member_count), "" + individualList.size() + "");
+        fillValue((TextView) parentView.findViewById(R.id.household_address), getValue(pc.getColumnmaps(), "address1", true) + ", " + getValue(pc.getColumnmaps(), "union_council", true) + ", " +
+                getValue(pc.getColumnmaps(), "town", true) + ",\n " + getValue(pc.getColumnmaps(), "city_village", true) + ", " +
+                getValue(pc.getColumnmaps(), "province", true));
+        fillValue((TextView) parentView.findViewById(R.id.household_contact), getValue(pc.getColumnmaps(), "contact_phone_number_hhh", true));
+    }
+
+    public void valuesForLHW(CommonPersonObjectClient pc, View parentView, List<CommonPersonObject> individualList){
+        fillValue((TextView) parentView.findViewById(R.id.household_id), pc.getColumnmaps(), "household_id", false);
+        fillValue((TextView) parentView.findViewById(R.id.household_name), getValue(pc.getColumnmaps(), "first_name_hhh", true) + " " + getValue(pc.getColumnmaps(), "last_name_hhh", true));
+        fillValue((TextView) parentView.findViewById(R.id.household_member_count), "" + individualList.size() + "");
+        fillValue((TextView) parentView.findViewById(R.id.household_address), getValue(pc.getColumnmaps(), "address1", true) + ", " + getValue(pc.getColumnmaps(), "union_council", true) + ", " +
+                getValue(pc.getColumnmaps(), "town", true) + ",\n " + getValue(pc.getColumnmaps(), "city_village", true) + ", " +
+                getValue(pc.getColumnmaps(), "province", true));
+        fillValue((TextView) parentView.findViewById(R.id.household_contact), getValue(pc.getColumnmaps(), "contact_phone_number_hhh", true));
     }
 }

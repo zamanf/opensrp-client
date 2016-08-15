@@ -133,6 +133,11 @@ public class Utils {
         v.setText(getValue(cm, field, humanize));
     }
 
+    public static void fillWithIdentifier(TextView v, Map<String, String> cm, String identifierType, boolean humanize) throws JSONException {
+        JSONObject idl = new JSONObject((String) cm.get("identifiers"));
+        v.setText(getValue(cm, idl.getString(identifierType), humanize));
+    }
+
     public static void fillValue(TextView v, Map<String, String> cm, String field, String defaultV, boolean humanize){
         String val = getValue(cm, field, humanize);
         if(StringUtils.isNotBlank(defaultV) && StringUtils.isBlank(val)){

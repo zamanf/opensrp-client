@@ -1,8 +1,6 @@
 package org.ei.opensrp.cursoradapter;
 
-import android.app.LoaderManager;
 import android.content.Context;
-import android.content.CursorLoader;
 import android.database.Cursor;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +12,7 @@ import org.ei.opensrp.adapter.SmartRegisterPaginatedAdapter;
 import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.commonregistry.CommonRepository;
+import org.ei.opensrp.repository.db.CESQLiteHelper;
 import org.ei.opensrp.view.contract.SmartRegisterClients;
 import org.ei.opensrp.view.dialog.FilterOption;
 import org.ei.opensrp.view.dialog.SearchFilterOption;
@@ -30,15 +29,22 @@ public class SmartRegisterPaginatedCursorAdapter extends CursorAdapter implement
     String mainFilter;
     SmartRegisterQueryBuilder lastQuery;
     SmartRegisterClients clients;
+    CESQLiteHelper ceDB;
+    SmartRegisterCursorBuilder.DB db;
 
-    public SmartRegisterPaginatedCursorAdapter(Context context, SmartRegisterCursorBuilder cursorBuilder, SmartRegisterClientsProvider listItemProvider) {
-        super(context, cursorBuilder.buildCursor(), false);
+    public SmartRegisterPaginatedCursorAdapter(Context context, SmartRegisterCursorBuilder cursorBuilder, SmartRegisterClientsProvider listItemProvider, SmartRegisterCursorBuilder.DB db) {
+        super(context, cursorBuilder.buildCursor(db), false);
+        this.db = db;
         this.listItemProvider = listItemProvider;
         this.context= context;
         this.table = cursorBuilder.query().table();
         this.mainFilter = cursorBuilder.query().mainFilter();
         lastQuery = cursorBuilder.query();
-        this.commonRepository = org.ei.opensrp.Context.getInstance().commonrepository(table);
+        if(db == null || db.equals(SmartRegisterCursorBuilder.DB.DRISHTI)){
+            this.commonRepository = org.ei.opensrp.Context.getInstance().commonrepository(table);
+        } else
+            this.ceDB = org.ei.opensrp.Context.getInstance().ceDB();
+
     }
 
     @Override
@@ -65,6 +71,25 @@ public class SmartRegisterPaginatedCursorAdapter extends CursorAdapter implement
         pClient.setColumnmaps(personinlist.getColumnmaps());
         clients.add(pClient);
         listItemProvider.getView(pClient, view, null/*todo*/);
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        // TODO: WARNING .. IT SHOULD BE CHANGED, IT WAS DONE FOR TRANSITIONING FROM HH REGISTER TO OTHERS
+        if (getCursor().isClosed()) {
+            return null;
+        }
+        if (!getCursor().moveToPosition(position)) {
+            throw new IllegalStateException("couldn't move cursor to position " + position);
+        }
+        View v;
+        if (convertView == null) {
+            v = newView(context, getCursor(), parent);
+        } else {
+            v = convertView;
+        }
+        bindView(v, context, getCursor());
+        return v;
     }
 
     public void swapCursorWithNew(Cursor newCursor) {
@@ -179,16 +204,26 @@ public class SmartRegisterPaginatedCursorAdapter extends CursorAdapter implement
         String query = lastQuery.toString();
         Log.i(getClass().getName(), query);
 
-        Cursor c = commonRepository.RawCustomQueryForAdapter(query);
+        Cursor c = buildCursor(query);
         swapCursorWithNew(c);
     }
 
     public int refreshTotalCount(){
-        Cursor c = commonRepository.RawCustomQueryForAdapter(lastQuery.countQuery());
+        Cursor c = buildCursor(lastQuery.countQuery());
         c.moveToFirst();
         totalcount= c.getInt(0);
         c.close();
         return  totalcount;
+    }
+
+    private Cursor buildCursor(String query){
+        Cursor cursor = null;
+        if(db == null || db.equals(SmartRegisterCursorBuilder.DB.DRISHTI)){
+            cursor = commonRepository.RawCustomQueryForAdapter(query);
+        } else {
+            cursor = ceDB.rawQueryForCursor(query);
+        }
+        return cursor;
     }
 
 }
