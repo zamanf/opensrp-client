@@ -1,7 +1,7 @@
 <model>
     <instance>
         <new_member_registration_form_without_qr encounter_type="New Member Registration"
-            id="new_member_registration_form_without_qr" version="201608121119">
+            id="new_member_registration_form_without_qr" version="201608160534">
             <formhub>
                 <uuid />
             </formhub>

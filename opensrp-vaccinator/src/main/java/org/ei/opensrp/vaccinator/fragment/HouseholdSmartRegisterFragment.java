@@ -138,6 +138,11 @@ public class HouseholdSmartRegisterFragment extends SmartClientRegisterGroupFrag
     }
 
     @Override
+    protected String getMemberRegistrationFormWithoutQR(HashMap<String, String> overridemap) {
+        return "new_member_registration_without_qr";
+    }
+
+    @Override
     protected Map<String, String> customFieldOverrides() {
         return null;
     }
@@ -256,13 +261,13 @@ public class HouseholdSmartRegisterFragment extends SmartClientRegisterGroupFrag
         map.put("relationalid", client.getCaseId());
         map.put("existing_first_name_hhh", getValue(client.getColumnmaps(), "first_name_hhh", true));
         map.put("existing_last_name_hhh", getValue(client.getColumnmaps(), "last_name_hhh", true));
-        map.put("existing_household_id", getValue(client.getColumnmaps(), "existing_household_id", true));
-        map.put("existing_union_councilname", getValue(client.getColumnmaps(), "union_council", true));
-        map.put("existing_townname", getValue(client.getColumnmaps(), "town", true));
+        map.put("existing_household_id", getValue(client.getColumnmaps(), "household_id", true));
+        map.put("existing_union_councilname", getValue(client.getColumnmaps(), "union_councilname", true));
+        map.put("existing_townname", getValue(client.getColumnmaps(), "townname", true));
         map.put("existing_city_villagename", getValue(client.getColumnmaps(), "city_village", true));
-        map.put("existing_provincename", getValue(client.getColumnmaps(), "province", true));
+        map.put("existing_provincename", getValue(client.getColumnmaps(), "provincename", true));
         map.put("existing_landmark", getValue(client.getColumnmaps(), "landmark", true));
-        map.put("existing_address1", getValue(client.getColumnmaps(), "adderss1", true));
+        map.put("existing_address1", getValue(client.getColumnmaps(), "address1", true));
 
         return map;
     }

@@ -139,6 +139,8 @@ public abstract class SmartClientRegisterGroupFragment extends SecuredNativeSmar
         imv.setScaleType(ImageView.ScaleType.FIT_XY);
     }//end of method
 
+    protected abstract String getMemberRegistrationFormWithoutQR(HashMap<String, String> overridemap);
+
     protected abstract String getRegistrationForm(HashMap<String, String> overridemap);
 
     protected abstract String getOAFollowupForm(Client client, HashMap<String, String> overridemap);
@@ -192,7 +194,7 @@ public abstract class SmartClientRegisterGroupFragment extends SecuredNativeSmar
         if(qrCode)
             startRegistration();
         else
-            startForm(getMemberRegistrationForm(overrides), "", overrides);
+            startForm(getMemberRegistrationFormWithoutQR(overrides), HouseholdSmartRegisterFragment.client.entityId(), overrides);
     }
 
     private void startNewMemberRegistrationForm(HashMap<String, String> overrides, CommonPersonObjectClient client){
@@ -275,7 +277,7 @@ public abstract class SmartClientRegisterGroupFragment extends SecuredNativeSmar
                 map.put("existing_first_name_hhh", getValue(client.getColumnmaps(), "first_name_hhh", true));
                 map.put("existing_last_name_hhh", getValue(client.getColumnmaps(), "last_name_hhh", true));
                 map.put("existing_household_id", getValue(client.getColumnmaps(), "household_id", true));
-                map.put("existing_address1", getValue(client.getColumnmaps(), "adderss1", true));
+                map.put("existing_address1", getValue(client.getColumnmaps(), "address1", true));
                 map.put("existing_union_councilname", getValue(client.getColumnmaps(), "union_councilname", true));
                 map.put("existing_townname", getValue(client.getColumnmaps(), "townname", true));
                 map.put("existing_city_villagename", getValue(client.getColumnmaps(), "city_village", true));

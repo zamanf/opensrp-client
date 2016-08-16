@@ -1,7 +1,7 @@
 <model>
     <instance>
         <New_Member_Registration_v1 encounter_type="New Member Registration"
-            id="new_member_registration_form" version="201608111127">
+            id="new_member_registration_form" version="201608160535">
             <formhub>
                 <uuid />
             </formhub>
