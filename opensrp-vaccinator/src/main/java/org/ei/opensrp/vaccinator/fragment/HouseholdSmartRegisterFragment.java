@@ -133,8 +133,11 @@ public class HouseholdSmartRegisterFragment extends SmartClientRegisterGroupFrag
     }
 
     @Override
-    protected String getMemberRegistrationForm(HashMap<String, String> overridemap) {
-        return "new_member_registration";
+    protected String getMemberRegistrationForm(boolean qrCode) {
+        if(qrCode)
+            return "new_member_registration";
+        else
+            return "new_member_registration_without_qr";
     }
 
     @Override
