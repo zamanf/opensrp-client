@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.CommonRepository;
 import org.ei.opensrp.repository.db.CESQLiteHelper;
+import org.ei.opensrp.util.Utils;
 import org.ei.opensrp.view.dialog.SearchFilterOption;
 
 /**
@@ -31,7 +32,7 @@ public class SmartRegisterCursorBuilder {
     }
 
     public SmartRegisterCursorBuilder(String table, String mainFilter, CursorSortOption sort){
-        this(table, mainFilter, null, null, null, null, sort==null?null:sort.sort());
+        this(table, mainFilter, null, null, null, null, sort == null ? null : sort.sort());
     }
 
     public SmartRegisterCursorBuilder(String table, String mainFilter, String alias, String[] customColumns, CursorSortOption sort){
@@ -47,9 +48,14 @@ public class SmartRegisterCursorBuilder {
         if (StringUtils.isNotBlank(searchFilter)){
             query.addCondition(searchFilter);
         }
-        if(StringUtils.isNotBlank(sort)){
-            query.addOrder(sort);
+        if(Utils.userRoles.contains("Vaccinator")){
+            // do nothing
+        } else {
+            if(StringUtils.isNotBlank(sort)){
+                query.addOrder(sort);
+            }
         }
+
     }
 
     SmartRegisterCursorBuilder(String table, String mainFilter, CursorFilterOption villageFilter,

@@ -13,6 +13,7 @@ import org.ei.opensrp.cursoradapter.CursorCommonObjectSort;
 import org.ei.opensrp.cursoradapter.CursorSortOption;
 import org.ei.opensrp.cursoradapter.SmartRegisterCursorBuilder;
 import org.ei.opensrp.cursoradapter.SmartRegisterPaginatedCursorAdapter;
+import org.ei.opensrp.util.Utils;
 import org.ei.opensrp.vaccinator.R;
 
 import org.ei.opensrp.vaccinator.application.common.BasicSearchOption;
@@ -59,9 +60,15 @@ public class WomanSmartRegisterFragment extends SmartClientRegisterFragment {
 
     @Override
     protected SmartRegisterPaginatedAdapter adapter() {
-        return new SmartRegisterPaginatedCursorAdapter(getActivity(),
-                new SmartRegisterCursorBuilder("pkwoman", null, (CursorSortOption) getDefaultOptionsProvider().sortOption())
-                , clientsProvider(), SmartRegisterCursorBuilder.DB.DRISHTI);
+        if (Utils.userRoles.contains("Vaccinator")) {
+            return new SmartRegisterPaginatedCursorAdapter(getActivity(),
+                    new SmartRegisterCursorBuilder("event", null, (CursorSortOption) getDefaultOptionsProvider().sortOption())
+                    , clientsProvider(), SmartRegisterCursorBuilder.DB.OPENSRP);
+        } else {
+            return new SmartRegisterPaginatedCursorAdapter(getActivity(),
+                    new SmartRegisterCursorBuilder("pkwoman", null, (CursorSortOption) getDefaultOptionsProvider().sortOption())
+                    , clientsProvider(), SmartRegisterCursorBuilder.DB.DRISHTI);
+        }
     }
 
     @Override

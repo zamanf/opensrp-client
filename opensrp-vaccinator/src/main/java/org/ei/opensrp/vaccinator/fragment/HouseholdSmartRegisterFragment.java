@@ -66,7 +66,7 @@ public class HouseholdSmartRegisterFragment extends SmartClientRegisterGroupFrag
     protected SmartRegisterPaginatedAdapter adapter() {
         if(Utils.userRoles.contains("Vaccinator")){
             return new SmartRegisterPaginatedCursorAdapter(getActivity(),
-                    new SmartRegisterCursorBuilder("pkhousehold", null, (CursorSortOption) getDefaultOptionsProvider().sortOption())
+                    new SmartRegisterCursorBuilder("event", null, (CursorSortOption) getDefaultOptionsProvider().sortOption())
                     , clientsProvider(), SmartRegisterCursorBuilder.DB.OPENSRP);
         } else {
             return new SmartRegisterPaginatedCursorAdapter(getActivity(),

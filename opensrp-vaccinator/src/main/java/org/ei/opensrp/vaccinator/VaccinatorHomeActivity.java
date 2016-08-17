@@ -1,18 +1,27 @@
 package org.ei.opensrp.vaccinator;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import org.ei.opensrp.repository.db.Client;
+import org.ei.opensrp.util.Utils;
 import org.ei.opensrp.vaccinator.child.ChildSmartRegisterActivity;
 import org.ei.opensrp.vaccinator.field.FieldMonitorSmartRegisterActivity;
 import org.ei.opensrp.vaccinator.household.HouseholdSmartRegisterActivity;
 import org.ei.opensrp.vaccinator.woman.WomanSmartRegisterActivity;
 import org.ei.opensrp.view.activity.NativeHomeActivity;
 import org.ei.opensrp.view.contract.HomeContext;
+import org.json.JSONException;
+
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class VaccinatorHomeActivity extends NativeHomeActivity {
     Activity activity=this;
@@ -61,11 +70,46 @@ public class VaccinatorHomeActivity extends NativeHomeActivity {
     }
 
     protected void updateRegisterCounts(HomeContext homeContext) {
-        String householdCount = context.commonrepository("pkhousehold").rawQuery("SELECT COUNT(*) c FROM pkhousehold").get(0).get("c");
-        String childCount = context.commonrepository("pkchild").rawQuery("SELECT COUNT(*) c FROM pkchild").get(0).get("c");
-        String womanCount = context.commonrepository("pkwoman").rawQuery("SELECT COUNT(*) c FROM pkwoman").get(0).get("c");
+        String womanCount;
+        String childCount;
+        int i = 0;
+        if(Utils.userRoles.contains("Vaccinator")){
+                //i = context.ceDB().getEvents(null, "Woman TT Enrollment", null).size();
+                //i = context.ceDB().getClients().size();
+            //context.getInstance().ceDB().rawQuery("select * from event where eventType = 'Woman TT Enrollment'").get(0).size();
+            //String db = context.getInstance().ceDB().getDatabaseName();
+            /*ContentValues row = new ContentValues();
+            Cursor cur = context.getInstance().ceDB().rawQueryForCursor("SELECT * FROM event where eventType like '%Woman%'");
+      if (cur.moveToNext()) {
+            row.put("title", cur.getString(0));
+            row.put("priority", cur.getInt(1));
+      }
+      cur.close();*/
+            List<Client> client = new ArrayList<Client>();
+            try {
+                client = context.getInstance().ceDB().getClients();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            Log.d("value of client", client.toString());
+            womanCount = String.valueOf(context.getInstance().ceDB().rawQueryForCursor("SELECT * FROM event where eventType like '%Woman%'").getCount());
+            childCount = String.valueOf(context.getInstance().ceDB().rawQueryForCursor("SELECT * FROM event where eventType like '%Child%'").getCount());
+
+            //householdCount = String.valueOf(context.ceDB().rawQueryForCursor("SELECT COUNT(*) c FROM event where eventType like '%CHILD%'").getCount());
+        } else {
+
+            womanCount = context.commonrepository("pkwoman").rawQuery("SELECT COUNT(*) c FROM pkwoman").get(0).get("c");
+            childCount = context.commonrepository("pkchild").rawQuery("SELECT COUNT(*) c FROM pkchild").get(0).get("c");
+
+        }
+        //womanCount = context.commonrepository("pkwoman").rawQuery("SELECT COUNT(*) c FROM pkwoman").get(0).get("c");
         String stockCountD = context.commonrepository("stock").rawQuery("SELECT COUNT(*) c FROM stock WHERE report='daily'").get(0).get("c");
         String stockCountM = context.commonrepository("stock").rawQuery("SELECT COUNT(*) c FROM stock WHERE report='monthly'").get(0).get("c");
+        String householdCount = context.commonrepository("pkhousehold").rawQuery("SELECT COUNT(*) c FROM pkhousehold").get(0).get("c");
+
 
         householdRegisterClientCountView.setText(householdCount);
         womanRegisterClientCountView.setText(womanCount);
