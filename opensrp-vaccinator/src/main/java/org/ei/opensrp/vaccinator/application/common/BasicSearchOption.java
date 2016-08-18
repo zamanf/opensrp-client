@@ -1,5 +1,6 @@
 package org.ei.opensrp.vaccinator.application.common;
 
+import org.apache.commons.lang3.StringUtils;
 import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.vaccinator.R;
@@ -34,6 +35,9 @@ public class BasicSearchOption implements SearchFilterOption {
 
     @Override
     public String getCriteria() {
+        if(StringUtils.isBlank(filter)){
+            return null;
+        }
         return " program_client_id = '"+filter+"' OR epi_card_number LIKE '%"+filter+"%' " +
                 " OR first_name LIKE '%"+filter+"%' OR last_name LIKE '%"+filter+"%' " +
                 " OR father_name LIKE '%"+filter+"%' " +

@@ -110,8 +110,8 @@ public class DisplayFormFragment extends Fragment {
         // Enable/disable hardware acceleration:
         if (Build.VERSION.SDK_INT >= 19) {
             // chromium, enable hardware acceleration
-           /* webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
-        } else {*/
+           webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+        } else {
             // older android version, disable hardware acceleration
             webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
@@ -158,6 +158,7 @@ public class DisplayFormFragment extends Fragment {
                 Log.d(TAG, "reseting form");
             }
         });
+        hideTranslucentProgressDialog();
     }
 
     public void loadHtml(){
@@ -230,32 +231,35 @@ public class DisplayFormFragment extends Fragment {
         });
     }
 
-    public void showForm(final ViewPager viewPager, final int formIndex, String entityId, final String metaData, boolean loadPrevious){
+    public void showForm(final ViewPager viewPager, final int formIndex, final String entityId, final String metaData, final boolean loadPrevious){
         viewPager.setCurrentItem(formIndex, false); //Don't animate the view on orientation change the view disapears
 
         showTranslucentProgressDialog();
 
-        if (entityId != null || metaData != null){
-            String data = null;
-            //check if there is previously saved data for the form
-            if(loadPrevious){
-                data = FormUtils.getInstance(getActivity()).getPreviouslySavedDataForForm(formName, metaData, entityId);
-            }
+        Thread tm = new Thread(new Runnable() {
+            @Override
+            public void run() {
 
-            if (data == null){
-                data = FormUtils.getInstance(getActivity()).generateXMLInputForFormWithEntityId(entityId, formName, metaData);
-            }
+                if (entityId != null || metaData != null){
+                    String data = null;
+                    //check if there is previously saved data for the form
+                    if(loadPrevious){
+                        data = FormUtils.getInstance(getActivity()).getPreviouslySavedDataForForm(formName, metaData, entityId);
+                    }
 
-            setRecordId(entityId);
-            setFieldOverides(metaData);
+                    if (data == null){
+                        data = FormUtils.getInstance(getActivity()).generateXMLInputForFormWithEntityId(entityId, formName, metaData);
+                    }
 
-            final String finalData = data;
-            Thread tm = new Thread(new Runnable() {
-                @Override
-                public void run() {
+                    setRecordId(entityId);
+                    setFieldOverides(metaData);
+
+                    final String finalData = data;
+
                     try {
                         // Wait for the page to initialize
                         while (!javascriptLoaded) {
+                            Log.d(TAG, "waiting for javascript to load");
                             Thread.sleep(100);
                         }
 
@@ -268,9 +272,10 @@ public class DisplayFormFragment extends Fragment {
                         Log.e(TAG, e.toString(), e);
                     }
                 }
-            });
-            tm.start();
-        }
+            }
+        });
+        tm.start();
+
     }
 
     public void setFormData(final String data){

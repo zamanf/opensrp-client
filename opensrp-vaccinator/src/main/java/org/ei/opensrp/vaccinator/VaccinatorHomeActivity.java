@@ -2,6 +2,7 @@ package org.ei.opensrp.vaccinator;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -56,15 +57,29 @@ public class VaccinatorHomeActivity extends NativeHomeActivity {
     }
 
     protected void updateRegisterCounts(HomeContext homeContext) {
-        String childCount = context.commonrepository("pkchild").rawQuery("SELECT COUNT(*) c FROM pkchild").get(0).get("c");
-        String womanCount = context.commonrepository("pkwoman").rawQuery("SELECT COUNT(*) c FROM pkwoman").get(0).get("c");
-        String stockCountD = context.commonrepository("stock").rawQuery("SELECT COUNT(*) c FROM stock WHERE report='daily'").get(0).get("c");
-        String stockCountM = context.commonrepository("stock").rawQuery("SELECT COUNT(*) c FROM stock WHERE report='monthly'").get(0).get("c");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final String childCount = context.commonrepository("pkchild").rawQuery("SELECT COUNT(*) c FROM pkchild").get(0).get("c");
+                final String womanCount = context.commonrepository("pkwoman").rawQuery("SELECT COUNT(*) c FROM pkwoman").get(0).get("c");
+                final String stockCountD = context.commonrepository("stock").rawQuery("SELECT COUNT(*) c FROM stock WHERE report='daily'").get(0).get("c");
+                final String stockCountM = context.commonrepository("stock").rawQuery("SELECT COUNT(*) c FROM stock WHERE report='monthly'").get(0).get("c");
 
-        womanRegisterClientCountView.setText(womanCount);
-        childRegisterClientCountView.setText(childCount);
-        fieldRegisterClientCountDView.setText(stockCountD+" D");
-        fieldRegisterClientCountMView.setText(stockCountM+" M");
+                Handler mainHandler = new Handler(getMainLooper());
+
+                Runnable myRunnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        womanRegisterClientCountView.setText(womanCount);
+                        childRegisterClientCountView.setText(childCount);
+                        fieldRegisterClientCountDView.setText(stockCountD + " D");
+                        fieldRegisterClientCountMView.setText(stockCountM + " M");
+                    }
+                };
+                mainHandler.post(myRunnable);
+            }
+        }).start();
+
     }
 
     private View.OnClickListener onRegisterStartListener = new View.OnClickListener() {

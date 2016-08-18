@@ -243,16 +243,6 @@ public abstract class SmartRegisterSecuredActivity extends SecuredActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                //hack reset the form
-                DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(pageIndex);
-                if (displayFormFragment != null) {
-                    displayFormFragment.hideTranslucentProgressDialog();
-                    displayFormFragment.setFormData(null);
-                    displayFormFragment.setRecordId(null);
-                    displayFormFragment.setFieldOverides(null);
-                }
-
-                mPager.setCurrentItem(0, false);
                 SecuredNativeSmartRegisterFragment registerFragment = (SecuredNativeSmartRegisterFragment) findFragmentByPosition(0);
                 if (registerFragment != null && data != null) {
                     String id = data.getFieldValue("program_client_id");
@@ -263,6 +253,17 @@ public abstract class SmartRegisterSecuredActivity extends SecuredActivity {
                     registerFragment.onFilterManual(id);
                 }
                 else registerFragment.onFilterManual("");//clean up search filter
+
+                //hack reset the form
+                DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(pageIndex);
+                if (displayFormFragment != null) {
+                    displayFormFragment.hideTranslucentProgressDialog();
+                    displayFormFragment.setFormData(null);
+                    displayFormFragment.setRecordId(null);
+                    displayFormFragment.setFieldOverides(null);
+                }
+
+                mPager.setCurrentItem(0, false);
             }
         });
     }
