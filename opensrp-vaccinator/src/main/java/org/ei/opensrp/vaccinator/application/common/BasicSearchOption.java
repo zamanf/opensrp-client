@@ -35,15 +35,7 @@ public class BasicSearchOption implements SearchFilterOption {
 
     @Override
     public String getCriteria() {
-        if(StringUtils.isBlank(filter)){
-            return null;
-        }
-        return " program_client_id = '"+filter+"' OR epi_card_number LIKE '%"+filter+"%' " +
-                " OR first_name LIKE '%"+filter+"%' OR last_name LIKE '%"+filter+"%' " +
-                " OR father_name LIKE '%"+filter+"%' " +
-                (type.equals(Type.CHILD)?(" OR mother_name LIKE '%"+filter+"%' "):"" )+
-                (type.equals(Type.WOMAN)? (" OR husband_name LIKE '%"+filter+"%' "):"" )+
-                " OR contact_phone_number LIKE '%"+filter+"%'";
+        return filter;
     }
 
     @Override

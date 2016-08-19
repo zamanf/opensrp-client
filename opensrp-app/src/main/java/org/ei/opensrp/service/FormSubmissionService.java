@@ -3,10 +3,12 @@ package org.ei.opensrp.service;
 import com.google.gson.Gson;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.ei.opensrp.commonregistry.AllCommonsRepository;
 import org.ei.opensrp.domain.form.FormSubmission;
 import org.ei.opensrp.repository.AllSettings;
 import org.ei.opensrp.repository.FormDataRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.text.MessageFormat.format;
@@ -23,18 +25,25 @@ public class FormSubmissionService {
     private ZiggyService ziggyService;
     private FormDataRepository formDataRepository;
     private AllSettings allSettings;
+    private AllCommonsRepository childRepository;
+    private AllCommonsRepository womanRepository;
 
-    public FormSubmissionService(ZiggyService ziggyService, FormDataRepository formDataRepository, AllSettings allSettings) {
+    public FormSubmissionService(ZiggyService ziggyService, FormDataRepository formDataRepository, AllCommonsRepository childRepository, AllCommonsRepository womanRepository, AllSettings allSettings) {
         this.ziggyService = ziggyService;
         this.formDataRepository = formDataRepository;
         this.allSettings = allSettings;
+        this.childRepository = childRepository;
+        this.womanRepository = womanRepository;
     }
 
     public void processSubmissions(List<FormSubmission> formSubmissions) {
+        List<String> entityIds = new ArrayList<String>();
         for (FormSubmission submission : formSubmissions) {
             if (!formDataRepository.submissionExists(submission.instanceId())) {
                 try {
                     ziggyService.saveForm(getParams(submission), submission.instance());
+                    entityIds.add(submission.entityId());
+
                 } catch (Exception e) {
                     logError(format("Form submission processing failed, with instanceId: {0}. Exception: {1}, StackTrace: {2}",
                             submission.instanceId(), e.getMessage(), ExceptionUtils.getStackTrace(e)));
@@ -42,6 +51,12 @@ public class FormSubmissionService {
             }
             formDataRepository.updateServerVersion(submission.instanceId(), submission.serverVersion());
             allSettings.savePreviousFormSyncIndex(submission.serverVersion());
+        }
+        if(!entityIds.isEmpty()) {
+            List<String> remainingIds = childRepository.updateSearch(entityIds);
+            if (!remainingIds.isEmpty()) {
+                womanRepository.updateSearch(remainingIds);
+            }
         }
     }
 

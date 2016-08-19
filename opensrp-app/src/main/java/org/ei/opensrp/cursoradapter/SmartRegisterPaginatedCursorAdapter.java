@@ -21,6 +21,8 @@ import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
 import org.ei.opensrp.view.template.SmartRegisterClientsProvider;
 
+import java.util.List;
+
 public class SmartRegisterPaginatedCursorAdapter extends CursorAdapter implements SmartRegisterPaginatedAdapter{
     private final SmartRegisterClientsProvider listItemProvider;
     private static final int PAGE_SIZE = 20;
@@ -158,12 +160,20 @@ public class SmartRegisterPaginatedCursorAdapter extends CursorAdapter implement
 
     public void filterandSortExecute(String vilageFilter, String searchFilter, String sort) {
 //todo        refresh();
+
         lastQuery = new SmartRegisterQueryBuilder(table, mainFilter);
         if (StringUtils.isNotBlank(vilageFilter)){
             lastQuery.addCondition(vilageFilter);
         }
         if (StringUtils.isNotBlank(searchFilter)){
-            lastQuery.addCondition(searchFilter);
+            if(searchFilter.contains("LIKE")){
+                lastQuery.addCondition(searchFilter);
+            }else{
+                searchFilter = commonRepository.findSearchIds(table, searchFilter, limitPerPage());
+                if(StringUtils.isNotBlank(searchFilter)){
+                    lastQuery.addCondition(searchFilter);
+                }
+            }
         }
         if(StringUtils.isNotBlank(sort)){
             lastQuery.addOrder(sort);

@@ -2,6 +2,7 @@ package org.ei.opensrp.commonregistry;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -9,6 +10,7 @@ import com.google.gson.reflect.TypeToken;
 import net.sqlcipher.database.SQLiteDatabase;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.ei.opensrp.repository.DrishtiRepository;
 
 import java.util.ArrayList;
@@ -24,6 +26,8 @@ import static org.apache.commons.lang3.StringUtils.repeat;
  */
 public class CommonRepository extends DrishtiRepository {
     private String common_SQL = "CREATE TABLE common(id VARCHAR PRIMARY KEY,details VARCHAR)";
+    private String common_ID_INDEX_SQL =  "CREATE INDEX common_id_index ON common(id COLLATE NOCASE) ;";
+    private String common_Relational_ID_INDEX_SQL = null;
     public static final String ID_COLUMN = "id";
     public static final String Relational_ID = "relationalid";
     public static final String DETAILS_COLUMN = "details";
@@ -35,7 +39,7 @@ public class CommonRepository extends DrishtiRepository {
         additionalcolumns = columns;
         common_TABLE_COLUMNS = ArrayUtils.addAll(common_TABLE_COLUMNS, columns);
         TABLE_NAME = tablename;
-        common_SQL = "CREATE TABLE "+ TABLE_NAME + "(id VARCHAR PRIMARY KEY,relationalid VARCHAR,details VARCHAR";
+        common_SQL = "CREATE TABLE "+ TABLE_NAME + "(" + ID_COLUMN + " VARCHAR PRIMARY KEY," + Relational_ID + " VARCHAR," + DETAILS_COLUMN + " VARCHAR";
         for(int i = 0;i<columns.length;i++){
             if(i ==0){
                 common_SQL = common_SQL + ", ";
@@ -47,11 +51,19 @@ public class CommonRepository extends DrishtiRepository {
             }
         }
         common_SQL = common_SQL +")";
+        common_ID_INDEX_SQL = "CREATE INDEX " + TABLE_NAME + "_" + ID_COLUMN + "_index ON " + TABLE_NAME + "(" + ID_COLUMN + " COLLATE NOCASE);";
+        common_Relational_ID_INDEX_SQL = "CREATE INDEX " + TABLE_NAME + "_" + Relational_ID + "_index ON " + TABLE_NAME + "(" + Relational_ID + " COLLATE NOCASE);";
     }
 
     @Override
     protected void onCreate(SQLiteDatabase database) {
         database.execSQL(common_SQL);
+        if(StringUtils.isNotBlank(common_ID_INDEX_SQL)) {
+            database.execSQL(common_ID_INDEX_SQL);
+        }
+        if(StringUtils.isNotBlank(common_Relational_ID_INDEX_SQL)) {
+            database.execSQL(common_Relational_ID_INDEX_SQL);
+        }
     }
 
     public void add(CommonPersonObject common) {
@@ -301,5 +313,116 @@ public class CommonRepository extends DrishtiRepository {
 
         common.setColumnmaps(columns);
         return common;
+    }
+
+    public ContentValues populateSearchValues(String caseId){
+        CommonPersonObject commonPersonObject = findByCaseID(caseId);
+        if (commonPersonObject == null) {
+            return null;
+        }
+
+        try {
+            Map<String, String> columnMaps = commonPersonObject.getColumnmaps();
+            String programClientId = withSub(columnMaps.get("program_client_id"));
+            String epiCardNumber = withSub(columnMaps.get("epi_card_number"));
+            String firstName = withSub(columnMaps.get("first_name"));
+            String lastName = withSub(columnMaps.get("last_name"));
+            String fatherName = withSub(columnMaps.get("father_name"));
+            String motherName = withSub(columnMaps.get("mother_name"));
+            String husbandName = withSub(columnMaps.get("husband_name"));
+            String phoneNumber = withSub(columnMaps.get("contact_phone_number"));
+
+            ContentValues searchValues = new ContentValues();
+            searchValues.put("program_client_id", programClientId);
+            searchValues.put("epi_card_number", epiCardNumber);
+            searchValues.put("first_name", firstName);
+            searchValues.put("last_name", lastName);
+            searchValues.put("father_name", fatherName);
+            if (TABLE_NAME.equals("pkchild"))
+                searchValues.put("mother_name", motherName);
+            else
+                searchValues.put("husband_name", husbandName);
+            searchValues.put("contact_phone_number", phoneNumber);
+
+            return searchValues;
+        }catch (Exception e){
+            Log.e("", "Update Search Error", e);
+            return null;
+        }
+    }
+
+    public boolean searchBatchInserts(Map<String, ContentValues> searchMap){
+        SQLiteDatabase database = masterRepository.getWritableDatabase();
+
+        database.beginTransaction();
+        try {
+            for(String caseId: searchMap.keySet()) {
+                String[] args = {caseId, TABLE_NAME};
+                ContentValues searchValues = searchMap.get(caseId);
+                ArrayList<HashMap<String, String>> mapList = rawQuery(String.format("SELECT search_rowid FROM search_relations WHERE object_id = '%s' and object_type = '%s'", caseId, TABLE_NAME));
+                if (!mapList.isEmpty()) {
+                    String searchRowId = mapList.get(0).get("search_rowid");
+                    database.update("search", searchValues, " rowid = ?", new String[]{String.valueOf(searchRowId)});
+
+                } else {
+                    long searchRowId = database.insert("search", null, searchValues);
+                    ContentValues searchRelationsValues = new ContentValues();
+                    searchRelationsValues.put("search_rowid", searchRowId);
+                    searchRelationsValues.put("object_id", caseId);
+                    searchRelationsValues.put("object_type", TABLE_NAME);
+                    database.insert("search_relations", null, searchRelationsValues);
+                }
+            }
+            database.setTransactionSuccessful();
+            database.endTransaction();
+
+            return true;
+        }catch (Exception e){
+            Log.e("", "Update Search Error", e);
+            database.endTransaction();
+            return false;
+        }
+    }
+
+    public String findSearchIds(String tableName, String phrase, int limit){
+        if(StringUtils.isBlank(phrase)){
+            return null;
+        }
+
+        List<String> ids  = new ArrayList<String>();
+        ArrayList<HashMap<String, String>> mapList = rawQuery("select object_id, object_type from search join search_relations on search_rowid = search.rowid where search match '"+phrase+"*'");
+        if(!mapList.isEmpty()){
+            // if search is greater than two pages try using limit
+            if(mapList.size() > (limit * 2))
+                mapList = rawQuery("select object_id, object_type from search join search_relations on search_rowid = search.rowid where search match '"+phrase+"*' LIMIT 0," + (limit*2));
+            for(HashMap<String, String> map: mapList){
+                String id = map.get("object_id");
+                String type = map.get("object_type");
+                if(StringUtils.isNotBlank(id) && StringUtils.isNotBlank(type) && type.equals(tableName)){
+                    ids.add(id);
+                }
+            }
+        }
+
+        if(ids.isEmpty()){
+            return  String.format("%s IN ()", ID_COLUMN);
+        }
+
+        String joinedIds =  "'" + StringUtils.join(ids,"','") + "'";
+        String searchString = String.format("%s IN (%s)", ID_COLUMN, joinedIds);
+        return searchString;
+    }
+
+    public String withSub(String s){
+        String withSub = "";
+        if(s == null || s.isEmpty()){
+            return withSub;
+        }
+        int length = s.length();
+
+        for (int i = 0; i < length; i++) {
+            withSub += s.substring(i) + " ";
+        }
+        return withSub.trim();
     }
 }

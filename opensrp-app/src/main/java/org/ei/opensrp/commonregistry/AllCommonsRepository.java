@@ -3,11 +3,18 @@ package org.ei.opensrp.commonregistry;
 
 import android.content.ContentValues;
 
+import net.sqlcipher.database.SQLiteDatabase;
+
 import org.ei.opensrp.repository.AlertRepository;
 import org.ei.opensrp.repository.TimelineEventRepository;
+import org.ei.opensrp.util.StringUtil;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static net.sqlcipher.DatabaseUtils.longForQuery;
 
 /**
  * Created by Raihan Ahmed on 2/12/15.
@@ -58,13 +65,39 @@ public class AllCommonsRepository {
 
     public void update(String tableName,ContentValues contentValues,String caseId){
         personRepository.updateColumn(tableName, contentValues, caseId);
+        List<String> caseIds = new ArrayList<String>();
+        caseIds.add(caseId);
+        updateSearch(caseIds);
     }
 
     public List<CommonPersonObject> customQuery(String sql , String[] selections , String tableName){
-        return personRepository.customQuery(sql,selections,tableName);
+        return personRepository.customQuery(sql, selections, tableName);
     }
 
     public List<CommonPersonObject> customQueryForCompleteRow(String sql , String[] selections , String tableName){
         return personRepository.customQueryForCompleteRow(sql,selections,tableName);
     }
-}
+
+    public List<String> updateSearch(List<String> caseIds) {
+        List<String> remainingIds = new ArrayList<String>();
+        if(caseIds == null || caseIds.isEmpty()){
+            return remainingIds;
+        }
+        Map<String, ContentValues> searchMap = new HashMap<String, ContentValues>();
+        for(String caseId: caseIds){
+            ContentValues contentValues = personRepository.populateSearchValues(caseId);
+            if(contentValues != null){
+                searchMap.put(caseId, contentValues);
+            }else{
+                remainingIds.add(caseId);
+            }
+        }
+
+        if(!searchMap.isEmpty()){
+            personRepository.searchBatchInserts(searchMap);
+        }
+
+        return remainingIds;
+    }
+
+    }

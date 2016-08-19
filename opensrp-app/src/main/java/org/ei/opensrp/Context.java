@@ -243,7 +243,7 @@ public class Context {
     public FormSubmissionService formSubmissionService() {
         initRepository();
         if (formSubmissionService == null) {
-            formSubmissionService = new FormSubmissionService(ziggyService(), formDataRepository(), allSettings());
+            formSubmissionService = new FormSubmissionService(ziggyService(), formDataRepository(), allCommonsRepositoryobjects("pkchild"), allCommonsRepositoryobjects("pkwoman"), allSettings());
         }
         return formSubmissionService;
     }

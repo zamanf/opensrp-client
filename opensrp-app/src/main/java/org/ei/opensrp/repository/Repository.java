@@ -16,6 +16,7 @@ public class Repository extends SQLiteOpenHelper {
     private String dbName;
     private Session session;
 
+
     public Repository(Context context, Session session, DrishtiRepository... repositories) {
         super(context, session.repositoryName(), null, 1);
         this.repositories = repositories;
@@ -35,6 +36,19 @@ public class Repository extends SQLiteOpenHelper {
         for (DrishtiRepository repository : repositories) {
             repository.onCreate(database);
         }
+
+        String searchSql = "create virtual table search using fts4 (program_client_id,epi_card_number,first_name,last_name,father_name,mother_name,husband_name,contact_phone_number);";
+        String searchRelationsSql = "create table search_relations (search_rowid INTEGER, object_id INTEGER, object_type TEXT);";
+        String searchRelationsRowIdIndex = "create index search_relations_searchrowid_index on search_relations (search_rowid)";
+        String searchRelationsObjectIdIndex = "create index search_relations_objects_id_index on search_relations (object_id);";
+        String searchRelationsObjectLinkIndex = "create index search_relations_objects_link_index on search_relations (object_id,object_type);";
+
+        database.execSQL(searchSql);
+        database.execSQL(searchRelationsSql);
+        database.execSQL(searchRelationsRowIdIndex);
+        database.execSQL(searchRelationsObjectIdIndex);
+        database.execSQL(searchRelationsObjectLinkIndex);
+
     }
 
     @Override
