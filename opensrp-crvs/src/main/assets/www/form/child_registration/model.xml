@@ -1,6 +1,6 @@
 <model>
   <instance>
-    <ChildRegistration.xls encounter_type="Child Registartion" id="ChildRegistration" version="201608040701">
+    <ChildRegistration.xls encounter_type="Child Registartion" id="ChildRegistration" version="201608211320">
       <formhub>
         <uuid/>
       </formhub>
@@ -11,8 +11,8 @@
       <existing_Paurasava/>
       <existing_Union/>
       <existing_HIE_facilities/>
-      <start openmrs_entity="163137AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" openmrs_entity_parent="concept"/>
-      <today openmrs_entity="163286AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" openmrs_entity_parent="concept"/>
+      <start/>
+      <today/>
       <WARD openmrs_entity="person_address" openmrs_entity_id="address2" openmrs_entity_parent="usual_residence"/>
       <COUNTRY openmrs_entity="person_address" openmrs_entity_id="country" openmrs_entity_parent="usual_residence"/>
       <DIVISION openmrs_entity="person_address" openmrs_entity_id="stateProvince" openmrs_entity_parent="usual_residence"/>
@@ -24,28 +24,29 @@
       <HIE_FACILITIES openmrs_entity="person_address" openmrs_entity_id="address6" openmrs_entity_parent="usual_residence"/>
       <GPS openmrs_entity="person_address" openmrs_entity_id="geopoint" openmrs_entity_parent="usual_residence"/>
       <Date_Of_Reg>yes</Date_Of_Reg>
-      <child_nid openmrs_entity="person_attribute" openmrs_entity_id="nid"/>
-      <name_english openmrs_entity="person" openmrs_entity_id="english_name"/>
-      <name_bengali openmrs_entity="person" openmrs_entity_id="bengali_name"/>
+      <child_nid dhis_attribute="attribute" dhis_attribute_id="fOiDAS6zG1X" openmrs_entity="person_attribute" openmrs_entity_id="nationalId"/>
+      <name_Fname dhis_attribute="attribute" dhis_attribute_id="QWTcaK2mXeD" openmrs_entity="person" openmrs_entity_id="first_name"/>
+      <name_Lname openmrs_entity="person" openmrs_entity_id="last_name"/>
+      <name_bengali/>
       <Father_Information>
-        <father_nid/>
-        <father_name_english/>
+        <father_nid dhis_attribute="attribute" dhis_attribute_id="ZeOaGp7aH7S" openmrs_entity="concept" openmrs_entity_id="f2fa4f04-cb73-4feb-a12c-789a486adba1"/>
+        <father_name_english dhis_attribute="attribute" dhis_attribute_id="i44zOELS0U0" openmrs_entity="person_attribute" openmrs_entity_id="fatherName"/>
         <father_name_bengali/>
-        <father_dob/>
+        <father_dob dhis_attribute="attribute" dhis_attribute_id="dTsDubUMSfN" openmrs_entity="concept" openmrs_entity_id="85870d00-cdc2-4a39-93e9-ba03c4fe1a95"/>
       </Father_Information>
       <Mother_Information>
-        <mother_nid/>
-        <mother_name_english/>
+        <mother_nid dhis_attribute="attribute" dhis_attribute_id="tV1tJwsY74Z" openmrs_entity="concept" openmrs_entity_id="d5f66574-6807-46e2-b887-0374a75e95f7"/>
+        <mother_name_english dhis_attribute="attribute" dhis_attribute_id="z90AqHFU1Np" openmrs_entity="person_attribute" openmrs_entity_id="motherName"/>
         <mother_name_bengali/>
-        <mother_dob/>
+        <mother_dob dhis_attribute="attribute" dhis_attribute_id="mFsA7VzbU7m" openmrs_entity="concept" openmrs_entity_id="4941958a-6ae6-4e20-84a3-8288bec20102"/>
       </Mother_Information>
-      <child_dob openmrs_entity="person" openmrs_entity_id="birthdate"/>
-      <place_of_birth openmrs_entity="person" openmrs_entity_id="placeofbirth"/>
-      <nationality openmrs_entity="person_attribute" openmrs_entity_id="nationality">Banglaeshi</nationality>
-      <gender openmrs_entity="person" openmrs_entity_id="gender"/>
-      <present_address/>
-      <permanent_address/>
-      <end openmrs_entity="163138AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" openmrs_entity_parent="concept"/>
+      <child_dob dhis_attribute="attribute" dhis_attribute_id="JBLD3c3KJGX" openmrs_entity="person" openmrs_entity_id="birthdate"/>
+      <place_of_birth dhis_attribute="attribute" dhis_attribute_id="sdEXuVWggcy" openmrs_entity="person_attribute" openmrs_entity_id="placeofbirth"/>
+      <nationality dhis_attribute="attribute" dhis_attribute_id="AULGrWleWqc" openmrs_entity="person_attribute" openmrs_entity_id="nationality">Banglaeshi</nationality>
+      <gender dhis_attribute="attribute" dhis_attribute_id="Q31J4kz6nGS" openmrs_entity="person" openmrs_entity_id="gender"/>
+      <present_address dhis_attribute="attribute" dhis_attribute_id="IQL4t2SqbAD" openmrs_entity="person_attribute" openmrs_entity_id="addressCode"/>
+      <permanent_address dhis_attribute="attribute" dhis_attribute_id="zmIexn2UDnj" openmrs_entity="person_attribute" openmrs_entity_id="addressCode"/>
+      <end/>
       <meta>
         <instanceID/>
       </meta>

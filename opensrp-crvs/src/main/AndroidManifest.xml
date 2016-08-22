@@ -3,7 +3,8 @@
     package="com.opensrp.crvs">
 
     <application android:allowBackup="true"
-        android:label="@string/app_name"
+        tools:replace="android:label"
+        android:label="@string/app_name_crvs"
         android:name=".application.CRVSApplication">
         <activity
             android:name=".LoginActivity"
