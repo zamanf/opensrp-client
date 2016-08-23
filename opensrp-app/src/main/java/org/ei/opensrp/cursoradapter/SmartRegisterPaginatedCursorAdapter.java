@@ -1,8 +1,6 @@
 package org.ei.opensrp.cursoradapter;
 
-import android.app.LoaderManager;
 import android.content.Context;
-import android.content.CursorLoader;
 import android.database.Cursor;
 import android.util.Log;
 import android.view.View;
@@ -21,7 +19,7 @@ import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
 import org.ei.opensrp.view.template.SmartRegisterClientsProvider;
 
-import java.util.List;
+import java.util.Arrays;
 
 public class SmartRegisterPaginatedCursorAdapter extends CursorAdapter implements SmartRegisterPaginatedAdapter{
     private final SmartRegisterClientsProvider listItemProvider;
@@ -32,6 +30,7 @@ public class SmartRegisterPaginatedCursorAdapter extends CursorAdapter implement
     String mainFilter;
     SmartRegisterQueryBuilder lastQuery;
     SmartRegisterClients clients;
+
 
     public SmartRegisterPaginatedCursorAdapter(Context context, SmartRegisterCursorBuilder cursorBuilder, SmartRegisterClientsProvider listItemProvider) {
         super(context, cursorBuilder.buildCursor(), false);
@@ -75,7 +74,7 @@ public class SmartRegisterPaginatedCursorAdapter extends CursorAdapter implement
     }
 
 
-    private int totalcount = 0;
+    private Integer totalcount = null;
     public int limitPerPage(){return lastQuery.pageSize();}
     public int currentoffset(){return lastQuery.offset();}
 
@@ -85,7 +84,9 @@ public class SmartRegisterPaginatedCursorAdapter extends CursorAdapter implement
 
     @Override
     public int getCount() {
-        refreshTotalCount();
+        if(totalcount == null) {
+            refreshTotalCount();
+        }
         if(totalcount < currentoffset()+limitPerPage()){
             return totalcount - currentoffset();
         }
@@ -97,11 +98,11 @@ public class SmartRegisterPaginatedCursorAdapter extends CursorAdapter implement
     }
 
     public int currentPage() {
+        int currentPage = 0;
         if(currentoffset() != 0) {
-            return (int)Math.round(pageCount()-((totalcount-currentoffset())/(1.0*limitPerPage())));
-        }else{
-            return 1;
+            currentPage =  (int)Math.round(pageCount()-((totalcount-currentoffset())/(1.0*limitPerPage())));
         }
+        return currentPage + 1;
     }
 
     public boolean hasNextPage() {
@@ -161,22 +162,28 @@ public class SmartRegisterPaginatedCursorAdapter extends CursorAdapter implement
     public void filterandSortExecute(String vilageFilter, String searchFilter, String sort) {
 //todo        refresh();
 
-        lastQuery = new SmartRegisterQueryBuilder(table, mainFilter);
-        if (StringUtils.isNotBlank(vilageFilter)){
-            lastQuery.addCondition(vilageFilter);
-        }
-        if (StringUtils.isNotBlank(searchFilter)){
-            if(searchFilter.contains("LIKE")){
-                lastQuery.addCondition(searchFilter);
-            }else{
-                searchFilter = commonRepository.findSearchIds(table, searchFilter, limitPerPage());
-                if(StringUtils.isNotBlank(searchFilter)){
-                    lastQuery.addCondition(searchFilter);
-                }
+        // TODO Include village filter in fts, currently no village filters available
+
+        if(Arrays.asList(commonRepository.ftsTables()).contains(table) && searchFilter != null && sort != null && (!searchFilter.contains("LIKE") || !searchFilter.contains("="))){
+            // FTS way
+            lastQuery = new SmartRegisterQueryBuilder(table, mainFilter);
+            lastQuery.setIsFTS(true);
+            lastQuery.setFtsSearchFilter(searchFilter);
+            lastQuery.setFtsSort(sort);
+        }else {
+            // old way
+            lastQuery = new SmartRegisterQueryBuilder(table, mainFilter);
+            if (StringUtils.isNotBlank(vilageFilter)){
+                lastQuery.addCondition(vilageFilter);
             }
-        }
-        if(StringUtils.isNotBlank(sort)){
-            lastQuery.addOrder(sort);
+
+            if (StringUtils.isNotBlank(vilageFilter)) {
+                lastQuery.addCondition(searchFilter);
+            }
+
+            if (StringUtils.isNotBlank(sort)) {
+                lastQuery.addOrder(sort);
+            }
         }
         lastQuery.limitAndOffset(limitPerPage(), currentoffset());
 
@@ -184,19 +191,35 @@ public class SmartRegisterPaginatedCursorAdapter extends CursorAdapter implement
     }
 
     public void filterandSortExecute() {
+        refreshTotalCount();
         clients = new SmartRegisterClients();
 
-        String query = lastQuery.toString();
+        String query;
+        if(lastQuery.isFTS()) {
+            query = lastQuery.toStringFts();
+        } else {
+            query = lastQuery.toString();
+        }
         Log.i(getClass().getName(), query);
 
         Cursor c = commonRepository.RawCustomQueryForAdapter(query);
         swapCursorWithNew(c);
+
     }
 
     public int refreshTotalCount(){
-        Cursor c = commonRepository.RawCustomQueryForAdapter(lastQuery.countQuery());
-        c.moveToFirst();
-        totalcount= c.getInt(0);
+        String countQuery = lastQuery.countQuery();
+        if(lastQuery.isFTS()){
+            countQuery = lastQuery.countQueryFts();
+        }
+        Log.i(getClass().getName(), countQuery);
+        Cursor c = commonRepository.RawCustomQueryForAdapter(countQuery);
+        if(c != null && (c.getCount() > 0)) {
+            c.moveToFirst();
+            totalcount = c.getInt(0);
+        }else{
+            totalcount = 0;
+        }
         c.close();
         return  totalcount;
     }

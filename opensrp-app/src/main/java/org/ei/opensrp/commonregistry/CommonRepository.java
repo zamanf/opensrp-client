@@ -332,17 +332,25 @@ public class CommonRepository extends DrishtiRepository {
             String husbandName = withSub(columnMaps.get("husband_name"));
             String phoneNumber = withSub(columnMaps.get("contact_phone_number"));
 
-            ContentValues searchValues = new ContentValues();
-            searchValues.put("program_client_id", programClientId);
-            searchValues.put("epi_card_number", epiCardNumber);
-            searchValues.put("first_name", firstName);
-            searchValues.put("last_name", lastName);
-            searchValues.put("father_name", fatherName);
+            String motherOrHusbandName = "";
             if (TABLE_NAME.equals("pkchild"))
-                searchValues.put("mother_name", motherName);
+                motherOrHusbandName = motherName;
             else
-                searchValues.put("husband_name", husbandName);
-            searchValues.put("contact_phone_number", phoneNumber);
+                motherOrHusbandName = husbandName;
+
+            String phraseSeparator = " | ";
+            String phrase  = programClientId + phraseSeparator + epiCardNumber + phraseSeparator +firstName + phraseSeparator + lastName + phraseSeparator + fatherName + phraseSeparator + motherOrHusbandName + phraseSeparator + phoneNumber;
+
+            ContentValues searchValues = new ContentValues();
+            searchValues.put("phrase", phrase);
+
+            String firstNameSort = columnMaps.get("first_name") == null ? "" : columnMaps.get("first_name");
+            String dobSort = columnMaps.get("dob") == null ? "" : columnMaps.get("dob");
+            String programClientIdSort = columnMaps.get("program_client_id") == null ? "" : columnMaps.get("program_client_id");
+
+            searchValues.put("first_name", firstNameSort);
+            searchValues.put("dob", dobSort);
+            searchValues.put("program_client_id", programClientIdSort);
 
             return searchValues;
         }catch (Exception e){
@@ -359,7 +367,7 @@ public class CommonRepository extends DrishtiRepository {
             for(String caseId: searchMap.keySet()) {
                 String[] args = {caseId, TABLE_NAME};
                 ContentValues searchValues = searchMap.get(caseId);
-                ArrayList<HashMap<String, String>> mapList = rawQuery(String.format("SELECT search_rowid FROM search_relations WHERE object_id = '%s' and object_type = '%s'", caseId, TABLE_NAME));
+                ArrayList<HashMap<String, String>> mapList = rawQuery(String.format("SELECT search_rowid FROM search_relations WHERE object_id = '%s' AND object_type = '%s'", caseId, TABLE_NAME));
                 if (!mapList.isEmpty()) {
                     String searchRowId = mapList.get(0).get("search_rowid");
                     database.update("search", searchValues, " rowid = ?", new String[]{String.valueOf(searchRowId)});
@@ -384,36 +392,12 @@ public class CommonRepository extends DrishtiRepository {
         }
     }
 
-    public String findSearchIds(String tableName, String phrase, int limit){
-        if(StringUtils.isBlank(phrase)){
-            return null;
-        }
-
-        List<String> ids  = new ArrayList<String>();
-        ArrayList<HashMap<String, String>> mapList = rawQuery("select object_id, object_type from search join search_relations on search_rowid = search.rowid where search match '"+phrase+"*'");
-        if(!mapList.isEmpty()){
-            // if search is greater than two pages try using limit
-            if(mapList.size() > (limit * 2))
-                mapList = rawQuery("select object_id, object_type from search join search_relations on search_rowid = search.rowid where search match '"+phrase+"*' LIMIT 0," + (limit*2));
-            for(HashMap<String, String> map: mapList){
-                String id = map.get("object_id");
-                String type = map.get("object_type");
-                if(StringUtils.isNotBlank(id) && StringUtils.isNotBlank(type) && type.equals(tableName)){
-                    ids.add(id);
-                }
-            }
-        }
-
-        if(ids.isEmpty()){
-            return  String.format("%s IN ()", ID_COLUMN);
-        }
-
-        String joinedIds =  "'" + StringUtils.join(ids,"','") + "'";
-        String searchString = String.format("%s IN (%s)", ID_COLUMN, joinedIds);
-        return searchString;
+    public String[] ftsTables(){
+        String[] ftsTables = {"pkchild", "pkwoman"};
+        return ftsTables;
     }
 
-    public String withSub(String s){
+    private String withSub(String s){
         String withSub = "";
         if(s == null || s.isEmpty()){
             return withSub;

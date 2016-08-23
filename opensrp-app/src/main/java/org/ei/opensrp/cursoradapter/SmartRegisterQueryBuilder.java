@@ -14,6 +14,9 @@ public class SmartRegisterQueryBuilder {
     private String joins = "";
     private int pageSize = 20;
     private int offset = 0;
+    private boolean isFTS;
+    private String ftsSearchFilter = "";
+    private String ftsSort = "";
 
     public String table() {
         return table;
@@ -149,6 +152,17 @@ public class SmartRegisterQueryBuilder {
         return res;
     }
 
+    public String toStringFts(){
+        String res = Selectquery;
+
+        String searchFilter = searchFilterFts();
+        if (StringUtils.isNotBlank(searchFilter)){
+            res += " WHERE "+searchFilterFts();
+        }
+
+        return res;
+    }
+
     public String countQuery(){
         String res = "SELECT COUNT(*) FROM "+table;
         if (StringUtils.isNotBlank(joins)){
@@ -159,5 +173,62 @@ public class SmartRegisterQueryBuilder {
         }
 
         return res;
+    }
+
+    public void setIsFTS(boolean isFTS) {
+        this.isFTS = isFTS;
+    }
+
+    public boolean isFTS() {
+        return isFTS;
+    }
+
+    public void setFtsSearchFilter(String ftsSearchFilter) {
+        this.ftsSearchFilter = ftsSearchFilter;
+    }
+
+    public String getFtsSearchFilter() {
+        return ftsSearchFilter;
+    }
+
+    public void setFtsSort(String ftsSort) {
+        this.ftsSort = ftsSort;
+    }
+
+    private String searchFilterFts(){
+        String query = "SELECT object_id FROM search JOIN search_relations ON search_rowid = search.rowid " + phraseClause(this.table, this.ftsSearchFilter) + orderByClause(this.ftsSort) + limitClause(this.pageSize, this.offset);
+        String searchString = String.format(" %s IN (%s) ", "id", query);
+        return searchString;
+    }
+
+    public String countQueryFts(){
+        String groupByClause = " GROUP BY object_type HAVING object_type = '" + this.table + "'";
+        String countQuery = "SELECT COUNT(*) FROM search JOIN search_relations ON search_rowid = search.rowid " + phraseClause(this.ftsSearchFilter) + groupByClause;
+        return countQuery;
+    }
+
+    private String phraseClause(String tableName, String phrase){
+        if(StringUtils.isNotBlank(phrase)){
+            return " WHERE phrase MATCH '"+phrase+"*' AND object_type = '" + this.table + "'";
+        }
+        return "WHERE object_type = '" + tableName + "'";
+    }
+
+    private String phraseClause(String phrase){
+        if(StringUtils.isNotBlank(phrase)){
+            return " WHERE phrase MATCH '"+phrase+"*'";
+        }
+        return "";
+    }
+
+    private String orderByClause(String sort){
+        if(StringUtils.isNotBlank(sort)){
+            return " ORDER BY search." + sort;
+        }
+        return "";
+    }
+
+    private String limitClause(int limit, int offset){
+        return " LIMIT " +  offset + "," + limit;
     }
 }

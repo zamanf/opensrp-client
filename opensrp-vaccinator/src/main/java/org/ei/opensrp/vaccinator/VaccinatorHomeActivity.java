@@ -57,6 +57,11 @@ public class VaccinatorHomeActivity extends NativeHomeActivity {
     }
 
     protected void updateRegisterCounts(HomeContext homeContext) {
+        womanRegisterClientCountView.setText("0");
+        childRegisterClientCountView.setText("0");
+        fieldRegisterClientCountDView.setText("0 D");
+        fieldRegisterClientCountMView.setText("0 M");
+
         new Thread(new Runnable() {
             @Override
             public void run() {

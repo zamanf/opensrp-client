@@ -37,16 +37,18 @@ public class Repository extends SQLiteOpenHelper {
             repository.onCreate(database);
         }
 
-        String searchSql = "create virtual table search using fts4 (program_client_id,epi_card_number,first_name,last_name,father_name,mother_name,husband_name,contact_phone_number);";
+        String searchSql = "create virtual table search using fts4 (phrase,first_name,dob,program_client_id);";
         String searchRelationsSql = "create table search_relations (search_rowid INTEGER, object_id INTEGER, object_type TEXT);";
         String searchRelationsRowIdIndex = "create index search_relations_searchrowid_index on search_relations (search_rowid)";
-        String searchRelationsObjectIdIndex = "create index search_relations_objects_id_index on search_relations (object_id);";
-        String searchRelationsObjectLinkIndex = "create index search_relations_objects_link_index on search_relations (object_id,object_type);";
+        String searchRelationsObjectIdIndex = "create index search_relations_objects_id_index on search_relations (object_id COLLATE NOCASE);";
+        String searchRelationsTypeIdIndex = "create index search_relations_objects_type_index on search_relations (object_type COLLATE NOCASE);";
+        String searchRelationsObjectLinkIndex = "create index search_relations_objects_link_index on search_relations (object_id COLLATE NOCASE,object_type COLLATE NOCASE);";
 
         database.execSQL(searchSql);
         database.execSQL(searchRelationsSql);
         database.execSQL(searchRelationsRowIdIndex);
         database.execSQL(searchRelationsObjectIdIndex);
+        database.execSQL(searchRelationsTypeIdIndex);
         database.execSQL(searchRelationsObjectLinkIndex);
 
     }
