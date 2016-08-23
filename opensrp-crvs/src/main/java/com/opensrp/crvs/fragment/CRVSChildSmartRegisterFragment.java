@@ -353,12 +353,12 @@ public class CRVSChildSmartRegisterFragment extends SecuredNativeSmartRegisterCu
         CommonRepository commonRepository = context.commonrepository("crvschild");
         setTablename("crvschild");
         SmartRegisterQueryBuilder countqueryBUilder = new SmartRegisterQueryBuilder(childMainCountWithJoins());
-        countSelect = countqueryBUilder.mainCondition(" crvschild.name_english is not null ");
+        countSelect = countqueryBUilder.mainCondition(" crvschild.name_Fname is not null ");
         CountExecute();
 
 
         SmartRegisterQueryBuilder queryBUilder = new SmartRegisterQueryBuilder(childMainSelectWithJoins());
-        mainSelect = queryBUilder.mainCondition(" crvschild.name_english is not null ");
+        mainSelect = queryBUilder.mainCondition(" crvschild.name_Fname is not null ");
         queryBUilder.addCondition(filters);
         Sortqueries = sortByChildName();
         currentquery  = queryBUilder.orderbyCondition(Sortqueries);
@@ -368,7 +368,7 @@ public class CRVSChildSmartRegisterFragment extends SecuredNativeSmartRegisterCu
 //        Cursor c = commonRepository.CustomQueryForAdapter(new String[]{"id as _id","relationalid","details"},"household",""+currentlimit,""+currentoffset);
         Cursor c = commonRepository.RawCustomQueryForAdapter(queryBUilder.Endquery(queryBUilder.addlimitandOffset(currentquery, 20, 0)));
         CRVSChildSmartClientsProvider hhscp = new CRVSChildSmartClientsProvider(getActivity(),clientActionHandler,context.alertService());
-        clientAdapter = new SmartRegisterPaginatedCursorAdapter(getActivity(), c, hhscp, new CommonRepository("crvschild",new String []{ "name_english", "mother_name_english", "father_name_english","child_dob"}));
+        clientAdapter = new SmartRegisterPaginatedCursorAdapter(getActivity(), c, hhscp, new CommonRepository("crvschild",new String []{ "name_Fname", "mother_name_english", "father_name_english","child_dob"}));
         clientsView.setAdapter(clientAdapter);
 //        setServiceModeViewDrawableRight(null);
 //        updateSearchView();
@@ -386,7 +386,7 @@ public class CRVSChildSmartRegisterFragment extends SecuredNativeSmartRegisterCu
                 "Else alerts.status END ASC";
     }
     public String childMainSelectWithJoins(){
-        return "Select crvschild.id as _id,crvschild.relationalid,crvschild.details,crvschild.name_english,crvschild.mother_name_english,crvschild.father_name_english,crvschild.child_dob \n" +
+        return "Select crvschild.id as _id,crvschild.relationalid,crvschild.details,crvschild.name_Fname,crvschild.mother_name_english,crvschild.father_name_english,crvschild.child_dob \n" +
                 "from crvschild\n";
     }
     public String childMainCountWithJoins() {
@@ -395,7 +395,7 @@ public class CRVSChildSmartRegisterFragment extends SecuredNativeSmartRegisterCu
     }
 
     private String sortByChildName(){
-        return " name_english ASC";
+        return " name_Fname ASC";
     }
     private String sortBymother_name(){
         return " mother_name_english ASC";

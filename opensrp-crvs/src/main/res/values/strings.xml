@@ -412,7 +412,7 @@
     <string name="nid">NID</string>
     <string name="father_information">Father\'s Information</string>
     <string name="mother_information">Mother\'s Information</string>
-    <string name="app_name_crvs">OpenSrp CRVS</string>
+    <string name="app_name_crvs">opensrp-CRVS</string>
 
 
 </resources>

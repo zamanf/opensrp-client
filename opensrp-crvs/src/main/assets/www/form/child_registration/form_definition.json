@@ -93,8 +93,12 @@
         "bind": "/model/instance/ChildRegistration.xls/child_nid"
       },
       {
-        "name": "name_english",
-        "bind": "/model/instance/ChildRegistration.xls/name_english"
+        "name": "name_Fname",
+        "bind": "/model/instance/ChildRegistration.xls/name_Fname"
+      },
+      {
+        "name": "name_Lname",
+        "bind": "/model/instance/ChildRegistration.xls/name_Lname"
       },
       {
         "name": "name_bengali",
