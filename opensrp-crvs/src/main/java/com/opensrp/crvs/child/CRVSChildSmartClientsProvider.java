@@ -91,7 +91,7 @@ public class CRVSChildSmartClientsProvider implements SmartRegisterCLientsProvid
 
         fathername.setText(humanize(pc.getColumnmaps().get("father_name_english")!=null?pc.getColumnmaps().get("father_name_english"):""));
         mothername.setText(humanize(pc.getColumnmaps().get("mother_name_english") != null ? pc.getColumnmaps().get("mother_name_english"):""));
-        name.setText(humanize(pc.getColumnmaps().get("name_english")!=null?pc.getColumnmaps().get("name_english"):""));
+        name.setText(humanize(pc.getColumnmaps().get("name_Fname")!=null?pc.getColumnmaps().get("name_Fname"):""));
         placeofbirth.setText(pc.getDetails().get("place_of_birth")!=null?pc.getDetails().get("place_of_birth"):"");
         address.setText(pc.getDetails().get("present_address")!=null?pc.getDetails().get("present_address"):"");
         age.setText(""+age(pc)+ "d ");
