@@ -392,6 +392,26 @@ public class CommonRepository extends DrishtiRepository {
         }
     }
 
+    public List<String> findSearchIds(String query){
+
+        SQLiteDatabase database = masterRepository.getReadableDatabase();
+
+        Log.i(getClass().getName(), query);
+        Cursor cursor = database.rawQuery(query, null);
+
+        List<String> ids  = new ArrayList<String>();
+
+        if (cursor.moveToFirst()) {
+            do {
+                String id = cursor.getString(0);
+                ids.add(id);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        return ids;
+    }
+
     public String[] ftsTables(){
         String[] ftsTables = {"pkchild", "pkwoman"};
         return ftsTables;

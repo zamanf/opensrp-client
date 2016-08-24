@@ -2,6 +2,8 @@ package org.ei.opensrp.cursoradapter;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.List;
+
 /**
  * Created by raihan on 3/17/16.
  */
@@ -152,12 +154,23 @@ public class SmartRegisterQueryBuilder {
         return res;
     }
 
-    public String toStringFts(){
+    public String toStringFts(List<String> ids, String idColumn){
         String res = Selectquery;
 
-        String searchFilter = searchFilterFts();
-        if (StringUtils.isNotBlank(searchFilter)){
-            res += " WHERE "+searchFilterFts();
+        if(ids.isEmpty()){
+            res += String.format(" WHERE %s IN () ", idColumn);;
+        }else {
+            String joinedIds = "'" + StringUtils.join(ids, "','") + "'";
+            res += String.format(" WHERE %s IN (%s) ", idColumn, joinedIds);
+
+            if (StringUtils.isNotBlank(ftsSort)) {
+                res += " ORDER BY CASE " + idColumn;
+                for (int i = 0; i < ids.size(); i++) {
+                    res += " WHEN '" + ids.get(i) + "' THEN " + i;
+                }
+                res += " END ";
+
+            }
         }
 
         return res;
@@ -195,11 +208,11 @@ public class SmartRegisterQueryBuilder {
         this.ftsSort = ftsSort;
     }
 
-    private String searchFilterFts(){
+    public String searchQueryFts(){
         String query = "SELECT object_id FROM search JOIN search_relations ON search_rowid = search.rowid " + phraseClause(this.table, this.ftsSearchFilter) + orderByClause(this.ftsSort) + limitClause(this.pageSize, this.offset);
-        String searchString = String.format(" %s IN (%s) ", "id", query);
-        return searchString;
+        return query;
     }
+
 
     public String countQueryFts(){
         String groupByClause = " GROUP BY object_type HAVING object_type = '" + this.table + "'";
@@ -213,6 +226,7 @@ public class SmartRegisterQueryBuilder {
         }
         return "WHERE object_type = '" + tableName + "'";
     }
+
 
     private String phraseClause(String phrase){
         if(StringUtils.isNotBlank(phrase)){

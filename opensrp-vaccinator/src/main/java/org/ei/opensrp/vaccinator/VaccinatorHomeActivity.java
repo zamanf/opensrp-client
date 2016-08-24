@@ -54,13 +54,14 @@ public class VaccinatorHomeActivity extends NativeHomeActivity {
         fieldRegisterClientCountDView = (TextView) findViewById(R.id.txt_field_register_client_countd);
         fieldRegisterClientCountMView = (TextView) findViewById(R.id.txt_field_register_client_countm);
 
-    }
-
-    protected void updateRegisterCounts(HomeContext homeContext) {
         womanRegisterClientCountView.setText("0");
         childRegisterClientCountView.setText("0");
         fieldRegisterClientCountDView.setText("0 D");
         fieldRegisterClientCountMView.setText("0 M");
+
+    }
+
+    protected void updateRegisterCounts(HomeContext homeContext) {
 
         new Thread(new Runnable() {
             @Override

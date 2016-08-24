@@ -20,6 +20,7 @@ import org.ei.opensrp.view.dialog.SortOption;
 import org.ei.opensrp.view.template.SmartRegisterClientsProvider;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class SmartRegisterPaginatedCursorAdapter extends CursorAdapter implements SmartRegisterPaginatedAdapter{
     private final SmartRegisterClientsProvider listItemProvider;
@@ -196,7 +197,9 @@ public class SmartRegisterPaginatedCursorAdapter extends CursorAdapter implement
 
         String query;
         if(lastQuery.isFTS()) {
-            query = lastQuery.toStringFts();
+            String sql = lastQuery.searchQueryFts();
+            List<String> ids = commonRepository.findSearchIds(sql);
+            query = lastQuery.toStringFts(ids, CommonRepository.ID_COLUMN);
         } else {
             query = lastQuery.toString();
         }
