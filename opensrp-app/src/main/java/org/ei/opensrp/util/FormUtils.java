@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Xml;
 
+import org.apache.commons.lang3.StringUtils;
 import org.ei.opensrp.domain.SyncStatus;
 import org.ei.opensrp.domain.form.FormSubmission;
 import org.json.JSONArray;
@@ -152,8 +153,11 @@ public class FormUtils {
             JSONObject formDefinition = new JSONObject(formDefinitionJson);
             String bindPath = formDefinition.getJSONObject("form").getString("bind_type");
 
-            String sql = "select * from " + bindPath + " where id='" + entityId + "'";
-            String dbEntity = theAppContext.formDataRepository().queryUniqueResult(sql);
+            String dbEntity = "{}";
+            if(StringUtils.isNotBlank(entityId)){
+                String sql = "select * from " + bindPath + " where id='" + entityId + "'";
+                dbEntity = theAppContext.formDataRepository().queryUniqueResult(sql);
+            }
 
             JSONObject entityJson = new JSONObject();
             if (dbEntity != null && !dbEntity.isEmpty()){

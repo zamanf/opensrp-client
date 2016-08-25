@@ -16,6 +16,8 @@ import com.google.gson.Gson;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ei.opensrp.R;
+import org.ei.opensrp.commonregistry.AllCommonsRepository;
+import org.ei.opensrp.commonregistry.CommonRepository;
 import org.ei.opensrp.domain.form.FormSubmission;
 import org.ei.opensrp.service.ZiggyService;
 import org.ei.opensrp.util.FormUtils;
@@ -27,6 +29,9 @@ import org.ei.opensrp.view.fragment.DisplayFormFragment;
 import org.ei.opensrp.view.fragment.SecuredNativeSmartRegisterFragment;
 import org.ei.opensrp.view.viewpager.OpenSRPViewPager;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.ei.opensrp.AllConstants.ENTITY_ID_PARAM;
 import static org.ei.opensrp.AllConstants.FORM_NAME_PARAM;
@@ -133,6 +138,18 @@ public abstract class SmartRegisterSecuredActivity extends SecuredActivity {
             org.ei.opensrp.Context context = org.ei.opensrp.Context.getInstance();
             ZiggyService ziggyService = context.ziggyService();
             ziggyService.saveForm(getParams(submission), submission.instance());
+
+            AllCommonsRepository childRepository = context.allCommonsRepositoryobjects("pkchild");
+            AllCommonsRepository womanRepository = context.allCommonsRepositoryobjects("pkwoman");
+
+            if(!submission.entityId().isEmpty()) {
+                List<String> entityIds = new ArrayList<String>();
+                entityIds.add(submission.entityId());
+                List<String> remainingIds = childRepository.updateSearch(entityIds);
+                if (!remainingIds.isEmpty()) {
+                    womanRepository.updateSearch(remainingIds);
+                }
+            }
 
             new AlertDialog.Builder(this)
                     .setMessage(R.string.form_saved_success_dialog_message)

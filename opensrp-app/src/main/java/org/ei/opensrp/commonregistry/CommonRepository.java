@@ -7,6 +7,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import net.sqlcipher.database.DatabaseObjectNotClosedException;
 import net.sqlcipher.database.SQLiteDatabase;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -293,9 +294,14 @@ public class CommonRepository extends DrishtiRepository {
         return cursor;
     }
     public Cursor RawCustomQueryForAdapter(String query){
-        SQLiteDatabase database = masterRepository.getReadableDatabase();
-        Cursor cursor = database.rawQuery(query, null);
-        return cursor;
+        try {
+            SQLiteDatabase database = masterRepository.getReadableDatabase();
+            Cursor cursor = database.rawQuery(query, null);
+            return cursor;
+        }catch (DatabaseObjectNotClosedException e){
+            Log.e("", getClass().getName(), e);
+            return null;
+        }
     }
     public CommonPersonObject readAllcommonforCursorAdapter (Cursor cursor) {
         int columncount = cursor.getColumnCount();

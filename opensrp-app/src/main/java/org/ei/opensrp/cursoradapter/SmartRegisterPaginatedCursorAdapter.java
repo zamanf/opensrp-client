@@ -95,6 +95,9 @@ public class SmartRegisterPaginatedCursorAdapter extends CursorAdapter implement
     }
 
     public int pageCount() {
+        if(totalcount <= limitPerPage()){
+            return 1;
+        }
         return (int) Math.round(1.0*totalcount/limitPerPage());
     }
 
@@ -206,8 +209,9 @@ public class SmartRegisterPaginatedCursorAdapter extends CursorAdapter implement
         Log.i(getClass().getName(), query);
 
         Cursor c = commonRepository.RawCustomQueryForAdapter(query);
-        swapCursorWithNew(c);
-
+        if(c != null && (c.getCount() > 0)) {
+            swapCursorWithNew(c);
+        }
     }
 
     public int refreshTotalCount(){

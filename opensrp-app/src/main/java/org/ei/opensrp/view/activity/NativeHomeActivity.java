@@ -201,7 +201,7 @@ public abstract class NativeHomeActivity extends SecuredActivity {
             .post(new Runnable() {
                 @Override
                 public void run() {
-                if (remainingFormsToSyncMenuItem == null) {
+                if (remainingFormsToSyncMenuItem == null || pendingFormSubmissionService == null) {
                     return;
                 }
 
