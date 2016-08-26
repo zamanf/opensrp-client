@@ -209,7 +209,7 @@ public class SmartRegisterPaginatedCursorAdapter extends CursorAdapter implement
         Log.i(getClass().getName(), query);
 
         Cursor c = commonRepository.RawCustomQueryForAdapter(query);
-        if(c != null && (c.getCount() > 0)) {
+        if(c != null) {
             swapCursorWithNew(c);
         }
     }
