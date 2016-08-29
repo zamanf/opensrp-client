@@ -125,6 +125,16 @@
             android:textSize="13sp"
             android:textColor="@color/Black"/>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/gender"
+            android:text="hello"
+            android:paddingLeft="10dp"
+            android:visibility="gone"
+            android:textSize="13sp"
+            android:textColor="@color/Black"/>
+
     </LinearLayout>
 
 
@@ -137,11 +147,18 @@
         android:layout_weight="1.25">
 
         <Button
+            android:id="@+id/enrollment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Enrollment"
+            android:textSize="15sp"/>
+
+        <Button
             android:id="@+id/followup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Followup"
-            android:textSize="20sp"/>
+            android:textSize="15sp"/>
 
     </LinearLayout>
 

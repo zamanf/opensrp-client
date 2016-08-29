@@ -1,9 +1,6 @@
 package org.ei.opensrp.vaccinator.household;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +20,6 @@ import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.util.StringUtil;
 import org.ei.opensrp.vaccinator.R;
 import org.ei.opensrp.vaccinator.adapter.HouseholdMemberAdapter;
-import org.ei.opensrp.vaccinator.child.ChildSmartRegisterActivity;
 import org.ei.opensrp.view.fragment.SecuredFragment;
 import org.joda.time.DateTime;
 import org.joda.time.Years;
@@ -32,7 +28,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import static org.ei.opensrp.util.Utils.convertDateFormat;
 import static org.ei.opensrp.util.Utils.getDataRowHousehold;
@@ -156,8 +151,10 @@ public class HouseholdDetailFragment extends SecuredFragment {
 
             if (memberAge < 10 && getValue(individual.getColumnmaps(), "gender", false).equalsIgnoreCase("male"))
                 member.setMemberImageId(R.drawable.child_boy_infant);
-            else if (memberAge > 10 && getValue(individual.getColumnmaps(), "gender", false).equalsIgnoreCase("male"))
+            else if (memberAge > 10 && getValue(individual.getColumnmaps(), "gender", false).equalsIgnoreCase("male")) {
                 member.setMemberImageId(R.drawable.household_profile);
+                member.setCantBeEnrolled(true);
+            }
             else if (memberAge < 10 && getValue(individual.getColumnmaps(), "gender", false).equalsIgnoreCase("female"))
                 member.setMemberImageId(R.drawable.child_girl_infant);
             else if (memberAge > 10 && getValue(individual.getColumnmaps(), "gender", false).equalsIgnoreCase("female"))
@@ -170,12 +167,13 @@ public class HouseholdDetailFragment extends SecuredFragment {
             member.setMemberName(StringUtils.capitalize(getValue(individual.getColumnmaps(), "first_name", false)) + " " + StringUtils.capitalize(getValue(individual.getColumnmaps(), "last_name", false)));
             member.setMemberRelationWithHousehold(StringUtil.humanize(getValue(individual.getColumnmaps(), "relationship", true)));
             member.setMemberAge(convertDateFormat(getValue(individual.getDetails(), "calc_dob_confirm", false), true) + " (" + memberAge + " years)");
+            member.setMemberGender(getValue(individual.getColumnmaps(), "gender", false));
 
 
             if(!womanList.isEmpty()) {
                 for (CommonPersonObject woman : womanList) {
                     if (woman.getDetails().get("existing_program_client_id").equals(individual.getColumnmaps().get("existing_program_client_id"))) {
-                        member.setMemberExists(true);
+                        member.setMemberExists(false);
                         member.setClient(woman);
                     }
                 }

@@ -1,7 +1,6 @@
 package org.ei.opensrp.vaccinator;
 
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.util.Log;
@@ -9,7 +8,6 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import org.ei.opensrp.repository.db.Client;
 import org.ei.opensrp.util.Utils;
 import org.ei.opensrp.vaccinator.child.ChildSmartRegisterActivity;
 import org.ei.opensrp.vaccinator.field.FieldMonitorSmartRegisterActivity;
@@ -17,11 +15,6 @@ import org.ei.opensrp.vaccinator.household.HouseholdSmartRegisterActivity;
 import org.ei.opensrp.vaccinator.woman.WomanSmartRegisterActivity;
 import org.ei.opensrp.view.activity.NativeHomeActivity;
 import org.ei.opensrp.view.contract.HomeContext;
-import org.json.JSONException;
-
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class VaccinatorHomeActivity extends NativeHomeActivity {
     Activity activity=this;
@@ -85,7 +78,7 @@ public class VaccinatorHomeActivity extends NativeHomeActivity {
             row.put("priority", cur.getInt(1));
       }
       cur.close();*/
-            List<Client> client = new ArrayList<Client>();
+            /*List<Client> client = new ArrayList<Client>();
             try {
                 client = context.getInstance().ceDB().getClients();
             } catch (JSONException e) {
@@ -94,9 +87,26 @@ public class VaccinatorHomeActivity extends NativeHomeActivity {
                 e.printStackTrace();
             }
 
-            Log.d("value of client", client.toString());
-            womanCount = String.valueOf(context.getInstance().ceDB().rawQueryForCursor("SELECT * FROM event where eventType like '%Woman%'").getCount());
-            childCount = String.valueOf(context.getInstance().ceDB().rawQueryForCursor("SELECT * FROM event where eventType like '%Child%'").getCount());
+            Log.d("value of client", client.toString());*/
+
+            Cursor cursor = context.getInstance().ceDB().rawQueryForCursor("SELECT COUNT(*) FROM event where eventType like '%Woman%'");
+            if(cursor != null && (cursor.getCount() > 0 )){
+                cursor.moveToFirst();
+                womanCount = String.valueOf(cursor.getInt(0));
+            } else {
+                womanCount = "0";
+            }
+            cursor.close();
+            //womanCount = String.valueOf(context.ceDB().rawQueryForCursor("SELECT * FROM event WHERE eventType LIKE '%Woman%'").getCount());
+            childCount = String.valueOf(context.ceDB().rawQueryForCursor("SELECT * FROM event where eventType like '%Child%'").getCount());
+            //context.ceDB().rawQuery("select * from event where eventType like '%Woman%'");
+            /*try {
+                Client client1 = context.ceDB().getClient("{\"Program Client ID\":\"10021160012702\"}");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }*/
 
             //householdCount = String.valueOf(context.ceDB().rawQueryForCursor("SELECT COUNT(*) c FROM event where eventType like '%CHILD%'").getCount());
         } else {

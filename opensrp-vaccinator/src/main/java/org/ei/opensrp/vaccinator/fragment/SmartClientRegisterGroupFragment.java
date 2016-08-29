@@ -291,6 +291,14 @@ public abstract class SmartClientRegisterGroupFragment extends SecuredNativeSmar
                     map.put("gender", getValue(child.getColumnmaps(), "gender", true));
                 }
 
+                if(woman != null){
+                    map.put("first_name", getValue(woman.getColumnmaps(), "first_name", true));
+                    map.put("last_name", getValue(woman.getColumnmaps(), "last_name", true));
+                    map.put("member_birthdate", getValue(woman.getColumnmaps(), "dob", true));
+                    map.put("gender", getValue(woman.getColumnmaps(), "gender", true));
+                }
+
+
             } else {
                 //map.put("existing_household_id", qrCode);
                 map.put("household_id", qrCode);

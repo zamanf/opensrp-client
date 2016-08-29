@@ -9,6 +9,7 @@ import android.widget.ImageView;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ei.opensrp.Context;
+import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.cursoradapter.CursorCommonObjectSort;
 import org.ei.opensrp.vaccinator.R;
 import org.ei.opensrp.repository.db.CESQLiteHelper;
@@ -23,12 +24,15 @@ import org.joda.time.DateTime;
 import org.joda.time.Years;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import util.VaccinatorUtils;
 import util.barcode.Barcode;
 import util.barcode.BarcodeIntentIntegrator;
 import util.barcode.BarcodeIntentResult;
+
+import static org.ei.opensrp.util.Utils.getValue;
 
 public abstract class SmartClientRegisterFragment extends SecuredNativeSmartRegisterFragment {
 
@@ -150,6 +154,7 @@ public abstract class SmartClientRegisterFragment extends SecuredNativeSmartRegi
       that client appears  on register only . if it doesnt then it shows two options
        */
         SmartRegisterClients fc = getFilteredClients(qrCode);
+        CommonPersonObject member = householdMember(qrCode);
         if(fc.size() > 0) {
             //do nothing. let user select from filtered data
         }
@@ -189,6 +194,13 @@ public abstract class SmartClientRegisterFragment extends SecuredNativeSmartRegi
             map.put("existing_program_client_id", qrCode);
             map.put("program_client_id", qrCode);
 
+            if(member != null){
+                map.put("first_name", getValue(member.getColumnmaps(), "first_name", true));
+                map.put("last_name", getValue(member.getColumnmaps(), "last_name", true));
+                map.put("birth_date", getValue(member.getColumnmaps(), "member_birthdate", true));
+                map.put("gender", getValue(member.getColumnmaps(), "gender", true));
+            }
+
             Map<String, String> m = customFieldOverrides();
             if(m != null){
                 map.putAll(m);
@@ -210,5 +222,25 @@ public abstract class SmartClientRegisterFragment extends SecuredNativeSmartRegi
         setCurrentSearchFilter(new BasicSearchOption(filterString, BasicSearchOption.Type.getByRegisterName(getDefaultOptionsProvider().nameInShortFormForTitle())));
         onFilterManual(filterString);
         return getClientsAdapter().currentPageList();
+    }
+
+    public CommonPersonObject householdMember(String qrCode){
+        String memberExistQuery = "select * from pkindividual where existing_program_client_id = " + qrCode;
+
+        List<CommonPersonObject> memberData = context.allCommonsRepositoryobjects("pkindividual").customQueryForCompleteRow(memberExistQuery, new String[]{}, "pkindividual");
+        CommonPersonObject householdMember;
+        if (memberData.size() == 0) {
+            return null;
+        } else {
+            householdMember = memberData.get(0);
+            /*String householdId = memberData.get(0).getDetails().get("household_id");
+            String householdQuery = "select * from pkhousehold where household_id = " + householdId;
+            //CommonPersonObject householdData = context.allCommonsRepositoryobjects("pkhousehold").customQueryForCompleteRow(householdQuery, new String[]{}, "pkhousehold").get(0);
+            //todo: create new search option
+            setCurrentSearchFilter(new HouseholdSearchOption(householdId));
+            onFilterManual(householdId);*/
+        }
+
+        return householdMember;
     }
 }

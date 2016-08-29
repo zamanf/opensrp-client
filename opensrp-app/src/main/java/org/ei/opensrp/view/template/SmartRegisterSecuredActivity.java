@@ -194,7 +194,7 @@ public abstract class SmartRegisterSecuredActivity extends SecuredActivity {
             if(mProfileFragment != null) {
                 // TODO remove ...
                 if(formName.equals("new_member_registration_without_qr")){
-                    formIndex = FormUtils.getIndexForFormName(formName, formNames);
+                    formIndex = FormUtils.getIndexForFormName(formName, formNames) + 1;
                 } else
                     formIndex = FormUtils.getIndexForFormName(formName, formNames) + ((BaseRegisterActivityPagerAdapter) mPagerAdapter).offset;
             }
@@ -279,7 +279,7 @@ public abstract class SmartRegisterSecuredActivity extends SecuredActivity {
                 DisplayFormFragment displayFormFragment;
                 if(mProfileFragment == null)
                     displayFormFragment = getDisplayFormFragmentAtIndex(pageIndex);
-                 else
+                else
                     displayFormFragment = getDisplayFormFragmentAtIndex(2);
 
                     if (displayFormFragment != null) {

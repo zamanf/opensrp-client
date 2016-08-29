@@ -13,14 +13,10 @@ import android.widget.TextView;
 
 import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
-import org.ei.opensrp.domain.form.FieldOverrides;
-import org.ei.opensrp.util.Utils;
 import org.ei.opensrp.vaccinator.R;
-import org.ei.opensrp.vaccinator.application.template.SmartRegisterFragment;
 import org.ei.opensrp.vaccinator.child.ChildSmartRegisterActivity;
 import org.ei.opensrp.vaccinator.household.HouseholdMemberDetails;
 import org.ei.opensrp.vaccinator.woman.WomanSmartRegisterActivity;
-import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.controller.ANMController;
 import org.ei.opensrp.view.controller.FormController;
 import org.ei.opensrp.view.controller.NavigationController;
@@ -50,8 +46,10 @@ public class HouseholdMemberAdapter extends ArrayAdapter<HouseholdMemberDetails>
     TextView memberName;
     TextView memberAge;
     TextView memberRelation;
+    TextView memberGender;
     ImageView memberImage;
     Button btnFollowup;
+    Button btnEnrollment;
     CommonPersonObjectClient client;
 
     public HouseholdMemberAdapter(Fragment fragment, Context context, List<HouseholdMemberDetails> list){
@@ -72,7 +70,6 @@ public class HouseholdMemberAdapter extends ArrayAdapter<HouseholdMemberDetails>
 
         memberId = (TextView) row.findViewById(R.id.memberId);
         memberId.setText(list.get(position).memberId);
-        //memberId.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
 
         memberName = (TextView) row.findViewById(R.id.memberName);
         memberName.setText(list.get(position).memberName);
@@ -86,13 +83,24 @@ public class HouseholdMemberAdapter extends ArrayAdapter<HouseholdMemberDetails>
         memberImage =(ImageView) row.findViewById(R.id.individual_profilepic);
         memberImage.setImageResource(list.get(position).memberImageId);
 
+        memberGender = (TextView) row.findViewById(R.id.gender);
+        memberGender.setText(list.get(position).memberGender);
+
         btnFollowup = (Button) row.findViewById(R.id.followup);
+        btnEnrollment = (Button) row.findViewById(R.id.enrollment);
+
+
         if(list.get(position).isMemberExists()) {
             btnFollowup.setVisibility(View.VISIBLE);
-
+            btnEnrollment.setVisibility(View.GONE);
         } else {
             btnFollowup.setVisibility(View.GONE);
+            if(list.get(position).isCantBeEnrolled() == false)
+                btnEnrollment.setVisibility(View.VISIBLE);
+            else
+                btnEnrollment.setVisibility(View.GONE);
         }
+
 
         btnFollowup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,18 +110,9 @@ public class HouseholdMemberAdapter extends ArrayAdapter<HouseholdMemberDetails>
                 person = list.get(position).getClient();
                 map.putAll(followupOverrides(person));
 
-                try {
-                    formController = new FormController(WomanSmartRegisterActivity.class.newInstance());
-                } catch (InstantiationException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-
                 client = new CommonPersonObjectClient(person.getCaseId(),person.getDetails(),person.getDetails().get("first_name"));
 
                 client.setColumnmaps(person.getColumnmaps());
-                //client.setDetails(person.getDetails());
                 client.setCaseId(person.getCaseId());
 
                 final Intent intent;
@@ -123,37 +122,41 @@ public class HouseholdMemberAdapter extends ArrayAdapter<HouseholdMemberDetails>
                     intent = new Intent(fragment.getActivity(), ChildSmartRegisterActivity.class);
                 }
 
-                //intent.putExtra("program_client_id", client.getDetails().get("program_client_id").toString());
                 intent.putExtra("program_client_id", client.getColumnmaps().get("program_client_id").toString());
 
                 fragment.getActivity().startActivity(intent);
                 fragment.getActivity().finish();
-
-
-                //((HouseholdDetailFragment) fragment.).startFormActivity("woman_followup", ((CommonPersonObjectClient) v.getTag()).entityId(), null);
-
-                //startFollowupForm("woman_followup", client, map, SmartRegisterFragment.ByColumnAndByDetails.byDefault);
-
-                /*Intent intent = new Intent(getContext(), BridgingActivity.class);
-                intent.putExtra("woman", "woman");
-                BridgingActivity.person  = person;
-                /*intent.putExtra("client", client);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                v.getContext().startActivity(intent);*/
-
-                /*formNames[1] = "woman_enrollment";
-                formNames[2] = "woman_followup";
-                formNames[3] = "offsite_woman_followup";*/
-
-
-                //client.setName();
-
-                //startFormActivity("woman_followup", null, null);
-
-
-                //((WomanSmartRegisterActivity) fragment.getActivity()).startFormActivity("woman_followup", ((CommonPersonObjectClient) v.getTag()).entityId(), null);
             }
         });
+
+
+        btnEnrollment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /*CommonPersonObject person;
+                HashMap<String, String> map = new HashMap<>();
+                String name[] = list.get(position).getMemberName().split(" ");
+                String sql = "select * from pkindividual where relationalid = '" + HouseholdDetailFragment.householdClient.getCaseId() + "' and first_name = '" + name[0] + "' and last_name = '" + name[1] + "'";
+                List<CommonPersonObject> individualList = org.ei.opensrp.Context.getInstance().allCommonsRepositoryobjects("pkindividual").customQueryForCompleteRow(sql, new String[]{}, "pkindividual");*/
+
+
+                String fullAgeText = memberAge.getText().toString();
+                String[] ageArray = fullAgeText.split("\\(");
+                ageArray = ageArray[1].split(" ");
+                int age = Integer.parseInt(ageArray[0]);
+
+                Intent intent = null;
+                if (age < 10)
+                    intent = new Intent(fragment.getActivity(), ChildSmartRegisterActivity.class);
+                else if (age > 10 && memberGender.getText().toString().equalsIgnoreCase("female"))
+                    intent = new Intent(fragment.getActivity(), WomanSmartRegisterActivity.class);
+
+                fragment.getActivity().startActivity(intent);
+                fragment.getActivity().finish();
+
+            }
+        });
+
         return row;
     }
 
