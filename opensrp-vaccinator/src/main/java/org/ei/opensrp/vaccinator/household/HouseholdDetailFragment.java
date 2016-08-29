@@ -173,7 +173,7 @@ public class HouseholdDetailFragment extends SecuredFragment {
             if(!womanList.isEmpty()) {
                 for (CommonPersonObject woman : womanList) {
                     if (woman.getDetails().get("existing_program_client_id").equals(individual.getColumnmaps().get("existing_program_client_id"))) {
-                        member.setMemberExists(false);
+                        member.setMemberExists(true);
                         member.setClient(woman);
                     }
                 }

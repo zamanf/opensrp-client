@@ -133,13 +133,6 @@ public class HouseholdMemberAdapter extends ArrayAdapter<HouseholdMemberDetails>
         btnEnrollment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*CommonPersonObject person;
-                HashMap<String, String> map = new HashMap<>();
-                String name[] = list.get(position).getMemberName().split(" ");
-                String sql = "select * from pkindividual where relationalid = '" + HouseholdDetailFragment.householdClient.getCaseId() + "' and first_name = '" + name[0] + "' and last_name = '" + name[1] + "'";
-                List<CommonPersonObject> individualList = org.ei.opensrp.Context.getInstance().allCommonsRepositoryobjects("pkindividual").customQueryForCompleteRow(sql, new String[]{}, "pkindividual");*/
-
-
                 String fullAgeText = memberAge.getText().toString();
                 String[] ageArray = fullAgeText.split("\\(");
                 ageArray = ageArray[1].split(" ");
