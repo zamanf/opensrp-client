@@ -328,7 +328,7 @@ public abstract class SmartRegisterSecuredActivity extends SecuredActivity {
         if (currentPage == 0) {
             super.onBackPressed(); // allow back key only if we are
         }
-        else if(mProfileFragment != null){
+        else if(mProfileFragment != null && currentPage <= 1){
             //mPager.setCurrentItem(0, false);
             switchToBaseFragment(null, 0);
         }

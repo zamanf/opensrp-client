@@ -8,13 +8,21 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.flurry.android.FlurryAgent;
+
 import org.ei.opensrp.util.Utils;
+import org.ei.opensrp.vaccinator.analytics.CountlyAnalytics;
+import org.ei.opensrp.vaccinator.analytics.Events;
 import org.ei.opensrp.vaccinator.child.ChildSmartRegisterActivity;
 import org.ei.opensrp.vaccinator.field.FieldMonitorSmartRegisterActivity;
 import org.ei.opensrp.vaccinator.household.HouseholdSmartRegisterActivity;
 import org.ei.opensrp.vaccinator.woman.WomanSmartRegisterActivity;
 import org.ei.opensrp.view.activity.NativeHomeActivity;
 import org.ei.opensrp.view.contract.HomeContext;
+
+import java.util.HashMap;
+
+import ly.count.android.sdk.Countly;
 
 public class VaccinatorHomeActivity extends NativeHomeActivity {
     Activity activity=this;
@@ -37,6 +45,8 @@ public class VaccinatorHomeActivity extends NativeHomeActivity {
 
         navigationController = new VaccinatorNavigationController(this);//todo refactor and maybe remove this method
         Log.i(TAG, "Created Home Activity views:");
+        Countly.sharedInstance().init(this, "https://cloud.count.ly", "dc5dfb412bdbd91792b29f66e5a4bd2ee226cfb6");
+
     }
 
     public void setupViewsAndListeners() {
@@ -167,4 +177,21 @@ public class VaccinatorHomeActivity extends NativeHomeActivity {
             }
         }
     };
+
+    @Override
+    protected void onStart(){
+        super.onStart();
+        HashMap<String,String> segments = new HashMap<String, String>();
+        segments.put("user", Utils.providerDetails().get("provider_name"));
+        CountlyAnalytics.startAnalytics(this, Events.LOGIN, segments);
+        FlurryAgent.setLogEnabled(false);
+        FlurryAgent.onStartSession(this);
+    }
+
+    @Override
+    protected void onStop(){
+        super.onStop();
+        CountlyAnalytics.stopAnalytics();
+        FlurryAgent.onEndSession(this);
+    }
 }

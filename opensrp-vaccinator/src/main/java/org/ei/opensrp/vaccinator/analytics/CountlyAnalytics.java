@@ -9,6 +9,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
+import ly.count.android.sdk.Countly;
+
+
 //import ly.count.android.sdk.Countly;
 
 /**
@@ -21,7 +24,7 @@ public class CountlyAnalytics {
     Resources res = Context.getInstance().applicationContext().getResources();*/
 
     public static void startAnalytics(Activity activity, Events event, HashMap<String, String> segmentation) {
-        //Countly.sharedInstance().onStart(activity);
+        Countly.sharedInstance().onStart(activity);
         Date date = new Date();
         SimpleDateFormat ft = new SimpleDateFormat("hh:mm:ss a zzz");
         segmentation.put("user", Context.getInstance().anmService().fetchDetails().name());
@@ -51,11 +54,11 @@ public class CountlyAnalytics {
             segmentation.put("event", Events.WOMAN_FOLLOWUP.toString());
         }
 
-        //Countly.sharedInstance().recordEvent(event.toString(), segmentation, 1);
+        Countly.sharedInstance().recordEvent(event.toString(), segmentation, 1);
     }
 
 
     public static void stopAnalytics(){
-        //Countly.sharedInstance().onStop();
+        Countly.sharedInstance().onStop();
     }
 }
