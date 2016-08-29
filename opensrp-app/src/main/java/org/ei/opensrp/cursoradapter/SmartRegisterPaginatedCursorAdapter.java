@@ -45,13 +45,17 @@ public class SmartRegisterPaginatedCursorAdapter extends CursorAdapter implement
 
     @Override
     public void notifyDataSetInvalidated() {
-        Log.i(getClass().getName(), "Invalidating dataset and closing cursors");
-        super.notifyDataSetInvalidated();
-        if (getCursor() != null && !getCursor().isClosed()) {
-            getCursor().close();
-        }
+        try {
+            Log.i(getClass().getName(), "Invalidating dataset and closing cursors");
+            super.notifyDataSetInvalidated();
+            if (getCursor() != null && !getCursor().isClosed()) {
+                getCursor().close();
+            }
 
-        SmartRegisterCursorBuilder.closeCursor();
+            SmartRegisterCursorBuilder.closeCursor();
+        }catch (Exception e){
+            Log.e(getClass().getName(), "Error in notifyDataSetInvalidated()", e);
+        }
     }
 
     @Override
@@ -168,7 +172,7 @@ public class SmartRegisterPaginatedCursorAdapter extends CursorAdapter implement
 
         // TODO Include village filter in fts, currently no village filters available
 
-        if(Arrays.asList(commonRepository.ftsTables()).contains(table) && searchFilter != null && sort != null && (!searchFilter.contains("LIKE") || !searchFilter.contains("="))){
+        if(commonRepository.isFts() && searchFilter != null && sort != null && (!searchFilter.contains("LIKE") || !searchFilter.contains("="))){
             // FTS way
             lastQuery = new SmartRegisterQueryBuilder(table, mainFilter);
             lastQuery.setIsFTS(true);

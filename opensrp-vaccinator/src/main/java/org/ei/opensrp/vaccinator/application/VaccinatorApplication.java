@@ -3,6 +3,7 @@ package org.ei.opensrp.vaccinator.application;
 import android.content.res.Configuration;
 
 import org.ei.opensrp.Context;
+import org.ei.opensrp.commonregistry.CommonFtsObject;
 import org.ei.opensrp.sync.DrishtiSyncScheduler;
 import org.ei.opensrp.view.activity.DrishtiApplication;
 import org.ei.opensrp.view.receiver.SyncBroadcastReceiver;
@@ -25,6 +26,7 @@ public class VaccinatorApplication extends DrishtiApplication{
 
         context = Context.getInstance();
         context.updateApplicationContext(getApplicationContext());
+        context.updateCommonFtsObject(createCommonFtsObject());
         applyUserLanguagePreference();
         cleanUpSyncState();
         startCESyncService(getApplicationContext());
@@ -62,5 +64,38 @@ public class VaccinatorApplication extends DrishtiApplication{
         Locale.setDefault(locale);
         getBaseContext().getResources().updateConfiguration(config,
                 getBaseContext().getResources().getDisplayMetrics());
+    }
+
+    private String[] getFtsSearchFields(String tableName){
+        if(tableName.equals("pkchild")){
+            String[] ftsSearchFileds =  { "program_client_id", "epi_card_number", "first_name", "last_name", "father_name", "mother_name", "contact_phone_number" };
+            return ftsSearchFileds;
+        }else if(tableName.equals("pkwoman")){
+            String[] ftsSearchFileds =  { "program_client_id", "epi_card_number", "first_name", "last_name", "father_name", "husband_name", "contact_phone_number" };
+            return ftsSearchFileds;
+        }
+        return null;
+    }
+
+    private String[] getFtsSortFields(String tableName){
+        if(tableName.equals("pkchild") || tableName.equals("pkwoman")) {
+            String[] sortFields = {"first_name", "dob", "program_client_id"};
+            return sortFields;
+        }
+        return null;
+    }
+
+    private String[] getFtsTables(){
+        String[] ftsTables = { "pkchild", "pkwoman" };
+        return ftsTables;
+    }
+
+    private CommonFtsObject createCommonFtsObject(){
+        CommonFtsObject commonFtsObject = new CommonFtsObject(getFtsTables());
+        for(String ftsTable: commonFtsObject.getTables()){
+            commonFtsObject.updateSearchFields(ftsTable, getFtsSearchFields(ftsTable));
+            commonFtsObject.updateSortFields(ftsTable, getFtsSortFields(ftsTable));
+        }
+        return commonFtsObject;
     }
 }

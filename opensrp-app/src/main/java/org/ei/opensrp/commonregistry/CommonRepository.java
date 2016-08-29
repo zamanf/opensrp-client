@@ -35,6 +35,7 @@ public class CommonRepository extends DrishtiRepository {
     public String TABLE_NAME = "common";
     public  String[] common_TABLE_COLUMNS = new String[]{ID_COLUMN,Relational_ID,DETAILS_COLUMN};
     public String [] additionalcolumns;
+    private CommonFtsObject commonFtsObject;
     public CommonRepository(String tablename, String[] columns) {
         super();
         additionalcolumns = columns;
@@ -54,6 +55,11 @@ public class CommonRepository extends DrishtiRepository {
         common_SQL = common_SQL +")";
         common_ID_INDEX_SQL = "CREATE INDEX " + TABLE_NAME + "_" + ID_COLUMN + "_index ON " + TABLE_NAME + "(" + ID_COLUMN + " COLLATE NOCASE);";
         common_Relational_ID_INDEX_SQL = "CREATE INDEX " + TABLE_NAME + "_" + Relational_ID + "_index ON " + TABLE_NAME + "(" + Relational_ID + " COLLATE NOCASE);";
+    }
+
+    public CommonRepository(CommonFtsObject commonFtsObject, String tablename, String[] columns) {
+        this(tablename, columns);
+        this.commonFtsObject = commonFtsObject;
     }
 
     @Override
@@ -327,36 +333,31 @@ public class CommonRepository extends DrishtiRepository {
             return null;
         }
 
+        if(commonFtsObject == null){
+            return null;
+        }
+
         try {
             Map<String, String> columnMaps = commonPersonObject.getColumnmaps();
-            String programClientId = withSub(columnMaps.get("program_client_id"));
-            String epiCardNumber = withSub(columnMaps.get("epi_card_number"));
-            String firstName = withSub(columnMaps.get("first_name"));
-            String lastName = withSub(columnMaps.get("last_name"));
-            String fatherName = withSub(columnMaps.get("father_name"));
-            String motherName = withSub(columnMaps.get("mother_name"));
-            String husbandName = withSub(columnMaps.get("husband_name"));
-            String phoneNumber = withSub(columnMaps.get("contact_phone_number"));
-
-            String motherOrHusbandName = "";
-            if (TABLE_NAME.equals("pkchild"))
-                motherOrHusbandName = motherName;
-            else
-                motherOrHusbandName = husbandName;
+            List<String> ftsSearchColumns = new ArrayList<String>();
+            String[] ftsSearchFields =  commonFtsObject.getSearchFields(TABLE_NAME);
+            for(String ftsSearchField: ftsSearchFields){
+                String ftsSearchColumn = withSub(columnMaps.get(ftsSearchField));
+                ftsSearchColumns.add(ftsSearchColumn);
+            }
 
             String phraseSeparator = " | ";
-            String phrase  = programClientId + phraseSeparator + epiCardNumber + phraseSeparator +firstName + phraseSeparator + lastName + phraseSeparator + fatherName + phraseSeparator + motherOrHusbandName + phraseSeparator + phoneNumber;
+            String phrase = StringUtils.join(ftsSearchColumns, phraseSeparator);
 
             ContentValues searchValues = new ContentValues();
-            searchValues.put("phrase", phrase);
+            searchValues.put(CommonFtsObject.idColumn, caseId);
+            searchValues.put(CommonFtsObject.phraseColumnName, phrase);
 
-            String firstNameSort = columnMaps.get("first_name") == null ? "" : columnMaps.get("first_name");
-            String dobSort = columnMaps.get("dob") == null ? "" : columnMaps.get("dob");
-            String programClientIdSort = columnMaps.get("program_client_id") == null ? "" : columnMaps.get("program_client_id");
-
-            searchValues.put("first_name", firstNameSort);
-            searchValues.put("dob", dobSort);
-            searchValues.put("program_client_id", programClientIdSort);
+            String[] ftsSortFields =  commonFtsObject.getSortFields(TABLE_NAME);
+            for(String ftsSortField: ftsSortFields){
+                String ftsSortValue = columnMaps.get(ftsSortField) == null ? "" : columnMaps.get(ftsSortField);
+                searchValues.put(ftsSortField, ftsSortValue);
+            }
 
             return searchValues;
         }catch (Exception e){
@@ -369,22 +370,17 @@ public class CommonRepository extends DrishtiRepository {
         SQLiteDatabase database = masterRepository.getWritableDatabase();
 
         database.beginTransaction();
+        String ftsSearchTable = CommonFtsObject.searchTableName(TABLE_NAME);
         try {
             for(String caseId: searchMap.keySet()) {
                 String[] args = {caseId, TABLE_NAME};
                 ContentValues searchValues = searchMap.get(caseId);
-                ArrayList<HashMap<String, String>> mapList = rawQuery(String.format("SELECT search_rowid FROM search_relations WHERE object_id = '%s' AND object_type = '%s'", caseId, TABLE_NAME));
+                ArrayList<HashMap<String, String>> mapList = rawQuery(String.format("SELECT " + CommonFtsObject.idColumn + " FROM " + ftsSearchTable + " WHERE  " + CommonFtsObject.idColumn + " = '%s'", caseId));
                 if (!mapList.isEmpty()) {
-                    String searchRowId = mapList.get(0).get("search_rowid");
-                    database.update("search", searchValues, " rowid = ?", new String[]{String.valueOf(searchRowId)});
+                    database.update(ftsSearchTable, searchValues, CommonFtsObject.idColumn + "= ?", new String[]{caseId});
 
                 } else {
-                    long searchRowId = database.insert("search", null, searchValues);
-                    ContentValues searchRelationsValues = new ContentValues();
-                    searchRelationsValues.put("search_rowid", searchRowId);
-                    searchRelationsValues.put("object_id", caseId);
-                    searchRelationsValues.put("object_type", TABLE_NAME);
-                    database.insert("search_relations", null, searchRelationsValues);
+                    database.insert(ftsSearchTable, null, searchValues);
                 }
             }
             database.setTransactionSuccessful();
@@ -418,9 +414,8 @@ public class CommonRepository extends DrishtiRepository {
         return ids;
     }
 
-    public String[] ftsTables(){
-        String[] ftsTables = {"pkchild", "pkwoman"};
-        return ftsTables;
+    public boolean isFts(){
+        return commonFtsObject != null;
     }
 
     private String withSub(String s){

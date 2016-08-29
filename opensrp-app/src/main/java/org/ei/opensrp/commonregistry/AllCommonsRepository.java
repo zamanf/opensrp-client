@@ -5,6 +5,7 @@ import android.content.ContentValues;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
+import org.apache.commons.lang3.StringUtils;
 import org.ei.opensrp.repository.AlertRepository;
 import org.ei.opensrp.repository.TimelineEventRepository;
 import org.ei.opensrp.util.StringUtil;
@@ -75,7 +76,7 @@ public class AllCommonsRepository {
     }
 
     public List<CommonPersonObject> customQueryForCompleteRow(String sql , String[] selections , String tableName){
-        return personRepository.customQueryForCompleteRow(sql,selections,tableName);
+        return personRepository.customQueryForCompleteRow(sql, selections, tableName);
     }
 
     public List<String> updateSearch(List<String> caseIds) {
@@ -100,4 +101,23 @@ public class AllCommonsRepository {
         return remainingIds;
     }
 
+    public boolean updateSearch(String caseId) {
+        if(StringUtils.isBlank(caseId)){
+            return false;
+        }
+        Map<String, ContentValues> searchMap = new HashMap<String, ContentValues>();
+        ContentValues contentValues = personRepository.populateSearchValues(caseId);
+        if(contentValues != null){
+            searchMap.put(caseId, contentValues);
+        }else{
+            return false;
+        }
+
+        if(!searchMap.isEmpty()){
+            personRepository.searchBatchInserts(searchMap);
+        }
+
+        return true;
     }
+
+}

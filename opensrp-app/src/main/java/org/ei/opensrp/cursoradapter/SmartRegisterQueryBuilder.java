@@ -1,6 +1,7 @@
 package org.ei.opensrp.cursoradapter;
 
 import org.apache.commons.lang3.StringUtils;
+import org.ei.opensrp.commonregistry.CommonFtsObject;
 
 import java.util.List;
 
@@ -200,44 +201,31 @@ public class SmartRegisterQueryBuilder {
         this.ftsSearchFilter = ftsSearchFilter;
     }
 
-    public String getFtsSearchFilter() {
-        return ftsSearchFilter;
-    }
-
     public void setFtsSort(String ftsSort) {
         this.ftsSort = ftsSort;
     }
 
     public String searchQueryFts(){
-        String query = "SELECT object_id FROM search JOIN search_relations ON search_rowid = search.rowid " + phraseClause(this.table, this.ftsSearchFilter) + orderByClause(this.ftsSort) + limitClause(this.pageSize, this.offset);
+        String query = "SELECT " + CommonFtsObject.idColumn + " FROM " + CommonFtsObject.searchTableName(table)  + phraseClause(this.ftsSearchFilter) + orderByClause(this.ftsSort) + limitClause(this.pageSize, this.offset);
         return query;
     }
 
 
     public String countQueryFts(){
-        String groupByClause = " GROUP BY object_type HAVING object_type = '" + this.table + "'";
-        String countQuery = "SELECT COUNT(*) FROM search JOIN search_relations ON search_rowid = search.rowid " + phraseClause(this.ftsSearchFilter) + groupByClause;
+        String countQuery = "SELECT COUNT(*) FROM " + CommonFtsObject.searchTableName(table)  + phraseClause(this.ftsSearchFilter);
         return countQuery;
     }
 
-    private String phraseClause(String tableName, String phrase){
-        if(StringUtils.isNotBlank(phrase)){
-            return " WHERE phrase MATCH '"+phrase+"*' AND object_type = '" + this.table + "'";
-        }
-        return "WHERE object_type = '" + tableName + "'";
-    }
-
-
     private String phraseClause(String phrase){
         if(StringUtils.isNotBlank(phrase)){
-            return " WHERE phrase MATCH '"+phrase+"*'";
+            return " WHERE " + CommonFtsObject.phraseColumnName + " MATCH '"+phrase+"*'";
         }
         return "";
     }
 
     private String orderByClause(String sort){
         if(StringUtils.isNotBlank(sort)){
-            return " ORDER BY search." + sort;
+            return " ORDER BY " + sort;
         }
         return "";
     }

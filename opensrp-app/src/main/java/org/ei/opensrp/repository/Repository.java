@@ -1,13 +1,19 @@
 package org.ei.opensrp.repository;
 
-import android.content.Context;
 
 import net.sqlcipher.database.SQLiteDatabase;
 import net.sqlcipher.database.SQLiteOpenHelper;
 
+import org.apache.commons.lang3.StringUtils;
+import android.content.Context;
+
+import org.ei.opensrp.commonregistry.CommonFtsObject;
 import org.ei.opensrp.util.Session;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Repository extends SQLiteOpenHelper {
     private DrishtiRepository[] repositories;
@@ -15,6 +21,7 @@ public class Repository extends SQLiteOpenHelper {
     private Context context;
     private String dbName;
     private Session session;
+    private CommonFtsObject commonFtsObject;
 
 
     public Repository(Context context, Session session, DrishtiRepository... repositories) {
@@ -31,25 +38,32 @@ public class Repository extends SQLiteOpenHelper {
         }
     }
 
+    public Repository(Context context, Session session, CommonFtsObject commonFtsObject, DrishtiRepository... repositories) {
+        this(context, session, repositories);
+        this.commonFtsObject = commonFtsObject;
+    }
+
     @Override
     public void onCreate(SQLiteDatabase database) {
         for (DrishtiRepository repository : repositories) {
             repository.onCreate(database);
         }
 
-        String searchSql = "create virtual table search using fts4 (phrase,first_name,dob,program_client_id);";
-        String searchRelationsSql = "create table search_relations (search_rowid INTEGER, object_id INTEGER, object_type TEXT);";
-        String searchRelationsRowIdIndex = "create index search_relations_searchrowid_index on search_relations (search_rowid)";
-        String searchRelationsObjectIdIndex = "create index search_relations_objects_id_index on search_relations (object_id COLLATE NOCASE);";
-        String searchRelationsTypeIdIndex = "create index search_relations_objects_type_index on search_relations (object_type COLLATE NOCASE);";
-        String searchRelationsObjectLinkIndex = "create index search_relations_objects_link_index on search_relations (object_id COLLATE NOCASE,object_type COLLATE NOCASE);";
+        if(this.commonFtsObject != null) {
+            for (String ftsTable: commonFtsObject.getTables()) {
+                String[] sortFields = this.commonFtsObject.getSortFields(ftsTable);
+                List<String> searchColumns = new ArrayList<String>(Arrays.asList(sortFields));
+                searchColumns.add(0, CommonFtsObject.idColumn);
+                searchColumns.add(1, CommonFtsObject.phraseColumnName);
 
-        database.execSQL(searchSql);
-        database.execSQL(searchRelationsSql);
-        database.execSQL(searchRelationsRowIdIndex);
-        database.execSQL(searchRelationsObjectIdIndex);
-        database.execSQL(searchRelationsTypeIdIndex);
-        database.execSQL(searchRelationsObjectLinkIndex);
+                String joinedSearchColumns = StringUtils.join(searchColumns, ",");
+                String prefix = ftsTable + "_";
+
+                String searchSql = "create virtual table " + CommonFtsObject.searchTableName(ftsTable) + " using fts4 (" + joinedSearchColumns + ");";
+                database.execSQL(searchSql);
+
+            }
+        }
 
     }
 

@@ -8,7 +8,6 @@ import org.ei.opensrp.domain.form.FormSubmission;
 import org.ei.opensrp.repository.AllSettings;
 import org.ei.opensrp.repository.FormDataRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static java.text.MessageFormat.format;
@@ -25,24 +24,36 @@ public class FormSubmissionService {
     private ZiggyService ziggyService;
     private FormDataRepository formDataRepository;
     private AllSettings allSettings;
-    private AllCommonsRepository childRepository;
-    private AllCommonsRepository womanRepository;
+    private AllCommonsRepository[] allCommonsRepositories;
 
-    public FormSubmissionService(ZiggyService ziggyService, FormDataRepository formDataRepository, AllCommonsRepository childRepository, AllCommonsRepository womanRepository, AllSettings allSettings) {
+    public FormSubmissionService(ZiggyService ziggyService, FormDataRepository formDataRepository, AllSettings allSettings) {
         this.ziggyService = ziggyService;
         this.formDataRepository = formDataRepository;
         this.allSettings = allSettings;
-        this.childRepository = childRepository;
-        this.womanRepository = womanRepository;
+    }
+
+    public FormSubmissionService(ZiggyService ziggyService, FormDataRepository formDataRepository, AllSettings allSettings, AllCommonsRepository... allCommonsRepositories) {
+        this.ziggyService = ziggyService;
+        this.formDataRepository = formDataRepository;
+        this.allSettings = allSettings;
+        this.allCommonsRepositories = allCommonsRepositories;
     }
 
     public void processSubmissions(List<FormSubmission> formSubmissions) {
-        List<String> entityIds = new ArrayList<String>();
         for (FormSubmission submission : formSubmissions) {
             if (!formDataRepository.submissionExists(submission.instanceId())) {
                 try {
                     ziggyService.saveForm(getParams(submission), submission.instance());
-                    entityIds.add(submission.entityId());
+
+                    // Update FTS Tables
+                    if(allCommonsRepositories != null) {
+                        for(AllCommonsRepository allCommonsRepository: allCommonsRepositories) {
+                            boolean updated = allCommonsRepository.updateSearch(submission.entityId());
+                            if (updated) {
+                                break;
+                            }
+                        }
+                    }
 
                 } catch (Exception e) {
                     logError(format("Form submission processing failed, with instanceId: {0}. Exception: {1}, StackTrace: {2}",
@@ -51,12 +62,6 @@ public class FormSubmissionService {
             }
             formDataRepository.updateServerVersion(submission.instanceId(), submission.serverVersion());
             allSettings.savePreviousFormSyncIndex(submission.serverVersion());
-        }
-        if(!entityIds.isEmpty()) {
-            List<String> remainingIds = childRepository.updateSearch(entityIds);
-            if (!remainingIds.isEmpty()) {
-                womanRepository.updateSearch(remainingIds);
-            }
         }
     }
 
