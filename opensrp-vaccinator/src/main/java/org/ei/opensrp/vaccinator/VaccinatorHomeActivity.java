@@ -46,6 +46,7 @@ public class VaccinatorHomeActivity extends NativeHomeActivity {
         navigationController = new VaccinatorNavigationController(this);//todo refactor and maybe remove this method
         Log.i(TAG, "Created Home Activity views:");
         Countly.sharedInstance().init(this, "https://cloud.count.ly", "dc5dfb412bdbd91792b29f66e5a4bd2ee226cfb6");
+        new FlurryAgent.Builder().withLogEnabled(false).build(this, "PKD27SF3CWTVPRFPVDVV");
 
     }
 
