@@ -26,42 +26,113 @@
             android:layout_weight="1"
             android:layout_gravity="center_vertical">
 
-            <org.ei.opensrp.view.customControls.CustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                style="@style/CustomFontTextViewStyle"
-                android:text="Large Text"
-                android:layout_margin="1dp"
-                android:id="@+id/name_english"
-                android:textSize="18sp" />
-            <org.ei.opensrp.view.customControls.CustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                style="@style/CustomFontTextViewStyle"
-                android:text="Large Text"
-                android:layout_margin="1dp"
-                android:id="@+id/name_in_bengali"
-                android:textSize="18sp" />
-            <org.ei.opensrp.view.customControls.CustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                style="@style/CustomFontTextViewStyle"
-                android:text="Large Text"
-                android:layout_margin="1dp"
-                android:id="@+id/dob"
-                android:textSize="18sp" />
-            <org.ei.opensrp.view.customControls.CustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                style="@style/CustomFontTextViewStyle"
-                android:text="Large Text"
-                android:layout_margin="1dp"
-                android:id="@+id/nid"
-                android:textSize="18sp" />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <org.ei.opensrp.view.customControls.CustomFontTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    style="@style/CustomFontTextViewStyle"
+                    android:text="Name(in English): "
+                    android:layout_margin="1dp"
+                    android:id="@+id/name_english_label"
+                    android:textSize="18sp"
+                    android:layout_weight="1" />
+
+                <org.ei.opensrp.view.customControls.CustomFontTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    style="@style/CustomFontTextViewStyle"
+                    android:text="Large Text"
+                    android:layout_margin="1dp"
+                    android:id="@+id/name_english"
+                    android:textSize="18sp"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <org.ei.opensrp.view.customControls.CustomFontTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    style="@style/CustomFontTextViewStyle"
+                    android:text="Name(in Bengali): "
+                    android:layout_margin="1dp"
+                    android:id="@+id/name_in_bengali_label"
+                    android:textSize="18sp"
+                    android:layout_weight="1" />
+
+                <org.ei.opensrp.view.customControls.CustomFontTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    style="@style/CustomFontTextViewStyle"
+                    android:text="Large Text"
+                    android:layout_margin="1dp"
+                    android:id="@+id/name_in_bengali"
+                    android:textSize="18sp"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <org.ei.opensrp.view.customControls.CustomFontTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    style="@style/CustomFontTextViewStyle"
+                    android:text="DoB: "
+                    android:layout_margin="1dp"
+                    android:id="@+id/dob_label"
+                    android:textSize="18sp"
+                    android:layout_weight="1" />
+
+                <org.ei.opensrp.view.customControls.CustomFontTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    style="@style/CustomFontTextViewStyle"
+                    android:text="Large Text"
+                    android:layout_margin="1dp"
+                    android:id="@+id/dob"
+                    android:textSize="18sp"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <org.ei.opensrp.view.customControls.CustomFontTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    style="@style/CustomFontTextViewStyle"
+                    android:text="NID: "
+                    android:layout_margin="1dp"
+                    android:id="@+id/nid_label"
+                    android:textSize="18sp"
+                    android:layout_weight="1" />
+
+                <org.ei.opensrp.view.customControls.CustomFontTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    style="@style/CustomFontTextViewStyle"
+                    android:text="Large Text"
+                    android:layout_margin="1dp"
+                    android:id="@+id/nid"
+                    android:textSize="18sp"
+                    android:layout_weight="1" />
+            </LinearLayout>
 
         </LinearLayout>
         <LinearLayout
@@ -72,42 +143,112 @@
             android:layout_weight="1"
             android:layout_gravity="center_vertical">
 
-            <org.ei.opensrp.view.customControls.CustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                style="@style/CustomFontTextViewStyle"
-                android:text="Large Text"
-                android:layout_margin="1dp"
-                android:id="@+id/nationality"
-                android:textSize="18sp" />
-            <org.ei.opensrp.view.customControls.CustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                style="@style/CustomFontTextViewStyle"
-                android:text="Large Text"
-                android:layout_margin="1dp"
-                android:id="@+id/placeofbirth"
-                android:textSize="18sp" />
-            <org.ei.opensrp.view.customControls.CustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                style="@style/CustomFontTextViewStyle"
-                android:text="Large Text"
-                android:layout_margin="1dp"
-                android:id="@+id/presentaddress"
-                android:textSize="18sp" />
-            <org.ei.opensrp.view.customControls.CustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                style="@style/CustomFontTextViewStyle"
-                android:text="Large Text"
-                android:layout_margin="1dp"
-                android:id="@+id/permanentaddress"
-                android:textSize="18sp" />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <org.ei.opensrp.view.customControls.CustomFontTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    style="@style/CustomFontTextViewStyle"
+                    android:text="Nationality: "
+                    android:layout_margin="1dp"
+                    android:id="@+id/nationality_label"
+                    android:textSize="18sp"
+                    android:layout_weight="1" />
+                <org.ei.opensrp.view.customControls.CustomFontTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    style="@style/CustomFontTextViewStyle"
+                    android:text="Large Text"
+                    android:layout_margin="1dp"
+                    android:id="@+id/nationality"
+                    android:textSize="18sp"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <org.ei.opensrp.view.customControls.CustomFontTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    style="@style/CustomFontTextViewStyle"
+                    android:text="Place of Birth: "
+                    android:layout_margin="1dp"
+                    android:id="@+id/placeofbirth_label"
+                    android:textSize="18sp"
+                    android:layout_weight="1" />
+
+                <org.ei.opensrp.view.customControls.CustomFontTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    style="@style/CustomFontTextViewStyle"
+                    android:text="Large Text"
+                    android:layout_margin="1dp"
+                    android:id="@+id/placeofbirth"
+                    android:textSize="18sp"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <org.ei.opensrp.view.customControls.CustomFontTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    style="@style/CustomFontTextViewStyle"
+                    android:text="Present Address: "
+                    android:layout_margin="1dp"
+                    android:id="@+id/presentaddress_label"
+                    android:textSize="18sp"
+                    android:layout_weight="1" />
+
+                <org.ei.opensrp.view.customControls.CustomFontTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    style="@style/CustomFontTextViewStyle"
+                    android:text="Large Text"
+                    android:layout_margin="1dp"
+                    android:id="@+id/presentaddress"
+                    android:textSize="18sp"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <org.ei.opensrp.view.customControls.CustomFontTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    style="@style/CustomFontTextViewStyle"
+                    android:text="Permanent Address: "
+                    android:layout_margin="1dp"
+                    android:id="@+id/permanentaddress_label"
+                    android:textSize="18sp"
+                    android:layout_weight="1" />
+
+                <org.ei.opensrp.view.customControls.CustomFontTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    style="@style/CustomFontTextViewStyle"
+                    android:text="Large Text"
+                    android:layout_margin="1dp"
+                    android:id="@+id/permanentaddress"
+                    android:textSize="18sp"
+                    android:layout_weight="1" />
+            </LinearLayout>
 
         </LinearLayout>
     </LinearLayout>
