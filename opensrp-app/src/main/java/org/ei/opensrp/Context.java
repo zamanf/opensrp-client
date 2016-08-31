@@ -878,7 +878,7 @@ public class Context {
                     index = i;
                 }
             }
-            if(commonFtsObject != null){
+            if(commonFtsObject != null && commonFtsObject.containsTable(tablename)){
                 MapOfCommonRepository.put(bindtypes.get(index).getBindtypename(), new CommonRepository(commonFtsObject, bindtypes.get(index).getBindtypename(), bindtypes.get(index).getColumnNames()));
             } else {
                 MapOfCommonRepository.put(bindtypes.get(index).getBindtypename(), new CommonRepository(bindtypes.get(index).getBindtypename(), bindtypes.get(index).getColumnNames()));

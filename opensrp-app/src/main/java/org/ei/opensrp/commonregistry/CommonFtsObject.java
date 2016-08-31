@@ -47,12 +47,12 @@ public class CommonFtsObject {
         return sortMap.get(table);
     }
 
-    private boolean containsTable(String table){
+    public boolean containsTable(String table){
         if(tables == null || StringUtils.isBlank(table)){
             return false;
         }
 
-        List<String> tableList = Arrays.asList(table);
+        List<String> tableList = Arrays.asList(tables);
         return tableList.contains(table);
     }
 
