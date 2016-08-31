@@ -95,7 +95,7 @@ public class CRVSLocationSelectorDialogFragment extends DialogFragment {
     public TreeNode createNode(String locationlevel, String locationname){
         TreeNode node = new TreeNode(locationname,locationlevel).setViewHolder(new SelectableItemHolder(getActivity(),locationlevel+": "));
         node.setSelectable(false);
-        addselectlistener(node, "");
+//        addselectlistener(node, "");
         return node;
     }
 
@@ -128,12 +128,29 @@ public class CRVSLocationSelectorDialogFragment extends DialogFragment {
 //            }
 //        });
 //    }
-    public void addselectlistener (TreeNode node,final String id){
+    public void addselectlistener (TreeNode node,final String id,final Map<String, String> addressFields){
         node.setClickListener(new TreeNode.TreeNodeClickListener() {
             @Override
             public void onClick(TreeNode node, Object value) {
                 if(node.isLeaf()){
                     JSONObject locationjson = new JSONObject();
+//                    try {
+//                        locationjson.put("location_name", node.getName().replace(" ","_"));
+//                        locationjson.put("existing_location", id);
+//                    }catch (Exception e){
+//
+//                    }
+//                    TreeNode traversingnode = node;
+//                    while(!traversingnode.isRoot()){
+//                        try {
+//                            locationjson.put("existing_"+traversingnode.getlocationlevel(), traversingnode.getName());
+//                        }catch(Exception e){
+//
+//                        }
+//                        traversingnode = traversingnode.getParent();
+//                    }
+
+                    /////////////for dghs/////////////////////////////
                     try {
                         locationjson.put("location_name", node.getName().replace(" ","_"));
                         locationjson.put("existing_location", id);
@@ -149,6 +166,15 @@ public class CRVSLocationSelectorDialogFragment extends DialogFragment {
                         }
                         traversingnode = traversingnode.getParent();
                     }
+                    for (Map.Entry<String, String> entry : addressFields.entrySet())
+                    {
+                        try {
+                            locationjson.put("existing_"+entry.getKey(), entry.getValue());
+                        }catch(Exception e){
+
+                        }
+                    }
+                    /////////////////////////////////////////////////////////////
                     FieldOverrides fieldOverrides = new FieldOverrides(locationjson.toString());
                     parentActivity.startFormActivity(formname, null, fieldOverrides.getJSONString());
                     savestate = tView.getSaveState();
@@ -166,7 +192,7 @@ public class CRVSLocationSelectorDialogFragment extends DialogFragment {
                     Strings.isNullOrEmpty(locationTag)?"-":humanize(locationTag),
                     humanize(entry.getValue().getLabel()));
             node.addChild(tree);
-            addselectlistener(tree, entry.getValue().getId());
+            addselectlistener(tree, entry.getValue().getId(),entry.getValue().getNode().getAddress().getAddressFields());
             if(entry.getValue().getChildren() != null) {
                 locationTreeToTreNode(tree, entry.getValue().getChildren());
             }

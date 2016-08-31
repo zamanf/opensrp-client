@@ -90,7 +90,7 @@ public class ChildDetailActivity extends Activity {
         });
 
 
-        name.setText(humanize((ChildClient.getColumnmaps().get("name_english") != null ? ChildClient.getColumnmaps().get("name_english") : "").replace("+", "_")));
+        name.setText(humanize((ChildClient.getColumnmaps().get("name_Fname") != null ? ChildClient.getColumnmaps().get("name_Fname") : "").replace("+", "_")));
         nameinbengali.setText(humanize((ChildClient.getDetails().get("name_bengali") != null ? ChildClient.getDetails().get("name_bengali") : "").replace("+", "_")));
         dob.setText(((ChildClient.getColumnmaps().get("child_dob") != null ? ChildClient.getColumnmaps().get("child_dob") : "").replace("+", "_")));
         nid.setText(((ChildClient.getDetails().get("child_nid") != null ? ChildClient.getDetails().get("child_nid") : "").replace("+", "_")));

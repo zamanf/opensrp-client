@@ -185,8 +185,7 @@
             android:layout_height="match_parent"
             android:text="New Button"
             style="@style/CustomFontTextViewStyle.ListView.Medium.TwoLine"
-            android:id="@+id/nid"
-            android:background="@color/status_bar_text_almost_white" />
+            android:id="@+id/nid" />
     </LinearLayout>
 
     <ImageView
