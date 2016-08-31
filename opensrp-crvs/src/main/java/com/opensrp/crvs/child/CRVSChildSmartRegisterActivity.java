@@ -171,7 +171,7 @@ public class CRVSChildSmartRegisterActivity extends SecuredNativeSmartRegisterAc
     }
     @Override
     public void startFormActivity(String formName, String entityId, String metaData) {
-//        Log.v("fieldoverride", metaData);
+        Log.v("fieldoverride", metaData);
         try {
             int formIndex = FormUtils.getIndexForFormName(formName, formNames) + 1; // add the offset
             if (entityId != null || metaData != null){
@@ -251,6 +251,8 @@ public class CRVSChildSmartRegisterActivity extends SecuredNativeSmartRegisterAc
     @Override
     public void saveFormSubmission(String formSubmission, String id, String formName, JSONObject fieldOverrides){
         // save the form
+        Log.v("field overrides we are here", fieldOverrides.toString());
+
         try{
             FormUtils formUtils = FormUtils.getInstance(getApplicationContext());
             FormSubmission submission = formUtils.generateFormSubmisionFromXMLString(id, formSubmission, formName, fieldOverrides);

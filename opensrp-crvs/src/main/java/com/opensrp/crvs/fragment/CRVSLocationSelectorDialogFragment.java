@@ -128,29 +128,12 @@ public class CRVSLocationSelectorDialogFragment extends DialogFragment {
 //            }
 //        });
 //    }
-    public void addselectlistener (TreeNode node,final String id,final Map<String, String> addressFields){
+    public void addselectlistener(TreeNode node, final String id, final Map<String, String> addressFields){
         node.setClickListener(new TreeNode.TreeNodeClickListener() {
             @Override
             public void onClick(TreeNode node, Object value) {
                 if(node.isLeaf()){
                     JSONObject locationjson = new JSONObject();
-//                    try {
-//                        locationjson.put("location_name", node.getName().replace(" ","_"));
-//                        locationjson.put("existing_location", id);
-//                    }catch (Exception e){
-//
-//                    }
-//                    TreeNode traversingnode = node;
-//                    while(!traversingnode.isRoot()){
-//                        try {
-//                            locationjson.put("existing_"+traversingnode.getlocationlevel(), traversingnode.getName());
-//                        }catch(Exception e){
-//
-//                        }
-//                        traversingnode = traversingnode.getParent();
-//                    }
-
-                    /////////////for dghs/////////////////////////////
                     try {
                         locationjson.put("location_name", node.getName().replace(" ","_"));
                         locationjson.put("existing_location", id);
@@ -174,7 +157,6 @@ public class CRVSLocationSelectorDialogFragment extends DialogFragment {
 
                         }
                     }
-                    /////////////////////////////////////////////////////////////
                     FieldOverrides fieldOverrides = new FieldOverrides(locationjson.toString());
                     parentActivity.startFormActivity(formname, null, fieldOverrides.getJSONString());
                     savestate = tView.getSaveState();
