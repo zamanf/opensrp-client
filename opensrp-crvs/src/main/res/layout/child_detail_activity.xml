@@ -26,12 +26,13 @@
             android:layout_height="wrap_content"
             android:text="Basic Info"
             android:id="@+id/childid"
-            style="@style/CustomFontTextViewStyle.ListView.Medium"
+            style="@style/CustomFontTextViewStyle.ListView.Medium.NoPadding"
             android:layout_gravity="center_vertical"
             android:layout_marginTop="2dp"
             android:layout_marginBottom="2dp"
             android:textStyle="bold"
-            android:textSize="22sp" />
+            android:textSize="22sp"
+            android:layout_marginLeft="5dp" />
 
     </LinearLayout>
 
@@ -56,15 +57,16 @@
             android:id="@+id/clients_header_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-        android:layout_marginRight="@dimen/list_view_margin_left_and_right"
-            android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp">
 
         <org.ei.opensrp.view.customControls.CustomFontTextView
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
             android:text="@string/father_information"
             android:id="@+id/father_information"
-            style="@style/CustomFontTextViewStyle.ListView.Medium"
+            style="@style/CustomFontTextViewStyle.ListView.Medium.NoPadding"
             android:layout_gravity="center_vertical"
             android:textColor="@color/text_black"
             android:textStyle="bold"
@@ -80,7 +82,8 @@
             android:textColor="@color/text_black"
             android:textStyle="bold"
             android:textSize="20sp"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:layout_marginLeft="2dp" />
 
     </LinearLayout>
 
@@ -91,7 +94,7 @@
 
     <ScrollView
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:fillViewport="true"
         android:id="@+id/scrollView" >
 
@@ -107,139 +110,291 @@
                 android:id="@+id/imageView" />
 
             <LinearLayout
-                android:orientation="vertical"
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#ffffff">
 
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="2dp"
-                    android:id="@+id/edd_layout">
-
-                    <org.ei.opensrp.view.customControls.CustomFontTextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        style="@style/CustomFontTextViewStyle"
-                        android:text="@string/date_of_birth"
-                        android:id="@+id/father_name_english"
-                        android:layout_weight="1"
-                        android:layout_gravity="center_vertical"
-                        android:textColor="@color/text_black" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:id="@+id/mother_name_english"
-                        android:layout_gravity="center_vertical"
-                        android:textColor="@color/text_black"
-                        android:layout_marginRight="5dp"
-                        android:layout_weight="1" />
-                </LinearLayout>
 
                 <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:layout_margin="2dp"
-                    android:id="@+id/pregnancy_type_of_delivery">
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
 
-                    <org.ei.opensrp.view.customControls.CustomFontTextView
-                        android:layout_width="0dp"
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        style="@style/CustomFontTextViewStyle"
-                        android:text="@string/pnc_typeofdelivery"
-                        android:id="@+id/father_name_bengali"
-                        android:layout_weight="1"
-                        android:layout_gravity="center_vertical"
-                        android:textColor="@color/text_black"
-                        android:layout_marginTop="10dp" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:id="@+id/mother_name_bengali"
-                        android:layout_gravity="center_vertical"
-                        android:textColor="@color/text_black"
+                        android:id="@+id/edd_layout"
                         android:layout_marginRight="5dp"
-                        android:layout_weight="1"
-                        android:layout_marginTop="10dp" />
+                        android:layout_marginLeft="5dp">
+                        <org.ei.opensrp.view.customControls.CustomFontTextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            style="@style/CustomFontTextViewStyle.noPadding"
+                            android:text="Father's Name(in English): "
+                            android:id="@+id/father_name_english_label"
+                            android:layout_weight="1"
+                            android:layout_gravity="center_vertical" />
+                        <org.ei.opensrp.view.customControls.CustomFontTextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            style="@style/CustomFontTextViewStyle.noPadding"
+                            android:text="@string/date_of_birth"
+                            android:id="@+id/father_name_english"
+                            android:paddingRight="5dp"
+                            android:layout_weight="1"
+                            android:gravity="right"
+                            android:layout_gravity="center_vertical"
+                            android:textColor="@color/text_black" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:id="@+id/pregnancy_type_of_delivery"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp">
+                        <org.ei.opensrp.view.customControls.CustomFontTextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            style="@style/CustomFontTextViewStyle.noPadding"
+                            android:text="Father's Name(in Bengali): "
+                            android:id="@+id/father_name_bengali_label"
+                            android:layout_weight="1"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginTop="10dp" />
+                        <org.ei.opensrp.view.customControls.CustomFontTextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            style="@style/CustomFontTextViewStyle.noPadding"
+                            android:text="@string/pnc_typeofdelivery"
+                            android:id="@+id/father_name_bengali"
+                            android:paddingRight="5dp"
+                            android:layout_weight="1"
+                            android:gravity="right"
+                            android:layout_gravity="center_vertical"
+                            android:textColor="@color/text_black"
+                            android:layout_marginTop="10dp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:id="@+id/encc1_layout"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp">
+
+                        <org.ei.opensrp.view.customControls.CustomFontTextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            style="@style/CustomFontTextViewStyle.noPadding"
+                            android:text="Father's Dob: "
+                            android:id="@+id/father_dob_label"
+                            android:layout_weight="1"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginTop="10dp" />
+
+                        <org.ei.opensrp.view.customControls.CustomFontTextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            style="@style/CustomFontTextViewStyle.noPadding"
+                            android:text="ENCC1"
+                            android:id="@+id/father_dob"
+                            android:layout_weight="1"
+                            android:layout_gravity="center_vertical"
+                            android:gravity="right"
+                            android:paddingRight="5dp"
+                            android:textColor="@color/text_black"
+                            android:layout_marginTop="10dp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:id="@+id/encc2_layout"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp">
+                        <org.ei.opensrp.view.customControls.CustomFontTextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            style="@style/CustomFontTextViewStyle.noPadding"
+                            android:text="Father's NID: "
+                            android:id="@+id/father_nid_label"
+                            android:layout_weight="1"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginTop="10dp" />
+
+                        <org.ei.opensrp.view.customControls.CustomFontTextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            style="@style/CustomFontTextViewStyle.noPadding"
+                            android:text="ENCC2"
+                            android:id="@+id/father_nid"
+                            android:layout_weight="1"
+                            android:layout_gravity="center_vertical"
+                            android:gravity="right"
+                            android:paddingRight="5dp"
+                            android:textColor="@color/text_black"
+                            android:layout_marginTop="10dp" />
+
+                    </LinearLayout>
                 </LinearLayout>
-
-
+                <ImageView
+                    android:layout_width="@dimen/smart_register_client_divider_height"
+                    android:layout_height="match_parent"
+                    android:src="@color/smart_register_client_divider_color"
+                    android:id="@+id/divider1" />
                 <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:layout_margin="2dp"
-                    android:id="@+id/encc1_layout">
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="2dp">
 
-                    <org.ei.opensrp.view.customControls.CustomFontTextView
-                        android:layout_width="0dp"
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        style="@style/CustomFontTextViewStyle"
-                        android:text="ENCC1"
-                        android:id="@+id/father_dob"
-                        android:layout_weight="1"
-                        android:layout_gravity="center_vertical"
-                        android:textColor="@color/text_black"
-                        android:layout_marginTop="10dp" />
+                        android:layout_marginTop="2dp">
 
-                    <TextView
-                        android:layout_width="0dp"
+                        <org.ei.opensrp.view.customControls.CustomFontTextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            style="@style/CustomFontTextViewStyle.noPadding"
+                            android:text="Mother's Name(in English): "
+                            android:id="@+id/mother_name_english_label"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1" />
+
+                        <org.ei.opensrp.view.customControls.CustomFontTextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            style="@style/CustomFontTextViewStyle.noPadding"
+                            android:id="@+id/mother_name_english"
+                            android:paddingRight="5dp"
+                            android:gravity="right"
+                            android:layout_gravity="center_vertical"
+                            android:textColor="@color/text_black"
+                            android:layout_weight="1" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="Medium Text"
-                        android:id="@+id/mother_dob"
-                        android:layout_gravity="center_vertical"
-                        android:textColor="@color/text_black"
-                        android:layout_marginRight="5dp"
-                        android:layout_weight="1"
-                        android:layout_marginTop="10dp" />
+                        android:layout_marginTop="2dp">
+
+                        <org.ei.opensrp.view.customControls.CustomFontTextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            style="@style/CustomFontTextViewStyle.noPadding"
+                            android:id="@+id/mother_name_bengali_label"
+                            android:text="Mother's Name(in Bengali): "
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:layout_marginTop="10dp" />
+
+                        <org.ei.opensrp.view.customControls.CustomFontTextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            style="@style/CustomFontTextViewStyle.noPadding"
+                            android:id="@+id/mother_name_bengali"
+                            android:gravity="right"
+                            android:paddingRight="5dp"
+                            android:layout_gravity="center_vertical"
+                            android:textColor="@color/text_black"
+                            android:layout_weight="1"
+                            android:layout_marginTop="10dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp">
+
+                        <org.ei.opensrp.view.customControls.CustomFontTextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            style="@style/CustomFontTextViewStyle.noPadding"
+                            android:text="Mother's Dob: "
+                            android:id="@+id/mother_dob_label"
+                            android:layout_weight="1"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginTop="10dp" />
+
+                        <org.ei.opensrp.view.customControls.CustomFontTextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            style="@style/CustomFontTextViewStyle.noPadding"
+                            android:text="Medium Text"
+                            android:id="@+id/mother_dob"
+                            android:layout_gravity="center_vertical"
+                            android:textColor="@color/text_black"
+                            android:gravity="right"
+                            android:paddingRight="5dp"
+                            android:layout_weight="1"
+                            android:layout_marginTop="10dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp">
+
+                        <org.ei.opensrp.view.customControls.CustomFontTextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            style="@style/CustomFontTextViewStyle.noPadding"
+                            android:text="Mother's NID: "
+                            android:id="@+id/mother_nid_label"
+                            android:layout_weight="1"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginTop="10dp" />
+
+                        <org.ei.opensrp.view.customControls.CustomFontTextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            style="@style/CustomFontTextViewStyle.noPadding"
+                            android:text="Medium Text"
+                            android:id="@+id/mother_nid"
+                            android:layout_gravity="center_vertical"
+                            android:textColor="@color/text_black"
+                            android:gravity="right"
+                            android:paddingRight="5dp"
+                            android:layout_weight="1"
+                            android:layout_marginTop="10dp" />
+                    </LinearLayout>
                 </LinearLayout>
 
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:layout_margin="2dp"
-                    android:id="@+id/encc2_layout">
-
-                    <org.ei.opensrp.view.customControls.CustomFontTextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        style="@style/CustomFontTextViewStyle"
-                        android:text="ENCC2"
-                        android:id="@+id/father_nid"
-                        android:layout_weight="1"
-                        android:layout_gravity="center_vertical"
-                        android:textColor="@color/text_black"
-                        android:textStyle="bold"
-                        android:layout_marginTop="10dp" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="Medium Text"
-                        android:id="@+id/mother_nid"
-                        android:layout_gravity="center_vertical"
-                        android:textColor="@color/text_black"
-                        android:layout_marginRight="5dp"
-                        android:layout_weight="1"
-                        android:layout_marginTop="10dp" />
-                </LinearLayout>
 
             </LinearLayout>
 
