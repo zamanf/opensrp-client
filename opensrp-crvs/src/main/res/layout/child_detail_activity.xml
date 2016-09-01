@@ -128,7 +128,8 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/edd_layout"
                         android:layout_marginRight="5dp"
-                        android:layout_marginLeft="5dp">
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="10dp">
                         <org.ei.opensrp.view.customControls.CustomFontTextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -156,7 +157,7 @@
                         android:orientation="horizontal"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
+                        android:layout_marginTop="10dp"
                         android:id="@+id/pregnancy_type_of_delivery"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp">
@@ -189,7 +190,7 @@
                         android:orientation="horizontal"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
+                        android:layout_marginTop="10dp"
                         android:id="@+id/encc1_layout"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp">
@@ -224,7 +225,7 @@
                         android:orientation="horizontal"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
+                        android:layout_marginTop="10dp"
                         android:id="@+id/encc2_layout"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp">
@@ -270,7 +271,7 @@
                         android:orientation="horizontal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp">
+                        android:layout_marginTop="10dp">
 
                         <org.ei.opensrp.view.customControls.CustomFontTextView
                             android:layout_width="0dp"
@@ -298,7 +299,7 @@
                         android:orientation="horizontal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp">
+                        android:layout_marginTop="10dp">
 
                         <org.ei.opensrp.view.customControls.CustomFontTextView
                             android:layout_width="0dp"
@@ -328,7 +329,7 @@
                         android:orientation="horizontal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp">
+                        android:layout_marginTop="10dp">
 
                         <org.ei.opensrp.view.customControls.CustomFontTextView
                             android:layout_width="0dp"
@@ -359,7 +360,7 @@
                         android:orientation="horizontal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp">
+                        android:layout_marginTop="10dp">
 
                         <org.ei.opensrp.view.customControls.CustomFontTextView
                             android:layout_width="0dp"

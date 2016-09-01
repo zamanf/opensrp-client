@@ -86,7 +86,8 @@
             android:text="00"
             android:id="@+id/age"
             android:gravity="right"
-            android:layout_marginRight="1dp" />
+            android:layout_marginRight="1dp"
+            android:visibility="invisible" />
 
     </LinearLayout>
 

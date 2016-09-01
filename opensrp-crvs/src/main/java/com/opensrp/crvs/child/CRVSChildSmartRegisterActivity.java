@@ -251,7 +251,7 @@ public class CRVSChildSmartRegisterActivity extends SecuredNativeSmartRegisterAc
     @Override
     public void saveFormSubmission(String formSubmission, String id, String formName, JSONObject fieldOverrides){
         // save the form
-        Log.v("field overrides we are here", fieldOverrides.toString());
+        Log.v("field overrides wehere", fieldOverrides.toString());
 
         try{
             FormUtils formUtils = FormUtils.getInstance(getApplicationContext());
@@ -272,6 +272,7 @@ public class CRVSChildSmartRegisterActivity extends SecuredNativeSmartRegisterAc
             e.printStackTrace();
         }
     }
+
 
     public void switchToBaseFragment(final String data){
         Log.v("we are here","switchtobasegragment");

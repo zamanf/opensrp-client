@@ -1,9 +1,10 @@
 <model>
   <instance>
-    <ChildRegistration.xls encounter_type="Child Registartion" id="ChildRegistration" version="201608310636">
+    <ChildRegistration encounter_type="Child Registartion" id="ChildRegistration" version="201609010435">
       <formhub>
         <uuid/>
       </formhub>
+      <existing_location openmrs_entity="encounter" openmrs_entity_id="location_id"/>
       <existing_Country/>
       <existing_Division/>
       <existing_District/>
@@ -50,6 +51,6 @@
       <meta>
         <instanceID/>
       </meta>
-    </ChildRegistration.xls>
+    </ChildRegistration>
   </instance>
 </model>
