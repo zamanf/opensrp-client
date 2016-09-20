@@ -22,7 +22,9 @@ import org.ei.opensrp.commonregistry.CommonPersonObjectController;
 import org.ei.opensrp.domain.form.FormSubmission;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.repository.AllSharedPreferences;
+import org.ei.opensrp.service.FormSubmissionService;
 import org.ei.opensrp.service.ZiggyService;
+import org.ei.opensrp.sync.ClientProcessor;
 import org.ei.opensrp.util.FormUtils;
 import org.ei.opensrp.util.StringUtil;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
@@ -260,9 +262,11 @@ public class CRVSChildSmartRegisterActivity extends SecuredNativeSmartRegisterAc
             Context context = Context.getInstance();
             ZiggyService ziggyService = context.ziggyService();
             ziggyService.saveForm(getParams(submission), submission.instance());
+            ClientProcessor.getInstance(getApplicationContext()).processClient();
             Log.v("we are here", "hhregister");
             //switch to forms list fragmentstregi
             switchToBaseFragment(formSubmission); // Unnecessary!! passing on data
+
 
         }catch (Exception e){
             DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(currentPage);

@@ -1,6 +1,6 @@
 <model>
   <instance>
-    <ChildRegistration encounter_type="Child Registartion" id="ChildRegistration" version="201609010435">
+    <ChildRegistration.xls encounter_type="Child Registartion" id="ChildRegistration" version="201609200402">
       <formhub>
         <uuid/>
       </formhub>
@@ -12,8 +12,8 @@
       <existing_Paurasava/>
       <existing_Union/>
       <existing_HIE_facilities/>
-      <start/>
-      <today/>
+      <start openmrs_entity="encounter" openmrs_entity_id="encounter_start"/>
+      <today openmrs_entity="Concept" openmrs_entity_id="cdec172a-9535-4d21-98a5-72a668b9b22c"/>
       <WARD openmrs_entity="person_address" openmrs_entity_id="address2" openmrs_entity_parent="usual_residence"/>
       <COUNTRY openmrs_entity="person_address" openmrs_entity_id="country" openmrs_entity_parent="usual_residence"/>
       <DIVISION openmrs_entity="person_address" openmrs_entity_id="stateProvince" openmrs_entity_parent="usual_residence"/>
@@ -47,10 +47,10 @@
       <gender dhis_attribute="attribute" dhis_attribute_id="Q31J4kz6nGS" openmrs_entity="person" openmrs_entity_id="gender"/>
       <present_address dhis_attribute="attribute" dhis_attribute_id="IQL4t2SqbAD" openmrs_entity="person_attribute" openmrs_entity_id="addressCode"/>
       <permanent_address dhis_attribute="attribute" dhis_attribute_id="zmIexn2UDnj" openmrs_entity="person_attribute" openmrs_entity_id="addressCode"/>
-      <end/>
+      <end openmrs_entity="Concept" openmrs_entity_id="98240c65-7f4e-4099-b4ac-d63e68fd955d"/>
       <meta>
         <instanceID/>
       </meta>
-    </ChildRegistration>
+    </ChildRegistration.xls>
   </instance>
 </model>

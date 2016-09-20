@@ -92,12 +92,16 @@ public class CRVSChildSmartClientsProvider implements SmartRegisterCLientsProvid
         fathername.setText(humanize(pc.getColumnmaps().get("father_name_english")!=null?pc.getColumnmaps().get("father_name_english"):""));
         mothername.setText(humanize(pc.getColumnmaps().get("mother_name_english") != null ? pc.getColumnmaps().get("mother_name_english"):""));
         name.setText(humanize(pc.getColumnmaps().get("name_Fname")!=null?pc.getColumnmaps().get("name_Fname"):""));
-        placeofbirth.setText(pc.getDetails().get("place_of_birth")!=null?pc.getDetails().get("place_of_birth"):"");
-        address.setText(pc.getDetails().get("present_address")!=null?pc.getDetails().get("present_address"):"");
+        placeofbirth.setText(pc.getColumnmaps().get("place_of_birth")!=null?pc.getColumnmaps().get("place_of_birth"):"");
+        address.setText(pc.getColumnmaps().get("present_address")!=null?pc.getColumnmaps().get("present_address"):"");
         age.setText(""+age(pc)+ "d ");
-        dateofbirth.setText(pc.getColumnmaps().get("child_dob")!=null?pc.getColumnmaps().get("child_dob"):"");
-        if((pc.getDetails().get("child_nid")!=null?pc.getDetails().get("child_nid"):"").length()>0) {
-            nid.setText("NID: " + (pc.getDetails().get("child_nid") != null ? pc.getDetails().get("child_nid") : ""));
+        String dob=pc.getColumnmaps().get("child_dob")!=null?pc.getColumnmaps().get("child_dob"):"";
+        if(!dob.isEmpty() && dob.contains("T")){
+            dob = dob.substring(0, dob.indexOf("T"));
+        }
+        dateofbirth.setText(dob);
+        if((pc.getColumnmaps().get("child_nid")!=null?pc.getColumnmaps().get("child_nid"):"").length()>0) {
+            nid.setText("NID: " + (pc.getColumnmaps().get("child_nid") != null ? pc.getColumnmaps().get("child_nid") : ""));
             nid.setVisibility(View.VISIBLE);
         }else{
             nid.setVisibility(View.GONE);
