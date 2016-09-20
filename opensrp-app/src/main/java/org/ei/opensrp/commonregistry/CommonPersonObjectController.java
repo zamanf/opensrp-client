@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 
+import org.ei.opensrp.Context;
 import org.ei.opensrp.repository.AllBeneficiaries;
 import org.ei.opensrp.repository.DetailsRepository;
 import org.ei.opensrp.util.Cache;
@@ -156,6 +157,7 @@ public class CommonPersonObjectController {
             @Override
             public String fetch() {
                 List<CommonPersonObject> p = allpersonobjects.all();
+                updateDetails(p);
                 CommonPersonObjectClients pClients = new CommonPersonObjectClients();
                 if(filtermap != null){
                     for (CommonPersonObject personinlist : p) {
@@ -261,6 +263,7 @@ public class CommonPersonObjectController {
             @Override
             public CommonPersonObjectClients fetch() {
                 List<CommonPersonObject> p = allpersonobjects.all();
+                updateDetails(p);
                 CommonPersonObjectClients pClients = new CommonPersonObjectClients();
                 if(filtermap != null){
                     for (CommonPersonObject personinlist : p) {
@@ -336,7 +339,6 @@ public class CommonPersonObjectController {
                             for (CommonPersonObject personinlist : p) {
                                 if (!isnull(personinlist)) {
                                     if (personinlist.getColumnmaps().get("relational_id").equalsIgnoreCase(filtervalue) ==filtercase) {
-                                        updateDetails(personinlist);
                                         CommonPersonObjectClient pClient = new CommonPersonObjectClient(personinlist.getCaseId(), personinlist.getDetails(), personinlist.getDetails().get(nameString) );
                                         pClient.setColumnmaps(personinlist.getColumnmaps());
                                         pClients.add(pClient);
@@ -389,15 +391,12 @@ public class CommonPersonObjectController {
     }
 
 
-    private void updateDetails(CommonPersonObject pc){
+    private void updateDetails(List<CommonPersonObject> p){
         DetailsRepository detailsRepository = org.ei.opensrp.Context.getInstance().detailsRepository();
-        Map<String, String> details =  detailsRepository.getAllDetailsForClient(pc.getCaseId());
-
-        if(pc.getDetails() != null) {
-            pc.getDetails().putAll(details);
-        }else{
-            pc.setDetails(details);
+        for(CommonPersonObject pc: p) {
+            detailsRepository.updateDetails(pc);
         }
+
     }
 
 }

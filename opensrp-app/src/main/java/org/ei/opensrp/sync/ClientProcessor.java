@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import org.apache.commons.lang3.StringUtils;
 import org.ei.drishti.dto.AlertStatus;
 import org.ei.opensrp.clientandeventmodel.DateUtil;
 import org.ei.opensrp.commonregistry.AllCommonsRepository;
@@ -29,6 +30,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import static org.ei.opensrp.event.Event.FORM_SUBMITTED;
 
 public class ClientProcessor {
 
@@ -555,6 +557,10 @@ public class ClientProcessor {
         JSONArray humanReadableValues = jsonDocObject.has("humanReadableValues") ? jsonDocObject.getJSONArray("humanReadableValues") : null;
 
         if (jsonDocObject == null || humanReadableValues == null || humanReadableValues.length() == 0) {
+            String humanReadableValue  = org.ei.opensrp.Context.getInstance().customHumanReadableConceptResponse().get(value);
+            if(StringUtils.isNotBlank(humanReadableValue)){
+                return humanReadableValue;
+            }
             return value;
         }
 
@@ -732,10 +738,17 @@ public class ClientProcessor {
     }
 
     private void updateFTSsearch(String tableName, String entityId) {
+        Log.i(TAG, "Starting updateFTSsearch table: " + tableName);
         AllCommonsRepository allCommonsRepository = org.ei.opensrp.Context.getInstance().allCommonsRepositoryobjects(tableName);
         if (allCommonsRepository != null) {
             allCommonsRepository.updateSearch(entityId);
+            updateRegisterCount(entityId);
         }
+        Log.i(TAG, "Finished updateFTSsearch table: " + tableName);
+    }
+
+    private void updateRegisterCount(String entityId){
+        FORM_SUBMITTED.notifyListeners(entityId);
     }
 
 }

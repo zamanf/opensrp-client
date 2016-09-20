@@ -198,6 +198,8 @@ public class Context {
 
     private CommonFtsObject commonFtsObject;
 
+    private Map<String, String> customHumanReadableConceptResponse;
+
     ///////////////////common bindtypes///////////////
     public static ArrayList<CommonRepositoryInformationHolder> bindtypes;
     /////////////////////////////////////////////////
@@ -882,19 +884,19 @@ public class Context {
             MapOfCommonRepository = new HashMap<String, CommonRepository>();
         }
         if(MapOfCommonRepository.get(tablename) == null){
-            int index = 0;
-            for(int i = 0;i<bindtypes.size();i++){
-                if(bindtypes.get(i).getBindtypename().equalsIgnoreCase(tablename)){
-                    index = i;
+            for(CommonRepositoryInformationHolder bindType: bindtypes){
+                if(bindType.getBindtypename().equalsIgnoreCase(tablename)){
+                    if(commonFtsObject != null && commonFtsObject.containsTable(tablename)){
+                        MapOfCommonRepository.put(bindType.getBindtypename(), new CommonRepository(commonFtsObject, bindType.getBindtypename(), bindType.getColumnNames()));
+                        break;
+                    } else {
+                        MapOfCommonRepository.put(bindType.getBindtypename(), new CommonRepository(bindType.getBindtypename(), bindType.getColumnNames()));
+                        break;
+                    }
                 }
             }
-            if(commonFtsObject != null && commonFtsObject.containsTable(tablename)){
-                MapOfCommonRepository.put(bindtypes.get(index).getBindtypename(), new CommonRepository(commonFtsObject, bindtypes.get(index).getBindtypename(), bindtypes.get(index).getColumnNames()));
-            } else {
-                MapOfCommonRepository.put(bindtypes.get(index).getBindtypename(), new CommonRepository(bindtypes.get(index).getBindtypename(), bindtypes.get(index).getColumnNames()));
-            }
-        }
 
+        }
         return  MapOfCommonRepository.get(tablename);
     }
 
@@ -1001,6 +1003,23 @@ public class Context {
 
     public CommonFtsObject commonFtsObject() {
         return commonFtsObject;
+    }
+
+    /**
+     * Linking generated concept with human readable values
+     * @param customHumanReadableConceptResponse
+     * @return
+     */
+    public Context updateCustomHumanReadableConceptResponse(Map<String, String> customHumanReadableConceptResponse) {
+        this.customHumanReadableConceptResponse = customHumanReadableConceptResponse;
+        return this;
+    }
+
+    public Map<String, String> customHumanReadableConceptResponse() {
+        if(customHumanReadableConceptResponse == null){
+            return new HashMap<>();
+        }
+        return customHumanReadableConceptResponse;
     }
 
     ///////////////////////////////////////////////////////////////////////////////
