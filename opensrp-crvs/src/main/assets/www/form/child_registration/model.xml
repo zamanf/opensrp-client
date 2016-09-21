@@ -1,6 +1,6 @@
 <model>
   <instance>
-    <ChildRegistration.xls encounter_type="Child Registartion" id="ChildRegistration" version="201609200402">
+    <ChildRegistration encounter_type="Child Registartion" id="ChildRegistration" version="201609210815">
       <formhub>
         <uuid/>
       </formhub>
@@ -51,6 +51,6 @@
       <meta>
         <instanceID/>
       </meta>
-    </ChildRegistration.xls>
+    </ChildRegistration>
   </instance>
 </model>

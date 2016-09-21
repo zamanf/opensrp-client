@@ -3,6 +3,7 @@
   "form": {
     "default_bind_path": "/model/instance/ChildRegistration",
     "bind_type": "crvschild",
+    "ec_bind_type": "ec_crvschild",
     "fields": [
       {
         "name": "id",
