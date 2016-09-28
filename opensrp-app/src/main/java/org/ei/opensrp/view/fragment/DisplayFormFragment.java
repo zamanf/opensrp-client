@@ -18,6 +18,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.GeolocationPermissions;
 import android.webkit.JavascriptInterface;
+import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -42,6 +43,7 @@ public class DisplayFormFragment extends Fragment {
     public static final String TAG = "DisplayFormFragment";
 
     WebView webView;
+    AppWebViewClient webViewClient;
     ProgressBar progressBar;
 
     public static String formInputErrorMessage = "Form contains errors please try again";// externalize this
@@ -113,7 +115,8 @@ public class DisplayFormFragment extends Fragment {
         webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
         webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
 
-        webView.setWebViewClient(new AppWebViewClient(progressBar));
+        webViewClient = new AppWebViewClient(progressBar);
+        webView.setWebViewClient(webViewClient);
         webView.setWebChromeClient(new WebChromeClient() {
             public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
                 callback.invoke(origin, true, false);
@@ -134,7 +137,16 @@ public class DisplayFormFragment extends Fragment {
         webView.post(new Runnable() {
             @Override
             public void run() {
-                webView.loadUrl("javascript:resetForm()");
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+                    webView.evaluateJavascript("resetForm()", new ValueCallback<String>(){
+                        @Override
+                        public void onReceiveValue(String value) {
+                            webViewClient.onPageFinished(webView, value);
+                        }
+                    });
+                } else {
+                    webView.loadUrl("javascript:resetForm()");
+                }
                 Log.d(TAG, "reseting form");
             }
         });
@@ -232,13 +244,22 @@ public class DisplayFormFragment extends Fragment {
             }
         }).start();
     }
-   String formData="";
+    String formData="";
     private void postXmlDataToForm(final String data){
         webView.post(new Runnable() {
             @Override
             public void run() {
                 formData = data.replaceAll("template=\"\"","");
-                webView.loadUrl("javascript:loadDraft('" + formData + "')");
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+                    webView.evaluateJavascript("loadDraft('" + formData + "')", new ValueCallback<String>(){
+                        @Override
+                        public void onReceiveValue(String value) {
+                            webViewClient.onPageFinished(webView, value);
+                        }
+                    });
+                } else {
+                    webView.loadUrl("javascript:loadDraft('" + formData + "')");
+                }
                 Log.d("posting data", data);
             }
         });
@@ -250,14 +271,32 @@ public class DisplayFormFragment extends Fragment {
     }
 
     public void saveCurrentFormData() {
-        webView.loadUrl("javascript:savePartialData()");
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+            webView.evaluateJavascript("savePartialData()", new ValueCallback<String>(){
+                @Override
+                public void onReceiveValue(String value) {
+                    webViewClient.onPageFinished(webView, value);
+                }
+            });
+        } else {
+            webView.loadUrl("javascript:savePartialData()");
+        }
     }
 
     public void reloadDateWidget() {
         webView.post(new Runnable() {
             @Override
             public void run() {
-                webView.loadUrl("javascript:refreshDateFields()");
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+                    webView.evaluateJavascript("refreshDateFields()", new ValueCallback<String>(){
+                        @Override
+                        public void onReceiveValue(String value) {
+                            webViewClient.onPageFinished(webView, value);
+                        }
+                    });
+                } else {
+                    webView.loadUrl("javascript:refreshDateFields()");
+                }
                 Log.d(TAG, "date widgets reloaded");
             }
         });
@@ -384,4 +423,5 @@ public class DisplayFormFragment extends Fragment {
         progressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         progressDialog.setContentView(R.layout.progress_dialog);
     }
+
 }
