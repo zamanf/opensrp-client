@@ -11,8 +11,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.ei.opensrp.Context;
 import org.ei.opensrp.cursoradapter.CursorCommonObjectSort;
 import org.ei.opensrp.vaccinator.R;
-import org.ei.opensrp.vaccinator.db.CESQLiteHelper;
-import org.ei.opensrp.vaccinator.db.Client;
+import org.ei.opensrp.repository.db.CESQLiteHelper;
+import org.ei.opensrp.repository.db.Client;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
 import org.ei.opensrp.view.contract.SmartRegisterClients;
 import org.ei.opensrp.view.controller.FormController;
@@ -25,10 +25,10 @@ import org.joda.time.Years;
 import java.util.HashMap;
 import java.util.Map;
 
-import util.VaccinatorUtils;
-import util.barcode.Barcode;
-import util.barcode.BarcodeIntentIntegrator;
-import util.barcode.BarcodeIntentResult;
+import org.ei.opensrp.util.VaccinatorUtils;
+import org.ei.opensrp.util.barcode.Barcode;
+import org.ei.opensrp.util.barcode.BarcodeIntentIntegrator;
+import org.ei.opensrp.util.barcode.BarcodeIntentResult;
 
 public abstract class SmartClientRegisterFragment extends SecuredNativeSmartRegisterFragment {
 
@@ -200,7 +200,6 @@ public abstract class SmartClientRegisterFragment extends SecuredNativeSmartRegi
                 startEnrollmentForm(map);
             }
         }
-        getSearchView().setText(qrCode);
     }
 
     protected abstract Map<String, String> customFieldOverrides();

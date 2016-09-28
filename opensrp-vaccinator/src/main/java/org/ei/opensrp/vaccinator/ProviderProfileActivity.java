@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
-import util.VaccinatorUtils;
+import org.ei.opensrp.util.VaccinatorUtils;
 
 import static org.ei.opensrp.util.Utils.convertDateFormat;
 import static org.ei.opensrp.util.Utils.getDataRow;

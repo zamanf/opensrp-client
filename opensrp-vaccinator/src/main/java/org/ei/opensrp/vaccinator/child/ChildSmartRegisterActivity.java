@@ -2,6 +2,7 @@ package org.ei.opensrp.vaccinator.child;
 
 import org.ei.opensrp.vaccinator.application.common.SmartClientRegisterFragment;
 import org.ei.opensrp.view.controller.FormController;
+import org.ei.opensrp.view.template.DetailFragment;
 import org.ei.opensrp.view.template.SmartRegisterSecuredActivity;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import java.util.List;
 public class ChildSmartRegisterActivity extends SmartRegisterSecuredActivity {
 
     @Override
-    public SmartClientRegisterFragment getBaseFragment() {
+    public SmartClientRegisterFragment makeBaseFragment() {
         return new ChildSmartRegisterFragment(new FormController(this));
     }
 
@@ -28,7 +29,17 @@ public class ChildSmartRegisterActivity extends SmartRegisterSecuredActivity {
     }
 
     @Override
+    public String postFormSubmissionRecordFilterField() {
+        return "existing_program_client_id";
+    }
+
+    @Override
     protected void onResumption() {
 
+    }
+
+    @Override
+    public DetailFragment getDetailFragment() {
+        return new ChildDetailFragment();
     }
 }

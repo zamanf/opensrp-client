@@ -1,14 +1,14 @@
 package org.ei.opensrp.view.template;
 
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 
@@ -16,17 +16,21 @@ import com.google.gson.Gson;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ei.opensrp.R;
+import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.domain.form.FormSubmission;
 import org.ei.opensrp.service.ZiggyService;
 import org.ei.opensrp.util.FormUtils;
-import org.ei.opensrp.util.Utils;
 import org.ei.opensrp.view.activity.SecuredActivity;
 import org.ei.opensrp.view.dialog.DialogOptionModel;
 import org.ei.opensrp.view.dialog.SmartRegisterDialogFragment;
 import org.ei.opensrp.view.fragment.DisplayFormFragment;
 import org.ei.opensrp.view.fragment.SecuredNativeSmartRegisterFragment;
 import org.ei.opensrp.view.viewpager.OpenSRPViewPager;
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.ei.opensrp.AllConstants.ENTITY_ID_PARAM;
 import static org.ei.opensrp.AllConstants.FORM_NAME_PARAM;
@@ -39,58 +43,68 @@ import static org.ei.opensrp.util.EasyMap.create;
 public abstract class SmartRegisterSecuredActivity extends SecuredActivity {
     public static final String DIALOG_TAG = "dialog";
 
-    OpenSRPViewPager mPager;
     private BaseRegisterActivityPagerAdapter mPagerAdapter;
     private int currentPage;
-
-    private String[] formNames = new String[]{};
-    private android.support.v4.app.Fragment mBaseFragment = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        requestWindowFeature(Window.FEATURE_NO_TITLE);
-
         setContentView(R.layout.activity_main);
 
-        mPager = (OpenSRPViewPager) findViewById(R.id.view_pager);
+        OpenSRPViewPager mPager = (OpenSRPViewPager) findViewById(R.id.view_pager);
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayShowHomeEnabled(false);
         getSupportActionBar().hide();
-//        getWindow().getDecorView().setBackgroundDrawable(null);
 
-        formNames = this.buildFormNameList();
-        mBaseFragment = getBaseFragment();
+        String[] formNames = this.buildFormNameList();
+        Fragment[] otherFragl = null;
 
+        DetailFragment detailFrg = getDetailFragment();
+        if (detailFrg != null){
+            otherFragl = new Fragment[]{detailFrg};
+        }
         // Instantiate a ViewPager and a PagerAdapter.
-        mPagerAdapter = new BaseRegisterActivityPagerAdapter(getSupportFragmentManager(), formNames, mBaseFragment);
-        mPager.setOffscreenPageLimit(formNames.length);
-        mPager.setAdapter(mPagerAdapter);
-        mPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+        mPagerAdapter = new BaseRegisterActivityPagerAdapter(mPager, getSupportFragmentManager(),
+                formNames, makeBaseFragment(), otherFragl);
+        mPagerAdapter.getViewPager().setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                currentPage = position;
-                onPageChanged(position);
+            currentPage = position;
+            onPageChanged(position);
             }
         });
 
-        mPagerAdapter.switchToBaseFragment(mPager);
+        mPagerAdapter.switchToBaseFragment();
+
+        onCreateActivity(savedInstanceState);
     }
 
-    public abstract SecuredNativeSmartRegisterFragment getBaseFragment();
+    protected abstract SecuredNativeSmartRegisterFragment makeBaseFragment();
+
+    public SecuredNativeSmartRegisterFragment getBaseFragment(){
+        return (SecuredNativeSmartRegisterFragment) mPagerAdapter.getBaseFragment();
+    }
+
+    public DetailFragment getDetailFragment(){
+        return null;
+    }
 
     public void onPageChanged(int page) {
-        setRequestedOrientation(page == 0 ? ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        if(page == 0 || mPagerAdapter.isFormFragment(page)){
+            setRequestedOrientation(page == 0 ? ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
     }
 
     protected abstract String[] buildFormNameList() ;
 
-    @Override
-    protected void onCreation() {
+    protected void onCreateActivity(Bundle savedInstanceState) {
+
     }
 
+    @Override
+    protected void onCreation() { }
 
     public void showFragmentDialog(DialogOptionModel dialogOptionModel) {
         showFragmentDialog(dialogOptionModel, null);
@@ -100,32 +114,41 @@ public abstract class SmartRegisterSecuredActivity extends SecuredActivity {
         if (dialogOptionModel.getDialogOptions().length <= 0) {
             return;
         }
-
+//todo not tested
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        Fragment prev = getFragmentManager().findFragmentByTag(DIALOG_TAG);
+        android.app.Fragment prev = getFragmentManager().findFragmentByTag(DIALOG_TAG);
         if (prev != null) {
             ft.remove(prev);
         }
         ft.addToBackStack(null);
 
-        SmartRegisterDialogFragment
-                .newInstance(this, dialogOptionModel, tag)
-                .show(ft, DIALOG_TAG);
+        SmartRegisterDialogFragment.newInstance(this, dialogOptionModel, tag).show(ft, DIALOG_TAG);
+    }
+
+    public void showDetailFragment(CommonPersonObjectClient client, boolean landscape){
+        if (mPagerAdapter.otherFragmentsSize() == 0){
+            throw new IllegalStateException("No detail fragment configured for current activity");
+        }
+
+        setRequestedOrientation(landscape?ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE:ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        Fragment pf = mPagerAdapter.getRegisteredFragment(1);
+        ((DetailFragment)pf).resetView(client);
+        mPagerAdapter.showFragment(1);//todo assumption
     }
 
     protected String getParams(FormSubmission submission) {
         return new Gson().toJson(
-                create(INSTANCE_ID_PARAM, submission.instanceId())
-                        .put(ENTITY_ID_PARAM, submission.entityId())
-                        .put(FORM_NAME_PARAM, submission.formName())
-                        .put(VERSION_PARAM, submission.version())
-                        .put(SYNC_STATUS, PENDING.value())
-                        .map());
+            create(INSTANCE_ID_PARAM, submission.instanceId())
+                    .put(ENTITY_ID_PARAM, submission.entityId())
+                    .put(FORM_NAME_PARAM, submission.formName())
+                    .put(VERSION_PARAM, submission.version())
+                    .put(SYNC_STATUS, PENDING.value())
+                    .map());
     }
 
-    public void saveFormSubmission(final String formSubmission, String id, final String formName, JSONObject fieldOverrides) {
+    public void saveFormSubmission(final String formSubmission, final String id, final String formName, final JSONObject fieldOverrides) {
         Log.v("fieldoverride", fieldOverrides.toString());
-        // save the form
         try {
             FormUtils formUtils = FormUtils.getInstance(getApplicationContext());
             final FormSubmission submission = formUtils.generateFormSubmisionFromXMLString(id, formSubmission, formName, fieldOverrides);
@@ -135,42 +158,45 @@ public abstract class SmartRegisterSecuredActivity extends SecuredActivity {
             ziggyService.saveForm(getParams(submission), submission.instance());
 
             new AlertDialog.Builder(this)
-                    .setMessage(R.string.form_saved_success_dialog_message)
-                    .setTitle(R.string.form_saved_dialog_title)
-                    .setCancelable(false)
-                    .setPositiveButton(R.string.ok_button_label,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                int formIndex = FormUtils.getIndexForFormName(formName, formNames) + 1;
-                                switchToBaseFragment(submission, formIndex); // pass data to let fragment know which record to display
-                            }
-                        })
-                    .show();
+                .setMessage(R.string.form_saved_success_dialog_message)
+                .setTitle(R.string.form_saved_dialog_title)
+                .setCancelable(false)
+                .setPositiveButton(R.string.ok_button_label,
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            int formIndex = mPagerAdapter.getIndexForFormName(formName);//todo
+                            closeForm(submission, formIndex, fieldOverrides); // pass data to let fragment know which record to display
+                        }
+                    })
+                .show();
         } catch (Exception e) {
-            new AlertDialog.Builder(this)
-                    .setMessage((getResources().getString(R.string.form_saved_failed_dialog_message))+" : "+e.getMessage())
-                    .setTitle(R.string.form_saved_dialog_title)
-                    .setCancelable(false)
-                    .setPositiveButton(R.string.ok_button_label,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(currentPage);
-                                if (displayFormFragment != null) {
-                                    displayFormFragment.hideTranslucentProgressDialog();
-                                }
-                            }
-                        }).show();
             e.printStackTrace();
+
+            new AlertDialog.Builder(this)
+                .setMessage((getResources().getString(R.string.form_saved_failed_dialog_message))+" : "+e.getMessage())
+                .setTitle(R.string.form_saved_dialog_title)
+                .setCancelable(false)
+                .setPositiveButton(R.string.ok_button_label,
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            DisplayFormFragment displayFormFragment = (DisplayFormFragment) mPagerAdapter.getRegisteredFragment(currentPage);
+                            if (displayFormFragment != null) {
+                                displayFormFragment.hideTranslucentProgressDialog();
+                            }
+                        }
+                    }).show();
         }
     }
 
     @Override
     public void startFormActivity(String formName, String entityId, String metaData) {
-        Log.v("fieldoverride", metaData);
+        Log.v(getClass().getName(), "Going to launch DisplayFormFragment for "+formName+" for entity "+entityId);
+        Log.v(" with fieldoverride", metaData);
         try {
-            int formIndex = FormUtils.getIndexForFormName(formName, formNames) + 1; // add the offset
-            DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(formIndex);
-            displayFormFragment.showForm(mPager, formIndex, entityId, metaData, false);
+            int formIndex = mPagerAdapter.getIndexForFormName(formName);
+            DisplayFormFragment displayFormFragment = (DisplayFormFragment) mPagerAdapter.getRegisteredFragment(formIndex);
+            displayFormFragment.showForm(formIndex, entityId, metaData, false);
+            mPagerAdapter.showFragment(formIndex);//todo
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -239,64 +265,69 @@ public abstract class SmartRegisterSecuredActivity extends SecuredActivity {
         return null;
     }
 
-    public void switchToBaseFragment(final FormSubmission data, final int pageIndex) {
+    public void closeForm(final FormSubmission data, final int pageIndex, final JSONObject overrides) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 //hack reset the form
-                DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(pageIndex);
+               DisplayFormFragment displayFormFragment = (DisplayFormFragment) mPagerAdapter.getRegisteredFragment(pageIndex);
                 if (displayFormFragment != null) {
                     displayFormFragment.hideTranslucentProgressDialog();
-                    displayFormFragment.setFormData(null);
-                    displayFormFragment.setRecordId(null);
-                    displayFormFragment.setFieldOverides(null);
                 }
 
-                mPager.setCurrentItem(0, false);
-                SecuredNativeSmartRegisterFragment registerFragment = (SecuredNativeSmartRegisterFragment) findFragmentByPosition(0);
+                SecuredNativeSmartRegisterFragment registerFragment = (SecuredNativeSmartRegisterFragment) mPagerAdapter.getBaseFragment();
                 if (registerFragment != null && data != null) {
-                    String id = data.getFieldValue("program_client_id");
-                    if (StringUtils.isBlank(id)){
-                        id = data.getFieldValue("existing_program_client_id");
+                    String id = data.getFieldValue(postFormSubmissionRecordFilterField());
+                    if (StringUtils.isBlank(id)) {
+                        try {
+                            id = overrides.getString(postFormSubmissionRecordFilterField());
+                        } catch (JSONException e) {
+                            id = "";
+                            e.printStackTrace();
+                        }
                     }
-                    registerFragment.getSearchView().setText(id);
                     registerFragment.onFilterManual(id);
+                } else {
+                    registerFragment.onFilterManual("");//clean up search filter
                 }
-                else registerFragment.onFilterManual("");//clean up search filter
+                mPagerAdapter.switchToBaseFragment();
             }
         });
     }
 
-    public android.support.v4.app.Fragment findFragmentByPosition(int position) {
+    public abstract String postFormSubmissionRecordFilterField();
+
+    /*public android.support.v4.app.Fragment findFragmentByPosition(int position) {
         FragmentPagerAdapter fragmentPagerAdapter = mPagerAdapter;
         return getSupportFragmentManager().findFragmentByTag("android:switcher:" + mPager.getId() + ":" + fragmentPagerAdapter.getItemId(position));
-    }
+    }*/
 
-    public DisplayFormFragment getDisplayFormFragmentAtIndex(int index) {
+   /* public DisplayFormFragment getDisplayFormFragmentAtIndex(int index) {
         return  (DisplayFormFragment)findFragmentByPosition(index);
-    }
+    }*/
 
     @Override
     public void onBackPressed() {
-        if (currentPage != 0) {
+        if (mPagerAdapter.isFormFragment(currentPage)) {
             new AlertDialog.Builder(this)
-                    .setMessage(R.string.form_back_confirm_dialog_message)
-                    .setTitle(R.string.form_back_confirm_dialog_title)
-                    .setCancelable(false)
-                    .setPositiveButton(R.string.yes_button_label,
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int whichButton) {
-                                    switchToBaseFragment(null, currentPage);
-                                }
-                            })
-                    .setNegativeButton(R.string.no_button_label,
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int whichButton) {
-                                }
-                            })
-                    .show();
+                .setMessage(R.string.form_back_confirm_dialog_message)
+                .setTitle(R.string.form_back_confirm_dialog_title)
+                .setCancelable(false)
+                .setPositiveButton(R.string.yes_button_label, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        closeForm(null, currentPage, null);
+                    }
+                })
+                .setNegativeButton(R.string.no_button_label, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+
+                    }
+                })
+                .show();
         } else if (currentPage == 0) {
             super.onBackPressed(); // allow back key only if we are
+        } else {
+            mPagerAdapter.switchToBaseFragment();
         }
     }
 }

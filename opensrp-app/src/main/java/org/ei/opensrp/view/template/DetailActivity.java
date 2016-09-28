@@ -2,13 +2,6 @@ package org.ei.opensrp.view.template;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.RectF;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -169,52 +162,5 @@ public abstract class DetailActivity extends Activity {
             saveImageReference(bindType(), client.entityId(), details);
             setProfiePicFromPath(this, mImageView, currentPhoto.getAbsolutePath(), R.drawable.ic_pencil);
         }
-    }
-
-    /**
-     * Adds a watermark on the given image.
-     */
-    public Bitmap addWatermark(Resources res, Bitmap source, boolean highQuality) {
-        int w, h;
-        Canvas c;
-        Paint paint;
-        Bitmap bmp, watermark;
-
-        Matrix matrix;
-        RectF r;
-
-        w = source.getWidth();
-        h = source.getHeight();
-
-        // Create the new bitmap
-        bmp = Bitmap.createBitmap(w, h, highQuality?Bitmap.Config.ARGB_8888:Bitmap.Config.ARGB_4444);
-
-        paint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG | Paint.FILTER_BITMAP_FLAG);
-
-        // Copy the original bitmap into the new one
-        c = new Canvas(bmp);
-        c.drawBitmap(source, 0, 0, paint);
-
-        // Load the watermark
-        watermark = BitmapFactory.decodeResource(res, R.drawable.ic_pencil);
-        // Scale the watermark to be approximately 20% of the source image height
-        float scaley = (float) (((float) h * 0.20) / (float) watermark.getHeight());
-        float scalex = (float) (((float) w * 0.20) / (float) watermark.getWidth());
-
-        // Create the matrix
-        matrix = new Matrix();
-        matrix.postScale(scalex, scaley);
-        // Determine the post-scaled size of the watermark
-        r = new RectF(0, 0, watermark.getWidth(), watermark.getHeight());
-        matrix.mapRect(r);
-        // Move the watermark to the bottom right corner
-        matrix.postTranslate(0, 0);
-
-        // Draw the watermark
-        c.drawBitmap(watermark, matrix, paint);
-        // Free up the bitmap memory
-        watermark.recycle();
-
-        return bmp;
     }
 }

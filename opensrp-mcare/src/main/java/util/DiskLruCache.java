@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package util;
+package org.ei.opensrp.immunization.util;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
@@ -170,7 +170,7 @@ public final class DiskLruCache implements Closeable {
      */
     private long nextSequenceNumber = 0;
 
-    /* From java.util.Arrays */
+    /* From java.org.ei.opensrp.immunization.util.Arrays */
     @SuppressWarnings("unchecked")
     private static <T> T[] copyOfRange(T[] original, int start, int end) {
         final int originalLength = original.length; // For exception priority compatibility.

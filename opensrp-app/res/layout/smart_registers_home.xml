@@ -5,6 +5,7 @@
               android:background="#ff313131">
 
     <LinearLayout
+            android:id="@+id/home_upper_container"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -12,6 +13,7 @@
             android:background="@drawable/bg_texture">
 
         <ImageView
+                android:id="@+id/home_header_image"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
@@ -19,6 +21,7 @@
                 android:src="@drawable/logo"/>
 
         <LinearLayout
+                android:id="@+id/register_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -185,6 +188,7 @@
     </LinearLayout>
 
     <LinearLayout
+            android:id="@+id/home_button_container"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"

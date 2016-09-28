@@ -62,11 +62,7 @@ public class FormUtils {
 
     public FormSubmission generateFormSubmisionFromXMLString(String entity_id, String formData, String formName, JSONObject overrides) throws Exception{
         JSONObject formSubmission = XML.toJSONObject(formData);
-
-        FileUtilities fu = new FileUtilities();
-        fu.write("xmlform.txt", formData);
-        fu.write("xmlformsubmission.txt", formSubmission.toString());
-        System.out.println(formSubmission);
+        android.util.Log.d(getClass().getName(), "FS : "+formSubmission.toString());
 
         // use the form_definition.json to iterate through fields
         String formDefinitionJson = readFileFromAssetsFolder("www/form/" + formName + "/form_definition.json");
@@ -158,6 +154,10 @@ public class FormUtils {
             JSONObject entityJson = new JSONObject();
             if (dbEntity != null && !dbEntity.isEmpty()){
                 entityJson = new JSONObject(dbEntity);
+            }
+
+            if (entityId != null && entityId.isEmpty() == false && entityJson.length() == 0){
+                entityJson.put("id", entityId);
             }
 
             //read the xml form model, the expected form model that is passed to the form mirrors it
@@ -530,6 +530,10 @@ public class FormUtils {
             entityJson = new JSONObject(dbEntity);
         }
 
+        if (entityId != null && entityId.isEmpty() == false && entityJson.length() == 0){
+            entityJson.put("id", entityId);
+        }
+
         JSONArray fieldsArray = fieldsDefinition.getJSONArray("fields");
 
         for (int i = 0; i < fieldsArray.length(); i++){
@@ -787,14 +791,4 @@ public class FormUtils {
         //Log.d("File", fileContents);
         return fileContents;
     }
-
-    public static int getIndexForFormName(String formName, String[] formNames){
-        for (int i = 0; i < formNames.length; i++){
-            if (formName.equalsIgnoreCase(formNames[i])){
-                return i;
-            }
-        }
-        return -1;
-    }
-
 }

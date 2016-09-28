@@ -8,7 +8,6 @@ import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
@@ -230,12 +229,13 @@ public class DisplayFormFragment extends Fragment {
         });
     }
 
-    public void showForm(final ViewPager viewPager, final int formIndex, String entityId, final String metaData, boolean loadPrevious){
-        viewPager.setCurrentItem(formIndex, false); //Don't animate the view on orientation change the view disapears
+    public void showForm(final int formIndex, String entityId, final String metaData, boolean loadPrevious){
+       // viewPager.setCurrentItem(formIndex, false); //Don't animate the view on orientation change the view disapears
 
         showTranslucentProgressDialog();
 
-        if (entityId != null || metaData != null){
+        if (metaData != null){
+            entityId = entityId == null?"":entityId;
             String data = null;
             //check if there is previously saved data for the form
             if(loadPrevious){
@@ -320,7 +320,8 @@ public class DisplayFormFragment extends Fragment {
         webView.post(new Runnable() {
             @Override
             public void run() {
-                webView.loadUrl("javascript:loadDraft('" + data + "')");
+                String formData = data.replaceAll("template=\"\"", "");
+                webView.loadUrl("javascript:loadDraft('" + formData + "')");
                 Log.d("posting data", data);
             }
         });

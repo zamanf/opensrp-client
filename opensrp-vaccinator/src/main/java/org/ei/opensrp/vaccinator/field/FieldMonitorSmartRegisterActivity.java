@@ -10,7 +10,7 @@ import java.util.List;
 public class FieldMonitorSmartRegisterActivity extends SmartRegisterSecuredActivity {
 
     @Override
-    public SecuredNativeSmartRegisterFragment getBaseFragment() {
+    public SecuredNativeSmartRegisterFragment makeBaseFragment() {
         return new FieldMonitorRegisterFragment(new FormController(this));
     }
 
@@ -22,7 +22,14 @@ public class FieldMonitorSmartRegisterActivity extends SmartRegisterSecuredActiv
     }
 
     @Override
+    public String postFormSubmissionRecordFilterField() {
+        return "";
+    }
+
+    @Override
     protected void onResumption() {
 
     }
+
+    //TODO
 }

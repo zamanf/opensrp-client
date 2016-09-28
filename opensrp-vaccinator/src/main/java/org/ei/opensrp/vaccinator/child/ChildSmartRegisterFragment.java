@@ -15,7 +15,7 @@ import org.ei.opensrp.vaccinator.R;
 import org.ei.opensrp.vaccinator.application.common.BasicSearchOption;
 import org.ei.opensrp.vaccinator.application.common.SmartClientRegisterFragment;
 import org.ei.opensrp.vaccinator.application.common.VaccinationServiceModeOption;
-import org.ei.opensrp.vaccinator.db.Client;
+import org.ei.opensrp.repository.db.Client;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.controller.FormController;
@@ -23,8 +23,8 @@ import org.ei.opensrp.view.dialog.FilterOption;
 import org.ei.opensrp.view.dialog.SearchFilterOption;
 import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
-import org.ei.opensrp.view.template.DetailActivity;
 import org.ei.opensrp.view.template.SmartRegisterClientsProvider;
+import org.ei.opensrp.view.template.SmartRegisterSecuredActivity;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.json.JSONException;
@@ -35,8 +35,8 @@ import java.util.Map;
 
 import static org.ei.opensrp.util.Utils.getValue;
 import static org.ei.opensrp.util.Utils.nonEmptyValue;
-import static util.VaccinatorUtils.getObsValue;
-import static util.VaccinatorUtils.providerDetails;
+import static org.ei.opensrp.util.VaccinatorUtils.getObsValue;
+import static org.ei.opensrp.util.VaccinatorUtils.providerDetails;
 
 public class ChildSmartRegisterFragment extends SmartClientRegisterFragment {
     private final ClientActionHandler clientActionHandler = new ClientActionHandler();
@@ -84,6 +84,11 @@ public class ChildSmartRegisterFragment extends SmartClientRegisterFragment {
             public String nameInShortFormForTitle() {
                 return Context.getInstance().getStringResource(R.string.child_register_title);
             }
+
+            @Override
+            public SecuredNativeSmartRegisterActivity.SearchType searchType() {
+                return SecuredNativeSmartRegisterActivity.SearchType.PASSIVE;
+            }
         };
     }
 
@@ -105,8 +110,9 @@ public class ChildSmartRegisterFragment extends SmartClientRegisterFragment {
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.child_profile_info_layout:
-                    DetailActivity.startDetailActivity(getActivity(), (CommonPersonObjectClient) view.getTag(), ChildDetailActivity.class);
-                    getActivity().finish();
+                    /*DetailActivity.startDetailActivity(getActivity(), (CommonPersonObjectClient) view.getTag(), ChildDetailActivity.class);
+                    getActivity().finish();*/
+                    ((SmartRegisterSecuredActivity) getActivity()).showDetailFragment((CommonPersonObjectClient) view.getTag(), true);
                     break;
                 case R.id.child_next_visit_holder:
                     HashMap<String, String> map = new HashMap<>();

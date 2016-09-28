@@ -6,7 +6,7 @@ import android.widget.TableRow;
 import org.ei.opensrp.Context;
 import org.ei.opensrp.domain.Alert;
 import org.ei.opensrp.vaccinator.R;
-import org.ei.opensrp.vaccinator.db.VaccineRepo;
+import org.ei.opensrp.repository.db.VaccineRepo;
 import org.ei.opensrp.view.template.DetailActivity;
 import org.joda.time.DateTime;
 import org.joda.time.Months;
@@ -20,10 +20,11 @@ import static org.ei.opensrp.util.Utils.getDataRow;
 import static org.ei.opensrp.util.Utils.getValue;
 import static org.ei.opensrp.util.Utils.hasAnyEmptyValue;
 import static org.ei.opensrp.util.Utils.nonEmptyValue;
-import static util.VaccinatorUtils.addStatusTag;
-import static util.VaccinatorUtils.addVaccineDetail;
-import static util.VaccinatorUtils.generateSchedule;
+import static org.ei.opensrp.util.VaccinatorUtils.addStatusTag;
+import static org.ei.opensrp.util.VaccinatorUtils.addVaccineDetail;
+import static org.ei.opensrp.util.VaccinatorUtils.generateSchedule;
 
+@Deprecated
 public class ChildDetailActivity extends DetailActivity {
     @Override
     protected int layoutResId() {

@@ -30,11 +30,10 @@ import org.ei.opensrp.view.template.DetailActivity;
 import org.ei.opensrp.view.template.SmartRegisterClientsProvider;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import util.VaccinatorUtils;
+import org.ei.opensrp.util.VaccinatorUtils;
 
 import static android.view.View.TEXT_ALIGNMENT_CENTER;
 
@@ -77,6 +76,11 @@ public class FieldMonitorRegisterFragment extends SecuredNativeSmartRegisterFrag
             @Override
             public String nameInShortFormForTitle() {
                 return Context.getInstance().getStringResource(R.string.stock_register_title);
+            }
+
+            @Override
+            public SecuredNativeSmartRegisterActivity.SearchType searchType() {
+                return SecuredNativeSmartRegisterActivity.SearchType.PASSIVE;
             }
         };
     }

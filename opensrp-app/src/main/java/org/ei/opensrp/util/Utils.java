@@ -23,10 +23,12 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Build.VERSION_CODES;
+import android.os.Handler;
 import android.text.Html;
 import android.text.Spanned;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -44,11 +46,14 @@ import org.apache.commons.lang3.text.WordUtils;
 import org.ei.drishti.dto.AlertStatus;
 import org.ei.opensrp.ByColumnAndByDetails;
 import org.ei.opensrp.R;
+import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.domain.ProfileImage;
 import org.ei.opensrp.repository.ImageRepository;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.joda.time.DateTime;
+import org.joda.time.Years;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.opensrp.api.domain.Location;
 import org.opensrp.api.util.TreeNode;
@@ -76,6 +81,23 @@ public class Utils {
     private static final SimpleDateFormat DB_DTF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     private Utils() {};
+
+    public static int ageInYears(CommonPersonObjectClient person, String dobField, ByColumnAndByDetails columnOrDetail, boolean suppressException){
+        return ageInYears(person.getColumnmaps(), person.getDetails(), dobField, columnOrDetail, suppressException);
+    }
+
+    public static int ageInYears(CommonPersonObject person, String dobField, ByColumnAndByDetails columnOrDetail, boolean suppressException){
+        return ageInYears(person.getColumnmaps(), person.getDetails(), dobField, columnOrDetail, suppressException);
+    }
+
+    public static int ageInYears(Map<String, String> columns, Map<String, String> details, String dobField, ByColumnAndByDetails columnOrDetail, boolean suppressException){
+        int age = -1;
+        try{
+            age = Years.yearsBetween(new DateTime(getValue(columnOrDetail.equals(ByColumnAndByDetails.byColumn)?columns:details, dobField, false)), DateTime.now()).getYears();
+        }
+        catch (Exception e){if (suppressException == false) throw new RuntimeException(e);}
+        return age;
+    }
 
     public static String convertDateFormat(String date, boolean suppressException){
         try{
@@ -122,6 +144,11 @@ public class Utils {
         return "";
     }
 
+    public static void fillWithIdentifier(TextView v, Map<String, String> cm, String identifierType, boolean humanize) throws JSONException {
+        JSONObject idl = new JSONObject((String) cm.get("identifiers"));
+        v.setText(getValue(cm, idl.getString(identifierType), humanize));
+    }
+
     public static void fillValue(TextView v, Map<String, String> cm, String field, boolean humanize){
         v.setText(getValue(cm, field, humanize));
     }
@@ -144,6 +171,14 @@ public class Utils {
             val = defaultV;
         }
         v.setText(val);
+    }
+
+    public static final int getColor(Context context, int id) {
+        if (Build.VERSION.SDK_INT >= VERSION_CODES.M) {
+            return context.getResources().getColor(id, context.getTheme());
+        }else {
+            return context.getResources().getColor(id);
+        }
     }
 
     public static String getColorValue(Context cxt, AlertStatus alertStatus){
@@ -185,7 +220,7 @@ public class Utils {
     }
 
     public static void fillValue(TextView v, String value){
-        v.setText(value);
+        v.setText(Html.fromHtml(value));
     }
 
     public static String formatValue(String value, boolean humanize){
@@ -273,6 +308,53 @@ public class Utils {
     }
 
     public static TableRow getDataRow(Context context, String label, String value, TableRow row){
+        return getDataRow(context, label, value, row, false);
+    }
+
+    public static TableRow getDataRow(Context context, String label, String value, TableRow row, boolean compact){
+        TableRow tr = row;
+        if(row == null){
+            tr = new TableRow(context);
+            TableRow.LayoutParams trlp = new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            tr.setLayoutParams(trlp);
+            if(compact) {
+                tr.setPadding(5, 3, 10, 3);
+            }
+            else {
+                tr.setPadding(10, 5, 10, 5);
+            }
+        }
+
+        TextView l = new TextView(context);
+        l.setText(label + ": ");
+        if(compact){
+            l.setPadding(5, 2, 5, 1);
+        }
+        else {
+            l.setPadding(20, 2, 20, 2);
+        }
+        l.setTextColor(Color.BLACK);
+        l.setTextSize(14);
+        l.setBackgroundColor(Color.WHITE);
+        tr.addView(l);
+
+        TextView v = new TextView(context);
+        v.setText(value);
+        if(compact){
+            v.setPadding(5, 2, 5, 1);
+        }
+        else {
+            v.setPadding(20, 2, 20, 2);
+        }
+        v.setTextColor(Color.BLACK);
+        v.setTextSize(14);
+        v.setBackgroundColor(Color.WHITE);
+        tr.addView(v);
+
+        return tr;
+    }
+
+    public static TableRow getEvenWidthDataRow(Context context, String label, String value, TableRow row){
         TableRow tr = row;
         if(row == null){
             tr = new TableRow(context);
@@ -290,6 +372,8 @@ public class Utils {
         tr.addView(l);
 
         TextView v = new TextView(context);
+        v.setSingleLine(false);
+        v.setMaxLines(4);
         v.setText(value);
         v.setPadding(20, 2, 20, 2);
         v.setTextColor(Color.BLACK);
@@ -317,6 +401,21 @@ public class Utils {
         return i;
     }
 
+    public static int addAsInts(boolean ignoreEmpty, Map<String, String> map, String... variables){
+        return addAsInts(ignoreEmpty, null, null, map, variables);
+    }
+
+    public static int addAsInts(boolean ignoreEmpty, String prefix, String postfix, Map<String, String> map, String... variables){
+        prefix = StringUtils.isBlank(prefix)?"":prefix.trim();
+        postfix = StringUtils.isBlank(postfix)?"":postfix.trim();
+        int i = 0;
+        for (String v : variables){
+            v = prefix+v+postfix;
+            i += ignoreEmpty&&StringUtils.isBlank(map.get(v))?0:Integer.parseInt(map.get(v));
+        }
+        return i;
+    }
+
     public static TableRow addToRow(Context context, String value, TableRow row){
         return addToRow(context, value, row, false, 1);
     }
@@ -337,7 +436,7 @@ public class Utils {
         TextView v = new TextView(context);
         v.setText(value);
         if(compact){
-            v.setPadding(15, 4, 1, 1);
+            v.setPadding(15, 3, 1, 1);
         }
         else {
             v.setPadding(2, 15, 2, 15);
@@ -346,10 +445,10 @@ public class Utils {
                 0,
                 TableRow.LayoutParams.WRAP_CONTENT, weight
         );
-        params.setMargins(0, 0, 1, 0);
+        params.setMargins(0, 0, 1, 1);
         v.setLayoutParams(params);
         v.setTextColor(Color.BLACK);
-        v.setTextSize(14);
+        v.setTextSize(12);
         v.setBackgroundColor(Color.WHITE);
         row.addView(v);
 
@@ -387,17 +486,27 @@ public class Utils {
         }
     }
 
-    public static void setProfiePic(Context context, ImageView mImageView, String entityId, Object watermark){
-        ProfileImage photo = ((ImageRepository) org.ei.opensrp.Context.getInstance().imageRepository()).findByEntityId(entityId, "dp");
+    public static void setProfiePic(final Context context, final ImageView mImageView, String entityId, final Object watermark){
+        final ProfileImage photo = ((ImageRepository) org.ei.opensrp.Context.getInstance().imageRepository()).findByEntityId(entityId, "dp");
         if(photo != null){
-            setProfiePicFromPath(context, mImageView, photo.getFilepath(), watermark);
+            mImageView.getViewTreeObserver()
+                .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                    // Wait until layout to call Picasso
+                    @Override
+                    public void onGlobalLayout() {
+                        // Ensure we call this only once
+                        mImageView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                        setProfiePicFromPath(context, mImageView, photo.getFilepath(), watermark);
+                    }
+                });
         }
     }
 
     public static void setProfiePicFromPath(Context context, ImageView mImageView, String photoPath, Object watermark){
-        mImageView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         if(watermark == null){
-            Picasso.with(context).load(new File(photoPath)).resize(mImageView.getMeasuredWidth(), mImageView.getMeasuredHeight()).into(mImageView);
+            Picasso.with(context).load(new File(photoPath))
+                    .resize(mImageView.getWidth(), mImageView.getHeight())
+                    .into(mImageView);
         }
         else {
             Picasso.with(context).load(new File(photoPath))
@@ -408,9 +517,10 @@ public class Utils {
     }
 
     public static void setProfiePic(Context context, ImageView mImageView, int photoResId, Object watermark){
-        mImageView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         if(watermark == null){
-            Picasso.with(context).load(photoResId).resize(mImageView.getMeasuredWidth(), mImageView.getMeasuredHeight()).into(mImageView);
+            Picasso.with(context).load(photoResId)
+                    .resize(mImageView.getWidth(), mImageView.getHeight())
+                    .into(mImageView);
         }
         else {
             Picasso.with(context).load(photoResId)

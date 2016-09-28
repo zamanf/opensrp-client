@@ -1,6 +1,8 @@
 package org.ei.opensrp.cursoradapter;
 
 import org.apache.commons.lang3.StringUtils;
+import org.ei.opensrp.util.StringUtil;
+import org.ei.opensrp.util.Utils;
 
 /**
  * Created by raihan on 3/17/16.
@@ -23,6 +25,8 @@ public class SmartRegisterQueryBuilder {
         return mainFilter;
     }
 
+    public String selection(){ return Selectquery; }
+
     public String order() {
         return order;
     }
@@ -39,12 +43,19 @@ public class SmartRegisterQueryBuilder {
         return offset;
     }
 
+    public void overrideSelection(String selection){ this.Selectquery = selection; }
+
     /**
      * @param table
      * @param mainFilter optional
      */
-    public SmartRegisterQueryBuilder(String table, String mainFilter) {
-        Selectquery = "SELECT id AS _id, t.* FROM "+table+" t ";
+    public SmartRegisterQueryBuilder(String table, String mainFilter, String idColumn) {
+        if (StringUtils.isNotBlank(idColumn)) {
+            Selectquery = "SELECT "+idColumn+" AS _id, t.* FROM " + table + " t ";
+        } else {
+            Selectquery = "SELECT id AS _id, t.* FROM " + table + " t ";
+        }
+
         this.table = table;
         if(StringUtils.isNotBlank(mainFilter)){
             this.mainFilter = mainFilter;
@@ -56,15 +67,19 @@ public class SmartRegisterQueryBuilder {
      * @param additionalColumns
      * @param mainFilter optional
      */
-    public SmartRegisterQueryBuilder(String table, String alias, String [] additionalColumns, String mainFilter){
+    public SmartRegisterQueryBuilder(String table, String alias, String [] additionalColumns, String mainFilter, String idColumn){
         this.table = table;
         alias = StringUtils.isBlank(alias)?"t":alias;
         this.alias = alias;
         if(StringUtils.isNotBlank(mainFilter)){
             this.mainFilter = mainFilter;
         }
+        if (StringUtils.isNotBlank(idColumn)) {
+            Selectquery = "SELECT "+idColumn+" AS _id";
+        } else {
+            Selectquery = "SELECT id AS _id";
+        }
 
-        Selectquery = "SELECT id AS _id";
 
         if (additionalColumns != null) {
             for (int i = 0; i < additionalColumns.length; i++) {
@@ -113,6 +128,12 @@ public class SmartRegisterQueryBuilder {
         mainFilter += " "+condition ;
         return this;
     }
+
+    public SmartRegisterQueryBuilder addJoin(String join){
+        this.joins += " "+join+" ";
+        return this;
+    }
+
     public SmartRegisterQueryBuilder addOrder(String orderCondition){
         if (StringUtils.isNotBlank(order)){
             this.order += ", "+orderCondition;

@@ -220,11 +220,18 @@ public class CommonRepository extends DrishtiRepository {
 
             while (!cursor.isAfterLast()) {
                 int columncount = cursor.getColumnCount();
-                HashMap<String, String> columns = new HashMap<String, String>();
-                for (int i = 0; i < columncount; i++) {
-                    columns.put(cursor.getColumnName(i), String.valueOf(cursor.getInt(i)));
+                HashMap <String, String> columns = new HashMap<String, String>();
+                for (int i = 0;i < columncount;i++ ){
+                    String cname = cursor.getColumnName(i);
+                    if(!cname.equalsIgnoreCase("details")) {
+                        columns.put(cname, cursor.getString(i));
+                    }
                 }
-                CommonPersonObject common = new CommonPersonObject("1","0", null, tableName);
+
+                CommonPersonObject common = new CommonPersonObject(columns.get(ID_COLUMN), columns.get(Relational_ID),
+                        new Gson().<Map<String, String>>fromJson(cursor.getString(cursor.getColumnIndex(DETAILS_COLUMN)), new TypeToken<Map<String, String>>() {
+                        }.getType()),TABLE_NAME);
+
                 common.setColumnmaps(columns);
 
                 commons.add(common);
@@ -243,8 +250,7 @@ public class CommonRepository extends DrishtiRepository {
 
         SQLiteDatabase database = masterRepository.getReadableDatabase();
         Cursor cursor = database.rawQuery(sql,selections);
-        // database.
-        return readAllcommonFor(cursor, tableName);
+        return readAllcommonForField(cursor, tableName);
     }
 
     private List<CommonPersonObject> readAllcommonFor(Cursor cursor ,String tableName) {
@@ -254,12 +260,18 @@ public class CommonRepository extends DrishtiRepository {
 
             while (!cursor.isAfterLast()) {
                 int columncount = cursor.getColumnCount();
-                HashMap<String, String> columns = new HashMap<String, String>();
-                for (int i = 3; i < columncount; i++) {
-                    columns.put(additionalcolumns[i - 3], cursor.getString(i));
+                HashMap <String, String> columns = new HashMap<String, String>();
+                for (int i = 0;i < columncount;i++ ){
+                    String cname = cursor.getColumnName(i);
+                    if(!cname.equalsIgnoreCase("details")) {
+                        columns.put(cname, cursor.getString(i));
+                    }
                 }
-                CommonPersonObject common = new CommonPersonObject("1","0", new Gson().<Map<String, String>>fromJson(cursor.getString(cursor.getColumnIndex("details")), new TypeToken<Map<String, String>>() {
-                }.getType()), tableName);
+
+                CommonPersonObject common = new CommonPersonObject(columns.get(ID_COLUMN), columns.get(Relational_ID),
+                        new Gson().<Map<String, String>>fromJson(cursor.getString(cursor.getColumnIndex(DETAILS_COLUMN)), new TypeToken<Map<String, String>>() {
+                        }.getType()),TABLE_NAME);
+
                 common.setColumnmaps(columns);
 
                 commons.add(common);

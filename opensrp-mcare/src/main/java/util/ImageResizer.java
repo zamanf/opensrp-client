@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package util;
+package org.ei.opensrp.immunization.util;
 
 import android.annotation.TargetApi;
 import android.content.Context;

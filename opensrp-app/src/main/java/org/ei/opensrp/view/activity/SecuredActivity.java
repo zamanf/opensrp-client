@@ -115,6 +115,8 @@ public abstract class SecuredActivity extends ActionBarActivity {
     }
 
     private void launchForm(String formName, String entityId, String metaData, Class formType) {
+        Log.v(getClass().getName(), "Going to launch "+formType+" for "+formName+" for entity "+entityId);
+
         this.metaData = metaData;
 
         Intent intent = new Intent(this, formType);

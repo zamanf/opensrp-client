@@ -50,7 +50,7 @@ import org.opensrp.api.util.TreeNode;
 import java.util.ArrayList;
 import java.util.Map;
 
-import util.AsyncTask;
+import org.ei.opensrp.immunization.util.AsyncTask;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;

@@ -39,8 +39,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import util.ImageCache;
-import util.ImageFetcher;
+import org.ei.opensrp.immunization.util.ImageCache;
+import org.ei.opensrp.immunization.util.ImageFetcher;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;

@@ -18,8 +18,8 @@ import java.util.List;
 import static org.ei.opensrp.util.Utils.addToRow;
 import static org.ei.opensrp.util.Utils.getDataRow;
 import static org.ei.opensrp.util.Utils.getValue;
-import static util.VaccinatorUtils.getTotalUsed;
-import static util.VaccinatorUtils.providerDetails;
+import static org.ei.opensrp.util.VaccinatorUtils.getTotalUsed;
+import static org.ei.opensrp.util.VaccinatorUtils.providerDetails;
 
 public class FieldMonitorDailyDetailActivity extends DetailActivity {
     @Override

@@ -7,7 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.ei.opensrp.Context;
 import org.ei.opensrp.domain.Alert;
 import org.ei.opensrp.vaccinator.R;
-import org.ei.opensrp.vaccinator.db.VaccineRepo;
+import org.ei.opensrp.repository.db.VaccineRepo;
 import org.ei.opensrp.view.template.DetailActivity;
 import org.joda.time.DateTime;
 import org.joda.time.Years;
@@ -19,13 +19,11 @@ import static org.ei.opensrp.util.Utils.convertDateFormat;
 import static org.ei.opensrp.util.Utils.getDataRow;
 import static org.ei.opensrp.util.Utils.getValue;
 import static org.ei.opensrp.util.Utils.nonEmptyValue;
-import static util.VaccinatorUtils.addStatusTag;
-import static util.VaccinatorUtils.addVaccineDetail;
-import static util.VaccinatorUtils.generateSchedule;
+import static org.ei.opensrp.util.VaccinatorUtils.addStatusTag;
+import static org.ei.opensrp.util.VaccinatorUtils.addVaccineDetail;
+import static org.ei.opensrp.util.VaccinatorUtils.generateSchedule;
 
-/**
- * Created by muhammad.ahmed@ihsinformatics.com on 11-Nov-15.
- */
+@Deprecated
 public class WomanDetailActivity extends DetailActivity {
 
     @Override

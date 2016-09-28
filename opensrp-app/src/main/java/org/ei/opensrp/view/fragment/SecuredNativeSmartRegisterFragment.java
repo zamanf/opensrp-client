@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.database.DataSetObserver;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -24,6 +23,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.apache.commons.lang3.StringUtils;
 import org.ei.opensrp.Context;
 import org.ei.opensrp.R;
 import org.ei.opensrp.adapter.SmartRegisterPaginatedAdapter;
@@ -45,6 +45,8 @@ import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
 import org.ei.opensrp.view.template.SmartRegisterClientsProvider;
 import org.ei.opensrp.view.template.SmartRegisterSecuredActivity;
+import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity.SearchType;
+
 import org.joda.time.DateTime;
 import org.json.JSONObject;
 import org.opensrp.api.domain.Location;
@@ -55,9 +57,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
-import static android.os.AsyncTask.THREAD_POOL_EXECUTOR;
 import static android.view.View.INVISIBLE;
 import static android.view.View.TEXT_ALIGNMENT_CENTER;
 import static android.view.View.VISIBLE;
@@ -76,12 +78,18 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
     private TextView appliedSortView;
     private EditText searchView;
     private View searchCancelView;
+    private SearchType currentSearchType;
+    private View searchTypeButton;
     private TextView titleLabelView;
+    private View searchButton;
     private FormController formController;
+    private boolean isFullyLoaded;
 
     public SecuredNativeSmartRegisterFragment(FormController formController){
         this.formController = formController;
     }
+
+    public boolean isFullyLoaded(){return isFullyLoaded;}
 
     public FormController getFormController(){return formController;}
 
@@ -92,6 +100,10 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
     public View getSearchCancelView() {
         return searchCancelView;
     }
+
+    public View searchType(){return searchTypeButton;}
+
+    public SearchType getCurrentSearchType(){return currentSearchType;}
 
     public FilterOption getCurrentVillageFilter() {
         return currentVillageFilter;
@@ -130,6 +142,7 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
     private final PaginationViewHandler paginationViewHandler = new PaginationViewHandler();
     private final NavBarActionsHandler navBarActionsHandler = new NavBarActionsHandler();
     private final SearchCancelHandler searchCancelHandler = new SearchCancelHandler();
+    private final SearchTextChangeHandler searchTextChangeHandler = new SearchTextChangeHandler();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -179,15 +192,15 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
                     });
 
                     clientsView.setAdapter(clientsAdapter);
+                    isFullyLoaded = true;
                     if(isAdded()) {
                         paginationViewHandler.refresh();
                         clientsProgressView.setVisibility(View.GONE);
                         clientsView.setVisibility(VISIBLE);
-                    }
-                    }
+                    }}
                 });
 
-        Log.i(getClass().getName(), "setting up adapter placed to queue "+success);
+        Log.i(getClass().getName(), "setting up  placed to queue "+success);
     }
 
     @Override
@@ -261,34 +274,63 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
         titleLabelView = (TextView) view.findViewById(R.id.txt_title_label);
     }
 
+    private void resetSearchTypeView(){
+        Log.i(getClass().getName(), "Resetting SearchTypeView");
+        if (currentSearchType == null){
+            currentSearchType = getDefaultOptionsProvider().searchType();
+        }
+
+        if (searchCancelView.getVisibility() == INVISIBLE || searchCancelView.getVisibility() == View.GONE){
+            searchTypeButton.setVisibility(VISIBLE);
+        }
+        else {
+            searchTypeButton.setVisibility(View.GONE);
+        }
+
+        Log.i(getClass().getName(), "SearchType is "+currentSearchType);
+
+        if(currentSearchType.equals(SearchType.ACTIVE)){
+            ((Button) searchTypeButton).setTextColor(getResources().getColor(R.color.accent_material_light));
+
+            searchButton.setVisibility(View.INVISIBLE);
+        }
+        else {
+            ((Button) searchTypeButton).setTextColor(getResources().getColor(R.color.switch_thumb_normal_material_dark));
+
+            searchButton.setVisibility(View.VISIBLE);
+        }
+    }
+
     public void setupSearchView(View view) {
-        searchView = (EditText) view.findViewById(R.id.edt_search);
-        searchView.setHint(getNavBarOptionsProvider().searchHint());
-        searchView.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-            }
+        searchButton = view.findViewById(R.id.btn_search_go);
+        searchButton.setOnClickListener(searchTextChangeHandler);
 
-            @Override
-            public void onTextChanged(CharSequence cs, int start, int before, int count) {
-                if(currentSearchFilter == null){
-                    currentSearchFilter = new ECSearchOption(cs.toString());
-                }
-                else {
-                    currentSearchFilter.setFilter(cs.toString());
-                }
-                clientsAdapter.refreshList(currentVillageFilter, currentServiceModeOption,
-                        currentSearchFilter, currentSortOption);
-
-                searchCancelView.setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-            }
-        });
         searchCancelView = view.findViewById(R.id.btn_search_cancel);
         searchCancelView.setOnClickListener(searchCancelHandler);
+
+        searchTypeButton = view.findViewById(R.id.btn_search_autocomplete);
+        searchTypeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (currentSearchType == null){
+                    currentSearchType = getDefaultOptionsProvider().searchType();
+                }
+                else if (currentSearchType.equals(SearchType.ACTIVE)){
+                    currentSearchType = SearchType.PASSIVE;
+                }
+                else {
+                    currentSearchType = SearchType.ACTIVE;
+                }
+
+                resetSearchTypeView();
+            }
+        });
+
+        searchView = (EditText) view.findViewById(R.id.edt_search);
+        searchView.setHint(getNavBarOptionsProvider().searchHint());
+        searchView.addTextChangedListener(searchTextChangeHandler);
+
+        resetSearchTypeView();
     }
 
     private void updateDefaultOptions() {
@@ -362,7 +404,9 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
 
     public void onFilterManual(String filter) {
         currentSearchFilter.setFilter(filter);
-        clientsAdapter.refreshList(currentVillageFilter, currentServiceModeOption, currentSearchFilter, currentSortOption);
+        searchView.setText(filter);
+        //todo check if on active search it would call it twice
+        clientsAdapter.refreshList(currentVillageFilter, currentServiceModeOption, StringUtils.isBlank(filter)?null:currentSearchFilter, currentSortOption);
     }
 
     protected void onEditSelection(EditOption editOption, SmartRegisterClient client) {
@@ -501,7 +545,45 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
         }
 
         private void clearSearchText() {
-            searchView.setText("");
+            onFilterManual("");
+        }
+    }
+
+    public class SearchTextChangeHandler implements TextWatcher, View.OnClickListener {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence cs, int start, int before, int count) {
+            searchCancelView.setVisibility(isEmpty(cs) ? View.GONE : VISIBLE);
+            searchTypeButton.setVisibility(isEmpty(cs) ? VISIBLE : View.GONE);
+
+            if (currentSearchType.equals(SearchType.PASSIVE)){
+                return;
+            }
+            triggerSearch(cs);
+        }
+
+        private void triggerSearch(CharSequence cs){
+            if(currentSearchFilter == null){
+                currentSearchFilter = new ECSearchOption(cs.toString());
+            }
+            else {
+                currentSearchFilter.setFilter(cs.toString());
+            }
+            clientsAdapter.refreshList(currentVillageFilter, currentServiceModeOption,
+                    currentSearchFilter, currentSortOption);
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+        }
+
+        @Override
+        public void onClick(View view) {
+            Log.i(getClass().getName(), "Button clicked to search");
+            triggerSearch(searchView.getText());
         }
     }
 

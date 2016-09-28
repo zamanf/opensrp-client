@@ -8,7 +8,9 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,16 +21,19 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import org.ei.opensrp.Context;
-import org.ei.opensrp.R;
 import org.ei.opensrp.domain.LoginResponse;
 import org.ei.opensrp.domain.Response;
 import org.ei.opensrp.domain.ResponseStatus;
 import org.ei.opensrp.event.Listener;
+import org.ei.opensrp.repository.AllSharedPreferences;
 import org.ei.opensrp.sync.DrishtiSyncScheduler;
 import org.ei.opensrp.util.Log;
+import org.ei.opensrp.util.Utils;
 import org.ei.opensrp.view.BackgroundAction;
 import org.ei.opensrp.view.LockingBackgroundTask;
 import org.ei.opensrp.view.ProgressIndicator;
+import org.joda.time.DateTime;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -36,32 +41,59 @@ import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 import static android.view.inputmethod.InputMethodManager.HIDE_NOT_ALWAYS;
 import static org.ei.opensrp.domain.LoginResponse.SUCCESS;
 import static org.ei.opensrp.util.Log.logError;
-import static org.ei.opensrp.util.Log.logVerbose;
 
-public class LoginActivity extends Activity {
+public abstract class LoginActivity extends Activity {
     private Context context;
     private EditText userNameEditText;
     private EditText passwordEditText;
     private ProgressDialog progressDialog;
+    public static final String ENGLISH_LOCALE = "en";
+    public static final String ENGLISH_LANGUAGE = "English";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        logVerbose("Initializing ...");
-        setContentView(R.layout.login);
+        android.util.Log.i(getClass().getName(), "Loading Login");
+        try{
+            AllSharedPreferences allSharedPreferences = new AllSharedPreferences(getDefaultSharedPreferences(this));
+            String preferredLocale = allSharedPreferences.fetchLanguagePreference();
+            Resources res = Context.getInstance().applicationContext().getResources();
+            // Change locale settings in the app.
+            DisplayMetrics dm = res.getDisplayMetrics();
+            android.content.res.Configuration conf = res.getConfiguration();
+            conf.locale = new Locale(preferredLocale);
+            res.updateConfiguration(conf, dm);
+        }catch(Exception e){ e.printStackTrace(); }
+
+        setContentView(loginLayout());//todo refactor
+
+        getActionBar().setDisplayShowTitleEnabled(false);
 
         context = Context.getInstance().updateApplicationContext(this.getApplicationContext());
         initializeLoginFields();
         initializeBuildDetails();
         setDoneActionHandlerOnPasswordField();
         initializeProgressDialog();
+        setLanguage();
+        android.util.Log.i(getClass().getName(), "created login view");
     }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        android.util.Log.i(getClass().getName(), "Fully loaded");
+    }
+
+    protected abstract int loginLayout();
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
+        // Inflate the menu; this adds items to the action bar if it is present.
         menu.add("Settings");
         return true;
     }
@@ -75,7 +107,7 @@ public class LoginActivity extends Activity {
     }
 
     private void initializeBuildDetails() {
-        TextView buildDetailsTextView = (TextView) findViewById(R.id.login_build);
+        TextView buildDetailsTextView = (TextView) findViewById(org.ei.opensrp.R.id.login_build);
         try {
             buildDetailsTextView.setText("Version " + getVersion() + ", Built on: " + getBuildDate());
         } catch (Exception e) {
@@ -95,6 +127,7 @@ public class LoginActivity extends Activity {
     }
 
     public void login(final View view) {
+        android.util.Log.i(getClass().getName(), "Hiding Keyboard "+DateTime.now().toString());
         hideKeyboard();
         view.setClickable(false);
 
@@ -106,11 +139,12 @@ public class LoginActivity extends Activity {
         } else {
             remoteLogin(view, userName, password);
         }
+        android.util.Log.i(getClass().getName(), "Login result finished "+DateTime.now().toString());
     }
 
     private void initializeLoginFields() {
-        userNameEditText = ((EditText) findViewById(R.id.login_userNameText));
-        passwordEditText = ((EditText) findViewById(R.id.login_passwordText));
+        userNameEditText = ((EditText) findViewById(org.ei.opensrp.R.id.login_userNameText));
+        passwordEditText = ((EditText) findViewById(org.ei.opensrp.R.id.login_passwordText));
     }
 
     private void setDoneActionHandlerOnPasswordField() {
@@ -118,7 +152,7 @@ public class LoginActivity extends Activity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    login(findViewById(R.id.login_loginButton));
+                    login(findViewById(org.ei.opensrp.R.id.login_loginButton));
                 }
                 return false;
             }
@@ -128,39 +162,41 @@ public class LoginActivity extends Activity {
     private void initializeProgressDialog() {
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
-        progressDialog.setTitle(getString(R.string.loggin_in_dialog_title));
-        progressDialog.setMessage(getString(R.string.loggin_in_dialog_message));
+        progressDialog.setTitle(getString(org.ei.opensrp.R.string.loggin_in_dialog_title));
+        progressDialog.setMessage(getString(org.ei.opensrp.R.string.loggin_in_dialog_message));
     }
 
-    private void localLogin(View view, String userName, String password) {
+    //todo public abstract boolean beforeLoginCheck();
+
+    private void localLogin(final View view, final String userName, final String password) {
         if (context.userService().isValidLocalLogin(userName, password)) {
             localLoginWith(userName, password);
         } else {
-            showErrorDialog(getString(R.string.login_failed_dialog_message));
+            showErrorDialog(getString(org.ei.opensrp.R.string.login_failed_dialog_message));
             view.setClickable(true);
         }
     }
 
     private void remoteLogin(final View view, final String userName, final String password) {
-        tryRemoteLogin(userName, password, new Listener<LoginResponse>() {
+        tryRemoteLogin(this, userName, password, new Listener<LoginResponse>() {
             public void onEvent(LoginResponse loginResponse) {
-                if (loginResponse == SUCCESS) {
-                    remoteLoginWith(userName, password, loginResponse.payload());
+            if (loginResponse == SUCCESS) {
+                remoteLoginWith(userName, password, loginResponse.payload());
+            } else {
+                if (loginResponse == null) {
+                    showErrorDialog("Login failed. Unknown reason. Try Again");
                 } else {
-                    if (loginResponse == null) {
-                        showErrorDialog("Login failed. Unknown reason. Try Again");
-                    } else {
-                        showErrorDialog(loginResponse.message());
-                    }
-                    view.setClickable(true);
+                    showErrorDialog(loginResponse.message());
                 }
+                view.setClickable(true);
+            }
             }
         });
     }
 
     private void showErrorDialog(String message) {
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle(getString(R.string.login_failed_dialog_title))
+                .setTitle(getString(org.ei.opensrp.R.string.login_failed_dialog_title))
                 .setMessage(message)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
@@ -171,11 +207,22 @@ public class LoginActivity extends Activity {
         dialog.show();
     }
 
+    private void showMessageDialog(String message, DialogInterface.OnClickListener ok, DialogInterface.OnClickListener cancel) {
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle(getString(org.ei.opensrp.R.string.login_failed_dialog_title))
+                .setMessage(message)
+                .setPositiveButton("OK", ok)
+                .setNegativeButton("Cancel", cancel)
+                .create();
+
+        dialog.show();
+    }
+
     private void getLocation() {
         tryGetLocation(new Listener<Response<String>>() {
             @Override
             public void onEvent(Response<String> data) {
-                if(data.status() == ResponseStatus.success) {
+                if (data.status() == ResponseStatus.success) {
                     context.userService().saveAnmLocation(data.payload());
                 }
             }
@@ -204,7 +251,7 @@ public class LoginActivity extends Activity {
         });
     }
 
-    private void tryRemoteLogin(final String userName, final String password, final Listener<LoginResponse> afterLoginCheck) {
+    private void tryRemoteLogin(final android.content.Context appContext, final String userName, final String password, final Listener<LoginResponse> afterLoginCheck) {
         LockingBackgroundTask task = new LockingBackgroundTask(new ProgressIndicator() {
             @Override
             public void setVisible() {
@@ -219,7 +266,13 @@ public class LoginActivity extends Activity {
 
         task.doActionInBackground(new BackgroundAction<LoginResponse>() {
             public LoginResponse actionToDoInBackgroundThread() {
-                return context.userService().isValidRemoteLogin(userName, password);
+                LoginResponse lr = context.userService().isValidRemoteLogin(userName, password);
+                try {
+                    customTaskWithRemoteLogin(appContext, userName, password);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return lr;
             }
 
             public void postExecuteInUIThread(LoginResponse result) {
@@ -227,6 +280,8 @@ public class LoginActivity extends Activity {
             }
         });
     }
+
+    protected abstract void customTaskWithRemoteLogin(android.content.Context context, String username, String password);
 
     private void fillUserIfExists() {
         if (context.userService().hasARegisteredUser()) {
@@ -243,19 +298,32 @@ public class LoginActivity extends Activity {
     private void localLoginWith(String userName, String password) {
         context.userService().localLogin(userName, password);
         goToHome();
-        DrishtiSyncScheduler.startOnlyIfConnectedToNetwork(getApplicationContext());
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                android.util.Log.i(getClass().getName(), "Starting DrishtiSyncScheduler "+DateTime.now().toString());
+                DrishtiSyncScheduler.startOnlyIfConnectedToNetwork(getApplicationContext());
+                android.util.Log.i(getClass().getName(), "Started DrishtiSyncScheduler "+DateTime.now().toString());
+            }
+        }).start();
     }
 
     private void remoteLoginWith(String userName, String password, String userInfo) {
         context.userService().remoteLogin(userName, password, userInfo);
+
+        try{
+            Utils.writePreference(this, "team", new JSONObject(userInfo).getJSONObject("team").toString());
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
         goToHome();
+
         DrishtiSyncScheduler.startOnlyIfConnectedToNetwork(getApplicationContext());
     }
 
-    private void goToHome() {
-        startActivity(new Intent(this, NativeHomeActivity.class));
-        finish();
-    }
+    protected abstract void goToHome() ;
 
     private String getVersion() throws PackageManager.NameNotFoundException {
         PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
@@ -267,6 +335,42 @@ public class LoginActivity extends Activity {
         ZipFile zf = new ZipFile(applicationInfo.sourceDir);
         ZipEntry ze = zf.getEntry("classes.dex");
         return new SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(new java.util.Date(ze.getTime()));
+    }
+
+    public static void setLanguage(){
+        AllSharedPreferences allSharedPreferences = new AllSharedPreferences(getDefaultSharedPreferences(Context.getInstance().applicationContext()));
+        String preferredLocale = allSharedPreferences.fetchLanguagePreference();
+            Resources res = Context.getInstance().applicationContext().getResources();
+            // Change locale settings in the app.
+            DisplayMetrics dm = res.getDisplayMetrics();
+            android.content.res.Configuration conf = res.getConfiguration();
+            conf.locale = new Locale(preferredLocale);
+            res.updateConfiguration(conf, dm);
+
+    }
+     public static String switchLanguagePreference() {
+         AllSharedPreferences allSharedPreferences = new AllSharedPreferences(getDefaultSharedPreferences(Context.getInstance().applicationContext()));
+
+         String preferredLocale = allSharedPreferences.fetchLanguagePreference();
+        /* todo if (URDU_LOCALE.equals(preferredLocale)) {
+            allSharedPreferences.saveLanguagePreference(URDU_LOCALE);
+            Resources res = Context.getInstance().applicationContext().getResources();
+            // Change locale settings in the app.
+            DisplayMetrics dm = res.getDisplayMetrics();
+            android.content.res.Configuration conf = res.getConfiguration();
+            conf.locale = new Locale(URDU_LOCALE);
+            res.updateConfiguration(conf, dm);
+            return URDU_LANGUAGE;
+        } else*/ {
+            allSharedPreferences.saveLanguagePreference(ENGLISH_LOCALE);
+            Resources res = Context.getInstance().applicationContext().getResources();
+            // Change locale settings in the app.
+            DisplayMetrics dm = res.getDisplayMetrics();
+            android.content.res.Configuration conf = res.getConfiguration();
+            conf.locale = new Locale(ENGLISH_LOCALE);
+            res.updateConfiguration(conf, dm);
+            return ENGLISH_LANGUAGE;
+        }
     }
 
 }

@@ -27,8 +27,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import util.ImageCache;
-import util.ImageFetcher;
+import org.ei.opensrp.immunization.util.ImageCache;
+import org.ei.opensrp.immunization.util.ImageFetcher;
 
 import static org.ei.opensrp.util.StringUtil.humanize;
 

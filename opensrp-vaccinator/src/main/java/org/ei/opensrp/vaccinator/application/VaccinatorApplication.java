@@ -1,6 +1,7 @@
 package org.ei.opensrp.vaccinator.application;
 
 import android.content.res.Configuration;
+import android.util.Log;
 
 import org.ei.opensrp.Context;
 import org.ei.opensrp.sync.DrishtiSyncScheduler;
@@ -20,6 +21,7 @@ public class VaccinatorApplication extends DrishtiApplication{
 
     @Override
     public void onCreate() {
+        Log.i(getClass().getName(), "Starting vaccinator application");
         super.onCreate();
         DrishtiSyncScheduler.setReceiverClass(SyncBroadcastReceiver.class);
 
@@ -29,6 +31,7 @@ public class VaccinatorApplication extends DrishtiApplication{
         cleanUpSyncState();
         startCESyncService(getApplicationContext());
         ConfigSyncReceiver.scheduleFirstSync(getApplicationContext());
+        Log.i(getClass().getName(), "Loaded vaccinator application");
     }
 
     private void cleanUpSyncState() {
@@ -42,7 +45,7 @@ public class VaccinatorApplication extends DrishtiApplication{
 
     @Override
     public void onTerminate() {
-        logInfo("Application is terminating. Stopping Bidan Sync scheduler and resetting isSyncInProgress setting.");
+        logInfo("Application is terminating. Stopping Sync scheduler and resetting isSyncInProgress setting.");
         cleanUpSyncState();
         super.onTerminate();
     }

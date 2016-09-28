@@ -125,8 +125,16 @@ public abstract class NativeHomeActivity extends SecuredActivity {
         NativeUpdateANMDetailsTask task = new NativeUpdateANMDetailsTask(Context.getInstance().anmController());
         task.fetch(new NativeAfterANMDetailsFetchListener() {
             @Override
-            public void afterFetch(HomeContext anmDetails) {
-                updateRegisterCounts(anmDetails);
+            public void afterFetch(final HomeContext anmDetails) {
+                Handler mainHandler = new Handler(getMainLooper());
+
+                Runnable myRunnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        updateRegisterCounts(anmDetails);
+                    }
+                };
+                mainHandler.post(myRunnable);
             }
         });
     }

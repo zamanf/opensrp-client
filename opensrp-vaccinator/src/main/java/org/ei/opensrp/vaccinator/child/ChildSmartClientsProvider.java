@@ -10,12 +10,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
-import org.ei.opensrp.cursoradapter.SmartRegisterPaginatedCursorAdapter;
 import org.ei.opensrp.domain.Alert;
 import org.ei.opensrp.service.AlertService;
 import org.ei.opensrp.util.StringUtil;
 import org.ei.opensrp.vaccinator.R;
-import org.ei.opensrp.vaccinator.db.VaccineRepo;
+import org.ei.opensrp.repository.db.VaccineRepo;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.contract.SmartRegisterClients;
 import org.ei.opensrp.view.dialog.FilterOption;
@@ -39,8 +38,8 @@ import static org.ei.opensrp.util.Utils.hasAnyEmptyValue;
 import static org.ei.opensrp.util.Utils.nonEmptyValue;
 import static org.ei.opensrp.util.Utils.setProfiePic;
 import static org.ei.opensrp.util.Utils.toDate;
-import static util.VaccinatorUtils.generateSchedule;
-import static util.VaccinatorUtils.nextVaccineDue;
+import static org.ei.opensrp.util.VaccinatorUtils.generateSchedule;
+import static org.ei.opensrp.util.VaccinatorUtils.nextVaccineDue;
 
 /**
  * Created by Ahmed on 13-Oct-15.

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package util;
+package org.ei.opensrp.immunization.util;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;

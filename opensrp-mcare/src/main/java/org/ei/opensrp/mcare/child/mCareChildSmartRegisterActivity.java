@@ -47,7 +47,7 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import util.AsyncTask;
+import org.ei.opensrp.immunization.util.AsyncTask;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 import static android.view.View.INVISIBLE;
