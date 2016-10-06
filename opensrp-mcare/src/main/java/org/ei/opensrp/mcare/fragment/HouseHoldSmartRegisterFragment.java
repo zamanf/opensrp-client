@@ -212,7 +212,7 @@ public class HouseHoldSmartRegisterFragment extends SecuredNativeSmartRegisterCu
         countqueryBUilder.joinwithALerts("household","FW CENSUS");
         countSelect = countqueryBUilder.mainCondition(" FWHOHFNAME is not null ");
         mainCondition = " FWHOHFNAME is not null ";
-        CountExecute();
+        super.CountExecute();
 
         SmartRegisterQueryBuilder queryBUilder = new SmartRegisterQueryBuilder();
         queryBUilder.SelectInitiateMainTable("household", new String[]{"relationalid", "details", "FWHOHFNAME", "FWGOBHHID", "FWJIVHHID"});
@@ -223,7 +223,7 @@ public class HouseHoldSmartRegisterFragment extends SecuredNativeSmartRegisterCu
         currentlimit = 20;
         currentoffset = 0;
 
-        super.initialFilterandSortExecute();
+        super.filterandSortInInitializeQueries();
 
 //        setServiceModeViewDrawableRight(null);
         updateSearchView();
@@ -305,7 +305,9 @@ public class HouseHoldSmartRegisterFragment extends SecuredNativeSmartRegisterCu
     protected void onResumption() {
 //        super.onResumption();
         getDefaultOptionsProvider();
-        initializeQueries();
+        if(isPausedOrRefreshList()) {
+            initializeQueries();
+        }
 //        updateSearchView();
         checkforNidMissing(mView);
 //

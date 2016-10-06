@@ -176,7 +176,9 @@ public class mCareChildSmartRegisterFragment extends SecuredNativeSmartRegisterC
     protected void onResumption() {
         super.onResumption();
         getDefaultOptionsProvider();
-        initializeQueries();
+        if(isPausedOrRefreshList()) {
+            initializeQueries();
+        }
         updateSearchView();
         try{
             LoginActivity.setLanguage();
@@ -350,7 +352,7 @@ public class mCareChildSmartRegisterFragment extends SecuredNativeSmartRegisterC
         SmartRegisterQueryBuilder countqueryBUilder = new SmartRegisterQueryBuilder(childMainCountWithJoins());
         countSelect = countqueryBUilder.mainCondition(" mcarechild.FWBNFGEN is not null ");
         mainCondition = " FWBNFGEN is not null ";
-        CountExecute();
+        super.CountExecute();
 
         SmartRegisterQueryBuilder queryBUilder = new SmartRegisterQueryBuilder(childMainSelectWithJoins());
         mainSelect = queryBUilder.mainCondition(" mcarechild.FWBNFGEN is not null ");
@@ -359,7 +361,7 @@ public class mCareChildSmartRegisterFragment extends SecuredNativeSmartRegisterC
         currentlimit = 20;
         currentoffset = 0;
 
-        super.initialFilterandSortExecute();
+        super.filterandSortInInitializeQueries();
 
 //        setServiceModeViewDrawableRight(null);
 //        updateSearchView();
