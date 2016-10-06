@@ -395,7 +395,7 @@ public class DisplayFormFragment extends Fragment {
                 WindowManager w = getActivity().getWindowManager();
                 Display d = w.getDefaultDisplay();
 
-                if (Build.VERSION.SDK_INT >= 14 && Build.VERSION.SDK_INT < 17) {
+                if (Build.VERSION.SDK_INT >= 14 && Build.VERSION.SDK_INT <= 17) {
                     try {
                         landWidthPixels = (Integer) Display.class.getMethod("getRawWidth").invoke(d);
                         landHeightPixels = (Integer) Display.class.getMethod("getRawHeight").invoke(d);
@@ -413,7 +413,9 @@ public class DisplayFormFragment extends Fragment {
                     }
                 }
 
-                webView.setLayoutParams(new RelativeLayout.LayoutParams(landHeightPixels, landWidthPixels));
+                if(landWidthPixels > 0 && landHeightPixels > 0) {
+                    webView.setLayoutParams(new RelativeLayout.LayoutParams(landHeightPixels, landWidthPixels));
+                }
             }
         });
     }
