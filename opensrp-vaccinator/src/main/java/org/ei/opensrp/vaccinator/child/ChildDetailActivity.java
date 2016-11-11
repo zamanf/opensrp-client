@@ -140,12 +140,14 @@ public class ChildDetailActivity extends DetailActivity {
         List<Map<String, Object>> sch = generateSchedule("child", months < 0 ? null:new DateTime(client.getColumnmaps().get("dob")), client.getColumnmaps(), al);
         int i = 0;
         for (Map<String, Object> m : sch){
-            if (i <= 7) {
+            if (i <= 3) {
                 table = (TableLayout) findViewById(R.id.child_vaccine_table1);
-            } else {
+            } else  if(i <= 8){
                 table = (TableLayout) findViewById(R.id.child_vaccine_table2);
+            } else {
+                table = (TableLayout) findViewById(R.id.child_vaccine_table3);
             }
-            addVaccineDetail(this, table, m.get("status").toString(), (VaccineRepo.Vaccine)m.get("vaccine"), (DateTime)m.get("date"), (Alert)m.get("alert"), true);
+            addVaccineDetail(this, table, m.get("status").toString(), (VaccineRepo.Vaccine)m.get("vaccine"), (DateTime)m.get("date"), (Alert)m.get("alert"), false);
             i++;
         }
 

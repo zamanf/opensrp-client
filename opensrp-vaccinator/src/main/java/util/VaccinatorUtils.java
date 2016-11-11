@@ -33,6 +33,7 @@ import org.ei.drishti.dto.AlertStatus;
 import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.domain.Alert;
 import org.ei.opensrp.util.IntegerUtil;
+import org.ei.opensrp.vaccinator.R;
 import org.ei.opensrp.vaccinator.db.CESQLiteHelper;
 import org.ei.opensrp.vaccinator.db.Client;
 import org.ei.opensrp.vaccinator.db.Obs;
@@ -171,6 +172,7 @@ public class VaccinatorUtils {
 
     public static void addVaccineDetail(Context context, TableLayout table, String status, String vaccine, String vaccineDate, Alert alert, boolean compact){
         TableRow tr = new TableRow(context);
+        tr.setBackgroundResource(R.drawable.table_row_border);
         TableRow.LayoutParams trlp = new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         tr.setLayoutParams(trlp);
         if(compact){
