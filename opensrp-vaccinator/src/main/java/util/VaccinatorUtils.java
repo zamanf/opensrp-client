@@ -17,10 +17,13 @@
 package util;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.text.Html;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -166,20 +169,21 @@ public class VaccinatorUtils {
         tr.setPadding(15, 5, 0, 0);
         table.addView(tr);
     }
-    public static void addVaccineDetail(Context context, TableLayout table, String status, Vaccine vaccine, DateTime vaccineDate, Alert alert, boolean compact) {
-        addVaccineDetail(context, table, status, vaccine.display(), vaccineDate != null ? vaccineDate.toString("yyyy-MM-dd") : "", alert, compact);
+
+    public static void addVaccineDetail(Context context, TableLayout table, String status, Vaccine vaccine, DateTime vaccineDate, Alert alert, String previousVaccine,  boolean compact) {
+        addVaccineDetail(context, table, status, vaccine.display(), vaccineDate != null ? vaccineDate.toString("yyyy-MM-dd") : "", alert, previousVaccine, compact);
     }
 
-    public static void addVaccineDetail(Context context, TableLayout table, String status, String vaccine, String vaccineDate, Alert alert, boolean compact){
+    public static void addVaccineDetail(Context context, TableLayout table, String status, String vaccine, String vaccineDate, Alert alert,  String previousVaccine, boolean compact){
         TableRow tr = new TableRow(context);
         tr.setBackgroundResource(R.drawable.table_row_border);
         TableRow.LayoutParams trlp = new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         tr.setLayoutParams(trlp);
         if(compact){
-            tr.setPadding(10, 1, 10, 1);
+            tr.setPadding(10, 5, 10, 5);
         }
         else{
-            tr.setPadding(10, 5, 10, 5);
+            tr.setPadding(10, 10, 10, 10);
         }
 
         TextView label = new TextView(context);
@@ -219,7 +223,7 @@ public class VaccinatorUtils {
         blp.setMargins(30, 6, 5, 5);
         s.setLayoutParams(blp);
         s.setGravity(Gravity.CENTER_VERTICAL);
-        s.setBackgroundColor(StringUtils.isBlank(color)?Color.WHITE:Color.parseColor(color));
+        s.setBackgroundColor(StringUtils.isBlank(color) ? Color.WHITE : Color.parseColor(color));
         l.addView(s);
 
         TextView v = new TextView(context);
@@ -229,10 +233,22 @@ public class VaccinatorUtils {
         v.setBackgroundColor(Color.WHITE);
         l.addView(v);
 
+        if(table.getChildCount() > 0 && StringUtils.isNotBlank(vaccine) && StringUtils.isNotBlank(previousVaccine)) {
+            if(!vaccine.split("\\s+")[0].equals(previousVaccine.split("\\s+")[0])) {
+                View view = new View(context);
+                view.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, Float.valueOf(dpToPx(context, 10f)).intValue()));
+                view.setBackgroundColor(Color.WHITE);
+
+                table.addView(view);
+            }
+        }
+
         tr.addView(l);
 
         table.addView(tr);
     }
+
+
 
     private static DateTime getReceivedDate(Map<String, String> received, Vaccine v){
         if (received.get(v.name()) != null){
@@ -313,5 +329,10 @@ public class VaccinatorUtils {
             }
         }
         return v;
+    }
+
+    public static float dpToPx(Context context, float dpValue){
+        Resources r = context.getResources();
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, r.getDisplayMetrics());
     }
 }

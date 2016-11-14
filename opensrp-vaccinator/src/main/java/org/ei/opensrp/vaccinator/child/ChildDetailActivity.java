@@ -137,8 +137,10 @@ public class ChildDetailActivity extends DetailActivity {
                 "bcg", "opv0", "penta1", "opv1", "pcv1", "penta2", "opv2", "pcv2",
                 "penta3", "opv3", "pcv3", "ipv", "measles1", "measles2");
 
-        List<Map<String, Object>> sch = generateSchedule("child", months < 0 ? null:new DateTime(client.getColumnmaps().get("dob")), client.getColumnmaps(), al);
+        List<Map<String, Object>> sch = generateSchedule("child", months < 0 ? null : new DateTime(client.getColumnmaps().get("dob")), client.getColumnmaps(), al);
         int i = 0;
+
+        String previousVaccine = "";
         for (Map<String, Object> m : sch){
             if (i <= 3) {
                 table = (TableLayout) findViewById(R.id.child_vaccine_table1);
@@ -147,7 +149,8 @@ public class ChildDetailActivity extends DetailActivity {
             } else {
                 table = (TableLayout) findViewById(R.id.child_vaccine_table3);
             }
-            addVaccineDetail(this, table, m.get("status").toString(), (VaccineRepo.Vaccine)m.get("vaccine"), (DateTime)m.get("date"), (Alert)m.get("alert"), false);
+            addVaccineDetail(this, table, m.get("status").toString(), (VaccineRepo.Vaccine)m.get("vaccine"), (DateTime)m.get("date"), (Alert)m.get("alert"), previousVaccine, false);
+            previousVaccine = ((VaccineRepo.Vaccine) m.get("vaccine")).display();
             i++;
         }
 

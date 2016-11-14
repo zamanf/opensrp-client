@@ -6,6 +6,7 @@
     >
     <LinearLayout
         android:layout_width="fill_parent"
+        android:paddingTop="10dp"
         android:layout_height="match_parent" android:orientation="horizontal">
 
     <TableLayout
@@ -13,7 +14,10 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:id="@+id/woman_vaccine_table"
-        android:layout_margin="1dp"
+        android:layout_marginLeft="7.5dp"
+        android:layout_marginRight="7.5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
         android:layout_gravity="center_horizontal"
         android:padding="2dp" android:background="@drawable/listview_background_rounded"
         android:textAlignment="center">

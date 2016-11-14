@@ -138,6 +138,10 @@ public class CESyncReceiver extends BroadcastReceiver {
         String url = baseUrl + serviceUrl + "?q=" + URLEncoder.encode(tq.query(), "UTF-8");
         Log.i(CESyncReceiver.class.getName(), "URL: "+url);
 
+        if(httpAgent == null){
+            throw new RuntimeException(serviceUrl+" http agent is null");
+        }
+
         Response resp = httpAgent.fetch(url);
         if(resp.isFailure()){
             throw new RuntimeException(serviceUrl+" not returned data");

@@ -122,8 +122,10 @@ public class WomanDetailActivity extends DetailActivity {
         TableLayout table = (TableLayout) findViewById(R.id.woman_vaccine_table);
         List<Alert> al = Context.getInstance().alertService().findByEntityIdAndAlertNames(client.entityId(), "TT 1", "TT 2", "TT 3", "TT 4", "TT 5", "tt1", "tt2", "tt3", "tt4", "tt5");
         List<Map<String, Object>> sch = generateSchedule("woman", null, client.getColumnmaps(), al);
+        String previousVaccine = "";
         for (Map<String, Object> m : sch){
-            addVaccineDetail(this, table, m.get("status").toString(), (VaccineRepo.Vaccine) m.get("vaccine"), (DateTime) m.get("date"), (Alert) m.get("alert"), false);
+            addVaccineDetail(this, table, m.get("status").toString(), (VaccineRepo.Vaccine) m.get("vaccine"), (DateTime) m.get("date"), (Alert) m.get("alert"), previousVaccine, true);
+            previousVaccine = ((VaccineRepo.Vaccine) m.get("vaccine")).display();
         }
 
         if(age < 0){
