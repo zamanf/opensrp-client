@@ -203,7 +203,9 @@ public class ElcoSmartRegisterActivity extends SecuredNativeSmartRegisterActivit
                 }
 
                 DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(formIndex);
+
                 if (displayFormFragment != null) {
+                    displayFormFragment.setFormPartialSaving(false);
                     displayFormFragment.setFormData(data);
                     displayFormFragment.setRecordId(entityId);
                     displayFormFragment.setFieldOverides(metaData);
@@ -289,7 +291,9 @@ public class ElcoSmartRegisterActivity extends SecuredNativeSmartRegisterActivit
         }catch (Exception e){
             // TODO: show error dialog on the formfragment if the submission fails
             DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(currentPage);
+
             if (displayFormFragment != null) {
+                displayFormFragment.setFormPartialSaving(false);
                 displayFormFragment.hideTranslucentProgressDialog();
             }
             e.printStackTrace();
@@ -313,6 +317,7 @@ public class ElcoSmartRegisterActivity extends SecuredNativeSmartRegisterActivit
                     }
                     DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(prevPageIndex);
                     if (displayFormFragment != null) {
+                        displayFormFragment.setFormPartialSaving(false);
                         displayFormFragment.hideTranslucentProgressDialog();
                         displayFormFragment.setFormData(null);
                     }
@@ -323,6 +328,7 @@ public class ElcoSmartRegisterActivity extends SecuredNativeSmartRegisterActivit
                     SecuredFragment registerFragment = (SecuredFragment) findFragmentByPosition(1);
                     DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(prevPageIndex);
                     if (displayFormFragment != null) {
+                        displayFormFragment.setFormPartialSaving(false);
                         displayFormFragment.hideTranslucentProgressDialog();
                         displayFormFragment.setFormData(null);
                     }
