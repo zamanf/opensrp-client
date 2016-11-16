@@ -8,6 +8,7 @@ import org.ei.opensrp.Context;
 import org.ei.opensrp.domain.Alert;
 import org.ei.opensrp.vaccinator.R;
 import org.ei.opensrp.vaccinator.db.VaccineRepo;
+import org.ei.opensrp.vaccinator.domain.VaccineWrapper;
 import org.ei.opensrp.view.template.DetailActivity;
 import org.joda.time.DateTime;
 import org.joda.time.Years;
@@ -124,8 +125,20 @@ public class WomanDetailActivity extends DetailActivity {
         List<Map<String, Object>> sch = generateSchedule("woman", null, client.getColumnmaps(), al);
         String previousVaccine = "";
         for (Map<String, Object> m : sch){
-            addVaccineDetail(this, table, m.get("status").toString(), (VaccineRepo.Vaccine) m.get("vaccine"), (DateTime) m.get("date"), (Alert) m.get("alert"), previousVaccine, true);
-            previousVaccine = ((VaccineRepo.Vaccine) m.get("vaccine")).display();
+
+            VaccineWrapper vaccineWrapper = new VaccineWrapper();
+            vaccineWrapper.setStatus( m.get("status").toString());
+            vaccineWrapper.setVaccine((VaccineRepo.Vaccine) m.get("vaccine"));
+            vaccineWrapper.setVaccineDate((DateTime) m.get("date"));
+            vaccineWrapper.setAlert((Alert) m.get("alert"));
+            vaccineWrapper.setPreviousVaccine(previousVaccine);
+            vaccineWrapper.setCompact(true);
+
+            vaccineWrapper.setPatientNumber(getValue(client.getColumnmaps(), "epi_card_number", false));
+            vaccineWrapper.setPatientName(getValue(client.getColumnmaps(), "first_name", true));
+
+            addVaccineDetail(this, table, vaccineWrapper);
+            previousVaccine = vaccineWrapper.getVaccineAsString();
         }
 
         if(age < 0){

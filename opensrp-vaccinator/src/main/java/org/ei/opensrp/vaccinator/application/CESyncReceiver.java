@@ -95,6 +95,10 @@ public class CESyncReceiver extends BroadcastReceiver {
                     fetchAllClients(db, context);
                     fetchAllEvents(db, context);
                 }
+                catch (RuntimeException e){
+                    success = false;
+                    e.printStackTrace();
+                }
                 catch (Exception e){
                     success = false;
                     e.printStackTrace();

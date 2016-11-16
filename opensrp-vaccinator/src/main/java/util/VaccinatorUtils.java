@@ -16,6 +16,9 @@
 
 package util;
 
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -42,6 +45,8 @@ import org.ei.opensrp.vaccinator.db.Client;
 import org.ei.opensrp.vaccinator.db.Obs;
 import org.ei.opensrp.vaccinator.db.VaccineRepo;
 import org.ei.opensrp.vaccinator.db.VaccineRepo.Vaccine;
+import org.ei.opensrp.vaccinator.domain.VaccineWrapper;
+import org.ei.opensrp.vaccinator.view.VaccinationDialogFragment;
 import org.joda.time.DateTime;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -170,16 +175,14 @@ public class VaccinatorUtils {
         table.addView(tr);
     }
 
-    public static void addVaccineDetail(Context context, TableLayout table, String status, Vaccine vaccine, DateTime vaccineDate, Alert alert, String previousVaccine,  boolean compact) {
-        addVaccineDetail(context, table, status, vaccine.display(), vaccineDate != null ? vaccineDate.toString("yyyy-MM-dd") : "", alert, previousVaccine, compact);
-    }
 
-    public static void addVaccineDetail(Context context, TableLayout table, String status, String vaccine, String vaccineDate, Alert alert,  String previousVaccine, boolean compact){
+
+    public static void addVaccineDetail(final Context context, TableLayout table, final VaccineWrapper vaccineWrapper){
         TableRow tr = new TableRow(context);
         tr.setBackgroundResource(R.drawable.table_row_border);
         TableRow.LayoutParams trlp = new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         tr.setLayoutParams(trlp);
-        if(compact){
+        if(vaccineWrapper.isCompact()){
             tr.setPadding(10, 5, 10, 5);
         }
         else{
@@ -187,30 +190,31 @@ public class VaccinatorUtils {
         }
 
         TextView label = new TextView(context);
-        label.setText(vaccine);
+        label.setText(vaccineWrapper.getVaccineAsString());
         label.setPadding(20, 5, 70, 5);
         label.setTextColor(Color.BLACK);
         label.setBackgroundColor(Color.WHITE);
         tr.addView(label);
 
+        String vaccineDate = "";
         String color = "#ffffff";
-        if(status.equalsIgnoreCase("due")) {
-            if(alert != null){
-                color = getColorValue(context, alert.status());
-                vaccineDate = "due: "+convertDateFormat(vaccineDate, true)+"";
+        if(vaccineWrapper.getStatus().equalsIgnoreCase("due")) {
+            if(vaccineWrapper.getAlert() != null){
+                color = getColorValue(context, vaccineWrapper.getAlert().status());
+                vaccineDate = "due: "+convertDateFormat(vaccineWrapper.getVaccineDateAsString(), true)+"";
             }
-            else if(StringUtils.isNotBlank(vaccineDate)){
+            else if(StringUtils.isNotBlank(vaccineWrapper.getVaccineDateAsString())){
                 color = getColorValue(context, AlertStatus.inProcess);
-                vaccineDate = "due: "+convertDateFormat(vaccineDate, true)+"";
+                vaccineDate = "due: "+convertDateFormat(vaccineWrapper.getVaccineDateAsString(), true)+"";
             }
         }
-        else if(status.equalsIgnoreCase("done")){
+        else if(vaccineWrapper.getStatus().equalsIgnoreCase("done")){
             color = "#31B404";
-            vaccineDate = convertDateFormat(vaccineDate, true);
+            vaccineDate = convertDateFormat(vaccineWrapper.getVaccineDateAsString(), true);
         }
-        else if(status.equalsIgnoreCase("expired")){
+        else if(vaccineWrapper.getStatus().equalsIgnoreCase("expired")){
             color = getColorValue(context, AlertStatus.inProcess);
-            vaccineDate = "exp: "+convertDateFormat(vaccineDate, true)+"";
+            vaccineDate = "exp: "+convertDateFormat(vaccineWrapper.getVaccineDateAsString(), true)+"";
         }
 
         LinearLayout l = new LinearLayout(context);
@@ -233,8 +237,8 @@ public class VaccinatorUtils {
         v.setBackgroundColor(Color.WHITE);
         l.addView(v);
 
-        if(table.getChildCount() > 0 && StringUtils.isNotBlank(vaccine) && StringUtils.isNotBlank(previousVaccine)) {
-            if(!vaccine.split("\\s+")[0].equals(previousVaccine.split("\\s+")[0])) {
+        if(table.getChildCount() > 0 && StringUtils.isNotBlank(vaccineWrapper.getVaccineAsString()) && StringUtils.isNotBlank(vaccineWrapper.getPreviousVaccine())) {
+            if(!vaccineWrapper.getVaccineAsString().split("\\s+")[0].equals(vaccineWrapper.getPreviousVaccine().split("\\s+")[0])) {
                 View view = new View(context);
                 view.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, Float.valueOf(dpToPx(context, 10f)).intValue()));
                 view.setBackgroundColor(Color.WHITE);
@@ -244,6 +248,22 @@ public class VaccinatorUtils {
         }
 
         tr.addView(l);
+
+        if(vaccineWrapper.getStatus().equalsIgnoreCase("due")) {
+            tr.setOnClickListener(new TableRow.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    FragmentTransaction ft = ((Activity) context).getFragmentManager().beginTransaction();
+                    Fragment prev = ((Activity) context).getFragmentManager().findFragmentByTag(VaccinationDialogFragment.DIALOG_TAG);
+                    if (prev != null) {
+                        ft.remove(prev);
+                    }
+                    ft.addToBackStack(null);
+                    VaccinationDialogFragment.newInstance(context, vaccineWrapper).show(ft, VaccinationDialogFragment.DIALOG_TAG);
+                    ;
+                }
+            });
+        }
 
         table.addView(tr);
     }
