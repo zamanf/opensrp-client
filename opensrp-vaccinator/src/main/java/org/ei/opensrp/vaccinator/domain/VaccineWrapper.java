@@ -4,6 +4,8 @@ import org.ei.opensrp.domain.Alert;
 import org.joda.time.DateTime;
 import org.ei.opensrp.vaccinator.db.VaccineRepo.Vaccine;
 
+import java.util.Date;
+
 /**
  * Created by keyman on 16/11/2016.
  */
@@ -19,7 +21,6 @@ public class VaccineWrapper {
     private String patientNumber;
 
     private DateTime updatedVaccineDate;
-
 
     public String getStatus() {
         return status;
@@ -100,6 +101,10 @@ public class VaccineWrapper {
 
     public String getVaccineDateAsString() {
         return vaccineDate != null ? vaccineDate.toString("yyyy-MM-dd") : "";
+    }
+
+    public String getUpdatedVaccineDateAsString() {
+        return updatedVaccineDate != null ? updatedVaccineDate.toString("yyyy-MM-dd") : "";
     }
 
 

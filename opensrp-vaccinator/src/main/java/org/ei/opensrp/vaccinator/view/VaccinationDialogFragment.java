@@ -6,6 +6,7 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,16 +16,22 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.apache.commons.lang3.time.DateFormatUtils;
+import org.ei.opensrp.util.DateUtil;
 import org.ei.opensrp.vaccinator.R;
 import org.ei.opensrp.vaccinator.domain.VaccineWrapper;
+import org.ei.opensrp.view.template.DetailActivity;
 import org.joda.time.DateTime;
 
 import java.util.Calendar;
+
+import util.DetailFormUtils;
 
 @SuppressLint("ValidFragment")
 public class VaccinationDialogFragment extends DialogFragment {
     private final Context context;
     private final VaccineWrapper tag;
+    private VaccinationDialogListener listener;
     public static final String DIALOG_TAG = "VaccinationDialogFragment";
 
     private VaccinationDialogFragment(Context context,
@@ -73,7 +80,13 @@ public class VaccinationDialogFragment extends DialogFragment {
                 Calendar calendar = Calendar.getInstance();
                 calendar.set(year, month, day);
 
-                tag.setUpdatedVaccineDate(new DateTime(calendar.getTimeInMillis()));
+                String formatedDate = DateFormatUtils.format(calendar, "yyyy-MM-dd");
+                updateJson(formatedDate);
+
+                tag.setUpdatedVaccineDate(new DateTime(calendar.getTime()));
+
+                listener.onVaccinateEarlier(tag);
+
          }
         });
 
@@ -85,7 +98,10 @@ public class VaccinationDialogFragment extends DialogFragment {
 
                 Calendar calendar = Calendar.getInstance();
 
-                tag.setUpdatedVaccineDate(new DateTime(calendar.getTimeInMillis()));
+                String formatedDate = DateFormatUtils.format(calendar, "yyyy-MM-dd");
+                updateJson(formatedDate);
+                listener.onVaccinateToday(tag);
+
             }
         });
 
@@ -110,4 +126,36 @@ public class VaccinationDialogFragment extends DialogFragment {
 
         return dialogView;
     }
+
+    private void updateJson(String formatedDate) {
+        String parent = "";
+        if(tag.getVaccine().category().equals("child")){
+            parent = "Child_Vaccination_Followup";
+        }else if(tag.getVaccine().category().equals("woman")){
+            parent = "Woman_TT_Followup_Form";
+        }
+        DetailFormUtils.updateJson(DetailActivity.formSubmission, parent, tag.getVaccine().name(), formatedDate);
+        DetailFormUtils.updateJson(DetailActivity.formSubmission, parent, tag.getVaccine().name()+"_dose_today", "1");
+    }
+
+    public interface VaccinationDialogListener {
+        public void onVaccinateToday(VaccineWrapper tag);
+        public void onVaccinateEarlier(VaccineWrapper tag);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        // Verify that the host activity implements the callback interface
+        try {
+            // Instantiate the NoticeDialogListener so we can send events to the host
+            listener = (VaccinationDialogListener) activity;
+        } catch (ClassCastException e) {
+            // The activity doesn't implement the interface, throw exception
+            throw new ClassCastException(activity.toString()
+                    + " must implement NoticeDialogListener");
+        }
+    }
+
+
 }

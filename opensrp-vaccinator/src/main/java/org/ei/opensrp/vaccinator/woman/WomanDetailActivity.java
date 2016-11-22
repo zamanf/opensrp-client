@@ -9,12 +9,15 @@ import org.ei.opensrp.domain.Alert;
 import org.ei.opensrp.vaccinator.R;
 import org.ei.opensrp.vaccinator.db.VaccineRepo;
 import org.ei.opensrp.vaccinator.domain.VaccineWrapper;
+import org.ei.opensrp.vaccinator.view.VaccinationDialogFragment;
 import org.ei.opensrp.view.template.DetailActivity;
 import org.joda.time.DateTime;
 import org.joda.time.Years;
 
 import java.util.List;
 import java.util.Map;
+
+import util.DetailFormUtils;
 
 import static org.ei.opensrp.util.Utils.convertDateFormat;
 import static org.ei.opensrp.util.Utils.getDataRow;
@@ -27,7 +30,9 @@ import static util.VaccinatorUtils.generateSchedule;
 /**
  * Created by muhammad.ahmed@ihsinformatics.com on 11-Nov-15.
  */
-public class WomanDetailActivity extends DetailActivity {
+public class WomanDetailActivity extends DetailActivity implements VaccinationDialogFragment.VaccinationDialogListener {
+
+    TableLayout table;
 
     @Override
     protected int layoutResId() {
@@ -120,7 +125,7 @@ public class WomanDetailActivity extends DetailActivity {
 
 
         //VACCINES INFORMATION
-        TableLayout table = (TableLayout) findViewById(R.id.woman_vaccine_table);
+        table = (TableLayout) findViewById(R.id.woman_vaccine_table);
         List<Alert> al = Context.getInstance().alertService().findByEntityIdAndAlertNames(client.entityId(), "TT 1", "TT 2", "TT 3", "TT 4", "TT 5", "tt1", "tt2", "tt3", "tt4", "tt5");
         List<Map<String, Object>> sch = generateSchedule("woman", null, client.getColumnmaps(), al);
         String previousVaccine = "";
@@ -160,5 +165,15 @@ public class WomanDetailActivity extends DetailActivity {
         pt.addView(tr);
         tr = getDataRow(this, "GA (weeks)", getValue(client.getColumnmaps(), "final_ga", "N/A", false), null);
         pt.addView(tr);
+    }
+
+    @Override
+    public void onVaccinateToday(VaccineWrapper tag) {
+        DetailFormUtils.vaccinateToday(table, tag);
+    }
+
+    @Override
+    public void onVaccinateEarlier(VaccineWrapper tag) {
+        DetailFormUtils.vaccinateEarlier(table, tag);
     }
 }

@@ -128,7 +128,7 @@ public class CESyncReceiver extends BroadcastReceiver {
         }
     }
 
-    private JSONArray fetchAsJson(Context context, String lastSyncProperty, String serviceUrl) throws JSONException, UnsupportedEncodingException {
+    private JSONArray fetchAsJson(Context context, String lastSyncProperty, String serviceUrl) throws JSONException, UnsupportedEncodingException, RuntimeException {
         HTTPAgent httpAgent = org.ei.opensrp.Context.getInstance().getHttpAgent();
         String baseUrl = org.ei.opensrp.Context.getInstance().configuration().dristhiBaseURL();
         if(baseUrl.endsWith("/")){
@@ -156,7 +156,7 @@ public class CESyncReceiver extends BroadcastReceiver {
         return jarr;
     }
 
-    public void fetchAllClients(CESQLiteHelper dbhandler, Context context) throws JSONException, NoSuchFieldException, IllegalAccessException, IllegalArgumentException, UnsupportedEncodingException {
+    public void fetchAllClients(CESQLiteHelper dbhandler, Context context) throws JSONException, NoSuchFieldException, IllegalAccessException, UnsupportedEncodingException, RuntimeException {
         JSONArray jarr = fetchAsJson(context, LAST_SYNC_DATETIME_CLIENT, CLIENT_SEARCH_URL);
         for (int i = 0; i < jarr.length(); i++) {
             JSONObject jo = jarr.getJSONObject(i);
@@ -168,7 +168,7 @@ public class CESyncReceiver extends BroadcastReceiver {
         Utils.writePreference(context, LAST_SYNC_DATETIME_CLIENT, System.currentTimeMillis()+"");
     }
 
-    public void fetchAllEvents(CESQLiteHelper dbhandler, Context context) throws JSONException, NoSuchFieldException, IllegalAccessException, IllegalArgumentException, UnsupportedEncodingException {
+    public void fetchAllEvents(CESQLiteHelper dbhandler, Context context) throws JSONException, NoSuchFieldException, IllegalAccessException, UnsupportedEncodingException, RuntimeException {
         JSONArray jarr = fetchAsJson(context, LAST_SYNC_DATETIME_EVENT, EVENT_SEARCH_URL);
         for (int i = 0; i < jarr.length(); i++) {
             JSONObject jo = jarr.getJSONObject(i);

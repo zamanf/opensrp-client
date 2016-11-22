@@ -20,16 +20,20 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.text.Html;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -46,6 +50,7 @@ import org.ei.opensrp.vaccinator.db.Obs;
 import org.ei.opensrp.vaccinator.db.VaccineRepo;
 import org.ei.opensrp.vaccinator.db.VaccineRepo.Vaccine;
 import org.ei.opensrp.vaccinator.domain.VaccineWrapper;
+import org.ei.opensrp.vaccinator.view.UndoVaccinationDialogFragment;
 import org.ei.opensrp.vaccinator.view.VaccinationDialogFragment;
 import org.joda.time.DateTime;
 import org.json.JSONException;
@@ -178,23 +183,19 @@ public class VaccinatorUtils {
 
 
     public static void addVaccineDetail(final Context context, TableLayout table, final VaccineWrapper vaccineWrapper){
-        TableRow tr = new TableRow(context);
-        tr.setBackgroundResource(R.drawable.table_row_border);
-        TableRow.LayoutParams trlp = new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        tr.setLayoutParams(trlp);
+        TableRow tr = (TableRow) ((Activity) context).getLayoutInflater().inflate(R.layout.vaccinate_row_view, null);
+        tr.setGravity(Gravity.CENTER_VERTICAL);
+        tr.setTag(vaccineWrapper.getVaccine().name());
+
+        RelativeLayout relativeLayout = (RelativeLayout) tr.findViewById(R.id.vacc_status_layout);
         if(vaccineWrapper.isCompact()){
-            tr.setPadding(10, 5, 10, 5);
-        }
-        else{
-            tr.setPadding(10, 10, 10, 10);
+            relativeLayout.setPadding(dpToPx(context, 0f), dpToPx(context, 7.5f), dpToPx(context, 0f), dpToPx(context, 7.5f));
+        } else {
+            relativeLayout.setPadding(dpToPx(context, 0f), dpToPx(context, 10f), dpToPx(context, 0f), dpToPx(context, 10f));
         }
 
-        TextView label = new TextView(context);
+        TextView label = (TextView) tr.findViewById(R.id.vaccine);
         label.setText(vaccineWrapper.getVaccineAsString());
-        label.setPadding(20, 5, 70, 5);
-        label.setTextColor(Color.BLACK);
-        label.setBackgroundColor(Color.WHITE);
-        tr.addView(label);
 
         String vaccineDate = "";
         String color = "#ffffff";
@@ -222,32 +223,46 @@ public class VaccinatorUtils {
         l.setVerticalGravity(Gravity.CENTER_VERTICAL);
         l.setGravity(Gravity.CENTER_VERTICAL);
 
-        Button s = new Button(context);
-        TableRow.LayoutParams blp = new TableRow.LayoutParams(15, 15);
-        blp.setMargins(30, 6, 5, 5);
-        s.setLayoutParams(blp);
-        s.setGravity(Gravity.CENTER_VERTICAL);
+        Button s = (Button) tr.findViewById(R.id.status);
         s.setBackgroundColor(StringUtils.isBlank(color) ? Color.WHITE : Color.parseColor(color));
-        l.addView(s);
 
-        TextView v = new TextView(context);
+        TextView v = (TextView) tr.findViewById(R.id.date);
         v.setText(vaccineDate);
-        v.setPadding(10, 4, 20, 5);
-        v.setTextColor(Color.BLACK);
-        v.setBackgroundColor(Color.WHITE);
-        l.addView(v);
+
+        Button u =  (Button) tr.findViewById(R.id.undo);
+        FrameLayout.LayoutParams ulp = (FrameLayout.LayoutParams) u.getLayoutParams();
+        if(vaccineWrapper.isCompact()){
+            ulp.width = dpToPx(context, 70f);
+            ulp.height = dpToPx(context, 35f);
+            u.setLayoutParams(ulp);
+        } else {
+            ulp.width = dpToPx(context, 65f);
+            ulp.height = dpToPx(context, 40f);
+            u.setLayoutParams(ulp);
+        }
+
+        u.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentTransaction ft = ((Activity) context).getFragmentManager().beginTransaction();
+                Fragment prev = ((Activity) context).getFragmentManager().findFragmentByTag(VaccinationDialogFragment.DIALOG_TAG);
+                if (prev != null) {
+                    ft.remove(prev);
+                }
+                ft.addToBackStack(null);
+                UndoVaccinationDialogFragment undoVaccinationDialogFragment = UndoVaccinationDialogFragment.newInstance(context, vaccineWrapper);
+                undoVaccinationDialogFragment.show(ft, VaccinationDialogFragment.DIALOG_TAG);
+            }
+        });
 
         if(table.getChildCount() > 0 && StringUtils.isNotBlank(vaccineWrapper.getVaccineAsString()) && StringUtils.isNotBlank(vaccineWrapper.getPreviousVaccine())) {
             if(!vaccineWrapper.getVaccineAsString().split("\\s+")[0].equals(vaccineWrapper.getPreviousVaccine().split("\\s+")[0])) {
                 View view = new View(context);
-                view.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, Float.valueOf(dpToPx(context, 10f)).intValue()));
-                view.setBackgroundColor(Color.WHITE);
+                view.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, dpToPx(context, 10f)));
 
                 table.addView(view);
             }
         }
-
-        tr.addView(l);
 
         if(vaccineWrapper.getStatus().equalsIgnoreCase("due")) {
             tr.setOnClickListener(new TableRow.OnClickListener() {
@@ -259,8 +274,9 @@ public class VaccinatorUtils {
                         ft.remove(prev);
                     }
                     ft.addToBackStack(null);
-                    VaccinationDialogFragment.newInstance(context, vaccineWrapper).show(ft, VaccinationDialogFragment.DIALOG_TAG);
-                    ;
+                    VaccinationDialogFragment vaccinationDialogFragment = VaccinationDialogFragment.newInstance(context, vaccineWrapper);
+                    vaccinationDialogFragment.show(ft, VaccinationDialogFragment.DIALOG_TAG);
+
                 }
             });
         }
@@ -351,8 +367,9 @@ public class VaccinatorUtils {
         return v;
     }
 
-    public static float dpToPx(Context context, float dpValue){
+    public static int dpToPx(Context context, float dpValue){
         Resources r = context.getResources();
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, r.getDisplayMetrics());
+        float val =  TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, r.getDisplayMetrics());
+        return new Float(val).intValue();
     }
 }

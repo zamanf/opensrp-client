@@ -25,6 +25,7 @@ import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.commonregistry.CommonPersonObjectController;
 import org.ei.opensrp.domain.ProfileImage;
 import org.ei.opensrp.repository.ImageRepository;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,6 +47,9 @@ public abstract class DetailActivity extends Activity {
 
     protected static CommonPersonObjectClient client;
     private static CommonPersonObjectController controller;
+    public static String metaData;
+    public static String formName;
+    public static JSONObject formSubmission;
 
     public static void startDetailActivity(android.content.Context context, CommonPersonObjectClient clientobj, Class<? extends DetailActivity> detailActivity){
         client = clientobj;

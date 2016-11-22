@@ -13,6 +13,9 @@ import android.widget.Toast;
 
 import org.ei.opensrp.vaccinator.R;
 import org.ei.opensrp.vaccinator.domain.VaccineWrapper;
+import org.ei.opensrp.view.template.DetailActivity;
+
+import util.DetailFormUtils;
 
 @SuppressLint("ValidFragment")
 public class UndoVaccinationDialogFragment extends DialogFragment {
@@ -55,7 +58,7 @@ public class UndoVaccinationDialogFragment extends DialogFragment {
             @Override
             public void onClick(View view) {
                 dismiss();
-                Toast.makeText(context, "Yes", Toast.LENGTH_SHORT).show();
+                removeJson();
             }
         });
 
@@ -68,5 +71,16 @@ public class UndoVaccinationDialogFragment extends DialogFragment {
         });
 
         return dialogView;
+    }
+
+    private void removeJson() {
+        String parent = "";
+        if(tag.getVaccine().category().equals("child")){
+            parent = "Child_Vaccination_Followup";
+        }else if(tag.getVaccine().category().equals("woman")){
+            parent = "Woman_TT_Followup_Form";
+        }
+        DetailFormUtils.removeJson(DetailActivity.formSubmission, parent, tag.getVaccine().name());
+        DetailFormUtils.removeJson(DetailActivity.formSubmission, parent, tag.getVaccine().name() + "_dose_today");
     }
 }

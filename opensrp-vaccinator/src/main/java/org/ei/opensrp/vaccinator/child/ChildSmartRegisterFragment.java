@@ -103,17 +103,20 @@ public class ChildSmartRegisterFragment extends SmartClientRegisterFragment {
     private class ClientActionHandler implements View.OnClickListener {
         @Override
         public void onClick(View view) {
+            CommonPersonObjectClient client = (CommonPersonObjectClient) view.getTag();
+            HashMap<String, String> map = new HashMap<>();
+            map.putAll(followupOverrides(client));
+            map.putAll(providerDetails());
+
+            String formName = "child_followup";
+
             switch (view.getId()) {
                 case R.id.child_profile_info_layout:
-                    DetailActivity.startDetailActivity(getActivity(), (CommonPersonObjectClient) view.getTag(), ChildDetailActivity.class);
+                    ChildDetailActivity.startDetailActivity(getActivity(), (CommonPersonObjectClient) view.getTag(), map, formName, ChildDetailActivity.class);
                     getActivity().finish();
                     break;
                 case R.id.child_next_visit_holder:
-                    HashMap<String, String> map = new HashMap<>();
-                    CommonPersonObjectClient client = (CommonPersonObjectClient) view.getTag();
-                    map.putAll(followupOverrides(client));
-                    map.putAll(providerDetails());
-                    startForm("child_followup", (SmartRegisterClient) view.getTag(), map);
+                    startForm(formName, (SmartRegisterClient) view.getTag(), map);
                     break;
             }
         }

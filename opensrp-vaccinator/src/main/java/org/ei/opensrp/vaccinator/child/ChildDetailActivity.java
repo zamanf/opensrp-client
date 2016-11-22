@@ -1,20 +1,31 @@
 package org.ei.opensrp.vaccinator.child;
 
+import android.util.Log;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
 import org.ei.opensrp.Context;
+import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.domain.Alert;
+import org.ei.opensrp.domain.form.FieldOverrides;
 import org.ei.opensrp.vaccinator.R;
 import org.ei.opensrp.vaccinator.db.VaccineRepo;
 import org.ei.opensrp.vaccinator.domain.VaccineWrapper;
+import org.ei.opensrp.vaccinator.view.VaccinationDialogFragment;
 import org.ei.opensrp.view.template.DetailActivity;
 import org.joda.time.DateTime;
 import org.joda.time.Months;
 import org.joda.time.Years;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import util.DetailFormUtils;
 
 import static org.ei.opensrp.util.Utils.convertDateFormat;
 import static org.ei.opensrp.util.Utils.getDataRow;
@@ -25,7 +36,10 @@ import static util.VaccinatorUtils.addStatusTag;
 import static util.VaccinatorUtils.addVaccineDetail;
 import static util.VaccinatorUtils.generateSchedule;
 
-public class ChildDetailActivity extends DetailActivity {
+public class ChildDetailActivity extends DetailActivity implements VaccinationDialogFragment.VaccinationDialogListener {
+
+    Set<TableLayout> tables;
+
     @Override
     protected int layoutResId() {
         return R.layout.child_detail_activity;
@@ -49,6 +63,27 @@ public class ChildDetailActivity extends DetailActivity {
     @Override
     protected Integer profilePicContainerId() {
         return R.id.child_profilepic;
+    }
+
+    public static void startDetailActivity(android.content.Context context, CommonPersonObjectClient clientobj, HashMap<String, String> overrideStringmap, String formName, Class<? extends DetailActivity> detailActivity){
+        try {
+            if (overrideStringmap == null) {
+                org.ei.opensrp.util.Log.logDebug("overrides data is null");
+                overrideStringmap = new HashMap<>();
+            }
+
+            ChildDetailActivity.formName = formName;
+
+            metaData = new FieldOverrides(new JSONObject(overrideStringmap).toString()).getJSONString();
+            org.ei.opensrp.util.Log.logDebug("fieldOverrides data is : " + metaData);
+
+            String data = DetailFormUtils.formData(context, clientobj.entityId(), formName, metaData);
+            formSubmission = DetailFormUtils.convertFormDataToJson(data);
+
+            DetailActivity.startDetailActivity(context, clientobj, detailActivity);
+        }catch (JSONException e){
+            Log.e(ChildDetailActivity.class.getName(), "", e);
+        }
     }
 
     @Override
@@ -131,6 +166,7 @@ public class ChildDetailActivity extends DetailActivity {
 
         //VACCINES INFORMATION
         TableLayout table = null;
+        tables = new HashSet<>();
 
         List<Alert> al = Context.getInstance().alertService().findByEntityIdAndAlertNames(client.entityId(),
                 "BCG", "OPV 0", "Penta 1", "OPV 1", "PCV 1", "Penta 2", "OPV 2", "PCV 2",
@@ -164,6 +200,7 @@ public class ChildDetailActivity extends DetailActivity {
 
             addVaccineDetail(this, table, vaccineWrapper);
             previousVaccine = vaccineWrapper.getVaccineAsString();
+            tables.add(table);
             i++;
         }
 
@@ -185,4 +222,15 @@ public class ChildDetailActivity extends DetailActivity {
             addStatusTag(this, table, "Partially Immunized", true);
         }
     }
+
+    @Override
+    public void onVaccinateToday(VaccineWrapper tag) {
+        DetailFormUtils.vaccinateToday(tables, tag);
+    }
+
+    @Override
+    public void onVaccinateEarlier(VaccineWrapper tag) {
+        DetailFormUtils.vaccinateEarlier(tables, tag);
+    }
+
 }
