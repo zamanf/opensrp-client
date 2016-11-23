@@ -1,6 +1,7 @@
 package org.ei.opensrp.vaccinator.child;
 
-import android.util.Log;
+import android.content.Intent;
+import android.os.Bundle;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
@@ -10,22 +11,23 @@ import org.ei.opensrp.domain.Alert;
 import org.ei.opensrp.domain.form.FieldOverrides;
 import org.ei.opensrp.vaccinator.R;
 import org.ei.opensrp.vaccinator.db.VaccineRepo;
+import org.ei.opensrp.vaccinator.domain.FormSubmissionWrapper;
 import org.ei.opensrp.vaccinator.domain.VaccineWrapper;
-import org.ei.opensrp.vaccinator.view.VaccinationDialogFragment;
+import org.ei.opensrp.vaccinator.view.VaccinationActionListener;
 import org.ei.opensrp.view.template.DetailActivity;
 import org.joda.time.DateTime;
 import org.joda.time.Months;
 import org.joda.time.Years;
-import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import util.DetailFormUtils;
+import util.VaccinateActionUtils;
 
 import static org.ei.opensrp.util.Utils.convertDateFormat;
 import static org.ei.opensrp.util.Utils.getDataRow;
@@ -36,9 +38,11 @@ import static util.VaccinatorUtils.addStatusTag;
 import static util.VaccinatorUtils.addVaccineDetail;
 import static util.VaccinatorUtils.generateSchedule;
 
-public class ChildDetailActivity extends DetailActivity implements VaccinationDialogFragment.VaccinationDialogListener {
+public class ChildDetailActivity extends DetailActivity implements VaccinationActionListener {
 
     Set<TableLayout> tables;
+
+    public FormSubmissionWrapper formSubmissionWrapper;
 
     @Override
     protected int layoutResId() {
@@ -65,34 +69,37 @@ public class ChildDetailActivity extends DetailActivity implements VaccinationDi
         return R.id.child_profilepic;
     }
 
-    public static void startDetailActivity(android.content.Context context, CommonPersonObjectClient clientobj, HashMap<String, String> overrideStringmap, String formName, Class<? extends DetailActivity> detailActivity){
-        try {
-            if (overrideStringmap == null) {
-                org.ei.opensrp.util.Log.logDebug("overrides data is null");
-                overrideStringmap = new HashMap<>();
-            }
+    public static void startDetailActivity(android.content.Context context, CommonPersonObjectClient clientobj, HashMap<String, String> overrideStringmap, String formName, Class<? extends DetailActivity> detailActivity) {
 
-            ChildDetailActivity.formName = formName;
+        client = clientobj;
 
-            metaData = new FieldOverrides(new JSONObject(overrideStringmap).toString()).getJSONString();
-            org.ei.opensrp.util.Log.logDebug("fieldOverrides data is : " + metaData);
-
-            String data = DetailFormUtils.formData(context, clientobj.entityId(), formName, metaData);
-            formSubmission = DetailFormUtils.convertFormDataToJson(data);
-
-            DetailActivity.startDetailActivity(context, clientobj, detailActivity);
-        }catch (JSONException e){
-            Log.e(ChildDetailActivity.class.getName(), "", e);
+        if (overrideStringmap == null) {
+            org.ei.opensrp.util.Log.logDebug("overrides data is null");
+            overrideStringmap = new HashMap<>();
         }
+
+        String metaData = new FieldOverrides(new JSONObject(overrideStringmap).toString()).getJSONString();
+        org.ei.opensrp.util.Log.logDebug("fieldOverrides data is : " + metaData);
+
+        String data = VaccinateActionUtils.formData(context, clientobj.entityId(), formName, metaData);
+
+        FormSubmissionWrapper formSubmissionWrapper = new FormSubmissionWrapper(data, clientobj.entityId(), formName, metaData, "child");
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(EXTRA_OBJECT, formSubmissionWrapper);
+        Intent intent = new Intent(context, detailActivity);
+        intent.putExtras(bundle);
+
+        context.startActivity(intent);
+
     }
 
     @Override
     protected Integer defaultProfilePicResId() {
         String gender = getValue(client, "gender", true);
-        if(gender.equalsIgnoreCase("female")){
+        if (gender.equalsIgnoreCase("female")) {
             return R.drawable.child_girl_infant;
-        }
-        else if(gender.toLowerCase().contains("trans")){
+        } else if (gender.toLowerCase().contains("trans")) {
             return R.drawable.child_transgender_inflant;
         }
 
@@ -115,6 +122,9 @@ public class ChildDetailActivity extends DetailActivity implements VaccinationDi
 
     @Override
     protected void generateView() {
+
+        retrieveFormSubmissionWrapper();
+
         //BASIC INFORMATION
         TableLayout dt = (TableLayout) findViewById(R.id.child_detail_info_table1);
 
@@ -125,17 +135,16 @@ public class ChildDetailActivity extends DetailActivity implements VaccinationDi
         tr = getDataRow(this, "EPI Card Number", getValue(client.getColumnmaps(), "epi_card_number", false), null);
         dt.addView(tr);
 
-        tr = getDataRow(this, "Child's Name", getValue(client.getColumnmaps(), "first_name", true)+" "+getValue(client.getColumnmaps(), "last_name", true), null);
+        tr = getDataRow(this, "Child's Name", getValue(client.getColumnmaps(), "first_name", true) + " " + getValue(client.getColumnmaps(), "last_name", true), null);
         dt.addView(tr);
 
         int months = -1;
-        try{
+        try {
             months = Months.monthsBetween(new DateTime(getValue(client.getColumnmaps(), "dob", false)), DateTime.now()).getMonths();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        tr = getDataRow(this, "Birthdate (Age)", convertDateFormat(getValue(client.getColumnmaps(), "dob", false), "No DoB", true) + " (" + (months < 0? "":(months+"")) + " months" + ")", null);
+        tr = getDataRow(this, "Birthdate (Age)", convertDateFormat(getValue(client.getColumnmaps(), "dob", false), "No DoB", true) + " (" + (months < 0 ? "" : (months + "")) + " months" + ")", null);
         dt.addView(tr);
 
         tr = getDataRow(this, "Gender", getValue(client.getColumnmaps(), "gender", true), null);
@@ -155,13 +164,13 @@ public class ChildDetailActivity extends DetailActivity implements VaccinationDi
         tr = getDataRow(this, "Contact Number", getValue(client.getColumnmaps(), "contact_phone_number", false), null);
         dt2.addView(tr);
         tr = getDataRow(this, "Address", getValue(client.getColumnmaps(), "address1", true)
-                +", \nUC: "+ getValue(client.getColumnmaps(), "union_council", true)
-                +", \nTown: "+ getValue(client.getColumnmaps(), "town", true)
-                +", \nCity: "+ getValue(client, "city_village", true)
-                +", \nProvince: "+ getValue(client, "province", true), null);
+                + ", \nUC: " + getValue(client.getColumnmaps(), "union_council", true)
+                + ", \nTown: " + getValue(client.getColumnmaps(), "town", true)
+                + ", \nCity: " + getValue(client, "city_village", true)
+                + ", \nProvince: " + getValue(client, "province", true), null);
         dt2.addView(tr);
 
-        String[] vl = new String[]{"bcg", "opv0", "penta1", "opv1","pcv1", "penta2", "opv2", "pcv2",
+        String[] vl = new String[]{"bcg", "opv0", "penta1", "opv1", "pcv1", "penta2", "opv2", "pcv2",
                 "penta3", "opv3", "pcv3", "ipv", "measles1", "measles2"};
 
         //VACCINES INFORMATION
@@ -178,10 +187,10 @@ public class ChildDetailActivity extends DetailActivity implements VaccinationDi
         int i = 0;
 
         String previousVaccine = "";
-        for (Map<String, Object> m : sch){
+        for (Map<String, Object> m : sch) {
             if (i <= 3) {
                 table = (TableLayout) findViewById(R.id.child_vaccine_table1);
-            } else  if(i <= 8){
+            } else if (i <= 8) {
                 table = (TableLayout) findViewById(R.id.child_vaccine_table2);
             } else {
                 table = (TableLayout) findViewById(R.id.child_vaccine_table3);
@@ -205,32 +214,72 @@ public class ChildDetailActivity extends DetailActivity implements VaccinationDi
         }
 
         int agey = -1;
-        try{
+        try {
             agey = Years.yearsBetween(new DateTime(getValue(client.getColumnmaps(), "dob", false)), DateTime.now()).getYears();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        if(agey < 0){
+        if (agey < 0) {
             addStatusTag(this, table, "No DoB", true);
-        }
-        else if(!hasAnyEmptyValue(client.getColumnmaps(), "_retro", vl)){
+        } else if (!hasAnyEmptyValue(client.getColumnmaps(), "_retro", vl)) {
             addStatusTag(this, table, "Fully Immunized", true);
-        }
-        else if(agey >= 5 && hasAnyEmptyValue(client.getColumnmaps(), "_retro", vl)){
+        } else if (agey >= 5 && hasAnyEmptyValue(client.getColumnmaps(), "_retro", vl)) {
             addStatusTag(this, table, "Partially Immunized", true);
         }
     }
 
     @Override
     public void onVaccinateToday(VaccineWrapper tag) {
-        DetailFormUtils.vaccinateToday(tables, tag);
+        TableRow tableRow = findRow(tag);
+        if (tableRow != null) {
+            VaccinateActionUtils.vaccinateToday(tableRow, tag);
+        }
     }
 
     @Override
     public void onVaccinateEarlier(VaccineWrapper tag) {
-        DetailFormUtils.vaccinateEarlier(tables, tag);
+        TableRow tableRow = findRow(tag);
+        if (tableRow != null) {
+            VaccinateActionUtils.vaccinateEarlier(tableRow, tag);
+        }
     }
 
+    @Override
+    public void onUndoVaccination(VaccineWrapper tag) {
+        TableRow tableRow = findRow(tag);
+        if (tableRow != null) {
+            VaccinateActionUtils.undoVaccination(this, tableRow, tag);
+        }
+    }
+
+    private TableRow findRow(VaccineWrapper tag) {
+        return VaccinateActionUtils.findRow(tables, tag.getVaccine().name());
+    }
+
+    public void retrieveFormSubmissionWrapper() {
+        Bundle extras = this.getIntent().getExtras();
+        if (extras != null) {
+            Serializable serializable = extras.getSerializable(EXTRA_OBJECT);
+            if (serializable != null && serializable instanceof FormSubmissionWrapper) {
+                this.formSubmissionWrapper = (FormSubmissionWrapper) serializable;
+            }
+        }
+    }
+
+    public FormSubmissionWrapper getFormSubmissionWrapper() {
+        return formSubmissionWrapper;
+    }
+
+    @Override
+    public void finish() {
+        if (formSubmissionWrapper != null && formSubmissionWrapper.updates() > 0) {
+            final android.content.Context context = this;
+            String data = formSubmissionWrapper.updateFormSubmission();
+            if (data != null) {
+                VaccinateActionUtils.saveFormSubmission(context, data, formSubmissionWrapper.getEntityId(), formSubmissionWrapper.getFormName(), formSubmissionWrapper.getOverrides());
+            }
+        }
+        super.finish();
+    }
 }

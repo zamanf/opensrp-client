@@ -23,7 +23,6 @@ import org.ei.opensrp.view.dialog.FilterOption;
 import org.ei.opensrp.view.dialog.SearchFilterOption;
 import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
-import org.ei.opensrp.view.template.DetailActivity;
 import org.ei.opensrp.view.template.SmartRegisterClientsProvider;
 import org.joda.time.DateTime;
 import org.joda.time.Years;
@@ -107,17 +106,20 @@ public class WomanSmartRegisterFragment extends SmartClientRegisterFragment {
     private class ClientActionHandler implements View.OnClickListener {
         @Override
         public void onClick(View view) {
+            HashMap<String, String> map = new HashMap<>();
+            CommonPersonObjectClient client = (CommonPersonObjectClient) view.getTag();
+            map.putAll(followupOverrides(client));
+            map.putAll(providerDetails());
+
+            String formName = "woman_followup";
+
             switch (view.getId()) {
                 case R.id.woman_profile_info_layout:
-                    DetailActivity.startDetailActivity(getActivity(), (CommonPersonObjectClient) view.getTag(), WomanDetailActivity.class);
+                    WomanDetailActivity.startDetailActivity(getActivity(), (CommonPersonObjectClient) view.getTag(), map, formName, WomanDetailActivity.class);
                     getActivity().finish();
                     break;
                 case R.id.woman_next_visit_holder:
-                    HashMap<String, String> map = new HashMap<>();
-                    CommonPersonObjectClient client = (CommonPersonObjectClient) view.getTag();
-                    map.putAll(followupOverrides(client));
-                    map.putAll(providerDetails());
-                    startForm("woman_followup", (SmartRegisterClient) view.getTag(), map);
+                    startForm(formName, (SmartRegisterClient) view.getTag(), map);
                     break;
             }
         }

@@ -1,6 +1,8 @@
 package org.ei.opensrp.view.template;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -13,18 +15,27 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 import org.ei.opensrp.Context;
 import org.ei.opensrp.R;
+import org.ei.opensrp.commonregistry.AllCommonsRepository;
+import org.ei.opensrp.commonregistry.CommonFtsObject;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.commonregistry.CommonPersonObjectController;
 import org.ei.opensrp.domain.ProfileImage;
+import org.ei.opensrp.domain.form.FormSubmission;
 import org.ei.opensrp.repository.ImageRepository;
+import org.ei.opensrp.service.ZiggyService;
+import org.ei.opensrp.util.FormUtils;
+import org.ei.opensrp.view.fragment.DisplayFormFragment;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -35,6 +46,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import static org.ei.opensrp.AllConstants.ENTITY_ID_PARAM;
+import static org.ei.opensrp.AllConstants.FORM_NAME_PARAM;
+import static org.ei.opensrp.AllConstants.INSTANCE_ID_PARAM;
+import static org.ei.opensrp.AllConstants.SYNC_STATUS;
+import static org.ei.opensrp.AllConstants.VERSION_PARAM;
+import static org.ei.opensrp.domain.SyncStatus.PENDING;
+import static org.ei.opensrp.util.EasyMap.create;
 import static org.ei.opensrp.util.Utils.convertDateFormat;
 import static org.ei.opensrp.util.Utils.setProfiePic;
 import static org.ei.opensrp.util.Utils.setProfiePicFromPath;
@@ -44,12 +62,10 @@ public abstract class DetailActivity extends Activity {
     static String mCurrentPhotoPath;
     static File currentPhoto;
     static ImageView mImageView;
+    public static final String EXTRA_OBJECT = "extraObject";
 
     protected static CommonPersonObjectClient client;
     private static CommonPersonObjectController controller;
-    public static String metaData;
-    public static String formName;
-    public static JSONObject formSubmission;
 
     public static void startDetailActivity(android.content.Context context, CommonPersonObjectClient clientobj, Class<? extends DetailActivity> detailActivity){
         client = clientobj;
@@ -221,4 +237,5 @@ public abstract class DetailActivity extends Activity {
 
         return bmp;
     }
+
 }

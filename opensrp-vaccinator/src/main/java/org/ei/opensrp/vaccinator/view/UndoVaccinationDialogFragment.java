@@ -1,6 +1,7 @@
 package org.ei.opensrp.vaccinator.view;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.os.Bundle;
@@ -9,18 +10,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.ei.opensrp.vaccinator.R;
+import org.ei.opensrp.vaccinator.child.ChildDetailActivity;
+import org.ei.opensrp.vaccinator.domain.FormSubmissionWrapper;
 import org.ei.opensrp.vaccinator.domain.VaccineWrapper;
+import org.ei.opensrp.vaccinator.woman.WomanDetailActivity;
 import org.ei.opensrp.view.template.DetailActivity;
 
-import util.DetailFormUtils;
+import util.VaccinateActionUtils;
 
 @SuppressLint("ValidFragment")
 public class UndoVaccinationDialogFragment extends DialogFragment {
     private final Context context;
     private final VaccineWrapper tag;
+    private VaccinationActionListener listener;
     public static final String DIALOG_TAG = "UndoVaccinationDialogFragment";
 
     private UndoVaccinationDialogFragment(Context context,
@@ -58,7 +62,9 @@ public class UndoVaccinationDialogFragment extends DialogFragment {
             @Override
             public void onClick(View view) {
                 dismiss();
-                removeJson();
+                updateFormSubmission();
+
+                listener.onUndoVaccination(tag);
             }
         });
 
@@ -73,14 +79,31 @@ public class UndoVaccinationDialogFragment extends DialogFragment {
         return dialogView;
     }
 
-    private void removeJson() {
-        String parent = "";
-        if(tag.getVaccine().category().equals("child")){
-            parent = "Child_Vaccination_Followup";
-        }else if(tag.getVaccine().category().equals("woman")){
-            parent = "Woman_TT_Followup_Form";
+    private void updateFormSubmission() {
+        FormSubmissionWrapper formSubmissionWrapper = null;
+        if (tag.getVaccine().category().equals("child") && listener instanceof ChildDetailActivity) {
+            formSubmissionWrapper = ((ChildDetailActivity) listener).getFormSubmissionWrapper();
+        } else if (tag.getVaccine().category().equals("woman") && listener instanceof WomanDetailActivity) {
+            formSubmissionWrapper = ((WomanDetailActivity) listener).getFormSubmissionWrapper();
         }
-        DetailFormUtils.removeJson(DetailActivity.formSubmission, parent, tag.getVaccine().name());
-        DetailFormUtils.removeJson(DetailActivity.formSubmission, parent, tag.getVaccine().name() + "_dose_today");
+
+        if(formSubmissionWrapper != null) {
+            formSubmissionWrapper.remove(tag);
+        }
+
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        // Verify that the host activity implements the callback interface
+        try {
+            // Instantiate the NoticeDialogListener so we can send events to the host
+            listener = (VaccinationActionListener) activity;
+        } catch (ClassCastException e) {
+            // The activity doesn't implement the interface, throw exception
+            throw new ClassCastException(activity.toString()
+                    + " must implement VaccinationActionListener");
+        }
     }
 }
