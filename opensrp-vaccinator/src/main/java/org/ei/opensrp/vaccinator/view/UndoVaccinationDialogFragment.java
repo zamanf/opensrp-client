@@ -16,9 +16,6 @@ import org.ei.opensrp.vaccinator.child.ChildDetailActivity;
 import org.ei.opensrp.vaccinator.domain.FormSubmissionWrapper;
 import org.ei.opensrp.vaccinator.domain.VaccineWrapper;
 import org.ei.opensrp.vaccinator.woman.WomanDetailActivity;
-import org.ei.opensrp.view.template.DetailActivity;
-
-import util.VaccinateActionUtils;
 
 @SuppressLint("ValidFragment")
 public class UndoVaccinationDialogFragment extends DialogFragment {

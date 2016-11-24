@@ -15,6 +15,10 @@ public class VaccineWrapper {
     private String previousVaccine;
     private boolean compact;
 
+    private String color;
+    private String formattedVaccineDate;
+    private String existingAge;
+
     private String patientName;
     private String patientNumber;
 
@@ -68,6 +72,30 @@ public class VaccineWrapper {
 
     public void setCompact(boolean compact) {
         this.compact = compact;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getFormattedVaccineDate() {
+        return formattedVaccineDate;
+    }
+
+    public void setFormattedVaccineDate(String formattedVaccineDate) {
+        this.formattedVaccineDate = formattedVaccineDate;
+    }
+
+    public String getExistingAge() {
+        return existingAge;
+    }
+
+    public void setExistingAge(String existingAge) {
+        this.existingAge = existingAge;
     }
 
     public String getPatientName() {

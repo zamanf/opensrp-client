@@ -200,12 +200,12 @@ public class VaccinatorUtils {
             if(vaccineWrapper.getAlert() != null){
                 color = getColorValue(context, vaccineWrapper.getAlert().status());
                 vaccineDate = "due: "+convertDateFormat(vaccineWrapper.getVaccineDateAsString(), true)+"";
-                addVaccinationDialogHook(context, tr, vaccineWrapper);
+                addVaccinationDialogHook(context, tr, vaccineWrapper, color, vaccineDate);
             }
             else if(StringUtils.isNotBlank(vaccineWrapper.getVaccineDateAsString())){
                 color = getColorValue(context, AlertStatus.inProcess);
                 vaccineDate = "due: "+convertDateFormat(vaccineWrapper.getVaccineDateAsString(), true)+"";
-                addVaccinationDialogHook(context, tr, vaccineWrapper);
+                addVaccinationDialogHook(context, tr, vaccineWrapper, color, vaccineDate);
             }
         }
         else if(vaccineWrapper.getStatus().equalsIgnoreCase("done")){
@@ -215,7 +215,7 @@ public class VaccinatorUtils {
         else if(vaccineWrapper.getStatus().equalsIgnoreCase("expired")){
             color = getColorValue(context, AlertStatus.inProcess);
             vaccineDate = "exp: "+convertDateFormat(vaccineWrapper.getVaccineDateAsString(), true)+"";
-            addVaccinationDialogHook(context, tr, vaccineWrapper);
+            addVaccinationDialogHook(context, tr, vaccineWrapper, color, vaccineDate);
         }
 
         LinearLayout l = new LinearLayout(context);
@@ -267,21 +267,27 @@ public class VaccinatorUtils {
         table.addView(tr);
     }
 
-    private static void addVaccinationDialogHook(final Context context, TableRow tr, final VaccineWrapper vaccineWrapper){
-        tr.setOnClickListener(new TableRow.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FragmentTransaction ft = ((Activity) context).getFragmentManager().beginTransaction();
-                Fragment prev = ((Activity) context).getFragmentManager().findFragmentByTag(VaccinationDialogFragment.DIALOG_TAG);
-                if (prev != null) {
-                    ft.remove(prev);
-                }
-                ft.addToBackStack(null);
-                VaccinationDialogFragment vaccinationDialogFragment = VaccinationDialogFragment.newInstance(context, vaccineWrapper);
-                vaccinationDialogFragment.show(ft, VaccinationDialogFragment.DIALOG_TAG);
+    private static void addVaccinationDialogHook(final Context context, TableRow tr, final VaccineWrapper vaccineWrapper, String color, String formattedDate){
 
-            }
-        });
+        if(VaccinateActionUtils.addDialogHookCustomFilter(vaccineWrapper)) {
+            vaccineWrapper.setColor(color);
+            vaccineWrapper.setFormattedVaccineDate(formattedDate);
+
+            tr.setOnClickListener(new TableRow.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    FragmentTransaction ft = ((Activity) context).getFragmentManager().beginTransaction();
+                    Fragment prev = ((Activity) context).getFragmentManager().findFragmentByTag(VaccinationDialogFragment.DIALOG_TAG);
+                    if (prev != null) {
+                        ft.remove(prev);
+                    }
+                    ft.addToBackStack(null);
+                    VaccinationDialogFragment vaccinationDialogFragment = VaccinationDialogFragment.newInstance(context, vaccineWrapper);
+                    vaccinationDialogFragment.show(ft, VaccinationDialogFragment.DIALOG_TAG);
+
+                }
+            });
+        }
     }
 
 

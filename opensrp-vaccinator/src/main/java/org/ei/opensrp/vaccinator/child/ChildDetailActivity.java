@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
+import org.apache.commons.lang3.StringUtils;
 import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.domain.Alert;
@@ -117,6 +118,9 @@ public class ChildDetailActivity extends DetailActivity implements VaccinationAc
     }
 
     public String getEntityIdentifier() {
+        if(client == null){
+            return "";
+        }
         return nonEmptyValue(client.getColumnmaps(), true, false, "existing_program_client_id", "program_client_id");
     }
 
@@ -206,6 +210,11 @@ public class ChildDetailActivity extends DetailActivity implements VaccinationAc
 
             vaccineWrapper.setPatientNumber(getValue(client.getColumnmaps(), "epi_card_number", false));
             vaccineWrapper.setPatientName(getValue(client.getColumnmaps(), "first_name", true) + " " + getValue(client.getColumnmaps(), "last_name", true));
+
+            String existingAge = VaccinateActionUtils.retrieveExistingAge(formSubmissionWrapper);
+            if(StringUtils.isNotBlank(existingAge)){
+                vaccineWrapper.setExistingAge(existingAge);
+            }
 
             addVaccineDetail(this, table, vaccineWrapper);
             previousVaccine = vaccineWrapper.getVaccineAsString();

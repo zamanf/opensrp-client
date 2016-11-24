@@ -38,8 +38,12 @@ public class CESyncReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent arg1) {
         db = new CESQLiteHelper(context);
-        AsyncCallWS task = new AsyncCallWS(context);
-        task.execute();
+        try {
+            AsyncCallWS task = new AsyncCallWS(context);
+            task.execute();
+        }catch (RuntimeException e){
+            Log.i(CESyncReceiver.class.getName(), "RuntimeException: ", e);
+        }
     }
 
     public static void scheduleNextSync(Context context, boolean executedSuccessfully){
@@ -94,10 +98,6 @@ public class CESyncReceiver extends BroadcastReceiver {
                 try{
                     fetchAllClients(db, context);
                     fetchAllEvents(db, context);
-                }
-                catch (RuntimeException e){
-                    success = false;
-                    e.printStackTrace();
                 }
                 catch (Exception e){
                     success = false;

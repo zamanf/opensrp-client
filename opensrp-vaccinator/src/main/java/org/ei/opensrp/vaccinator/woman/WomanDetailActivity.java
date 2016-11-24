@@ -109,6 +109,9 @@ public class WomanDetailActivity extends DetailActivity implements VaccinationAc
     }
 
     public String getEntityIdentifier() {
+        if(client == null){
+            return "";
+        }
         return nonEmptyValue(client.getColumnmaps(), true, false, "existing_program_client_id", "program_client_id");
     }
 

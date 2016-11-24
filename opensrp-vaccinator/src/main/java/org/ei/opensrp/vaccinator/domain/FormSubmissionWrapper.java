@@ -91,11 +91,18 @@ public class FormSubmissionWrapper implements Serializable {
 
                 if (!tag.isToday()) {
                     String fieldName = vaccine.name() + "_retro";
-                    JSONObject vaccinesGroupJson = VaccinateActionUtils.find(encounterJson, "vaccines_group");
-                    if(vaccinesGroupJson != null) {
-                        VaccinateActionUtils.updateJson(vaccinesGroupJson, fieldName, formatedDate);
+
+                    JSONObject parentJson = null;
+                    if (category.equals("child")) {
+                        parentJson = VaccinateActionUtils.find(encounterJson, "vaccines_group");
+                    } else if (category.equals("woman")) {
+                        parentJson = encounterJson;
+                    }
+
+                    if(parentJson != null) {
+                        VaccinateActionUtils.updateJson(parentJson, fieldName, formatedDate);
                         if (StringUtils.isNumeric(lastChar)) {
-                            VaccinateActionUtils.updateJson(vaccinesGroupJson, vaccine.name() + "_dose", lastChar);
+                            VaccinateActionUtils.updateJson(parentJson, vaccine.name() + "_dose", lastChar);
                         }
                         vaccines += vaccine.name() + " ";
                     }

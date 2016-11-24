@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,18 +13,15 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 
-import org.apache.commons.lang3.time.DateFormatUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.ei.opensrp.vaccinator.R;
 import org.ei.opensrp.vaccinator.child.ChildDetailActivity;
 import org.ei.opensrp.vaccinator.domain.FormSubmissionWrapper;
 import org.ei.opensrp.vaccinator.domain.VaccineWrapper;
 import org.ei.opensrp.vaccinator.woman.WomanDetailActivity;
-import org.ei.opensrp.view.template.DetailActivity;
 import org.joda.time.DateTime;
 
 import java.util.Calendar;
-
-import util.VaccinateActionUtils;
 
 @SuppressLint("ValidFragment")
 public class VaccinationDialogFragment extends DialogFragment {
@@ -64,6 +62,10 @@ public class VaccinationDialogFragment extends DialogFragment {
         vaccineView.setText(tag.getVaccineAsString());
 
         final DatePicker earlierDatePicker = (DatePicker) dialogView.findViewById(R.id.earlier_date_picker);
+
+        String color =  tag.getColor();
+        Button status = (Button) dialogView.findViewById(R.id.status);
+        status.setBackgroundColor(StringUtils.isBlank(color) ? Color.WHITE : Color.parseColor(color));
 
         final Button set = (Button) dialogView.findViewById(R.id.set);
         set.setOnClickListener(new View.OnClickListener() {

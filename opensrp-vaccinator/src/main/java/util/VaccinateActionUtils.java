@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -13,12 +14,14 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 
+import org.apache.commons.lang3.StringUtils;
 import org.ei.opensrp.commonregistry.AllCommonsRepository;
 import org.ei.opensrp.commonregistry.CommonFtsObject;
 import org.ei.opensrp.domain.form.FormSubmission;
 import org.ei.opensrp.service.ZiggyService;
 import org.ei.opensrp.util.FormUtils;
 import org.ei.opensrp.vaccinator.R;
+import org.ei.opensrp.vaccinator.domain.FormSubmissionWrapper;
 import org.ei.opensrp.vaccinator.domain.VaccineWrapper;
 import org.ei.opensrp.vaccinator.view.VaccinationDialogFragment;
 import org.json.JSONException;
@@ -46,9 +49,9 @@ public class VaccinateActionUtils {
 
     public static void updateJson(JSONObject jsonObject, String field, String value) {
         try {
-               if (jsonObject.has(field)) {
-                    JSONObject fieldJson = jsonObject.getJSONObject(field);
-                    fieldJson.put("content", value);
+            if (jsonObject.has(field)) {
+                JSONObject fieldJson = jsonObject.getJSONObject(field);
+                fieldJson.put("content", value);
             }
         } catch (JSONException e) {
             Log.e(VaccinateActionUtils.class.getName(), "", e);
@@ -67,7 +70,6 @@ public class VaccinateActionUtils {
 
         return null;
     }
-
 
 
     public static TableRow findRow(Set<TableLayout> tables, String tag) {
@@ -95,6 +97,10 @@ public class VaccinateActionUtils {
         Button button = (Button) tableRow.findViewById(R.id.undo);
         button.setVisibility(View.VISIBLE);
 
+        String color = "#31B404";
+        Button status = (Button) tableRow.findViewById(R.id.status);
+        status.setBackgroundColor(Color.parseColor(color));
+
         tableRow.setOnClickListener(null);
     }
 
@@ -107,12 +113,23 @@ public class VaccinateActionUtils {
         Button button = (Button) tableRow.findViewById(R.id.undo);
         button.setVisibility(View.VISIBLE);
 
+        String color = "#31B404";
+        Button status = (Button) tableRow.findViewById(R.id.status);
+        status.setBackgroundColor(Color.parseColor(color));
+
         tableRow.setOnClickListener(null);
     }
 
     public static void undoVaccination(final Context context, TableRow tableRow, final VaccineWrapper tag) {
         Button button = (Button) tableRow.findViewById(R.id.undo);
         button.setVisibility(View.GONE);
+
+        String color = tag.getColor();
+        Button status = (Button) tableRow.findViewById(R.id.status);
+        status.setBackgroundColor(Color.parseColor(color));
+
+        TextView v = (TextView) tableRow.findViewById(R.id.date);
+        v.setText(tag.getFormattedVaccineDate());
 
         if (tag.getStatus().equalsIgnoreCase("due")) {
             tableRow.setOnClickListener(new TableRow.OnClickListener() {
@@ -180,9 +197,68 @@ public class VaccinateActionUtils {
                 return new JSONObject(overridesStr);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(VaccinateActionUtils.class.getName(), "", e);
         }
         return null;
+
+    }
+
+    public static String retrieveExistingAge(FormSubmissionWrapper formSubmissionWrapper) {
+        try {
+            if (formSubmissionWrapper != null) {
+                JSONObject fieldOverrides = formSubmissionWrapper.getOverrides();
+                if (fieldOverrides.has("existing_age")) {
+                    return fieldOverrides.getString("existing_age");
+                }
+            }
+        } catch (JSONException e) {
+            Log.e(VaccinateActionUtils.class.getName(), "", e);
+        }
+        return null;
+    }
+
+    public static boolean addDialogHookCustomFilter(VaccineWrapper tag) {
+        boolean addHook = false;
+
+        int age = 0;
+        String existingAge = tag.getExistingAge();
+        if (StringUtils.isNumeric(existingAge)) {
+            age = Integer.valueOf(existingAge);
+        }
+        switch (tag.getVaccine()) {
+            case penta1:
+            case pcv1:
+            case opv1:
+                if (age > 35)
+                    addHook = true;
+                break;
+            case penta2:
+            case pcv2:
+            case opv2:
+                if (age > 63)
+                    addHook = true;
+                break;
+            case penta3:
+            case pcv3:
+            case opv3:
+            case ipv:
+                if (age > 91)
+                    addHook = true;
+                break;
+            case measles1:
+                if (age > 250)
+                    addHook = true;
+                break;
+            case measles2:
+                if (age > 340)
+                    addHook = true;
+                break;
+            default:
+                addHook =true;
+                break;
+        }
+
+        return addHook;
 
     }
 
