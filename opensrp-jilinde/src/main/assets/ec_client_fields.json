@@ -1,0 +1,66 @@
+{
+  "bindobjects": [
+    {
+      "name": "ec_crvschild",
+      "comment":"",
+      "columns": [
+        {
+          "column_name": "base_entity_id",
+          "type": "Client",
+          "json_mapping": {
+            "field": "baseEntityId"
+          }
+        },
+        {
+          "column_name": "name_Fname",
+          "type": "Client",
+          "json_mapping": {
+            "field": "firstName"
+          }
+        },
+        {
+          "column_name": "mother_name_english",
+          "type": "Client",
+          "json_mapping": {
+            "field": "attributes.motherName"
+          }
+        },
+        {
+          "column_name": "father_name_english",
+          "type": "Client",
+          "json_mapping": {
+            "field": "attributes.fatherName"
+          }
+        },
+        {
+          "column_name": "child_dob",
+          "type": "Client",
+          "json_mapping": {
+            "field": "birthdate"
+          }
+        },
+        {
+          "column_name": "place_of_birth",
+          "type": "Client",
+          "json_mapping": {
+            "field": "attributes.placeofbirth"
+          }
+        },
+        {
+          "column_name": "present_address",
+          "type": "Client",
+          "json_mapping": {
+            "field": "attributes.addressCode"
+          }
+        },
+        {
+          "column_name": "child_nid",
+          "type": "Client",
+          "json_mapping": {
+            "field": "attributes.nationalId"
+          }
+        }
+      ]
+    }
+  ]
+}

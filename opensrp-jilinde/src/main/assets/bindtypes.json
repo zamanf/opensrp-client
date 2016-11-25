@@ -1,0 +1,10 @@
+{
+  "bindobjects": [
+    {
+      "name": "crvschild",
+      "columns": [
+        {"name":"name_Fname"},{"name":"mother_name_english"},{"name":"father_name_english"},{"name":"child_dob"}
+      ]
+    }
+  ]
+}
