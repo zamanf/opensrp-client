@@ -181,7 +181,7 @@ public class HouseHoldSmartRegisterActivity extends SecuredNativeSmartRegisterAc
                 }
 
                 DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(formIndex);
-                displayFormFragment.setFormPartialSaving(false);
+                //displayFormFragment.setFormPartialSaving(false);
                 if (displayFormFragment != null) {
                     displayFormFragment.setFormData(data);
                     displayFormFragment.setRecordId(entityId);
