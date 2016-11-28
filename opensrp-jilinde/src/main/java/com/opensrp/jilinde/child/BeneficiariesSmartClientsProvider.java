@@ -76,24 +76,36 @@ public class BeneficiariesSmartClientsProvider implements SmartRegisterCLientsPr
         TextView cDate  = (TextView) itemView.findViewById(R.id.clinic_date);
         TextView cSite  = (TextView) itemView.findViewById(R.id.clinic_site);
 
+        ImageView profile = (ImageView) itemView.findViewById(R.id.profilepic);
+
         //profileinfolayout.setOnClickListener(onClickListener);
         //profileinfolayout.setTag(smartRegisterClient);
 
         final CommonPersonObjectClient pc = (CommonPersonObjectClient) smartRegisterClient;
 
+        String gender = pc.getColumnmaps().get("gender") != null ? pc.getColumnmaps().get("gender") : "";
+        String gChar= "";
+
+        if(gender.equals("female")){
+            gChar = "F";
+            profile.setImageResource(R.mipmap.woman_placeholder);
+        } else if(gender.equals("male")){
+            gChar= "M";
+            profile.setImageResource(R.mipmap.household_profile_thumb);
+        }
+
         name.setText(humanize(pc.getColumnmaps().get("name") != null ? pc.getColumnmaps().get("name") : ""));
         location.setText(humanize(pc.getColumnmaps().get("location") != null ? pc.getColumnmaps().get("location") : ""));
 
         String age = pc.getColumnmaps().get("age") != null ? pc.getColumnmaps().get("age") : "";
-        String gender = pc.getColumnmaps().get("gender") != null ? pc.getColumnmaps().get("gender") : "";
 
         String ageGenderString = "";
         if (StringUtils.isNotBlank(age) && StringUtils.isNotBlank(gender)) {
-            ageGenderString = age.trim() + ", " + gender.trim();
+            ageGenderString = age.trim() + ", " + gChar;
         } else if (StringUtils.isNotBlank(age)) {
             ageGenderString = age;
         } else if (StringUtils.isNotBlank(gender)) {
-            ageGenderString = gender;
+            ageGenderString = gChar;
         }
 
         ageGender.setText(ageGenderString);
@@ -105,7 +117,6 @@ public class BeneficiariesSmartClientsProvider implements SmartRegisterCLientsPr
 
         cDate.setText("");
         cSite.setText("");
-        //constructRiskFlagView(pc, itemView);
 
         itemView.setLayoutParams(clientViewLayoutParams);
     }
@@ -131,30 +142,6 @@ public class BeneficiariesSmartClientsProvider implements SmartRegisterCLientsPr
         }
 
     }
-
-
-    private void constructRiskFlagView(CommonPersonObjectClient pc, View itemView) {
-//        AllCommonsRepository allancRepository = org.ei.opensrp.Context.getInstance().allCommonsRepositoryobjects("mcaremother");
-//        CommonPersonObject ancobject = allancRepository.findByCaseID(pc.entityId());
-//        AllCommonsRepository allelcorep = org.ei.opensrp.Context.getInstance().allCommonsRepositoryobjects("elco");
-//        CommonPersonObject elcoparent = allelcorep.findByCaseID(ancobject.getRelationalId());
-
-        ImageView hrp = (ImageView) itemView.findViewById(R.id.hrp);
-        ImageView hp = (ImageView) itemView.findViewById(R.id.hr);
-        ImageView vg = (ImageView) itemView.findViewById(R.id.vg);
-
-        vg.setVisibility(View.GONE);
-
-
-        hrp.setVisibility(View.GONE);
-
-        hp.setVisibility(View.GONE);
-
-
-//        if(pc.getDetails().get("FWWOMAGE")!=null &&)
-
-    }
-
 
     @Override
     public SmartRegisterClients updateClients(FilterOption villageFilter, ServiceModeOption serviceModeOption,

@@ -28,7 +28,8 @@ import static org.ei.opensrp.util.Log.logError;
 import static org.ei.opensrp.util.Log.logInfo;
 
 public class FormSubmissionSyncService {
-    public static final String FORM_SUBMISSIONS_PATH = "all-form-submissions";
+    public static final String FORM_SUBMISSIONS_PATH = "form-submissions";
+    public static final String ALL_FORM_SUBMISSIONS_PATH = "all-form-submissions";
     private final HTTPAgent httpAgent;
     private final FormDataRepository formDataRepository;
     private AllSettings allSettings;
@@ -84,7 +85,7 @@ public class FormSubmissionSyncService {
         while (true) {
             String uri = format("{0}/{1}?anm-id={2}&timestamp={3}&batch-size={4}",
                     baseURL,
-                    FORM_SUBMISSIONS_PATH,
+                    ALL_FORM_SUBMISSIONS_PATH,
                     anmId,
                     allSettings.fetchPreviousFormSyncIndex(),
                     downloadBatchSize);
