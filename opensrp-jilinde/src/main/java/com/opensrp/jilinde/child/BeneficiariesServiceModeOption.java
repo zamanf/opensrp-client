@@ -26,7 +26,7 @@ public class BeneficiariesServiceModeOption extends ServiceModeOption {
 
     @Override
     public String name() {
-        return Context.getInstance().applicationContext().getResources().getString(R.string.childregister);
+        return Context.getInstance().applicationContext().getResources().getString(R.string.beneficiary_register);
     }
 
     @Override
@@ -50,8 +50,8 @@ public class BeneficiariesServiceModeOption extends ServiceModeOption {
             @Override
             public int[] headerTextResourceIds() {
                 return new int[]{
-                        R.string.elco_profile, R.string.member_name, R.string.place_of_birth,
-                        R.string.date_of_birth,R.string.nid};
+                        R.string.client, R.string.contact, R.string.enrollment,
+                        R.string.last_visit,R.string.clinic_visit};
             }
         };
     }

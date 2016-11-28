@@ -55,17 +55,10 @@ import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
-//import com.opensrp.crvs.child.BeneficiaryDetailActivity;
-
 /**
  * Created by koros on 11/2/15.
  */
 public class BeneficiariesSmartRegisterFragment extends SecuredNativeSmartRegisterCursorAdapterFragment {
-
-    private SmartRegisterClientsProvider clientProvider = null;
-    private CommonPersonObjectController controller;
-    private VillageController villageController;
-    private DialogOptionMapper dialogOptionMapper;
 
     private final ClientActionHandler clientActionHandler = new ClientActionHandler();
 
@@ -109,14 +102,7 @@ public class BeneficiariesSmartRegisterFragment extends SecuredNativeSmartRegist
             public DialogOption[] filterOptions() {
                 ArrayList<DialogOption> dialogOptionslist = new ArrayList<DialogOption>();
                 dialogOptionslist.add(new CursorCommonObjectFilterOption(getString(R.string.filter_by_all_label),""));
-                dialogOptionslist.add(new CursorCommonObjectFilterOption(getString(R.string.filter_by_encc3),filterStringForENCCRV3()));
 
-                String locationjson = context.anmLocationController().get();
-                LocationTree locationTree = EntityUtils.fromJson(locationjson, LocationTree.class);
-
-                Map<String,TreeNode<String, Location>> locationMap =
-                        locationTree.getLocationsHierarchy();
-                addChildToList(dialogOptionslist,locationMap);
                 DialogOption[] dialogOptions = new DialogOption[dialogOptionslist.size()];
                 for (int i = 0;i < dialogOptionslist.size();i++){
                     dialogOptions[i] = dialogOptionslist.get(i);
@@ -134,10 +120,10 @@ public class BeneficiariesSmartRegisterFragment extends SecuredNativeSmartRegist
             public DialogOption[] sortingOptions() {
                 return new DialogOption[]{
 //                        new ElcoPSRFDueDateSort(),
-                        new CursorCommonObjectSort(getString(R.string.due_status),sortByAlertmethod()),
-                        new CursorCommonObjectSort(Context.getInstance().applicationContext().getString(R.string.elco_alphabetical_sort),sortByChildName()),
-                        new CursorCommonObjectSort(Context.getInstance().applicationContext().getString(R.string.child_details_fathers_name_label),sortByfather_name()),
-                        new CursorCommonObjectSort( Context.getInstance().applicationContext().getString(R.string.child_details_mothers_name_label),sortBymother_name()),
+                       // new CursorCommonObjectSort(getString(R.string.due_status),sortByAlertmethod()),
+                        new CursorCommonObjectSort(Context.getInstance().applicationContext().getString(R.string.alphabetical_sort),sortByName()),
+                        //new CursorCommonObjectSort(Context.getInstance().applicationContext().getString(R.string.child_details_fathers_name_label),sortByfather_name()),
+                        //new CursorCommonObjectSort( Context.getInstance().applicationContext().getString(R.string.child_details_mothers_name_label),sortBymother_name()),
 
 //                        new CommonObjectSort(true,false,true,"age")
                 };
@@ -268,7 +254,7 @@ public class BeneficiariesSmartRegisterFragment extends SecuredNativeSmartRegist
                         if(cs.toString().equalsIgnoreCase("")){
                             filters = "";
                         }else {
-                            filters = "and FWWOMFNAME Like '%" + cs.toString() + "%' or GOBHHID Like '%" + cs.toString() + "%'  or JiVitAHHID Like '%" + cs.toString() + "%' ";
+                            filters = "and name Like '%" + cs.toString() + "%' or site Like '%" + cs.toString() + "%'  or location Like '%" + cs.toString() + "%' ";
                         }
                         return null;
                     }
@@ -335,17 +321,17 @@ public class BeneficiariesSmartRegisterFragment extends SecuredNativeSmartRegist
         }
     }
     public void initializeQueries(){
-        CommonRepository commonRepository = context.commonrepository("ec_crvschild");
-        setTablename("ec_crvschild");
+        CommonRepository commonRepository = context.commonrepository("beneficiaries");
+        setTablename("beneficiaries");
         SmartRegisterQueryBuilder countqueryBUilder = new SmartRegisterQueryBuilder(childMainCountWithJoins());
-        countSelect = countqueryBUilder.mainCondition(" ec_crvschild.name_Fname is not null ");
+        countSelect = countqueryBUilder.mainCondition(" beneficiaries.name is not null ");
         CountExecute();
 
 
         SmartRegisterQueryBuilder queryBUilder = new SmartRegisterQueryBuilder(childMainSelectWithJoins());
-        mainSelect = queryBUilder.mainCondition(" ec_crvschild.name_Fname is not null ");
+        mainSelect = queryBUilder.mainCondition(" beneficiaries.name is not null ");
         queryBUilder.addCondition(filters);
-        Sortqueries = sortByChildName();
+        Sortqueries = sortByName();
         currentquery  = queryBUilder.orderbyCondition(Sortqueries);
 
 
@@ -353,52 +339,25 @@ public class BeneficiariesSmartRegisterFragment extends SecuredNativeSmartRegist
 //        Cursor c = commonRepository.CustomQueryForAdapter(new String[]{"id as _id","relationalid","details"},"household",""+currentlimit,""+currentoffset);
         Cursor c = commonRepository.RawCustomQueryForAdapter(queryBUilder.Endquery(queryBUilder.addlimitandOffset(currentquery, 20, 0)));
         BeneficiariesSmartClientsProvider hhscp = new BeneficiariesSmartClientsProvider(getActivity(),clientActionHandler,context.alertService());
-        clientAdapter = new SmartRegisterPaginatedCursorAdapter(getActivity(), c, hhscp, new CommonRepository("ec_crvschild",new String []{ "name_Fname", "mother_name_english", "father_name_english","place_of_birth","present_address","child_nid","child_dob"}));
+        clientAdapter = new SmartRegisterPaginatedCursorAdapter(getActivity(), c, hhscp, new CommonRepository("beneficiaries",new String []{ "name", "location", "age", "gender", "phone_no", "enrollment_date", "site" }));
         clientsView.setAdapter(clientAdapter);
 //        setServiceModeViewDrawableRight(null);
 //        updateSearchView();
         refresh();
 
     }
-    private String sortByAlertmethod() {
-        return " CASE WHEN alerts.status = 'urgent' THEN '1'"
-                +
-                "WHEN alerts.status = 'upcoming' THEN '2'\n" +
-                "WHEN alerts.status = 'normal' THEN '3'\n" +
-                "WHEN alerts.status = 'expired' THEN '4'\n" +
-                "WHEN alerts.status is Null THEN '5'\n" +
-                "WHEN alerts.status = 'complete' THEN '6'\n" +
-                "Else alerts.status END ASC";
-    }
+
     public String childMainSelectWithJoins(){
-        return "Select ec_crvschild.id as _id,ec_crvschild.relationalid,ec_crvschild.details,ec_crvschild.name_Fname,ec_crvschild.mother_name_english,ec_crvschild.father_name_english,ec_crvschild.place_of_birth,ec_crvschild.present_address,ec_crvschild.child_nid,ec_crvschild.child_dob \n" +
-                "from ec_crvschild\n";
+        return "Select beneficiaries.id as _id, beneficiaries.relationalid, beneficiaries.name, beneficiaries.location, beneficiaries.age, beneficiaries.gender, beneficiaries.phone_no, beneficiaries.enrollment_date, beneficiaries.site \n" +
+                "from beneficiaries\n";
     }
     public String childMainCountWithJoins() {
         return "Select Count(*) \n" +
-                "from ec_crvschild";
+                "from beneficiaries";
     }
 
-    private String sortByChildName(){
-        return " name_Fname ASC";
-    }
-    private String sortBymother_name(){
-        return " mother_name_english ASC";
-    }
-    private String sortByfather_name(){
-        return " father_name_english ASC";
-    }
-    private String sortBychild_dob(){
-        return " child_dob ASC";
-    }
-    private String filterStringForGENDER(){
-        return "and alerts.visitCode LIKE '%enccrv_1%'";
-    }
-    private String filterStringForPLACEOFBIRTH(){
-        return "and alerts.visitCode LIKE '%enccrv_2%'";
-    }
-    private String filterStringForENCCRV3(){
-        return "and alerts.visitCode LIKE '%enccrv_3%'";
+    private String sortByName(){
+        return " name ASC";
     }
 
 }

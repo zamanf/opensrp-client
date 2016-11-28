@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.apache.commons.lang3.StringUtils;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.cursoradapter.SmartRegisterCLientsProviderForCursorAdapter;
 
@@ -61,59 +62,54 @@ public class BeneficiariesSmartClientsProvider implements SmartRegisterCLientsPr
     public void getView(final SmartRegisterClient smartRegisterClient, View convertView) {
         View itemView = convertView;
 
-        LinearLayout profileinfolayout = (LinearLayout)itemView.findViewById(R.id.profile_info_layout);
+        LinearLayout profileinfolayout = (LinearLayout) itemView.findViewById(R.id.profile_info_layout);
 
-//        ImageView profilepic = (ImageView)itemView.findViewById(R.id.profilepic);
-        TextView mothername = (TextView)itemView.findViewById(R.id.mother_name);
-        TextView fathername = (TextView)itemView.findViewById(R.id.father_name);
-        TextView name = (TextView)itemView.findViewById(R.id.name);
-        TextView placeofbirth = (TextView)itemView.findViewById(R.id.placeofbirth);
-        TextView dateofbirth = (TextView)itemView.findViewById(R.id.dateofbirth);
-        TextView age = (TextView)itemView.findViewById(R.id.age);
-        TextView nid = (TextView)itemView.findViewById(R.id.nid);
+        TextView name = (TextView) itemView.findViewById(R.id.name);
+        TextView location = (TextView) itemView.findViewById(R.id.location);
+        TextView ageGender = (TextView) itemView.findViewById(R.id.age_gender);
 
+        TextView contact  = (TextView) itemView.findViewById(R.id.contact);
 
+        TextView eDate  = (TextView) itemView.findViewById(R.id.enrollment_date);
+        TextView eSite  = (TextView) itemView.findViewById(R.id.enrollment_site);
 
-        TextView address = (TextView)itemView.findViewById(R.id.address);
-////        Button due_visit_date = (Button)itemView.findViewById(R.id.hh_due_date);
-//
-//        ImageButton follow_up = (ImageButton)itemView.findViewById(R.id.btn_edit);
         profileinfolayout.setOnClickListener(onClickListener);
         profileinfolayout.setTag(smartRegisterClient);
 
         final CommonPersonObjectClient pc = (CommonPersonObjectClient) smartRegisterClient;
 
-        fathername.setText(humanize(pc.getColumnmaps().get("father_name_english")!=null?pc.getColumnmaps().get("father_name_english"):""));
-        mothername.setText(humanize(pc.getColumnmaps().get("mother_name_english") != null ? pc.getColumnmaps().get("mother_name_english"):""));
-        name.setText(humanize(pc.getColumnmaps().get("name_Fname")!=null?pc.getColumnmaps().get("name_Fname"):""));
-        placeofbirth.setText(pc.getColumnmaps().get("place_of_birth")!=null?pc.getColumnmaps().get("place_of_birth"):"");
-        address.setText(pc.getColumnmaps().get("present_address")!=null?pc.getColumnmaps().get("present_address"):"");
-        age.setText(""+age(pc)+ "d ");
-        String dob=pc.getColumnmaps().get("child_dob")!=null?pc.getColumnmaps().get("child_dob"):"";
-        if(!dob.isEmpty() && dob.contains("T")){
-            dob = dob.substring(0, dob.indexOf("T"));
-        }
-        dateofbirth.setText(dob);
-        if((pc.getColumnmaps().get("child_nid")!=null?pc.getColumnmaps().get("child_nid"):"").length()>0) {
-            nid.setText("NID: " + (pc.getColumnmaps().get("child_nid") != null ? pc.getColumnmaps().get("child_nid") : ""));
-            nid.setVisibility(View.VISIBLE);
-        }else{
-            nid.setVisibility(View.GONE);
+        name.setText(humanize(pc.getColumnmaps().get("name") != null ? pc.getColumnmaps().get("name") : ""));
+        location.setText(humanize(pc.getColumnmaps().get("location") != null ? pc.getColumnmaps().get("location") : ""));
+
+        String age = pc.getColumnmaps().get("age") != null ? pc.getColumnmaps().get("age") : "";
+        String gender = pc.getColumnmaps().get("gender") != null ? pc.getColumnmaps().get("gender") : "";
+
+        String ageGenderString = "";
+        if (StringUtils.isNotBlank(age) && StringUtils.isNotBlank(gender)) {
+            ageGenderString = age.trim() + ", " + gender.trim();
+        } else if (StringUtils.isNotBlank(age)) {
+            ageGenderString = age;
+        } else if (StringUtils.isNotBlank(gender)) {
+            ageGenderString = gender;
         }
 
+        ageGender.setText(ageGenderString);
 
+        contact.setText(pc.getColumnmaps().get("phone_no") != null ? pc.getColumnmaps().get("phone_no") : "");
 
-        constructRiskFlagView(pc,itemView);
+        eDate.setText(pc.getColumnmaps().get("enrollment_date") != null ? pc.getColumnmaps().get("enrollment_date") : "");
+        eSite.setText(humanize(pc.getColumnmaps().get("site") != null ? pc.getColumnmaps().get("site") : ""));
+
+        //constructRiskFlagView(pc, itemView);
 
         itemView.setLayoutParams(clientViewLayoutParams);
     }
 
 
-
     private Long age(CommonPersonObjectClient ancclient) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         try {
-            Date edd_date = format.parse(ancclient.getColumnmaps().get("child_dob")!=null?ancclient.getColumnmaps().get("child_dob") :"");
+            Date edd_date = format.parse(ancclient.getColumnmaps().get("child_dob") != null ? ancclient.getColumnmaps().get("child_dob") : "");
             Calendar thatDay = Calendar.getInstance();
             thatDay.setTime(edd_date);
 
@@ -132,23 +128,22 @@ public class BeneficiariesSmartClientsProvider implements SmartRegisterCLientsPr
     }
 
 
-
-    private void constructRiskFlagView(CommonPersonObjectClient pc,  View itemView) {
+    private void constructRiskFlagView(CommonPersonObjectClient pc, View itemView) {
 //        AllCommonsRepository allancRepository = org.ei.opensrp.Context.getInstance().allCommonsRepositoryobjects("mcaremother");
 //        CommonPersonObject ancobject = allancRepository.findByCaseID(pc.entityId());
 //        AllCommonsRepository allelcorep = org.ei.opensrp.Context.getInstance().allCommonsRepositoryobjects("elco");
 //        CommonPersonObject elcoparent = allelcorep.findByCaseID(ancobject.getRelationalId());
 
-        ImageView hrp = (ImageView)itemView.findViewById(R.id.hrp);
-        ImageView hp = (ImageView)itemView.findViewById(R.id.hr);
-        ImageView vg = (ImageView)itemView.findViewById(R.id.vg);
+        ImageView hrp = (ImageView) itemView.findViewById(R.id.hrp);
+        ImageView hp = (ImageView) itemView.findViewById(R.id.hr);
+        ImageView vg = (ImageView) itemView.findViewById(R.id.vg);
 
-            vg.setVisibility(View.GONE);
+        vg.setVisibility(View.GONE);
 
 
-            hrp.setVisibility(View.GONE);
+        hrp.setVisibility(View.GONE);
 
-            hp.setVisibility(View.GONE);
+        hp.setVisibility(View.GONE);
 
 
 //        if(pc.getDetails().get("FWWOMAGE")!=null &&)
@@ -178,11 +173,11 @@ public class BeneficiariesSmartClientsProvider implements SmartRegisterCLientsPr
 
     @Override
     public View inflatelayoutForCursorAdapter() {
-        return (ViewGroup) inflater().inflate(R.layout.smart_register_crvs_child_client, null);
+        return (ViewGroup) inflater().inflate(R.layout.smart_register_jilinde_client, null);
     }
 
-    class alertTextandStatus{
-        String alertText ,alertstatus;
+    class alertTextandStatus {
+        String alertText, alertstatus;
 
         public alertTextandStatus(String alertText, String alertstatus) {
             this.alertText = alertText;

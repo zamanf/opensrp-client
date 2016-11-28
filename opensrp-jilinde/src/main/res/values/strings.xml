@@ -311,7 +311,7 @@
     <string name="household_entries">All Household Entries</string>
     <string name="hh_register_title_in_short">HH</string>
 
-    <string name="elco_profile">PROFILE</string>
+
     <string name="elco_unique_id">UNIQUE ID</string>
     <string name="elco_lmp">LMP</string>
     <string name="elco_psrf_due_date">PSRF DUE DATE</string>
@@ -337,7 +337,7 @@
     <string name="hhiid_jivita_elco_label">HHID-JiVitA:</string>
     <string name="hhid_gob_elco_label">HHID-Government:</string>
     <string name="elco_details_mauza">Mauza:</string>
-    <string name="elco_alphabetical_sort">Alphabetical (Woman name)</string>
+
     <string name="anc_nbnf_due_date">BNF DUE</string>
     <string name="anc_reminder_status">ANC STATUS</string>
     <string name="anc_edd_ga">EDD &amp; GA</string>
@@ -404,15 +404,21 @@
     <string name="pregnancy_outcome">Pregnancy Outcome</string>
     <string name="pnc_typeofdelivery">Type of Delivery</string>
     <string name="date_of_birth">DATE OF BIRTH</string>
+
     <string name="child_details_mothers_name_label">Mother\'s Name:</string>
     <string name="pnc_Details_date_of_outcome">Date of Outcome</string>
-    <string name="childregister">Child Register</string>
-    <string name="member_name">MEMBER NAMES</string>
-    <string name="place_of_birth">PLACE OF BIRTH</string>
+
     <string name="nid">NID</string>
     <string name="father_information">Father\'s Information</string>
     <string name="mother_information">Mother\'s Information</string>
     <string name="app_name_jilinde">opensrp-Jilinde</string>
 
+    <string name="beneficiary_register">Beneficiary Register</string>
+    <string name="contact">Contact</string>
+    <string name="enrollment">Enrollment</string>
+    <string name="client">Client</string>
+    <string name="alphabetical_sort">Alphabetical</string>
+    <string name="last_visit">Last Visit</string>
+    <string name="clinic_visit">Clinic Visit</string>
 
 </resources>
