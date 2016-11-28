@@ -1,4 +1,4 @@
-package com.opensrp.crvs.fragment;
+package com.opensrp.jilinde.fragment;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
@@ -11,13 +11,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 
-import com.opensrp.crvs.LoginActivity;
-import com.opensrp.crvs.R;
-import com.opensrp.crvs.child.CRVSChildServiceModeOption;
-import com.opensrp.crvs.child.CRVSChildSmartClientsProvider;
-import com.opensrp.crvs.child.CRVSChildSmartRegisterActivity;
-import com.opensrp.crvs.child.CRVSDueDateSort;
-import com.opensrp.crvs.child.ChildDetailActivity;
+import com.opensrp.jilinde.LoginActivity;
+import com.opensrp.jilinde.R;
+import com.opensrp.jilinde.child.CRVSChildServiceModeOption;
+import com.opensrp.jilinde.child.CRVSChildSmartClientsProvider;
+import com.opensrp.jilinde.child.CRVSChildSmartRegisterActivity;
+import com.opensrp.jilinde.child.CRVSDueDateSort;
+import com.opensrp.jilinde.child.ChildDetailActivity;
 //import com.opensrp.crvs.child.ChildDetailActivity;
 
 import org.ei.opensrp.Context;
@@ -35,11 +35,9 @@ import org.ei.opensrp.cursoradapter.SmartRegisterQueryBuilder;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.util.StringUtil;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
-import org.ei.opensrp.view.contract.ECClient;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.contract.SmartRegisterClients;
 import org.ei.opensrp.view.controller.VillageController;
-import org.ei.opensrp.view.customControls.CustomFontTextView;
 import org.ei.opensrp.view.dialog.AllClientsFilter;
 import org.ei.opensrp.view.dialog.DialogOption;
 import org.ei.opensrp.view.dialog.DialogOptionMapper;

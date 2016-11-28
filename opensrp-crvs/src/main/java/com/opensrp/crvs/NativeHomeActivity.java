@@ -1,6 +1,5 @@
 package com.opensrp.crvs;
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.util.Log;
 import android.view.Menu;

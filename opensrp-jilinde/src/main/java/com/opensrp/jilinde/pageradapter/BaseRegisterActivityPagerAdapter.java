@@ -1,4 +1,4 @@
-package com.opensrp.crvs.pageradapter;
+package com.opensrp.jilinde.pageradapter;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

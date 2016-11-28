@@ -1,9 +1,9 @@
-package com.opensrp.crvs.application;
+package com.opensrp.jilinde.application;
 
 import android.content.Intent;
 import android.content.res.Configuration;
 
-import com.opensrp.crvs.LoginActivity;
+import com.opensrp.jilinde.LoginActivity;
 
 import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;

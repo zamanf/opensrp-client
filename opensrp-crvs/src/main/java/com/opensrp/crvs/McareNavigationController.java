@@ -2,14 +2,11 @@ package com.opensrp.crvs;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 
 
 import com.opensrp.crvs.child.CRVSChildSmartRegisterActivity;
 
 import org.ei.opensrp.view.controller.ANMController;
-
-import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
 public class McareNavigationController extends org.ei.opensrp.view.controller.NavigationController {
     private Activity activity;

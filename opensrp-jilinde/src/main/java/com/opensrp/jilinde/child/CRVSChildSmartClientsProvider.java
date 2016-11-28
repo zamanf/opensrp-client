@@ -1,4 +1,4 @@
-package com.opensrp.crvs.child;
+package com.opensrp.jilinde.child;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,7 +12,7 @@ import android.widget.TextView;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.cursoradapter.SmartRegisterCLientsProviderForCursorAdapter;
 
-import com.opensrp.crvs.R;
+import com.opensrp.jilinde.R;
 
 import org.ei.opensrp.service.AlertService;
 import org.ei.opensrp.view.contract.SmartRegisterClient;

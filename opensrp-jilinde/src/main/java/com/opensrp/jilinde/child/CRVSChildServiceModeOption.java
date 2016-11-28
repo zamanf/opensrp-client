@@ -1,8 +1,8 @@
-package com.opensrp.crvs.child;
+package com.opensrp.jilinde.child;
 
 import android.view.View;
 
-import com.opensrp.crvs.R;
+import com.opensrp.jilinde.R;
 
 import org.ei.opensrp.Context;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;

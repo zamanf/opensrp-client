@@ -1,4 +1,4 @@
-package com.opensrp.crvs.fragment;
+package com.opensrp.jilinde.fragment;
 
 import android.app.DialogFragment;
 import android.os.Bundle;

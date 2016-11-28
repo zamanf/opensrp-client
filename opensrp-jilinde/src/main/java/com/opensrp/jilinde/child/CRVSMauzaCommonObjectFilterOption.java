@@ -1,4 +1,4 @@
-package com.opensrp.crvs.child;
+package com.opensrp.jilinde.child;
 
 import org.ei.opensrp.cursoradapter.CursorFilterOption;
 import org.ei.opensrp.view.contract.SmartRegisterClient;

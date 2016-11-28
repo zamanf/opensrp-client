@@ -1,4 +1,4 @@
-package com.opensrp.crvs;
+package com.opensrp.jilinde;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -91,7 +91,7 @@ public class LoginActivity extends Activity {
         initializeProgressDialog();
         getActionBar().setTitle("");
         getActionBar().setIcon(getResources().getDrawable(R.mipmap.login_header_logo));
-        getActionBar().setBackgroundDrawable(getResources().getDrawable(com.opensrp.crvs.R.color.action_bar_background));
+        getActionBar().setBackgroundDrawable(getResources().getDrawable(com.opensrp.jilinde.R.color.action_bar_background));
         setLanguage();
 
     }
