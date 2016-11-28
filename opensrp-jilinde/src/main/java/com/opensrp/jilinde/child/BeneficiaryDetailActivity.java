@@ -33,7 +33,7 @@ import static org.ei.opensrp.util.StringUtil.humanize;
 /**
  * Created by raihan on 5/11/15.
  */
-public class ChildDetailActivity extends Activity {
+public class BeneficiaryDetailActivity extends Activity {
 
     //image retrieving
     private static final String TAG = "ImageGridFragment";

@@ -33,7 +33,7 @@ import static org.ei.opensrp.util.StringUtil.humanize;
 /**
  * Created by user on 2/12/15.
  */
-public class CRVSChildSmartClientsProvider implements SmartRegisterCLientsProviderForCursorAdapter {
+public class BeneficiariesSmartClientsProvider implements SmartRegisterCLientsProviderForCursorAdapter {
 
     private final LayoutInflater inflater;
     private final Context context;
@@ -44,9 +44,9 @@ public class CRVSChildSmartClientsProvider implements SmartRegisterCLientsProvid
     private final AlertService alertService;
 
 
-    public CRVSChildSmartClientsProvider(Context context,
-                                         View.OnClickListener onClickListener,
-                                         AlertService alertService) {
+    public BeneficiariesSmartClientsProvider(Context context,
+                                             View.OnClickListener onClickListener,
+                                             AlertService alertService) {
         this.onClickListener = onClickListener;
         this.alertService = alertService;
         this.context = context;

@@ -21,12 +21,12 @@
         <activity android:name=".NativeHomeActivity"
             android:theme="@style/AppTheme"
             android:screenOrientation="landscape"/>
-        <activity android:name=".child.CRVSChildSmartRegisterActivity"
+        <activity android:name=".child.BeneficiariesSmartRegisterActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@style/AppThemeNoActionBarAndTitle"
             android:windowSoftInputMode="adjustResize"
             android:screenOrientation="landscape"/>
-        <activity android:name=".child.ChildDetailActivity"
+        <activity android:name=".child.BeneficiaryDetailActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@style/AppThemeNoActionBarAndTitle"
             android:windowSoftInputMode="adjustResize"

@@ -10,48 +10,38 @@ import android.util.Log;
 
 import com.opensrp.jilinde.LoginActivity;
 import com.opensrp.jilinde.R;
-import com.opensrp.jilinde.fragment.CRVSChildSmartRegisterFragment;
+import com.opensrp.jilinde.fragment.BeneficiariesSmartRegisterFragment;
 import com.opensrp.jilinde.pageradapter.BaseRegisterActivityPagerAdapter;
 
 import org.ei.opensrp.Context;
 import org.ei.opensrp.adapter.SmartRegisterPaginatedAdapter;
-import org.ei.opensrp.commonregistry.CommonPersonObjectController;
+import org.ei.opensrp.domain.form.FieldOverrides;
 import org.ei.opensrp.domain.form.FormSubmission;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.repository.AllSharedPreferences;
 import org.ei.opensrp.service.ZiggyService;
 import org.ei.opensrp.sync.ClientProcessor;
 import org.ei.opensrp.util.FormUtils;
-import org.ei.opensrp.util.StringUtil;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
-import org.ei.opensrp.view.controller.VillageController;
 import org.ei.opensrp.view.dialog.DialogOption;
-import org.ei.opensrp.view.dialog.DialogOptionMapper;
 import org.ei.opensrp.view.dialog.DialogOptionModel;
 import org.ei.opensrp.view.dialog.EditOption;
 import org.ei.opensrp.view.fragment.DisplayFormFragment;
 import org.ei.opensrp.view.fragment.SecuredNativeSmartRegisterFragment;
 import org.ei.opensrp.view.viewpager.OpenSRPViewPager;
+import org.json.JSONException;
 import org.json.JSONObject;
-import org.opensrp.api.domain.Location;
-import org.opensrp.api.util.TreeNode;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
-public class CRVSChildSmartRegisterActivity extends SecuredNativeSmartRegisterActivity {
-
-    private SmartRegisterClientsProvider clientProvider = null;
-    private CommonPersonObjectController controller;
-    private VillageController villageController;
-    private DialogOptionMapper dialogOptionMapper;
+public class BeneficiariesSmartRegisterActivity extends SecuredNativeSmartRegisterActivity {
 
     @Bind(R.id.view_pager)
     OpenSRPViewPager mPager;
@@ -70,7 +60,7 @@ public class CRVSChildSmartRegisterActivity extends SecuredNativeSmartRegisterAc
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         formNames = this.buildFormNameList();
-        mBaseFragment = new CRVSChildSmartRegisterFragment();
+        mBaseFragment = new BeneficiariesSmartRegisterFragment();
 
         // Instantiate a ViewPager and a PagerAdapter.
         mPagerAdapter = new BaseRegisterActivityPagerAdapter(getSupportFragmentManager(), formNames, mBaseFragment);
@@ -86,7 +76,8 @@ public class CRVSChildSmartRegisterActivity extends SecuredNativeSmartRegisterAc
     }
     private String[] buildFormNameList(){
         List<String> formNames = new ArrayList<String>();
-        formNames.add("child_registration");
+        formNames.add("enrollment_form");
+        formNames.add("clinic_visit_form");
 
 
 
@@ -125,8 +116,16 @@ public class CRVSChildSmartRegisterActivity extends SecuredNativeSmartRegisterAc
 
     @Override
     public void startRegistration() {
-
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("dummy", "dummyValue");
+            FieldOverrides fieldOverrides = new FieldOverrides(jsonObject.toString());
+            startFormActivity(formNames[0], null, fieldOverrides.getJSONString());
+        }catch (JSONException e){
+            Log.e(LOG_TAG, "", e);
+        }
     }
+
     @Override
     public void showFragmentDialog(DialogOptionModel dialogOptionModel, Object tag) {
         try {
@@ -189,56 +188,6 @@ public class CRVSChildSmartRegisterActivity extends SecuredNativeSmartRegisterAc
         }
 
     }
-//    public void updateSearchView(){
-//        getSearchView().addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-//            }
-//
-//            @Override
-//            public void onTextChanged(final CharSequence cs, int start, int before, int count) {
-//                (new AsyncTask() {
-//                    SmartRegisterClients filteredClients;
-//
-//                    @Override
-//                    protected Object doInBackground(Object[] params) {
-////                        currentSearchFilter = new ElcoSearchOption(cs.toString());
-//                        setCurrentSearchFilter(new ElcoSearchOption(cs.toString()));
-//                        filteredClients = getClientsAdapter().getListItemProvider()
-//                                .updateClients(getCurrentVillageFilter(), getCurrentServiceModeOption(),
-//                                        getCurrentSearchFilter(), getCurrentSortOption());
-//
-//
-//                        return null;
-//                    }
-//
-//                    @Override
-//                    protected void onPostExecute(Object o) {
-////                        clientsAdapter
-////                                .refreshList(currentVillageFilter, currentServiceModeOption,
-////                                        currentSearchFilter, currentSortOption);
-//                        getClientsAdapter().refreshClients(filteredClients);
-//                        getClientsAdapter().notifyDataSetChanged();
-//                        getSearchCancelView().setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
-//                        super.onPostExecute(o);
-//                    }
-//                }).execute();
-////                currentSearchFilter = new HHSearchOption(cs.toString());
-////                clientsAdapter
-////                        .refreshList(currentVillageFilter, currentServiceModeOption,
-////                                currentSearchFilter, currentSortOption);
-////
-////                searchCancelView.setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
-//
-//
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable editable) {
-//
-//            }
-//        });
-//    }
 
     @Override
     public void saveFormSubmission(String formSubmission, String id, String formName, JSONObject fieldOverrides){
@@ -352,20 +301,6 @@ public class CRVSChildSmartRegisterActivity extends SecuredNativeSmartRegisterAc
 
     public DisplayFormFragment getDisplayFormFragmentAtIndex(int index) {
         return  (DisplayFormFragment)findFragmentByPosition(index);
-    }
-    public void addChildToList(ArrayList<DialogOption> dialogOptionslist,Map<String,TreeNode<String, Location>> locationMap){
-        for(Map.Entry<String, TreeNode<String, Location>> entry : locationMap.entrySet()) {
-
-            if(entry.getValue().getChildren() != null) {
-                addChildToList(dialogOptionslist,entry.getValue().getChildren());
-
-            }else{
-                StringUtil.humanize(entry.getValue().getLabel());
-                String name = StringUtil.humanize(entry.getValue().getLabel());
-                dialogOptionslist.add(new CRVSMauzaCommonObjectFilterOption(name.replace(" ","_"),"existing_Mauzapara",name));
-
-            }
-        }
     }
 
     public void retrieveAndSaveUnsubmittedFormData(){

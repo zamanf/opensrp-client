@@ -19,12 +19,12 @@ import java.util.List;
 /**
  * Created by Raihan Ahmed on 3/22/15.
  */
-public class CRVSDueDateSort implements SortOption {
+public class BeneficiariesDueDateSort implements SortOption {
 
 
 
 
-    public CRVSDueDateSort() {
+    public BeneficiariesDueDateSort() {
 
     }
 

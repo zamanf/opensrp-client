@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 
 
-import com.opensrp.jilinde.child.CRVSChildSmartRegisterActivity;
+import com.opensrp.jilinde.child.BeneficiariesSmartRegisterActivity;
 
 import org.ei.opensrp.view.controller.ANMController;
 
@@ -19,7 +19,7 @@ public class McareNavigationController extends org.ei.opensrp.view.controller.Na
     }
 
     public void startChildSmartRegistry() {
-        activity.startActivity(new Intent(activity, CRVSChildSmartRegisterActivity.class));
+        activity.startActivity(new Intent(activity, BeneficiariesSmartRegisterActivity.class));
     }
 
 

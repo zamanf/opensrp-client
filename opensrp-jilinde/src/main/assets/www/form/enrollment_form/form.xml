@@ -1,5 +1,5 @@
 <form autocomplete="off" novalidate="novalidate" class="or clearfix theme-grid" dir="ltr" id="enrollment_form_1">
-    <!--This form was created by transforming a OpenRosa-flavored (X)Form using an XSLT sheet created by Enketo LLC.--><section class="form-logo"> <img src="/media/get/https/api.ona.io/cagulas/xformsMedia/164088/405110.png" alt="form logo"/></section><h3 id="form-title">ENROLLMENT FORM</h3><select id="form-languages" style="display:none;" data-default-lang="default"><option value="default">default</option> </select>
+    <!--This form was created by transforming a OpenRosa-flavored (X)Form using an XSLT sheet created by Enketo LLC.--><section class="form-logo"> <img src="https://api.ona.io/cagulas/xformsMedia/164088/405110.png" alt="form logo"/></section><h3 id="form-title">ENROLLMENT FORM</h3><select id="form-languages" style="display:none;" data-default-lang="default"><option value="default">default</option> </select>
 
 
     <section class="or-group-data " name="/Enrollment_Form/facility_info1"><fieldset class="question simple-select or-appearance-w1 "><fieldset><legend><span lang="" class="question-label active">County</span>
