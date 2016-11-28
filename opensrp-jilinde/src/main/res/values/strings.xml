@@ -425,4 +425,5 @@
     <string name="register_label">Register</string>
     <string name="clinic_visit_form">Clinic Visit Form</string>
 
+    <string name="follow_up">Follow Up</string>
 </resources>

@@ -4,70 +4,44 @@
     android:layout_width="fill_parent"
     android:layout_height="@dimen/list_item_height"
     android:orientation="horizontal"
-    android:weightSum="11.5">
+    android:weightSum="11">
 
     <LinearLayout
         android:id="@+id/profile_info_layout"
         android:layout_width="0dp"
         android:layout_height="fill_parent"
-        android:layout_weight="3.5"
+        android:layout_weight="3"
         android:orientation="horizontal">
 
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/profilepic"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_marginLeft="5dp"
-                android:scaleType="fitXY"
-                android:src="@drawable/child_boy_infant" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/hrp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@mipmap/flag_hrp"
-                    android:visibility="invisible" />
-
-                <ImageView
-                    android:id="@+id/hr"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/flag_hr"
-                    android:visibility="invisible" />
-
-                <ImageView
-                    android:id="@+id/vg"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@mipmap/flag_vg"
-                    android:visibility="invisible" />
-            </LinearLayout>
-        </FrameLayout>
+        <ImageView
+            android:id="@+id/profilepic"
+            android:layout_width="@dimen/client_profile_pic_width"
+            android:layout_height="80dp"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="2dp"
+            android:scaleType="fitXY"
+            android:src="@mipmap/household_profile_thumb" />
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="fill_parent"
-            android:layout_marginLeft="3dp"
+            android:layout_marginBottom="1dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="1dp"
             android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:weightSum="3">
 
             <org.ei.opensrp.view.customControls.CustomFontTextView
                 android:id="@+id/name"
-                style="@style/CustomFontTextViewStyle.ListView.Medium.NoPadding"
+                style="@style/CustomFontTextViewStyle.ListView.Bold.NoPadding"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Medium Text"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <org.ei.opensrp.view.customControls.CustomFontTextView
                 android:id="@+id/location"
@@ -76,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Medium Text"
-                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="14sp" />
 
             <org.ei.opensrp.view.customControls.CustomFontTextView
@@ -86,19 +60,18 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Medium Text"
-                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="14sp" />
+
         </LinearLayout>
 
-        <org.ei.opensrp.view.customControls.CustomFontTextView
-            android:id="@+id/age_old"
-            style="@style/CustomFontTextViewStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="1dp"
-            android:gravity="right"
-            android:text="00"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+        <Button
+            android:id="@+id/warnbutton"
+            android:layout_width="25dp"
+            android:layout_height="20dp"
+            android:layout_gravity="top"
+            android:layout_margin="1dp"
+            android:background="@mipmap/warning"
             android:visibility="invisible" />
 
     </LinearLayout>
@@ -122,7 +95,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
             android:text="New Text"
-            android:textSize="12sp" />
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="14sp" />
 
         <org.ei.opensrp.view.customControls.CustomFontTextView
             android:id="@+id/contact2"
@@ -130,7 +104,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="New Text"
-            android:textSize="12sp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="14sp"
             android:visibility="invisible" />
     </LinearLayout>
 
@@ -153,7 +128,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
             android:text="New Text"
-            android:textSize="12sp" />
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="14sp" />
 
         <org.ei.opensrp.view.customControls.CustomFontTextView
             android:id="@+id/enrollment_site"
@@ -161,7 +137,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="New Text"
-            android:textSize="12sp" />
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="14sp" />
     </LinearLayout>
 
     <ImageView
@@ -183,7 +160,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
             android:text="New Text"
-            android:textSize="12sp" />
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="14sp" />
 
         <org.ei.opensrp.view.customControls.CustomFontTextView
             android:id="@+id/clinic_site"
@@ -191,9 +169,40 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="New Text"
-
-            android:textSize="12sp" />
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="14sp" />
     </LinearLayout>
+
+    <ImageView
+        android:layout_width="@dimen/smart_register_client_divider_height"
+        android:layout_height="fill_parent"
+        android:src="@color/smart_register_client_divider_color" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="2"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:id="@+id/follow_up"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            android:background="@color/smart_register_blue">
+
+            <org.ei.opensrp.view.customControls.CustomFontTextView
+                android:id="@+id/hh_due_date"
+                style="@style/CustomFontTextViewStyle.ListView.Medium"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:gravity="center"
+                android:maxLines="10"
+                android:textColor="@color/status_bar_text_almost_white"
+                android:text="@string/follow_up" />
+        </FrameLayout>
+    </LinearLayout>
+
 
     <ImageView
         android:layout_width="@dimen/smart_register_client_divider_height"
@@ -204,11 +213,12 @@
         android:id="@+id/btn_edit"
         android:layout_width="0dp"
         android:layout_height="fill_parent"
-        android:layout_weight="2"
+        android:layout_weight="0"
         android:background="@drawable/edit_button_background"
         android:clickable="true"
         android:focusable="true"
         android:gravity="center"
         android:scaleType="center"
-        android:src="@drawable/ic_pencil" />
+        android:src="@drawable/ic_pencil"
+        android:visibility="gone" />
 </LinearLayout>

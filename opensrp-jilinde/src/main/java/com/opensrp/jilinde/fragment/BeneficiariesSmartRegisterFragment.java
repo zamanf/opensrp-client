@@ -252,7 +252,7 @@ public class BeneficiariesSmartRegisterFragment extends SecuredNativeSmartRegist
                         if(cs.toString().equalsIgnoreCase("")){
                             filters = "";
                         }else {
-                            filters = "and name Like '%" + cs.toString() + "%' or site Like '%" + cs.toString() + "%'  or location Like '%" + cs.toString() + "%' ";
+                            filters = "and name Like '%" + cs.toString() + "%' or location Like '%" + cs.toString() + "%'  or phone_no Like '%" + cs.toString() + "%' ";
                         }
                         return null;
                     }

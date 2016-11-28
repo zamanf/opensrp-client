@@ -39,12 +39,12 @@ public class BeneficiariesServiceModeOption extends ServiceModeOption {
 
             @Override
             public int weightSum() {
-                return 20;
+                return 22;
             }
 
             @Override
             public int[] weights() {
-                return new int[]{7,4,3,3,3};
+                return new int[]{6,4,4,4,4};
             }
 
             @Override

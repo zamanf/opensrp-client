@@ -215,6 +215,7 @@ public class BeneficiariesSmartRegisterActivity extends SecuredNativeSmartRegist
             ZiggyService ziggyService = context.ziggyService();
             ziggyService.saveForm(getParams(submission), submission.instance());
 
+            switchToBaseFragment(formSubmission);
 
         }catch (Exception e){
             DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(currentPage);
