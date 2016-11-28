@@ -187,7 +187,7 @@ public class BeneficiariesSmartRegisterFragment extends SecuredNativeSmartRegist
     }
 
     private DialogOption[] getEditOptionsforChild() {
-        return ((BeneficiariesSmartRegisterActivity)getActivity()).getEditOptionsforChild();
+        return ((BeneficiariesSmartRegisterActivity)getActivity()).getEditOptionsforBeneficiary();
     }
 
 
@@ -201,20 +201,18 @@ public class BeneficiariesSmartRegisterFragment extends SecuredNativeSmartRegist
                     Intent intent = new Intent(getActivity(),BeneficiaryDetailActivity.class);
                     startActivity(intent);
                     break;
-//                case R.id.encc_reminder_due_date:
-//                    CustomFontTextView enccreminderDueDate = (CustomFontTextView)view.findViewById(R.id.encc_reminder_due_date);
-//                    Log.v("do as you will", (String) view.getTag(R.id.textforEnccRegister));
-//                    showFragmentDialog(new EditDialogOptionModelForChild((String)view.getTag(R.id.textforEnccRegister),(String)view.getTag(R.id.AlertStatustextforEnccRegister)), view.getTag(R.id.clientobject));
-//                    break;
+                case R.id.btn_edit:
+                    showFragmentDialog(new EditDialogOptionModelForBeneficiary(), view.getTag());
+                    break;
             }
         }
 
 
     }
 
-    private class EditDialogOptionModelForChild implements DialogOptionModel {
+    private class EditDialogOptionModelForBeneficiary implements DialogOptionModel {
 
-        public EditDialogOptionModelForChild() {
+        public EditDialogOptionModelForBeneficiary() {
         }
 
         @Override

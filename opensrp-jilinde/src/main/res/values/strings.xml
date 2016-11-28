@@ -423,4 +423,6 @@
 
     <string name="home_beneficiary_label">Beneficiary</string>
     <string name="register_label">Register</string>
+    <string name="clinic_visit_form">Clinic Visit Form</string>
+
 </resources>

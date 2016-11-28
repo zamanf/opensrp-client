@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -75,6 +76,11 @@ public class BeneficiariesSmartClientsProvider implements SmartRegisterCLientsPr
 
         TextView cDate  = (TextView) itemView.findViewById(R.id.clinic_date);
         TextView cSite  = (TextView) itemView.findViewById(R.id.clinic_site);
+        ImageButton editBtn  = (ImageButton) itemView.findViewById(R.id.btn_edit);
+        editBtn.setOnClickListener(onClickListener);
+        editBtn.setTag(smartRegisterClient);
+
+
 
         //profileinfolayout.setOnClickListener(onClickListener);
         //profileinfolayout.setTag(smartRegisterClient);

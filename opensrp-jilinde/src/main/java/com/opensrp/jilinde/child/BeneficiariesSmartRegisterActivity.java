@@ -15,6 +15,7 @@ import com.opensrp.jilinde.pageradapter.BaseRegisterActivityPagerAdapter;
 
 import org.ei.opensrp.Context;
 import org.ei.opensrp.adapter.SmartRegisterPaginatedAdapter;
+import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.domain.form.FieldOverrides;
 import org.ei.opensrp.domain.form.FormSubmission;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
@@ -27,6 +28,7 @@ import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.dialog.DialogOption;
 import org.ei.opensrp.view.dialog.DialogOptionModel;
 import org.ei.opensrp.view.dialog.EditOption;
+import org.ei.opensrp.view.dialog.OpenFormOption;
 import org.ei.opensrp.view.fragment.DisplayFormFragment;
 import org.ei.opensrp.view.fragment.SecuredNativeSmartRegisterFragment;
 import org.ei.opensrp.view.viewpager.OpenSRPViewPager;
@@ -34,6 +36,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.Bind;
@@ -137,9 +140,19 @@ public class BeneficiariesSmartRegisterActivity extends SecuredNativeSmartRegist
     }
 
 
-    public DialogOption[] getEditOptionsforChild() {
+    public DialogOption[] getEditOptionsforBeneficiary() {
 
-            return new DialogOption[]{};
+        HashMap<String,String> overridemap = new HashMap<String,String>();
+       // CommonPersonObjectClient pc = HouseHoldDetailActivity.householdclient;
+//        String alertstate = "";
+//        if(pc!=null) {
+//            overridemap.put("existing_ELCO", pc.getDetails().get("ELCO"));
+//            overridemap.put("existing_location", pc.getDetails().get("existing_location"));
+//            overridemap.put("current_formStatus", alertstate);
+//        }
+        return new DialogOption[]{
+                new OpenFormOption(getResources().getString(R.string.clinic_visit_form), "clinic_visit_form", formController, overridemap, OpenFormOption.ByColumnAndByDetails.bydefault)
+        };
 
     }
     private class EditDialogOptionModelForChild implements DialogOptionModel {
@@ -152,7 +165,7 @@ public class BeneficiariesSmartRegisterActivity extends SecuredNativeSmartRegist
 
         @Override
         public DialogOption[] getDialogOptions() {
-            return getEditOptionsforChild();
+            return getEditOptionsforBeneficiary();
         }
 
         @Override
