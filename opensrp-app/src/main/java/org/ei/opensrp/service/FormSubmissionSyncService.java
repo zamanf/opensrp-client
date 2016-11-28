@@ -28,7 +28,7 @@ import static org.ei.opensrp.util.Log.logError;
 import static org.ei.opensrp.util.Log.logInfo;
 
 public class FormSubmissionSyncService {
-    public static final String FORM_SUBMISSIONS_PATH = "form-submissions";
+    public static final String FORM_SUBMISSIONS_PATH = "all-form-submissions";
     private final HTTPAgent httpAgent;
     private final FormDataRepository formDataRepository;
     private AllSettings allSettings;

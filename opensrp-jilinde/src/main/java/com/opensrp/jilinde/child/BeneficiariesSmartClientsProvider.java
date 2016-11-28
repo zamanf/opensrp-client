@@ -73,8 +73,11 @@ public class BeneficiariesSmartClientsProvider implements SmartRegisterCLientsPr
         TextView eDate  = (TextView) itemView.findViewById(R.id.enrollment_date);
         TextView eSite  = (TextView) itemView.findViewById(R.id.enrollment_site);
 
-        profileinfolayout.setOnClickListener(onClickListener);
-        profileinfolayout.setTag(smartRegisterClient);
+        TextView cDate  = (TextView) itemView.findViewById(R.id.clinic_date);
+        TextView cSite  = (TextView) itemView.findViewById(R.id.clinic_site);
+
+        //profileinfolayout.setOnClickListener(onClickListener);
+        //profileinfolayout.setTag(smartRegisterClient);
 
         final CommonPersonObjectClient pc = (CommonPersonObjectClient) smartRegisterClient;
 
@@ -100,6 +103,8 @@ public class BeneficiariesSmartClientsProvider implements SmartRegisterCLientsPr
         eDate.setText(pc.getColumnmaps().get("enrollment_date") != null ? pc.getColumnmaps().get("enrollment_date") : "");
         eSite.setText(humanize(pc.getColumnmaps().get("site") != null ? pc.getColumnmaps().get("site") : ""));
 
+        cDate.setText("");
+        cSite.setText("");
         //constructRiskFlagView(pc, itemView);
 
         itemView.setLayoutParams(clientViewLayoutParams);

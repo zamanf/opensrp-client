@@ -153,7 +153,7 @@ public class NativeHomeActivity extends SecuredActivity {
     private void updateRegisterCounts(HomeContext homeContext) {
                SmartRegisterQueryBuilder sqb = new SmartRegisterQueryBuilder();
 
-        Cursor childcountcursor = context.commonrepository("ec_crvschild").RawCustomQueryForAdapter(sqb.queryForCountOnRegisters("ec_crvschild"," ec_crvschild.name_Fname is not NUll "));
+        Cursor childcountcursor = context.commonrepository("beneficiaries").RawCustomQueryForAdapter(sqb.queryForCountOnRegisters("beneficiaries"," beneficiaries.name is not NUll "));
         childcountcursor.moveToFirst();
         childcount= childcountcursor.getInt(0);
         childcountcursor.close();

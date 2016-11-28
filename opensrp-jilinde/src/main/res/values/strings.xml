@@ -21,7 +21,7 @@
     <string name="home_pnc_label">PNC</string>
     <string name="home_child_label">Child</string>
     <string name="home_report_label">Reporting</string>
-    <string name="register_label">Register</string>
+
     <string name="home_videos_label">Videos</string>
 
     <string name="videos_cannot_play_video_dialog_title">Cannot play video.</string>
@@ -421,4 +421,6 @@
     <string name="last_visit">Last Visit</string>
     <string name="clinic_visit">Clinic Visit</string>
 
+    <string name="home_beneficiary_label">Beneficiary</string>
+    <string name="register_label">Register</string>
 </resources>

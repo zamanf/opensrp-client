@@ -191,6 +191,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="New Text"
+
             android:textSize="12sp" />
     </LinearLayout>
 
@@ -209,5 +210,5 @@
         android:focusable="true"
         android:gravity="center"
         android:scaleType="center"
-        android:src="@string/str_follow_up" />
+        android:src="@drawable/ic_pencil" />
 </LinearLayout>
