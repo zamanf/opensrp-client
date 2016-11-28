@@ -1,173 +1,25 @@
 {
   "form_data_definition_version": "1",
   "form": {
-    "default_bind_path": "/model/instance/ChildRegistration",
-    "bind_type": "crvschild",
-    "ec_bind_type": "ec_crvschild",
+    "default_bind_path": "/model/instance/clinic_visit_form",
+    "bind_type": "clinic_visits",
+    "ec_bind_type": "ec_clinic_visits",
     "fields": [
       {
         "name": "id",
         "shouldLoadValue": true
       },
       {
-        "name": "existing_location",
-        "bind": "/model/instance/ChildRegistration/existing_location"
+        "name": "site",
+        "bind": "/model/instance/clinic_visit_form/facility_info1/site"
       },
       {
-        "name": "existing_Country",
-        "bind": "/model/instance/ChildRegistration/existing_Country"
+        "name": "visit_date",
+        "bind": "/model/instance/clinic_visit_form/today"
       },
       {
-        "name": "existing_Division",
-        "bind": "/model/instance/ChildRegistration/existing_Division"
-      },
-      {
-        "name": "existing_District",
-        "bind": "/model/instance/ChildRegistration/existing_District"
-      },
-      {
-        "name": "existing_Upazilla",
-        "bind": "/model/instance/ChildRegistration/existing_Upazilla"
-      },
-      {
-        "name": "existing_Paurasava",
-        "bind": "/model/instance/ChildRegistration/existing_Paurasava"
-      },
-      {
-        "name": "existing_Union",
-        "bind": "/model/instance/ChildRegistration/existing_Union"
-      },
-      {
-        "name": "existing_HIE_facilities",
-        "bind": "/model/instance/ChildRegistration/existing_HIE_facilities"
-      },
-      {
-        "name": "start",
-        "bind": "/model/instance/ChildRegistration/start"
-      },
-      {
-        "name": "today",
-        "bind": "/model/instance/ChildRegistration/today"
-      },
-      {
-        "name": "WARD",
-        "bind": "/model/instance/ChildRegistration/WARD"
-      },
-      {
-        "name": "COUNTRY",
-        "bind": "/model/instance/ChildRegistration/COUNTRY"
-      },
-      {
-        "name": "DIVISION",
-        "bind": "/model/instance/ChildRegistration/DIVISION"
-      },
-      {
-        "name": "DISTRICT",
-        "bind": "/model/instance/ChildRegistration/DISTRICT"
-      },
-      {
-        "name": "UPAZILLA",
-        "bind": "/model/instance/ChildRegistration/UPAZILLA"
-      },
-      {
-        "name": "PAURASAVA",
-        "bind": "/model/instance/ChildRegistration/PAURASAVA"
-      },
-      {
-        "name": "UNION",
-        "bind": "/model/instance/ChildRegistration/UNION"
-      },
-      {
-        "name": "ADDRESS_LINE",
-        "bind": "/model/instance/ChildRegistration/ADDRESS_LINE"
-      },
-      {
-        "name": "HIE_FACILITIES",
-        "bind": "/model/instance/ChildRegistration/HIE_FACILITIES"
-      },
-      {
-        "name": "GPS",
-        "bind": "/model/instance/ChildRegistration/GPS"
-      },
-      {
-        "name": "Date_Of_Reg",
-        "bind": "/model/instance/ChildRegistration/Date_Of_Reg"
-      },
-      {
-        "name": "child_nid",
-        "bind": "/model/instance/ChildRegistration/child_nid"
-      },
-      {
-        "name": "name_Fname",
-        "bind": "/model/instance/ChildRegistration/name_Fname"
-      },
-      {
-        "name": "name_Lname",
-        "bind": "/model/instance/ChildRegistration/name_Lname"
-      },
-      {
-        "name": "name_bengali",
-        "bind": "/model/instance/ChildRegistration/name_bengali"
-      },
-      {
-        "name": "father_nid",
-        "bind": "/model/instance/ChildRegistration/Father_Information/father_nid"
-      },
-      {
-        "name": "father_name_english",
-        "bind": "/model/instance/ChildRegistration/Father_Information/father_name_english"
-      },
-      {
-        "name": "father_name_bengali",
-        "bind": "/model/instance/ChildRegistration/Father_Information/father_name_bengali"
-      },
-      {
-        "name": "father_dob",
-        "bind": "/model/instance/ChildRegistration/Father_Information/father_dob"
-      },
-      {
-        "name": "mother_nid",
-        "bind": "/model/instance/ChildRegistration/Mother_Information/mother_nid"
-      },
-      {
-        "name": "mother_name_english",
-        "bind": "/model/instance/ChildRegistration/Mother_Information/mother_name_english"
-      },
-      {
-        "name": "mother_name_bengali",
-        "bind": "/model/instance/ChildRegistration/Mother_Information/mother_name_bengali"
-      },
-      {
-        "name": "mother_dob",
-        "bind": "/model/instance/ChildRegistration/Mother_Information/mother_dob"
-      },
-      {
-        "name": "child_dob",
-        "bind": "/model/instance/ChildRegistration/child_dob"
-      },
-      {
-        "name": "place_of_birth",
-        "bind": "/model/instance/ChildRegistration/place_of_birth"
-      },
-      {
-        "name": "nationality",
-        "bind": "/model/instance/ChildRegistration/nationality"
-      },
-      {
-        "name": "gender",
-        "bind": "/model/instance/ChildRegistration/gender"
-      },
-      {
-        "name": "present_address",
-        "bind": "/model/instance/ChildRegistration/present_address"
-      },
-      {
-        "name": "permanent_address",
-        "bind": "/model/instance/ChildRegistration/permanent_address"
-      },
-      {
-        "name": "end",
-        "bind": "/model/instance/ChildRegistration/end"
+        "name": "relationalid",
+        "bind": "/model/instance/clinic_visit_form/relationalid"
       }
     ]
   }

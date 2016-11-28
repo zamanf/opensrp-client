@@ -1,9 +1,15 @@
 {
   "bindobjects": [
     {
-      "name": "crvschild",
+      "name": "beneficiaries",
       "columns": [
-        {"name":"name_Fname"},{"name":"mother_name_english"},{"name":"father_name_english"},{"name":"child_dob"}
+        {"name":"name"},{"name":"location"},{"name":"age"},{"name":"gender"},{"name":"phone_no"},{"name":"enrollment_date"},{"name":"site"}
+      ]
+    },
+    {
+      "name": "clinic_visits",
+      "columns": [
+        {"name":"site"},{"name":"visit_date"}
       ]
     }
   ]
