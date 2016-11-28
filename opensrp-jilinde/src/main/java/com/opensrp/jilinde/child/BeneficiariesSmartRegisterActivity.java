@@ -198,13 +198,9 @@ public class BeneficiariesSmartRegisterActivity extends SecuredNativeSmartRegist
             FormUtils formUtils = FormUtils.getInstance(getApplicationContext());
             FormSubmission submission = formUtils.generateFormSubmisionFromXMLString(id, formSubmission, formName, fieldOverrides);
 
-            Context context = Context.getInstance();
+            org.ei.opensrp.Context context = org.ei.opensrp.Context.getInstance();
             ZiggyService ziggyService = context.ziggyService();
             ziggyService.saveForm(getParams(submission), submission.instance());
-            ClientProcessor.getInstance(getApplicationContext()).processClient();
-            Log.v("we are here", "hhregister");
-            //switch to forms list fragmentstregi
-            switchToBaseFragment(formSubmission); // Unnecessary!! passing on data
 
 
         }catch (Exception e){
