@@ -420,7 +420,7 @@
 
     <string name="alphabetical_sort">Alphabetical</string>
     <string name="age_sort">Age</string>
-    <string name="location_sort">Location</string>
+    <string name="location_sort">Unique Id</string>
 
     <string name="last_visit">Last Visit</string>
     <string name="clinic_visit">Clinic Visit</string>

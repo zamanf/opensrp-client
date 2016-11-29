@@ -19,7 +19,8 @@
       },
       {
         "name": "relationalid",
-        "bind": "/model/instance/clinic_visit_form/relationalid"
+        "bind": "/model/instance/clinic_visit_form/relationalid",
+        "shouldLoadValue": true
       }
     ]
   }

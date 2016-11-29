@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -76,7 +77,7 @@ public class BeneficiariesSmartClientsProvider implements SmartRegisterCLientsPr
 
         TextView cDate  = (TextView) itemView.findViewById(R.id.clinic_date);
         TextView cSite  = (TextView) itemView.findViewById(R.id.clinic_site);
-        ImageButton editBtn  = (ImageButton) itemView.findViewById(R.id.btn_edit);
+        FrameLayout editBtn  = (FrameLayout) itemView.findViewById(R.id.follow_up);
         editBtn.setOnClickListener(onClickListener);
         editBtn.setTag(smartRegisterClient);
 
@@ -107,7 +108,7 @@ public class BeneficiariesSmartClientsProvider implements SmartRegisterCLientsPr
 
         String ageGenderString = "";
         if (StringUtils.isNotBlank(age) && StringUtils.isNotBlank(gender)) {
-            ageGenderString = age.trim() + ", " + gChar;
+            ageGenderString = age.trim() + " " + gChar;
         } else if (StringUtils.isNotBlank(age)) {
             ageGenderString = age;
         } else if (StringUtils.isNotBlank(gender)) {
@@ -121,8 +122,8 @@ public class BeneficiariesSmartClientsProvider implements SmartRegisterCLientsPr
         eDate.setText(pc.getColumnmaps().get("enrollment_date") != null ? pc.getColumnmaps().get("enrollment_date") : "");
         eSite.setText(humanize(pc.getColumnmaps().get("site") != null ? pc.getColumnmaps().get("site") : ""));
 
-        cDate.setText("");
-        cSite.setText("");
+        cDate.setText(pc.getColumnmaps().get("visit_date") != null ? pc.getColumnmaps().get("visit_date") : "");
+        cSite.setText(humanize(pc.getColumnmaps().get("clinic_site") != null ? pc.getColumnmaps().get("clinic_site") : ""));
 
         itemView.setLayoutParams(clientViewLayoutParams);
     }

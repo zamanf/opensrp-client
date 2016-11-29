@@ -84,7 +84,7 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="fill_parent"
-        android:layout_gravity="center"
+        android:gravity="center"
         android:layout_weight="2"
         android:orientation="vertical">
 
@@ -93,20 +93,11 @@
             style="@style/CustomFontTextViewStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
+            android:gravity="center"
             android:text="New Text"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="14sp" />
 
-        <org.ei.opensrp.view.customControls.CustomFontTextView
-            android:id="@+id/contact2"
-            style="@style/CustomFontTextViewStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="New Text"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="14sp"
-            android:visibility="invisible" />
     </LinearLayout>
 
     <ImageView
@@ -123,11 +114,12 @@
 
         <org.ei.opensrp.view.customControls.CustomFontTextView
             android:id="@+id/enrollment_date"
-            style="@style/CustomFontTextViewStyle"
+            style="@style/CustomFontTextViewStyle.ListView.Bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
             android:text="New Text"
+
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="14sp" />
 
@@ -155,7 +147,7 @@
 
         <org.ei.opensrp.view.customControls.CustomFontTextView
             android:id="@+id/clinic_date"
-            style="@style/CustomFontTextViewStyle"
+            style="@style/CustomFontTextViewStyle.ListView.Bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"

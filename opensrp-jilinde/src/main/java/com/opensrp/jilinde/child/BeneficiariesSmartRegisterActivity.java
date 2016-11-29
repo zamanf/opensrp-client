@@ -140,9 +140,10 @@ public class BeneficiariesSmartRegisterActivity extends SecuredNativeSmartRegist
     }
 
 
-    public DialogOption[] getEditOptionsforBeneficiary() {
+    public DialogOption[] getEditOptionsforBeneficiary(SmartRegisterClient tag) {
 
         HashMap<String,String> overridemap = new HashMap<String,String>();
+        overridemap.put("relationalid",tag.entityId());
        // CommonPersonObjectClient pc = HouseHoldDetailActivity.householdclient;
 //        String alertstate = "";
 //        if(pc!=null) {
@@ -158,14 +159,16 @@ public class BeneficiariesSmartRegisterActivity extends SecuredNativeSmartRegist
     private class EditDialogOptionModelForChild implements DialogOptionModel {
         String childvisittext ;
         String childvisitstatus;
-        public EditDialogOptionModelForChild(String text,String status) {
+        Object tag;
+        public EditDialogOptionModelForChild(String text,String status, Object _tag) {
             childvisittext = text;
             childvisitstatus = status;
+            tag=_tag;
         }
 
         @Override
         public DialogOption[] getDialogOptions() {
-            return getEditOptionsforBeneficiary();
+            return getEditOptionsforBeneficiary((SmartRegisterClient) tag);
         }
 
         @Override

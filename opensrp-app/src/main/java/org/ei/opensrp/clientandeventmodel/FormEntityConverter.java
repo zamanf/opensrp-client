@@ -446,7 +446,7 @@ public class FormEntityConverter {
 
     private void addRelationship(SubformMap subformMap, Client client) {
         try {
-            String relationships = AssetHandler.readFileFromAssetsFolder(FormUtils.ecClientRelationships, mContext);
+            String relationships = "";
             JSONArray jsonArray = null;
 
             jsonArray = new JSONArray(relationships);

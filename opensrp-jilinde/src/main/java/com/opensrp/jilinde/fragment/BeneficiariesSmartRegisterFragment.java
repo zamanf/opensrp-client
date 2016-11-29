@@ -187,8 +187,9 @@ public class BeneficiariesSmartRegisterFragment extends SecuredNativeSmartRegist
         updateSearchView();
     }
 
-    private DialogOption[] getEditOptionsforChild() {
-        return ((BeneficiariesSmartRegisterActivity) getActivity()).getEditOptionsforBeneficiary();
+
+    private DialogOption[] getEditOptionsforChild(Object tag) {
+        return ((BeneficiariesSmartRegisterActivity)getActivity()).getEditOptionsforBeneficiary((SmartRegisterClient)tag);
     }
 
 
@@ -201,8 +202,8 @@ public class BeneficiariesSmartRegisterFragment extends SecuredNativeSmartRegist
                     Intent intent = new Intent(getActivity(), BeneficiaryDetailActivity.class);
                     startActivity(intent);
                     break;
-                case R.id.btn_edit:
-                    showFragmentDialog(new EditDialogOptionModelForBeneficiary(), view.getTag());
+                case R.id.follow_up:
+                    showFragmentDialog(new EditDialogOptionModelForBeneficiary(view.getTag()), view.getTag());
                     break;
             }
         }
@@ -211,13 +212,14 @@ public class BeneficiariesSmartRegisterFragment extends SecuredNativeSmartRegist
     }
 
     private class EditDialogOptionModelForBeneficiary implements DialogOptionModel {
-
-        public EditDialogOptionModelForBeneficiary() {
+Object tag;
+        public EditDialogOptionModelForBeneficiary(Object _tag) {
+            tag=_tag;
         }
 
         @Override
         public DialogOption[] getDialogOptions() {
-            return getEditOptionsforChild();
+            return getEditOptionsforChild(tag);
         }
 
         @Override
@@ -345,7 +347,7 @@ public class BeneficiariesSmartRegisterFragment extends SecuredNativeSmartRegist
 
     public String childMainSelectWithJoins() {
         return "Select beneficiaries.id as _id, beneficiaries.relationalid, beneficiaries.name, beneficiaries.location, beneficiaries.age, beneficiaries.gender, beneficiaries.phone_no, beneficiaries.enrollment_date, beneficiaries.site \n" +
-                "from beneficiaries\n";
+                ",cv.site as clinic_site,cv.visit_date from beneficiaries left join clinic_visits cv on beneficiaries.id=cv.relationalid\n";
     }
 
     public String childMainCountWithJoins() {
