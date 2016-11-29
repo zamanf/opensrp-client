@@ -417,7 +417,11 @@
     <string name="contact">Contact</string>
     <string name="enrollment">Enrollment</string>
     <string name="client">Client</string>
+
     <string name="alphabetical_sort">Alphabetical</string>
+    <string name="age_sort">Age</string>
+    <string name="location_sort">Location</string>
+
     <string name="last_visit">Last Visit</string>
     <string name="clinic_visit">Clinic Visit</string>
 

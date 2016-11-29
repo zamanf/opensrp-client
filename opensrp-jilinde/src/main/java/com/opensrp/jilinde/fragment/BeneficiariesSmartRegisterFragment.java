@@ -101,14 +101,14 @@ public class BeneficiariesSmartRegisterFragment extends SecuredNativeSmartRegist
             @Override
             public DialogOption[] filterOptions() {
                 ArrayList<DialogOption> dialogOptionslist = new ArrayList<DialogOption>();
-                dialogOptionslist.add(new CursorCommonObjectFilterOption(getString(R.string.filter_by_all_label),""));
+                dialogOptionslist.add(new CursorCommonObjectFilterOption(getString(R.string.filter_by_all_label), ""));
 
                 DialogOption[] dialogOptions = new DialogOption[dialogOptionslist.size()];
-                for (int i = 0;i < dialogOptionslist.size();i++){
+                for (int i = 0; i < dialogOptionslist.size(); i++) {
                     dialogOptions[i] = dialogOptionslist.get(i);
                 }
 
-                return  dialogOptions;
+                return dialogOptions;
             }
 
             @Override
@@ -120,10 +120,10 @@ public class BeneficiariesSmartRegisterFragment extends SecuredNativeSmartRegist
             public DialogOption[] sortingOptions() {
                 return new DialogOption[]{
 //                        new ElcoPSRFDueDateSort(),
-                       // new CursorCommonObjectSort(getString(R.string.due_status),sortByAlertmethod()),
-                        new CursorCommonObjectSort(Context.getInstance().applicationContext().getString(R.string.alphabetical_sort),sortByName()),
-                        //new CursorCommonObjectSort(Context.getInstance().applicationContext().getString(R.string.child_details_fathers_name_label),sortByfather_name()),
-                        //new CursorCommonObjectSort( Context.getInstance().applicationContext().getString(R.string.child_details_mothers_name_label),sortBymother_name()),
+                        // new CursorCommonObjectSort(getString(R.string.due_status),sortByAlertmethod()),
+                        new CursorCommonObjectSort(Context.getInstance().applicationContext().getString(R.string.alphabetical_sort), sortByName()),
+                        new CursorCommonObjectSort(Context.getInstance().applicationContext().getString(R.string.age_sort), sortByAge()),
+                        new CursorCommonObjectSort(Context.getInstance().applicationContext().getString(R.string.location_sort), sortByLocation()),
 
 //                        new CommonObjectSort(true,false,true,"age")
                 };
@@ -157,15 +157,16 @@ public class BeneficiariesSmartRegisterFragment extends SecuredNativeSmartRegist
     @Override
     protected void onCreation() {
     }
+
     @Override
     protected void onResumption() {
         super.onResumption();
         getDefaultOptionsProvider();
         initializeQueries();
         updateSearchView();
-        try{
+        try {
             LoginActivity.setLanguage();
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
 
@@ -177,7 +178,7 @@ public class BeneficiariesSmartRegisterFragment extends SecuredNativeSmartRegist
         view.findViewById(R.id.btn_report_month).setVisibility(INVISIBLE);
         view.findViewById(R.id.service_mode_selection).setVisibility(INVISIBLE);
 
-        ImageButton startregister = (ImageButton)view.findViewById(org.ei.opensrp.R.id.register_client);
+        ImageButton startregister = (ImageButton) view.findViewById(org.ei.opensrp.R.id.register_client);
 //        startregister.setVisibility(View.GONE);
         clientsView.setVisibility(View.VISIBLE);
         clientsProgressView.setVisibility(View.INVISIBLE);
@@ -187,9 +188,8 @@ public class BeneficiariesSmartRegisterFragment extends SecuredNativeSmartRegist
     }
 
     private DialogOption[] getEditOptionsforChild() {
-        return ((BeneficiariesSmartRegisterActivity)getActivity()).getEditOptionsforBeneficiary();
+        return ((BeneficiariesSmartRegisterActivity) getActivity()).getEditOptionsforBeneficiary();
     }
-
 
 
     private class ClientActionHandler implements View.OnClickListener {
@@ -197,8 +197,8 @@ public class BeneficiariesSmartRegisterFragment extends SecuredNativeSmartRegist
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.profile_info_layout:
-                    BeneficiaryDetailActivity.ChildClient = (CommonPersonObjectClient)view.getTag();
-                    Intent intent = new Intent(getActivity(),BeneficiaryDetailActivity.class);
+                    BeneficiaryDetailActivity.ChildClient = (CommonPersonObjectClient) view.getTag();
+                    Intent intent = new Intent(getActivity(), BeneficiaryDetailActivity.class);
                     startActivity(intent);
                     break;
                 case R.id.btn_edit:
@@ -227,10 +227,7 @@ public class BeneficiariesSmartRegisterFragment extends SecuredNativeSmartRegist
     }
 
 
-
-
-
-    public void updateSearchView(){
+    public void updateSearchView() {
         getSearchView().addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
@@ -249,9 +246,9 @@ public class BeneficiariesSmartRegisterFragment extends SecuredNativeSmartRegist
 //                                .updateClients(getCurrentVillageFilter(), getCurrentServiceModeOption(),
 //                                        getCurrentSearchFilter(), getCurrentSortOption());
 //
-                        if(cs.toString().equalsIgnoreCase("")){
+                        if (cs.toString().equalsIgnoreCase("")) {
                             filters = "";
-                        }else {
+                        } else {
                             filters = "and name Like '%" + cs.toString() + "%' or location Like '%" + cs.toString() + "%'  or phone_no Like '%" + cs.toString() + "%' ";
                         }
                         return null;
@@ -272,8 +269,6 @@ public class BeneficiariesSmartRegisterFragment extends SecuredNativeSmartRegist
                 }).execute();
 
 
-
-
             }
 
             @Override
@@ -282,34 +277,36 @@ public class BeneficiariesSmartRegisterFragment extends SecuredNativeSmartRegist
             }
         });
     }
-    public void addChildToList(ArrayList<DialogOption> dialogOptionslist,Map<String,TreeNode<String, Location>> locationMap){
-        for(Map.Entry<String, TreeNode<String, Location>> entry : locationMap.entrySet()) {
 
-            if(entry.getValue().getChildren() != null) {
-                addChildToList(dialogOptionslist,entry.getValue().getChildren());
+    public void addChildToList(ArrayList<DialogOption> dialogOptionslist, Map<String, TreeNode<String, Location>> locationMap) {
+        for (Map.Entry<String, TreeNode<String, Location>> entry : locationMap.entrySet()) {
 
-            }else{
+            if (entry.getValue().getChildren() != null) {
+                addChildToList(dialogOptionslist, entry.getValue().getChildren());
+
+            } else {
                 StringUtil.humanize(entry.getValue().getLabel());
                 String name = StringUtil.humanize(entry.getValue().getLabel());
-                dialogOptionslist.add(new CursorCommonObjectFilterOption(name,"and mcaremother.details like '%"+name +"%'"));
+                dialogOptionslist.add(new CursorCommonObjectFilterOption(name, "and mcaremother.details like '%" + name + "%'"));
 
             }
         }
     }
-    class pncControllerfiltermap extends ControllerFilterMap{
+
+    class pncControllerfiltermap extends ControllerFilterMap {
 
         @Override
         public boolean filtermapLogic(CommonPersonObject commonPersonObject) {
             boolean returnvalue = false;
-            if(commonPersonObject.getDetails().get("FWWOMVALID") != null){
-                if(commonPersonObject.getDetails().get("FWWOMVALID").equalsIgnoreCase("1")){
+            if (commonPersonObject.getDetails().get("FWWOMVALID") != null) {
+                if (commonPersonObject.getDetails().get("FWWOMVALID").equalsIgnoreCase("1")) {
                     returnvalue = true;
-                    if(commonPersonObject.getDetails().get("Is_PNC")!=null){
-                        if(commonPersonObject.getDetails().get("Is_PNC").equalsIgnoreCase("1")){
+                    if (commonPersonObject.getDetails().get("Is_PNC") != null) {
+                        if (commonPersonObject.getDetails().get("Is_PNC").equalsIgnoreCase("1")) {
                             returnvalue = true;
                         }
 
-                    }else{
+                    } else {
                         returnvalue = false;
                     }
                 }
@@ -318,7 +315,8 @@ public class BeneficiariesSmartRegisterFragment extends SecuredNativeSmartRegist
             return returnvalue;
         }
     }
-    public void initializeQueries(){
+
+    public void initializeQueries() {
         CommonRepository commonRepository = context.commonrepository("beneficiaries");
         setTablename("beneficiaries");
         SmartRegisterQueryBuilder countqueryBUilder = new SmartRegisterQueryBuilder(childMainCountWithJoins());
@@ -330,14 +328,14 @@ public class BeneficiariesSmartRegisterFragment extends SecuredNativeSmartRegist
         mainSelect = queryBUilder.mainCondition(" beneficiaries.name is not null ");
         queryBUilder.addCondition(filters);
         Sortqueries = sortByName();
-        currentquery  = queryBUilder.orderbyCondition(Sortqueries);
+        currentquery = queryBUilder.orderbyCondition(Sortqueries);
 
 
 //        queryBUilder.queryForRegisterSortBasedOnRegisterAndAlert("household", new String[]{"relationalid" ,"details","FWHOHFNAME", "FWGOBHHID","FWJIVHHID"}, null, "FW CENSUS");
 //        Cursor c = commonRepository.CustomQueryForAdapter(new String[]{"id as _id","relationalid","details"},"household",""+currentlimit,""+currentoffset);
         Cursor c = commonRepository.RawCustomQueryForAdapter(queryBUilder.Endquery(queryBUilder.addlimitandOffset(currentquery, 20, 0)));
-        BeneficiariesSmartClientsProvider hhscp = new BeneficiariesSmartClientsProvider(getActivity(),clientActionHandler,context.alertService());
-        clientAdapter = new SmartRegisterPaginatedCursorAdapter(getActivity(), c, hhscp, new CommonRepository("beneficiaries",new String []{ "name", "location", "age", "gender", "phone_no", "enrollment_date", "site" }));
+        BeneficiariesSmartClientsProvider hhscp = new BeneficiariesSmartClientsProvider(getActivity(), clientActionHandler, context.alertService());
+        clientAdapter = new SmartRegisterPaginatedCursorAdapter(getActivity(), c, hhscp, new CommonRepository("beneficiaries", new String[]{"name", "location", "age", "gender", "phone_no", "enrollment_date", "site"}));
         clientsView.setAdapter(clientAdapter);
 //        setServiceModeViewDrawableRight(null);
 //        updateSearchView();
@@ -345,17 +343,26 @@ public class BeneficiariesSmartRegisterFragment extends SecuredNativeSmartRegist
 
     }
 
-    public String childMainSelectWithJoins(){
+    public String childMainSelectWithJoins() {
         return "Select beneficiaries.id as _id, beneficiaries.relationalid, beneficiaries.name, beneficiaries.location, beneficiaries.age, beneficiaries.gender, beneficiaries.phone_no, beneficiaries.enrollment_date, beneficiaries.site \n" +
                 "from beneficiaries\n";
     }
+
     public String childMainCountWithJoins() {
         return "Select Count(*) \n" +
                 "from beneficiaries";
     }
 
-    private String sortByName(){
+    private String sortByName() {
         return " name ASC";
+    }
+
+    private String sortByAge() {
+        return " age ASC";
+    }
+
+    private String sortByLocation() {
+        return " location ASC";
     }
 
 }
