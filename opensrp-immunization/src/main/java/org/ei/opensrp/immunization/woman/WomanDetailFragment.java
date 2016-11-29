@@ -1,13 +1,17 @@
 package org.ei.opensrp.immunization.woman;
 
+import android.graphics.Color;
+import android.view.View;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+import android.widget.TextView;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ei.opensrp.Context;
 import org.ei.opensrp.domain.Alert;
 import org.ei.opensrp.repository.db.VaccineRepo;
 import org.ei.opensrp.immunization.R;
+import org.ei.opensrp.util.Utils;
 import org.ei.opensrp.view.template.DetailFragment;
 import org.joda.time.DateTime;
 import org.joda.time.Years;
@@ -15,6 +19,9 @@ import org.joda.time.Years;
 import java.util.List;
 import java.util.Map;
 
+import static org.ei.opensrp.util.Utils.addRow;
+import static org.ei.opensrp.util.Utils.fillValue;
+import static org.ei.opensrp.util.Utils.toDate;
 import static org.ei.opensrp.util.VaccinatorUtils.addStatusTag;
 import static org.ei.opensrp.util.VaccinatorUtils.addVaccineDetail;
 import static org.ei.opensrp.util.VaccinatorUtils.generateSchedule;
@@ -22,6 +29,7 @@ import static org.ei.opensrp.util.Utils.convertDateFormat;
 import static org.ei.opensrp.util.Utils.getDataRow;
 import static org.ei.opensrp.util.Utils.getValue;
 import static org.ei.opensrp.util.Utils.nonEmptyValue;
+import static org.ei.opensrp.util.VaccinatorUtils.nextVaccineDue;
 
 /**
  * Created by muhammad.ahmed@ihsinformatics.com on 11-Nov-15.
@@ -85,14 +93,9 @@ public class WomanDetailFragment extends DetailFragment {
         TableLayout dt = (TableLayout) currentView.findViewById(R.id.woman_detail_info_table1);
 
        //setting value in WOMAN basic information textviews
-        TableRow tr = getDataRow(getActivity(), "Program ID", getEntityIdentifier(), null);
-        dt.addView(tr);
-
-        tr = getDataRow(getActivity(), "EPI Card Number", getValue(client.getColumnmaps(), "epi_card_number", false), null);
-        dt.addView(tr);
-
-        tr = getDataRow(getActivity(), "Woman's Name", getValue(client.getColumnmaps(), "first_name", true), null);
-        dt.addView(tr);
+        addRow(getActivity(), dt, "Program ID", getEntityIdentifier(), Utils.Size.MEDIUM);
+        addRow(getActivity(), dt, "EPI Card Number", getValue(client.getColumnmaps(), "epi_card_number", false), Utils.Size.MEDIUM);
+        addRow(getActivity(), dt, "Woman's Name", getValue(client.getColumnmaps(), "first_name", true), Utils.Size.MEDIUM);
 
         int age = -1;
         try{
@@ -101,29 +104,19 @@ public class WomanDetailFragment extends DetailFragment {
         catch (Exception e){
             e.printStackTrace();
         }
-        tr = getDataRow(getActivity(), "Birthdate (Age)", convertDateFormat(getValue(client.getColumnmaps(), "dob", false), "No DoB", true) + " (" + age + " years)", null);
-        dt.addView(tr);
-
-        tr = getDataRow(getActivity(), "Father's Name", getValue(client.getColumnmaps(), "father_name", true), null);
-        dt.addView(tr);
-
-        tr = getDataRow(getActivity(), "Husband's Name", getValue(client.getColumnmaps(), "husband_name", true), null);
-        dt.addView(tr);
+        addRow(getActivity(), dt, "Birthdate (Age)", convertDateFormat(getValue(client.getColumnmaps(), "dob", false), "No DoB", true) + " (" + age + " years)", Utils.Size.MEDIUM);
+        addRow(getActivity(), dt, "Father's Name", getValue(client.getColumnmaps(), "father_name", true), Utils.Size.MEDIUM);
+        addRow(getActivity(), dt, "Husband's Name", getValue(client.getColumnmaps(), "husband_name", true), Utils.Size.MEDIUM);
 
         TableLayout dt2 = (TableLayout) currentView.findViewById(R.id.woman_detail_info_table2);
-        tr = getDataRow(getActivity(), "Ethnicity", getValue(client, "ethnicity", true), null);
-        dt2.addView(tr);
-        tr = getDataRow(getActivity(), "Married", getValue(client.getColumnmaps(), "marriage", true), null);
-        dt2.addView(tr);
-        tr = getDataRow(getActivity(), "Contact Number", getValue(client.getColumnmaps(), "contact_phone_number", true), null);
-        dt2.addView(tr);
-        tr = getDataRow(getActivity(), "Address", getValue(client.getColumnmaps(), "address1", true)
+        addRow(getActivity(), dt2, "Ethnicity", getValue(client, "ethnicity", true), Utils.Size.MEDIUM);
+        addRow(getActivity(), dt2, "Married", getValue(client.getColumnmaps(), "marriage", true), Utils.Size.MEDIUM);
+        addRow(getActivity(), dt2, "Contact Number", getValue(client.getColumnmaps(), "contact_phone_number", true), Utils.Size.MEDIUM);
+        addRow(getActivity(), dt2, "Address", getValue(client.getColumnmaps(), "address1", true)
                 +", \nUC: "+ getValue(client.getColumnmaps(), "union_council", true)
                 +", \nTown: "+ getValue(client.getColumnmaps(), "town", true)
                 +", \nCity: "+ getValue(client, "city_village", true)
-                +", \nProvince: "+ getValue(client, "province", true), null);
-        dt2.addView(tr);
-
+                +", "+ getValue(client, "province", true), Utils.Size.MEDIUM);
 
         //VACCINES INFORMATION
         TableLayout table = (TableLayout) currentView.findViewById(R.id.woman_vaccine_table);
@@ -146,13 +139,9 @@ public class WomanDetailFragment extends DetailFragment {
 
         TableLayout pt = (TableLayout) currentView.findViewById(R.id.woman_pregnancy_table);
         pt.addView(pregnancyHeader);
-        tr = getDataRow(getActivity(), "Pregnant", getValue(client.getColumnmaps(), "pregnant", true), null);
-        pt.addView(tr);
-        tr = getDataRow(getActivity(), "EDD", convertDateFormat(getValue(client.getColumnmaps(), "final_edd", false), "N/A", true), null);
-        pt.addView(tr);
-        tr = getDataRow(getActivity(), "LMP", convertDateFormat(getValue(client, "final_lmp", false), "N/A", true), null);
-        pt.addView(tr);
-        tr = getDataRow(getActivity(), "GA (weeks)", getValue(client.getColumnmaps(), "final_ga", "N/A", false), null);
-        pt.addView(tr);
+        addRow(getActivity(), pt, "Pregnant", getValue(client.getColumnmaps(), "pregnant", true), Utils.Size.MEDIUM);
+        addRow(getActivity(), pt, "EDD", convertDateFormat(getValue(client.getColumnmaps(), "final_edd", false), "N/A", true), Utils.Size.MEDIUM);
+        addRow(getActivity(), pt, "LMP", convertDateFormat(getValue(client, "final_lmp", false), "N/A", true), Utils.Size.MEDIUM);
+        addRow(getActivity(), pt, "GA (weeks)", getValue(client.getColumnmaps(), "final_ga", "N/A", false), Utils.Size.MEDIUM);
     }
 }

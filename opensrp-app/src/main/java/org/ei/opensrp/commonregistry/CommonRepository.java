@@ -35,15 +35,15 @@ public class CommonRepository extends DrishtiRepository {
         additionalcolumns = columns;
         common_TABLE_COLUMNS = ArrayUtils.addAll(common_TABLE_COLUMNS, columns);
         TABLE_NAME = tablename;
-        common_SQL = "CREATE TABLE "+ TABLE_NAME + "(id VARCHAR PRIMARY KEY,relationalid VARCHAR,details VARCHAR";
+        common_SQL = "CREATE TABLE "+ TABLE_NAME + "(id VARCHAR PRIMARY KEY,relationalid VARCHAR,details VARCHAR collate nocase";
         for(int i = 0;i<columns.length;i++){
             if(i ==0){
                 common_SQL = common_SQL + ", ";
             }
             if(i!=columns.length-1) {
-                common_SQL = common_SQL + columns[i] + " VARCHAR,";
+                common_SQL = common_SQL + columns[i] + " VARCHAR collate nocase,";
             }else{
-                common_SQL = common_SQL + columns[i] + " VARCHAR ";
+                common_SQL = common_SQL + columns[i] + " VARCHAR collate nocase";
             }
         }
         common_SQL = common_SQL +")";

@@ -24,6 +24,5 @@
         android:layout_height="@dimen/smart_register_client_divider_height"
         android:src="@color/smart_register_client_divider_color"/>
 
-    <include layout="@layout/womandetail_vaccine_detail"
-        />
+    <include layout="@layout/womandetail_vaccine_detail" />
 </LinearLayout>

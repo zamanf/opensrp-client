@@ -73,8 +73,8 @@ public class WomanSmartClientsProvider implements SmartRegisterClientsProvider {
         fillValue((TextView)convertView.findViewById(R.id.woman_id), pc.getColumnmaps(), "program_client_id", false);
 
         fillValue((TextView) convertView.findViewById(R.id.woman_name), getValue(pc.getColumnmaps(), "first_name", true));
-        fillValue((TextView) convertView.findViewById(R.id.woman_husbandname), getValue(pc.getColumnmaps(), "husband_name", true));
-        fillValue((TextView) convertView.findViewById(R.id.woman_fathername), getValue(pc.getColumnmaps(), "father_name", true));
+        fillValue((TextView) convertView.findViewById(R.id.woman_husbandname), "W/O- "+getValue(pc.getColumnmaps(), "husband_name", true));
+        fillValue((TextView) convertView.findViewById(R.id.woman_fathername), "D/O - "+getValue(pc.getColumnmaps(), "father_name", true));
 
         int age = -1;
         try{
@@ -103,11 +103,13 @@ public class WomanSmartClientsProvider implements SmartRegisterClientsProvider {
 
         List<Alert> alertlist_for_client = alertService.findByEntityIdAndAlertNames(pc.entityId(), "TT 1", "TT 2", "TT 3", "TT 4", "TT 5", "tt1", "tt2", "tt3", "tt4", "tt5");
 
+        convertView.findViewById(R.id.next_vaccine_image).setVisibility(View.VISIBLE);
+
         if(age < 0){
             deactivateNextVaccine("Invalid DoB", "", R.color.alert_na, convertView);
         }
         else if(StringUtils.isNotBlank(getValue(pc.getColumnmaps(), "tt5", false))){
-            deactivateNextVaccine("Fully Immunized", "", R.color.alert_na, convertView);
+            deactivateNextVaccine("Fully Immunized", "", R.color.alert_complete_green, convertView);
         }
         else if(age > 49 && StringUtils.isBlank(getValue(pc.getColumnmaps(), "tt5", false))){
             deactivateNextVaccine("Partially Immunized", "", R.color.alert_na, convertView);
@@ -144,6 +146,8 @@ public class WomanSmartClientsProvider implements SmartRegisterClientsProvider {
 
         convertView.findViewById(R.id.woman_profile_info_layout).setTag(client);
         convertView.findViewById(R.id.woman_profile_info_layout).setOnClickListener(onClickListener);
+        convertView.findViewById(R.id.woman_profile_info_layout1).setTag(client);
+        convertView.findViewById(R.id.woman_profile_info_layout1).setOnClickListener(onClickListener);
 
         return convertView;
     }
@@ -155,6 +159,7 @@ public class WomanSmartClientsProvider implements SmartRegisterClientsProvider {
         ((TextView) convertView.findViewById(R.id.woman_next_visit_date)).setTextColor(Color.BLACK);
         convertView.findViewById(R.id.woman_next_visit_holder).setBackgroundColor(context.getResources().getColor(color));
         convertView.findViewById(R.id.woman_next_visit_holder).setOnClickListener(null);
+        convertView.findViewById(R.id.next_vaccine_image).setVisibility(View.INVISIBLE);
         convertView.findViewById(R.id.woman_next_visit_holder).setTag(null);
     }
 

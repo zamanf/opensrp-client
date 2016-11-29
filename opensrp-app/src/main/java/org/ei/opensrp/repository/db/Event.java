@@ -9,8 +9,10 @@ import java.util.List;
 import java.util.Map;
 
 public class Event extends BaseDataObject{
-	private String eventId;
-	
+	private String _id;
+
+	private Map<String, String> identifiers;
+
 	private String baseEntityId;
 	
 	private String locationId;
@@ -35,10 +37,10 @@ public class Event extends BaseDataObject{
 		this.version = System.currentTimeMillis();
 	}
 
-	public Event(String baseEntityId, String eventId, String eventType, DateTime eventDate, String entityType, 
+	public Event(String baseEntityId, String id, String eventType, DateTime eventDate, String entityType,
 			String providerId, String locationId, String formSubmissionId) {
 		this.baseEntityId = baseEntityId;
-		this.eventId = eventId;
+		this._id = id;
 		this.eventType = eventType;
 		this.eventDate = eventDate;
 		this.entityType = entityType;
@@ -55,6 +57,21 @@ public class Event extends BaseDataObject{
 		return obs;
 	}
 
+	public Obs getObs(String parent, String concept) {
+		if(obs == null){
+			obs = new ArrayList<>();
+		}
+		for (Obs o : obs) {
+			// parent is blank OR matches with obs parent
+			if((StringUtils.isBlank(parent)
+					|| (StringUtils.isNotBlank(o.getParentCode()) && parent.equalsIgnoreCase(o.getParentCode())))
+				&& o.getFieldCode().equalsIgnoreCase(concept)){
+				return o; //TODO handle duplicates
+			}
+		}
+		return null;
+	}
+
 	/**
 	 * WARNING: Overrides all existing obs
 	 * @param obs
@@ -66,7 +83,7 @@ public class Event extends BaseDataObject{
 	
 	public void addObs(Obs observation) {
 		if(obs == null){
-			obs = new ArrayList<Obs>();
+			obs = new ArrayList<>();
 		}
 		
 		obs.add(observation);
@@ -78,6 +95,55 @@ public class Event extends BaseDataObject{
 	
 	public void setBaseEntityId(String baseEntityId) {
 		this.baseEntityId = baseEntityId;
+	}
+
+	public Map<String, String> getIdentifiers() {
+		if(identifiers == null){
+			identifiers = new HashMap<>();
+		}
+		return identifiers;
+	}
+
+	public String getIdentifier(String identifierType) {
+		if(identifiers == null){
+			return null;
+		}
+		for (String k : identifiers.keySet()) {
+			if(k.equalsIgnoreCase(identifierType)){
+				return identifiers.get(k);
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Returns field matching the regex. Note that incase of multiple fields matching criteria
+	 * function would return first match. The must be well formed to find out a single value
+	 * @param regex
+	 * @return
+	 */
+	public String getIdentifierMatchingRegex(String regex) {
+		for (Map.Entry<String, String> a : getIdentifiers().entrySet()) {
+			if(a.getKey().matches(regex)){
+				return a.getValue();
+			}
+		}
+		return null;
+	}
+
+	public void setIdentifiers(Map<String, String> identifiers) {
+		this.identifiers = identifiers;
+	}
+
+	public void addIdentifier(String identifierType, String identifier) {
+		if(identifiers == null){
+			identifiers = new HashMap<>();
+		}
+
+	}
+
+	public void removeIdentifier(String identifierType) {
+		identifiers.remove(identifierType);
 	}
 
 	public String getLocationId() {
@@ -120,12 +186,12 @@ public class Event extends BaseDataObject{
 		this.providerId = providerId;
 	}
 
-	public String getEventId() {
-		return eventId;
+	public String getId() {
+		return _id;
 	}
 
-	public void setEventId(String eventId) {
-		this.eventId = eventId;
+	public void setId(String id) {
+		this._id = id;
 	}
 
 	public String getEntityType() {
@@ -146,7 +212,7 @@ public class Event extends BaseDataObject{
 	
 	public void addDetails(String key, String val) {
 		if(details == null){
-			details = new HashMap<String, String>();
+			details = new HashMap<>();
 		}
 		details.put(key, val);
 	}
@@ -170,7 +236,7 @@ public class Event extends BaseDataObject{
 
 				if(o.getFieldCode().equalsIgnoreCase(f) || o.getFormSubmissionField().equalsIgnoreCase(f)){
 					// obs is found and first  one.. should throw exception if multiple obs found with same names/ids
-					if(nonEmpty && o.getValues().isEmpty()){
+					if(nonEmpty && (o.getValues().isEmpty())){
 						continue;
 					}
 					if(res == null){
@@ -185,6 +251,24 @@ public class Event extends BaseDataObject{
 
 	public Event withBaseEntityId(String baseEntityId) {
 		this.baseEntityId = baseEntityId;
+		return this;
+	}
+
+	/**
+	 * WARNING: Overrides all existing identifiers
+	 * @param identifiers
+	 * @return
+	 */
+	public Event withIdentifiers(Map<String, String> identifiers) {
+		this.identifiers = identifiers;
+		return this;
+	}
+
+	public Event withIdentifier(String identifierType, String identifier) {
+		if(identifiers == null){
+			identifiers = new HashMap<>();
+		}
+		identifiers.put(identifierType, identifier);
 		return this;
 	}
 
@@ -230,7 +314,7 @@ public class Event extends BaseDataObject{
 	
 	public Event withObs(Obs observation) {
 		if(obs == null){
-			obs = new ArrayList<Obs>();
+			obs = new ArrayList<>();
 		}
 		obs.add(observation);
 		return this;

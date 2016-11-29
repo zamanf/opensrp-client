@@ -1,5 +1,7 @@
 package org.ei.opensrp.repository.db;
 
+import org.joda.time.DateTime;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -7,12 +9,13 @@ import java.util.Map.Entry;
 
 public class Address{
 
-	
+	private Boolean preferred;
+
 	private String addressType;
 	
-	private Date startDate;
+	private DateTime startDate;
 	
-	private Date endDate;
+	private DateTime endDate;
 	
 	private Map<String, String> addressFields;
 	
@@ -41,7 +44,7 @@ public class Address{
 	
 	public Address() {	}
 
-	public Address(String addressType, Date startDate, Date endDate, Map<String, String> addressFields, 
+	public Address(String addressType, DateTime startDate, DateTime endDate, Map<String, String> addressFields,
 			String latitude, String longitude, String postalCode, String stateProvince, String country) {
 		this.addressType = addressType;
 		this.startDate = startDate;
@@ -62,19 +65,19 @@ public class Address{
 		this.addressType = addressType;
 	}
 
-	public Date getStartDate() {
+	public DateTime getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(Date startDate) {
+	public void setStartDate(DateTime startDate) {
 		this.startDate = startDate;
 	}
 
-	public Date getEndDate() {
+	public DateTime getEndDate() {
 		return endDate;
 	}
 
-	public void setEndDate(Date endDate) {
+	public void setEndDate(DateTime endDate) {
 		this.endDate = endDate;
 	}
 
@@ -216,7 +219,7 @@ public class Address{
 	 * @return
 	 */
 	public boolean isActive() {
-		return endDate==null||endDate.after(new Date());
+		return endDate==null||endDate.isAfter(DateTime.now());
 	}
 
 	/**
@@ -228,10 +231,10 @@ public class Address{
 			return -1;
 		}
 		if(endDate == null){
-			return new Date().getTime()-startDate.getTime();
+			return DateTime.now().getMillis()-startDate.getMillis();
 		}
 		
-		return endDate.getTime()-startDate.getTime();
+		return endDate.getMillis()-startDate.getMillis();
 	}
 
 	/**
@@ -278,7 +281,7 @@ public class Address{
 	 * @param endDate
 	 * @return
 	 */
-	public Address withStartDate(Date startDate) {
+	public Address withStartDate(DateTime startDate) {
 		this.startDate = startDate;
 		return this;
 	}
@@ -288,7 +291,7 @@ public class Address{
 	 * @param endDate
 	 * @return
 	 */
-	public Address withEndDate(Date endDate) {
+	public Address withEndDate(DateTime endDate) {
 		this.endDate = endDate;
 		return this;
 	}

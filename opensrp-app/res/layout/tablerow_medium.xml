@@ -1,5 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+<TableRow xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/tablerow"
+    android:layout_width="wrap_content" android:layout_height="wrap_content"
+    android:background="#ffffff"
+    android:paddingTop="3dp"
+    android:paddingBottom="3dp"
+    android:paddingLeft="10dp">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text"
+        android:id="@+id/c1"
+        android:textSize="16sp"
+        android:textColor="@color/text_black"
+        android:textStyle="bold"
+        android:paddingLeft="30dp"
+        android:paddingTop="5dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text had a very long value that should wrap and not exceed the boundaries of textview it is embedded in. "
+        android:id="@+id/c2"
+        android:textSize="16sp"
+        android:textColor="@color/text_black"
+        android:singleLine="false"
+        android:maxLines="10"
+        android:ellipsize="end"
+        android:paddingLeft="30dp"
+        android:paddingTop="5dp" />
 </TableRow>

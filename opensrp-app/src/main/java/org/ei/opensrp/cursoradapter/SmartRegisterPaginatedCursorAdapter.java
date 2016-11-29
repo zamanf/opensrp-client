@@ -24,7 +24,6 @@ import java.util.HashMap;
 
 public class SmartRegisterPaginatedCursorAdapter extends CursorAdapter implements SmartRegisterPaginatedAdapter{
     private final SmartRegisterClientsProvider listItemProvider;
-    private static final int PAGE_SIZE = 20;
     private final String selection;
     Context context;
     CommonRepository commonRepository;
@@ -197,6 +196,8 @@ public class SmartRegisterPaginatedCursorAdapter extends CursorAdapter implement
 
     public void filterandSortExecute(String vilageFilter, String searchFilter, String sort) {
 //todo        refresh();
+        int pageSize = limitPerPage();
+
         lastQuery = new SmartRegisterQueryBuilder(table, mainFilter, db == null || db.equals(SmartRegisterCursorBuilder.DB.DRISHTI)?null:"baseEntityId");
         lastQuery.overrideSelection(selection);
         if (StringUtils.isNotBlank(vilageFilter)){
@@ -208,7 +209,7 @@ public class SmartRegisterPaginatedCursorAdapter extends CursorAdapter implement
         if(StringUtils.isNotBlank(sort)){
             lastQuery.addOrder(sort);
         }
-        lastQuery.limitAndOffset(limitPerPage(), currentoffset());
+        lastQuery.limitAndOffset(pageSize, currentoffset());
 
         filterandSortExecute();
     }

@@ -22,6 +22,9 @@
       "name" : "provider_province",
       "bind" : "/model/instance/new_member_registration_form/provider_province"
     }, {
+      "name" : "provider_id",
+      "bind" : "/model/instance/new_member_registration_form/provider_id"
+    }, {
       "name" : "provider_location_id",
       "bind" : "/model/instance/new_member_registration_form/provider_location_id"
     }, {
@@ -45,6 +48,21 @@
     }, {
       "name" : "provider_location_note",
       "bind" : "/model/instance/new_member_registration_form/provider_location_note"
+    }, {
+      "name" : "province",
+      "bind" : "/model/instance/new_member_registration_form/province"
+    }, {
+      "name" : "city_village",
+      "bind" : "/model/instance/new_member_registration_form/city_village"
+    }, {
+      "name" : "town",
+      "bind" : "/model/instance/new_member_registration_form/town"
+    }, {
+      "name" : "union_council",
+      "bind" : "/model/instance/new_member_registration_form/union_council"
+    }, {
+      "name" : "address1",
+      "bind" : "/model/instance/new_member_registration_form/address1"
     }, {
       "name" : "start",
       "bind" : "/model/instance/new_member_registration_form/start"
@@ -73,14 +91,17 @@
       "name" : "household_id",
       "bind" : "/model/instance/new_member_registration_form/household_id"
     }, {
+      "name" : "household_role",
+      "bind" : "/model/instance/new_member_registration_form/household_role"
+    }, {
       "name" : "household_id_note",
       "bind" : "/model/instance/new_member_registration_form/household_id_note"
     }, {
       "name" : "name_hhh",
       "bind" : "/model/instance/new_member_registration_form/name_hhh"
     }, {
-      "name" : "address_note",
-      "bind" : "/model/instance/new_member_registration_form/address_note"
+      "name" : "address",
+      "bind" : "/model/instance/new_member_registration_form/address"
     }, {
       "name" : "program_client_id",
       "bind" : "/model/instance/new_member_registration_form/individual/program_client_id"

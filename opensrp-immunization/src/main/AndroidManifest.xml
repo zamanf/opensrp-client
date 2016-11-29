@@ -27,7 +27,7 @@
             android:screenOrientation="landscape"
             android:theme="@style/AppThemeNoTitle" />
         <activity
-            android:name=".household.HouseholdSmartRegisterActivity"
+            android:name="org.ei.opensrp.household.HouseholdSmartRegisterActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="landscape"
             android:theme="@style/AppThemeNoTitle" />
@@ -56,10 +56,6 @@
         <activity
             android:name=".woman.WomanSmartRegisterActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="landscape"
-            android:theme="@style/AppThemeNoTitle" />
-        <activity
-            android:name=".woman.WomanDetailActivity"
             android:screenOrientation="landscape"
             android:theme="@style/AppThemeNoTitle" />
         <activity

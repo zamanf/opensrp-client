@@ -49,18 +49,28 @@ public class BaseEntity extends BaseDataObject {
 
 	public List<Address> getAddresses() {
 		if (addresses == null) {
-			addresses = new ArrayList<Address>();
+			addresses = new ArrayList<>();
 		}
 		return addresses;
 	}
 	
 	public Address getAddress(String addressType) {
-		for (Address address : addresses) {
+		for (Address address : getAddresses()) {
 			if(address.getAddressType().equalsIgnoreCase(addressType)){
 				return address;
 			}
 		}
 		return null;
+	}
+
+	public void removeAddress(String addressType) {
+		Address ar = null;
+		for (Address address : getAddresses()) {
+			if(address.getAddressType().equalsIgnoreCase(addressType)){
+				ar = address;
+			}
+		}
+		if(ar != null) getAddresses().remove(ar);
 	}
 
 	/**
@@ -75,14 +85,14 @@ public class BaseEntity extends BaseDataObject {
 
 	public void addAddress(Address address) {
 		if (addresses == null) {
-			addresses = new ArrayList<Address>();
+			addresses = new ArrayList<>();
 		}
 		addresses.add(address);
 	}
 
 	public Map<String, Object> getAttributes() {
 		if (attributes == null) {
-			attributes = new HashMap<String, Object>();
+			attributes = new HashMap<>();
 		}
 		return attributes;
 	}
@@ -111,7 +121,7 @@ public class BaseEntity extends BaseDataObject {
 
 	public void addAttribute(String name, Object value) {
 		if (attributes == null) {
-			attributes = new HashMap<String, Object>();
+			attributes = new HashMap<>();
 		}
 
 		attributes.put(name, value);
@@ -123,7 +133,7 @@ public class BaseEntity extends BaseDataObject {
 	
 	public Map<String, String> getIdentifiers() {
 		if(identifiers == null){
-			identifiers = new HashMap<String, String>();
+			identifiers = new HashMap<>();
 		}
 		return identifiers;
 	}
@@ -139,13 +149,29 @@ public class BaseEntity extends BaseDataObject {
 		}
 		return null;
 	}
+
+	/**
+	 * Returns field matching the regex. Note that incase of multiple fields matching criteria
+	 * function would return first match. The must be well formed to find out a single value
+	 * @param regex
+	 * @return
+	 */
+	public String getIdentifierMatchingRegex(String regex) {
+		for (Map.Entry<String, String> a : getIdentifiers().entrySet()) {
+			if(a.getKey().matches(regex)){
+				return a.getValue();
+			}
+		}
+		return null;
+	}
+
 	public void setIdentifiers(Map<String, String> identifiers) {
 		this.identifiers = identifiers;
 	}
 
 	public void addIdentifier(String identifierType, String identifier) {
 		if(identifiers == null){
-			identifiers = new HashMap<String, String>();
+			identifiers = new HashMap<>();
 		}
 		
 		identifiers.put(identifierType, identifier);
@@ -172,7 +198,7 @@ public class BaseEntity extends BaseDataObject {
 	
 	public BaseEntity withIdentifier(String identifierType, String identifier) {
 		if(identifiers == null){
-			identifiers = new HashMap<String, String>();
+			identifiers = new HashMap<>();
 		}
 		identifiers.put(identifierType, identifier);
 		return this;
@@ -191,7 +217,7 @@ public class BaseEntity extends BaseDataObject {
 
 	public BaseEntity withAddress(Address address) {
 		if (addresses == null) {
-			addresses = new ArrayList<Address>();
+			addresses = new ArrayList<>();
 		}
 		addresses.add(address);
 		return this;
@@ -210,7 +236,7 @@ public class BaseEntity extends BaseDataObject {
 
 	public BaseEntity withAttribute(String name, Object value) {
 		if (attributes == null) {
-			attributes = new HashMap<String, Object>();
+			attributes = new HashMap<>();
 		}
 		attributes.put(name, value);
 		return this;

@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageButton;
-import android.widget.TextView;
 
 import org.ei.opensrp.immunization.child.ChildSmartRegisterActivity;
 import org.ei.opensrp.immunization.field.FieldMonitorSmartRegisterActivity;
@@ -18,11 +16,10 @@ import org.ei.opensrp.view.contract.HomeContext;
 public class ImmunizationHomeActivity extends NativeHomeActivity {
     Activity activity=this;
 
-    private TextView womanRegisterClientCountView;
-    private TextView childRegisterClientCountView;
-    private TextView fieldRegisterClientCountMView;
-    private TextView householdRegisterClientCountView;
-    private TextView householdRegisterClientMemberCountView;
+    private Register womanRegister;
+    private Register childRegister;
+    private Register stockRegister;
+    private Register householdRegister;
 
     private final String TAG = getClass().getName();
 
@@ -43,40 +40,42 @@ public class ImmunizationHomeActivity extends NativeHomeActivity {
     }
 
     public void setupViewsAndListeners() {
-        ImageButton imgButtonHousehold=(ImageButton)findViewById(R.id.btn_household_register);
-        ImageButton imgButtonChild=(ImageButton)findViewById(R.id.btn_child_register_new);
-        ImageButton imgButtonWoman=(ImageButton)findViewById(R.id.btn_woman_register);
-        ImageButton imgButtonField=(ImageButton)findViewById(R.id.btn_field_register);
-        if(onRegisterStartListener!=null) {
-            imgButtonField.setOnClickListener(onRegisterStartListener);
-            imgButtonWoman.setOnClickListener(onRegisterStartListener);
-            imgButtonChild.setOnClickListener(onRegisterStartListener);
-            imgButtonHousehold.setOnClickListener(onRegisterStartListener);
-        }
+        Log.v(getClass().getName(), Utils.providerDetails().toString());
+        womanRegister = initRegister("View Woman Register", R.id.womanImmunizationContainer, R.id.btn_woman_register, onRegisterStartListener,
+                new RegisterCountView[]{new RegisterCountView(R.id.txt_woman_register_client_count, "pkwoman", "", "", CountMethod.AUTO)});
+        childRegister = initRegister("View Child Register", R.id.childImmunizationContainer, R.id.btn_child_register, onRegisterStartListener,
+                new RegisterCountView[]{new RegisterCountView(R.id.txt_child_register_client_count, "pkchild", "", "", CountMethod.AUTO)});
+        stockRegister = initRegister("View Stock Register", R.id.stockContainer, R.id.btn_field_register, onRegisterStartListener,
+                new RegisterCountView[]{new RegisterCountView(R.id.txt_field_register_client_countm, "stock", "report='monthly'", "", CountMethod.AUTO)});
+
+        householdRegister = initRegister("View Household Register", R.id.householdContainer, R.id.btn_household_register, onRegisterStartListener,
+                new RegisterCountView[]{
+                   new RegisterCountView(R.id.txt_household_register_client_count, "pkhousehold", "", "", CountMethod.AUTO),
+                   new RegisterCountView(R.id.txt_household_register_client_plus_members_count, "pkindividual", "", "", CountMethod.AUTO),
+                });
 
         findViewById(R.id.btn_reporting).setOnClickListener(onButtonsClickListener);
         findViewById(R.id.btn_provider_profile).setOnClickListener(onButtonsClickListener);
-
-        householdRegisterClientCountView = (TextView) findViewById(R.id.txt_household_register_client_count);
-        householdRegisterClientMemberCountView = (TextView) findViewById(R.id.txt_household_register_client_plus_members_count);
-        womanRegisterClientCountView = (TextView) findViewById(R.id.txt_woman_register_client_count);
-        childRegisterClientCountView = (TextView) findViewById(R.id.txt_child_register_client_count);
-        fieldRegisterClientCountMView = (TextView) findViewById(R.id.txt_field_register_client_countm);
     }
 
     protected void updateRegisterCounts(HomeContext homeContext) {
-        String householdCount = context.commonrepository("pkhousehold").rawQuery("SELECT COUNT(*) c FROM pkhousehold").get(0).get("c");
-        String householdIndividualCount = context.commonrepository("pkindividual").rawQuery("SELECT COUNT(*) c FROM pkindividual").get(0).get("c");
+        if (womanRegister.isAllowed()){
+            womanRegister.resetRegisterCounts();
+        }
+        if (childRegister.isAllowed()){
+            childRegister.resetRegisterCounts();
+        }
+        if (stockRegister.isAllowed()){
+            stockRegister.resetRegisterCounts();
+        }
+        if (householdRegister.isAllowed()){
+            householdRegister.resetRegisterCounts();
 
-        String childCount = context.commonrepository("pkchild").rawQuery("SELECT COUNT(*) c FROM pkchild").get(0).get("c");
-        String womanCount = context.commonrepository("pkwoman").rawQuery("SELECT COUNT(*) c FROM pkwoman").get(0).get("c");
-        String stockCountM = context.commonrepository("stock").rawQuery("SELECT COUNT(*) c FROM stock WHERE report='monthly'").get(0).get("c");
+            int hhCount = householdRegister.getCountView(R.id.txt_household_register_client_count).getCurrentCount();
+            int hhMemberCount = householdRegister.getCountView(R.id.txt_household_register_client_plus_members_count).getCurrentCount();
 
-        householdRegisterClientCountView.setText(householdCount+" H");
-        householdRegisterClientMemberCountView.setText(Utils.addAsInts(true, householdCount,householdIndividualCount)+" M");//HHHead + individual
-        womanRegisterClientCountView.setText(womanCount);
-        childRegisterClientCountView.setText(childCount);
-        fieldRegisterClientCountMView.setText(stockCountM);
+            householdRegister.overrideRegisterCount(R.id.txt_household_register_client_plus_members_count, hhCount+hhMemberCount, "M");
+        }
     }
 
     private View.OnClickListener onRegisterStartListener = new View.OnClickListener() {
@@ -91,7 +90,7 @@ public class ImmunizationHomeActivity extends NativeHomeActivity {
                     activity.startActivity(new Intent(activity, FieldMonitorSmartRegisterActivity.class));
                     break;
 
-                case R.id.btn_child_register_new:
+                case R.id.btn_child_register:
                     activity.startActivity(new Intent(activity, ChildSmartRegisterActivity.class));
                     break;
 

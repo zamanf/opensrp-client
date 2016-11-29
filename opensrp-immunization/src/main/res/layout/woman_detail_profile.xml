@@ -8,8 +8,8 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" android:weightSum="11"
-        >
+        android:layout_height="wrap_content" android:weightSum="10"
+        android:layout_marginBottom="10dp">
 
         <ImageView
             android:layout_width="@dimen/client_profile_pic_width"
@@ -20,25 +20,25 @@
             android:scaleType="fitXY" />
 
         <TableLayout
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="5"
             android:id="@+id/woman_detail_info_table1"
             android:background="@drawable/listview_background_rounded"
-            android:layout_margin="20dp"
-            android:layout_gravity="center_horizontal"
-            android:padding="10dp">
+            android:shrinkColumns="1" android:layout_weight="5">
+
+            <include layout="@layout/tablerow_medium" />
+            <include layout="@layout/tablerow_medium" />
         </TableLayout>
 
         <TableLayout
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="6"
             android:id="@+id/woman_detail_info_table2"
             android:background="@drawable/listview_background_rounded"
-            android:layout_margin="20dp"
-            android:layout_gravity="center_horizontal"
-            android:padding="10dp">
+            android:shrinkColumns="1" android:layout_weight="5">
+
+            <include layout="@layout/tablerow_medium" />
+            <include layout="@layout/tablerow_medium" />
         </TableLayout>
 
     </LinearLayout>

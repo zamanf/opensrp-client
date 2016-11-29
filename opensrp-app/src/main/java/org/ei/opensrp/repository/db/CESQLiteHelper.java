@@ -54,7 +54,7 @@ public class CESQLiteHelper extends SQLiteOpenHelper {
 		gender (Type.text, false, false), 
 		relationships (Type.map, false, false);
 		
-		private client_column(Type type, boolean pk, boolean index) {
+		client_column(Type type, boolean pk, boolean index) {
 			this.column = new ColumnAttribute(type, pk, index);
 		}
 		private ColumnAttribute column;
@@ -79,7 +79,8 @@ public class CESQLiteHelper extends SQLiteOpenHelper {
 		cityVillage (Type.text, false, false), 
 		stateProvince (Type.text, false, false), 
 		country (Type.text, false, false);
-		private address_column(Type type, boolean pk, boolean index) {
+
+		address_column(Type type, boolean pk, boolean index) {
 			this.column = new ColumnAttribute(type, pk, index);
 		}
 		private ColumnAttribute column;
@@ -97,7 +98,8 @@ public class CESQLiteHelper extends SQLiteOpenHelper {
 		voider (Type.text, false, false), 
 		voidReason (Type.text, false, false),
 		
-		eventId (Type.text, true, false), 
+		_id (Type.text, true, false),
+		identifiers (Type.map, false, true),
 		baseEntityId (Type.text, false, true), 
 		locationId (Type.text, false, false), 
 		eventDate (Type.date, false, true), 
@@ -107,8 +109,8 @@ public class CESQLiteHelper extends SQLiteOpenHelper {
 		entityType (Type.text, false, false), 
 		details (Type.map, false, false), 
 		version (Type.text, false, false);
-		
-		private event_column(Type type, boolean pk, boolean index) {
+
+		event_column(Type type, boolean pk, boolean index) {
 			this.column = new ColumnAttribute(type, pk, index);
 		}
 		private ColumnAttribute column;
@@ -117,16 +119,17 @@ public class CESQLiteHelper extends SQLiteOpenHelper {
 		}
 	}
 	public enum obs_column implements Column{
-		eventId (Type.text, false, true), 
+		eventId (Type.text, false, true),
 		fieldType (Type.text, false, false), 
 		fieldDataType (Type.text, false, false), 
 		fieldCode (Type.text, false, false), 
 		parentCode (Type.text, false, false),
-		values (Type.list, false, false), 
+		values (Type.list, false, false),
+		humanReadableValues (Type.list, false, false),
 		comments (Type.text, false, false), 
 		formSubmissionField (Type.text, false, true);
 		
-		private obs_column(Type type, boolean pk, boolean index) {
+		obs_column(Type type, boolean pk, boolean index) {
 			this.column = new ColumnAttribute(type, pk, index);
 		}
 		private ColumnAttribute column;
@@ -142,7 +145,7 @@ public class CESQLiteHelper extends SQLiteOpenHelper {
 		public Column[] columns() {
 			return columns;
 		}
-		private Table(Column[] columns) {
+		Table(Column[] columns) {
 			this.columns = columns;
 		}
 	}
@@ -176,7 +179,7 @@ public class CESQLiteHelper extends SQLiteOpenHelper {
 	
 	private String getCreateTableColumn(Column col) {
 		ColumnAttribute c = col.column();
-		return "`"+col.name()+"` "+ getSqliteType(c.type()) + (c.pk()?" PRIMARY KEY ":"");
+		return "`"+col.name()+"` "+ getSqliteType(c.type()) + (c.pk()?" PRIMARY KEY ":" collate nocase ");
 	}
 	
 	private String removeEndingComma (String str){
@@ -243,13 +246,13 @@ public class CESQLiteHelper extends SQLiteOpenHelper {
 	}
 	
 	private void insert(Class<?> cls, Table table, Column[] cols, String referenceColumn, String referenceValue, Object o) throws IllegalAccessException, IllegalArgumentException, NoSuchFieldException{
-		Map<Column, Object> fm = new HashMap<Column, Object>();
+		Map<Column, Object> fm = new HashMap<>();
 		
 		for (Column c : cols) {
 			if(c.name().equalsIgnoreCase(referenceColumn)){
 				continue;//skip reference column as it is already appended
 			}
-			Field f = null;
+			Field f;
 			try{
 				f = cls.getDeclaredField(c.name());// 1st level
 			}
@@ -292,12 +295,12 @@ public class CESQLiteHelper extends SQLiteOpenHelper {
 	public void insert(Event event) throws NoSuchFieldException, IllegalAccessException, IllegalArgumentException {
 		insert(Event.class, Table.event, event_column.values(), event);
 		for (Obs o : event.getObs()) {
-			insert(Obs.class, Table.obs, obs_column.values(), obs_column.eventId.name(), event.getEventId(), o);
+			insert(Obs.class, Table.obs, obs_column.values(), obs_column.eventId.name(), event.getId(), o);
 		}
 	}
 	
 	public List<Client> getClients() throws JSONException, ParseException {
-		List<Client> clist = new ArrayList<Client>();
+		List<Client> clist = new ArrayList<>();
 		Cursor cres = getDatabase().rawQuery("SELECT * FROM "+Table.client.name(), null);
 		while (cres.moveToNext()) {
 			JSONObject cl = new JSONObject();
@@ -367,7 +370,7 @@ public class CESQLiteHelper extends SQLiteOpenHelper {
 	}
 
 	public List<Event> getEvents(String baseEntityId, String eventType, String order) throws JSONException, ParseException {
-		List<Event> elist = new ArrayList<Event>();
+		List<Event> elist = new ArrayList<>();
 		Cursor eres = getDatabase().rawQuery("SELECT * FROM " + Table.event.name() +
 				" WHERE " + event_column.baseEntityId.name() + "='" + baseEntityId + "'" +
 				(StringUtils.isBlank(eventType)?"":" AND "+event_column.eventType.name()+"='"+eventType+"' ")+
@@ -380,11 +383,11 @@ public class CESQLiteHelper extends SQLiteOpenHelper {
 			}
 
 			JSONArray olist = new JSONArray();
-			Cursor ores = getDatabase().rawQuery("SELECT * FROM "+Table.obs.name()+" WHERE "+obs_column.eventId.name()+"='"+ev.getString(event_column.eventId.name())+"'", null);
+			Cursor ores = getDatabase().rawQuery("SELECT * FROM "+Table.obs.name()+" WHERE "+obs_column.eventId.name()+"='"+ev.getString(event_column._id.name())+"'", null);
 			while (ores.moveToNext()) {
 				JSONObject o = new JSONObject();
 				for (Column oc : Table.obs.columns()) {
-					if(!oc.name().equalsIgnoreCase(event_column.eventId.name())){//skip reference column
+					if(!oc.name().equalsIgnoreCase(event_column._id.name())){//skip reference column
 						o.put(oc.name(), getValue(eres, oc));
 					}
 				}
@@ -400,14 +403,15 @@ public class CESQLiteHelper extends SQLiteOpenHelper {
 				}
 			}).create();
 			elist.add(g.fromJson(ev.toString(), Event.class));
+			ores.close();
 		}
 		return elist;
 	}
 
 	public List<Obs> getObs(String baseEntityId, String eventType, String order, String... fields) throws JSONException, ParseException {
-		List<Obs> olist = new ArrayList<Obs>();
+		List<Obs> olist = new ArrayList<>();
 		Cursor ores = getDatabase().rawQuery("SELECT * FROM " + Table.obs.name() +" obs "+
-				" JOIN "+Table.event.name()+" e ON e."+event_column.eventId.name()+"= obs."+obs_column.eventId.name()+
+				" JOIN "+Table.event.name()+" e ON e."+event_column._id.name()+"= obs."+obs_column.eventId.name()+
 				" WHERE e." + event_column.baseEntityId.name() + "='" + baseEntityId + "' " +
 				" AND obs."+obs_column.values.name()+" IS NOT NULL " +
 				" AND obs."+obs_column.values.name()+" <> '' " +
@@ -446,7 +450,7 @@ public class CESQLiteHelper extends SQLiteOpenHelper {
 			return ""+cur.getString(ind)+"";
 		}
 		if(type.name().equalsIgnoreCase(Type.bool.name())){
-			return cur.getInt(ind)==0?false:true;
+			return cur.getInt(ind) != 0;
 		}
 		if(type.name().equalsIgnoreCase(Type.date.name())){
 			return new DateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(cur.getString(ind)).getTime());
@@ -495,11 +499,11 @@ public class CESQLiteHelper extends SQLiteOpenHelper {
 
 	public ArrayList<HashMap<String, String>> rawQuery(String query){
 		Cursor cursor = getDatabase().rawQuery(query, null);
-		ArrayList<HashMap<String, String>> maplist = new ArrayList<HashMap<String, String>>();
+		ArrayList<HashMap<String, String>> maplist = new ArrayList<>();
 		// looping through all rows and adding to list
 		if (cursor.moveToFirst()) {
 			do {
-				HashMap<String, String> map = new HashMap<String, String>();
+				HashMap<String, String> map = new HashMap<>();
 				for(int i=0; i<cursor.getColumnCount();i++)
 				{
 					map.put(cursor.getColumnName(i), cursor.getString(i));
@@ -509,7 +513,6 @@ public class CESQLiteHelper extends SQLiteOpenHelper {
 			} while (cursor.moveToNext());
 		}
 		getDatabase().close();
-		// return contact list
 		return maplist;
 	}
 

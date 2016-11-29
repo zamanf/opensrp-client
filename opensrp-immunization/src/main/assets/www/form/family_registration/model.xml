@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model>
   <instance>
-    <family_registration_form encounter_type="Family Registration Form" id="family_registration_form" version="201609091754">
+    <family_registration_form encounter_type="Family Registration Form" id="family_registration_form" version="201609290808">
       <formhub>
         <uuid/>
       </formhub>
@@ -9,6 +9,7 @@
       <provider_town/>
       <provider_city/>
       <provider_province/>
+      <provider_id/>
       <provider_location_id openmrs_entity="encounter" openmrs_entity_id="location_id"/>
       <provider_location_name/>
       <provider_location_note/>
@@ -20,7 +21,8 @@
       <simserial openmrs_entity="concept" openmrs_entity_id="163151AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
       <phonenumber openmrs_entity="concept" openmrs_entity_id="163152AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
       <client_reg_date openmrs_entity="encounter" openmrs_entity_id="encounter_date"/>
-      <household_id openmrs_entity="person_identifier" openmrs_entity_id="Household ID"/>
+      <household_id openmrs_entity="person_attribute" openmrs_entity_id="Household ID"/>
+      <household_role openmrs_entity="person_attribute" openmrs_entity_id="Household Role">Household Head</household_role>
       <household_id_note/>
       <household_head>
         <already_enrolled_in_other_program/>

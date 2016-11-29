@@ -297,13 +297,15 @@ public class HouseholdSmartRegisterFragment extends SecuredNativeSmartRegisterFr
                 Toast.makeText(getActivity(), "Given ID found associated with a child and a woman. Data is inconsistent. Search in corresponding register", Toast.LENGTH_LONG).show();
                 return;
             }
-            SmartRegisterClients hh = filterHousehold(linkId);
+            SmartRegisterClients hhl = filterHousehold(linkId);
+            CommonPersonObjectClient hh = (CommonPersonObjectClient) hhl.get(0);
             map.put("existing_program_client_id", qrCode);
             map.put("program_client_id", qrCode);
-            Map<String, String> m = memberRegistrationOverrides((CommonPersonObjectClient) hh.get(0), woman != null?woman:child, filterHouseholdMembers(((CommonPersonObjectClient) hh.get(0)).getColumnmaps().get("household_id")));
+
+            Map<String, String> m = memberRegistrationOverrides(hh, woman != null?woman:child, filterHouseholdMembers(hh.getColumnmaps().get("household_id")));
             map.putAll(m);
 
-            startNewMemberEnrollmentForm(map, (CommonPersonObjectClient) hh.get(0));
+            startNewMemberEnrollmentForm(map, hh);
         }
         else if(entityType.equalsIgnoreCase("WOMAN")){//todo what about offsite enrollment
             map.put("existing_program_client_id", qrCode);
@@ -358,6 +360,8 @@ public class HouseholdSmartRegisterFragment extends SecuredNativeSmartRegisterFr
         }
         else {
             map.put("household_id", qrCode);
+            map.put("town", getValue(VaccinatorUtils.providerDetails(), "provider_town", false));
+            map.put("union_council", getValue(VaccinatorUtils.providerDetails(), "provider_uc", false));
 
             startGroupEnrollmentForm(map);
         }
@@ -505,6 +509,12 @@ public class HouseholdSmartRegisterFragment extends SecuredNativeSmartRegisterFr
         map.put("existing_full_name_hhh", getValue(client.getColumnmaps(), "first_name", true));
         map.put("existing_household_id", getValue(client.getColumnmaps(), "household_id", true));
         map.put("existing_num_members", (otherMembers.size()+1)+"");
+
+        map.put("province", getValue(client.getColumnmaps(), "province", false));
+        map.put("city_village", getValue(client.getColumnmaps(), "city_village", false));
+        map.put("town", getValue(client.getColumnmaps(), "town", false));
+        map.put("union_council", getValue(client.getColumnmaps(), "union_council", false));
+        map.put("address1", getValue(client.getColumnmaps(), "address1", false));
 
         map.put("existing_full_address", getValue(client.getColumnmaps(), "address1", true)
                 +", UC: "+ getValue(client.getColumnmaps(), "union_council", true).replace("Uc", "UC")

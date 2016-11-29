@@ -19,6 +19,9 @@
       "name" : "provider_province",
       "bind" : "/model/instance/family_registration_form/provider_province"
     }, {
+      "name" : "provider_id",
+      "bind" : "/model/instance/family_registration_form/provider_id"
+    }, {
       "name" : "provider_location_id",
       "bind" : "/model/instance/family_registration_form/provider_location_id"
     }, {
@@ -54,6 +57,9 @@
     }, {
       "name" : "household_id",
       "bind" : "/model/instance/family_registration_form/household_id"
+    }, {
+      "name" : "household_role",
+      "bind" : "/model/instance/family_registration_form/household_role"
     }, {
       "name" : "household_id_note",
       "bind" : "/model/instance/family_registration_form/household_id_note"

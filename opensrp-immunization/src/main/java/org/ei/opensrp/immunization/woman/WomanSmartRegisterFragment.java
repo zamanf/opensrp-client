@@ -53,7 +53,7 @@ public class WomanSmartRegisterFragment extends SmartClientRegisterFragment {
     @Override
     protected SmartRegisterPaginatedAdapter adapter() {
         return new SmartRegisterPaginatedCursorAdapter(getActivity(),
-                new SmartRegisterCursorBuilder("pkwoman", null, (CursorSortOption) getDefaultOptionsProvider().sortOption(), "")
+                new SmartRegisterCursorBuilder("pkwoman", null, (CursorSortOption) getDefaultOptionsProvider().sortOption(), "").limit(5)
                 , clientsProvider(), SmartRegisterCursorBuilder.DB.DRISHTI);
     }
 
@@ -69,9 +69,9 @@ public class WomanSmartRegisterFragment extends SmartClientRegisterFragment {
             @Override
             public ServiceModeOption serviceMode() {
                 return new VaccinationServiceModeOption(null, "TT", new int[]{
-                        R.string.woman_profile , R.string.age, R.string.epi_number,
+                        R.string.woman_profile , R.string.epi_number,
                         R.string.woman_edd, R.string.woman_contact_number, R.string.woman_last_vaccine, R.string.woman_next_vaacine
-                }, new int[]{6,2,2,3,3,3,4});
+                }, new int[]{8,3,3,3,3,3});
             }
 
             @Override
@@ -114,6 +114,7 @@ public class WomanSmartRegisterFragment extends SmartClientRegisterFragment {
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.woman_profile_info_layout:
+                case R.id.woman_profile_info_layout1:
                     ((SmartRegisterSecuredActivity) getActivity()).showDetailFragment((CommonPersonObjectClient) view.getTag(), true);
                     break;
                 case R.id.woman_next_visit_holder:

@@ -1,9 +1,8 @@
 package org.ei.opensrp.immunization.woman;
 
-import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.PersistableBundle;
 import android.util.Log;
 
 import org.ei.opensrp.immunization.application.common.SmartClientRegisterFragment;
@@ -70,7 +69,7 @@ public class WomanSmartRegisterActivity extends SmartRegisterSecuredActivity {
         List<String> formNames = new ArrayList<String>();
         formNames.add("woman_enrollment");
         formNames.add("woman_followup");
-        formNames.add("offsite_woman_followup");
+        formNames.add("woman_offsite_followup");
 
         return formNames.toArray(new String[formNames.size()]);
     }

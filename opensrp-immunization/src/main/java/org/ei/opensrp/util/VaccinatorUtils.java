@@ -16,6 +16,7 @@
 
 package org.ei.opensrp.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.text.Html;
@@ -28,6 +29,9 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import org.apache.commons.lang3.StringUtils;
 import org.ei.drishti.dto.AlertStatus;
 import org.ei.opensrp.commonregistry.CommonPersonObject;
@@ -37,7 +41,6 @@ import org.ei.opensrp.repository.db.Client;
 import org.ei.opensrp.repository.db.Obs;
 import org.ei.opensrp.repository.db.VaccineRepo;
 import org.ei.opensrp.repository.db.VaccineRepo.Vaccine;
-import org.ei.opensrp.util.IntegerUtil;
 import org.joda.time.DateTime;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,6 +49,7 @@ import org.opensrp.api.util.EntityUtils;
 import org.opensrp.api.util.LocationTree;
 import org.opensrp.api.util.TreeNode;
 
+import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -54,6 +58,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.ei.opensrp.util.Utils.addAsInts;
+import static org.ei.opensrp.util.Utils.addRow;
 import static org.ei.opensrp.util.Utils.addToList;
 import static org.ei.opensrp.util.Utils.addToRow;
 import static org.ei.opensrp.util.Utils.convertDateFormat;
@@ -74,14 +79,11 @@ public class VaccinatorUtils {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return "";
+        return null;
     }
 
     public static HashMap<String, String> providerDetails(){
         org.ei.opensrp.Context context = org.ei.opensrp.Context.getInstance();
-        org.ei.opensrp.util.Log.logDebug("ANM DETAILS" + context.anmController().get());
-        org.ei.opensrp.util.Log.logDebug("USER DETAILS" + context.allSettings().fetchUserInformation());
-        org.ei.opensrp.util.Log.logDebug("TEAM DETAILS" + getPreference(context.applicationContext(), "team", "{}"));
 
         String locationJson = context.anmLocationController().get();
         LocationTree locationTree = EntityUtils.fromJson(locationJson, LocationTree.class);
@@ -116,12 +118,49 @@ public class VaccinatorUtils {
         return map;
     }
 
+    public static JSONObject providerFullDetails() throws JSONException {
+        org.ei.opensrp.Context context = org.ei.opensrp.Context.getInstance();
+
+        String locationJson = context.anmLocationController().get();
+        LocationTree locationTree = EntityUtils.fromJson(locationJson, LocationTree.class);
+
+        Map<String, TreeNode<String, Location>> locationMap = locationTree.getLocationsHierarchy();
+        Map<String, String> locations = new HashMap<>();
+        addToList(locations, locationMap, "country");
+        addToList(locations, locationMap, "province");
+        addToList(locations, locationMap, "city");
+        addToList(locations, locationMap, "town");
+        addToList(locations, locationMap, "uc");
+        addToList(locations, locationMap, "vaccination center");
+
+        JSONObject map = new JSONObject();
+        map.put("provider_uc", locations.get("uc"));
+        map.put("provider_town", locations.get("town"));
+        map.put("provider_city", locations.get("city"));
+        map.put("provider_province", locations.get("province"));
+        map.put("provider_location_id", locations.get("vaccination center"));
+        map.put("provider_location_name", locations.get("vaccination center"));
+        map.put("provider_id", context.anmService().fetchDetails().name());
+
+        JSONObject tm = new JSONObject(getPreference(context.applicationContext(), "team", "{}"));
+        map.put("provider_name", tm.getJSONObject("person").getString("display"));
+        map.put("provider_identifier", tm.getString("identifier"));
+        map.put("provider_team", tm.getJSONObject("team").getString("teamName"));
+
+        map.put("anm", new JSONObject(context.anmController().get()));
+
+        String userStr = context.allSettings().fetchUserInformation();
+        map.put("user", new JSONObject(userStr));
+
+        return map;
+    }
+
     public static String getObsValue(CESQLiteHelper cedb, Client client, boolean humanize, String... fields) throws JSONException, ParseException {
         List<Obs> ol = cedb.getObs(client.getBaseEntityId(), null, "eventDate DESC", fields);
         if(ol == null || ol.size() == 0){
             return "";
         }
-        return formatValue(ol.get(0).getValue(), humanize);
+        return formatValue(ol.get(0).getValue(true), humanize);
     }
 
     public static ArrayList<HashMap<String, String>> getWasted(String startDate, String endDate, String type){
@@ -187,39 +226,27 @@ public class VaccinatorUtils {
         return totalUsed;
     }
 
-    public static void addStatusTag(Context context, TableLayout table, String tag, boolean hrLine){
+    public static void addStatusTag(Activity context, TableLayout table, String tag, boolean hrLine){
         TableRow tr = new TableRow(context);
         if(hrLine) {
             tr.setBackgroundColor(Color.LTGRAY);
             tr.setPadding(1, 1, 1, 1);
             table.addView(tr);
         }
-        tr = addToRow(context, Html.fromHtml("<b>"+tag+"</b>"), new TableRow(context), true, 1);
-        tr.setPadding(15, 5, 0, 0);
-        table.addView(tr);
+       addRow(context, table, tag, 2, Utils.Size.MEDIUM);
     }
-    public static void addVaccineDetail(Context context, TableLayout table, String status, Vaccine vaccine, DateTime vaccineDate, Alert alert, boolean compact) {
-        addVaccineDetail(context, table, status, vaccine.display(), vaccineDate != null ? vaccineDate.toString("yyyy-MM-dd") : "", alert, compact);
+    public static void addVaccineDetail(Activity context, TableLayout table, String status, Vaccine vaccine, DateTime vaccineDate, Alert alert, boolean compact) {
+        addVaccineDetail(context, table, status, vaccine.display(), vaccineDate != null ? vaccineDate.toString("yyyy-MM-dd") : "", alert, Utils.Size.MEDIUM);
     }
 
-    public static void addVaccineDetail(Context context, TableLayout table, String status, String vaccine, String vaccineDate, Alert alert, boolean compact){
-        TableRow tr = new TableRow(context);
-        TableRow.LayoutParams trlp = new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        tr.setLayoutParams(trlp);
-        if(compact){
-            tr.setPadding(10, 1, 10, 1);
-        }
-        else{
-            tr.setPadding(10, 5, 10, 5);
-        }
+    public static void addVaccineDetail(Activity context, TableLayout table, String status, Vaccine vaccine, DateTime vaccineDate,
+           Alert alert, Utils.Size size) {
+        addVaccineDetail(context, table, status, vaccine.display(), vaccineDate != null ? vaccineDate.toString("yyyy-MM-dd") : "",
+                alert, size);
+    }
 
-        TextView label = new TextView(context);
-        label.setText(vaccine);
-        label.setPadding(20, 5, 70, 5);
-        label.setTextColor(Color.BLACK);
-        label.setBackgroundColor(Color.WHITE);
-        tr.addView(label);
-
+    public static void addVaccineDetail(Activity context, TableLayout table, String status, String vaccine, String vaccineDate,
+                                        Alert alert, Utils.Size size){
         String color = "#ffffff";
         if(status.equalsIgnoreCase("due")) {
             if(alert != null){
@@ -244,6 +271,7 @@ public class VaccinatorUtils {
         l.setOrientation(LinearLayout.HORIZONTAL);
         l.setVerticalGravity(Gravity.CENTER_VERTICAL);
         l.setGravity(Gravity.CENTER_VERTICAL);
+        l.setPadding(10, 4, 0, 4);
 
         Button s = new Button(context);
         TableRow.LayoutParams blp = new TableRow.LayoutParams(15, 15);
@@ -255,14 +283,13 @@ public class VaccinatorUtils {
 
         TextView v = new TextView(context);
         v.setText(vaccineDate);
+        v.setTextSize(16);
         v.setPadding(10, 4, 20, 5);
         v.setTextColor(Color.BLACK);
         v.setBackgroundColor(Color.WHITE);
         l.addView(v);
 
-        tr.addView(l);
-
-        table.addView(tr);
+        addRow(context, table, vaccine, l, size);
     }
 
     private static DateTime getReceivedDate(Map<String, String> received, Vaccine v){
@@ -304,7 +331,7 @@ public class VaccinatorUtils {
                         m = createVaccineMap("due", null, prereq, v);
                     }
                     else {
-                        m = createVaccineMap("due", null, null, v);
+                        m = createVaccineMap("na", null, null, v);//it was due before
                     }
                 } else if(milestoneDate != null){
                     m = createVaccineMap("due", null, milestoneDate.plusDays(v.milestoneGapDays()), v);

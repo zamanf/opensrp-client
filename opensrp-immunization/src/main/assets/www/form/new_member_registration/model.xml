@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model>
   <instance>
-    <new_member_registration_form encounter_type="New Member Registration" id="new_member_registration" version="201609260645">
+    <new_member_registration_form encounter_type="New Member Registration" id="new_member_registration" version="201609290807">
       <formhub>
         <uuid/>
       </formhub>
@@ -9,14 +9,20 @@
       <provider_town/>
       <provider_city/>
       <provider_province/>
+      <provider_id/>
       <provider_location_id openmrs_entity="encounter" openmrs_entity_id="location_id"/>
       <provider_location_name/>
-      <existing_household_id>2021212</existing_household_id>
+      <existing_household_id/>
       <existing_full_name_hhh/>
       <existing_full_address/>
       <existing_program_client_id/>
-      <existing_num_members>2</existing_num_members>
+      <existing_num_members/>
       <provider_location_note/>
+      <province openmrs_entity="person_address" openmrs_entity_id="stateProvince" openmrs_entity_parent="usual_residence"/>
+      <city_village openmrs_entity="person_address" openmrs_entity_id="cityVillage" openmrs_entity_parent="usual_residence"/>
+      <town openmrs_entity="person_address" openmrs_entity_id="town" openmrs_entity_parent="usual_residence"/>
+      <union_council openmrs_entity="person_address" openmrs_entity_id="subTown" openmrs_entity_parent="usual_residence"/>
+      <address1 openmrs_entity="person_address" openmrs_entity_id="address1" openmrs_entity_parent="usual_residence"/>
       <start openmrs_entity="concept" openmrs_entity_id="163137AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
       <end openmrs_entity="concept" openmrs_entity_id="163138AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
       <today/>
@@ -26,9 +32,10 @@
       <phonenumber openmrs_entity="concept" openmrs_entity_id="163152AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
       <client_reg_date openmrs_entity="encounter" openmrs_entity_id="encounter_date"/>
       <household_id openmrs_entity="person_attribute" openmrs_entity_id="Household ID"/>
+      <household_role openmrs_entity="person_attribute" openmrs_entity_id="Household Role">Household Member</household_role>
       <household_id_note/>
       <name_hhh/>
-      <address_note/>
+      <address/>
       <individual>
         <program_client_id openmrs_entity="person_identifier" openmrs_entity_id="Program Client ID"/>
         <program_client_id_note/>

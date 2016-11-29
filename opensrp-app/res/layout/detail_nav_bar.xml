@@ -86,7 +86,8 @@
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="20dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:background="@color/client_list_header_dark_grey">
 
         <org.ei.opensrp.view.customControls.CustomFontTextView
             android:layout_width="wrap_content"

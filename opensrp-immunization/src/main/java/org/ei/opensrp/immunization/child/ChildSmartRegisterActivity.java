@@ -2,7 +2,6 @@ package org.ei.opensrp.immunization.child;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.PersistableBundle;
 import android.util.Log;
 
 import org.ei.opensrp.immunization.application.common.SmartClientRegisterFragment;

@@ -1,5 +1,6 @@
 package org.ei.opensrp.repository.db;
 
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
@@ -105,6 +106,20 @@ public class Client extends BaseEntity {
 		this.lastName = lastName;
 	}
 
+	public String fullName() {
+		String n = "";
+		if(StringUtils.isNotBlank(firstName)){
+			n += firstName;
+		}
+		if(StringUtils.isNotBlank(middleName)){
+			n += " "+ middleName;
+		}
+		if(StringUtils.isNotBlank(lastName)){
+			n += " " + lastName;
+		}
+		return n.trim();
+	}
+
 	public DateTime getBirthdate() {
 		return birthdate;
 	}
@@ -203,7 +218,7 @@ public class Client extends BaseEntity {
 	
 	public List<String> findRelatives(String relationshipType) {
 		if(relationships == null){
-			relationships = new HashMap<String, List<String>>();
+			relationships = new HashMap<>();
 		}
 		
 		return relationships.get(relationshipType);
@@ -211,12 +226,12 @@ public class Client extends BaseEntity {
 	
 	public void addRelationship(String relationType, String relativeEntityId) {
 		if(relationships == null){
-			relationships = new HashMap<String, List<String>>();
+			relationships = new HashMap<>();
 		}
 		
 		List<String> relatives = findRelatives(relationType);
 		if(relatives == null){
-			relatives = new ArrayList<String>();
+			relatives = new ArrayList<>();
 		}
 		relatives.add(relativeEntityId);
 		relationships.put(relationType, relatives);

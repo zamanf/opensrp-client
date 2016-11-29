@@ -16,6 +16,7 @@
 
 package org.ei.opensrp.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -25,11 +26,18 @@ import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.os.Handler;
 import android.text.Html;
+import android.text.InputType;
 import android.text.Spanned;
+import android.text.TextUtils;
+import android.util.Size;
+import android.util.SizeF;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
@@ -81,6 +89,17 @@ public class Utils {
     private static final SimpleDateFormat DB_DTF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     private Utils() {};
+
+    public static JSONObject providerDetails(){
+        org.ei.opensrp.Context context = org.ei.opensrp.Context.getInstance();
+        try {
+            JSONObject u = new JSONObject(context.allSettings().fetchUserInformation());
+            return u;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public static int ageInYears(CommonPersonObjectClient person, String dobField, ByColumnAndByDetails columnOrDetail, boolean suppressException){
         return ageInYears(person.getColumnmaps(), person.getDetails(), dobField, columnOrDetail, suppressException);
@@ -260,6 +279,16 @@ public class Utils {
         return formatValue(cm.get(field), humanize);
     }
 
+    public static String getValue(JSONObject cm, String field, boolean humanize, boolean suppressException) {
+        try {
+            return formatValue(cm.get(field), humanize);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            if(suppressException==false) throw new RuntimeException(e);
+        }
+        return "";
+    }
+
     public static String nonEmptyValue(Map<String, String> cm, boolean asc, boolean humanize, String... fields){
         List<String> l = Arrays.asList(fields);
         if(!asc){
@@ -311,8 +340,61 @@ public class Utils {
         return getDataRow(context, label, value, row, false);
     }
 
+    public enum Size{
+        XSMALL, SMALL, MEDIUM, LARGE, XLARGE
+    }
+
+    public static void addRow(Activity activity, TableLayout table, String label, String value, Size size){
+        if(size.equals(Size.MEDIUM)){
+            View v = activity.getLayoutInflater().inflate(R.layout.tablerow_medium, null);
+            ((TextView)v.findViewById(R.id.c1)).setText(label);
+            ((TextView)v.findViewById(R.id.c2)).setText(value);
+
+            table.addView(v);
+        }
+    }
+
+    public static void addRow(Activity activity, TableLayout table, String label, View value, Size size){
+        if(size.equals(Size.MEDIUM)){
+            TableRow v = (TableRow) activity.getLayoutInflater().inflate(R.layout.tablerow_medium, null);
+            ((TextView)v.findViewById(R.id.c1)).setText(label);
+            v.removeView(v.findViewById(R.id.c2));
+            v.addView(value);
+
+            table.addView(v);
+        }
+    }
+
+    public static void addRow(Activity activity, TableLayout table, String label, int span, Size size){
+        if(size.equals(Size.MEDIUM)){
+            TableRow v = (TableRow) activity.getLayoutInflater().inflate(R.layout.tablerow_medium, null);
+            v.removeView(v.findViewById(R.id.c2));
+
+            TableRow.LayoutParams lp = new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1);
+            lp.span = span;
+
+            ((TextView)v.findViewById(R.id.c1)).setText(label);
+            v.findViewById(R.id.c1).setLayoutParams(lp);
+
+            table.addView(v);
+        }
+    }
+
+    public static void addRow(Activity activity, TableLayout table, String label1, String value1, String label2, String value2, Size size){
+        if(size.equals(Size.MEDIUM)){
+            View v = activity.getLayoutInflater().inflate(R.layout.tablerow_medium_double, null);
+            ((TextView)v.findViewById(R.id.c1)).setText(label1);
+            ((TextView)v.findViewById(R.id.c2)).setText(value1);
+            ((TextView)v.findViewById(R.id.c3)).setText(label2);
+            ((TextView)v.findViewById(R.id.c4)).setText(value2);
+
+            table.addView(v);
+        }
+    }
+
     public static TableRow getDataRow(Context context, String label, String value, TableRow row, boolean compact){
         TableRow tr = row;
+
         if(row == null){
             tr = new TableRow(context);
             TableRow.LayoutParams trlp = new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -339,6 +421,8 @@ public class Utils {
         tr.addView(l);
 
         TextView v = new TextView(context);
+        v.setSingleLine(false);
+        v.setMaxLines(10);
         v.setText(value);
         if(compact){
             v.setPadding(5, 2, 5, 1);

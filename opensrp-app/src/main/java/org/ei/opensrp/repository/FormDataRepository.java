@@ -36,6 +36,7 @@ public class FormDataRepository extends DrishtiRepository {
     public static final String INSTANCE_ID_COLUMN = "instanceId";
     public static final String ENTITY_ID_COLUMN = "entityId";
     private static final String FORM_NAME_COLUMN = "formName";
+    private static final String PROVIDER_COLUMN = "anmId";
     private static final String INSTANCE_COLUMN = "instance";
     private static final String VERSION_COLUMN = "version";
     private static final String SERVER_VERSION_COLUMN = "serverVersion";
@@ -172,6 +173,7 @@ public class FormDataRepository extends DrishtiRepository {
         values.put(INSTANCE_ID_COLUMN, submission.instanceId());
         values.put(ENTITY_ID_COLUMN, submission.entityId());
         values.put(FORM_NAME_COLUMN, submission.formName());
+        values.put(PROVIDER_COLUMN, submission.formName());
         values.put(INSTANCE_COLUMN, submission.instance());
         values.put(VERSION_COLUMN, submission.version());
         values.put(SERVER_VERSION_COLUMN, submission.serverVersion());

@@ -2,6 +2,7 @@ package org.ei.opensrp.view.template;
 
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -325,6 +326,7 @@ public abstract class SmartRegisterSecuredActivity extends SecuredActivity {
                 })
                 .show();
         } else if (currentPage == 0) {
+            ProgressDialog.show(this, "Wait", "Going back to home...", true);
             super.onBackPressed(); // allow back key only if we are
         } else {
             mPagerAdapter.switchToBaseFragment();

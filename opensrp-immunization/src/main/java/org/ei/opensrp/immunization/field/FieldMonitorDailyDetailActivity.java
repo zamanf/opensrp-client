@@ -46,7 +46,7 @@ public class FieldMonitorDailyDetailActivity extends DetailActivity {
     protected Integer profilePicContainerId() { return null; }
 
     @Override
-    protected Integer defaultProfilePicResId(){ return null; };
+    protected Integer defaultProfilePicResId(){ return null; }
 
     @Override
     protected String bindType() {

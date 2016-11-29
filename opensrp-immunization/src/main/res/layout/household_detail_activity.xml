@@ -3,7 +3,7 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <fragment android:name="org.ei.opensrp.immunization.household.HouseholdDetailFragment"
+    <fragment android:name="org.ei.opensrp.household.HouseholdDetailFragment"
         android:id="@+id/household_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

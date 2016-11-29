@@ -147,6 +147,10 @@
     {
       "name":"pkhousehold",
       "columns":[
+        {"name":"provider_uc"},
+        {"name":"provider_town"},
+        {"name":"provider_id"},
+        {"name":"provider_location_id"},
         {"name":"client_reg_date"},
         {"name":"household_id"},
         {"name":"already_enrolled_in_other_program"},
@@ -175,6 +179,10 @@
     {
       "name":"pkindividual",
       "columns":[
+        {"name":"provider_uc"},
+        {"name":"provider_town"},
+        {"name":"provider_id"},
+        {"name":"provider_location_id"},
         {"name":"client_reg_date"},
         {"name":"program_client_id"},
         {"name":"household_member_id"},
@@ -184,6 +192,11 @@
         {"name":"dob"},
         {"name":"already_enrolled_in_other_program"},
         {"name":"household_id"},
+        {"name":"province"},
+        {"name":"city_village"},
+        {"name":"town"},
+        {"name":"union_council"},
+        {"name":"address1"},
         {"name":"address"},
         {"name":"contact_phone_number"},
         {"name":"ethnicity"},

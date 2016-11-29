@@ -2,9 +2,7 @@ package org.ei.opensrp.repository;
 
 import android.content.SharedPreferences;
 
-import static org.ei.opensrp.AllConstants.DEFAULT_LOCALE;
-import static org.ei.opensrp.AllConstants.IS_SYNC_IN_PROGRESS_PREFERENCE_KEY;
-import static org.ei.opensrp.AllConstants.LANGUAGE_PREFERENCE_KEY;
+import static org.ei.opensrp.AllConstants.*;
 
 public class AllSharedPreferences {
     public static final String ANM_IDENTIFIER_PREFERENCE_KEY = "anmIdentifier";
@@ -43,7 +41,7 @@ public class AllSharedPreferences {
 
     public String fetchBaseURL(String baseurl){
 
-      return   preferences.getString(DRISHTI_BASE_URL,baseurl);
+        return   preferences.getString(DRISHTI_BASE_URL,baseurl);
     }
 
     public String fetchHost(String host){
@@ -51,8 +49,16 @@ public class AllSharedPreferences {
         return   preferences.getString(HOST,host);
     }
 
+    public void saveHost(String host){
+        preferences.edit().putString(HOST,host).commit();
+    }
+
     public Integer fetchPort(Integer port){
 
         return  Integer.parseInt( preferences.getString(PORT,""+port));
+    }
+
+    public void savePort(Integer port){
+        preferences.edit().putString(PORT,String.valueOf(port)).commit();
     }
 }
