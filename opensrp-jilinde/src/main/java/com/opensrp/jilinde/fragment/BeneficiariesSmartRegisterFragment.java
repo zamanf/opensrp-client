@@ -162,8 +162,9 @@ public class BeneficiariesSmartRegisterFragment extends SecuredNativeSmartRegist
     protected void onResumption() {
         super.onResumption();
         getDefaultOptionsProvider();
-        initializeQueries();
-        updateSearchView();
+        if(isPausedOrRefreshList()) {
+            initializeQueries();
+        }
         try {
             LoginActivity.setLanguage();
         } catch (Exception e) {
@@ -319,38 +320,37 @@ Object tag;
     }
 
     public void initializeQueries() {
-        CommonRepository commonRepository = context.commonrepository("beneficiaries");
-        setTablename("beneficiaries");
-        SmartRegisterQueryBuilder countqueryBUilder = new SmartRegisterQueryBuilder(childMainCountWithJoins());
-        countSelect = countqueryBUilder.mainCondition(" beneficiaries.name is not null ");
-        CountExecute();
-
-
-        SmartRegisterQueryBuilder queryBUilder = new SmartRegisterQueryBuilder(childMainSelectWithJoins());
-        mainSelect = queryBUilder.mainCondition(" beneficiaries.name is not null ");
-        queryBUilder.addCondition(filters);
-        Sortqueries = sortByName();
-        currentquery = queryBUilder.orderbyCondition(Sortqueries);
-
-
-//        queryBUilder.queryForRegisterSortBasedOnRegisterAndAlert("household", new String[]{"relationalid" ,"details","FWHOHFNAME", "FWGOBHHID","FWJIVHHID"}, null, "FW CENSUS");
-//        Cursor c = commonRepository.CustomQueryForAdapter(new String[]{"id as _id","relationalid","details"},"household",""+currentlimit,""+currentoffset);
-        Cursor c = commonRepository.RawCustomQueryForAdapter(queryBUilder.Endquery(queryBUilder.addlimitandOffset(currentquery, 20, 0)));
         BeneficiariesSmartClientsProvider hhscp = new BeneficiariesSmartClientsProvider(getActivity(), clientActionHandler, context.alertService());
-        clientAdapter = new SmartRegisterPaginatedCursorAdapter(getActivity(), c, hhscp, new CommonRepository("beneficiaries", new String[]{"name", "location", "age", "gender", "phone_no", "enrollment_date", "site"}));
+        clientAdapter = new SmartRegisterPaginatedCursorAdapter(getActivity(), null, hhscp, new CommonRepository("beneficiaries", new String[]{"name", "location", "age", "gender", "phone_no", "enrollment_date", "site"}));
         clientsView.setAdapter(clientAdapter);
-//        setServiceModeViewDrawableRight(null);
-//        updateSearchView();
+
+        setTablename("beneficiaries");
+        SmartRegisterQueryBuilder countqueryBUilder = new SmartRegisterQueryBuilder(beneficiaryMainCountWithJoins());
+        countSelect = countqueryBUilder.mainCondition(" beneficiaries.name is not null ");
+        mainCondition = " beneficiaries.name is not null ";
+        super.CountExecute();
+
+
+        SmartRegisterQueryBuilder queryBUilder = new SmartRegisterQueryBuilder(beneficiaryMainSelectWithJoins());
+        mainSelect = queryBUilder.mainCondition(" beneficiaries.name is not null ");
+        Sortqueries = sortByName();
+
+        currentlimit = 20;
+        currentoffset = 0;
+
+        super.filterandSortInInitializeQueries();
+
+        updateSearchView();
         refresh();
 
     }
 
-    public String childMainSelectWithJoins() {
+    public String beneficiaryMainSelectWithJoins() {
         return "Select beneficiaries.id as _id, beneficiaries.relationalid, beneficiaries.name, beneficiaries.location, beneficiaries.age, beneficiaries.gender, beneficiaries.phone_no, beneficiaries.enrollment_date, beneficiaries.site \n" +
                 ",cv.site as clinic_site,cv.visit_date from beneficiaries left join clinic_visits cv on beneficiaries.id=cv.relationalid\n";
     }
 
-    public String childMainCountWithJoins() {
+    public String beneficiaryMainCountWithJoins() {
         return "Select Count(*) \n" +
                 "from beneficiaries";
     }

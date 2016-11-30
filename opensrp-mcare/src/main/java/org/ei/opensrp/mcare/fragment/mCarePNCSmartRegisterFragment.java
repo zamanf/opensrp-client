@@ -181,8 +181,10 @@ public class mCarePNCSmartRegisterFragment extends SecuredNativeSmartRegisterCur
     protected void onResumption() {
         super.onResumption();
         getDefaultOptionsProvider();
-        initializeQueries();
-        try {
+        if(isPausedOrRefreshList()) {
+            initializeQueries();
+        }
+        try{
             LoginActivity.setLanguage();
         } catch (Exception e) {
 
@@ -368,39 +370,28 @@ public class mCarePNCSmartRegisterFragment extends SecuredNativeSmartRegisterCur
                 "Left Join ec_elco on ec_elco.id=ec_pnc.base_entity_id ";
     }
 
-    public void initializeQueries() {
-        try {
-            CommonRepository commonRepository = context.commonrepository("ec_pnc");
-            setTablename("ec_pnc");
-            SmartRegisterQueryBuilder countqueryBUilder = new SmartRegisterQueryBuilder(pncMainCountWithJoins());
-            mainCondition = "  is_closed=0 ";
-            countSelect = countqueryBUilder.mainCondition(" ec_pnc.is_closed=0 ");
-            CountExecute();
+    public void initializeQueries(){
+        mCarePNCSmartClientsProvider hhscp = new mCarePNCSmartClientsProvider(getActivity(),clientActionHandler,context.alertService());
+        clientAdapter = new SmartRegisterPaginatedCursorAdapter(getActivity(), null, hhscp, new CommonRepository("mcaremother",new String []{"FWWOMFNAME","FWPSRLMP","FWSORTVALUE","JiVitAHHID","GOBHHID","Is_PNC","FWBNFSTS","FWBNFDTOO"}));
+        clientsView.setAdapter(clientAdapter);
 
+        setTablename("mcaremother");
+        SmartRegisterQueryBuilder countqueryBUilder = new SmartRegisterQueryBuilder(pncMainCountWithJoins());
+        countSelect = countqueryBUilder.mainCondition(" mcaremother.Is_PNC = '1'  and mcaremother.FWWOMFNAME not null and mcaremother.FWWOMFNAME != \"\"   AND mcaremother.details  LIKE '%\"FWWOMVALID\":\"1\"%'");
+        mainCondition = " Is_PNC = '1'  and FWWOMFNAME not null and FWWOMFNAME != \"\"   AND details  LIKE '%\"FWWOMVALID\":\"1\"%'";
+        super.CountExecute();
 
-            SmartRegisterQueryBuilder queryBUilder = new SmartRegisterQueryBuilder(pncMainSelectWithJoins());
-            mainSelect = queryBUilder.mainCondition(" ec_pnc.is_closed=0 ");
-            Sortqueries = sortByAlertmethod();
+        SmartRegisterQueryBuilder queryBUilder = new SmartRegisterQueryBuilder(pncMainSelectWithJoins());
+        mainSelect = queryBUilder.mainCondition(" mcaremother.Is_PNC = '1'  and mcaremother.FWWOMFNAME not null and mcaremother.FWWOMFNAME != \"\"   AND mcaremother.details  LIKE '%\"FWWOMVALID\":\"1\"%'");
+        Sortqueries = sortByAlertmethod();
 
-            currentlimit = 20;
-            currentoffset = 0;
-            String query = filterandSortQuery(commonRepository, queryBUilder);
+        currentlimit = 20;
+        currentoffset = 0;
 
-//          queryBUilder.addCondition(filters);
-//          currentquery = queryBUilder.orderbyCondition(Sortqueries);
-//          databaseCursor = commonRepository.RawCustomQueryForAdapter(queryBUilder.Endquery(queryBUilder.addlimitandOffset(currentquery, 20, 0)));
-            databaseCursor = commonRepository.RawCustomQueryForAdapter(query);
-            mCarePNCSmartClientsProvider hhscp = new mCarePNCSmartClientsProvider(getActivity(), clientActionHandler, context.alertService());
-            clientAdapter = new SmartRegisterPaginatedCursorAdapter(getActivity(), databaseCursor, hhscp, new CommonRepository("ec_pnc", new String[]{"FWWOMFNAME", "FWPSRLMP", "JiVitAHHID", "GOBHHID", "FWBNFSTS", "FWBNFDTOO"}));
-            clientsView.setAdapter(clientAdapter);
-            updateSearchView();
-            refresh();
+        super.filterandSortInInitializeQueries();
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-
-        }
+        updateSearchView();
+        refresh();
 
     }
 

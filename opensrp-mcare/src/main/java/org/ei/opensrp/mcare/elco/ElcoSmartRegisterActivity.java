@@ -177,17 +177,20 @@ public class ElcoSmartRegisterActivity extends SecuredNativeSmartRegisterActivit
                 new OpenFormOption(getResources().getString(R.string.psrfform), "psrf_form", formController,overridemap, OpenFormOption.ByColumnAndByDetails.bydefault)
         };
     }
-    public DialogOption[] getEditOptionsForMISELCO(CommonPersonObjectClient elco) {
+    public DialogOption[] getEditOptionsForMISELCO(CommonPersonObjectClient elco,String alertstatus) {
+        String alertstate = alertstatus;
+        HashMap<String,String> overridemap = new HashMap<String,String>();
+        overridemap.put("mis_elco_current_formStatus", alertstate);
 
         return new DialogOption[]{
 
-                new OpenFormOption(getResources().getString(R.string.mis_elco), "mis_elco", formController)
+                new OpenFormOption(getResources().getString(R.string.mis_elco), "mis_elco", formController,overridemap,OpenFormOption.ByColumnAndByDetails.bydefault)
         };
     }
 
     private String getalertstateofelco(CommonPersonObjectClient elco) {
         List<Alert> alertlist_for_client = org.ei.opensrp.Context.getInstance().alertService().findByEntityIdAndAlertNames(elco.entityId(), "ELCO PSRF");
-        String alertstate = "";
+        String alertstate = "upcoming";
         if(alertlist_for_client.size() == 0 ){
 
         }else {
@@ -215,7 +218,9 @@ public class ElcoSmartRegisterActivity extends SecuredNativeSmartRegisterActivit
                 }
 
                 DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(formIndex);
+
                 if (displayFormFragment != null) {
+                    displayFormFragment.setFormPartialSaving(false);
                     displayFormFragment.setFormData(data);
                     displayFormFragment.setRecordId(entityId);
                     displayFormFragment.setFieldOverides(metaData);
@@ -297,7 +302,9 @@ public class ElcoSmartRegisterActivity extends SecuredNativeSmartRegisterActivit
         }catch (Exception e){
             // TODO: show error dialog on the formfragment if the submission fails
             DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(currentPage);
+
             if (displayFormFragment != null) {
+                displayFormFragment.setFormPartialSaving(false);
                 displayFormFragment.hideTranslucentProgressDialog();
             }
             Log.e("", "Form Submission Error", e);;
@@ -321,6 +328,7 @@ public class ElcoSmartRegisterActivity extends SecuredNativeSmartRegisterActivit
                     }
                     DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(prevPageIndex);
                     if (displayFormFragment != null) {
+                        displayFormFragment.setFormPartialSaving(false);
                         displayFormFragment.hideTranslucentProgressDialog();
                         displayFormFragment.setFormData(null);
                     }
@@ -331,6 +339,7 @@ public class ElcoSmartRegisterActivity extends SecuredNativeSmartRegisterActivit
                     SecuredFragment registerFragment = (SecuredFragment) findFragmentByPosition(1);
                     DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(prevPageIndex);
                     if (displayFormFragment != null) {
+                        displayFormFragment.setFormPartialSaving(false);
                         displayFormFragment.hideTranslucentProgressDialog();
                         displayFormFragment.setFormData(null);
                     }

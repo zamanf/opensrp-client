@@ -1,18 +1,14 @@
 package org.ei.opensrp.mcare.fragment;
 
-import android.content.Intent;
-import android.database.Cursor;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ListView;
 
 import org.ei.opensrp.Context;
 import org.ei.opensrp.adapter.SmartRegisterPaginatedAdapter;
-import org.ei.opensrp.commonregistry.CommonObjectSort;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.commonregistry.CommonPersonObjectController;
 import org.ei.opensrp.commonregistry.CommonRepository;
@@ -22,18 +18,15 @@ import org.ei.opensrp.cursoradapter.SecuredNativeSmartRegisterCursorAdapterFragm
 import org.ei.opensrp.cursoradapter.SmartRegisterPaginatedCursorAdapter;
 import org.ei.opensrp.cursoradapter.SmartRegisterQueryBuilder;
 import org.ei.opensrp.mcare.LoginActivity;
-import org.ei.opensrp.mcare.NativeHomeActivity;
 import org.ei.opensrp.mcare.R;
 import org.ei.opensrp.mcare.elco.EcElcoSmartClientsProvider;
 import org.ei.opensrp.mcare.elco.ElcoDetailActivity;
 import org.ei.opensrp.mcare.elco.ElcoMauzaCommonObjectFilterOption;
 import org.ei.opensrp.mcare.elco.ElcoPSRFDueDateSort;
-import org.ei.opensrp.mcare.elco.ElcoSearchOption;
 import org.ei.opensrp.mcare.elco.ElcoServiceModeOption;
 import org.ei.opensrp.mcare.elco.ElcoSmartClientsProvider;
 import org.ei.opensrp.mcare.elco.ElcoSmartRegisterActivity;
 import org.ei.opensrp.mcare.elco.PSRFHandler;
-import org.ei.opensrp.mcare.household.HouseHoldSmartClientsProvider;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.util.StringUtil;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
@@ -49,7 +42,6 @@ import org.ei.opensrp.view.dialog.EditOption;
 import org.ei.opensrp.view.dialog.FilterOption;
 import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
-import org.ei.opensrp.view.fragment.SecuredNativeSmartRegisterFragment;
 import org.opensrp.api.domain.Location;
 import org.opensrp.api.util.EntityUtils;
 import org.opensrp.api.util.LocationTree;
@@ -184,7 +176,9 @@ public class ElcoSmartRegisterFragment extends SecuredNativeSmartRegisterCursorA
     protected void onResumption() {
         super.onResumption();
         getDefaultOptionsProvider();
-        initializeQueries();
+        if(isPausedOrRefreshList()) {
+            initializeQueries();
+        }
         try{
             LoginActivity.setLanguage();
         }catch (Exception e){
@@ -227,8 +221,8 @@ public class ElcoSmartRegisterFragment extends SecuredNativeSmartRegisterCursorA
     private DialogOption[] getEditOptions(CommonPersonObjectClient tag) {
         return ((ElcoSmartRegisterActivity)getActivity()).getEditOptions(tag);
     }
-    private DialogOption[] getEditOptionsForMIS_ELCO(CommonPersonObjectClient tag) {
-        return ((ElcoSmartRegisterActivity)getActivity()).getEditOptionsForMISELCO(tag);
+    private DialogOption[] getEditOptionsForMIS_ELCO(CommonPersonObjectClient tag,String alertstate) {
+        return ((ElcoSmartRegisterActivity)getActivity()).getEditOptionsForMISELCO(tag,alertstate);
     }
 
 
@@ -244,7 +238,7 @@ public class ElcoSmartRegisterFragment extends SecuredNativeSmartRegisterCursorA
                     showFragmentDialog(new EditDialogOptionModel((CommonPersonObjectClient) view.getTag()), view.getTag());
                     break;
                 case R.id.mis_elco:
-                    showFragmentDialog(new EditDialogOptionModelForMIS_ELCO((CommonPersonObjectClient)view.getTag()), view.getTag());
+                    showFragmentDialog(new EditDialogOptionModelForMIS_ELCO((CommonPersonObjectClient)view.getTag(R.id.clientobject),(String)view.getTag(R.id.AlertStatustextforMIS_ELCO)), view.getTag());
                     break;
             }
         }
@@ -272,13 +266,15 @@ public class ElcoSmartRegisterFragment extends SecuredNativeSmartRegisterCursorA
     }
     private class EditDialogOptionModelForMIS_ELCO implements DialogOptionModel {
         CommonPersonObjectClient tag;
-        public EditDialogOptionModelForMIS_ELCO(CommonPersonObjectClient tag) {
+        String alertstatus;
+        public EditDialogOptionModelForMIS_ELCO(CommonPersonObjectClient tag,String alertstate) {
             this.tag = tag;
+            alertstatus = alertstate;
         }
 
         @Override
         public DialogOption[] getDialogOptions() {
-            return getEditOptionsForMIS_ELCO(tag);
+            return getEditOptionsForMIS_ELCO(tag,alertstatus);
         }
 
         @Override
@@ -414,40 +410,30 @@ public class ElcoSmartRegisterFragment extends SecuredNativeSmartRegisterCursorA
             }
         }
     }
-    private void initializeQueries(){
-        CommonRepository commonRepository = context.commonrepository("ec_elco");
-        setTablename("ec_elco");
+    public void initializeQueries(){
+        ElcoSmartClientsProvider hhscp = new ElcoSmartClientsProvider(getActivity(),clientActionHandler,context.alertService());
+        clientAdapter = new SmartRegisterPaginatedCursorAdapter(getActivity(), null, hhscp, new CommonRepository("elco",new String []{ "FWWOMFNAME", "JiVitAHHID", "GOBHHID"}));
+        clientsView.setAdapter(clientAdapter);
+
+        setTablename("elco");
         SmartRegisterQueryBuilder countqueryBUilder = new SmartRegisterQueryBuilder();
-        countqueryBUilder.SelectInitiateMainTableCounts("ec_elco");
-        countqueryBUilder.joinwithALerts("ec_elco", "ELCO PSRF");
-        mainCondition = " FWWOMFNAME is not null and is_closed=0 ";
-        countSelect = countqueryBUilder.mainCondition(mainCondition);
-
-        CountExecute();
-
-
+        countqueryBUilder.SelectInitiateMainTableCounts("elco");
+        countqueryBUilder.joinwithALerts("elco","ELCO PSRF");
+        countSelect = countqueryBUilder.mainCondition(" FWWOMFNAME != \"\"  and  FWWOMFNAME is not null  and details LIKE '%\"FWELIGIBLE\":\"1\"%' ");
+        mainCondition = " FWWOMFNAME != \"\"  and  FWWOMFNAME is not null  and details LIKE '%\"FWELIGIBLE\":\"1\"%' ";
+        super.CountExecute();
 
         SmartRegisterQueryBuilder queryBUilder = new SmartRegisterQueryBuilder();
-        queryBUilder.SelectInitiateMainTable("ec_elco", new String[]{"relationalid", "relational_id", "details", "FWWOMFNAME", "JiVitAHHID", "GOBHHID", "base_entity_id", "FWHUSNAME", "FWWOMAGE", "FWWOMNID", "FWWOMBID", "FWPSRDATE", "FWPSRPREGSTS"});
-        queryBUilder.joinwithALerts("ec_elco","ELCO PSRF");
-        mainSelect = queryBUilder.mainCondition(mainCondition);
+        queryBUilder.SelectInitiateMainTable("elco", new String[]{"relationalid", "details", "FWWOMFNAME", "JiVitAHHID", "GOBHHID"});
+        queryBUilder.joinwithALerts("elco", "ELCO PSRF");
+        mainSelect = queryBUilder.mainCondition(" FWWOMFNAME != \"\"  and FWWOMFNAME is not null  and details LIKE '%\"FWELIGIBLE\":\"1\"%' ");
         Sortqueries = sortByAlertmethod();
 
         currentlimit = 20;
         currentoffset = 0;
-        String query  = filterandSortQuery(commonRepository, queryBUilder);
-//        queryBUilder.addCondition(filters);
-//        currentquery  = queryBUilder.orderbyCondition(Sortqueries);
 
+        super.filterandSortInInitializeQueries();
 
-//        queryBUilder.queryForRegisterSortBasedOnRegisterAndAlert("household", new String[]{"relationalid" ,"details","FWHOHFNAME", "FWGOBHHID","FWJIVHHID"}, null, "FW CENSUS");
-//        Cursor c = commonRepository.CustomQueryForAdapter(new String[]{"id as _id","relationalid","details"},"household",""+currentlimit,""+currentoffset);
-
-//        databaseCursor = commonRepository.RawCustomQueryForAdapter(queryBUilder.Endquery(queryBUilder.addlimitandOffset(currentquery, 20, 0)));
-        databaseCursor = commonRepository.RawCustomQueryForAdapter(query);
-        EcElcoSmartClientsProvider hhscp = new EcElcoSmartClientsProvider(getActivity(),clientActionHandler,context.alertService());
-        clientAdapter = new SmartRegisterPaginatedCursorAdapter(getActivity(), databaseCursor, hhscp, new CommonRepository("ec_elco",new String []{ "FWWOMFNAME","relational_id", "JiVitAHHID", "GOBHHID"}));
-        clientsView.setAdapter(clientAdapter);
 //        setServiceModeViewDrawableRight(null);
 //        updateSearchView();
         refresh();
