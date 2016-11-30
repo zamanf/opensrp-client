@@ -36,6 +36,439 @@
       {
         "name": "site",
         "bind": "/model/instance/Enrollment_Form/site"
+      },
+      {
+        "name": "county",
+        "bind": "/model/instance/Enrollment_Form/facility_info1/county"
+      },
+      {
+        "name": "sub_county",
+        "bind": "/model/instance/Enrollment_Form/facility_info1/sub_county"
+      },
+      {
+        "name": "date",
+        "bind": "/model/instance/Enrollment_Form/facility_info2/date"
+      },
+      {
+        "name": "mfl_code",
+        "bind": "/model/instance/Enrollment_Form/facility_info2/mfl_code"
+      },
+      {
+        "name": "program",
+        "bind": "/model/instance/Enrollment_Form/program_partner/program"
+      },
+      {
+        "name": "partner",
+        "bind": "/model/instance/Enrollment_Form/program_partner/partner"
+      },
+      {
+        "name": "place_of_birth",
+        "bind": "/model/instance/Enrollment_Form/general_info/q3"
+      },
+      {
+        "name": "date_of_birth",
+        "bind": "/model/instance/Enrollment_Form/general_info/q4"
+      },
+      {
+        "name": "sub_county",
+        "bind": "/model/instance/Enrollment_Form/general_info/q5"
+      },
+      {
+        "name": "physical_address",
+        "bind": "/model/instance/Enrollment_Form/general_info/q6"
+      },
+      {
+        "name": "marital_status",
+        "bind": "/model/instance/Enrollment_Form/general_info/q9"
+      },
+      {
+        "name": "education_level",
+        "bind": "/model/instance/Enrollment_Form/general_info/q10"
+      },
+      {
+        "name": "specify_education_level",
+        "bind": "/model/instance/Enrollment_Form/general_info/q10i"
+      },
+      {
+        "name": "visited_wellness_center",
+        "bind": "/model/instance/Enrollment_Form/general_info/q11"
+      },
+      {
+        "name": "contacted",
+        "bind": "/model/instance/Enrollment_Form/general_info/q12"
+      },
+      {
+        "name": "disc_clinic",
+        "bind": "/model/instance/Enrollment_Form/general_info/q13a"
+      },
+      {
+        "name": "disc_clinic_registration_number",
+        "bind": "/model/instance/Enrollment_Form/general_info/q13b"
+      },
+      {
+        "name": "name_used_in_disc_clinic",
+        "bind": "/model/instance/Enrollment_Form/general_info/q14"
+      },
+      {
+        "name": "mostly_operate",
+        "bind": "/model/instance/Enrollment_Form/general_info/q15a"
+      },
+      {
+        "name": "specify_mostly_operate",
+        "bind": "/model/instance/Enrollment_Form/general_info/q15ai"
+      },
+      {
+        "name": "name_of_hotspot",
+        "bind": "/model/instance/Enrollment_Form/general_info/q15b"
+      },
+      {
+        "name": "average_s_acts_per_week",
+        "bind": "/model/instance/Enrollment_Form/general_info/q16"
+      },
+      {
+        "name": "hiv_transmitted",
+        "bind": "/model/instance/Enrollment_Form/sti_info/q17a"
+      },
+      {
+        "name": "specify_hiv_transmitted",
+        "bind": "/model/instance/Enrollment_Form/sti_info/q17ai"
+      },
+      {
+        "name": "hiv_prevention",
+        "bind": "/model/instance/Enrollment_Form/sti_info/q17b"
+      },
+      {
+        "name": "specify_hiv_prevention",
+        "bind": "/model/instance/Enrollment_Form/sti_info/q17bi"
+      },
+      {
+        "name": "known_sti",
+        "bind": "/model/instance/Enrollment_Form/sti_info/q18a"
+      },
+      {
+        "name": "specify_known_sti",
+        "bind": "/model/instance/Enrollment_Form/sti_info/q18ai"
+      },
+      {
+        "name": "had_these_conditions",
+        "bind": "/model/instance/Enrollment_Form/sti_info/conditions/q18b"
+      },
+      {
+        "name": "genital_ulcers_disease",
+        "bind": "/model/instance/Enrollment_Form/sti_info/conditions/q18bi"
+      },
+      {
+        "name": "foul_smell_p_a_discharge",
+        "bind": "/model/instance/Enrollment_Form/sti_info/conditions/q18bii"
+      },
+      {
+        "name": "painless_growth",
+        "bind": "/model/instance/Enrollment_Form/sti_info/conditions/q18biii"
+      },
+      {
+        "name": "lower_abdomen_pain",
+        "bind": "/model/instance/Enrollment_Form/sti_info/conditions/q18biv"
+      },
+      {
+        "name": "go_for_treatment",
+        "bind": "/model/instance/Enrollment_Form/sti_info/q18c"
+      },
+      {
+        "name": "specify_go_for_treatment",
+        "bind": "/model/instance/Enrollment_Form/sti_info/q18ci"
+      },
+      {
+        "name": "hiv_tested",
+        "bind": "/model/instance/Enrollment_Form/counselling_info/q19a"
+      },
+      {
+        "name": "last_time_tested",
+        "bind": "/model/instance/Enrollment_Form/counselling_info/q19b"
+      },
+      {
+        "name": "specify_htc_received",
+        "bind": "/model/instance/Enrollment_Form/counselling_info/q19bi"
+      },
+      {
+        "name": "share_results",
+        "bind": "/model/instance/Enrollment_Form/counselling_info/q19c"
+      },
+      {
+        "name": "disclosed",
+        "bind": "/model/instance/Enrollment_Form/counselling_info/q19d"
+      },
+      {
+        "name": "shared_info_with",
+        "bind": "/model/instance/Enrollment_Form/counselling_info/q19e"
+      },
+      {
+        "name": "specify_shared_info_with",
+        "bind": "/model/instance/Enrollment_Form/counselling_info/q19ei"
+      },
+      {
+        "name": "receiving_care",
+        "bind": "/model/instance/Enrollment_Form/counselling_info/q19f"
+      },
+      {
+        "name": "duration",
+        "bind": "/model/instance/Enrollment_Form/counselling_info/q19fi"
+      },
+      {
+        "name": "facility_name",
+        "bind": "/model/instance/Enrollment_Form/counselling_info/facility_dets/q19qi"
+      },
+      {
+        "name": "ccc_number",
+        "bind": "/model/instance/Enrollment_Form/counselling_info/facility_dets/q19gii"
+      },
+      {
+        "name": "cd4_count",
+        "bind": "/model/instance/Enrollment_Form/counselling_info/facility_dets/q19giii"
+      },
+      {
+        "name": "type_of_art",
+        "bind": "/model/instance/Enrollment_Form/counselling_info/facility_dets/q19giv"
+      },
+      {
+        "name": "lubricate",
+        "bind": "/model/instance/Enrollment_Form/condoms_info/q20a"
+      },
+      {
+        "name": "use_with_lubrication",
+        "bind": "/model/instance/Enrollment_Form/condoms_info/q20b"
+      },
+      {
+        "name": "specify_use_with_lubrication",
+        "bind": "/model/instance/Enrollment_Form/condoms_info/q20bi"
+      },
+      {
+        "name": "supplier_condom",
+        "bind": "/model/instance/Enrollment_Form/condoms_info/q21"
+      },
+      {
+        "name": "correclty_use_condom",
+        "bind": "/model/instance/Enrollment_Form/condoms_info/condom_knowledge/q22"
+      },
+      {
+        "name": "male_condom",
+        "bind": "/model/instance/Enrollment_Form/condoms_info/condom_knowledge/q22a"
+      },
+      {
+        "name": "female_condom",
+        "bind": "/model/instance/Enrollment_Form/condoms_info/condom_knowledge/q2b"
+      },
+      {
+        "name": "consistently_use_condom",
+        "bind": "/model/instance/Enrollment_Form/condoms_info/q23"
+      },
+      {
+        "name": "trained_in_condom_negotiation",
+        "bind": "/model/instance/Enrollment_Form/condoms_info/q24"
+      },
+      {
+        "name": "condom_negotiation_how_often",
+        "bind": "/model/instance/Enrollment_Form/condoms_info/condom_negotiation/q25"
+      },
+      {
+        "name": "casual_client",
+        "bind": "/model/instance/Enrollment_Form/condoms_info/condom_negotiation/q25a"
+      },
+      {
+        "name": "regular_client",
+        "bind": "/model/instance/Enrollment_Form/condoms_info/condom_negotiation/q25b"
+      },
+      {
+        "name": "boyfriend",
+        "bind": "/model/instance/Enrollment_Form/condoms_info/condom_negotiation/q25c"
+      },
+      {
+        "name": "client_refused_condom_negotiation",
+        "bind": "/model/instance/Enrollment_Form/condoms_info/q26"
+      },
+      {
+        "name": "age_start_sex_work",
+        "bind": "/model/instance/Enrollment_Form/preactices_info/q27a"
+      },
+      {
+        "name": "female_sexual_partners",
+        "bind": "/model/instance/Enrollment_Form/preactices_info/q27b"
+      },
+      {
+        "name": "sex_with_men",
+        "bind": "/model/instance/Enrollment_Form/preactices_info/q27c"
+      },
+      {
+        "name": "sex_with_men_for_money",
+        "bind": "/model/instance/Enrollment_Form/preactices_info/q27d"
+      },
+      {
+        "name": "identify_yourself",
+        "bind": "/model/instance/Enrollment_Form/preactices_info/q27e"
+      },
+      {
+        "name": "duration_enganging_in_sex_work",
+        "bind": "/model/instance/Enrollment_Form/preactices_info/q27f"
+      },
+      {
+        "name": "active_last_three_months",
+        "bind": "/model/instance/Enrollment_Form/preactices_info/q27g"
+      },
+      {
+        "name": "time_of_day",
+        "bind": "/model/instance/Enrollment_Form/preactices_info/q27h"
+      },
+      {
+        "name": "other_sources_of_income",
+        "bind": "/model/instance/Enrollment_Form/preactices_info/q27i"
+      },
+      {
+        "name": "specify_other_sources_of_income",
+        "bind": "/model/instance/Enrollment_Form/preactices_info/q27i.i"
+      },
+      {
+        "name": "condom_last_time",
+        "bind": "/model/instance/Enrollment_Form/preactices_info/q27j"
+      },
+      {
+        "name": "casual_clients_per_week",
+        "bind": "/model/instance/Enrollment_Form/preactices_info/q28"
+      },
+      {
+        "name": "regular_clients_per_week",
+        "bind": "/model/instance/Enrollment_Form/preactices_info/q29"
+      },
+      {
+        "name": "receptive_anal_sex_last_three_months",
+        "bind": "/model/instance/Enrollment_Form/preactices_info/q30"
+      },
+      {
+        "name": "did_you_use_condom",
+        "bind": "/model/instance/Enrollment_Form/preactices_info/q31"
+      },
+      {
+        "name": "sex_under_alcohol_influence",
+        "bind": "/model/instance/Enrollment_Form/preactices_info/q32"
+      },
+      {
+        "name": "drugs_in_past_thirty_days",
+        "bind": "/model/instance/Enrollment_Form/preactices_info/q33"
+      },
+      {
+        "name": "specify_drugs_in_past_thirty_days",
+        "bind": "/model/instance/Enrollment_Form/preactices_info/q33a"
+      },
+      {
+        "name": "how_drugs_taken",
+        "bind": "/model/instance/Enrollment_Form/preactices_info/q34"
+      },
+      {
+        "name": "specify_how_drugs_taken",
+        "bind": "/model/instance/Enrollment_Form/preactices_info/q20bi"
+      },
+      {
+        "name": "trained_on_harm_reduction",
+        "bind": "/model/instance/Enrollment_Form/preactices_info/q35"
+      },
+
+      {
+        "name": "insert_cleaning_fluids",
+        "bind": "/model/instance/Enrollment_Form/douching_info/q36"
+      },
+      {
+        "name": "use_to_clean",
+        "bind": "/model/instance/Enrollment_Form/douching_info/q37"
+      },
+      {
+        "name": "experienced_gender_violence",
+        "bind": "/model/instance/Enrollment_Form/gbv_info/q38a"
+      },
+      {
+        "name": "which_type",
+        "bind": "/model/instance/Enrollment_Form/gbv_info/q38b"
+      },
+      {
+        "name": "specify_which_type",
+        "bind": "/model/instance/Enrollment_Form/gbv_info/q38bi"
+      },
+      {
+        "name": "person_who_did_this",
+        "bind": "/model/instance/Enrollment_Form/gbv_info/q38c"
+      },
+      {
+        "name": "seek_help",
+        "bind": "/model/instance/Enrollment_Form/gbv_info/q38d"
+      },
+      {
+        "name": "seek_help_where",
+        "bind": "/model/instance/Enrollment_Form/gbv_info/q38e"
+      },
+      {
+        "name": "specify_seek_help_where",
+        "bind": "/model/instance/Enrollment_Form/gbv_info/q38ei"
+      },
+      {
+        "name": "outcome_report_police",
+        "bind": "/model/instance/Enrollment_Form/gbv_info/q38f"
+      },
+      {
+        "name": "specify_outcome_report_police",
+        "bind": "/model/instance/Enrollment_Form/gbv_info/q38fi"
+      },
+      {
+        "name": "why_not_reporting_to_police",
+        "bind": "/model/instance/Enrollment_Form/gbv_info/q38g"
+      },
+      {
+        "name": "specify_why_not_reporting_to_police",
+        "bind": "/model/instance/Enrollment_Form/gbv_info/q38gi"
+      },
+      {
+        "name": "condom_used_in_s_abuse",
+        "bind": "/model/instance/Enrollment_Form/gbv_info/q38h"
+      },
+      {
+        "name": "note_empowerment",
+        "bind": "/model/instance/Enrollment_Form/decisions_info/note_empowerment"
+      },
+      {
+        "name": "refused_client_no_condom",
+        "bind": "/model/instance/Enrollment_Form/decisions_info/q39a"
+      },
+      {
+        "name": "msm_msw_group_defend_rights",
+        "bind": "/model/instance/Enrollment_Form/decisions_info/q39b"
+      },
+      {
+        "name": "group_organization_name",
+        "bind": "/model/instance/Enrollment_Form/decisions_info/q38c"
+      },
+      {
+        "name": "contact_1",
+        "bind": "/model/instance/Enrollment_Form/decisions_info/contact_1"
+      },
+      {
+        "name": "contact_2",
+        "bind": "/model/instance/Enrollment_Form/decisions_info/contact_2"
+      },
+      {
+        "name": "sign_thumb",
+        "bind": "/model/instance/Enrollment_Form/decisions_info/sign_thumb"
+      },
+      {
+        "name": "des_name",
+        "bind": "/model/instance/Enrollment_Form/decisions_info/name"
+      },
+      {
+        "name": "sign",
+        "bind": "/model/instance/Enrollment_Form/decisions_info/sign"
+      },
+      {
+        "name": "des",
+        "bind": "/model/instance/Enrollment_Form/decisions_info/des"
+      },
+      {
+        "name": "date_answered",
+        "bind": "/model/instance/Enrollment_Form/decisions_info/date_answered"
       }
     ]
   }
