@@ -209,6 +209,7 @@ public class HouseHoldSmartRegisterFragment extends SecuredNativeSmartRegisterCu
     }
 
     public void initializeQueries(){
+
         HouseHoldSmartClientsProvider hhscp = new HouseHoldSmartClientsProvider(getActivity(),clientActionHandler,context.alertService());
         clientAdapter = new SmartRegisterPaginatedCursorAdapter(getActivity(), null, hhscp, new CommonRepository("household",new String []{"FWHOHFNAME", "FWGOBHHID","FWJIVHHID"}));
         clientsView.setAdapter(clientAdapter);
@@ -236,12 +237,6 @@ public class HouseHoldSmartRegisterFragment extends SecuredNativeSmartRegisterCu
             updateSearchView();
             refresh();
 //        checkforNidMissing(view);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-        finally {
-        }
-
 
     }
 

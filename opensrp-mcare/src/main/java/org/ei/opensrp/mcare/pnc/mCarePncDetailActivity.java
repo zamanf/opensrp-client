@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.ei.opensrp.Context;
+import org.ei.opensrp.commonregistry.AllCommonsRepository;
 import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.domain.Alert;
@@ -99,7 +100,7 @@ public class mCarePncDetailActivity extends Activity {
             nid.setVisibility(View.GONE);
         }
         husbandname.setText(Html.fromHtml(getString(R.string.elco_details_husband_name_label)+" "+humanize((ancclient.getDetails().get("FWHUSNAME") != null ? ancclient.getDetails().get("FWHUSNAME") : ""))));
-        age.setText(Html.fromHtml(getString(R.string.elco_age_label)+" " + (ancclient.getDetails().get("FWWOMAGE") != null ? ancclient.getDetails().get("FWWOMAGE") : "")));
+        age.setText(Html.fromHtml(getString(R.string.elco_age_label) + " " + (ancclient.getDetails().get("FWWOMAGE") != null ? ancclient.getDetails().get("FWWOMAGE") : "")));
 
         DateUtil.setDefaultDateFormat("yyyy-MM-dd");
         AllCommonsRepository allmotherRepository = org.ei.opensrp.Context.getInstance().allCommonsRepositoryobjects("mcaremother");

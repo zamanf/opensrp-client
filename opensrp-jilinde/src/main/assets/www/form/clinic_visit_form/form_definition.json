@@ -11,7 +11,7 @@
       },
       {
         "name": "site",
-        "bind": "/model/instance/clinic_visit_form/facility_info1/site"
+        "bind": "/model/instance/clinic_visit_form/site"
       },
       {
         "name": "visit_date",

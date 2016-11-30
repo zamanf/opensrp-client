@@ -1,4 +1,4 @@
-package com.opensrp.jilinde.child;
+package com.opensrp.jilinde.beneficiary;
 
 import android.app.Activity;
 import android.content.Intent;

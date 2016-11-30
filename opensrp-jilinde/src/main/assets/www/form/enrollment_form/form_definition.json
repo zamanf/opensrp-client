@@ -35,7 +35,7 @@
       },
       {
         "name": "site",
-        "bind": "/model/instance/Enrollment_Form/facility_info1/site"
+        "bind": "/model/instance/Enrollment_Form/site"
       }
     ]
   }

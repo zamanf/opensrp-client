@@ -22,6 +22,7 @@ import org.ei.opensrp.mcare.application.McareApplication;
 import org.ei.opensrp.mcare.household.HouseHoldDetailActivity;
 import org.ei.opensrp.repository.DetailsRepository;
 import org.ei.opensrp.service.AlertService;
+import org.ei.opensrp.util.DateUtil;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.contract.SmartRegisterClients;
 import org.ei.opensrp.view.customControls.CustomFontTextView;

@@ -1,6 +1,6 @@
 <model>
   <instance>
-    <Enrollment_Form id="enrollment_form_1" version="201611251254">
+    <Enrollment_Form id="enrollment_form_1" version="201611300927">
       <formhub>
         <uuid/>
       </formhub>
@@ -8,8 +8,8 @@
       <facility_info1>
         <county/>
         <sub_county/>
-        <site/>
       </facility_info1>
+      <site/>
       <facility_info2>
         <date/>
         <mfl_code/>
@@ -138,8 +138,8 @@
         <q38gi/>
         <q38h/>
       </gbv_info>
-      <note_empowerment/>
       <decisions_info>
+        <note_empowerment/>
         <q39a/>
         <q39b/>
         <q39c/>
@@ -169,6 +169,22 @@
       <item>
         <itextId>static_instance-share-2</itextId>
         <name>3</name>
+      </item>
+    </root>
+  </instance>
+  <instance id="site">
+    <root>
+      <item>
+        <itextId>static_instance-site-0</itextId>
+        <name>DiSC1</name>
+      </item>
+      <item>
+        <itextId>static_instance-site-1</itextId>
+        <name>DiSC2</name>
+      </item>
+      <item>
+        <itextId>static_instance-site-2</itextId>
+        <name>DiSC3</name>
       </item>
     </root>
   </instance>

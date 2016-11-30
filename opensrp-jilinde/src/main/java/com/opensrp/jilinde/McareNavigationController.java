@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 
 
-import com.opensrp.jilinde.child.BeneficiariesSmartRegisterActivity;
+import com.opensrp.jilinde.beneficiary.BeneficiariesSmartRegisterActivity;
 
 import org.ei.opensrp.view.controller.ANMController;
 

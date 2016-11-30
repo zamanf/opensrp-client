@@ -1,6 +1,6 @@
 <model>
   <instance>
-    <clinic_visit_form id="clinical_visit_form_1" version="201611251255">
+    <clinic_visit_form id="clinical_visit_form_1" version="201611300848">
       <formhub>
         <uuid/>
       </formhub>
@@ -8,8 +8,8 @@
       <facility_info1>
         <county/>
         <sub_county/>
-        <site/>
       </facility_info1>
+      <site/>
       <facility_info2>
         <date/>
         <mfl_code/>
@@ -129,7 +129,6 @@
         <designation/>
       </provider_details>
       <signature/>
-      <relationalid/>
       <meta>
         <instanceID/>
       </meta>
@@ -208,6 +207,22 @@
       <item>
         <itextId>static_instance-testing-2</itextId>
         <name>3</name>
+      </item>
+    </root>
+  </instance>
+  <instance id="site">
+    <root>
+      <item>
+        <itextId>static_instance-site-0</itextId>
+        <name>DiSC1</name>
+      </item>
+      <item>
+        <itextId>static_instance-site-1</itextId>
+        <name>DiSC2</name>
+      </item>
+      <item>
+        <itextId>static_instance-site-2</itextId>
+        <name>DiSC3</name>
       </item>
     </root>
   </instance>
@@ -349,4 +364,29 @@
       </item>
     </root>
   </instance>
+  "
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 </model>

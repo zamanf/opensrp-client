@@ -188,11 +188,12 @@ public class CRVSChildSmartRegisterFragment extends SecuredNativeSmartRegisterCu
     protected void onResumption() {
         super.onResumption();
         getDefaultOptionsProvider();
-        initializeQueries();
-        updateSearchView();
-        try{
+        if(isPausedOrRefreshList()) {
+            initializeQueries();
+        }
+        try {
             LoginActivity.setLanguage();
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
 
@@ -348,31 +349,30 @@ public class CRVSChildSmartRegisterFragment extends SecuredNativeSmartRegisterCu
         }
     }
     public void initializeQueries(){
-        CommonRepository commonRepository = context.commonrepository("ec_crvschild");
+        CRVSChildSmartClientsProvider hhscp = new CRVSChildSmartClientsProvider(getActivity(),clientActionHandler,context.alertService());
+        clientAdapter = new SmartRegisterPaginatedCursorAdapter(getActivity(), null, hhscp, new CommonRepository("ec_crvschild",new String []{ "name_Fname", "mother_name_english", "father_name_english","place_of_birth","present_address","child_nid","child_dob"}));
+        clientsView.setAdapter(clientAdapter);
+
         setTablename("ec_crvschild");
         SmartRegisterQueryBuilder countqueryBUilder = new SmartRegisterQueryBuilder(childMainCountWithJoins());
         countSelect = countqueryBUilder.mainCondition(" ec_crvschild.name_Fname is not null ");
-        CountExecute();
-
+        mainCondition = " ec_crvschild.name_Fname is not null ";
+        super.CountExecute();
 
         SmartRegisterQueryBuilder queryBUilder = new SmartRegisterQueryBuilder(childMainSelectWithJoins());
         mainSelect = queryBUilder.mainCondition(" ec_crvschild.name_Fname is not null ");
-        queryBUilder.addCondition(filters);
         Sortqueries = sortByChildName();
-        currentquery  = queryBUilder.orderbyCondition(Sortqueries);
 
+        currentlimit = 20;
+        currentoffset = 0;
 
-//        queryBUilder.queryForRegisterSortBasedOnRegisterAndAlert("household", new String[]{"relationalid" ,"details","FWHOHFNAME", "FWGOBHHID","FWJIVHHID"}, null, "FW CENSUS");
-//        Cursor c = commonRepository.CustomQueryForAdapter(new String[]{"id as _id","relationalid","details"},"household",""+currentlimit,""+currentoffset);
-        Cursor c = commonRepository.RawCustomQueryForAdapter(queryBUilder.Endquery(queryBUilder.addlimitandOffset(currentquery, 20, 0)));
-        CRVSChildSmartClientsProvider hhscp = new CRVSChildSmartClientsProvider(getActivity(),clientActionHandler,context.alertService());
-        clientAdapter = new SmartRegisterPaginatedCursorAdapter(getActivity(), c, hhscp, new CommonRepository("ec_crvschild",new String []{ "name_Fname", "mother_name_english", "father_name_english","place_of_birth","present_address","child_nid","child_dob"}));
-        clientsView.setAdapter(clientAdapter);
-//        setServiceModeViewDrawableRight(null);
-//        updateSearchView();
+        super.filterandSortInInitializeQueries();
+
+        updateSearchView();
         refresh();
 
     }
+
     private String sortByAlertmethod() {
         return " CASE WHEN alerts.status = 'urgent' THEN '1'"
                 +

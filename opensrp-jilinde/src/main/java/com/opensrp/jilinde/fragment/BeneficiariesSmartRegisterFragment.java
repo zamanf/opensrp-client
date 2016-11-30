@@ -1,7 +1,6 @@
 package com.opensrp.jilinde.fragment;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.AsyncTask;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -11,17 +10,16 @@ import android.widget.ImageButton;
 
 import com.opensrp.jilinde.LoginActivity;
 import com.opensrp.jilinde.R;
-import com.opensrp.jilinde.child.BeneficiariesServiceModeOption;
-import com.opensrp.jilinde.child.BeneficiariesSmartClientsProvider;
-import com.opensrp.jilinde.child.BeneficiariesDueDateSort;
-import com.opensrp.jilinde.child.BeneficiariesSmartRegisterActivity;
-import com.opensrp.jilinde.child.BeneficiaryDetailActivity;
+import com.opensrp.jilinde.beneficiary.BeneficiariesServiceModeOption;
+import com.opensrp.jilinde.beneficiary.BeneficiariesSmartClientsProvider;
+import com.opensrp.jilinde.beneficiary.BeneficiariesDueDateSort;
+import com.opensrp.jilinde.beneficiary.BeneficiariesSmartRegisterActivity;
+import com.opensrp.jilinde.beneficiary.BeneficiaryDetailActivity;
 
 import org.ei.opensrp.Context;
 import org.ei.opensrp.adapter.SmartRegisterPaginatedAdapter;
 import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
-import org.ei.opensrp.commonregistry.CommonPersonObjectController;
 import org.ei.opensrp.commonregistry.CommonRepository;
 import org.ei.opensrp.commonregistry.ControllerFilterMap;
 import org.ei.opensrp.cursoradapter.CursorCommonObjectFilterOption;
@@ -34,18 +32,14 @@ import org.ei.opensrp.util.StringUtil;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.contract.SmartRegisterClients;
-import org.ei.opensrp.view.controller.VillageController;
 import org.ei.opensrp.view.dialog.AllClientsFilter;
 import org.ei.opensrp.view.dialog.DialogOption;
-import org.ei.opensrp.view.dialog.DialogOptionMapper;
 import org.ei.opensrp.view.dialog.DialogOptionModel;
 import org.ei.opensrp.view.dialog.EditOption;
 import org.ei.opensrp.view.dialog.FilterOption;
 import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
 import org.opensrp.api.domain.Location;
-import org.opensrp.api.util.EntityUtils;
-import org.opensrp.api.util.LocationTree;
 import org.opensrp.api.util.TreeNode;
 
 import java.util.ArrayList;

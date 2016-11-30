@@ -1,4 +1,4 @@
-package com.opensrp.jilinde.child;
+package com.opensrp.jilinde.beneficiary;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -95,10 +94,10 @@ public class BeneficiariesSmartClientsProvider implements SmartRegisterCLientsPr
 
         if(gender.equals("female")){
             gChar = "F";
-            profile.setImageResource(R.mipmap.woman_placeholder);
+            profile.setImageResource(R.mipmap.african_female);
         } else if(gender.equals("male")){
             gChar= "M";
-            profile.setImageResource(R.mipmap.household_profile_thumb);
+            profile.setImageResource(R.mipmap.african_male);
         }
 
         name.setText(humanize(pc.getColumnmaps().get("name") != null ? pc.getColumnmaps().get("name") : ""));

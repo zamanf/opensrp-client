@@ -1,4 +1,4 @@
-package com.opensrp.jilinde.child;
+package com.opensrp.jilinde.beneficiary;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -15,13 +15,11 @@ import com.opensrp.jilinde.pageradapter.BaseRegisterActivityPagerAdapter;
 
 import org.ei.opensrp.Context;
 import org.ei.opensrp.adapter.SmartRegisterPaginatedAdapter;
-import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.domain.form.FieldOverrides;
 import org.ei.opensrp.domain.form.FormSubmission;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.repository.AllSharedPreferences;
 import org.ei.opensrp.service.ZiggyService;
-import org.ei.opensrp.sync.ClientProcessor;
 import org.ei.opensrp.util.FormUtils;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
