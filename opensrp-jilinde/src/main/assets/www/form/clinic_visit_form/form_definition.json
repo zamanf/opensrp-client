@@ -10,13 +10,204 @@
         "shouldLoadValue": true
       },
       {
+        "name": "county",
+        "bind": "/model/instance/clinic_visit_form/facility_info1/county"
+      },{
+        "name": "site",
+        "bind": "/model/instance/clinic_visit_form/facility_info1/sub_county"
+      },{
         "name": "site",
         "bind": "/model/instance/clinic_visit_form/site"
-      },
-      {
+      },{
         "name": "visit_date",
         "bind": "/model/instance/clinic_visit_form/today"
+      },{
+        "name": "mfl_code",
+        "bind": "/model/instance/clinic_visit_form/facility_info2/mfl_code"
+      },{
+        "name": "program",
+        "bind": "/model/instance/clinic_visit_form/facility_info3/program"
+      },{
+        "name": "implementing_partner",
+        "bind": "/model/instance/clinic_visit_form/facility_info3/partner"
+      },{
+        "name": "sti",
+        "bind": "/model/instance/clinic_visit_form/services/services_sti"
+      },{
+        "name": "sti_screened",
+        "bind": "/model/instance/clinic_visit_form/services/services_sti/sti_screened"
+      },{
+        "name": "sti_treated",
+        "bind": "/model/instance/clinic_visit_form/services/services_sti/sti_treated"
+      },{
+        "name": "sti_referred",
+        "bind": "/model/instance/clinic_visit_formservices//services_sti/sti_referred"
+      },{
+        "name": "services_tb",
+        "bind": "/model/instance/clinic_visit_form/services/services_tb"
+      },{
+        "name": "tb_screened",
+        "bind": "/model/instance/clinic_visit_form/services/services_tb/tb_screened"
+      },{
+        "name": "tb_treated",
+        "bind": "/model/instance/clinic_visit_form/services/services_tb/tb_treated"
+      },{
+        "name": "tb_referred",
+        "bind": "/model/instance/clinic_visit_form/services/services_tb/tb_referred"
+      },{
+        "name": "services_hepb",
+        "bind": "/model/instance/clinic_visit_form/services/services_hepb/services_hepb"
+      },{
+        "name": "hepb_screened",
+        "bind": "/model/instance/clinic_visit_form/services/services_hepb/hepb_screened"
+      },{
+        "name": "hepb_treated",
+        "bind": "/model/instance/clinic_visit_form/services/services_hepb/hepb_treated"
+      },{
+        "name": "hepb_referred",
+        "bind": "/model/instance/clinic_visit_form/services/services_hepb/hepb_referred"
+      },{
+        "name": "services_hepc",
+        "bind": "/model/instance/clinic_visit_form/services/services_hepc"
+      },{
+        "name": "hepc_screened",
+        "bind": "/model/instance/clinic_visit_form/services/services_hepc/hepc_screened"
+      },{
+        "name": "hepc_treated",
+        "bind": "/model/instance/clinic_visit_form/services/services_hepc/hepc_treated"
+      },{
+        "name": "hepc_referred",
+        "bind": "/model/instance/clinic_visit_form/services/services_hepc/hepc_referred"
+      },{
+        "name": "services_overdose",
+        "bind": "/model/instance/clinic_visit_form/services/services_overdose"
+      },{
+        "name": "hepc_screened",
+        "bind": "/model/instance/clinic_visit_form/services/services_overdose/overdose_screened"
+      },{
+        "name": "hepc_treated",
+        "bind": "/model/instance/clinic_visit_form/services/services_overdose/overdose_treated"
+      },{
+        "name": "hepc_referred",
+        "bind": "/model/instance/clinic_visit_form/services/services_overdose/overdose_referred"
+      },{
+        "name": "services_abscess",
+        "bind": "/model/instance/clinic_visit_form/services/services_abscess"
+      },{
+        "name": "abscess_screened",
+        "bind": "/model/instance/clinic_visit_form/services/services_abscess/abscess_screened"
+      },{
+        "name": "abscess_treated",
+        "bind": "/model/instance/clinic_visit_form/services/services_abscess/abscess_treated"
+      },{
+        "name": "abscess_referred",
+        "bind": "/model/instance/clinic_visit_form/services/services_abscess/abscess_referred"
       },
+      {
+        "name": "services_alcohol",
+        "bind": "/model/instance/clinic_visit_form/services/services_alcohol"
+      },{
+        "name": "alcohol_screened",
+        "bind": "/model/instance/clinic_visit_form/services/services_abscess/alcohol_screened"
+      },{
+        "name": "alcohol_treated",
+        "bind": "/model/instance/clinic_visit_form/services/services_abscess/alcohol_treated"
+      },{
+        "name": "alcohol_referred",
+        "bind": "/model/instance/clinic_visit_form/services/services_abscess/alcohol_referred"
+      },
+      {
+        "name": "services_cervical",
+        "bind": "/model/instance/clinic_visit_form/services/services_cervical"
+      },{
+        "name": "cervical_screened",
+        "bind": "/model/instance/clinic_visit_form/services/services_cervical/cervical_screened"
+      },{
+        "name": "cervical_treated",
+        "bind": "/model/instance/clinic_visit_form/services/services_abscess/cervical_treated"
+      },{
+        "name": "cervical_referred",
+        "bind": "/model/instance/clinic_visit_form/services/services_abscess/cervical_referred"
+      },{
+        "name": "services_fp",
+        "bind": "/model/instance/clinic_visit_form/other_services/services_fp"
+      },{
+        "name": "fp_services",
+        "bind": "/model/instance/clinic_visit_form/other_services/services_fp/fp_services"
+      },{
+        "name": "rrc_services",
+        "bind": "/model/instance/clinic_visit_form/other_services/services_fp/rrc_services"
+      },{
+        "name": "services_gbv",
+        "bind": "/model/instance/clinic_visit_form/other_services/services_gbv"
+      },{
+        "name": "gbv_services",
+        "bind": "/model/instance/clinic_visit_form/other_services/services_gbv/gbv_services"
+      },{
+        "name": "hiv_services",
+        "bind": "/model/instance/clinic_visit_form/other_services/services_gbv/hiv_services"
+      },{
+        "name": "services_cd",
+        "bind": "/model/instance/clinic_visit_form/other_services/services_cd"
+      },{
+        "name": "cd_services",
+        "bind": "/model/instance/clinic_visit_form/other_services/services_cd/cd_services"
+      },{
+        "name": "abortal_services",
+        "bind": "/model/instance/clinic_visit_form/other_services/services_cd/abortal_services"
+      },{
+        "name": "services_pep",
+        "bind": "/model/instance/clinic_visit_form/other_services/services_pep"
+      },{
+        "name": "support_services",
+        "bind": "/model/instance/clinic_visit_form/other_services/services_pep/support_services"
+      },{
+        "name": "services_phdp",
+        "bind": "/model/instance/clinic_visit_form/other_services/services_phdp"
+      },{
+        "name": "phdp_services",
+        "bind": "/model/instance/clinic_visit_form/other_services/services_phdp/phdp_services"
+      },{
+        "name": "services_naloxone",
+        "bind": "/model/instance/clinic_visit_form/other_services/services_naloxone"
+      },{
+        "name": "naloxone_services",
+        "bind": "/model/instance/clinic_visit_form/other_services/services_naloxone/naloxone_services"
+      },{
+        "name": "mat_services",
+        "bind": "/model/instance/clinic_visit_form/other_services/services_naloxone/mat_services"
+      },{
+        "name": "naloxone_services",
+        "bind": "/model/instance/clinic_visit_form/testing_counselling"
+      },{
+        "name": "self_accessed",
+        "bind": "/model/instance/clinic_visit_form/testing_counselling/self_accessed"
+      },{
+        "name": "counselled",
+        "bind": "/model/instance/clinic_visit_form/testing_counselling/counselled"
+      },{
+        "name": "tested",
+        "bind": "/model/instance/clinic_visit_form/testing_counselling/tested"
+      },{
+        "name": "received_results",
+        "bind": "/model/instance/clinic_visit_form/testing_counselling/received_results"
+      },{
+        "name": "testing_results",
+        "bind": "/model/instance/clinic_visit_form/testing_counselling/testing_results"
+      },{
+        "name": "art_treatment",
+        "bind": "/model/instance/clinic_visit_form/testing_counselling/art_treatment"
+      },{
+        "name": "clinicians_comments",
+        "bind": "/model/instance/clinic_visit_form/clinicians_comments"
+      },{
+        "name": "provider_details",
+        "bind": "/model/instance/clinic_visit_form/provider_details"
+      },{
+        "name": "signature",
+        "bind": "/model/instance/clinic_visit_form/signature"
+      },
+
       {
         "name": "relationalid",
         "bind": "/model/instance/clinic_visit_form/relationalid",
