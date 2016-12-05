@@ -302,40 +302,40 @@ public class ChildDetailActivity extends Activity {
             return ((pc.getDetails().get("Child_dob") != null ? pc.getDetails().get("Child_dob") : ""));
         }
         if (Schedulename.equalsIgnoreCase("child_pcv1")) {
-            return ( setDate((pc.getDetails().get("Child_dob") != null ? pc.getDetails().get("Child_dob") : ""),35));
+            return ( setDate((pc.getDetails().get("Child_dob") != null ? pc.getDetails().get("Child_dob") : ""),42));
         }
         if (Schedulename.equalsIgnoreCase("child_opv1")) {
-            return (setDate((pc.getDetails().get("final_opv0") != null ? pc.getDetails().get("final_opv0") : ""),35));
+            return (setDate((pc.getDetails().get("final_opv0") != null ? pc.getDetails().get("final_opv0") : ""),42));
         }
         if (Schedulename.equalsIgnoreCase("child_penta1")) {
-            return (setDate((pc.getDetails().get("Child_dob") != null ? pc.getDetails().get("Child_dob") : ""),35));
+            return (setDate((pc.getDetails().get("Child_dob") != null ? pc.getDetails().get("Child_dob") : ""),42));
         }
         if (Schedulename.equalsIgnoreCase("child_pcv2")) {
-            return (setDate((pc.getDetails().get("final_pcv1") != null ? pc.getDetails().get("final_pcv1") : ""),21));
+            return (setDate((pc.getDetails().get("final_pcv1") != null ? pc.getDetails().get("final_pcv1") : ""),28));
         }
         if (Schedulename.equalsIgnoreCase("child_opv2")) {
-            return (setDate((pc.getDetails().get("final_opv1") != null ? pc.getDetails().get("final_opv1") : ""),21));
+            return (setDate((pc.getDetails().get("final_opv1") != null ? pc.getDetails().get("final_opv1") : ""),28));
         }
         if (Schedulename.equalsIgnoreCase("child_penta2")) {
-            return (setDate((pc.getDetails().get("final_penta1") != null ? pc.getDetails().get("final_penta1") : ""),21));
+            return (setDate((pc.getDetails().get("final_penta1") != null ? pc.getDetails().get("final_penta1") : ""),28));
         }
         if (Schedulename.equalsIgnoreCase("child_pcv3")) {
-            return (setDate((pc.getDetails().get("final_pcv2") != null ? pc.getDetails().get("final_pcv2") : ""),21));
+            return (setDate((pc.getDetails().get("final_pcv2") != null ? pc.getDetails().get("final_pcv2") : ""),28));
         }
         if (Schedulename.equalsIgnoreCase("child_opv3")) {
-            return (setDate((pc.getDetails().get("final_opv2") != null ? pc.getDetails().get("final_opv2") : ""),21));
+            return (setDate((pc.getDetails().get("final_opv2") != null ? pc.getDetails().get("final_opv2") : ""),28));
         }
         if (Schedulename.equalsIgnoreCase("child_penta3")) {
-            return (setDate((pc.getDetails().get("final_penta2") != null ? pc.getDetails().get("final_penta2") : ""),21));
+            return (setDate((pc.getDetails().get("final_penta2") != null ? pc.getDetails().get("final_penta2") : ""),28));
         }
         if (Schedulename.equalsIgnoreCase("child_ipv")) {
-            return (setDate((pc.getDetails().get("final_opv2") != null ? pc.getDetails().get("final_opv2") : ""),21));
+            return (setDate((pc.getDetails().get("final_opv2") != null ? pc.getDetails().get("final_opv2") : ""),28));
         }
         if (Schedulename.equalsIgnoreCase("child_measles1")) {
-            return (setDate((pc.getDetails().get("Child_dob") != null ? pc.getDetails().get("Child_dob") : ""),266));
+            return (setDate((pc.getDetails().get("Child_dob") != null ? pc.getDetails().get("Child_dob") : ""),273));
         }
         if (Schedulename.equalsIgnoreCase("child_measles2")) {
-            return (setDate((pc.getDetails().get("final_measles1") != null ? pc.getDetails().get("final_measles1") : ""),175));
+            return (setDate((pc.getDetails().get("final_measles1") != null ? pc.getDetails().get("final_measles1") : ""),182));
         }
         return "";
     }
