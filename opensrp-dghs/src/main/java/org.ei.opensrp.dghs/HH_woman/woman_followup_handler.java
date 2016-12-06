@@ -10,24 +10,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class tt4handler implements FormSubmissionHandler {
+public class woman_followup_handler implements FormSubmissionHandler {
 
 
-    public tt4handler() {
+    public woman_followup_handler() {
 
     }
 
     @Override
     public void handle(FormSubmission submission) {
         String entityID = submission.entityId();
-        List<Alert> alertlist_for_client = Context.getInstance().alertService().findByEntityIdAndAlertNames(entityID, "Woman_TT4");
-        if(alertlist_for_client.size() == 0){
-
-        }else{
-            for(int i = 0;i<alertlist_for_client.size();i++){
-                Context.getInstance().alertService().changeAlertStatusToComplete(entityID, "Woman_TT4");
-            }
-        }
         AllCommonsRepository memberrep = Context.getInstance().allCommonsRepositoryobjects("members");
         Map<String, String> ElcoDetails = new HashMap<String, String>();
         ElcoDetails.put("Is_Reg_Today","0");

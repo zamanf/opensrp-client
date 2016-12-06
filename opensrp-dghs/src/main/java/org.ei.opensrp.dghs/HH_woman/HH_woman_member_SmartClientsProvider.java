@@ -246,17 +246,31 @@ public class HH_woman_member_SmartClientsProvider implements SmartRegisterCLient
 
     private void vaccineButton(List<Alert> vaccinealertlist_for_client, CommonPersonObjectClient pc, TextView vaccinebutton) {
         if (vaccinealertlist_for_client.size() == 0) {
-            vaccinebutton.setText("Not Synced to Server");
-            vaccinebutton.setTextColor(context.getResources().getColor(R.color.text_black));
-            vaccinebutton.setBackgroundColor(context.getResources().getColor(R.color.status_bar_text_almost_white));
+            if((pc.getDetails().get("Is_Reg_Today") != null ? pc.getDetails().get("Is_Reg_Today") : "").equalsIgnoreCase("1")){
+                vaccinebutton.setText("Register Vaccines");
+                vaccinebutton.setTextColor(context.getResources().getColor(R.color.status_bar_text_almost_white));
+                vaccinebutton.setBackgroundColor(context.getResources().getColor(R.color.alert_upcoming_yellow));
 //            pvfdue.setOnClickListener(new View.OnClickListener() {
 //                @Override
 //                public void onClick(View v) {
 //
 //                }
 //            });
-            vaccinebutton.setOnClickListener(onClickListener);
-            vaccinebutton.setTag(R.id.clientobject,pc);
+                vaccinebutton.setOnClickListener(onClickListener);
+                vaccinebutton.setTag(R.id.clientobject, pc);
+            }else {
+                vaccinebutton.setText("Not Synced to Server");
+                vaccinebutton.setTextColor(context.getResources().getColor(R.color.text_black));
+                vaccinebutton.setBackgroundColor(context.getResources().getColor(R.color.status_bar_text_almost_white));
+//            pvfdue.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//
+//                }
+//            });
+                vaccinebutton.setOnClickListener(onClickListener);
+                vaccinebutton.setTag(R.id.clientobject, pc);
+            }
 
         }
         for (int i = 0; i < vaccinealertlist_for_client.size(); i++) {

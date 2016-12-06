@@ -31,6 +31,7 @@ import org.ei.opensrp.dghs.HH_woman.tt2handler;
 import org.ei.opensrp.dghs.HH_woman.tt3handler;
 import org.ei.opensrp.dghs.HH_woman.tt4handler;
 import org.ei.opensrp.dghs.HH_woman.tt5handler;
+import org.ei.opensrp.dghs.HH_woman.woman_followup_handler;
 import org.ei.opensrp.dghs.LoginActivity;
 import org.ei.opensrp.dghs.R;
 import org.ei.opensrp.dghs.hh_member.HHWardCommonObjectFilterOption;
@@ -295,6 +296,9 @@ public class HH_Woman_member_SmartRegisterFragment extends SecuredNativeSmartReg
         }
         if (Schedulename.equalsIgnoreCase("Woman_TT5")) {
             context.formSubmissionRouter().getHandlerMap().put("woman_tt_form",new tt5handler());
+        }else{
+            context.formSubmissionRouter().getHandlerMap().put("woman_tt_form",new woman_followup_handler());
+
         }
 
     }

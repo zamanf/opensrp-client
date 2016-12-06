@@ -383,6 +383,21 @@ public class HH_ChildSmartClientsProvider implements SmartRegisterCLientsProvide
         TextView nextVaccineDate = (TextView)itemView.findViewById(R.id.next_vaccine);
         boolean issynced = isSYnced(pc);
         if(!issynced){
+            if((pc.getDetails().get("Is_Reg_Today") != null ? pc.getDetails().get("Is_Reg_Today") : "").equalsIgnoreCase("1")){
+                    nextVaccineDate.setText("Register Vaccines");
+                    nextVaccineDate.setTextColor(context.getResources().getColor(R.color.status_bar_text_almost_white));
+                    nextVaccineDate.setBackgroundColor(context.getResources().getColor(R.color.alert_upcoming_yellow));
+//            pvfdue.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//
+//                }
+//            });
+                    nextVaccineDate.setOnClickListener(onClickListener);
+                    nextVaccineDate.setTag( pc);
+
+            }else {
+
             nextVaccineDate.setBackgroundColor(context.getResources().getColor(R.color.client_list_header_dark_grey));
             nextVaccineDate.setTextColor(context.getResources().getColor(R.color.text_black));
             nextVaccineDate.setText("Not Synced");
@@ -395,6 +410,7 @@ public class HH_ChildSmartClientsProvider implements SmartRegisterCLientsProvide
 
             nextVaccineDate.setOnClickListener(onClickListener);
             nextVaccineDate.setTag(pc);
+            }
         }else{
           ArrayList<Alert> alertlist = checkAlertListForVaccine(pc);
 //            Collections.sort(alertlist,new Comparator<Alert>() {

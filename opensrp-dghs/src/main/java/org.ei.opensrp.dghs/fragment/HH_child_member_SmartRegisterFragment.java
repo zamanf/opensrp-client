@@ -25,9 +25,11 @@ import org.ei.opensrp.dghs.HH_child.ChildDetailActivity;
 import org.ei.opensrp.dghs.HH_child.ChildServiceModeOption;
 import org.ei.opensrp.dghs.HH_child.HH_ChildSmartClientsProvider;
 import org.ei.opensrp.dghs.HH_child.HH_child_member_SmartRegisterActivity;
+import org.ei.opensrp.dghs.HH_child.child_followup_handler;
 import org.ei.opensrp.dghs.HH_woman.HH_woman_member_SmartClientsProvider;
 import org.ei.opensrp.dghs.HH_woman.HH_woman_member_SmartRegisterActivity;
 import org.ei.opensrp.dghs.HH_woman.WomanServiceModeOption;
+import org.ei.opensrp.dghs.HH_woman.tt1handler;
 import org.ei.opensrp.dghs.LoginActivity;
 import org.ei.opensrp.dghs.R;
 import org.ei.opensrp.dghs.hh_member.HHWardCommonObjectFilterOption;
@@ -266,6 +268,7 @@ public class HH_child_member_SmartRegisterFragment extends SecuredNativeSmartReg
                     }
 
                     FieldOverrides fieldOverrides = new FieldOverrides(overridejsonobject.toString());
+                    context.formSubmissionRouter().getHandlerMap().put("child_vaccine_followup",new child_followup_handler());
 
                     ((HH_child_member_SmartRegisterActivity)getActivity()).startFormActivity("child_vaccine_followup", ((CommonPersonObjectClient) view.getTag()).entityId(), fieldOverrides.getJSONString());
                     break;
