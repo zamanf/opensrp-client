@@ -1,6 +1,6 @@
 <model>
   <instance>
-    <BirthOutcome encounter_type="Birth Outcome" id="BirthOutcome" version="201612051014">
+    <BirthOutcome encounter_type="Birth Outcome" id="BirthOutcome" version="201612060653">
       <formhub>
         <uuid/>
       </formhub>
@@ -59,6 +59,7 @@
         <child_was_suffering_from_a_disease_at_birth openmrs_entity="concept" openmrs_entity_id="081061f8-c5c1-48a7-93f2-88b61a560529"/>
         <contact_phone_number openmrs_entity="person_attribute" openmrs_entity_id="phoneNumber"/>
         <add_child/>
+        <Is_Reg_Today/>
         <Is_child/>
       </Child_Registration>
       <outcome_current_formStatus/>

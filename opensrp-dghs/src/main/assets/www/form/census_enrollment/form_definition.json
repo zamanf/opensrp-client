@@ -466,6 +466,10 @@
           {
             "name": "Is_preg_outcome",
             "bind": "/model/instance/NewMemberRegistration/HH_Member/Is_preg_outcome"
+          },
+          {
+            "name": "Is_Reg_Today",
+            "bind": "/model/instance/NewMemberRegistration/HH_Member/Is_Reg_Today"
           }
         ]
       }

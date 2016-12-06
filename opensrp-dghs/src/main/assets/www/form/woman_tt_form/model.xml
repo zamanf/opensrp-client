@@ -1,10 +1,11 @@
 <model>
   <instance>
-    <Woman_TT_Followup_Form encounter_type="Woman TT Follow Up" id="woman_tt_followup_form" version="201610190409">
+    <Woman_TT_Followup_Form encounter_type="Woman TT Follow Up" id="woman_tt_followup_form" version="201612060655">
       <formhub>
         <uuid/>
       </formhub>
       <existing_location openmrs_entity="encounter" openmrs_entity_id="location_id"/>
+      <existing_Is_Reg_Today/>
       <existing_Country/>
       <existing_Division/>
       <existing_District/>

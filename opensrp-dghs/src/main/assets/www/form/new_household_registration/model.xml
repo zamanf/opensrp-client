@@ -1,6 +1,6 @@
 <model>
   <instance>
-    <HHMemberReg encounter_type="HH And Member Registration" id="HHMemberReg" version="201612051014">
+    <HHMemberReg encounter_type="HH And Member Registration" id="HHMemberReg" version="201612060652">
       <formhub>
         <uuid/>
       </formhub>
@@ -147,6 +147,7 @@
         <Is_woman/>
         <Is_child/>
         <Is_preg_outcome/>
+        <Is_Reg_Today/>
       </HH_Member>
       <HH_current_form_status/>
       <meta>

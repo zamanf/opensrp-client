@@ -14,6 +14,11 @@
         "shouldLoadValue": true
       },
       {
+        "name": "Is_Reg_Today",
+        "bind": "/model/instance/Child_Vaccination_Followup/existing_Is_Reg_Today",
+        "shouldLoadValue": true
+      },
+      {
         "name": "Child_mother_name",
         "bind": "/model/instance/Child_Vaccination_Followup/existing_mother_name",
         "shouldLoadValue": true

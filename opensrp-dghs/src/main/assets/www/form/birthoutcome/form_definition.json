@@ -267,6 +267,10 @@
           {
             "name": "Is_child",
             "bind": "/model/instance/BirthOutcome/Child_Registration/Is_child"
+          },
+          {
+            "name": "Is_Reg_Today",
+            "bind": "/model/instance/BirthOutcome/Child_Registration/Is_Reg_Today"
           }
         ]
       }

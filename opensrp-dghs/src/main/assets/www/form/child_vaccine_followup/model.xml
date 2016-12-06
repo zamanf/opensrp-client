@@ -1,10 +1,11 @@
 <model>
     <instance>
-        <Child_Vaccination_Followup encounter_type="Child Vaccination Followup" id="child_vaccination_followup" version="201610181350">
+        <Child_Vaccination_Followup encounter_type="Child Vaccination Followup" id="child_vaccination_followup" version="201612060731">
             <formhub>
                 <uuid/>
             </formhub>
             <existing_first_name/>
+            <existing_Is_Reg_Today/>
             <existing_mother_name/>
             <existing_gender/>
             <existing_birth_date/>
