@@ -434,7 +434,7 @@ public class HH_child_member_SmartRegisterFragment extends SecuredNativeSmartReg
         return "and missedCount = '2'";
     }
     private String filterStringForMoreThanVaccineMiss(){
-        return "and missedCount IS NOT NULL and missedCount NOT IN ('1','2')";
+        return "and missedCount IS NOT NULL and missedCount NOT IN ('0','1','2')";
     }
 
     private String filterStringForFemale(){

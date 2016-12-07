@@ -214,6 +214,11 @@ public class CommonRepository extends DrishtiRepository {
     public void updateColumn(String tableName,ContentValues contentValues,String caseId){
         SQLiteDatabase database = masterRepository.getWritableDatabase();
         database.update(tableName, contentValues, ID_COLUMN + " = ?", new String[]{caseId});
+        try {
+            database.close();
+        }catch (Exception e){
+
+        }
     }
 
     public  List<CommonPersonObject> customQuery(String sql ,String[] selections,String tableName){

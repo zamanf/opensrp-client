@@ -56,6 +56,10 @@ public class NativeHomeActivity extends SecuredActivity {
                 updateMenuItem.setActionView(null);
             }
             updateRegisterCounts();
+            Last_vaccine_missedCount_task tdv = new Last_vaccine_missedCount_task(context,new HTTPAgent(context.applicationContext(),context.allSettings(),context.allSharedPreferences(),context.configuration()),context.configuration(),context.allSettings(),context.allSharedPreferences());
+            tdv.execute();
+            Today_vaccine_task tvt = new Today_vaccine_task(context,new HTTPAgent(context.applicationContext(),context.allSettings(),context.allSharedPreferences(),context.configuration()),context.configuration(),context.allSettings(),context.allSharedPreferences());
+            tvt.execute();
         }
     };
 
@@ -217,10 +221,7 @@ public class NativeHomeActivity extends SecuredActivity {
                 this, context.actionService(), context.formSubmissionSyncService(),
                 new SyncProgressIndicator(), context.allFormVersionSyncService());
         updateActionsTask.updateFromServer(new SyncAfterFetchListener());
-        Last_vaccine_missedCount_task tdv = new Last_vaccine_missedCount_task(context,new HTTPAgent(context.applicationContext(),context.allSettings(),context.allSharedPreferences(),context.configuration()),context.configuration(),context.allSettings(),context.allSharedPreferences());
-        tdv.execute();
-        Today_vaccine_task tvt = new Today_vaccine_task(context,new HTTPAgent(context.applicationContext(),context.allSettings(),context.allSharedPreferences(),context.configuration()),context.configuration(),context.allSettings(),context.allSharedPreferences());
-        tvt.execute();
+
     }
 
     @Override

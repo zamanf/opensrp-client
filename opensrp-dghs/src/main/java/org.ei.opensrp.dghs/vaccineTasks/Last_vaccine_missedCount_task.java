@@ -77,6 +77,8 @@ public class Last_vaccine_missedCount_task extends AsyncTask {
                 if(Long.parseLong(timeStamp)>Lasttimestamp){
                     Lasttimestamp = Long.parseLong(timeStamp);
                 }
+
+
                 ContentValues cv = new ContentValues();
                 cv.put("missedCount",missedCount);
                 context.commonrepository("members").updateColumn("members",cv,entityId);
@@ -84,9 +86,8 @@ public class Last_vaccine_missedCount_task extends AsyncTask {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        Log.v("missed log","----");
         context.applicationContext().getSharedPreferences("vaccine", android.content.Context.MODE_PRIVATE).edit().putLong("lastTimeStampForVaccine",Lasttimestamp).commit();
-
-
     }
 
     @Override

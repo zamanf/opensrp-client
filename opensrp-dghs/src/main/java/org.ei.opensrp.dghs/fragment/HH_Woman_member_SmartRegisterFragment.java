@@ -252,6 +252,9 @@ public class HH_Woman_member_SmartRegisterFragment extends SecuredNativeSmartReg
                 case R.id.next_vaccine_date:
                     CommonPersonObjectClient pc = (CommonPersonObjectClient) view.getTag(R.id.clientobject);
                     String Schedulename = (String)view.getTag(R.id.clientTTSchedulename);
+                    if(Schedulename == null){
+                        Schedulename = "";
+                    }
                     assignHandler(Schedulename);
                     JSONObject overridejsonobject = new JSONObject();
                     try {
@@ -511,6 +514,6 @@ public class HH_Woman_member_SmartRegisterFragment extends SecuredNativeSmartReg
         return "and missedCount = '2'";
     }
     private String filterStringForMoreThanVaccineMiss(){
-        return "and missedCount IS NOT NULL and missedCount NOT IN ('1','2')";
+        return "and missedCount IS NOT NULL and missedCount NOT IN ('0','1','2')";
     }
 }
