@@ -11,19 +11,32 @@ import android.provider.MediaStore;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 import org.ei.opensrp.Context;
+import org.ei.opensrp.commonregistry.AllCommonsRepository;
+import org.ei.opensrp.commonregistry.CommonFtsObject;
 import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.dghs.hh_member.HouseHoldDetailActivity;
 import org.ei.opensrp.domain.Alert;
 import org.ei.opensrp.dghs.R;
+import org.ei.opensrp.domain.form.FieldOverrides;
+import org.ei.opensrp.domain.form.FormSubmission;
+import org.ei.opensrp.service.ZiggyService;
+import org.ei.opensrp.util.FormUtils;
 import org.ei.opensrp.view.viewHolder.OnClickFormLauncher;
+import org.joda.time.DateTime;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.XML;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,6 +52,13 @@ import java.util.Map;
 import util.ImageCache;
 import util.ImageFetcher;
 
+import static org.ei.opensrp.AllConstants.ENTITY_ID_PARAM;
+import static org.ei.opensrp.AllConstants.FORM_NAME_PARAM;
+import static org.ei.opensrp.AllConstants.INSTANCE_ID_PARAM;
+import static org.ei.opensrp.AllConstants.SYNC_STATUS;
+import static org.ei.opensrp.AllConstants.VERSION_PARAM;
+import static org.ei.opensrp.domain.SyncStatus.PENDING;
+import static org.ei.opensrp.util.EasyMap.create;
 import static org.ei.opensrp.util.StringUtil.humanize;
 
 /**
@@ -189,6 +209,10 @@ public class WomanDetailActivity extends Activity {
         ttcheck(womanclient,tt3TextView,(View)findViewById(R.id.womandetail_tt3_block),"tt3_final","Woman_TT3");
         ttcheck(womanclient,tt4TextView,(View)findViewById(R.id.womandetail_tt4_block),"tt4_final","Woman_TT4");
         ttcheck(womanclient,tt5TextView,(View)findViewById(R.id.womandetail_tt5_block),"tt5_final","Woman_TT5");
+
+//        formwrapperForWomen(null);
+
+
 //        tt1TextView.setText((womanclient.getDetails().get("tt1_final")!=null?womanclient.getDetails().get("tt1_final"):"N/A"));
 //        tt2TextView.setText((womanclient.getDetails().get("tt2_final")!=null?womanclient.getDetails().get("tt2_final"):"N/A"));
 //        tt3TextView.setText((womanclient.getDetails().get("tt3_final")!=null?womanclient.getDetails().get("tt3_final"):"N/A"));
@@ -243,7 +267,60 @@ public class WomanDetailActivity extends Activity {
 
     }
 
-//    private void eddlay(CommonPersonObjectClient ancclient) {
+    private void formwrapperForWomen(HashMap<String,String> vaccinemap) {
+        JSONObject overridejsonobject = new JSONObject();
+        try {
+            overridejsonobject.put("e_tt1",((womanclient.getDetails().get("tt1_final")!=null?womanclient.getDetails().get("tt1_final"):"")));
+            overridejsonobject.put("e_tt2",((womanclient.getDetails().get("tt2_final")!=null?womanclient.getDetails().get("tt2_final"):"")));
+            overridejsonobject.put("e_tt3",((womanclient.getDetails().get("tt3_final")!=null?womanclient.getDetails().get("tt3_final"):"")));
+            overridejsonobject.put("e_tt4",((womanclient.getDetails().get("tt4_final")!=null?womanclient.getDetails().get("tt4_final"):"")));
+            overridejsonobject.put("e_tt5",((womanclient.getDetails().get("tt5_final")!=null?womanclient.getDetails().get("tt5_final"):"")));
+
+
+
+            DateTime currentDateTime = new DateTime(new Date());
+            overridejsonobject.put("tt1_final",currentDateTime.toString("yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
+
+            overridejsonobject.put("start",currentDateTime.toString("yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
+            overridejsonobject.put( "end", currentDateTime.toString("yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
+            overridejsonobject.put("today", currentDateTime.toString("yyyy-MM-dd"));
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+//            updateJson(encounterJson, "end", currentDateTime.toString("yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
+//            updateJson(encounterJson, "today", currentDateTime.toString("yyyy-MM-dd"));
+
+        }
+
+        FieldOverrides fieldOverrides = new FieldOverrides(overridejsonobject.toString());
+
+        String formMadeforprint = FormUtils.getInstance(this).generateXMLInputForFormWithEntityId(womanclient.entityId(), "woman_tt_form", fieldOverrides.getJSONString());
+
+        try {
+            JSONObject formSubmission = XML.toJSONObject(formMadeforprint);
+            JSONObject encounterJson = find(formSubmission, "Woman_TT_Followup_Form");
+            Log.v("formMadeforprint",encounterJson.toString());
+
+            DateTime currentDateTime = new DateTime(new Date());
+//            updateJson(encounterJson, "start", currentDateTime.toString("yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
+            updateJson(encounterJson, "deviceid", "Error: could not determine deviceID");
+            updateJson(encounterJson, "subscriberid", "no subscriberid property in enketo");
+            updateJson(encounterJson, "simserial", "no simserial property in enketo");
+            updateJson(encounterJson, "phonenumber", "no phonenumber property in enketo");
+            Log.v("formMadeforencounter",encounterJson.getString("start"));
+
+            String data = XML.toString(formSubmission);
+            saveFormSubmission(this, data, womanclient.entityId(), "woman_tt_form", retrieveFieldOverides(fieldOverrides.getJSONString()));
+            Log.v("formMadeforsubmission",formSubmission.toString());
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        Log.v("formMadeforprint",formMadeforprint);
+    }
+
+    //    private void eddlay(CommonPersonObjectClient ancclient) {
 //        TextView edd = (TextView)findViewById(R.id.lmp_date);
 //        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 //        try {
@@ -462,4 +539,87 @@ public class WomanDetailActivity extends Activity {
 //        Bitmap bitmap = BitmapFactory.decodeFile(file, options);
 //        view.setImageBitmap(bitmap);
     }
+    public static void updateJson(JSONObject jsonObject, String field, String value) {
+        try {
+            if (jsonObject.has(field)) {
+                JSONObject fieldJson = jsonObject.getJSONObject(field);
+                fieldJson.put("content", value);
+            }
+        } catch (JSONException e) {
+        }
+    }
+    public static void updateJsonObject(JSONObject jsonObject, String field, JSONObject value) {
+        try {
+            if (jsonObject.has(field)) {
+                JSONObject fieldJson = jsonObject.getJSONObject(field);
+
+                fieldJson.put(field, value);
+            }
+        } catch (JSONException e) {
+        }
+    }
+    public static JSONObject find(JSONObject jsonObject, String field) {
+        try {
+            if (jsonObject.has(field)) {
+                return jsonObject.getJSONObject(field);
+
+            }
+        } catch (JSONException e) {
+        }
+
+        return null;
+    }
+    public static void saveFormSubmission(android.content.Context appContext, final String formSubmission, String id, final String formName, JSONObject fieldOverrides) {
+        Log.v("fieldoverride", fieldOverrides.toString());
+        // save the form
+        try {
+            FormUtils formUtils = FormUtils.getInstance(appContext);
+            final FormSubmission submission = formUtils.generateFormSubmisionFromXMLString(id, formSubmission, formName, fieldOverrides);
+
+            org.ei.opensrp.Context context = org.ei.opensrp.Context.getInstance();
+            ZiggyService ziggyService = context.ziggyService();
+            ziggyService.saveForm(getParams(submission), submission.instance());
+
+            // Update Fts Tables
+            CommonFtsObject commonFtsObject = context.commonFtsObject();
+            if (commonFtsObject != null) {
+                String[] ftsTables = commonFtsObject.getTables();
+                for (String ftsTable : ftsTables) {
+                    AllCommonsRepository allCommonsRepository = context.allCommonsRepositoryobjects(ftsTable);
+                    boolean updated = allCommonsRepository.updateSearch(submission.entityId());
+                    if (updated) {
+                        break;
+                    }
+                }
+            }
+        } catch (Exception e) {
+//            Log.e(VaccinateActionUtils.class.getName(), "", e);
+        }
+    }
+    private static String getParams(FormSubmission submission) {
+        return new Gson().toJson(
+                create(INSTANCE_ID_PARAM, submission.instanceId())
+                        .put(ENTITY_ID_PARAM, submission.entityId())
+                        .put(FORM_NAME_PARAM, submission.formName())
+                        .put(VERSION_PARAM, submission.version())
+                        .put(SYNC_STATUS, PENDING.value())
+                        .map());
+    }
+    public static JSONObject retrieveFieldOverides(String overrides) {
+        try {
+            //get the field overrides map
+            if (overrides != null) {
+                JSONObject json = new JSONObject(overrides);
+                String overridesStr = json.getString("fieldOverrides");
+                return new JSONObject(overridesStr);
+            }
+        } catch (Exception e) {
+//            Log.e(VaccinateActionUtils.class.getName(), "", e);
+        }
+        return null;
+
+    }
+
+
+
 }
