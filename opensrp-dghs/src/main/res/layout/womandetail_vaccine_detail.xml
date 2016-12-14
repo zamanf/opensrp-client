@@ -53,6 +53,16 @@
                 android:layout_weight="1"
                 android:layout_gravity="center_vertical" />
 
+            <Button
+                android:layout_width="@dimen/client_profile_pic_width"
+                android:layout_height="fill_parent"
+                android:text="undo"
+                android:id="@+id/tt1_undo"
+                android:background="@color/alert_in_progress_blue"
+                android:textColor="@color/status_bar_text_almost_white"
+                android:layout_margin="1dp"
+                android:visibility="invisible" />
+
 
         </TableRow>
         <TableRow
@@ -97,6 +107,16 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1" />
 
+            <Button
+                android:layout_width="@dimen/client_profile_pic_width"
+                android:layout_height="fill_parent"
+                android:text="undo"
+                android:id="@+id/tt2_undo"
+                android:background="@color/alert_in_progress_blue"
+                android:textColor="@color/status_bar_text_almost_white"
+                android:layout_margin="1dp"
+                android:visibility="invisible" />
+
         </TableRow>
         <TableRow
             android:gravity="center_horizontal"
@@ -139,6 +159,16 @@
                 android:textColor="@color/text_black"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1" />
+
+            <Button
+                android:layout_width="@dimen/client_profile_pic_width"
+                android:layout_height="fill_parent"
+                android:text="undo"
+                android:id="@+id/tt3_undo"
+                android:background="@color/alert_in_progress_blue"
+                android:textColor="@color/status_bar_text_almost_white"
+                android:layout_margin="1dp"
+                android:visibility="invisible" />
 
         </TableRow>
 
@@ -183,6 +213,16 @@
                 android:textColor="@color/text_black"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1" />
+
+            <Button
+                android:layout_width="@dimen/client_profile_pic_width"
+                android:layout_height="fill_parent"
+                android:text="undo"
+                android:id="@+id/tt4_undo"
+                android:background="@color/alert_in_progress_blue"
+                android:textColor="@color/status_bar_text_almost_white"
+                android:layout_margin="1dp"
+                android:visibility="invisible" />
 
         </TableRow>
 
@@ -230,6 +270,16 @@
                 android:textColor="@color/text_black"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1" />
+
+            <Button
+                android:layout_width="@dimen/client_profile_pic_width"
+                android:layout_height="fill_parent"
+                android:text="undo"
+                android:id="@+id/tt5_undo"
+                android:background="@color/alert_in_progress_blue"
+                android:textColor="@color/status_bar_text_almost_white"
+                android:layout_margin="1dp"
+                android:visibility="invisible" />
 
         </TableRow>
 

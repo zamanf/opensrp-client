@@ -35,4 +35,7 @@
     <color name="action_bar_background">#2b475e</color>
 
     <color name="alert_complete_green_mcare">#4fb45b</color>
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="silver">#A9A9A9</color>
 </resources>
