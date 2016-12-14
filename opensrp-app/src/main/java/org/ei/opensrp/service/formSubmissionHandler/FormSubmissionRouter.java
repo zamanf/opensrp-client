@@ -12,6 +12,7 @@ import java.util.Map;
 import static java.text.MessageFormat.format;
 import static org.ei.opensrp.AllConstants.FormNames.*;
 import static org.ei.opensrp.event.Event.FORM_SUBMITTED;
+import static org.ei.opensrp.util.Log.logVerbose;
 import static org.ei.opensrp.util.Log.logWarn;
 
 
@@ -78,6 +79,8 @@ public class FormSubmissionRouter {
     public void route(String instanceId) throws Exception {
         FormSubmission submission = formDataRepository.fetchFromSubmission(instanceId);
         FormSubmissionHandler handler = handlerMap.get(submission.formName());
+
+        logVerbose(submission.formName());
         if (handler == null) {
             logWarn("Could not find a handler due to unknown form submission: " + submission);
         } else {

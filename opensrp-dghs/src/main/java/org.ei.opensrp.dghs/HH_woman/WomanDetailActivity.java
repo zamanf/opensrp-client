@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.AllCommonsRepository;
 import org.ei.opensrp.commonregistry.CommonFtsObject;
@@ -40,6 +41,7 @@ import org.ei.opensrp.dghs.R;
 import org.ei.opensrp.domain.form.FieldOverrides;
 import org.ei.opensrp.domain.form.FormSubmission;
 import org.ei.opensrp.service.ZiggyService;
+import org.ei.opensrp.service.formSubmissionHandler.FormSubmissionHandler;
 import org.ei.opensrp.util.FormUtils;
 import org.ei.opensrp.view.viewHolder.OnClickFormLauncher;
 import org.joda.time.DateTime;
@@ -61,13 +63,16 @@ import java.util.Map;
 import util.ImageCache;
 import util.ImageFetcher;
 
+import static java.text.MessageFormat.format;
 import static org.ei.opensrp.AllConstants.ENTITY_ID_PARAM;
 import static org.ei.opensrp.AllConstants.FORM_NAME_PARAM;
 import static org.ei.opensrp.AllConstants.INSTANCE_ID_PARAM;
 import static org.ei.opensrp.AllConstants.SYNC_STATUS;
 import static org.ei.opensrp.AllConstants.VERSION_PARAM;
 import static org.ei.opensrp.domain.SyncStatus.PENDING;
+import static org.ei.opensrp.event.Event.FORM_SUBMITTED;
 import static org.ei.opensrp.util.EasyMap.create;
+import static org.ei.opensrp.util.Log.logWarn;
 import static org.ei.opensrp.util.StringUtil.humanize;
 
 /**
@@ -94,6 +99,9 @@ public class WomanDetailActivity extends Activity implements VaccinationActionLi
     //image retrieving
 
     public static CommonPersonObjectClient womanclient;
+    private TextView tt1TextView,tt2TextView,tt3TextView,tt4TextView,tt5TextView;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,11 +123,11 @@ public class WomanDetailActivity extends Activity implements VaccinationActionLi
         TextView vaccination =(TextView) findViewById(R.id.womandetail_vaccinationstatus);
 
         //VACCINES INFORMATION/////////////////////////////////////////////////
-        TextView tt1TextView =(TextView) findViewById(R.id.womandetail_tt1);
-        TextView tt2TextView =(TextView) findViewById(R.id.womandetail_tt2);
-        TextView tt3TextView =(TextView) findViewById(R.id.womandetail_tt3);
-        TextView tt4TextView =(TextView) findViewById(R.id.womandetail_tt4);
-        TextView tt5TextView =(TextView) findViewById(R.id.womandetail_tt5);
+        tt1TextView =(TextView) findViewById(R.id.womandetail_tt1);
+        tt2TextView =(TextView) findViewById(R.id.womandetail_tt2);
+        tt3TextView =(TextView) findViewById(R.id.womandetail_tt3);
+        tt4TextView =(TextView) findViewById(R.id.womandetail_tt4);
+        tt5TextView =(TextView) findViewById(R.id.womandetail_tt5);
         ///////////////////////////////////////////////////////////////////////
         tt1_undo = (Button) findViewById(R.id.tt1_undo);
         tt2_undo = (Button) findViewById(R.id.tt2_undo);
@@ -681,7 +689,24 @@ public class WomanDetailActivity extends Activity implements VaccinationActionLi
             org.ei.opensrp.Context context = org.ei.opensrp.Context.getInstance();
             ZiggyService ziggyService = context.ziggyService();
             ziggyService.saveForm(getParams(submission), submission.instance());
-
+            /////////////handler mechanisms///////////////////////////////////////////////////////////////////////////
+            context.formSubmissionRouter().route(submission.instanceId());
+//            FormSubmission formsubmission = context.formDataRepository().fetchFromSubmission(submission.instance());
+//
+//            FormSubmissionHandler handler = context.formSubmissionRouter().getHandlerMap().get(submission.formName());
+//            if (handler == null) {
+//                logWarn("Could not find a handler due to unknown form submission: " + formsubmission);
+//            } else {
+//                try {
+//                    handler.handle(submission);
+//                } catch (Exception e) {
+//                    org.ei.opensrp.util.Log.logError(format("Handling {0} form submission with instance Id: {1} for entity: {2} failed with exception : {3}",
+//                            submission.formName(), submission.instanceId(), submission.entityId(), ExceptionUtils.getStackTrace(e)));
+//                    throw e;
+//                }
+//            }
+//            FORM_SUBMITTED.notifyListeners(submission.instance());
+            /////////////////////////////////////handler mechanisms////////////////////////////////////////////////////
             // Update Fts Tables
             CommonFtsObject commonFtsObject = context.commonFtsObject();
             if (commonFtsObject != null) {
@@ -729,28 +754,44 @@ public class WomanDetailActivity extends Activity implements VaccinationActionLi
         if(tag.getVaccine().display().equalsIgnoreCase("TT 1")) {
             update.put("tt1_final", tag.getUpdatedVaccineDateAsString());
             update.put("tt_1_dose_today", tag.getUpdatedVaccineDateAsString());
+            tt_complete_from_pop_up(tt1TextView,(View)findViewById(R.id.womandetail_tt1_block),"tt1_final",tag.getUpdatedVaccineDateAsString());
             makett1_undo_visible(tag);
         }
         if(tag.getVaccine().display().equalsIgnoreCase("TT 2")) {
             update.put("tt2_final", tag.getUpdatedVaccineDateAsString());
             update.put("tt_2_dose_today", tag.getUpdatedVaccineDateAsString());
+            tt_complete_from_pop_up(tt2TextView,(View)findViewById(R.id.womandetail_tt2_block),"tt2_final",tag.getUpdatedVaccineDateAsString());
             makett2_undo_visible(tag);
         }
         if(tag.getVaccine().display().equalsIgnoreCase("TT 3")) {
             update.put("tt3_final", tag.getUpdatedVaccineDateAsString());
             update.put("tt_3_dose_today", tag.getUpdatedVaccineDateAsString());
+            tt_complete_from_pop_up(tt3TextView,(View)findViewById(R.id.womandetail_tt3_block),"tt3_final",tag.getUpdatedVaccineDateAsString());
             makett3_undo_visible(tag);
         }
         if(tag.getVaccine().display().equalsIgnoreCase("TT 4")) {
             update.put("tt4_final", tag.getUpdatedVaccineDateAsString());
             update.put("tt_4_dose_today", tag.getUpdatedVaccineDateAsString());
+            tt_complete_from_pop_up(tt4TextView,(View)findViewById(R.id.womandetail_tt4_block),"tt4_final",tag.getUpdatedVaccineDateAsString());
             makett4_undo_visible(tag);
         }
         if(tag.getVaccine().display().equalsIgnoreCase("TT 5")) {
             update.put("tt5_final", tag.getUpdatedVaccineDateAsString());
             update.put("tt_5_dose_today", tag.getUpdatedVaccineDateAsString());
+            tt_complete_from_pop_up(tt5TextView,(View)findViewById(R.id.womandetail_tt5_block),"tt5_final",tag.getUpdatedVaccineDateAsString());
             makett5_undo_visible(tag);
         }
+    }
+
+    private void tt_complete_from_pop_up(TextView tt1TextView, View viewById, String tt1_final, String updatedVaccineDateAsString) {
+        viewById.setBackgroundColor(getResources().getColor(R.color.alert_complete_green));
+        tt1TextView.setText(updatedVaccineDateAsString);
+        tt1TextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     @Override
@@ -759,21 +800,25 @@ public class WomanDetailActivity extends Activity implements VaccinationActionLi
         if(tag.getVaccine().display().equalsIgnoreCase("TT 1")) {
             update.put("tt1_final", tag.getUpdatedVaccineDateAsString());
             update.put("tt1_retro", tag.getUpdatedVaccineDateAsString());
+            tt_complete_from_pop_up(tt1TextView,(View)findViewById(R.id.womandetail_tt1_block),"tt1_final",tag.getUpdatedVaccineDateAsString());
             makett1_undo_visible(tag);
         }
         if(tag.getVaccine().display().equalsIgnoreCase("TT 2")) {
             update.put("tt2_final", tag.getUpdatedVaccineDateAsString());
             update.put("tt2_retro", tag.getUpdatedVaccineDateAsString());
+            tt_complete_from_pop_up(tt2TextView,(View)findViewById(R.id.womandetail_tt2_block),"tt2_final",tag.getUpdatedVaccineDateAsString());
             makett2_undo_visible(tag);
         }
         if(tag.getVaccine().display().equalsIgnoreCase("TT 3")) {
             update.put("tt3_final", tag.getUpdatedVaccineDateAsString());
             update.put("tt3_retro", tag.getUpdatedVaccineDateAsString());
+            tt_complete_from_pop_up(tt3TextView,(View)findViewById(R.id.womandetail_tt3_block),"tt3_final",tag.getUpdatedVaccineDateAsString());
             makett3_undo_visible(tag);
         }
         if(tag.getVaccine().display().equalsIgnoreCase("TT 4")) {
             update.put("tt4_final", tag.getUpdatedVaccineDateAsString());
             update.put("tt4_retro", tag.getUpdatedVaccineDateAsString());
+            tt_complete_from_pop_up(tt4TextView,(View)findViewById(R.id.womandetail_tt4_block),"tt4_final",tag.getUpdatedVaccineDateAsString());
             makett4_undo_visible(tag);
         }
     }
@@ -867,7 +912,45 @@ public class WomanDetailActivity extends Activity implements VaccinationActionLi
     @Override
     public void onUndoVaccination(VaccineWrapper tag) {
 
+        if(tag.getVaccine().display().equalsIgnoreCase("TT 1")) {
+            update.remove("tt1_final");
+            update.remove("tt1_retro");
+            update.remove("tt_1_dose_today");
+            tt1_undo.setVisibility(View.INVISIBLE);
+            ttcheck(womanclient,tt1TextView,(View)findViewById(R.id.womandetail_tt1_block),"tt1_final","Woman_TT1");
+        }
+        if(tag.getVaccine().display().equalsIgnoreCase("TT 2")) {
+            update.remove("tt2_final");
+            update.remove("tt2_retro");
+            update.remove("tt_2_dose_today");
+            tt2_undo.setVisibility(View.INVISIBLE);
+            ttcheck(womanclient,tt2TextView,(View)findViewById(R.id.womandetail_tt2_block),"tt2_final","Woman_TT2");
+        }
+        if(tag.getVaccine().display().equalsIgnoreCase("TT 3")) {
+            update.remove("tt3_final");
+            update.remove("tt3_retro");
+            update.remove("tt_3_dose_today");
+            tt3_undo.setVisibility(View.INVISIBLE);
+            ttcheck(womanclient,tt3TextView,(View)findViewById(R.id.womandetail_tt3_block),"tt3_final","Woman_TT3");
+
+        }
+        if(tag.getVaccine().display().equalsIgnoreCase("TT 4")) {
+            update.remove("tt4_final");
+            update.remove("tt4_retro");
+            update.remove("tt_4_dose_today");
+            tt4_undo.setVisibility(View.INVISIBLE);
+            ttcheck(womanclient,tt4TextView,(View)findViewById(R.id.womandetail_tt4_block),"tt4_final","Woman_TT4");
+
+        }
+        if(tag.getVaccine().display().equalsIgnoreCase("TT 5")) {
+            update.remove("tt5_final");
+            update.remove("tt5_retro");
+            update.remove("tt_5_dose_today");
+            tt5_undo.setVisibility(View.INVISIBLE);
+            ttcheck(womanclient,tt5TextView,(View)findViewById(R.id.womandetail_tt5_block),"tt5_final","Woman_TT5");
+        }
     }
+
 
     @Override
     public void onBackPressed() {
