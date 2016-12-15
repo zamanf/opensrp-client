@@ -326,7 +326,7 @@ public class HH_woman_member_SmartClientsProvider implements SmartRegisterCLient
                     }
                 });
             }
-            if (vaccinealertlist_for_client.get(i).isComplete() || (pc.getDetails().get("tt1_final") != null) || (pc.getDetails().get("tt2_final") != null) || (pc.getDetails().get("tt3_final") != null) || (pc.getDetails().get("tt4_final") != null) || (pc.getDetails().get("tt5_final") != null)) {
+            if (vaccinealertlist_for_client.get(i).isComplete()) {
 //                vaccinebutton.setText("visited");
                 if (Schedulename.equalsIgnoreCase("Woman_TT1") && (pc.getDetails().get("tt1_final") != null)) {
                     vaccinebutton.setText("TT1 \n" + (pc.getDetails().get("tt1_final") != null ? pc.getDetails().get("tt1_final") : ""));
