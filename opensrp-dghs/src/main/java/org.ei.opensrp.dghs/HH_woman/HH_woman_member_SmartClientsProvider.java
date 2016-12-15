@@ -326,25 +326,34 @@ public class HH_woman_member_SmartClientsProvider implements SmartRegisterCLient
                     }
                 });
             }
-            if (vaccinealertlist_for_client.get(i).isComplete()) {
+            if (vaccinealertlist_for_client.get(i).isComplete() || (pc.getDetails().get("tt1_final") != null) || (pc.getDetails().get("tt2_final") != null) || (pc.getDetails().get("tt3_final") != null) || (pc.getDetails().get("tt4_final") != null) || (pc.getDetails().get("tt5_final") != null)) {
 //                vaccinebutton.setText("visited");
-                if (Schedulename.equalsIgnoreCase("Woman_TT1")) {
+                if (Schedulename.equalsIgnoreCase("Woman_TT1") && (pc.getDetails().get("tt1_final") != null)) {
                     vaccinebutton.setText("TT1 \n" + (pc.getDetails().get("tt1_final") != null ? pc.getDetails().get("tt1_final") : ""));
+                    vaccinebutton.setTextColor(context.getResources().getColor(R.color.status_bar_text_almost_white));
+                    vaccinebutton.setBackgroundColor(context.getResources().getColor(R.color.alert_complete_green_mcare));
                 }
-                if (Schedulename.equalsIgnoreCase("Woman_TT2")) {
+                if (Schedulename.equalsIgnoreCase("Woman_TT2")&& (pc.getDetails().get("tt2_final") != null)) {
                     vaccinebutton.setText("TT2 \n" + (pc.getDetails().get("tt2_final") != null ? pc.getDetails().get("tt2_final") : ""));
+                    vaccinebutton.setTextColor(context.getResources().getColor(R.color.status_bar_text_almost_white));
+                    vaccinebutton.setBackgroundColor(context.getResources().getColor(R.color.alert_complete_green_mcare));
                 }
-                if (Schedulename.equalsIgnoreCase("Woman_TT3")) {
+                if (Schedulename.equalsIgnoreCase("Woman_TT3")&& (pc.getDetails().get("tt3_final") != null)) {
                     vaccinebutton.setText("TT3 \n" + (pc.getDetails().get("tt3_final") != null ? pc.getDetails().get("tt3_final") : ""));
+                    vaccinebutton.setTextColor(context.getResources().getColor(R.color.status_bar_text_almost_white));
+                    vaccinebutton.setBackgroundColor(context.getResources().getColor(R.color.alert_complete_green_mcare));
                 }
-                if (Schedulename.equalsIgnoreCase("Woman_TT4")) {
+                if (Schedulename.equalsIgnoreCase("Woman_TT4")&& (pc.getDetails().get("tt4_final") != null)) {
                     vaccinebutton.setText("TT4 \n" + (pc.getDetails().get("tt4_final") != null ? pc.getDetails().get("tt4_final") : ""));
+                    vaccinebutton.setTextColor(context.getResources().getColor(R.color.status_bar_text_almost_white));
+                    vaccinebutton.setBackgroundColor(context.getResources().getColor(R.color.alert_complete_green_mcare));
                 }
-                if (Schedulename.equalsIgnoreCase("Woman_TT5")) {
+                if (Schedulename.equalsIgnoreCase("Woman_TT5")&& (pc.getDetails().get("tt5_final") != null)) {
                     vaccinebutton.setText("TT5 \n" + (pc.getDetails().get("tt5_final") != null ? pc.getDetails().get("tt5_final") : ""));
+                    vaccinebutton.setTextColor(context.getResources().getColor(R.color.status_bar_text_almost_white));
+                    vaccinebutton.setBackgroundColor(context.getResources().getColor(R.color.alert_complete_green_mcare));
                 }
-                vaccinebutton.setTextColor(context.getResources().getColor(R.color.status_bar_text_almost_white));
-                vaccinebutton.setBackgroundColor(context.getResources().getColor(R.color.alert_complete_green_mcare));
+
             }
         }
 

@@ -334,6 +334,14 @@
         "bind": "/model/instance/Woman_TT_Followup_Form/vaccines"
       },
       {
+        "name": "vaccines1",
+        "bind": "/model/instance/Woman_TT_Followup_Form/vaccines1"
+      },
+      {
+        "name": "vaccines1_2",
+        "bind": "/model/instance/Woman_TT_Followup_Form/vaccines1_2"
+      },
+      {
         "name": "tt1_retro",
         "bind": "/model/instance/Woman_TT_Followup_Form/tt1_retro"
       },

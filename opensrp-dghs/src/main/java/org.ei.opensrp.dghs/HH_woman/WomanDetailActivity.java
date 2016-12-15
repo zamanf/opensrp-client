@@ -754,30 +754,35 @@ public class WomanDetailActivity extends Activity implements VaccinationActionLi
         if(tag.getVaccine().display().equalsIgnoreCase("TT 1")) {
             update.put("tt1_final", tag.getUpdatedVaccineDateAsString());
             update.put("tt_1_dose_today", tag.getUpdatedVaccineDateAsString());
+            update.put("vaccines_2", "TT1");
             tt_complete_from_pop_up(tt1TextView,(View)findViewById(R.id.womandetail_tt1_block),"tt1_final",tag.getUpdatedVaccineDateAsString());
             makett1_undo_visible(tag);
         }
         if(tag.getVaccine().display().equalsIgnoreCase("TT 2")) {
             update.put("tt2_final", tag.getUpdatedVaccineDateAsString());
             update.put("tt_2_dose_today", tag.getUpdatedVaccineDateAsString());
+            update.put("vaccines_2", "TT2");
             tt_complete_from_pop_up(tt2TextView,(View)findViewById(R.id.womandetail_tt2_block),"tt2_final",tag.getUpdatedVaccineDateAsString());
             makett2_undo_visible(tag);
         }
         if(tag.getVaccine().display().equalsIgnoreCase("TT 3")) {
             update.put("tt3_final", tag.getUpdatedVaccineDateAsString());
             update.put("tt_3_dose_today", tag.getUpdatedVaccineDateAsString());
+            update.put("vaccines_2", "TT3");
             tt_complete_from_pop_up(tt3TextView,(View)findViewById(R.id.womandetail_tt3_block),"tt3_final",tag.getUpdatedVaccineDateAsString());
             makett3_undo_visible(tag);
         }
         if(tag.getVaccine().display().equalsIgnoreCase("TT 4")) {
             update.put("tt4_final", tag.getUpdatedVaccineDateAsString());
             update.put("tt_4_dose_today", tag.getUpdatedVaccineDateAsString());
+            update.put("vaccines_2", "TT4");
             tt_complete_from_pop_up(tt4TextView,(View)findViewById(R.id.womandetail_tt4_block),"tt4_final",tag.getUpdatedVaccineDateAsString());
             makett4_undo_visible(tag);
         }
         if(tag.getVaccine().display().equalsIgnoreCase("TT 5")) {
             update.put("tt5_final", tag.getUpdatedVaccineDateAsString());
             update.put("tt_5_dose_today", tag.getUpdatedVaccineDateAsString());
+            update.put("vaccines_2", "TT5");
             tt_complete_from_pop_up(tt5TextView,(View)findViewById(R.id.womandetail_tt5_block),"tt5_final",tag.getUpdatedVaccineDateAsString());
             makett5_undo_visible(tag);
         }
@@ -800,24 +805,28 @@ public class WomanDetailActivity extends Activity implements VaccinationActionLi
         if(tag.getVaccine().display().equalsIgnoreCase("TT 1")) {
             update.put("tt1_final", tag.getUpdatedVaccineDateAsString());
             update.put("tt1_retro", tag.getUpdatedVaccineDateAsString());
+            update.put("vaccines_2", "TT1");
             tt_complete_from_pop_up(tt1TextView,(View)findViewById(R.id.womandetail_tt1_block),"tt1_final",tag.getUpdatedVaccineDateAsString());
             makett1_undo_visible(tag);
         }
         if(tag.getVaccine().display().equalsIgnoreCase("TT 2")) {
             update.put("tt2_final", tag.getUpdatedVaccineDateAsString());
             update.put("tt2_retro", tag.getUpdatedVaccineDateAsString());
+            update.put("vaccines_2", "TT2");
             tt_complete_from_pop_up(tt2TextView,(View)findViewById(R.id.womandetail_tt2_block),"tt2_final",tag.getUpdatedVaccineDateAsString());
             makett2_undo_visible(tag);
         }
         if(tag.getVaccine().display().equalsIgnoreCase("TT 3")) {
             update.put("tt3_final", tag.getUpdatedVaccineDateAsString());
             update.put("tt3_retro", tag.getUpdatedVaccineDateAsString());
+            update.put("vaccines_2", "TT3");
             tt_complete_from_pop_up(tt3TextView,(View)findViewById(R.id.womandetail_tt3_block),"tt3_final",tag.getUpdatedVaccineDateAsString());
             makett3_undo_visible(tag);
         }
         if(tag.getVaccine().display().equalsIgnoreCase("TT 4")) {
             update.put("tt4_final", tag.getUpdatedVaccineDateAsString());
             update.put("tt4_retro", tag.getUpdatedVaccineDateAsString());
+            update.put("vaccines_2", "TT4");
             tt_complete_from_pop_up(tt4TextView,(View)findViewById(R.id.womandetail_tt4_block),"tt4_final",tag.getUpdatedVaccineDateAsString());
             makett4_undo_visible(tag);
         }
@@ -911,7 +920,7 @@ public class WomanDetailActivity extends Activity implements VaccinationActionLi
 
     @Override
     public void onUndoVaccination(VaccineWrapper tag) {
-
+            update.remove("vaccines_2");
         if(tag.getVaccine().display().equalsIgnoreCase("TT 1")) {
             update.remove("tt1_final");
             update.remove("tt1_retro");

@@ -1,12 +1,12 @@
 <model>
   <instance>
-    <BirthOutcome encounter_type="Birth Outcome" id="BirthOutcome" version="201612060653">
+    <BirthOutcome encounter_type="Birth Outcome" id="BirthOutcome" version="201612150628">
       <formhub>
         <uuid/>
       </formhub>
-      <today openmrs_entity="encounter" openmrs_entity_id="encounter_start"/>
-      <start openmrs_entity="Concept" openmrs_entity_id="cdec172a-9535-4d21-98a5-72a668b9b22c"/>
-      <end openmrs_entity="Concept" openmrs_entity_id="98240c65-7f4e-4099-b4ac-d63e68fd955d"/>
+      <today/>
+      <start/>
+      <end/>
       <existing_location/>
       <existing_COUNTRY/>
       <existing_DIVISION/>
@@ -20,7 +20,7 @@
       <existing_HIE_facilities/>
       <existing_gps/>
       <existing_doo/>
-      <Child_Registration template="" openmrs_entity="person" openmrs_entity_id="Child Vital Status">
+      <Child_Registration template="">
         <Member_COUNTRY openmrs_entity="person_address" openmrs_entity_id="country"/>
         <Member_DIVISION openmrs_entity="person_address" openmrs_entity_id="stateProvince"/>
         <Member_DISTRICT openmrs_entity="person_address" openmrs_entity_id="countyDistrict"/>
@@ -31,15 +31,17 @@
         <Member_BLOCK openmrs_entity="person_address" openmrs_entity_id="address2"/>
         <Member_Address_line openmrs_entity="person_address" openmrs_entity_id="address1"/>
         <Member_HIE_facilities openmrs_entity="person_address" openmrs_entity_id="address6"/>
-        <Interview_date openmrs_entity="Concept" openmrs_entity_id="a56af3d8-eb0b-46a0-9a03-504d22fb613d"/>
+        <Interview_date/>
         <HH_Address/>
-        <Reg_No openmrs_entity="person_attribute" openmrs_entity_id="HOH registration number"/>
-        <existing_Unique_ID openmrs_entity="concept" openmrs_entity_id="368ce583-bb94-4b24-aaed-54abf0471c35"/>
+        <Reg_No/>
+        <Member_Unique_ID/>
+        <Member_BRID openmrs_entity="person_attribute" openmrs_entity_id="birthRegistrationId"/>
+        <Member_HID openmrs_entity="person_attribute" openmrs_entity_id="healthId"/>
         <Child_dob openmrs_entity="person" openmrs_entity_id="birthdate"/>
-        <Child_age_days openmrs_entity="Concept" openmrs_entity_id="a04427c9-c616-48c9-8588-5bb96173f56a"/>
+        <Child_age_days/>
         <Child_birth_date_note/>
-        <Birth_Weigtht openmrs_entity="concept" openmrs_entity_id="98820672-21e0-4a2f-88fa-df671998cd4d"/>
-        <Newborn_Care_Received openmrs_entity="concept" openmrs_entity_id="d87c3916-7c3e-448d-a3b7-6f670d794a90"/>
+        <Birth_Weigtht openmrs_entity="concept" openmrs_entity_id="73e4e317-09ca-4657-bf77-6c7648f3a386"/>
+        <Newborn_Care_Received openmrs_entity="concept" openmrs_entity_id="d1f9a25b-1080-4dc9-9655-863cfee578e6"/>
         <Child_gender openmrs_entity="person" openmrs_entity_id="gender"/>
         <Child_vital_status/>
         <Child_name_check/>
@@ -48,15 +50,15 @@
         <Child_name_calc/>
         <Child_mother_name openmrs_entity="person_attribute" openmrs_entity_id="motherName"/>
         <Child_father_name openmrs_entity="person_attribute" openmrs_entity_id="fatherName"/>
-        <Child_guardian_id openmrs_entity="concept" openmrs_entity_id="368ce583-bb94-4b24-aaed-54abf0471c35"/>
-        <Child_Mother_NID openmrs_entity="person_attribute" openmrs_entity_id="Guardian NID"/>
-        <Child_Mother_BRID openmrs_entity="person_attribute" openmrs_entity_id="Guardian BRID"/>
-        <Child_Father_NID openmrs_entity="person_attribute" openmrs_entity_id="Guardian NID"/>
-        <Child_Father_BRID openmrs_entity="person_attribute" openmrs_entity_id="Guardian BRID"/>
-        <Child_Other_Guardian_NID openmrs_entity="person_attribute" openmrs_entity_id="Guardian NID"/>
-        <Child_Other_Guardian_BRID openmrs_entity="person_attribute" openmrs_entity_id="Guardian BRID"/>
-        <epi_card_number openmrs_entity="person_attribute" openmrs_entity_id="EPI Card Number"/>
-        <child_was_suffering_from_a_disease_at_birth openmrs_entity="concept" openmrs_entity_id="081061f8-c5c1-48a7-93f2-88b61a560529"/>
+        <Child_guardian_id/>
+        <Child_Mother_NID/>
+        <Child_Mother_BRID/>
+        <Child_Father_NID/>
+        <Child_Father_BRID/>
+        <Child_Other_Guardian_NID/>
+        <Child_Other_Guardian_BRID/>
+        <epi_card_number/>
+        <child_was_suffering_from_a_disease_at_birth/>
         <contact_phone_number openmrs_entity="person_attribute" openmrs_entity_id="phoneNumber"/>
         <add_child/>
         <Is_Reg_Today/>

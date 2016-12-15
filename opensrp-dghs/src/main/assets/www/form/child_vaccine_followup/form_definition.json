@@ -342,6 +342,14 @@
         "bind": "/model/instance/Child_Vaccination_Followup/child_vaccines"
       },
       {
+        "name": "child_vaccines1",
+        "bind": "/model/instance/Child_Vaccination_Followup/child_vaccines1"
+      },
+      {
+        "name": "child_vaccines1_2",
+        "bind": "/model/instance/Child_Vaccination_Followup/child_vaccines1_2"
+      },
+      {
         "name": "bcg_retro",
         "bind": "/model/instance/Child_Vaccination_Followup/vaccines_group/bcg_retro"
       },
