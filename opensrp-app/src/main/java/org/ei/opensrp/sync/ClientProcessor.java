@@ -63,40 +63,53 @@ public class ClientProcessor {
         return instance;
     }
 
-    public synchronized void processClient() throws Exception {
-        CloudantDataHandler handler = CloudantDataHandler.getInstance(mContext);
+    public synchronized Boolean processClient() throws Exception {
+        try {
+            CloudantDataHandler handler = CloudantDataHandler.getInstance(mContext);
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-        AllSharedPreferences allSharedPreferences = new AllSharedPreferences(preferences);
-        long lastSyncTimeStamp = allSharedPreferences.fetchLastSyncDate(0);
-        Date lastSyncDate = new Date(lastSyncTimeStamp);
-        String clientClassificationStr = getFileContents("ec_client_classification.json");
-        String clientAlertsStr = getFileContents("ec_client_alerts.json");
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+            AllSharedPreferences allSharedPreferences = new AllSharedPreferences(preferences);
+            long lastSyncTimeStamp = allSharedPreferences.fetchLastSyncDate(0);
+            Date lastSyncDate = new Date(lastSyncTimeStamp);
+            String clientClassificationStr = getFileContents("ec_client_classification.json");
+            String clientAlertsStr = getFileContents("ec_client_alerts.json");
 
-        //this seems to be easy for now cloudant json to events model is crazy
-        List<JSONObject> eventsAndAlerts = handler.getUpdatedEventsAndAlerts(lastSyncDate);if (!eventsAndAlerts.isEmpty()) {
-            for (JSONObject eventOrAlert : eventsAndAlerts) {
-                String type = eventOrAlert.has("type") ? eventOrAlert.getString("type") : null;
-                if (type.equals("Event")) {
+            //this seems to be easy for now cloudant json to events model is crazy
+            List<JSONObject> eventsAndAlerts = handler.getUpdatedEventsAndAlerts(lastSyncDate);
 
-                    JSONObject clientClassificationJson = new JSONObject(clientClassificationStr);
-                    if(isNullOrEmptyJSONObject(clientClassificationJson)){
+            if(eventsAndAlerts == null || eventsAndAlerts.isEmpty()){
+                return false;
+            } else {
+                for (JSONObject eventOrAlert : eventsAndAlerts) {
+                    String type = eventOrAlert.has("type") ? eventOrAlert.getString("type") : null;
+                    if(StringUtils.isBlank(type)){
                         continue;
                     }
-                    //iterate through the events
-                    processEvent(eventOrAlert, clientClassificationJson);
-                } else if (type.equals("Action")) {
-                    JSONObject clientAlertClassificationJson = new JSONObject(clientAlertsStr);
-                    if(isNullOrEmptyJSONObject(clientAlertClassificationJson)){
-                        continue;
-                    }
+                    if (type.equals("Event")) {
 
-                    processAlert(eventOrAlert, clientAlertClassificationJson);
+                        JSONObject clientClassificationJson = new JSONObject(clientClassificationStr);
+                        if (isNullOrEmptyJSONObject(clientClassificationJson)) {
+                            continue;
+                        }
+                        //iterate through the events
+                        processEvent(eventOrAlert, clientClassificationJson);
+                    } else if (type.equals("Action")) {
+                        JSONObject clientAlertClassificationJson = new JSONObject(clientAlertsStr);
+                        if (isNullOrEmptyJSONObject(clientAlertClassificationJson)) {
+                            continue;
+                        }
+
+                        processAlert(eventOrAlert, clientAlertClassificationJson);
+                    }
                 }
-            }
-        }
 
-        allSharedPreferences.saveLastSyncDate(lastSyncDate.getTime());
+                allSharedPreferences.saveLastSyncDate(lastSyncDate.getTime());
+                return true;
+            }
+        }catch (Exception e){
+            Log.e(TAG, e.toString(), e);
+            return null;
+        }
     }
 
     public Boolean processEvent(JSONObject event, JSONObject clientClassificationJson) throws Exception {
@@ -447,7 +460,7 @@ public class ClientProcessor {
             }
             return true;
         } catch (Exception e) {
-            Log.e(TAG, e.toString(), e);
+            Log.e(TAG, e.toString(), e);e.printStackTrace();
             return null;
         }
 

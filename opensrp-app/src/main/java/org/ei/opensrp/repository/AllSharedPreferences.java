@@ -77,6 +77,10 @@ public class AllSharedPreferences {
         preferences.edit().putLong(LAST_SYNC_DATE, lastSyncDate).commit();
     }
 
+    public void removeLastSyncDate(){
+        preferences.edit().remove(LAST_SYNC_DATE).commit();
+    }
+
     public void savePort(Integer port){
         preferences.edit().putString(PORT, String.valueOf(port)).commit();
     }

@@ -197,11 +197,11 @@ public class CloudantDataHandler {
                 try {
                     String lhvar = "version";
                     String rhvar = "version";
-                    if(lhs.getString("type") == "Action"){
+                    if(lhs.getString("type").equals("Action")){
                         lhvar = "timeStamp";
                     }
 
-                    if(rhs.getString("type") == "Action"){
+                    if(rhs.getString("type").equals("Action")){
                         rhvar = "timeStamp";
                     }
 

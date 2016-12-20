@@ -115,6 +115,11 @@ public class CommonRepository extends DrishtiRepository {
         database.insert(TABLE_NAME, null, createValuesFor(common));
     }
 
+    public void delete(String whereClause, String[] whereArgs) {
+        SQLiteDatabase database = masterRepository.getWritableDatabase();
+        database.delete(TABLE_NAME, whereClause, whereArgs);
+    }
+
     public void updateDetails(String caseId, Map<String, String> details) {
         SQLiteDatabase database = masterRepository.getWritableDatabase();
 
