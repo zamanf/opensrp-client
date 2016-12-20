@@ -48,6 +48,16 @@ android:layout_width="match_parent" android:layout_height="match_parent"
                 android:textColor="@color/text_black"
                 android:layout_weight="1" />
 
+            <Button
+                android:layout_width="@dimen/client_profile_pic_width"
+                android:layout_height="fill_parent"
+                android:text="undo"
+                android:id="@+id/bcg_undo"
+                android:background="@color/alert_in_progress_blue"
+                android:textColor="@color/status_bar_text_almost_white"
+                android:layout_margin="1dp"
+                android:visibility="invisible" />
+
 
         </TableRow>
 
@@ -91,6 +101,16 @@ android:layout_width="match_parent" android:layout_height="match_parent"
                 android:textColor="@color/text_black"
                 android:layout_weight="1" />
 
+            <Button
+                android:layout_width="@dimen/client_profile_pic_width"
+                android:layout_height="fill_parent"
+                android:text="undo"
+                android:id="@+id/penta1_undo"
+                android:background="@color/alert_in_progress_blue"
+                android:textColor="@color/status_bar_text_almost_white"
+                android:layout_margin="1dp"
+                android:visibility="invisible" />
+
         </TableRow>
 
         <TableRow>
@@ -128,6 +148,16 @@ android:layout_width="match_parent" android:layout_height="match_parent"
                 android:textSize="14sp"
                 android:textColor="@color/text_black"
                 android:layout_weight="1" />
+
+            <Button
+                android:layout_width="@dimen/client_profile_pic_width"
+                android:layout_height="fill_parent"
+                android:text="undo"
+                android:id="@+id/penta2_undo"
+                android:background="@color/alert_in_progress_blue"
+                android:textColor="@color/status_bar_text_almost_white"
+                android:layout_margin="1dp"
+                android:visibility="invisible" />
 
 
         </TableRow>
@@ -171,6 +201,16 @@ android:layout_width="match_parent" android:layout_height="match_parent"
                 android:textColor="@color/text_black"
                 android:layout_weight="1" />
 
+            <Button
+                android:layout_width="@dimen/client_profile_pic_width"
+                android:layout_height="fill_parent"
+                android:text="undo"
+                android:id="@+id/penta3_undo"
+                android:background="@color/alert_in_progress_blue"
+                android:textColor="@color/status_bar_text_almost_white"
+                android:layout_margin="1dp"
+                android:visibility="invisible" />
+
         </TableRow>
 
         <TableRow>
@@ -207,6 +247,16 @@ android:layout_width="match_parent" android:layout_height="match_parent"
                 android:layout_margin="5dp"
                 android:textColor="@color/text_black"
                 android:layout_weight="1" />
+
+            <Button
+                android:layout_width="@dimen/client_profile_pic_width"
+                android:layout_height="fill_parent"
+                android:text="undo"
+                android:id="@+id/opv0_undo"
+                android:background="@color/alert_in_progress_blue"
+                android:textColor="@color/status_bar_text_almost_white"
+                android:layout_margin="1dp"
+                android:visibility="invisible" />
 
         </TableRow>
 
@@ -249,6 +299,16 @@ android:layout_width="match_parent" android:layout_height="match_parent"
                 android:textColor="@color/text_black"
                 android:layout_weight="1" />
 
+            <Button
+                android:layout_width="@dimen/client_profile_pic_width"
+                android:layout_height="fill_parent"
+                android:text="undo"
+                android:id="@+id/opv1_undo"
+                android:background="@color/alert_in_progress_blue"
+                android:textColor="@color/status_bar_text_almost_white"
+                android:layout_margin="1dp"
+                android:visibility="invisible" />
+
         </TableRow>
 
         <TableRow>
@@ -285,6 +345,16 @@ android:layout_width="match_parent" android:layout_height="match_parent"
                 android:layout_margin="5dp"
                 android:textColor="@color/text_black"
                 android:layout_weight="1" />
+
+            <Button
+                android:layout_width="@dimen/client_profile_pic_width"
+                android:layout_height="fill_parent"
+                android:text="undo"
+                android:id="@+id/opv2_undo"
+                android:background="@color/alert_in_progress_blue"
+                android:textColor="@color/status_bar_text_almost_white"
+                android:layout_margin="1dp"
+                android:visibility="invisible" />
 
         </TableRow>
 
@@ -324,6 +394,16 @@ android:layout_width="match_parent" android:layout_height="match_parent"
                 android:layout_margin="5dp"
                 android:textColor="@color/text_black"
                 android:layout_weight="1" />
+
+            <Button
+                android:layout_width="@dimen/client_profile_pic_width"
+                android:layout_height="fill_parent"
+                android:text="undo"
+                android:id="@+id/opv3_undo"
+                android:background="@color/alert_in_progress_blue"
+                android:textColor="@color/status_bar_text_almost_white"
+                android:layout_margin="1dp"
+                android:visibility="invisible" />
 
         </TableRow>
 
@@ -376,6 +456,16 @@ android:layout_width="match_parent" android:layout_height="match_parent"
                 android:textColor="@color/text_black"
                 android:layout_weight="1" />
 
+            <Button
+                android:layout_width="@dimen/client_profile_pic_width"
+                android:layout_height="fill_parent"
+                android:text="undo"
+                android:id="@+id/ipv_undo"
+                android:background="@color/alert_in_progress_blue"
+                android:textColor="@color/status_bar_text_almost_white"
+                android:layout_margin="1dp"
+                android:visibility="invisible" />
+
         </TableRow>
 
         <TableRow>
@@ -415,6 +505,16 @@ android:layout_width="match_parent" android:layout_height="match_parent"
                 android:textColor="@color/text_black"
                 android:layout_weight="1" />
 
+            <Button
+                android:layout_width="@dimen/client_profile_pic_width"
+                android:layout_height="fill_parent"
+                android:text="undo"
+                android:id="@+id/pcv1_undo"
+                android:background="@color/alert_in_progress_blue"
+                android:textColor="@color/status_bar_text_almost_white"
+                android:layout_margin="1dp"
+                android:visibility="invisible" />
+
         </TableRow>
 
         <TableRow>
@@ -452,6 +552,16 @@ android:layout_width="match_parent" android:layout_height="match_parent"
                 android:textColor="@color/text_black"
                 android:layout_weight="1" />
 
+            <Button
+                android:layout_width="@dimen/client_profile_pic_width"
+                android:layout_height="fill_parent"
+                android:text="undo"
+                android:id="@+id/pcv2_undo"
+                android:background="@color/alert_in_progress_blue"
+                android:textColor="@color/status_bar_text_almost_white"
+                android:layout_margin="1dp"
+                android:visibility="invisible" />
+
         </TableRow>
 
         <TableRow>
@@ -488,6 +598,16 @@ android:layout_width="match_parent" android:layout_height="match_parent"
                 android:layout_margin="5dp"
                 android:textColor="@color/text_black"
                 android:layout_weight="1" />
+
+            <Button
+                android:layout_width="@dimen/client_profile_pic_width"
+                android:layout_height="fill_parent"
+                android:text="undo"
+                android:id="@+id/pcv3_undo"
+                android:background="@color/alert_in_progress_blue"
+                android:textColor="@color/status_bar_text_almost_white"
+                android:layout_margin="1dp"
+                android:visibility="invisible" />
 
         </TableRow>
 
@@ -531,6 +651,16 @@ android:layout_width="match_parent" android:layout_height="match_parent"
                 android:textColor="@color/text_black"
                 android:layout_weight="1" />
 
+            <Button
+                android:layout_width="@dimen/client_profile_pic_width"
+                android:layout_height="fill_parent"
+                android:text="undo"
+                android:id="@+id/button"
+                android:background="@color/alert_in_progress_blue"
+                android:textColor="@color/status_bar_text_almost_white"
+                android:layout_margin="1dp"
+                android:visibility="invisible" />
+
         </TableRow>
 
         <TableRow>
@@ -567,6 +697,16 @@ android:layout_width="match_parent" android:layout_height="match_parent"
                 android:layout_margin="5dp"
                 android:textColor="@color/text_black"
                 android:layout_weight="1" />
+
+            <Button
+                android:layout_width="@dimen/client_profile_pic_width"
+                android:layout_height="fill_parent"
+                android:text="undo"
+                android:id="@+id/button2"
+                android:background="@color/alert_in_progress_blue"
+                android:textColor="@color/status_bar_text_almost_white"
+                android:layout_margin="1dp"
+                android:visibility="invisible" />
 
         </TableRow>
 

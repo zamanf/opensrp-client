@@ -1,6 +1,8 @@
 package org.ei.opensrp.dghs.HH_child;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,6 +11,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,11 +23,28 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 import org.ei.opensrp.Context;
+import org.ei.opensrp.commonregistry.AllCommonsRepository;
+import org.ei.opensrp.commonregistry.CommonFtsObject;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.dghs.R;
+import org.ei.opensrp.dghs.domain.VaccineRepo;
+import org.ei.opensrp.dghs.domain.VaccineWrapper;
 import org.ei.opensrp.dghs.hh_member.HouseHoldDetailActivity;
+import org.ei.opensrp.dghs.vaccineFragment.UndoVaccinationDialogFragment;
+import org.ei.opensrp.dghs.vaccineFragment.VaccinationActionListener;
+import org.ei.opensrp.dghs.vaccineFragment.VaccinationDialogFragment;
 import org.ei.opensrp.domain.Alert;
+import org.ei.opensrp.domain.form.FieldOverrides;
+import org.ei.opensrp.domain.form.FormSubmission;
+import org.ei.opensrp.service.ZiggyService;
+import org.ei.opensrp.util.FormUtils;
+import org.joda.time.DateTime;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.XML;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,12 +61,19 @@ import java.util.concurrent.ExecutionException;
 import util.ImageCache;
 import util.ImageFetcher;
 
+import static org.ei.opensrp.AllConstants.ENTITY_ID_PARAM;
+import static org.ei.opensrp.AllConstants.FORM_NAME_PARAM;
+import static org.ei.opensrp.AllConstants.INSTANCE_ID_PARAM;
+import static org.ei.opensrp.AllConstants.SYNC_STATUS;
+import static org.ei.opensrp.AllConstants.VERSION_PARAM;
+import static org.ei.opensrp.domain.SyncStatus.PENDING;
+import static org.ei.opensrp.util.EasyMap.create;
 import static org.ei.opensrp.util.StringUtil.humanize;
 
 /**
  * Created by raihan on 5/11/15.
  */
-public class ChildDetailActivity extends Activity {
+public class ChildDetailActivity extends Activity implements VaccinationActionListener{
 
     //image retrieving
     private static final String TAG = "ImageGridFragment";
@@ -57,12 +84,33 @@ public class ChildDetailActivity extends Activity {
 
     private static ImageFetcher mImageFetcher;
 
+    HashMap<String,String> update =  new HashMap<String, String>();
+
+    Button undo_bcg;
+    Button undo_opv0;
+    Button undo_pcv1;
+    Button undo_opv1;
+    Button undo_penta1;
+    Button undo_pcv2;
+    Button undo_opv2;
+    Button undo_penta2;
+    Button undo_pcv3;
+    Button undo_opv3;
+    Button undo_penta3;
+    Button undo_ipv;
+    Button undo_measles1;
+    Button undo_measles2;
 
 
 
     //image retrieving
 
     public static CommonPersonObjectClient childclient;
+    private TextView childdetail_bcg;
+    private TextView childdetail_penta1;
+    private TextView childdetail_penta2;
+    private TextView childdetail_penta3;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,17 +127,17 @@ public class ChildDetailActivity extends Activity {
         ImageView profilepic = (ImageView) findViewById(R.id.childdetailprofileview);
 
 
-        TextView childdetail_bcg = (TextView) findViewById(R.id.childdetail_bcg);
+        childdetail_bcg = (TextView) findViewById(R.id.childdetail_bcg);
         TextView childdetail_opv0 = (TextView) findViewById(R.id.childdetail_opv0);
         TextView childdetail_pcv1 = (TextView) findViewById(R.id.childdetail_pcv1);
         TextView childdetail_opv1 = (TextView) findViewById(R.id.childdetail_opv1);
-        TextView childdetail_penta1 = (TextView) findViewById(R.id.childdetail_penta1);
+        childdetail_penta1 = (TextView) findViewById(R.id.childdetail_penta1);
         TextView childdetail_pcv2 = (TextView) findViewById(R.id.childdetail_pcv2);
         TextView childdetail_opv2 = (TextView) findViewById(R.id.childdetail_opv2);
-        TextView childdetail_penta2 = (TextView) findViewById(R.id.childdetail_penta2);
+        childdetail_penta2 = (TextView) findViewById(R.id.childdetail_penta2);
         TextView childdetail_pcv3 = (TextView) findViewById(R.id.childdetail_pcv3);
         TextView childdetail_opv3 = (TextView) findViewById(R.id.childdetail_opv3);
-        TextView childdetail_penta3 = (TextView) findViewById(R.id.childdetail_penta3);
+        childdetail_penta3 = (TextView) findViewById(R.id.childdetail_penta3);
         TextView childdetail_ipv= (TextView) findViewById(R.id.childdetail_ipv);
         TextView childdetail_measles1 = (TextView) findViewById(R.id.childdetail_measles1);
         TextView childdetail_measles2 = (TextView) findViewById(R.id.childdetail_measles2);
@@ -251,10 +299,12 @@ public class ChildDetailActivity extends Activity {
 //        Bitmap bitmap = BitmapFactory.decodeFile(file, options);
 //        view.setImageBitmap(bitmap);
     }
-    public void ChildVaccinecheck(CommonPersonObjectClient childClient, TextView tt1TextView,View block,String ttfinalKey,String ttschedulename){
+    public void ChildVaccinecheck(final CommonPersonObjectClient childClient, TextView tt1TextView, View block, String ttfinalKey, final String ttschedulename){
+        boolean active = false;
         if(!(childClient.getDetails().get(ttfinalKey)!=null?childClient.getDetails().get(ttfinalKey):"").equalsIgnoreCase("")){
             block.setBackgroundColor(getResources().getColor(R.color.alert_complete_green));
             String text = (childClient.getDetails().get(ttfinalKey)!=null?childClient.getDetails().get(ttfinalKey):"");
+            active = false;
             tt1TextView.setText(text);
         }else{
 
@@ -266,31 +316,106 @@ public class ChildDetailActivity extends Activity {
                         String text = "";
                         text = getVaccineDateText(ttschedulename,childClient);
                         tt1TextView.setText(text);
+                        active = true;
                     } else if (child_alertlist_for_client.get(i).status().value().equalsIgnoreCase("urgent")) {
                         block.setBackgroundColor(getResources().getColor(R.color.alert_urgent_red));
                         String text = "";
                         text = getVaccineDateText(ttschedulename,childClient);
                         tt1TextView.setText(text);
+                        active = true;
                     } else if (child_alertlist_for_client.get(i).status().value().equalsIgnoreCase("expired")) {
                         block.setBackgroundColor(getResources().getColor(R.color.client_list_header_dark_grey));
                         String text = "";
                         text = getVaccineDateText(ttschedulename,childClient);
                         tt1TextView.setText(text);
+                        active = false;
                     } else if (child_alertlist_for_client.get(i).status().value().equalsIgnoreCase("normal")) {
                         block.setBackgroundColor(getResources().getColor(R.color.alert_upcoming_light_blue));
                         String text = "";
                         text = getVaccineDateText(ttschedulename,childClient);
                         tt1TextView.setText(Html.fromHtml(text));
+                        active = false;
                     }
 
                 }
             }else{
                 String text = " ";
                 tt1TextView.setText(text);
-
+                active = false;
             }
 
         }
+        if(active) {
+            tt1TextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    android.content.Context context = ChildDetailActivity.this;
+                    VaccineWrapper vaccineWrapper = new VaccineWrapper();
+                    if (ttschedulename.equalsIgnoreCase("child_bcg")) {
+                        vaccineWrapper.setVaccine(VaccineRepo.Vaccine.bcg);
+                    }
+                    if (ttschedulename.equalsIgnoreCase("child_opv0")) {
+                        vaccineWrapper.setVaccine(VaccineRepo.Vaccine.opv0);
+                    }
+                    if (ttschedulename.equalsIgnoreCase("child_pcv1")) {
+                        vaccineWrapper.setVaccine(VaccineRepo.Vaccine.pcv1);
+                    }
+                    if (ttschedulename.equalsIgnoreCase("child_opv1")) {
+                        vaccineWrapper.setVaccine(VaccineRepo.Vaccine.opv1);
+                    }
+                    if (ttschedulename.equalsIgnoreCase("child_penta1")) {
+                        vaccineWrapper.setVaccine(VaccineRepo.Vaccine.penta1);
+                    }
+                    if (ttschedulename.equalsIgnoreCase("child_pcv2")) {
+                        vaccineWrapper.setVaccine(VaccineRepo.Vaccine.pcv2);
+                    }
+                    if (ttschedulename.equalsIgnoreCase("child_opv2")) {
+                        vaccineWrapper.setVaccine(VaccineRepo.Vaccine.opv2);
+                    }
+                    if (ttschedulename.equalsIgnoreCase("child_penta2")) {
+                        vaccineWrapper.setVaccine(VaccineRepo.Vaccine.penta2);
+                    }
+                    if (ttschedulename.equalsIgnoreCase("child_pcv3")) {
+                        vaccineWrapper.setVaccine(VaccineRepo.Vaccine.pcv3);
+                    }
+                    if (ttschedulename.equalsIgnoreCase("child_opv3")) {
+                        vaccineWrapper.setVaccine(VaccineRepo.Vaccine.opv3);
+                    }
+                    if (ttschedulename.equalsIgnoreCase("child_penta3")) {
+                        vaccineWrapper.setVaccine(VaccineRepo.Vaccine.penta3);
+                    }
+                    if (ttschedulename.equalsIgnoreCase("child_ipv")) {
+                        vaccineWrapper.setVaccine(VaccineRepo.Vaccine.ipv);
+                    }
+                    if (ttschedulename.equalsIgnoreCase("child_measles1")) {
+                        vaccineWrapper.setVaccine(VaccineRepo.Vaccine.measles1);
+                    }
+                    if (ttschedulename.equalsIgnoreCase("child_measles1")) {
+                        vaccineWrapper.setVaccine(VaccineRepo.Vaccine.measles2);
+                    }
+//                vaccineWrapper.setVaccineDate((DateTime) m.get("date"));
+//                vaccineWrapper.setAlert((Alert) m.get("alert"));
+//                vaccineWrapper.setPreviousVaccine(previousVaccine);
+                    vaccineWrapper.setCompact(true);
+
+                    vaccineWrapper.setPatientNumber(childClient.getColumnmaps().get(""));
+                    vaccineWrapper.setPatientName(childClient.getColumnmaps().get(""));
+
+
+                    FragmentTransaction ft = ((Activity) context).getFragmentManager().beginTransaction();
+                    Fragment prev = ((Activity) context).getFragmentManager().findFragmentByTag(VaccinationDialogFragment.DIALOG_TAG);
+                    if (prev != null) {
+                        ft.remove(prev);
+                    }
+                    ft.addToBackStack(null);
+                    VaccinationDialogFragment vaccinationDialogFragment = VaccinationDialogFragment.newInstance(context, vaccineWrapper);
+                    vaccinationDialogFragment.show(ft, VaccinationDialogFragment.DIALOG_TAG);
+
+                }
+            });
+        }
+
 
     }
 
@@ -367,6 +492,82 @@ public class ChildDetailActivity extends Activity {
         }
         return convertedDate;
     }
+//    bcg("BCG", 1, null, 366, 0, 0, 4, 366,  "child"),
+//    penta1("Penta 1", 3, null, 366, 42, 0, 4, 366,  "child"),
+//    penta2("Penta 2", 6, penta1, 366, 70, 28, 4, 366,  "child"),
+//    penta3("Penta 3", 9, penta2, 366, 98, 28, 4, 366,  "child"),
+//    opv0("OPV 0", 2, null, 1830, 0, 0, 4, 1830,  "child"),
+//    opv1("OPV 1", 4, null, 1830, 42, 0, 4, 1830,  "child"),
+//    opv2("OPV 2", 7, opv1, 1830, 70, 28, 4, 1830,  "child"),
+//    opv3("OPV 3", 10, opv2, 1830, 98, 28, 4, 1830,  "child"),
+//    ipv("IPV", 11, opv2, 1830, 98, 28, 4, 1830,  "child"),
+//    pcv1("PCV 1", 5, null, 1830, 42, 0, 4, 1830,  "child"),
+//    pcv2("PCV 2", 8, pcv1, 1830, 70, 28, 4, 1830,  "child"),
+//    pcv3("PCV 3", 12, pcv2, 1830, 98, 28, 4, 1830,  "child"),
+//    measles1("Measles 1", 13, null, 1830, 273, 0, 14, 1830,  "child"),
+//    measles2("Measles 2", 14, measles1, 1830, 458, 28, 70, 1830,  "child"),
+    @Override
+    public void onVaccinateToday(VaccineWrapper tag) {
+        if(tag.getVaccine().display().equalsIgnoreCase("BCG")) {
+            update.put("final_bcg", tag.getUpdatedVaccineDateAsString());
+            update.put("bcg", tag.getUpdatedVaccineDateAsString());
+            update.put("child_vaccines_2", "BCG");
+            vaccine_complete_from_pop_up(childdetail_bcg,(View)findViewById(R.id.child_block1),tag.getUpdatedVaccineDateAsString());
+            make_undo_visible(tag,undo_bcg);
+        }
+        if(tag.getVaccine().display().equalsIgnoreCase("Penta 1")) {
+            update.put("final_penta1", tag.getUpdatedVaccineDateAsString());
+            update.put("penta1_dose_today", tag.getUpdatedVaccineDateAsString());
+            update.put("child_vaccines_2", "Penta 1");
+            vaccine_complete_from_pop_up(childdetail_penta1,(View)findViewById(R.id.child_block2),tag.getUpdatedVaccineDateAsString());
+            make_undo_visible(tag,undo_penta1);
+        }
+        if(tag.getVaccine().display().equalsIgnoreCase("Penta 2")) {
+            update.put("final_penta2", tag.getUpdatedVaccineDateAsString());
+            update.put("penta2_dose_today", tag.getUpdatedVaccineDateAsString());
+            update.put("child_vaccines_2", "Penta 2");
+            vaccine_complete_from_pop_up(childdetail_penta2,(View)findViewById(R.id.child_block3),tag.getUpdatedVaccineDateAsString());
+            make_undo_visible(tag,undo_penta2);
+        }
+        if(tag.getVaccine().display().equalsIgnoreCase("Penta 3")) {
+            update.put("final_penta3", tag.getUpdatedVaccineDateAsString());
+            update.put("penta3_dose_today", tag.getUpdatedVaccineDateAsString());
+            update.put("child_vaccines_2", "Penta 3");
+            vaccine_complete_from_pop_up(childdetail_penta3,(View)findViewById(R.id.child_block4),tag.getUpdatedVaccineDateAsString());
+            make_undo_visible(tag,undo_penta3);
+        }
+        if(tag.getVaccine().display().equalsIgnoreCase("Penta 3")) {
+            update.put("final_penta3", tag.getUpdatedVaccineDateAsString());
+            update.put("penta3_dose_today", tag.getUpdatedVaccineDateAsString());
+            update.put("child_vaccines_2", "Penta 3");
+            vaccine_complete_from_pop_up(childdetail_penta3,(View)findViewById(R.id.child_block4),tag.getUpdatedVaccineDateAsString());
+            make_undo_visible(tag,undo_penta3);
+        }
+    }
+
+    @Override
+    public void onVaccinateEarlier(VaccineWrapper tag) {
+
+    }
+
+    @Override
+    public void onUndoVaccination(VaccineWrapper tag) {
+
+    }
+
+
+
+
+    private void vaccine_complete_from_pop_up(TextView tt1TextView, View viewById, String updatedVaccineDateAsString) {
+        viewById.setBackgroundColor(getResources().getColor(R.color.alert_complete_green));
+        tt1TextView.setText(updatedVaccineDateAsString);
+        tt1TextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+    }
 
 
     class childVaccineDetailAdapter extends BaseAdapter {
@@ -420,6 +621,264 @@ public class ChildDetailActivity extends Activity {
 
 
    }
+    private void formwrapperForChild(HashMap<String,String> vaccinemap) {
+
+        JSONObject overridejsonobject = new JSONObject();
+        try {
+            overridejsonobject.put("child_age",((childclient.getDetails().get("child_age")!=null?childclient.getDetails().get("child_age"):"")));
+            overridejsonobject.put("child_age_days",((childclient.getDetails().get("child_age_days")!=null?childclient.getDetails().get("child_age_days"):"")));
+            overridejsonobject.put("opv0_dose",((childclient.getDetails().get("opv0_dose")!=null?childclient.getDetails().get("opv0_dose"):"")));
+            overridejsonobject.put("pcv1_dose",((childclient.getDetails().get("pcv1_dose")!=null?childclient.getDetails().get("pcv1_dose"):"")));
+            overridejsonobject.put("opv1_dose",((childclient.getDetails().get("opv1_dose")!=null?childclient.getDetails().get("opv1_dose"):"")));
+            overridejsonobject.put("penta1_dose",((childclient.getDetails().get("penta1_dose")!=null?childclient.getDetails().get("penta1_dose"):"")));
+            overridejsonobject.put("pcv2_dose",((childclient.getDetails().get("pcv2_dose")!=null?childclient.getDetails().get("pcv2_dose"):"")));
+            overridejsonobject.put("opv2_dose",((childclient.getDetails().get("opv2_dose")!=null?childclient.getDetails().get("opv2_dose"):"")));
+            overridejsonobject.put("penta2_dose",((childclient.getDetails().get("penta2_dose")!=null?childclient.getDetails().get("penta2_dose"):"")));
+            overridejsonobject.put("pcv3_dose",((childclient.getDetails().get("pcv3_dose")!=null?childclient.getDetails().get("pcv3_dose"):"")));
+            overridejsonobject.put("opv3_dose",((childclient.getDetails().get("opv3_dose")!=null?childclient.getDetails().get("opv3_dose"):"")));
+            overridejsonobject.put("penta3_dose",((childclient.getDetails().get("penta3_dose")!=null?childclient.getDetails().get("penta3_dose"):"")));
+            overridejsonobject.put("measles1_dose",((childclient.getDetails().get("measles1_dose")!=null?childclient.getDetails().get("measles1_dose"):"")));
+            overridejsonobject.put("measles2_dose",((childclient.getDetails().get("measles2_dose")!=null?childclient.getDetails().get("measles2_dose"):"")));
+
+            overridejsonobject.put("opv0",((childclient.getDetails().get("opv0")!=null?childclient.getDetails().get("opv0"):"")));
+            overridejsonobject.put("pcv1",((childclient.getDetails().get("pcv1")!=null?childclient.getDetails().get("pcv1"):"")));
+            overridejsonobject.put("opv1",((childclient.getDetails().get("opv1")!=null?childclient.getDetails().get("opv1"):"")));
+            overridejsonobject.put("penta1",((childclient.getDetails().get("penta1")!=null?childclient.getDetails().get("penta1"):"")));
+            overridejsonobject.put("pcv2",((childclient.getDetails().get("pcv2")!=null?childclient.getDetails().get("pcv2"):"")));
+            overridejsonobject.put("opv2",((childclient.getDetails().get("opv2")!=null?childclient.getDetails().get("opv2"):"")));
+            overridejsonobject.put("penta2",((childclient.getDetails().get("penta2")!=null?childclient.getDetails().get("penta2"):"")));
+            overridejsonobject.put("pcv3",((childclient.getDetails().get("pcv3")!=null?childclient.getDetails().get("pcv3"):"")));
+            overridejsonobject.put("opv3",((childclient.getDetails().get("opv3")!=null?childclient.getDetails().get("opv3"):"")));
+            overridejsonobject.put("penta3",((childclient.getDetails().get("penta3")!=null?childclient.getDetails().get("penta3"):"")));
+            overridejsonobject.put("measles1",((childclient.getDetails().get("measles1")!=null?childclient.getDetails().get("measles1"):"")));
+            overridejsonobject.put("measles2",((childclient.getDetails().get("measles2")!=null?childclient.getDetails().get("measles2"):"")));
+
+            overridejsonobject.put("e_bcg",((childclient.getDetails().get("final_bcg")!=null?childclient.getDetails().get("final_bcg"):"")));
+            overridejsonobject.put("e_opv0",((childclient.getDetails().get("final_opv0")!=null?childclient.getDetails().get("final_opv0"):"")));
+            overridejsonobject.put("e_penta2",((childclient.getDetails().get("final_penta2")!=null?childclient.getDetails().get("final_penta2"):"")));
+            overridejsonobject.put("e_penta1",((childclient.getDetails().get("final_penta1")!=null?childclient.getDetails().get("final_penta1"):"")));
+            overridejsonobject.put("e_penta3",((childclient.getDetails().get("final_penta3")!=null?childclient.getDetails().get("final_penta3"):"")));
+            overridejsonobject.put("e_opv1",((childclient.getDetails().get("final_opv1")!=null?childclient.getDetails().get("final_opv1"):"")));
+            overridejsonobject.put("e_opv2",((childclient.getDetails().get("final_opv2")!=null?childclient.getDetails().get("final_opv2"):"")));
+            overridejsonobject.put("e_opv3",((childclient.getDetails().get("final_opv3")!=null?childclient.getDetails().get("final_opv3"):"")));
+            overridejsonobject.put("e_pcv1",((childclient.getDetails().get("final_pcv1")!=null?childclient.getDetails().get("final_pcv1"):"")));
+            overridejsonobject.put("e_pcv2",((childclient.getDetails().get("final_pcv2")!=null?childclient.getDetails().get("final_pcv2"):"")));
+            overridejsonobject.put("e_pcv3",((childclient.getDetails().get("final_pcv3")!=null?childclient.getDetails().get("final_pcv3"):"")));
+            overridejsonobject.put("e_ipv",((childclient.getDetails().get("final_ipv")!=null?childclient.getDetails().get("final_ipv"):"")));
+            overridejsonobject.put("e_measles1",((childclient.getDetails().get("final_measles1")!=null?childclient.getDetails().get("final_measles1"):"")));
+            overridejsonobject.put("e_measles2",((childclient.getDetails().get("final_measles2")!=null?childclient.getDetails().get("final_measles2"):"")));
+
+            if(vaccinemap.get("final_bcg")==null){
+                overridejsonobject.put("final_bcg",((childclient.getDetails().get("final_bcg")!=null?childclient.getDetails().get("final_bcg"):"")));
+            }
+            if(vaccinemap.get("final_opv0")==null){
+                overridejsonobject.put("final_opv0",((childclient.getDetails().get("final_opv0")!=null?childclient.getDetails().get("final_opv0"):"")));
+            }
+            if(vaccinemap.get("final_penta2")==null){
+                overridejsonobject.put("final_penta2",((childclient.getDetails().get("final_penta2")!=null?childclient.getDetails().get("final_penta2"):"")));
+            }
+            if(vaccinemap.get("final_penta1")==null){
+                overridejsonobject.put("final_penta1",((childclient.getDetails().get("final_penta1")!=null?childclient.getDetails().get("final_penta1"):"")));
+            }
+            if(vaccinemap.get("final_penta3")==null){
+                overridejsonobject.put("final_penta3",((childclient.getDetails().get("final_penta3")!=null?childclient.getDetails().get("final_penta3"):"")));
+            }
+            if(vaccinemap.get("final_opv1")==null){
+                overridejsonobject.put("final_opv1",((childclient.getDetails().get("final_opv1")!=null?childclient.getDetails().get("final_opv1"):"")));
+            }
+            if(vaccinemap.get("final_opv2")==null){
+                overridejsonobject.put("final_opv2",((childclient.getDetails().get("final_opv2")!=null?childclient.getDetails().get("final_opv2"):"")));
+            }
+            if(vaccinemap.get("final_opv3")==null){
+                overridejsonobject.put("final_opv3",((childclient.getDetails().get("final_opv3")!=null?childclient.getDetails().get("final_opv3"):"")));
+            }
+            if(vaccinemap.get("final_pcv1")==null){
+                overridejsonobject.put("final_pcv1",((childclient.getDetails().get("final_pcv1")!=null?childclient.getDetails().get("final_pcv1"):"")));
+            }
+            if(vaccinemap.get("final_pcv2")==null){
+                overridejsonobject.put("final_pcv2",((childclient.getDetails().get("final_pcv2")!=null?childclient.getDetails().get("final_pcv2"):"")));
+            }
+            if(vaccinemap.get("final_pcv3")==null){
+                overridejsonobject.put("final_pcv3",((childclient.getDetails().get("final_pcv3")!=null?childclient.getDetails().get("final_pcv3"):"")));
+            }
+            if(vaccinemap.get("final_ipv")==null){
+                overridejsonobject.put("final_ipv",((childclient.getDetails().get("final_ipv")!=null?childclient.getDetails().get("final_ipv"):"")));
+            }
+            if(vaccinemap.get("final_measles1")==null){
+                overridejsonobject.put("final_measles1",((childclient.getDetails().get("final_measles1")!=null?childclient.getDetails().get("final_measles1"):"")));
+            }
+            if(vaccinemap.get("final_measles2")==null){
+                overridejsonobject.put("final_measles2",((childclient.getDetails().get("final_measles2")!=null?childclient.getDetails().get("final_measles2"):"")));
+            }
+
+
+            for (HashMap.Entry<String, String> entry : vaccinemap.entrySet()) {
+                String key = entry.getKey();
+                Object value = entry.getValue();
+                overridejsonobject.put(key,value);                // ...
+            }
+
+            DateTime currentDateTime = new DateTime(new Date());
+//            overridejsonobject.put("tt1_final",currentDateTime.toString("yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
+
+            overridejsonobject.put("start",currentDateTime.toString("yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
+            overridejsonobject.put( "end", currentDateTime.toString("yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
+            overridejsonobject.put("today", currentDateTime.toString("yyyy-MM-dd"));
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+//            updateJson(encounterJson, "end", currentDateTime.toString("yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
+//            updateJson(encounterJson, "today", currentDateTime.toString("yyyy-MM-dd"));
+
+        }
+
+        FieldOverrides fieldOverrides = new FieldOverrides(overridejsonobject.toString());
+
+        String formMadeforprint = FormUtils.getInstance(this).generateXMLInputForFormWithEntityId(childclient.entityId(), "woman_tt_form", fieldOverrides.getJSONString());
+
+        try {
+            JSONObject formSubmission = XML.toJSONObject(formMadeforprint);
+            JSONObject encounterJson = find(formSubmission, "Child_Vaccination_Followup");
+            Log.v("formMadeforprint",encounterJson.toString());
+
+            DateTime currentDateTime = new DateTime(new Date());
+//            updateJson(encounterJson, "start", currentDateTime.toString("yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
+            updateJson(encounterJson, "deviceid", "Error: could not determine deviceID");
+            updateJson(encounterJson, "subscriberid", "no subscriberid property in enketo");
+            updateJson(encounterJson, "simserial", "no simserial property in enketo");
+            updateJson(encounterJson, "phonenumber", "no phonenumber property in enketo");
+            Log.v("formMadeforencounter",encounterJson.getString("start"));
+
+            String data = XML.toString(formSubmission);
+            saveFormSubmission(this, data, childclient.entityId(), "child_vaccine_followup", retrieveFieldOverides(fieldOverrides.getJSONString()));
+            Log.v("formMadeforsubmission",formSubmission.toString());
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        Log.v("formMadeforprint",formMadeforprint);
+    }
+    public static void saveFormSubmission(android.content.Context appContext, final String formSubmission, String id, final String formName, JSONObject fieldOverrides) {
+        Log.v("fieldoverride", fieldOverrides.toString());
+        // save the form
+        try {
+            FormUtils formUtils = FormUtils.getInstance(appContext);
+            final FormSubmission submission = formUtils.generateFormSubmisionFromXMLString(id, formSubmission, formName, fieldOverrides);
+
+            org.ei.opensrp.Context context = org.ei.opensrp.Context.getInstance();
+            ZiggyService ziggyService = context.ziggyService();
+            ziggyService.saveForm(getParams(submission), submission.instance());
+            /////////////handler mechanisms///////////////////////////////////////////////////////////////////////////
+            context.formSubmissionRouter().route(submission.instanceId());
+//            FormSubmission formsubmission = context.formDataRepository().fetchFromSubmission(submission.instance());
+//
+//            FormSubmissionHandler handler = context.formSubmissionRouter().getHandlerMap().get(submission.formName());
+//            if (handler == null) {
+//                logWarn("Could not find a handler due to unknown form submission: " + formsubmission);
+//            } else {
+//                try {
+//                    handler.handle(submission);
+//                } catch (Exception e) {
+//                    org.ei.opensrp.util.Log.logError(format("Handling {0} form submission with instance Id: {1} for entity: {2} failed with exception : {3}",
+//                            submission.formName(), submission.instanceId(), submission.entityId(), ExceptionUtils.getStackTrace(e)));
+//                    throw e;
+//                }
+//            }
+//            FORM_SUBMITTED.notifyListeners(submission.instance());
+            /////////////////////////////////////handler mechanisms////////////////////////////////////////////////////
+            // Update Fts Tables
+            CommonFtsObject commonFtsObject = context.commonFtsObject();
+            if (commonFtsObject != null) {
+                String[] ftsTables = commonFtsObject.getTables();
+                for (String ftsTable : ftsTables) {
+                    AllCommonsRepository allCommonsRepository = context.allCommonsRepositoryobjects(ftsTable);
+                    boolean updated = allCommonsRepository.updateSearch(submission.entityId());
+                    if (updated) {
+                        break;
+                    }
+                }
+            }
+        } catch (Exception e) {
+//            Log.e(VaccinateActionUtils.class.getName(), "", e);
+        }
+    }
+    private static String getParams(FormSubmission submission) {
+        return new Gson().toJson(
+                create(INSTANCE_ID_PARAM, submission.instanceId())
+                        .put(ENTITY_ID_PARAM, submission.entityId())
+                        .put(FORM_NAME_PARAM, submission.formName())
+                        .put(VERSION_PARAM, submission.version())
+                        .put(SYNC_STATUS, PENDING.value())
+                        .map());
+    }
+    public static JSONObject retrieveFieldOverides(String overrides) {
+        try {
+            //get the field overrides map
+            if (overrides != null) {
+                JSONObject json = new JSONObject(overrides);
+                String overridesStr = json.getString("fieldOverrides");
+                return new JSONObject(overridesStr);
+            }
+        } catch (Exception e) {
+//            Log.e(VaccinateActionUtils.class.getName(), "", e);
+        }
+        return null;
+    }
+    public static void updateJson(JSONObject jsonObject, String field, String value) {
+        try {
+            if (jsonObject.has(field)) {
+                JSONObject fieldJson = jsonObject.getJSONObject(field);
+                fieldJson.put("content", value);
+            }
+        } catch (JSONException e) {
+        }
+    }
+    public static void updateJsonObject(JSONObject jsonObject, String field, JSONObject value) {
+        try {
+            if (jsonObject.has(field)) {
+                JSONObject fieldJson = jsonObject.getJSONObject(field);
+
+                fieldJson.put(field, value);
+            }
+        } catch (JSONException e) {
+        }
+    }
+    public static JSONObject find(JSONObject jsonObject, String field) {
+        try {
+            if (jsonObject.has(field)) {
+                return jsonObject.getJSONObject(field);
+
+            }
+        } catch (JSONException e) {
+        }
+
+        return null;
+    }
+    @Override
+    public void onBackPressed() {
+        if(update.size()>0) {
+            formwrapperForChild(update);
+        }
+        super.onBackPressed();
+    }
+    private void make_undo_visible(final VaccineWrapper tag,Button tt1_undo) {
+        tt1_undo.setVisibility(View.VISIBLE);
+        tt1_undo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                android.content.Context context = ChildDetailActivity.this;
+                FragmentTransaction ft = ((Activity) context).getFragmentManager().beginTransaction();
+                Fragment prev = ((Activity) context).getFragmentManager().findFragmentByTag(VaccinationDialogFragment.DIALOG_TAG);
+                if (prev != null) {
+                    ft.remove(prev);
+                }
+                ft.addToBackStack(null);
+                UndoVaccinationDialogFragment undoVaccinationDialogFragment = UndoVaccinationDialogFragment.newInstance(context, tag);
+                undoVaccinationDialogFragment.show(ft, VaccinationDialogFragment.DIALOG_TAG);
+            }
+        });
+    }
     class vaccineInfo {
         String name;
         String state;

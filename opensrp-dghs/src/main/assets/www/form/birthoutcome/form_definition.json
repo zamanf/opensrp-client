@@ -165,8 +165,16 @@
             "bind": "/model/instance/BirthOutcome/Child_Registration/Reg_No"
           },
           {
-            "name": "existing_Unique_ID",
-            "bind": "/model/instance/BirthOutcome/Child_Registration/existing_Unique_ID"
+            "name": "Member_Unique_ID",
+            "bind": "/model/instance/BirthOutcome/Child_Registration/Member_Unique_ID"
+          },
+          {
+            "name": "Member_BRID",
+            "bind": "/model/instance/BirthOutcome/Child_Registration/Member_BRID"
+          },
+          {
+            "name": "Member_HID",
+            "bind": "/model/instance/BirthOutcome/Child_Registration/Member_HID"
           },
           {
             "name": "Child_dob",

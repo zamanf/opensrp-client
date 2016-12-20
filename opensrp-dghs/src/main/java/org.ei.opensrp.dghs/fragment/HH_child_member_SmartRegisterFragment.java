@@ -248,6 +248,8 @@ public class HH_child_member_SmartRegisterFragment extends SecuredNativeSmartReg
                     CommonPersonObjectClient pc = (CommonPersonObjectClient) view.getTag();
                     JSONObject overridejsonobject = new JSONObject();
                     try {
+                        overridejsonobject.put("existing_Is_Reg_Today",((pc.getDetails().get("Is_Reg_Today")!=null?pc.getDetails().get("Is_Reg_Today"):"")));
+
                         overridejsonobject.put("e_bcg",((pc.getDetails().get("final_bcg")!=null?pc.getDetails().get("final_bcg"):"")));
                         overridejsonobject.put("e_opv0",((pc.getDetails().get("final_opv0")!=null?pc.getDetails().get("final_opv0"):"")));
                         overridejsonobject.put("e_penta2",((pc.getDetails().get("final_penta2")!=null?pc.getDetails().get("final_penta2"):"")));

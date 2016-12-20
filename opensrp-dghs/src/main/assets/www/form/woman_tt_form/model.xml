@@ -1,6 +1,6 @@
 <model>
   <instance>
-    <Woman_TT_Followup_Form encounter_type="Woman TT Follow Up" id="woman_tt_followup_form" version="201612150609">
+    <Woman_TT_Followup_Form encounter_type="Woman TT Follow Up" id="woman_tt_followup_form" version="201612200838">
       <formhub>
         <uuid/>
       </formhub>
@@ -107,6 +107,7 @@
       <tt3_final/>
       <tt4_final/>
       <tt5_final/>
+      <Is_Reg_Today/>
       <meta>
         <instanceID/>
       </meta>

@@ -9,9 +9,8 @@
         "shouldLoadValue": true
       },
       {
-        "name": "Is_Reg_Today",
-        "bind": "/model/instance/Woman_TT_Followup_Form/existing_Is_Reg_Today",
-        "shouldLoadValue": true
+        "name": "existing_Is_Reg_Today",
+        "bind": "/model/instance/Woman_TT_Followup_Form/existing_Is_Reg_Today"
       },
       {
         "name": "existing_location",
@@ -436,8 +435,11 @@
       {
         "name": "tt5_final",
         "bind": "/model/instance/Woman_TT_Followup_Form/tt5_final"
+      },
+      {
+        "name": "Is_Reg_Today",
+        "bind": "/model/instance/Woman_TT_Followup_Form/Is_Reg_Today"
       }
-
     ]
   }
 }

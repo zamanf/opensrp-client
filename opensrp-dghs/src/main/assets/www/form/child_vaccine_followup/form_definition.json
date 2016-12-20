@@ -14,9 +14,8 @@
         "shouldLoadValue": true
       },
       {
-        "name": "Is_Reg_Today",
-        "bind": "/model/instance/Child_Vaccination_Followup/existing_Is_Reg_Today",
-        "shouldLoadValue": true
+        "name": "existing_Is_Reg_Today",
+        "bind": "/model/instance/Child_Vaccination_Followup/existing_Is_Reg_Today"
       },
       {
         "name": "Child_mother_name",
@@ -620,6 +619,10 @@
       {
         "name": "final_measles2",
         "bind": "/model/instance/Child_Vaccination_Followup/final_measles2"
+      },
+      {
+        "name": "Is_Reg_Today",
+        "bind": "/model/instance/Child_Vaccination_Followup/Is_Reg_Today"
       }
     ]
   }
