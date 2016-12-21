@@ -524,6 +524,13 @@ public class HH_woman_member_SmartClientsProvider implements SmartRegisterCLient
             lastvaccinestick.setVisibility(View.VISIBLE);
             lastvaccinetext.setVisibility(View.VISIBLE);
             lastvaccinetext.setText(lastvaccine);
+        }else if (!(pc.getDetails().get("vaccines1_2") != null ? pc.getDetails().get("vaccines1_2") : "").equalsIgnoreCase("")) {
+            String lastvaccine = (pc.getDetails().get("vaccines1_2") != null ? pc.getDetails().get("vaccines1_2") : "");
+            lastvaccine = lastvaccine.trim();
+            lastvaccine = lastvaccine.replace(" ",",");
+            lastvaccinestick.setVisibility(View.VISIBLE);
+            lastvaccinetext.setVisibility(View.VISIBLE);
+            lastvaccinetext.setText(lastvaccine);
         }
 
 

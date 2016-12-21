@@ -541,49 +541,49 @@ public class ChildDetailActivity extends Activity implements VaccinationActionLi
         if(tag.getVaccine().display().equalsIgnoreCase("Penta 1")) {
             update.put("final_penta1", tag.getUpdatedVaccineDateAsString());
             update.put("penta1_dose_today", tag.getUpdatedVaccineDateAsString());
-            update.put("child_vaccines_2", "Penta 1");
+            update.put("child_vaccines_2", "Penta1");
             vaccine_complete_from_pop_up(childdetail_penta1,(View)findViewById(R.id.child_block2),tag.getUpdatedVaccineDateAsString());
             make_undo_visible(tag,undo_penta1);
         }
         if(tag.getVaccine().display().equalsIgnoreCase("Penta 2")) {
             update.put("final_penta2", tag.getUpdatedVaccineDateAsString());
             update.put("penta2_dose_today", tag.getUpdatedVaccineDateAsString());
-            update.put("child_vaccines_2", "Penta 2");
+            update.put("child_vaccines_2", "Penta2");
             vaccine_complete_from_pop_up(childdetail_penta2,(View)findViewById(R.id.child_block3),tag.getUpdatedVaccineDateAsString());
             make_undo_visible(tag,undo_penta2);
         }
         if(tag.getVaccine().display().equalsIgnoreCase("Penta 3")) {
             update.put("final_penta3", tag.getUpdatedVaccineDateAsString());
             update.put("penta3_dose_today", tag.getUpdatedVaccineDateAsString());
-            update.put("child_vaccines_2", "Penta 3");
+            update.put("child_vaccines_2", "Penta3");
             vaccine_complete_from_pop_up(childdetail_penta3,(View)findViewById(R.id.child_block4),tag.getUpdatedVaccineDateAsString());
             make_undo_visible(tag,undo_penta3);
         }
         if(tag.getVaccine().display().equalsIgnoreCase("OPV 0")) {
             update.put("final_opv0", tag.getUpdatedVaccineDateAsString());
             update.put("opv0_dose_today", tag.getUpdatedVaccineDateAsString());
-            update.put("child_vaccines_2", "OPV 0");
+            update.put("child_vaccines_2", "OPV0");
             vaccine_complete_from_pop_up(childdetail_opv0,(View)findViewById(R.id.child_block5),tag.getUpdatedVaccineDateAsString());
             make_undo_visible(tag,undo_opv0);
         }
         if(tag.getVaccine().display().equalsIgnoreCase("OPV 1")) {
             update.put("final_opv1", tag.getUpdatedVaccineDateAsString());
             update.put("opv1_dose_today", tag.getUpdatedVaccineDateAsString());
-            update.put("child_vaccines_2", "OPV 1");
+            update.put("child_vaccines_2", "OPV1");
             vaccine_complete_from_pop_up(childdetail_opv1,(View)findViewById(R.id.child_block6),tag.getUpdatedVaccineDateAsString());
             make_undo_visible(tag,undo_opv1);
         }
         if(tag.getVaccine().display().equalsIgnoreCase("OPV 2")) {
             update.put("final_opv2", tag.getUpdatedVaccineDateAsString());
             update.put("opv2_dose_today", tag.getUpdatedVaccineDateAsString());
-            update.put("child_vaccines_2", "OPV 2");
+            update.put("child_vaccines_2", "OPV2");
             vaccine_complete_from_pop_up(childdetail_opv2,(View)findViewById(R.id.child_block7),tag.getUpdatedVaccineDateAsString());
             make_undo_visible(tag,undo_opv2);
         }
         if(tag.getVaccine().display().equalsIgnoreCase("OPV 3")) {
             update.put("final_opv3", tag.getUpdatedVaccineDateAsString());
             update.put("opv3_dose_today", tag.getUpdatedVaccineDateAsString());
-            update.put("child_vaccines_2", "OPV 3");
+            update.put("child_vaccines_2", "OPV3");
             vaccine_complete_from_pop_up(childdetail_opv3,(View)findViewById(R.id.child_block8),tag.getUpdatedVaccineDateAsString());
             make_undo_visible(tag,undo_opv3);
         }
@@ -597,35 +597,35 @@ public class ChildDetailActivity extends Activity implements VaccinationActionLi
         if(tag.getVaccine().display().equalsIgnoreCase("PCV 1")) {
             update.put("final_pcv1", tag.getUpdatedVaccineDateAsString());
             update.put("pcv1_dose_today", tag.getUpdatedVaccineDateAsString());
-            update.put("child_vaccines_2", "PCV 1");
+            update.put("child_vaccines_2", "PCV1");
             vaccine_complete_from_pop_up(childdetail_pcv1,(View)findViewById(R.id.child_block10),tag.getUpdatedVaccineDateAsString());
             make_undo_visible(tag,undo_pcv1);
         }
         if(tag.getVaccine().display().equalsIgnoreCase("PCV 2")) {
             update.put("final_pcv2", tag.getUpdatedVaccineDateAsString());
             update.put("pcv2_dose_today", tag.getUpdatedVaccineDateAsString());
-            update.put("child_vaccines_2", "PCV 2");
+            update.put("child_vaccines_2", "PCV2");
             vaccine_complete_from_pop_up(childdetail_pcv2,(View)findViewById(R.id.child_block11),tag.getUpdatedVaccineDateAsString());
             make_undo_visible(tag,undo_pcv2);
         }
         if(tag.getVaccine().display().equalsIgnoreCase("PCV 3")) {
             update.put("final_pcv3", tag.getUpdatedVaccineDateAsString());
             update.put("pcv3_dose_today", tag.getUpdatedVaccineDateAsString());
-            update.put("child_vaccines_2", "PCV 3");
+            update.put("child_vaccines_2", "PCV3");
             vaccine_complete_from_pop_up(childdetail_pcv3,(View)findViewById(R.id.child_block12),tag.getUpdatedVaccineDateAsString());
             make_undo_visible(tag,undo_pcv3);
         }
         if(tag.getVaccine().display().equalsIgnoreCase("Measles 1")) {
             update.put("final_measles1", tag.getUpdatedVaccineDateAsString());
             update.put("measles1_dose_today", tag.getUpdatedVaccineDateAsString());
-            update.put("child_vaccines_2", "Measles 1");
+            update.put("child_vaccines_2", "Measles1");
             vaccine_complete_from_pop_up(childdetail_measles1,(View)findViewById(R.id.child_block13),tag.getUpdatedVaccineDateAsString());
             make_undo_visible(tag,undo_measles1);
         }
         if(tag.getVaccine().display().equalsIgnoreCase("Measles 2")) {
             update.put("final_measles2", tag.getUpdatedVaccineDateAsString());
             update.put("measles2_dose_today", tag.getUpdatedVaccineDateAsString());
-            update.put("child_vaccines_2", "Measles 2");
+            update.put("child_vaccines_2", "Measles2");
             vaccine_complete_from_pop_up(childdetail_measles2,(View)findViewById(R.id.child_block14),tag.getUpdatedVaccineDateAsString());
             make_undo_visible(tag,undo_measles2);
         }
@@ -643,49 +643,49 @@ public class ChildDetailActivity extends Activity implements VaccinationActionLi
         if(tag.getVaccine().display().equalsIgnoreCase("Penta 1")) {
             update.put("final_penta1", tag.getUpdatedVaccineDateAsString());
             update.put("penta1_retro", tag.getUpdatedVaccineDateAsString());
-            update.put("child_vaccines_2", "Penta 1");
+            update.put("child_vaccines_2", "Penta1");
             vaccine_complete_from_pop_up(childdetail_penta1,(View)findViewById(R.id.child_block2),tag.getUpdatedVaccineDateAsString());
             make_undo_visible(tag,undo_penta1);
         }
         if(tag.getVaccine().display().equalsIgnoreCase("Penta 2")) {
             update.put("final_penta2", tag.getUpdatedVaccineDateAsString());
             update.put("penta2_retro", tag.getUpdatedVaccineDateAsString());
-            update.put("child_vaccines_2", "Penta 2");
+            update.put("child_vaccines_2", "Penta2");
             vaccine_complete_from_pop_up(childdetail_penta2,(View)findViewById(R.id.child_block3),tag.getUpdatedVaccineDateAsString());
             make_undo_visible(tag,undo_penta2);
         }
         if(tag.getVaccine().display().equalsIgnoreCase("Penta 3")) {
             update.put("final_penta3", tag.getUpdatedVaccineDateAsString());
             update.put("penta3_retro", tag.getUpdatedVaccineDateAsString());
-            update.put("child_vaccines_2", "Penta 3");
+            update.put("child_vaccines_2", "Penta3");
             vaccine_complete_from_pop_up(childdetail_penta3,(View)findViewById(R.id.child_block4),tag.getUpdatedVaccineDateAsString());
             make_undo_visible(tag,undo_penta3);
         }
         if(tag.getVaccine().display().equalsIgnoreCase("OPV 0")) {
             update.put("final_opv0", tag.getUpdatedVaccineDateAsString());
             update.put("opv0_retro", tag.getUpdatedVaccineDateAsString());
-            update.put("child_vaccines_2", "OPV 0");
+            update.put("child_vaccines_2", "OPV0");
             vaccine_complete_from_pop_up(childdetail_opv0,(View)findViewById(R.id.child_block5),tag.getUpdatedVaccineDateAsString());
             make_undo_visible(tag,undo_opv0);
         }
         if(tag.getVaccine().display().equalsIgnoreCase("OPV 1")) {
             update.put("final_opv1", tag.getUpdatedVaccineDateAsString());
             update.put("opv1_retro", tag.getUpdatedVaccineDateAsString());
-            update.put("child_vaccines_2", "OPV 1");
+            update.put("child_vaccines_2", "OPV1");
             vaccine_complete_from_pop_up(childdetail_opv1,(View)findViewById(R.id.child_block6),tag.getUpdatedVaccineDateAsString());
             make_undo_visible(tag,undo_opv1);
         }
         if(tag.getVaccine().display().equalsIgnoreCase("OPV 2")) {
             update.put("final_opv2", tag.getUpdatedVaccineDateAsString());
             update.put("opv2_retro", tag.getUpdatedVaccineDateAsString());
-            update.put("child_vaccines_2", "OPV 2");
+            update.put("child_vaccines_2", "OPV2");
             vaccine_complete_from_pop_up(childdetail_opv2,(View)findViewById(R.id.child_block7),tag.getUpdatedVaccineDateAsString());
             make_undo_visible(tag,undo_opv2);
         }
         if(tag.getVaccine().display().equalsIgnoreCase("OPV 3")) {
             update.put("final_opv3", tag.getUpdatedVaccineDateAsString());
             update.put("opv3_retro", tag.getUpdatedVaccineDateAsString());
-            update.put("child_vaccines_2", "OPV 3");
+            update.put("child_vaccines_2", "OPV3");
             vaccine_complete_from_pop_up(childdetail_opv3,(View)findViewById(R.id.child_block8),tag.getUpdatedVaccineDateAsString());
             make_undo_visible(tag,undo_opv3);
         }
@@ -699,35 +699,35 @@ public class ChildDetailActivity extends Activity implements VaccinationActionLi
         if(tag.getVaccine().display().equalsIgnoreCase("PCV 1")) {
             update.put("final_pcv1", tag.getUpdatedVaccineDateAsString());
             update.put("pcv1_retro", tag.getUpdatedVaccineDateAsString());
-            update.put("child_vaccines_2", "PCV 1");
+            update.put("child_vaccines_2", "PCV1");
             vaccine_complete_from_pop_up(childdetail_pcv1,(View)findViewById(R.id.child_block10),tag.getUpdatedVaccineDateAsString());
             make_undo_visible(tag,undo_pcv1);
         }
         if(tag.getVaccine().display().equalsIgnoreCase("PCV 2")) {
             update.put("final_pcv2", tag.getUpdatedVaccineDateAsString());
             update.put("pcv2_retro", tag.getUpdatedVaccineDateAsString());
-            update.put("child_vaccines_2", "PCV 2");
+            update.put("child_vaccines_2", "PCV2");
             vaccine_complete_from_pop_up(childdetail_pcv2,(View)findViewById(R.id.child_block11),tag.getUpdatedVaccineDateAsString());
             make_undo_visible(tag,undo_pcv2);
         }
         if(tag.getVaccine().display().equalsIgnoreCase("PCV 3")) {
             update.put("final_pcv3", tag.getUpdatedVaccineDateAsString());
             update.put("pcv3_retro", tag.getUpdatedVaccineDateAsString());
-            update.put("child_vaccines_2", "PCV 3");
+            update.put("child_vaccines_2", "PCV3");
             vaccine_complete_from_pop_up(childdetail_pcv3,(View)findViewById(R.id.child_block12),tag.getUpdatedVaccineDateAsString());
             make_undo_visible(tag,undo_pcv3);
         }
         if(tag.getVaccine().display().equalsIgnoreCase("Measles 1")) {
             update.put("final_measles1", tag.getUpdatedVaccineDateAsString());
             update.put("measles1_retro", tag.getUpdatedVaccineDateAsString());
-            update.put("child_vaccines_2", "Measles 1");
+            update.put("child_vaccines_2", "Measles1");
             vaccine_complete_from_pop_up(childdetail_measles1,(View)findViewById(R.id.child_block13),tag.getUpdatedVaccineDateAsString());
             make_undo_visible(tag,undo_measles1);
         }
         if(tag.getVaccine().display().equalsIgnoreCase("Measles 2")) {
             update.put("final_measles2", tag.getUpdatedVaccineDateAsString());
             update.put("measles2_retro", tag.getUpdatedVaccineDateAsString());
-            update.put("child_vaccines_2", "Measles 2");
+            update.put("child_vaccines_2", "Measles2");
             vaccine_complete_from_pop_up(childdetail_measles2,(View)findViewById(R.id.child_block14),tag.getUpdatedVaccineDateAsString());
             make_undo_visible(tag,undo_measles2);
         }
@@ -735,37 +735,27 @@ public class ChildDetailActivity extends Activity implements VaccinationActionLi
 
     @Override
     public void onUndoVaccination(VaccineWrapper tag) {
-        update.remove("child_vaccines_2");
-        ChildVaccinecheck(childclient,childdetail_opv0,findViewById(R.id.child_block5),"final_opv0","child_opv0");
-        ChildVaccinecheck(childclient,childdetail_pcv1,findViewById(R.id.child_block10),"final_pcv1","child_pcv1");
-        ChildVaccinecheck(childclient,childdetail_opv1,findViewById(R.id.child_block6),"final_opv1","child_opv1");
-        ChildVaccinecheck(childclient,childdetail_penta1,findViewById(R.id.child_block2),"final_penta1","child_penta1");
-        ChildVaccinecheck(childclient,childdetail_pcv2,findViewById(R.id.child_block11),"final_pcv2","child_pcv2");
-        ChildVaccinecheck(childclient,childdetail_opv2,findViewById(R.id.child_block7),"final_opv2","child_opv2");
-        ChildVaccinecheck(childclient,childdetail_penta2,findViewById(R.id.child_block3),"final_penta2","child_penta2");
-        ChildVaccinecheck(childclient,childdetail_pcv3,findViewById(R.id.child_block12),"final_pcv3","child_pcv3");
-        ChildVaccinecheck(childclient,childdetail_opv3,findViewById(R.id.child_block8),"final_opv3","child_opv3");
-        ChildVaccinecheck(childclient,childdetail_penta3,findViewById(R.id.child_block4),"final_penta3","child_penta3");
-        ChildVaccinecheck(childclient,childdetail_ipv,findViewById(R.id.child_block9),"final_ipv","child_ipv");
-        ChildVaccinecheck(childclient,childdetail_measles1,findViewById(R.id.child_block13),"final_measles1","child_measles1");
-        ChildVaccinecheck(childclient,childdetail_measles2,findViewById(R.id.child_block14),"final_measles2","child_measles2");
 
+        update.remove("child_vaccines_2");
         if(tag.getVaccine().display().equalsIgnoreCase("BCG")) {
             update.remove("final_bcg");
             update.remove("final_bcg");
             update.remove("bcg");
+            ChildVaccinecheck(childclient,childdetail_bcg,findViewById(R.id.child_block1),"final_bcg","child_bcg");
             undo_bcg.setVisibility(View.INVISIBLE);
         }
         if(tag.getVaccine().display().equalsIgnoreCase("Penta 1")) {
             update.remove("final_penta1");
             update.remove("penta1_retro");
             update.remove("penta1_dose_today");
+            ChildVaccinecheck(childclient,childdetail_penta1,findViewById(R.id.child_block2),"final_penta1","child_penta1");
             undo_penta1.setVisibility(View.INVISIBLE);
         }
         if(tag.getVaccine().display().equalsIgnoreCase("Penta 2")) {
             update.remove("final_penta2");
             update.remove("penta2_retro");
             update.remove("penta2_dose_today");
+            ChildVaccinecheck(childclient,childdetail_penta2,findViewById(R.id.child_block3),"final_penta2","child_penta2");
             undo_penta2.setVisibility(View.INVISIBLE);
 
         }
@@ -773,6 +763,7 @@ public class ChildDetailActivity extends Activity implements VaccinationActionLi
             update.remove("final_penta3");
             update.remove("penta3_retro");
             update.remove("penta3_dose_today");
+            ChildVaccinecheck(childclient,childdetail_penta3,findViewById(R.id.child_block4),"final_penta3","child_penta3");
             undo_penta3.setVisibility(View.INVISIBLE);
 
         }
@@ -780,6 +771,7 @@ public class ChildDetailActivity extends Activity implements VaccinationActionLi
             update.remove("final_opv0");
             update.remove("opv0_retro");
             update.remove("opv0_dose_today");
+            ChildVaccinecheck(childclient,childdetail_opv0,findViewById(R.id.child_block5),"final_opv0","child_opv0");
             undo_opv0.setVisibility(View.INVISIBLE);
 
         }
@@ -787,56 +779,68 @@ public class ChildDetailActivity extends Activity implements VaccinationActionLi
             update.remove("final_opv1");
             update.remove("opv1_retro");
             update.remove("opv1_dose_today");
+            ChildVaccinecheck(childclient,childdetail_opv1,findViewById(R.id.child_block6),"final_opv1","child_opv1");
             undo_opv1.setVisibility(View.INVISIBLE);
         }
         if(tag.getVaccine().display().equalsIgnoreCase("OPV 2")) {
             update.remove("final_opv2");
             update.remove("opv2_retro");
             update.remove("opv2_dose_today");
+            ChildVaccinecheck(childclient,childdetail_opv2,findViewById(R.id.child_block7),"final_opv2","child_opv2");
             undo_opv2.setVisibility(View.INVISIBLE);
         }
         if(tag.getVaccine().display().equalsIgnoreCase("OPV 3")) {
             update.remove("final_opv3");
             update.remove("opv3_retro");
             update.remove("opv3_dose_today");
+            ChildVaccinecheck(childclient,childdetail_opv3,findViewById(R.id.child_block8),"final_opv3","child_opv3");
             undo_opv3.setVisibility(View.INVISIBLE);
         }
         if(tag.getVaccine().display().equalsIgnoreCase("IPV")) {
             update.remove("final_ipv");
             update.remove("ipv_retro");
             update.remove("ipv_dose_today");
+            ChildVaccinecheck(childclient,childdetail_ipv,findViewById(R.id.child_block9),"final_ipv","child_ipv");
             undo_ipv.setVisibility(View.INVISIBLE);
         }
         if(tag.getVaccine().display().equalsIgnoreCase("PCV 1")) {
             update.remove("final_pcv1");
             update.remove("pcv1_retro");
             update.remove("pcv1_dose_today");
+            ChildVaccinecheck(childclient,childdetail_pcv1,findViewById(R.id.child_block10),"final_pcv1","child_pcv1");
             undo_pcv1.setVisibility(View.INVISIBLE);
         }
         if(tag.getVaccine().display().equalsIgnoreCase("PCV 2")) {
             update.remove("final_pcv2");
             update.remove("pcv2_retro");
             update.remove("pcv2_dose_today");
+            ChildVaccinecheck(childclient,childdetail_pcv2,findViewById(R.id.child_block11),"final_pcv2","child_pcv2");
             undo_pcv2.setVisibility(View.INVISIBLE);
         }
         if(tag.getVaccine().display().equalsIgnoreCase("PCV 3")) {
             update.remove("final_pcv3");
             update.remove("pcv3_retro");
             update.remove("pcv3_dose_today");
+            ChildVaccinecheck(childclient,childdetail_pcv3,findViewById(R.id.child_block12),"final_pcv3","child_pcv3");
             undo_pcv3.setVisibility(View.INVISIBLE);
         }
         if(tag.getVaccine().display().equalsIgnoreCase("Measles 1")) {
             update.remove("final_measles1");
             update.remove("measles1_retro");
             update.remove("measles1_dose_today");
+            ChildVaccinecheck(childclient,childdetail_measles1,findViewById(R.id.child_block13),"final_measles1","child_measles1");
             undo_measles1.setVisibility(View.INVISIBLE);
         }
         if(tag.getVaccine().display().equalsIgnoreCase("Measles 2")) {
             update.remove("final_measles2");
             update.remove("measles2_retro");
             update.remove("measles2_dose_today");
+            ChildVaccinecheck(childclient,childdetail_measles2,findViewById(R.id.child_block14),"final_measles2","child_measles2");
             undo_measles2.setVisibility(View.INVISIBLE);
         }
+
+
+
     }
 
 
@@ -1018,20 +1022,20 @@ public class ChildDetailActivity extends Activity implements VaccinationActionLi
 
         FieldOverrides fieldOverrides = new FieldOverrides(overridejsonobject.toString());
 
-        String formMadeforprint = FormUtils.getInstance(this).generateXMLInputForFormWithEntityId(childclient.entityId(), "woman_tt_form", fieldOverrides.getJSONString());
+        String formMadeforprint = FormUtils.getInstance(this).generateXMLInputForFormWithEntityId(childclient.entityId(), "child_vaccine_followup", fieldOverrides.getJSONString());
 
         try {
             JSONObject formSubmission = XML.toJSONObject(formMadeforprint);
             JSONObject encounterJson = find(formSubmission, "Child_Vaccination_Followup");
 //            Log.v("formMadeforprint",encounterJson.toString());
 
-            DateTime currentDateTime = new DateTime(new Date());
+//            DateTime currentDateTime = new DateTime(new Date());
 //            updateJson(encounterJson, "start", currentDateTime.toString("yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
-            updateJson(encounterJson, "deviceid", "Error: could not determine deviceID");
-            updateJson(encounterJson, "subscriberid", "no subscriberid property in enketo");
-            updateJson(encounterJson, "simserial", "no simserial property in enketo");
-            updateJson(encounterJson, "phonenumber", "no phonenumber property in enketo");
-            Log.v("formMadeforencounter",encounterJson.getString("start"));
+//            updateJson(encounterJson, "deviceid", "Error: could not determine deviceID");
+//            updateJson(encounterJson, "subscriberid", "no subscriberid property in enketo");
+//            updateJson(encounterJson, "simserial", "no simserial property in enketo");
+//            updateJson(encounterJson, "phonenumber", "no phonenumber property in enketo");
+//            Log.v("formMadeforencounter",encounterJson.getString("start"));
 
             String data = XML.toString(formSubmission);
             saveFormSubmission(this, data, childclient.entityId(), "child_vaccine_followup", retrieveFieldOverides(fieldOverrides.getJSONString()));

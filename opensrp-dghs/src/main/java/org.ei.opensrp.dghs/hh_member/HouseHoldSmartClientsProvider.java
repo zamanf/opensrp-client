@@ -28,6 +28,7 @@ import org.ei.opensrp.view.dialog.FilterOption;
 import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
 import org.ei.opensrp.view.viewHolder.OnClickFormLauncher;
+import org.joda.time.LocalDate;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -130,7 +131,7 @@ public class HouseHoldSmartClientsProvider implements SmartRegisterCLientsProvid
          gobhhid.setText(pc.getColumnmaps().get("HHID")!=null?pc.getColumnmaps().get("HHID"):"");
          age.setText("("+(pc.getDetails().get("calc_HoH_age_confirm")!=null?pc.getDetails().get("calc_HoH_age_confirm"):"")+") ");
         try {
-            int days = DateUtil.dayDifference(DateUtil.getLocalDate((pc.getDetails().get("calc_HoH_dob_confirm") != null ?  pc.getDetails().get("calc_HoH_dob_confirm")  : "")), DateUtil.today());
+            int days = DateUtil.dayDifference(getLocalDate((pc.getDetails().get("calc_HoH_dob_confirm") != null ?  pc.getDetails().get("calc_HoH_dob_confirm")  : "")), DateUtil.today());
             int calc_age = days / 365;
             age.setText("("+calc_age+") ");
         }catch (Exception e){
@@ -308,6 +309,15 @@ public class HouseHoldSmartClientsProvider implements SmartRegisterCLientsProvid
     public View inflatelayoutForCursorAdapter() {
         View View = (ViewGroup) inflater().inflate(R.layout.smart_register_hh_member_client, null);
         return View;
+    }
+    public static LocalDate getLocalDate(String date) {
+        try {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            Date formattedDate = format.parse(date);
+            return new LocalDate(formattedDate);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
 

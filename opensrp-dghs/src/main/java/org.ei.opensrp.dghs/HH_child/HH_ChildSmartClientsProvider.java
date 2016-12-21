@@ -556,11 +556,16 @@ public class HH_ChildSmartClientsProvider implements SmartRegisterCLientsProvide
         nlastVaccintick.setVisibility(View.VISIBLE);
         nlastVaccineDate.setVisibility(View.VISIBLE);
 
-        if((pc.getDetails().get("child_vaccines_2") != null ? pc.getDetails().get("child_vaccines_2") : "").equalsIgnoreCase("")){
+        if(((pc.getDetails().get("child_vaccines_2") != null ? pc.getDetails().get("child_vaccines_2") : "").equalsIgnoreCase(""))&&((pc.getDetails().get("child_vaccines1_2") != null ? pc.getDetails().get("child_vaccines1_2") : "").equalsIgnoreCase(""))){
             nlastVaccineDate.setVisibility(View.INVISIBLE);
             nlastVaccintick.setVisibility(View.INVISIBLE);
         }else {
-            String childVaccines = (pc.getDetails().get("child_vaccines_2") != null ? pc.getDetails().get("child_vaccines_2") : "");
+            String childVaccines = "";
+            if(pc.getDetails().get("child_vaccines_2") != null ) {
+                childVaccines = (pc.getDetails().get("child_vaccines_2") != null ? pc.getDetails().get("child_vaccines_2") : "");
+            }else if(pc.getDetails().get("child_vaccines1_2") != null ) {
+                childVaccines = (pc.getDetails().get("child_vaccines1_2") != null ? pc.getDetails().get("child_vaccines1_2") : "");
+            }
             childVaccines = childVaccines.trim();
             childVaccines = childVaccines.replace(" ",",");
             nlastVaccineDate.setText(childVaccines.toUpperCase());
