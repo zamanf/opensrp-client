@@ -209,7 +209,8 @@
       },
       {
         "name": "contact_phone_number",
-        "bind": "/model/instance/Woman_TT_Followup_Form/contact_phone_number"
+        "bind": "/model/instance/Woman_TT_Followup_Form/contact_phone_number",
+        "shouldLoadValue": true
       },
       {
         "name": "marriage",
@@ -435,11 +436,8 @@
       {
         "name": "tt5_final",
         "bind": "/model/instance/Woman_TT_Followup_Form/tt5_final"
-      },
-      {
-        "name": "Is_Reg_Today",
-        "bind": "/model/instance/Woman_TT_Followup_Form/Is_Reg_Today"
       }
+
     ]
   }
 }

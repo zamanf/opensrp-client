@@ -177,7 +177,7 @@ public class WomanDetailActivity extends Activity implements VaccinationActionLi
             }
         });
 
-        address.setText((womanclient.getDetails().get("HH_Address") != null ? womanclient.getDetails().get("HH_Address") : ""));
+        address.setText((womanclient.getDetails().get("Member_Address_line") != null ? womanclient.getDetails().get("Member_Address_line") : ""));
 
         if(((womanclient.getColumnmaps().get("Marital_status")!=null?womanclient.getColumnmaps().get("Marital_status"):"")).equalsIgnoreCase("1")){
             maritalstatus.setText("Unmarried");

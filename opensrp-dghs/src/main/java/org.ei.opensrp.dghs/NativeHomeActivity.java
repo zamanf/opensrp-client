@@ -11,6 +11,7 @@ import android.widget.Toast;
 import org.ei.opensrp.Context;
 import org.ei.opensrp.cursoradapter.SmartRegisterQueryBuilder;
 import org.ei.opensrp.dghs.HH_woman.BirthOutcomeHandler;
+import org.ei.opensrp.dghs.healthIDtasks.health_ID_task;
 import org.ei.opensrp.dghs.vaccineTasks.Last_vaccine_missedCount_task;
 import org.ei.opensrp.dghs.vaccineTasks.Today_anouncement_task;
 import org.ei.opensrp.dghs.vaccineTasks.Today_vaccine_task;
@@ -60,7 +61,9 @@ public class NativeHomeActivity extends SecuredActivity {
             tdv.execute();
             Today_vaccine_task tvt = new Today_vaccine_task(context,new HTTPAgent(context.applicationContext(),context.allSettings(),context.allSharedPreferences(),context.configuration()),context.configuration(),context.allSettings(),context.allSharedPreferences());
             tvt.execute();
-        }
+            health_ID_task health_id_task = new health_ID_task(context,new HTTPAgent(context.applicationContext(),context.allSettings(),context.allSharedPreferences(),context.configuration()),context.configuration(),context.allSettings(),context.allSharedPreferences());
+            health_id_task.execute();
+       }
     };
 
     private Listener<String> onFormSubmittedListener = new Listener<String>() {
