@@ -436,8 +436,11 @@
       {
         "name": "tt5_final",
         "bind": "/model/instance/Woman_TT_Followup_Form/tt5_final"
+      },
+      {
+        "name": "Is_Reg_Today",
+        "bind": "/model/instance/Woman_TT_Followup_Form/Is_Reg_Today"
       }
-
     ]
   }
 }
