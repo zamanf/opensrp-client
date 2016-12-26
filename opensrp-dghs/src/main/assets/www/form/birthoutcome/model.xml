@@ -1,6 +1,6 @@
 <model>
   <instance>
-    <BirthOutcome encounter_type="Birth Outcome" id="BirthOutcome" version="201612150628">
+    <BirthOutcome encounter_type="Birth Outcome" id="BirthOutcome" version="201612260946">
       <formhub>
         <uuid/>
       </formhub>
@@ -36,7 +36,6 @@
         <Reg_No/>
         <Member_Unique_ID/>
         <Member_BRID openmrs_entity="person_attribute" openmrs_entity_id="birthRegistrationId"/>
-        <Member_HID openmrs_entity="person_attribute" openmrs_entity_id="healthId"/>
         <Child_dob openmrs_entity="person" openmrs_entity_id="birthdate"/>
         <Child_age_days/>
         <Child_birth_date_note/>

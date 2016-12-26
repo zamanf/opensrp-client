@@ -408,8 +408,8 @@ public class HH_ChildSmartClientsProvider implements SmartRegisterCLientsProvide
                 }
             });
 
-            nextVaccineDate.setOnClickListener(onClickListener);
-            nextVaccineDate.setTag(pc);
+//            nextVaccineDate.setOnClickListener(onClickListener);
+//            nextVaccineDate.setTag(pc);
             }
         }else{
           ArrayList<Alert> alertlist = checkAlertListForVaccine(pc);

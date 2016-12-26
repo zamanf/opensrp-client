@@ -1,6 +1,6 @@
 <model>
   <instance>
-    <NewMemberRegistration encounter_type="New Member Registration" id="NewMemberRegistartion" version="201612150528">
+    <NewMemberRegistration encounter_type="New Member Registration" id="NewMemberRegistartion" version="201612261135">
       <formhub>
         <uuid/>
       </formhub>
@@ -45,7 +45,6 @@
         <Member_Unique_ID/>
         <Member_NID openmrs_entity="person_attribute" openmrs_entity_id="nationalId"/>
         <Member_BRID openmrs_entity="person_attribute" openmrs_entity_id="birthRegistrationId"/>
-        <Member_HID openmrs_entity="person_attribute" openmrs_entity_id="healthId"/>
         <member_birth_date_known>yes</member_birth_date_known>
         <member_birth_date/>
         <age/>

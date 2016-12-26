@@ -1,6 +1,6 @@
 <model>
   <instance>
-    <HHMemberReg encounter_type="HH And Member Registration" id="HHMemberReg" version="201612150528">
+    <HHMemberReg encounter_type="HH And Member Registration" id="HHMemberReg" version="201612260951">
       <formhub>
         <uuid/>
       </formhub>
@@ -49,7 +49,6 @@
       <HoH_Unique_ID/>
       <HoH_NID openmrs_entity="person_attribute" openmrs_entity_id="nationalId"/>
       <HoH_BRID openmrs_entity="person_attribute" openmrs_entity_id="birthRegistrationId"/>
-      <HoH_HID openmrs_entity="person_attribute" openmrs_entity_id="healthId"/>
       <HoH_Mobile_No openmrs_entity="person_attribute" openmrs_entity_id="phoneNumber"/>
       <HoH_Education openmrs_entity="person_attribute" openmrs_entity_id="education"/>
       <HoH_Occupation openmrs_entity="person_attribute" openmrs_entity_id="occupation"/>
@@ -75,7 +74,6 @@
         <Member_Unique_ID/>
         <Member_NID openmrs_entity="person_attribute" openmrs_entity_id="nationalId"/>
         <Member_BRID openmrs_entity="person_attribute" openmrs_entity_id="birthRegistrationId"/>
-        <Member_HID openmrs_entity="person_attribute" openmrs_entity_id="healthId"/>
         <member_birth_date_known>yes</member_birth_date_known>
         <member_birth_date/>
         <age/>

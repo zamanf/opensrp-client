@@ -268,8 +268,8 @@ public class HH_woman_member_SmartClientsProvider implements SmartRegisterCLient
 //
 //                }
 //            });
-                vaccinebutton.setOnClickListener(onClickListener);
-                vaccinebutton.setTag(R.id.clientobject, pc);
+//                vaccinebutton.setOnClickListener(onClickListener);
+//                vaccinebutton.setTag(R.id.clientobject, pc);
             }
 
         }

@@ -77,7 +77,7 @@
         "shouldLoadValue": true
       },
       {
-        "name": "Marital_Status",
+        "name": "Marital_status",
         "bind": "/model/instance/Woman_TT_Followup_Form/existing_marital_status",
         "shouldLoadValue": true
       },
@@ -209,8 +209,7 @@
       },
       {
         "name": "contact_phone_number",
-        "bind": "/model/instance/Woman_TT_Followup_Form/contact_phone_number",
-        "shouldLoadValue": true
+        "bind": "/model/instance/Woman_TT_Followup_Form/contact_phone_number"
       },
       {
         "name": "marriage",
@@ -221,9 +220,8 @@
         "bind": "/model/instance/Woman_TT_Followup_Form/husband_name"
       },
       {
-        "name": "pregnant",
-        "bind": "/model/instance/Woman_TT_Followup_Form/pregnant",
-        "shouldLoadValue": true
+        "name": "display_pregnant",
+        "bind": "/model/instance/Woman_TT_Followup_Form/pregnant"
       },
       {
         "name": "edd_lmp",

@@ -192,10 +192,6 @@
             "bind": "/model/instance/NewMemberRegistration/HH_Member/Member_BRID"
           },
           {
-            "name": "Member_HID",
-            "bind": "/model/instance/NewMemberRegistration/HH_Member/Member_HID"
-          },
-          {
             "name": "member_birth_date_known",
             "bind": "/model/instance/NewMemberRegistration/HH_Member/member_birth_date_known"
           },

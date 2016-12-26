@@ -173,10 +173,6 @@
             "bind": "/model/instance/BirthOutcome/Child_Registration/Member_BRID"
           },
           {
-            "name": "Member_HID",
-            "bind": "/model/instance/BirthOutcome/Child_Registration/Member_HID"
-          },
-          {
             "name": "Child_dob",
             "bind": "/model/instance/BirthOutcome/Child_Registration/Child_dob"
           },

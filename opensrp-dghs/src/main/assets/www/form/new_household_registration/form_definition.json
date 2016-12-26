@@ -189,10 +189,6 @@
         "bind": "/model/instance/HHMemberReg/HoH_BRID"
       },
       {
-        "name": "HoH_HID",
-        "bind": "/model/instance/HHMemberReg/HoH_HID"
-      },
-      {
         "name": "HoH_Mobile_No",
         "bind": "/model/instance/HHMemberReg/HoH_Mobile_No"
       },
