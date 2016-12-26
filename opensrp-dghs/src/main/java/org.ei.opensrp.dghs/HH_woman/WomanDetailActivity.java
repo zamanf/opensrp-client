@@ -311,6 +311,8 @@ public class WomanDetailActivity extends Activity implements VaccinationActionLi
             overridejsonobject.put("ga_ult",((womanclient.getDetails().get("ga_ult")!=null?womanclient.getDetails().get("ga_ult"):"")));
             overridejsonobject.put("final_ga",((womanclient.getDetails().get("final_ga")!=null?womanclient.getDetails().get("final_ga"):"")));
             overridejsonobject.put("Is_Reg_Today",((womanclient.getDetails().get("Is_Reg_Today")!=null?womanclient.getDetails().get("Is_Reg_Today"):"")));
+            overridejsonobject.put("existing_contact_phone_number",((womanclient.getDetails().get("contact_phone_number")!=null?womanclient.getDetails().get("contact_phone_number"):"")));
+            overridejsonobject.put("contact_phone_number",((womanclient.getDetails().get("contact_phone_number")!=null?womanclient.getDetails().get("contact_phone_number"):"")));
 
 
             overridejsonobject.put("e_tt1",((womanclient.getDetails().get("tt1_final")!=null?womanclient.getDetails().get("tt1_final"):"")));
