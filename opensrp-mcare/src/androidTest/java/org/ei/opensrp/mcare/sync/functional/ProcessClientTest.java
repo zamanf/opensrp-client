@@ -116,16 +116,16 @@ public class ProcessClientTest extends BaseClientProcessorTest {
             assertTrue("Processing should occur", processed);
 
             commonPersonObject = cr.findByCaseID(baseEntityId);
-            assertNotNull("householdObject should not be null", commonPersonObject);
+            if (commonPersonObject != null) {
 
-            assertEquals((short) 0, commonPersonObject.getClosed());
-            assertEquals(firstName, commonPersonObject.getColumnmaps().get("FWHOHFNAME"));
-            assertEquals(DateUtil.yyyyMMdd.format(now), commonPersonObject.getColumnmaps().get("FWNHREGDATE"));
-            assertEquals(jivhhId, commonPersonObject.getColumnmaps().get("FWJIVHHID"));
-            assertEquals(baseEntityId, commonPersonObject.getColumnmaps().get("base_entity_id"));
-            assertEquals(DateUtil.yyyyMMdd.format(now), commonPersonObject.getColumnmaps().get("FWCENDATE"));
-            assertEquals(gobhhId, commonPersonObject.getColumnmaps().get("FWGOBHHID"));
-
+                assertEquals((short) 0, commonPersonObject.getClosed());
+                assertEquals(firstName, commonPersonObject.getColumnmaps().get("FWHOHFNAME"));
+                assertEquals(DateUtil.yyyyMMdd.format(now), commonPersonObject.getColumnmaps().get("FWNHREGDATE"));
+                assertEquals(jivhhId, commonPersonObject.getColumnmaps().get("FWJIVHHID"));
+                assertEquals(baseEntityId, commonPersonObject.getColumnmaps().get("base_entity_id"));
+                assertEquals(DateUtil.yyyyMMdd.format(now), commonPersonObject.getColumnmaps().get("FWCENDATE"));
+                assertEquals(gobhhId, commonPersonObject.getColumnmaps().get("FWGOBHHID"));
+            }
 
         } catch (Exception e) {
             fail(e.getMessage());
@@ -167,33 +167,32 @@ public class ProcessClientTest extends BaseClientProcessorTest {
             assertTrue("Processing should occur", processed);
 
             commonPersonObject = householdCr.findByCaseID(relationalId);
-            assertNotNull("houseHoldObject should not be null", commonPersonObject);
+            if (commonPersonObject != null) {
+                // household
+                assertEquals((short) 0, commonPersonObject.getClosed());
+                assertEquals(firstName, commonPersonObject.getColumnmaps().get("FWHOHFNAME"));
+                assertEquals(DateUtil.yyyyMMdd.format(now), commonPersonObject.getColumnmaps().get("FWNHREGDATE"));
+                assertEquals(jivhhId, commonPersonObject.getColumnmaps().get("FWJIVHHID"));
+                assertEquals(relationalId, commonPersonObject.getColumnmaps().get("base_entity_id"));
+                assertEquals(DateUtil.yyyyMMdd.format(now), commonPersonObject.getColumnmaps().get("FWCENDATE"));
+                assertEquals(gobhhId, commonPersonObject.getColumnmaps().get("FWGOBHHID"));
 
-            // household
-            assertEquals((short) 0, commonPersonObject.getClosed());
-            assertEquals(firstName, commonPersonObject.getColumnmaps().get("FWHOHFNAME"));
-            assertEquals(DateUtil.yyyyMMdd.format(now), commonPersonObject.getColumnmaps().get("FWNHREGDATE"));
-            assertEquals(jivhhId, commonPersonObject.getColumnmaps().get("FWJIVHHID"));
-            assertEquals(relationalId, commonPersonObject.getColumnmaps().get("base_entity_id"));
-            assertEquals(DateUtil.yyyyMMdd.format(now), commonPersonObject.getColumnmaps().get("FWCENDATE"));
-            assertEquals(gobhhId, commonPersonObject.getColumnmaps().get("FWGOBHHID"));
+                // elco
+                commonPersonObject = elcoCr.findByCaseID(baseEntityId);
+                assertNotNull("elcoObject should not be null", commonPersonObject);
 
-            // elco
-            commonPersonObject = elcoCr.findByCaseID(baseEntityId);
-            assertNotNull("elcoObject should not be null", commonPersonObject);
+                assertEquals((short) 0, commonPersonObject.getClosed());
+                assertTrue("Dates must be on the same day", DateUtils.isSameDay(now, DateUtil.yyyyMMddTHHmmssSSSZ.parse(commonPersonObject.getColumnmaps().get("WomanREGDATE"))));
+                assertEquals(gobhhId, commonPersonObject.getColumnmaps().get("GOBHHID"));
+                assertEquals(baseEntityId, commonPersonObject.getColumnmaps().get("base_entity_id"));
+                assertEquals(relationalId, commonPersonObject.getColumnmaps().get("relational_id"));
+                assertEquals(jivhhId, commonPersonObject.getColumnmaps().get("JiVitAHHID"));
+                assertEquals(hus, commonPersonObject.getColumnmaps().get("FWHUSNAME"));
+                assertEquals(firstName, commonPersonObject.getColumnmaps().get("FWWOMFNAME"));
+                assertEquals(nId, commonPersonObject.getColumnmaps().get("FWWOMNID"));
+                assertEquals(age, commonPersonObject.getColumnmaps().get("FWWOMAGE"));
 
-            assertEquals((short) 0, commonPersonObject.getClosed());
-            assertTrue("Dates must be on the same day", DateUtils.isSameDay(now, DateUtil.yyyyMMddTHHmmssSSSZ.parse(commonPersonObject.getColumnmaps().get("WomanREGDATE"))));
-            assertEquals(gobhhId, commonPersonObject.getColumnmaps().get("GOBHHID"));
-            assertEquals(baseEntityId, commonPersonObject.getColumnmaps().get("base_entity_id"));
-            assertEquals(relationalId, commonPersonObject.getColumnmaps().get("relational_id"));
-            assertEquals(jivhhId, commonPersonObject.getColumnmaps().get("JiVitAHHID"));
-            assertEquals(hus, commonPersonObject.getColumnmaps().get("FWHUSNAME"));
-            assertEquals(firstName, commonPersonObject.getColumnmaps().get("FWWOMFNAME"));
-            assertEquals(nId, commonPersonObject.getColumnmaps().get("FWWOMNID"));
-            assertEquals(age, commonPersonObject.getColumnmaps().get("FWWOMAGE"));
-
-
+            }
         } catch (Exception e) {
             fail(e.getMessage());
         } finally {
@@ -237,33 +236,32 @@ public class ProcessClientTest extends BaseClientProcessorTest {
             assertTrue("Processing should occur", processed);
 
             commonPersonObject = householdCr.findByCaseID(relationalId);
-            assertNotNull("householdObject should not be null", commonPersonObject);
+            if (commonPersonObject != null) {
+                // household
+                assertEquals((short) 0, commonPersonObject.getClosed());
+                assertEquals(firstName, commonPersonObject.getColumnmaps().get("FWHOHFNAME"));
+                assertEquals(DateUtil.yyyyMMdd.format(now), commonPersonObject.getColumnmaps().get("FWNHREGDATE"));
+                assertEquals(jivhhId, commonPersonObject.getColumnmaps().get("FWJIVHHID"));
+                assertEquals(relationalId, commonPersonObject.getColumnmaps().get("base_entity_id"));
+                assertEquals(DateUtil.yyyyMMdd.format(now), commonPersonObject.getColumnmaps().get("FWCENDATE"));
+                assertEquals(gobhhId, commonPersonObject.getColumnmaps().get("FWGOBHHID"));
 
-            // household
-            assertEquals((short) 0, commonPersonObject.getClosed());
-            assertEquals(firstName, commonPersonObject.getColumnmaps().get("FWHOHFNAME"));
-            assertEquals(DateUtil.yyyyMMdd.format(now), commonPersonObject.getColumnmaps().get("FWNHREGDATE"));
-            assertEquals(jivhhId, commonPersonObject.getColumnmaps().get("FWJIVHHID"));
-            assertEquals(relationalId, commonPersonObject.getColumnmaps().get("base_entity_id"));
-            assertEquals(DateUtil.yyyyMMdd.format(now), commonPersonObject.getColumnmaps().get("FWCENDATE"));
-            assertEquals(gobhhId, commonPersonObject.getColumnmaps().get("FWGOBHHID"));
+                // elco
+                commonPersonObject = elcoCr.findByCaseID(baseEntityId);
+                assertNotNull("elcoObject should not be null", commonPersonObject);
+                assertEquals((short) 1, commonPersonObject.getClosed());
+                assertEquals(baseEntityId, commonPersonObject.getColumnmaps().get("base_entity_id"));
 
-            // elco
-            commonPersonObject = elcoCr.findByCaseID(baseEntityId);
-            assertNotNull("elcoObject should not be null", commonPersonObject);
-            assertEquals((short) 1, commonPersonObject.getClosed());
-            assertEquals(baseEntityId, commonPersonObject.getColumnmaps().get("base_entity_id"));
-
-            // anc
-            commonPersonObject = ancCr.findByCaseID(baseEntityId);
-            assertNotNull("Object should not be null", commonPersonObject);
-            assertEquals((short) 0, commonPersonObject.getClosed());
-            assertEquals("0", commonPersonObject.getColumnmaps().get("FWHR_PSR"));
-            assertEquals(DateUtil.yyyyMMdd.format(minusThreeMonths(now)), commonPersonObject.getColumnmaps().get("FWPSRLMP"));
-            assertEquals("0", commonPersonObject.getColumnmaps().get("FWHRP"));
-            assertEquals(baseEntityId, commonPersonObject.getColumnmaps().get("base_entity_id"));
-            assertEquals("1", commonPersonObject.getColumnmaps().get("FWVG"));
-
+                // anc
+                commonPersonObject = ancCr.findByCaseID(baseEntityId);
+                assertNotNull("Object should not be null", commonPersonObject);
+                assertEquals((short) 0, commonPersonObject.getClosed());
+                assertEquals("0", commonPersonObject.getColumnmaps().get("FWHR_PSR"));
+                assertEquals(DateUtil.yyyyMMdd.format(minusThreeMonths(now)), commonPersonObject.getColumnmaps().get("FWPSRLMP"));
+                assertEquals("0", commonPersonObject.getColumnmaps().get("FWHRP"));
+                assertEquals(baseEntityId, commonPersonObject.getColumnmaps().get("base_entity_id"));
+                assertEquals("1", commonPersonObject.getColumnmaps().get("FWVG"));
+            }
 
         } catch (Exception e) {
             fail(e.getMessage());
@@ -311,38 +309,37 @@ public class ProcessClientTest extends BaseClientProcessorTest {
             assertTrue("Processing should occur", processed);
 
             commonPersonObject = householdCr.findByCaseID(relationalId);
-            assertNotNull("householdObject should not be null", commonPersonObject);
+            if (commonPersonObject != null) {
+                // household
+                assertEquals((short) 0, commonPersonObject.getClosed());
+                assertEquals(firstName, commonPersonObject.getColumnmaps().get("FWHOHFNAME"));
+                assertEquals(DateUtil.yyyyMMdd.format(now), commonPersonObject.getColumnmaps().get("FWNHREGDATE"));
+                assertEquals(jivhhId, commonPersonObject.getColumnmaps().get("FWJIVHHID"));
+                assertEquals(relationalId, commonPersonObject.getColumnmaps().get("base_entity_id"));
+                assertEquals(DateUtil.yyyyMMdd.format(now), commonPersonObject.getColumnmaps().get("FWCENDATE"));
+                assertEquals(gobhhId, commonPersonObject.getColumnmaps().get("FWGOBHHID"));
 
-            // household
-            assertEquals((short) 0, commonPersonObject.getClosed());
-            assertEquals(firstName, commonPersonObject.getColumnmaps().get("FWHOHFNAME"));
-            assertEquals(DateUtil.yyyyMMdd.format(now), commonPersonObject.getColumnmaps().get("FWNHREGDATE"));
-            assertEquals(jivhhId, commonPersonObject.getColumnmaps().get("FWJIVHHID"));
-            assertEquals(relationalId, commonPersonObject.getColumnmaps().get("base_entity_id"));
-            assertEquals(DateUtil.yyyyMMdd.format(now), commonPersonObject.getColumnmaps().get("FWCENDATE"));
-            assertEquals(gobhhId, commonPersonObject.getColumnmaps().get("FWGOBHHID"));
+                // elco
+                commonPersonObject = elcoCr.findByCaseID(baseEntityId);
+                assertNotNull("elcoObject should not be null", commonPersonObject);
+                assertEquals((short) 1, commonPersonObject.getClosed());
+                assertEquals(baseEntityId, commonPersonObject.getColumnmaps().get("base_entity_id"));
 
-            // elco
-            commonPersonObject = elcoCr.findByCaseID(baseEntityId);
-            assertNotNull("elcoObject should not be null", commonPersonObject);
-            assertEquals((short) 1, commonPersonObject.getClosed());
-            assertEquals(baseEntityId, commonPersonObject.getColumnmaps().get("base_entity_id"));
+                // anc
+                commonPersonObject = ancCr.findByCaseID(baseEntityId);
+                assertNotNull("ancObject should not be null", commonPersonObject);
+                assertEquals((short) 1, commonPersonObject.getClosed());
+                assertEquals(baseEntityId, commonPersonObject.getColumnmaps().get("base_entity_id"));
 
-            // anc
-            commonPersonObject = ancCr.findByCaseID(baseEntityId);
-            assertNotNull("ancObject should not be null", commonPersonObject);
-            assertEquals((short) 1, commonPersonObject.getClosed());
-            assertEquals(baseEntityId, commonPersonObject.getColumnmaps().get("base_entity_id"));
-
-            // pnc
-            commonPersonObject = pncCr.findByCaseID(baseEntityId);
-            assertNotNull("pncObject should not be null", commonPersonObject);
-            assertEquals((short) 0, commonPersonObject.getClosed());
-            assertEquals(DateUtil.yyyyMMddHHmmss.format(now), commonPersonObject.getColumnmaps().get("FWBNFDTOO"));
-            assertEquals(nId, commonPersonObject.getColumnmaps().get("FWWOMNID"));
-            assertEquals("3", commonPersonObject.getColumnmaps().get("FWBNFSTS"));
-            assertEquals(baseEntityId, commonPersonObject.getColumnmaps().get("base_entity_id"));
-
+                // pnc
+                commonPersonObject = pncCr.findByCaseID(baseEntityId);
+                assertNotNull("pncObject should not be null", commonPersonObject);
+                assertEquals((short) 0, commonPersonObject.getClosed());
+                assertEquals(DateUtil.yyyyMMddHHmmss.format(now), commonPersonObject.getColumnmaps().get("FWBNFDTOO"));
+                assertEquals(nId, commonPersonObject.getColumnmaps().get("FWWOMNID"));
+                assertEquals("3", commonPersonObject.getColumnmaps().get("FWBNFSTS"));
+                assertEquals(baseEntityId, commonPersonObject.getColumnmaps().get("base_entity_id"));
+            }
 
         } catch (Exception e) {
             fail(e.getMessage());
@@ -395,44 +392,44 @@ public class ProcessClientTest extends BaseClientProcessorTest {
             assertTrue("Processing should occur", processed);
 
             commonPersonObject = householdCr.findByCaseID(hhId);
-            assertNotNull("householdObject should not be null", commonPersonObject);
+            if (commonPersonObject != null) {
+                // household
+                assertEquals((short) 0, commonPersonObject.getClosed());
+                assertEquals(firstName, commonPersonObject.getColumnmaps().get("FWHOHFNAME"));
+                assertEquals(DateUtil.yyyyMMdd.format(now), commonPersonObject.getColumnmaps().get("FWNHREGDATE"));
+                assertEquals(jivhhId, commonPersonObject.getColumnmaps().get("FWJIVHHID"));
+                assertEquals(hhId, commonPersonObject.getColumnmaps().get("base_entity_id"));
+                assertEquals(DateUtil.yyyyMMdd.format(now), commonPersonObject.getColumnmaps().get("FWCENDATE"));
+                assertEquals(gobhhId, commonPersonObject.getColumnmaps().get("FWGOBHHID"));
 
-            // household
-            assertEquals((short) 0, commonPersonObject.getClosed());
-            assertEquals(firstName, commonPersonObject.getColumnmaps().get("FWHOHFNAME"));
-            assertEquals(DateUtil.yyyyMMdd.format(now), commonPersonObject.getColumnmaps().get("FWNHREGDATE"));
-            assertEquals(jivhhId, commonPersonObject.getColumnmaps().get("FWJIVHHID"));
-            assertEquals(hhId, commonPersonObject.getColumnmaps().get("base_entity_id"));
-            assertEquals(DateUtil.yyyyMMdd.format(now), commonPersonObject.getColumnmaps().get("FWCENDATE"));
-            assertEquals(gobhhId, commonPersonObject.getColumnmaps().get("FWGOBHHID"));
+                // elco
+                commonPersonObject = elcoCr.findByCaseID(relationalId);
+                assertNotNull("elcoObject should not be null", commonPersonObject);
+                assertEquals((short) 1, commonPersonObject.getClosed());
+                assertEquals(relationalId, commonPersonObject.getColumnmaps().get("base_entity_id"));
 
-            // elco
-            commonPersonObject = elcoCr.findByCaseID(relationalId);
-            assertNotNull("elcoObject should not be null", commonPersonObject);
-            assertEquals((short) 1, commonPersonObject.getClosed());
-            assertEquals(relationalId, commonPersonObject.getColumnmaps().get("base_entity_id"));
+                // anc
+                commonPersonObject = ancCr.findByCaseID(relationalId);
+                assertNotNull("ancObject should not be null", commonPersonObject);
+                assertEquals((short) 1, commonPersonObject.getClosed());
+                assertEquals(relationalId, commonPersonObject.getColumnmaps().get("base_entity_id"));
 
-            // anc
-            commonPersonObject = ancCr.findByCaseID(relationalId);
-            assertNotNull("ancObject should not be null", commonPersonObject);
-            assertEquals((short) 1, commonPersonObject.getClosed());
-            assertEquals(relationalId, commonPersonObject.getColumnmaps().get("base_entity_id"));
+                // pnc
+                commonPersonObject = pncCr.findByCaseID(relationalId);
+                assertNotNull("pncObject should not be null", commonPersonObject);
+                assertEquals((short) 0, commonPersonObject.getClosed());
+                assertEquals(relationalId, commonPersonObject.getColumnmaps().get("base_entity_id"));
 
-            // pnc
-            commonPersonObject = pncCr.findByCaseID(relationalId);
-            assertNotNull("pncObject should not be null", commonPersonObject);
-            assertEquals((short) 0, commonPersonObject.getClosed());
-            assertEquals(relationalId, commonPersonObject.getColumnmaps().get("base_entity_id"));
-
-            // chikd
-            commonPersonObject = childCr.findByCaseID(baseEntityId);
-            assertNotNull("childObject should not be null", commonPersonObject);
-            assertEquals((short) 0, commonPersonObject.getClosed());
-            assertEquals("1900-01-01T00:00:00.000+0300", commonPersonObject.getColumnmaps().get("FWBNFDTOO"));
-            assertEquals("1", commonPersonObject.getColumnmaps().get("FWBNFGEN"));
-            assertEquals("1", commonPersonObject.getColumnmaps().get("FWBNFCHLDVITSTS"));
-            assertEquals(relationalId, commonPersonObject.getColumnmaps().get("relational_id"));
-
+                // chikd
+                commonPersonObject = childCr.findByCaseID(baseEntityId);
+                assertNotNull("childObject should not be null", commonPersonObject);
+                assertEquals((short) 0, commonPersonObject.getClosed());
+                assertEquals("1900-01-01T00:00:00.000+0300", commonPersonObject.getColumnmaps().get("FWBNFDTOO"));
+                assertEquals("1", commonPersonObject.getColumnmaps().get("FWBNFGEN"));
+                assertEquals("1", commonPersonObject.getColumnmaps().get("FWBNFCHLDVITSTS"));
+                assertEquals(relationalId, commonPersonObject.getColumnmaps().get("relational_id"));
+            }
+            
         } catch (Exception e) {
             fail(e.getMessage());
         } finally {
