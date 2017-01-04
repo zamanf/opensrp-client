@@ -108,7 +108,7 @@ public class ProcessClientTest extends BaseClientProcessorTest {
 
             CommonPersonObject commonPersonObject = cr.findByCaseID(baseEntityId);
 
-            assertNull("Object should be null", commonPersonObject);
+            assertNull("householdObject should be null", commonPersonObject);
 
             createECHousehold(baseEntityId, firstName, jivhhId, gobhhId, now);
 
@@ -116,7 +116,7 @@ public class ProcessClientTest extends BaseClientProcessorTest {
             assertTrue("Processing should occur", processed);
 
             commonPersonObject = cr.findByCaseID(baseEntityId);
-            assertNotNull("Object should not be null", commonPersonObject);
+            assertNotNull("householdObject should not be null", commonPersonObject);
 
             assertEquals((short) 0, commonPersonObject.getClosed());
             assertEquals(firstName, commonPersonObject.getColumnmaps().get("FWHOHFNAME"));
@@ -155,10 +155,10 @@ public class ProcessClientTest extends BaseClientProcessorTest {
             String age = "24";
 
             CommonPersonObject commonPersonObject = householdCr.findByCaseID(relationalId);
-            assertNull("Object should be null", commonPersonObject);
+            assertNull("householdObject should be null", commonPersonObject);
 
             commonPersonObject = elcoCr.findByCaseID(baseEntityId);
-            assertNull("Object should be null", commonPersonObject);
+            assertNull("elcoObject should be null", commonPersonObject);
 
             createECHousehold(relationalId, firstName, jivhhId, gobhhId, now);
             createECWoman(baseEntityId, firstName, nId, hus, age, jivhhId, gobhhId, now, relationalId);
@@ -167,7 +167,7 @@ public class ProcessClientTest extends BaseClientProcessorTest {
             assertTrue("Processing should occur", processed);
 
             commonPersonObject = householdCr.findByCaseID(relationalId);
-            assertNotNull("Object should not be null", commonPersonObject);
+            assertNotNull("houseHoldObject should not be null", commonPersonObject);
 
             // household
             assertEquals((short) 0, commonPersonObject.getClosed());
@@ -180,7 +180,7 @@ public class ProcessClientTest extends BaseClientProcessorTest {
 
             // elco
             commonPersonObject = elcoCr.findByCaseID(baseEntityId);
-            assertNotNull("Object should not be null", commonPersonObject);
+            assertNotNull("elcoObject should not be null", commonPersonObject);
 
             assertEquals((short) 0, commonPersonObject.getClosed());
             assertTrue("Dates must be on the same day", DateUtils.isSameDay(now, DateUtil.yyyyMMddTHHmmssSSSZ.parse(commonPersonObject.getColumnmaps().get("WomanREGDATE"))));
@@ -224,10 +224,10 @@ public class ProcessClientTest extends BaseClientProcessorTest {
             String age = "28";
 
             CommonPersonObject commonPersonObject = householdCr.findByCaseID(relationalId);
-            assertNull("Object should be null", commonPersonObject);
+            assertNull("householdObject should be null", commonPersonObject);
 
             commonPersonObject = elcoCr.findByCaseID(baseEntityId);
-            assertNull("Object should be null", commonPersonObject);
+            assertNull("elcoObject should be null", commonPersonObject);
 
             createECHousehold(relationalId, firstName, jivhhId, gobhhId, now);
             createECWoman(baseEntityId, firstName, nId, hus, age, jivhhId, gobhhId, now, relationalId);
@@ -237,7 +237,7 @@ public class ProcessClientTest extends BaseClientProcessorTest {
             assertTrue("Processing should occur", processed);
 
             commonPersonObject = householdCr.findByCaseID(relationalId);
-            assertNotNull("Object should not be null", commonPersonObject);
+            assertNotNull("householdObject should not be null", commonPersonObject);
 
             // household
             assertEquals((short) 0, commonPersonObject.getClosed());
@@ -250,7 +250,7 @@ public class ProcessClientTest extends BaseClientProcessorTest {
 
             // elco
             commonPersonObject = elcoCr.findByCaseID(baseEntityId);
-            assertNotNull("Object should not be null", commonPersonObject);
+            assertNotNull("elcoObject should not be null", commonPersonObject);
             assertEquals((short) 1, commonPersonObject.getClosed());
             assertEquals(baseEntityId, commonPersonObject.getColumnmaps().get("base_entity_id"));
 
@@ -297,10 +297,10 @@ public class ProcessClientTest extends BaseClientProcessorTest {
             String age = "22";
 
             CommonPersonObject commonPersonObject = householdCr.findByCaseID(relationalId);
-            assertNull("Object should be null", commonPersonObject);
+            assertNull("householdObject should be null", commonPersonObject);
 
             commonPersonObject = elcoCr.findByCaseID(baseEntityId);
-            assertNull("Object should be null", commonPersonObject);
+            assertNull("elcoObject should be null", commonPersonObject);
 
             createECHousehold(relationalId, firstName, jivhhId, gobhhId, now);
             createECWoman(baseEntityId, firstName, nId, hus, age, jivhhId, gobhhId, now, relationalId);
@@ -311,7 +311,7 @@ public class ProcessClientTest extends BaseClientProcessorTest {
             assertTrue("Processing should occur", processed);
 
             commonPersonObject = householdCr.findByCaseID(relationalId);
-            assertNotNull("Object should not be null", commonPersonObject);
+            assertNotNull("householdObject should not be null", commonPersonObject);
 
             // household
             assertEquals((short) 0, commonPersonObject.getClosed());
@@ -324,19 +324,19 @@ public class ProcessClientTest extends BaseClientProcessorTest {
 
             // elco
             commonPersonObject = elcoCr.findByCaseID(baseEntityId);
-            assertNotNull("Object should not be null", commonPersonObject);
+            assertNotNull("elcoObject should not be null", commonPersonObject);
             assertEquals((short) 1, commonPersonObject.getClosed());
             assertEquals(baseEntityId, commonPersonObject.getColumnmaps().get("base_entity_id"));
 
             // anc
             commonPersonObject = ancCr.findByCaseID(baseEntityId);
-            assertNotNull("Object should not be null", commonPersonObject);
+            assertNotNull("ancObject should not be null", commonPersonObject);
             assertEquals((short) 1, commonPersonObject.getClosed());
             assertEquals(baseEntityId, commonPersonObject.getColumnmaps().get("base_entity_id"));
 
             // pnc
             commonPersonObject = pncCr.findByCaseID(baseEntityId);
-            assertNotNull("Object should not be null", commonPersonObject);
+            assertNotNull("pncObject should not be null", commonPersonObject);
             assertEquals((short) 0, commonPersonObject.getClosed());
             assertEquals(DateUtil.yyyyMMddHHmmss.format(now), commonPersonObject.getColumnmaps().get("FWBNFDTOO"));
             assertEquals(nId, commonPersonObject.getColumnmaps().get("FWWOMNID"));
@@ -380,10 +380,10 @@ public class ProcessClientTest extends BaseClientProcessorTest {
             String childName = "Test Child";
 
             CommonPersonObject commonPersonObject = pncCr.findByCaseID(relationalId);
-            assertNull("Object should be null", commonPersonObject);
+            assertNull("pncObject should be null", commonPersonObject);
 
             commonPersonObject = childCr.findByCaseID(baseEntityId);
-            assertNull("Object should be null", commonPersonObject);
+            assertNull("childObject should be null", commonPersonObject);
 
             createECHousehold(hhId, firstName, jivhhId, gobhhId, now);
             createECWoman(relationalId, firstName, nId, hus, age, jivhhId, gobhhId, now, hhId);
@@ -395,7 +395,7 @@ public class ProcessClientTest extends BaseClientProcessorTest {
             assertTrue("Processing should occur", processed);
 
             commonPersonObject = householdCr.findByCaseID(hhId);
-            assertNotNull("Object should not be null", commonPersonObject);
+            assertNotNull("householdObject should not be null", commonPersonObject);
 
             // household
             assertEquals((short) 0, commonPersonObject.getClosed());
@@ -408,25 +408,25 @@ public class ProcessClientTest extends BaseClientProcessorTest {
 
             // elco
             commonPersonObject = elcoCr.findByCaseID(relationalId);
-            assertNotNull("Object should not be null", commonPersonObject);
+            assertNotNull("elcoObject should not be null", commonPersonObject);
             assertEquals((short) 1, commonPersonObject.getClosed());
             assertEquals(relationalId, commonPersonObject.getColumnmaps().get("base_entity_id"));
 
             // anc
             commonPersonObject = ancCr.findByCaseID(relationalId);
-            assertNotNull("Object should not be null", commonPersonObject);
+            assertNotNull("ancObject should not be null", commonPersonObject);
             assertEquals((short) 1, commonPersonObject.getClosed());
             assertEquals(relationalId, commonPersonObject.getColumnmaps().get("base_entity_id"));
 
             // pnc
             commonPersonObject = pncCr.findByCaseID(relationalId);
-            assertNotNull("Object should not be null", commonPersonObject);
+            assertNotNull("pncObject should not be null", commonPersonObject);
             assertEquals((short) 0, commonPersonObject.getClosed());
             assertEquals(relationalId, commonPersonObject.getColumnmaps().get("base_entity_id"));
 
             // chikd
             commonPersonObject = childCr.findByCaseID(baseEntityId);
-            assertNotNull("Object should not be null", commonPersonObject);
+            assertNotNull("childObject should not be null", commonPersonObject);
             assertEquals((short) 0, commonPersonObject.getClosed());
             assertEquals("1900-01-01T00:00:00.000+0300", commonPersonObject.getColumnmaps().get("FWBNFDTOO"));
             assertEquals("1", commonPersonObject.getColumnmaps().get("FWBNFGEN"));
