@@ -61,7 +61,7 @@ public class SmartShutterActivity extends Activity implements Camera.PreviewCall
     Camera cameraObj;
     FrameLayout preview;
     CameraSurfacePreview mPreview;
-    FacialProcessing faceProc;
+    public static FacialProcessing faceProc;
     DrawView drawView;
     FaceData[] faceArray;
     private ImageView cameraButton;
@@ -387,10 +387,10 @@ public class SmartShutterActivity extends Activity implements Camera.PreviewCall
             cameraObj.setPreviewCallback(null);
             preview.removeView(mPreview);
             cameraObj.release();
-            if (_qcSDKEnabled) {
-                faceProc.release();
-                faceProc = null;
-            }
+//            if (_qcSDKEnabled) {
+//                faceProc.release();
+//                faceProc = null;
+//            }
         }
         cameraObj = null;
     }
@@ -599,8 +599,8 @@ public class SmartShutterActivity extends Activity implements Camera.PreviewCall
             @Override
             public void onClick(View arg0) {
                 if (!settingsButtonPress) {
-                    if (_qcSDKEnabled)        // Disable the buttons if the facial processing feature is not supported.
-                    {
+                    // Disable the buttons if the facial processing feature is not supported.
+                    if (_qcSDKEnabled) {
                         faceDetectionButton.setVisibility(View.VISIBLE);
                         perfectPhotoButton.setVisibility(View.VISIBLE);
                     }

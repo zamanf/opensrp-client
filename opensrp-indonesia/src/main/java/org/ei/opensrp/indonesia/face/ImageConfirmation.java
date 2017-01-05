@@ -13,24 +13,38 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.Rect;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.ImageView;
+
+import com.qualcomm.snapdragon.sdk.face.FaceData;
+import com.qualcomm.snapdragon.sdk.face.FacialProcessing;
 
 import org.ei.opensrp.indonesia.R;
 import org.ei.opensrp.indonesia.face.util.Tools;
 import org.ei.opensrp.indonesia.kartu_ibu.KIDetailActivity;
 
+import java.util.Arrays;
+
 public class ImageConfirmation extends Activity {
 
+    private static String TAG = ImageConfirmation.class.getSimpleName();
     Bitmap storedBitmap;
     ImageView confirmationView;
     ImageView confirmButton;
     ImageView trashButton;
     private String entityId;
+    private Rect[] rects;
+    private boolean faceFlag = false;
+    private Bitmap mutableBitmap;
+    private boolean identifyPerson = false;
+    private FacialProcessing objFace;
+    private FaceData[] faceDatas;
+    private int arrayPossition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,13 +70,83 @@ public class ImageConfirmation extends Activity {
             mat.postRotate(angle == 90 ? 90 : (angle == 180 ? 180 : 0));
             storedBitmap = Bitmap.createBitmap(storedBitmap, 0, 0, storedBitmap.getWidth(), storedBitmap.getHeight(), mat, true);
         }
+//        TODO : Image from gallery
+
+        objFace = SmartShutterActivity.faceProc;
+//        if (objFace == null) {
+//            objFace = FacialProcessing.getInstance();
+//        }
 
 
-        confirmationView.setImageBitmap(storedBitmap);            // Setting the view with the bitmap image that came in.
+        boolean result = objFace.setBitmap(storedBitmap);
+        faceDatas = objFace.getFaceData();
 
+        int imageViewSurfaceWidth = storedBitmap.getWidth();
+        int imageViewSurfaceHeight = storedBitmap.getHeight();
+//        int imageViewSurfaceWidth = confirmationView.getWidth();
+//        int imageViewSurfaceHeight = confirmationView.getHeight();
+
+        Bitmap workingBitmap = Bitmap.createScaledBitmap(storedBitmap,
+                imageViewSurfaceWidth, imageViewSurfaceHeight, false);
+        mutableBitmap = workingBitmap.copy(Bitmap.Config.ARGB_8888, true);
+
+        objFace.normalizeCoordinates(imageViewSurfaceWidth, imageViewSurfaceHeight);
+
+        if(result){
+            Log.e(TAG, "onCreate: SetBitmap objFace "+"Success" );
+            if(faceDatas != null){
+                Log.e(TAG, "onCreate: faceDatas "+"NotNull" );
+                rects = new Rect[faceDatas.length];
+                for (int i = 0; i < faceDatas.length; i++) {
+                    Rect rect = faceDatas[i].rect;
+                    rects[i] = rect;
+
+                    float pixelDensity = getResources().getDisplayMetrics().density;
+                    if (identifyPerson) {
+                        String selectedPersonId = Integer.toString(faceDatas[i].getPersonId());
+                        String personName = entityId;
+//                        Iterator<HashMap.Entry<String, String>> iter = hash
+//                                .entrySet().iterator();
+//                        while (iter.hasNext()) {
+//                            HashMap.Entry<String, String> entry = iter
+//                                    .next();
+//                            if (entry.getValue().equals(
+//                                    selectedPersonId)) {
+//                                personName = entry.getKey();
+//                            }
+//                        }
+                        Tools.drawInfo(rect, mutableBitmap, pixelDensity, personName);
+                    } else {
+                        Tools.drawRectFace(rect, mutableBitmap, pixelDensity);
+                        Log.e(TAG, "onCreate: PersonId "+faceDatas[i].getPersonId() );
+                        if(faceDatas[i].getPersonId() < 0){
+                            arrayPossition = i;
+                        } else {
+                            Log.e(TAG, "onCreate: Similar face found "+
+                                    Integer.toString(faceDatas[i].getRecognitionConfidence()) );
+                        }
+                    }
+                }
+            } else {
+                Log.e(TAG, "onCreate: faceDatas "+"Null" );
+            }
+        } else {
+            Log.e(TAG, "onCreate: SetBitmap objFace"+"Failed" );
+        }
+
+//        confirmationView.setImageBitmap(storedBitmap);            // Setting the view with the bitmap image that came in.
+        confirmationView.setImageBitmap(mutableBitmap);            // Setting the view with the bitmap image that came in.
+
+        buttonJob();
+    }
+
+    /**
+     *
+     */
+    private void buttonJob() {
         // If approved then save the image and close.
         confirmButton = (ImageView) findViewById(R.id.iv_approve);
-        confirmButton.setOnClickListener(new OnClickListener() {
+        confirmButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
@@ -88,7 +172,7 @@ public class ImageConfirmation extends Activity {
 
         // Trash the image and return back to the camera preview.
         trashButton = (ImageView) findViewById(R.id.iv_cancel);
-        trashButton.setOnClickListener(new OnClickListener() {
+        trashButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
@@ -113,6 +197,7 @@ public class ImageConfirmation extends Activity {
                 return false;
             }
         });
+
     }
 
 
@@ -120,6 +205,10 @@ public class ImageConfirmation extends Activity {
      * Function to save image and get back to the camera preview.
      */
     private void saveAndClose(String entityId) {
+        Log.e(TAG, "saveAndClose: "+arrayPossition );
+        int res = objFace.addPerson(arrayPossition);
+        Log.e(TAG, "saveAndClose: "+res );
+        Log.e(TAG, "saveAndClose: "+ Arrays.toString(objFace.serializeRecogntionAlbum()));
 //        SmartShutterActivity.WritePictureToFile(ImageConfirmation.this, storedBitmap);
         Tools.WritePictureToFile(ImageConfirmation.this, storedBitmap, entityId);
 //        resultIntent.putExtra("com.qualcomm.sdk.smartshutterapp.SmartShutterActivity.thumbnail", thumbnail);

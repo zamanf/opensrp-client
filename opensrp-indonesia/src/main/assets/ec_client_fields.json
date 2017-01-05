@@ -4,6 +4,13 @@
       "name": "ec_kartu_ibu",
       "columns": [
         {
+          "column_name": "vector",
+          "type": "Client",
+          "json_mapping": {
+            "field": "attributes.vector"
+          }
+        },
+        {
           "column_name": "base_entity_id",
           "type": "Client",
           "json_mapping": {

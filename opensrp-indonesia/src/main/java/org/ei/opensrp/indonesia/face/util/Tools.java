@@ -1,14 +1,21 @@
 package org.ei.opensrp.indonesia.face.util;
 
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 
+import org.ei.opensrp.Context;
 import org.ei.opensrp.repository.DetailsRepository;
 
 import java.io.File;
@@ -19,9 +26,10 @@ import java.io.IOException;
 /**
  * Created by wildan on 1/4/17.
  */
-public class Tools {
+public class Tools extends Activity {
 
     private static final String TAG = Tools.class.getSimpleName();
+    private Canvas canvas = null;
 
     public static boolean WritePictureToFile(android.content.Context context, Bitmap bitmap, String entityId) {
 
@@ -49,16 +57,16 @@ public class Tools {
 
 
 //            KIDetailActivity.details = new HashMap<>();
-
 //            HashMap<String,String> details = new HashMap<>();
 //            KIDetailActivity.details.put("profilepic",photoPath);
-            DetailsRepository detailsRepository = org.ei.opensrp.Context.getInstance().detailsRepository();
+
+
+//            Database
+            DetailsRepository detailsRepository = Context.getInstance().detailsRepository();
 
             Long tsLong = System.currentTimeMillis()/1000;
             detailsRepository.add(entityId, "profilepic", photoPath, tsLong);
-            detailsRepository.add(entityId, "pekerjaan", photoPath, tsLong);
 //            kiclient.getDetails().get("profilepic");
-
 
             return true;
 
@@ -106,4 +114,70 @@ public class Tools {
     }
 
 
+    public static void drawInfo(Rect rect, Bitmap mutableBitmap, float pixelDensity, String personName) {
+        Log.e(TAG, "drawInfo: " );
+//        Rect rect = faceDatas[i].rect;
+        // Extra padding around the faeRects
+        rect.set(rect.left -= 20, rect.top -= 20, rect.right += 20, rect.bottom += 20);
+        Canvas canvas = new Canvas(mutableBitmap);
+        Paint paintForRectFill = new Paint(); // Draw rect
+        // fill
+        paintForRectFill.setStyle(Paint.Style.FILL);
+        paintForRectFill.setColor(Color.WHITE);
+        paintForRectFill.setAlpha(80);
+        // Draw rect strokes
+        Paint paintForRectStroke = new Paint();
+        paintForRectStroke.setStyle(Paint.Style.STROKE);
+        paintForRectStroke.setColor(Color.GREEN);
+        paintForRectStroke.setStrokeWidth(5);
+        canvas.drawRect(rect, paintForRectFill);
+        canvas.drawRect(rect, paintForRectStroke);
+
+//        float pixelDensity = getResources().getDisplayMetrics().density;
+        int textSize = (int) (rect.width() / 25 * pixelDensity);
+
+        Paint paintForText = new Paint();
+        Paint paintForTextBackground = new Paint();
+        Typeface tp = Typeface.SERIF;
+        Rect backgroundRect = new Rect(rect.left, rect.bottom, rect.right, (rect.bottom + textSize));
+
+        paintForText.setColor(Color.WHITE);
+        paintForText.setTextSize(textSize);
+        paintForTextBackground.setStyle(Paint.Style.FILL);
+        paintForTextBackground.setColor(Color.BLACK);
+        paintForText.setTypeface(tp);
+        paintForTextBackground.setAlpha(80);
+
+        if (personName != null) {
+            canvas.drawRect(backgroundRect, paintForTextBackground);
+            canvas.drawText(personName, rect.left, rect.bottom + (textSize), paintForText);
+        } else {
+            canvas.drawRect(backgroundRect, paintForTextBackground);
+            canvas.drawText("Not identified", rect.left, rect.bottom + (textSize), paintForText);
+        }
+
+//        confirmationView.setImageBitmap(mutableBitmap);
+
+    }
+
+    public static void drawRectFace(Rect rect, Bitmap mutableBitmap, float pixelDensity) {
+        Log.e(TAG, "drawInfo: " );
+//        Rect rect = faceDatas[i].rect;
+        // Extra padding around the faeRects
+        rect.set(rect.left -= 20, rect.top -= 20, rect.right += 20, rect.bottom += 20);
+        Canvas canvas = new Canvas(mutableBitmap);
+        Paint paintForRectFill = new Paint();
+        // Draw rect fill
+        paintForRectFill.setStyle(Paint.Style.FILL);
+        paintForRectFill.setColor(Color.WHITE);
+        paintForRectFill.setAlpha(80);
+        // Draw rect strokes
+        Paint paintForRectStroke = new Paint();
+        paintForRectStroke.setStyle(Paint.Style.STROKE);
+        paintForRectStroke.setColor(Color.GREEN);
+        paintForRectStroke.setStrokeWidth(5);
+        canvas.drawRect(rect, paintForRectFill);
+        canvas.drawRect(rect, paintForRectStroke);
+
+    }
 }

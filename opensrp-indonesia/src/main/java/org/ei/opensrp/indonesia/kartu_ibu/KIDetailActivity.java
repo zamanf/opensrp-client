@@ -51,8 +51,6 @@ public class KIDetailActivity extends Activity {
     private static int mImageThumbSpacing;
     private static String showbgm;
     private static ImageFetcher mImageFetcher;
-
-
     //image retrieving
     public static CommonPersonObjectClient kiclient;
     public static HashMap<String, String> details;
@@ -141,17 +139,11 @@ public class KIDetailActivity extends Activity {
 
         if(kiclient.getDetails().get("profilepic")!= null){
 
-//            Log.e(TAG, "onCreate: "+"Profile Picture"+kiclient.getDetails().get("profilepic") );
-
-//            KIDetailActivity.setImagetoHolderFromUri((Activity) context, pc.getDetails().get("profilepic"), kiview, R.mipmap.woman_placeholder);
-//            kiview.setTag(smartRegisterClient);
             final int THUMBSIZE = FaceConstants.THUMBSIZE;
 
             Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(kiclient.getDetails().get("profilepic") ),
                     THUMBSIZE, THUMBSIZE);
             kiview.setImageBitmap(ThumbImage);
-
-//                setImagetoHolderFromUri(KIDetailActivity.this, kiclient.getDetails().get("profilepic"), kiview, R.mipmap.woman_placeholder);
 
         } else {
 //            Log.e(TAG, "onCreate: "+"Profile Picture NULL" );
@@ -159,7 +151,6 @@ public class KIDetailActivity extends Activity {
             kiview.setImageDrawable(getResources().getDrawable(R.mipmap.woman_placeholder));
         }
        
-//        nama.setText(getResources().getString(R.string.name)+ (kiclient.getColumnmaps().get("profilepic") != null ? kiclient.getColumnmaps().get("profilepic") : "-"));
         nama.setText(getResources().getString(R.string.name)+ (kiclient.getColumnmaps().get("namalengkap") != null ? kiclient.getColumnmaps().get("namalengkap") : "-"));
         nik.setText(getResources().getString(R.string.nik)+ (kiclient.getDetails().get("nik") != null ? kiclient.getDetails().get("nik") : "-"));
         husband_name.setText(getResources().getString(R.string.husband_name)+ (kiclient.getColumnmaps().get("namaSuami") != null ? kiclient.getColumnmaps().get("namaSuami") : "-"));
@@ -274,6 +265,7 @@ public class KIDetailActivity extends Activity {
     }
 
     String mCurrentPhotoPath;
+
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -296,29 +288,6 @@ public class KIDetailActivity extends Activity {
     static File currentfile;
     static String bindobject;
     static String entityid;
-
-    private void dispatchTakePictureIntent(ImageView imageView) {
-        mImageView = imageView;
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-                // Error occurred while creating the File
-
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                currentfile = photoFile;
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-                        Uri.fromFile(photoFile));
-                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-            }
-        }
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -348,6 +317,45 @@ public class KIDetailActivity extends Activity {
 //        Toast.makeText(this,entityid,Toast.LENGTH_LONG).show();
     }
 
+    public static void setImagetoHolderFromUri(Activity activity,String file, ImageView view, int placeholder){
+        view.setImageDrawable(activity.getResources().getDrawable(placeholder));
+        File externalFile = new File(file);
+        Uri external = Uri.fromFile(externalFile);
+        view.setImageURI(external);
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        startActivity(new Intent(this, NativeKISmartRegisterActivity.class));
+        overridePendingTransition(0, 0);
+
+
+    }
+
+    private void dispatchTakePictureIntent(ImageView imageView) {
+        mImageView = imageView;
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                currentfile = photoFile;
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+                        Uri.fromFile(photoFile));
+                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+            }
+        }
+    }
+
     public static void setImagetoHolder(Activity activity, String file, ImageView view, int placeholder){
         mImageThumbSize = 300;
         mImageThumbSpacing = Context.getInstance().applicationContext().getResources().getDimensionPixelSize(R.dimen.image_thumbnail_spacing);
@@ -366,22 +374,6 @@ public class KIDetailActivity extends Activity {
 //        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
 //        Bitmap bitmap = BitmapFactory.decodeFile(file, options);
 //        view.setImageBitmap(bitmap);
-    }
-
-    public static void setImagetoHolderFromUri(Activity activity,String file, ImageView view, int placeholder){
-        view.setImageDrawable(activity.getResources().getDrawable(placeholder));
-        File externalFile = new File(file);
-        Uri external = Uri.fromFile(externalFile);
-        view.setImageURI(external);
-    }
-
-    @Override
-    public void onBackPressed() {
-        finish();
-        startActivity(new Intent(this, NativeKISmartRegisterActivity.class));
-        overridePendingTransition(0, 0);
-
-
     }
 
 

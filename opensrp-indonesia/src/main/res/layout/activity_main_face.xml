@@ -32,7 +32,7 @@
         android:layout_height="80dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/shutter_button"
+        android:background="@drawable/ic_camera_alt_white_24dp"
         android:gravity="bottom" />
     
     <ImageView
@@ -125,10 +125,10 @@
         android:layout_marginTop="4dp"
         android:layout_below="@+id/switchCamera"
         android:gravity="center"  />
-    
 
-   
 
-    
+
+
+
 
 </RelativeLayout>
