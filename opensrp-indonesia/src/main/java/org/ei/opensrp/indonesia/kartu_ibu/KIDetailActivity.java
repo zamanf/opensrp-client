@@ -4,21 +4,23 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.ei.opensrp.Context;
-import org.ei.opensrp.commonregistry.AllCommonsRepository;
-import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.domain.ProfileImage;
 import org.ei.opensrp.indonesia.R;
+import org.ei.opensrp.indonesia.face.SmartShutterActivity;
+import org.ei.opensrp.indonesia.face.util.FaceConstants;
 import org.ei.opensrp.indonesia.lib.FlurryFacade;
 import org.ei.opensrp.repository.DetailsRepository;
 import org.ei.opensrp.repository.ImageRepository;
@@ -31,9 +33,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static org.ei.opensrp.util.StringUtil.humanize;
 import util.ImageCache;
 import util.ImageFetcher;
+
+import static org.ei.opensrp.util.StringUtil.humanize;
 
 /**
  * Created by Iq on 07/09/16.
@@ -49,14 +52,17 @@ public class KIDetailActivity extends Activity {
     private static String showbgm;
     private static ImageFetcher mImageFetcher;
 
-    //image retrieving
 
+    //image retrieving
     public static CommonPersonObjectClient kiclient;
+    public static HashMap<String, String> details;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Context context = Context.getInstance();
         setContentView(R.layout.ki_detail_activity);
+
 
         final ImageView kiview = (ImageView)findViewById(R.id.motherdetailprofileview);
         //header
@@ -134,18 +140,31 @@ public class KIDetailActivity extends Activity {
         detailsRepository.updateDetails(kiclient);
 
         if(kiclient.getDetails().get("profilepic")!= null){
-                setImagetoHolderFromUri(KIDetailActivity.this, kiclient.getDetails().get("profilepic"), kiview, R.mipmap.woman_placeholder);
-        }
-        else {
-                kiview.setImageDrawable(getResources().getDrawable(R.mipmap.woman_placeholder));
+
+//            Log.e(TAG, "onCreate: "+"Profile Picture"+kiclient.getDetails().get("profilepic") );
+
+//            KIDetailActivity.setImagetoHolderFromUri((Activity) context, pc.getDetails().get("profilepic"), kiview, R.mipmap.woman_placeholder);
+//            kiview.setTag(smartRegisterClient);
+            final int THUMBSIZE = FaceConstants.THUMBSIZE;
+
+            Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(kiclient.getDetails().get("profilepic") ),
+                    THUMBSIZE, THUMBSIZE);
+            kiview.setImageBitmap(ThumbImage);
+
+//                setImagetoHolderFromUri(KIDetailActivity.this, kiclient.getDetails().get("profilepic"), kiview, R.mipmap.woman_placeholder);
+
+        } else {
+//            Log.e(TAG, "onCreate: "+"Profile Picture NULL" );
+
+            kiview.setImageDrawable(getResources().getDrawable(R.mipmap.woman_placeholder));
         }
        
+//        nama.setText(getResources().getString(R.string.name)+ (kiclient.getColumnmaps().get("profilepic") != null ? kiclient.getColumnmaps().get("profilepic") : "-"));
         nama.setText(getResources().getString(R.string.name)+ (kiclient.getColumnmaps().get("namalengkap") != null ? kiclient.getColumnmaps().get("namalengkap") : "-"));
         nik.setText(getResources().getString(R.string.nik)+ (kiclient.getDetails().get("nik") != null ? kiclient.getDetails().get("nik") : "-"));
         husband_name.setText(getResources().getString(R.string.husband_name)+ (kiclient.getColumnmaps().get("namaSuami") != null ? kiclient.getColumnmaps().get("namaSuami") : "-"));
         dob.setText(getResources().getString(R.string.dob)+ (kiclient.getDetails().get("tanggalLahir") != null ? kiclient.getDetails().get("tanggalLahir") : "-"));
         phone.setText("No HP: "+ (kiclient.getDetails().get("NomorTelponHp") != null ? kiclient.getDetails().get("NomorTelponHp") : "-"));
-
         //risk
         if(kiclient.getDetails().get("highRiskPregnancyYoungMaternalAge") != null ){
             risk1.setText(getResources().getString(R.string.highRiskPregnancyYoungMaternalAge)+humanize(kiclient.getDetails().get("highRiskPregnancyYoungMaternalAge")));
@@ -238,18 +257,23 @@ public class KIDetailActivity extends Activity {
             public void onClick(View v) {
                 FlurryFacade.logEvent("taking_mother_pictures_on_kohort_ibu_detail_view");
                 bindobject = "kartu_ibu";
+//                entityid = kiclient.entityId();
+//                entityid = kiclient.getDetails().get("nik");
                 entityid = kiclient.entityId();
-                dispatchTakePictureIntent(kiview);
-
+//                dispatchTakePictureIntent(kiview);
+//                Intent intent = new Intent(KIDetailActivity.this, FacialActivity.class);
+                Intent intent = new Intent(KIDetailActivity.this, SmartShutterActivity.class);
+//                Intent intent = new Intent(KIDetailActivity.this, PhotoLive.class);
+//                Intent intent = new Intent(KIDetailActivity.this, LiveRecognition.class);
+                intent.putExtra("IdentifyPerson", false);
+                intent.putExtra("org.sid.sidface.ImageConfirmation.id", entityid);
+                startActivity(intent);
             }
         });
 
     }
 
-
-
     String mCurrentPhotoPath;
-
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -266,11 +290,13 @@ public class KIDetailActivity extends Activity {
         mCurrentPhotoPath = "file:" + image.getAbsolutePath();
         return image;
     }
+
     static final int REQUEST_TAKE_PHOTO = 1;
     static ImageView mImageView;
     static File currentfile;
     static String bindobject;
     static String entityid;
+
     private void dispatchTakePictureIntent(ImageView imageView) {
         mImageView = imageView;
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -296,6 +322,9 @@ public class KIDetailActivity extends Activity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        Log.e(TAG, "onActivityResult: "+ "Result" );
+
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
 //            Bundle extras = data.getExtras();
 //            String imageBitmap = (String) extras.get(MediaStore.EXTRA_OUTPUT);
@@ -309,6 +338,7 @@ public class KIDetailActivity extends Activity {
             mImageView.setImageBitmap(bitmap);
         }
     }
+
     public void saveimagereference(String bindobject,String entityid,Map<String,String> details){
         Context.getInstance().allCommonsRepositoryobjects(bindobject).mergeDetails(entityid,details);
         String anmId = Context.getInstance().allSharedPreferences().fetchRegisteredANM();
@@ -317,13 +347,12 @@ public class KIDetailActivity extends Activity {
 //                kiclient.entityId();
 //        Toast.makeText(this,entityid,Toast.LENGTH_LONG).show();
     }
+
     public static void setImagetoHolder(Activity activity, String file, ImageView view, int placeholder){
         mImageThumbSize = 300;
         mImageThumbSpacing = Context.getInstance().applicationContext().getResources().getDimensionPixelSize(R.dimen.image_thumbnail_spacing);
 
-
-        ImageCache.ImageCacheParams cacheParams =
-                new ImageCache.ImageCacheParams(activity, IMAGE_CACHE_DIR);
+        ImageCache.ImageCacheParams cacheParams = new ImageCache.ImageCacheParams(activity, IMAGE_CACHE_DIR);
         cacheParams.setMemCacheSizePercent(0.50f); // Set memory cache to 25% of app memory
         mImageFetcher = new ImageFetcher(activity, mImageThumbSize);
         mImageFetcher.setLoadingImage(placeholder);
@@ -333,23 +362,19 @@ public class KIDetailActivity extends Activity {
 
 //        Uri.parse(new File("/sdcard/cats.jpg")
 
-
-
-
-
 //        BitmapFactory.Options options = new BitmapFactory.Options();
 //        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
 //        Bitmap bitmap = BitmapFactory.decodeFile(file, options);
 //        view.setImageBitmap(bitmap);
     }
+
     public static void setImagetoHolderFromUri(Activity activity,String file, ImageView view, int placeholder){
         view.setImageDrawable(activity.getResources().getDrawable(placeholder));
         File externalFile = new File(file);
         Uri external = Uri.fromFile(externalFile);
         view.setImageURI(external);
-
-
     }
+
     @Override
     public void onBackPressed() {
         finish();
@@ -358,4 +383,6 @@ public class KIDetailActivity extends Activity {
 
 
     }
+
+
 }

@@ -1,18 +1,16 @@
 package org.ei.opensrp.indonesia.fragment;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import org.ei.opensrp.Context;
-import org.ei.opensrp.adapter.SmartRegisterPaginatedAdapter;
-import org.ei.opensrp.commonregistry.CommonObjectFilterOption;
-import org.ei.opensrp.commonregistry.CommonObjectSort;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.commonregistry.CommonPersonObjectController;
 import org.ei.opensrp.commonregistry.CommonRepository;
@@ -21,19 +19,12 @@ import org.ei.opensrp.cursoradapter.CursorCommonObjectSort;
 import org.ei.opensrp.cursoradapter.SecuredNativeSmartRegisterCursorAdapterFragment;
 import org.ei.opensrp.cursoradapter.SmartRegisterPaginatedCursorAdapter;
 import org.ei.opensrp.cursoradapter.SmartRegisterQueryBuilder;
-import org.ei.opensrp.indonesia.AllConstantsINA;
 import org.ei.opensrp.indonesia.LoginActivity;
 import org.ei.opensrp.indonesia.R;
-import org.ei.opensrp.indonesia.kartu_ibu.AllKartuIbuServiceMode;
-import org.ei.opensrp.indonesia.kartu_ibu.KIClientsProvider;
 import org.ei.opensrp.indonesia.kartu_ibu.KICommonObjectFilterOption;
-import org.ei.opensrp.indonesia.kartu_ibu.KIDetailActivity;
-import org.ei.opensrp.indonesia.kartu_ibu.KISearchOption;
-import org.ei.opensrp.indonesia.kartu_ibu.NativeKISmartRegisterActivity;
 import org.ei.opensrp.indonesia.kb.AllKBServiceMode;
 import org.ei.opensrp.indonesia.kb.KBClientsProvider;
 import org.ei.opensrp.indonesia.kb.KBDetailActivity;
-import org.ei.opensrp.indonesia.kb.KBSearchOption;
 import org.ei.opensrp.indonesia.kb.NativeKBSmartRegisterActivity;
 import org.ei.opensrp.indonesia.lib.FlurryFacade;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
@@ -53,7 +44,6 @@ import org.ei.opensrp.view.dialog.LocationSelectorDialogFragment;
 import org.ei.opensrp.view.dialog.NameSort;
 import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
-import org.ei.opensrp.view.fragment.SecuredNativeSmartRegisterFragment;
 import org.opensrp.api.domain.Location;
 import org.opensrp.api.util.EntityUtils;
 import org.opensrp.api.util.LocationTree;
@@ -66,7 +56,6 @@ import util.AsyncTask;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
-import static com.google.common.collect.Iterables.toArray;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.ei.opensrp.indonesia.AllConstantsINA.FormNames.KOHORT_KB_REGISTER;
 
@@ -341,54 +330,90 @@ public class NativeKBSmartRegisterFragment extends SecuredNativeSmartRegisterCur
         }
 
     }
+
+    /**
+     *
+     * @param view
+     */
     @Override
     public void setupSearchView(View view) {
         searchView = (EditText) view.findViewById(org.ei.opensrp.R.id.edt_search);
-        searchView.setHint(getNavBarOptionsProvider().searchHint());
-        searchView.addTextChangedListener(new TextWatcher() {
+
+        searchView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-            }
-
-            @Override
-            public void onTextChanged(final CharSequence cs, int start, int before, int count) {
-
-                (new AsyncTask() {
-                    SmartRegisterClients filteredClients;
-
+            public void onClick(View v) {
+                CharSequence selections[] = new CharSequence[] {"Detail View", "Charts"};
+//                ChildDetailActivity.childclient = (CommonPersonObjectClient) view.getTag();
+//                GiziGrowthChartActivity.client = (CommonPersonObjectClient)view.getTag();
+                final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("");
+                builder.setItems(selections, new DialogInterface.OnClickListener() {
                     @Override
-                    protected Object doInBackground(Object[] params) {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // the user clicked on colors[which]
+                        if(which == 0)
+                        {
+//                            Intent intent = new Intent(getActivity(),ChildDetailActivity.class);
+//                            startActivity(intent);
+//                            getActivity().finish();
+                            searchView.setHint(getNavBarOptionsProvider().searchHint());
+                            searchView.addTextChangedListener(new TextWatcher() {
+                                @Override
+                                public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+                                }
+
+                                @Override
+                                public void onTextChanged(final CharSequence cs, int start, int before, int count) {
+
+                                    (new AsyncTask() {
+                                        SmartRegisterClients filteredClients;
+
+                                        @Override
+                                        protected Object doInBackground(Object[] params) {
 //                        currentSearchFilter =
 //                        setCurrentSearchFilter(new HHSearchOption(cs.toString()));
 //                        filteredClients = getClientsAdapter().getListItemProvider()
 //                                .updateClients(getCurrentVillageFilter(), getCurrentServiceModeOption(),
 //                                        getCurrentSearchFilter(), getCurrentSortOption());
 //
-                        filters = cs.toString();
-                        joinTable = "";
-                        mainCondition = " is_closed = 0 and jenisKontrasepsi != '0' ";
-                        return null;
-                    }
+                                            filters = cs.toString();
+                                            joinTable = "";
+                                            mainCondition = " is_closed = 0 and jenisKontrasepsi != '0' ";
+                                            return null;
+                                        }
 
-                    @Override
-                    protected void onPostExecute(Object o) {
+                                        @Override
+                                        protected void onPostExecute(Object o) {
 //                        clientsAdapter
 //                                .refreshList(currentVillageFilter, currentServiceModeOption,
 //                                        currentSearchFilter, currentSortOption);
 //                        getClientsAdapter().refreshClients(filteredClients);
 //                        getClientsAdapter().notifyDataSetChanged();
-                        getSearchCancelView().setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
-                        CountExecute();
-                        filterandSortExecute();
-                        super.onPostExecute(o);
-                    }
-                }).execute();
-            }
+                                            getSearchCancelView().setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
+                                            CountExecute();
+                                            filterandSortExecute();
+                                            super.onPostExecute(o);
+                                        }
+                                    }).execute();
+                                }
 
-            @Override
-            public void afterTextChanged(Editable editable) {
+                                @Override
+                                public void afterTextChanged(Editable editable) {
+                                }
+                            });
+                        }
+                        else if(which == 1){
+//                            Intent intent = new Intent(getActivity(),GiziGrowthChartActivity.class);
+//                            startActivity(intent);
+//                            getActivity().finish();
+                        }
+                    }
+                });
+                builder.show();
+
             }
         });
+
         searchCancelView = view.findViewById(org.ei.opensrp.R.id.btn_search_cancel);
         searchCancelView.setOnClickListener(searchCancelHandler);
     }
@@ -446,6 +471,7 @@ public class NativeKBSmartRegisterFragment extends SecuredNativeSmartRegisterCur
             }
         });
     }
+
     public void addChildToList(ArrayList<DialogOption> dialogOptionslist,Map<String,TreeNode<String, Location>> locationMap){
         for(Map.Entry<String, TreeNode<String, Location>> entry : locationMap.entrySet()) {
 

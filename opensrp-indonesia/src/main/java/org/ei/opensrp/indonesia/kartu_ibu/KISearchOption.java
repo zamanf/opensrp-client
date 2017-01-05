@@ -25,7 +25,8 @@ public class KISearchOption implements FilterOption {
 //        AllCommonsRepository allElcoRepository = new AllCommonsRepository("elco");
         if(!result) {
             if(currentclient.getDetails().get("namaLengkap") != null) {
-                if (currentclient.getDetails().get("namaLengkap").toLowerCase().contains(criteria.toLowerCase())) {
+                if (currentclient.getDetails().get("namaLengkap").
+                        toLowerCase().contains(criteria.toLowerCase())) {
                     result = true;
                 }
             }

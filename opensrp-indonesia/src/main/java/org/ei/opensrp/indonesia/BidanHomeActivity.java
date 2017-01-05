@@ -1,6 +1,9 @@
 package org.ei.opensrp.indonesia;
-import android.content.Intent;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -8,11 +11,13 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.qualcomm.snapdragon.sdk.face.FacialProcessing;
+
 import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.CommonPersonObjectController;
 import org.ei.opensrp.cursoradapter.SmartRegisterQueryBuilder;
 import org.ei.opensrp.event.Listener;
-
+import org.ei.opensrp.indonesia.fr.PhotoLiveConstant;
 import org.ei.opensrp.indonesia.lib.FlurryFacade;
 import org.ei.opensrp.service.PendingFormSubmissionService;
 import org.ei.opensrp.sync.SyncAfterFetchListener;
@@ -38,6 +43,7 @@ import static org.ei.opensrp.event.Event.SYNC_COMPLETED;
 import static org.ei.opensrp.event.Event.SYNC_STARTED;
 
 public class BidanHomeActivity extends SecuredActivity {
+    private static final String TAG = BidanHomeActivity.class.getSimpleName();
     private MenuItem updateMenuItem;
     private MenuItem remainingFormsToSyncMenuItem;
     private PendingFormSubmissionService pendingFormSubmissionService;
@@ -92,6 +98,7 @@ public class BidanHomeActivity extends SecuredActivity {
     private int anccount;
     private int pnccount;
     private int childcount;
+    public static FacialProcessing faceObj;
 
     @Override
     protected void onCreation() {
@@ -104,6 +111,14 @@ public class BidanHomeActivity extends SecuredActivity {
         DisplayFormFragment.formInputErrorMessage = getResources().getString(R.string.forminputerror);
         DisplayFormFragment.okMessage = getResources().getString(R.string.okforminputerror);
       //  context.formSubmissionRouter().getHandlerMap().put("census_enrollment_form", new ANChandler());
+
+// FacialActivity Recognition
+//        if(faceObj == null) {
+//            faceObj = FacialProcessing.getInstance();
+//        } else {
+//            faceObj.release();
+//        }
+//        initSingleRun();
 
     }
 
@@ -137,8 +152,7 @@ public class BidanHomeActivity extends SecuredActivity {
         getSupportActionBar().setDisplayUseLogoEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         LoginActivity.setLanguage();
-//        getActionBar().setBackgroundDrawable(getReso
-// urces().getDrawable(R.color.action_bar_background));
+//        getActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.action_bar_background));
     }
 
     @Override
@@ -320,4 +334,65 @@ public class BidanHomeActivity extends SecuredActivity {
             }
         }
     };
+
+//    FacialActivity Recognition
+    public static boolean activityStartedOnce = false;
+
+    private void initSingleRun() {
+
+        if (!activityStartedOnce) {
+            activityStartedOnce = true;
+            // Check if FacialActivity Recognition feature is supported, else give alert.
+            boolean isSupported = FacialProcessing.isFeatureSupported(FacialProcessing.FEATURE_LIST.FEATURE_FACIAL_RECOGNITION);
+            if (isSupported) {
+//                Log.d(TAG, "Feature FacialActivity Recognition is supported");
+                FlurryFacade.logEvent("Awesome!, Feature FacialActivity Recognition is supported");
+
+                loadAlbum(); // De-serialize a previously stored album.
+                if (faceObj != null) {
+                    faceObj.setRecognitionConfidence(PhotoLiveConstant.CONFIDENCE_VALUE);
+//                    faceObj.setProcessingMode(FacialProcessing.FP_MODES.FP_MODE_STILL);
+                } else{
+                    throw new UnsupportedOperationException("An instance is already in use");
+                }
+            } else
+
+            {
+                Log.e(TAG, "Feature FacialActivity Recognition is NOT supported");
+//                FlurryFacade.logEvent("Sorry, FacialActivity Recognition Feature is NOT supported!");
+                AlertDialog.Builder builder= new AlertDialog.Builder(this);
+
+                builder.setTitle("Incompatible Hardware!");
+                builder.setMessage("Your Smartphone doesn't support Qualcomm's FacialActivity Recognition feature.");
+                builder.setNegativeButton("OK",
+                        new DialogInterface.OnClickListener(){
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                BidanHomeActivity.this.finish();
+                            }});
+                builder.show();
+
+            }
+        }
+    }
+
+    public void loadAlbum() {
+        Toast.makeText(BidanHomeActivity.this, "Load FacialActivity Album", Toast.LENGTH_SHORT).show();
+        SharedPreferences settings = getSharedPreferences(PhotoLiveConstant.ALBUM_NAME, 0);
+        String arrayOfString = settings.getString("albumArray", null);
+
+        byte[] albumArray;
+        if (arrayOfString != null) {
+            String[] splitStringArray = arrayOfString.substring(1,
+                    arrayOfString.length() - 1).split(", ");
+
+            albumArray = new byte[splitStringArray.length];
+            for (int i = 0; i < splitStringArray.length; i++) {
+                albumArray[i] = Byte.parseByte(splitStringArray[i]);
+            }
+            faceObj.deserializeRecognitionAlbum(albumArray);
+            Log.e(TAG, "De-Serialized Album");
+        }
+    }
+
 }

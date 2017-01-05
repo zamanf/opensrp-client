@@ -1,21 +1,18 @@
 package org.ei.opensrp.indonesia.kartu_ibu;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.media.ThumbnailUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.google.common.base.Strings;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ei.opensrp.commonregistry.AllCommonsRepository;
@@ -23,41 +20,22 @@ import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.commonregistry.CommonPersonObjectController;
 import org.ei.opensrp.cursoradapter.SmartRegisterCLientsProviderForCursorAdapter;
-import org.ei.opensrp.domain.Alert;
 import org.ei.opensrp.indonesia.R;
-
-import org.ei.opensrp.provider.SmartRegisterClientsProvider;
+import org.ei.opensrp.indonesia.face.util.FaceConstants;
 import org.ei.opensrp.repository.DetailsRepository;
 import org.ei.opensrp.service.AlertService;
-import org.ei.opensrp.util.DateUtil;
-import org.ei.opensrp.view.contract.AlertDTO;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.contract.SmartRegisterClients;
 import org.ei.opensrp.view.dialog.FilterOption;
 import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
-import org.ei.opensrp.view.viewHolder.ECProfilePhotoLoader;
 import org.ei.opensrp.view.viewHolder.OnClickFormLauncher;
-import org.ei.opensrp.view.viewHolder.ProfilePhotoLoader;
-import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.joda.time.Months;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.List;
-
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
-import static org.ei.opensrp.util.StringUtil.humanize;
-import static org.ei.opensrp.view.controller.ECSmartRegisterController.STATUS_DATE_FIELD;
-import static org.ei.opensrp.view.controller.ECSmartRegisterController.STATUS_TYPE_FIELD;
 import static org.joda.time.LocalDateTime.parse;
 
 /**
@@ -94,6 +72,7 @@ public class KIClientsProvider implements SmartRegisterCLientsProviderForCursorA
         ViewHolder viewHolder;
 
         if(convertView.getTag() == null || !(convertView.getTag() instanceof  ViewHolder)){
+
             viewHolder = new ViewHolder();
             viewHolder.profilelayout =  (LinearLayout)convertView.findViewById(R.id.profile_info_layout);
             viewHolder.wife_name = (TextView)convertView.findViewById(R.id.wife_name);
@@ -131,7 +110,9 @@ public class KIClientsProvider implements SmartRegisterCLientsProviderForCursorA
         viewHolder.follow_up.setTag(smartRegisterClient);
         viewHolder.profilelayout.setOnClickListener(onClickListener);
         viewHolder.profilelayout.setTag(smartRegisterClient);
+
         CommonPersonObjectClient pc = (CommonPersonObjectClient) smartRegisterClient;
+
         if (iconPencilDrawable == null) {
             iconPencilDrawable = context.getResources().getDrawable(R.drawable.ic_pencil);
         }
@@ -143,18 +124,23 @@ public class KIClientsProvider implements SmartRegisterCLientsProviderForCursorA
         DetailsRepository detailsRepository = org.ei.opensrp.Context.getInstance().detailsRepository();
         detailsRepository.updateDetails(pc);
 
-
+        System.out.println("Detail: " + pc.getDetails().toString());
 
         //set image
         final ImageView kiview = (ImageView)convertView.findViewById(R.id.img_profile);
         if (pc.getDetails().get("profilepic") != null) {
-            KIDetailActivity.setImagetoHolderFromUri((Activity) context, pc.getDetails().get("profilepic"), kiview, R.mipmap.woman_placeholder);
-            kiview.setTag(smartRegisterClient);
-        }
-        else {
+//            KIDetailActivity.setImagetoHolderFromUri((Activity) context, pc.getDetails().get("profilepic"), kiview, R.mipmap.woman_placeholder);
+//            kiview.setTag(smartRegisterClient);
+            final int THUMBSIZE = FaceConstants.THUMBSIZE;
 
-                viewHolder.profilepic.setImageDrawable(context.getResources().getDrawable(R.drawable.woman_placeholder));
+            Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(pc.getDetails().get("profilepic") ),
+                    THUMBSIZE, THUMBSIZE);
+            kiview.setImageBitmap(ThumbImage);
+
+        } else {
+            viewHolder.profilepic.setImageDrawable(context.getResources().getDrawable(R.drawable.woman_placeholder));
         }
+
         viewHolder.wife_name.setText(pc.getColumnmaps().get("namalengkap")!=null?pc.getColumnmaps().get("namalengkap"):"");
         viewHolder.husband_name.setText(pc.getColumnmaps().get("namaSuami")!=null?pc.getColumnmaps().get("namaSuami"):"");
         viewHolder.village_name.setText(pc.getDetails().get("address1")!=null?pc.getDetails().get("address1"):"");
@@ -342,9 +328,9 @@ public class KIClientsProvider implements SmartRegisterCLientsProviderForCursorA
         TextView edd_due;
         TextView children_age_left;
         TextView anc_status_layout;
-         TextView visit_status;
-         TextView date_status;
-         TextView children_age_right;
+        TextView visit_status;
+        TextView date_status;
+        TextView children_age_right;
         ImageView hr_badge;
         ImageView hrpp_badge;
         ImageView bpl_badge;

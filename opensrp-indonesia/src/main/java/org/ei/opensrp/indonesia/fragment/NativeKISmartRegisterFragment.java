@@ -1,7 +1,9 @@
 package org.ei.opensrp.indonesia.fragment;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -9,7 +11,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import org.apache.commons.lang3.StringUtils;
 import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.AllCommonsRepository;
 import org.ei.opensrp.commonregistry.CommonPersonObject;
@@ -21,12 +22,12 @@ import org.ei.opensrp.cursoradapter.CursorCommonObjectSort;
 import org.ei.opensrp.cursoradapter.SecuredNativeSmartRegisterCursorAdapterFragment;
 import org.ei.opensrp.cursoradapter.SmartRegisterPaginatedCursorAdapter;
 import org.ei.opensrp.cursoradapter.SmartRegisterQueryBuilder;
-import org.ei.opensrp.indonesia.kartu_ibu.AllKartuIbuServiceMode;
 import org.ei.opensrp.indonesia.LoginActivity;
 import org.ei.opensrp.indonesia.R;
-
-import org.ei.opensrp.indonesia.kartu_ibu.KICommonObjectFilterOption;
+import org.ei.opensrp.indonesia.face.SmartShutterActivity;
+import org.ei.opensrp.indonesia.kartu_ibu.AllKartuIbuServiceMode;
 import org.ei.opensrp.indonesia.kartu_ibu.KIClientsProvider;
+import org.ei.opensrp.indonesia.kartu_ibu.KICommonObjectFilterOption;
 import org.ei.opensrp.indonesia.kartu_ibu.KIDetailActivity;
 import org.ei.opensrp.indonesia.kartu_ibu.NativeKISmartRegisterActivity;
 import org.ei.opensrp.indonesia.lib.FlurryFacade;
@@ -65,6 +66,7 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
  */
 public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCursorAdapterFragment {
 
+    private static final String TAG = NativeKISmartRegisterFragment.class.getSimpleName();
     private SmartRegisterClientsProvider clientProvider = null;
     private CommonPersonObjectController controller;
     private VillageController villageController;
@@ -370,9 +372,43 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
         }
 
     }
+
+    /**
+     *
+     * @param view
+     */
     @Override
     public void setupSearchView(View view) {
         searchView = (EditText) view.findViewById(org.ei.opensrp.R.id.edt_search);
+        searchView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CharSequence selections[] = new CharSequence[] {"Name", "Photo"};
+                final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("");
+                builder.setItems(selections, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int opt) {
+                        if (opt == 0) searchTextChangeListener() ; else getFacialRecord();
+                    }
+                });
+                builder.show();
+
+            }
+        });
+
+
+        searchCancelView = view.findViewById(org.ei.opensrp.R.id.btn_search_cancel);
+        searchCancelView.setOnClickListener(searchCancelHandler);
+    }
+
+    private void getFacialRecord() {
+        Intent intent = new Intent(getActivity(),SmartShutterActivity.class);
+        intent.putExtra("IdentifyPerson", true);
+        startActivity(intent);
+    }
+
+    private void searchTextChangeListener() {
         searchView.setHint(getNavBarOptionsProvider().searchHint());
         searchView.addTextChangedListener(new TextWatcher() {
             @Override
@@ -383,7 +419,7 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
             public void onTextChanged(final CharSequence cs, int start, int before, int count) {
 
                 (new AsyncTask() {
-                    SmartRegisterClients filteredClients;
+//                    SmartRegisterClients filteredClients;
 
                     @Override
                     protected Object doInBackground(Object[] params) {
@@ -395,7 +431,7 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
 //
                         filters = cs.toString();
                         joinTable = "";
-                        mainCondition = " is_closed = 0 ";
+                        mainCondition = " is_closed = 0 and jenisKontrasepsi != '0' ";
                         return null;
                     }
 
@@ -418,8 +454,7 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
             public void afterTextChanged(Editable editable) {
             }
         });
-        searchCancelView = view.findViewById(org.ei.opensrp.R.id.btn_search_cancel);
-        searchCancelView.setOnClickListener(searchCancelHandler);
+
     }
 
     public void updateSearchView(){
