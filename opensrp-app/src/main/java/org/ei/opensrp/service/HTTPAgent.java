@@ -43,11 +43,13 @@ import org.ei.opensrp.util.FileUtilities;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.security.KeyStore;
 
 import javax.net.ssl.SSLException;
 
 import static org.ei.opensrp.AllConstants.REALM;
+import static org.ei.opensrp.domain.LoginResponse.MALFORMED_URL;
 import static org.ei.opensrp.domain.LoginResponse.NO_INTERNET_CONNECTIVITY;
 import static org.ei.opensrp.domain.LoginResponse.SUCCESS;
 import static org.ei.opensrp.domain.LoginResponse.UNAUTHORIZED;
@@ -119,6 +121,7 @@ public class HTTPAgent {
     public LoginResponse urlCanBeAccessWithGivenCredentials(String requestURL, String userName, String password) {
         setCredentials(userName, password);
         try {
+            requestURL=requestURL.replaceAll("\\s+","");
             HttpResponse response = httpClient.execute(new HttpGet(requestURL));
             int statusCode = response.getStatusLine().getStatusCode();
             if (statusCode == HttpStatus.SC_OK) {
@@ -130,9 +133,12 @@ public class HTTPAgent {
                 logError("Bad response from Dristhi. Status code:  " + statusCode + " username: " + userName + " using " + requestURL);
                 return UNKNOWN_RESPONSE;
             }
-        } catch (IOException e) {
+        }catch (IOException e) {
             logError("Failed to check credentials of: " + userName + " using " + requestURL + ". Error: " + e.toString());
             return NO_INTERNET_CONNECTIVITY;
+        }catch (IllegalArgumentException e){
+            return MALFORMED_URL;
+
         }
     }
 
