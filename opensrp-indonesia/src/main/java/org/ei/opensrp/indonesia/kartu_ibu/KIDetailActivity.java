@@ -177,7 +177,9 @@ public class KIDetailActivity extends Activity {
 
         //detail
         village.setText(": "+humanize(kiclient.getDetails().get("cityVillage") != null ? kiclient.getDetails().get("cityVillage") : "-"));
+//        village.setText(": "+humanize(kiclient.getDetails().get("id") != null ? kiclient.getDetails().get("id") : "-"));
         subvillage.setText(": "+humanize (kiclient.getDetails().get("address1") != null ? kiclient.getDetails().get("address1") : "-"));
+//        subvillage.setText(": "+humanize (kiclient.getDetails().get("id") != null ? kiclient.getDetails().get("id") : "-"));
         age.setText(": "+humanize(kiclient.getColumnmaps().get("umur") != null ? kiclient.getColumnmaps().get("umur") : "-"));
         alamat.setText(": "+humanize(kiclient.getDetails().get("address3") != null ? kiclient.getDetails().get("address3") : "-"));
         education.setText(": "+humanize(kiclient.getDetails().get("pendidikan") != null ? kiclient.getDetails().get("pendidikan") : "-"));

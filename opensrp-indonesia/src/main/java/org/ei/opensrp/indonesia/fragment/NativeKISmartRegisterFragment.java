@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -166,8 +167,6 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
         };
     }
 
-
-
     @Override
     protected SmartRegisterClientsProvider clientsProvider() {
 //        if (clientProvider == null) {
@@ -201,15 +200,16 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
     private String filterStringForAll(){
         return "";
     }
+
     private String sortByAlertmethod() {
-        return " CASE WHEN alerts.status = 'urgent' THEN '1'"
-                +
+        return " CASE WHEN alerts.status = 'urgent' THEN '1'" +
                 "WHEN alerts.status = 'upcoming' THEN '2'\n" +
                 "WHEN alerts.status = 'normal' THEN '3'\n" +
                 "WHEN alerts.status = 'expired' THEN '4'\n" +
                 "WHEN alerts.status is Null THEN '5'\n" +
                 "Else alerts.status END ASC";
     }
+
     public String KartuIbuMainCount(){
         return "Select Count(*) from ec_kartu_ibu";
     }
@@ -292,11 +292,10 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
         }
     }
 
-
-
     private String KiSortByNameAZ() {
         return " namalengkap ASC";
     }
+
     private String KiSortByNameZA() {
         return " namalengkap DESC";
     }
@@ -304,6 +303,7 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
     private String KiSortByAge() {
         return " umur DESC";
     }
+
     private String KiSortByNoIbu() {
         return " noIbu ASC";
     }
@@ -311,7 +311,6 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
     private String KiSortByEdd() {
          return " htp IS NULL, htp";
     }
-
 
     private class EditDialogOptionModel implements DialogOptionModel {
         @Override
@@ -418,6 +417,7 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
             @Override
             public void onTextChanged(final CharSequence cs, int start, int before, int count) {
 
+                Log.e(TAG, "onTextChanged: "+"Number" );
                 (new AsyncTask() {
 //                    SmartRegisterClients filteredClients;
 
@@ -511,6 +511,7 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
             }
         });
     }
+
     public void addChildToList(ArrayList<DialogOption> dialogOptionslist,Map<String,TreeNode<String, Location>> locationMap){
         for(Map.Entry<String, TreeNode<String, Location>> entry : locationMap.entrySet()) {
 
@@ -525,6 +526,5 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
             }
         }
     }
-
 
 }

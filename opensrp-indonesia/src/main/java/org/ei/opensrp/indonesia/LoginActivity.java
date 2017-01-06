@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -54,6 +55,7 @@ import static org.ei.opensrp.util.Log.logVerbose;
 
 public class LoginActivity extends Activity {
 
+    private final static String TAG = LoginActivity.class.getSimpleName();
     private Context context;
     private EditText userNameEditText;
     private EditText passwordEditText;
@@ -95,11 +97,27 @@ public class LoginActivity extends Activity {
         getActionBar().setBackgroundDrawable(getResources().getDrawable(org.ei.opensrp.indonesia.R.color.action_bar_background));
         setLanguage();
 
-        View view = null;
-        localLogin(view, "ec_bidan", "Satu2345");
+//        View view = null;
+        LayoutInflater inflater=getLayoutInflater();
+        View view=inflater.inflate(R.layout.login,null);
+//        localLogin(view,"ec_bidan", "Satu2345");
+//        localLoginWith("ec_bidan", "Satu2345");
 
 
     }
+
+    private void localLogin(String userName, String password) {
+        if (context.userService().isValidLocalLogin(userName, password)) {
+            localLoginWith(userName, password);
+            android.util.Log.e(TAG, "localLogin: "+"OK" );
+        } else {
+            android.util.Log.e(TAG, "localLogin: "+"NOK" );
+            showErrorDialog(getString(org.ei.opensrp.R.string.login_failed_dialog_message));
+//            view.setClickable(true);
+        }
+
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
