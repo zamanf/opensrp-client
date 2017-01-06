@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import org.apache.commons.lang3.StringUtils;
 import org.ei.opensrp.Context;
 import org.ei.opensrp.cursoradapter.CursorCommonObjectSort;
+import org.ei.opensrp.cursoradapter.SecuredNativeSmartRegisterCursorAdapterFragment;
 import org.ei.opensrp.path.R;
 import org.ei.opensrp.path.option.BasicSearchOption;
 import org.ei.opensrp.path.option.DateSort;
@@ -34,7 +35,7 @@ import util.barcode.Barcode;
 import util.barcode.BarcodeIntentIntegrator;
 import util.barcode.BarcodeIntentResult;
 
-public abstract class SmartClientRegisterFragment extends SecuredNativeSmartRegisterFragment {
+public abstract class SmartClientRegisterFragment extends SecuredNativeSmartRegisterCursorAdapterFragment {
 
     public CESQLiteHelper getClientEventDb() {
         return ceDb;

@@ -10,17 +10,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
+import org.ei.opensrp.cursoradapter.SmartRegisterCLientsProviderForCursorAdapter;
 import org.ei.opensrp.domain.Alert;
-import org.ei.opensrp.service.AlertService;
-import org.ei.opensrp.util.StringUtil;
 import org.ei.opensrp.path.R;
 import org.ei.opensrp.path.db.VaccineRepo;
+import org.ei.opensrp.service.AlertService;
+import org.ei.opensrp.util.StringUtil;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.contract.SmartRegisterClients;
 import org.ei.opensrp.view.dialog.FilterOption;
 import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
-import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.view.viewHolder.OnClickFormLauncher;
 import org.joda.time.DateTime;
 import org.joda.time.Months;
@@ -43,7 +43,7 @@ import static util.VaccinatorUtils.nextVaccineDue;
 /**
  * Created by Ahmed on 13-Oct-15.
  */
-public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
+public class ChildSmartClientsProvider implements SmartRegisterCLientsProviderForCursorAdapter {
     private final LayoutInflater inflater;
     private final Context context;
     private final View.OnClickListener onClickListener;
@@ -61,7 +61,7 @@ public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
     }
 
     @Override
-    public View getView(SmartRegisterClient client, View convertView, ViewGroup viewGroup) {
+    public void getView(SmartRegisterClient client, View convertView) {
         CommonPersonObjectClient pc = (CommonPersonObjectClient) client;
 
         fillValue((TextView) convertView.findViewById(R.id.child_id), pc.getColumnmaps(), "program_client_id", false);
@@ -158,7 +158,7 @@ public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
         convertView.findViewById(R.id.child_profile_info_layout).setOnClickListener(onClickListener);
 
         convertView.setLayoutParams(clientViewLayoutParams);
-        return convertView;
+
     }
 
     private void deactivateNextVaccine(String vaccineViewText, String vaccineDateText, int color, View convertView){
@@ -189,12 +189,6 @@ public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
     }
 
     @Override
-    public SmartRegisterClients getClients() {
-
-        throw new UnsupportedOperationException("Operation not supported");
-    }
-
-    @Override
     public SmartRegisterClients updateClients(FilterOption villageFilter, ServiceModeOption serviceModeOption, FilterOption searchFilter, SortOption sortOption) {
         throw new UnsupportedOperationException("Operation not supported");
     }
@@ -209,9 +203,8 @@ public class ChildSmartClientsProvider implements SmartRegisterClientsProvider {
         throw new UnsupportedOperationException("Operation not supported");
     }
 
-    // FIXME path_conflict
-    //@Override
-    public View inflateLayoutForAdapter() {
+    @Override
+    public View inflatelayoutForCursorAdapter() {
         ViewGroup view = (ViewGroup) inflater().inflate(R.layout.smart_register_child_client, null);
         return view;
     }
