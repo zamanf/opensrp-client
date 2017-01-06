@@ -43,6 +43,10 @@
         <item name="android:paddingLeft">0dp</item>
     </style>
 
+    <style name="CustomFontTextViewStyle.ListView.Small.Bold" parent="CustomFontTextViewStyle">
+        <item name="fontVariant">bold</item>
+    </style>
+
     <style name="CustomFontTextViewStyle.ListView.Small.NoHeight" parent="@android:style/Widget.TextView">
         <item name="fontVariant">medium</item>
         <item name="android:textColor">@android:color/black</item>

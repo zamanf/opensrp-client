@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.ei.opensrp.path">
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <application
+        android:name="org.ei.opensrp.path.application.VaccinatorApplication"
+        android:allowBackup="true" >
+
+        <activity
+            android:name="org.ei.opensrp.path.LoginActivity"
+            android:screenOrientation="landscape" android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="org.ei.opensrp.path.VaccinatorHomeActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppThemeNoTitle" />
+        <activity
+            android:name="org.ei.opensrp.path.child.ChildSmartRegisterActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppThemeNoTitle" />
+        <activity
+            android:name="org.ei.opensrp.path.child.ChildDetailActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppThemeNoTitle" />
+        <activity
+            android:name="org.ei.opensrp.path.field.FieldMonitorSmartRegisterActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppThemeNoTitle" />
+        <activity
+            android:name="org.ei.opensrp.path.field.FieldMonitorDailyDetailActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppThemeNoTitle" />
+        <activity
+            android:name="org.ei.opensrp.path.field.FieldMonitorMonthlyDetailActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppThemeNoTitle" />
+        <activity
+            android:name="org.ei.opensrp.path.woman.WomanSmartRegisterActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppThemeNoTitle" />
+        <activity
+            android:name="org.ei.opensrp.path.woman.WomanDetailActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppThemeNoTitle" />
+        <activity
+            android:name="org.ei.opensrp.path.report.VaccineReport"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <receiver android:name="org.ei.opensrp.path.application.CESyncReceiver" />
+
+        <activity android:name="org.ei.opensrp.path.ProviderProfileActivity"></activity>
+    </application>
+
+</manifest>
