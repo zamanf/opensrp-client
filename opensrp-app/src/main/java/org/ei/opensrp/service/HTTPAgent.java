@@ -43,7 +43,6 @@ import org.ei.opensrp.util.FileUtilities;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.security.KeyStore;
 
 import javax.net.ssl.SSLException;
@@ -137,6 +136,7 @@ public class HTTPAgent {
             logError("Failed to check credentials of: " + userName + " using " + requestURL + ". Error: " + e.toString());
             return NO_INTERNET_CONNECTIVITY;
         }catch (IllegalArgumentException e){
+            logError(e.getMessage());
             return MALFORMED_URL;
 
         }
