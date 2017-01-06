@@ -23,7 +23,7 @@ import org.ei.opensrp.util.FormUtils;
 import org.ei.opensrp.path.R;
 import org.ei.opensrp.path.domain.FormSubmissionWrapper;
 import org.ei.opensrp.path.domain.VaccineWrapper;
-import org.ei.opensrp.path.view.VaccinationDialogFragment;
+import org.ei.opensrp.path.fragment.VaccinationDialogFragment;
 import org.json.JSONException;
 import org.json.JSONObject;
 

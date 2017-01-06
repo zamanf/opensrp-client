@@ -4,6 +4,8 @@ import android.content.res.Configuration;
 
 import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.CommonFtsObject;
+import org.ei.opensrp.path.receiver.CESyncReceiver;
+import org.ei.opensrp.path.receiver.ConfigSyncReceiver;
 import org.ei.opensrp.sync.DrishtiSyncScheduler;
 import org.ei.opensrp.view.activity.DrishtiApplication;
 import org.ei.opensrp.view.receiver.SyncBroadcastReceiver;

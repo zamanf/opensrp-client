@@ -14,7 +14,7 @@
         android:allowBackup="true" >
 
         <activity
-            android:name="org.ei.opensrp.path.LoginActivity"
+            android:name=".activity.LoginActivity"
             android:screenOrientation="landscape" android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,49 +22,49 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="org.ei.opensrp.path.VaccinatorHomeActivity"
+            android:name=".activity.VaccinatorHomeActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="landscape"
             android:theme="@style/AppThemeNoTitle" />
         <activity
-            android:name="org.ei.opensrp.path.child.ChildSmartRegisterActivity"
+            android:name=".activity.ChildSmartRegisterActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="landscape"
             android:theme="@style/AppThemeNoTitle" />
         <activity
-            android:name="org.ei.opensrp.path.child.ChildDetailActivity"
+            android:name=".activity.ChildDetailActivity"
             android:screenOrientation="landscape"
             android:theme="@style/AppThemeNoTitle" />
         <activity
-            android:name="org.ei.opensrp.path.field.FieldMonitorSmartRegisterActivity"
+            android:name=".activity.FieldMonitorSmartRegisterActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="landscape"
             android:theme="@style/AppThemeNoTitle" />
         <activity
-            android:name="org.ei.opensrp.path.field.FieldMonitorDailyDetailActivity"
+            android:name=".activity.FieldMonitorDailyDetailActivity"
             android:screenOrientation="landscape"
             android:theme="@style/AppThemeNoTitle" />
         <activity
-            android:name="org.ei.opensrp.path.field.FieldMonitorMonthlyDetailActivity"
+            android:name=".activity.FieldMonitorMonthlyDetailActivity"
             android:screenOrientation="landscape"
             android:theme="@style/AppThemeNoTitle" />
         <activity
-            android:name="org.ei.opensrp.path.woman.WomanSmartRegisterActivity"
+            android:name=".activity.WomanSmartRegisterActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="landscape"
             android:theme="@style/AppThemeNoTitle" />
         <activity
-            android:name="org.ei.opensrp.path.woman.WomanDetailActivity"
+            android:name=".activity.WomanDetailActivity"
             android:screenOrientation="landscape"
             android:theme="@style/AppThemeNoTitle" />
         <activity
-            android:name="org.ei.opensrp.path.report.VaccineReport"
+            android:name=".activity.VaccineReportActivity"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.NoActionBar"></activity>
 
-        <receiver android:name="org.ei.opensrp.path.application.CESyncReceiver" />
+        <receiver android:name=".receiver.CESyncReceiver" />
 
-        <activity android:name="org.ei.opensrp.path.ProviderProfileActivity"></activity>
+        <activity android:name=".activity.ProviderProfileActivity"></activity>
     </application>
 
 </manifest>
