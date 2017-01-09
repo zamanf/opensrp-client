@@ -39,8 +39,8 @@ public class CESyncReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent arg1) {
         db = new CESQLiteHelper(context);
         try {
-            AsyncCallWS task = new AsyncCallWS(context);
-            task.execute();
+            // AsyncCallWS task = new AsyncCallWS(context);
+            // task.execute();
         }catch (RuntimeException e){
             Log.i(CESyncReceiver.class.getName(), "RuntimeException: ", e);
         }

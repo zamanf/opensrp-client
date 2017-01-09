@@ -1,17 +1,12 @@
 package org.ei.opensrp.path.fragment;
 
-import android.annotation.SuppressLint;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.ImageButton;
 
 import org.ei.opensrp.Context;
-import org.ei.opensrp.adapter.SmartRegisterPaginatedAdapter;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
-import org.ei.opensrp.commonregistry.CommonRepository;
 import org.ei.opensrp.cursoradapter.CursorCommonObjectFilterOption;
 import org.ei.opensrp.cursoradapter.CursorCommonObjectSort;
 import org.ei.opensrp.cursoradapter.CursorSortOption;
@@ -22,17 +17,15 @@ import org.ei.opensrp.path.R;
 import org.ei.opensrp.path.activity.ChildDetailActivity;
 import org.ei.opensrp.path.activity.ChildSmartRegisterActivity;
 import org.ei.opensrp.path.activity.LoginActivity;
+import org.ei.opensrp.path.db.Client;
 import org.ei.opensrp.path.option.BasicSearchOption;
 import org.ei.opensrp.path.option.DateSort;
 import org.ei.opensrp.path.option.StatusSort;
-import org.ei.opensrp.path.servicemode.VaccinationServiceModeOption;
 import org.ei.opensrp.path.provider.ChildSmartClientsProvider;
-import org.ei.opensrp.path.db.Client;
+import org.ei.opensrp.path.servicemode.VaccinationServiceModeOption;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
-import org.ei.opensrp.view.contract.SmartRegisterClients;
-import org.ei.opensrp.view.controller.FormController;
 import org.ei.opensrp.view.dialog.DialogOption;
 import org.ei.opensrp.view.dialog.DialogOptionModel;
 import org.ei.opensrp.view.dialog.EditOption;
@@ -41,9 +34,7 @@ import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
-import org.json.JSONException;
 
-import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,13 +43,11 @@ import static android.view.View.VISIBLE;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static util.Utils.getValue;
 import static util.Utils.nonEmptyValue;
-import static util.VaccinatorUtils.getObsValue;
 import static util.VaccinatorUtils.providerDetails;
 
 public class ChildSmartRegisterFragment extends SecuredNativeSmartRegisterCursorAdapterFragment {
     private final ClientActionHandler clientActionHandler = new ClientActionHandler();
 
-    private String locationDialogTAG = "locationDialogTAG";
 
     @Override
     protected SecuredNativeSmartRegisterActivity.DefaultOptionsProvider getDefaultOptionsProvider() {

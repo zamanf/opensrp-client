@@ -2,6 +2,7 @@ package org.ei.opensrp.path.provider;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -91,7 +92,7 @@ public class ChildSmartClientsProvider implements SmartRegisterCLientsProviderFo
             months = Months.monthsBetween(new DateTime(getValue(pc.getColumnmaps(), "dob", false)), DateTime.now()).getMonths();
         }
         catch (Exception e){
-            e.printStackTrace();
+            Log.e(getClass().getName(), "", e);
         }
         fillValue((TextView) convertView.findViewById(R.id.child_age), (months < 0?"":(months+ " months") ));
         fillValue((TextView) convertView.findViewById(R.id.child_epi_number), pc.getColumnmaps(), "epi_card_number", false);

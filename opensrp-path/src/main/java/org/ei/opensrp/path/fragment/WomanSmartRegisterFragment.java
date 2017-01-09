@@ -1,58 +1,52 @@
 package org.ei.opensrp.path.fragment;
 
-import android.annotation.SuppressLint;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.ImageButton;
 
 import org.ei.opensrp.Context;
-import org.ei.opensrp.adapter.SmartRegisterPaginatedAdapter;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.cursoradapter.CursorCommonObjectFilterOption;
 import org.ei.opensrp.cursoradapter.CursorCommonObjectSort;
+import org.ei.opensrp.cursoradapter.CursorSortOption;
+import org.ei.opensrp.cursoradapter.SecuredNativeSmartRegisterCursorAdapterFragment;
+import org.ei.opensrp.cursoradapter.SmartRegisterPaginatedCursorAdapter;
+import org.ei.opensrp.cursoradapter.SmartRegisterQueryBuilder;
 import org.ei.opensrp.path.R;
+import org.ei.opensrp.path.activity.LoginActivity;
 import org.ei.opensrp.path.activity.WomanDetailActivity;
-import org.ei.opensrp.path.option.BasicSearchOption;
-import org.ei.opensrp.path.servicemode.VaccinationServiceModeOption;
+import org.ei.opensrp.path.activity.WomanSmartRegisterActivity;
 import org.ei.opensrp.path.db.Client;
+import org.ei.opensrp.path.option.BasicSearchOption;
+import org.ei.opensrp.path.option.DateSort;
+import org.ei.opensrp.path.option.StatusSort;
 import org.ei.opensrp.path.provider.WomanSmartClientsProvider;
+import org.ei.opensrp.path.servicemode.VaccinationServiceModeOption;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
-import org.ei.opensrp.view.controller.FormController;
+import org.ei.opensrp.view.contract.SmartRegisterClient;
+import org.ei.opensrp.view.dialog.DialogOption;
+import org.ei.opensrp.view.dialog.DialogOptionModel;
+import org.ei.opensrp.view.dialog.EditOption;
 import org.ei.opensrp.view.dialog.FilterOption;
 import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
 import org.joda.time.DateTime;
 import org.joda.time.Years;
-import org.json.JSONException;
 
-import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static util.Utils.getValue;
 import static util.Utils.nonEmptyValue;
-import static util.VaccinatorUtils.getObsValue;
 import static util.VaccinatorUtils.providerDetails;
 
-public class WomanSmartRegisterFragment extends SmartClientRegisterFragment {
+public class WomanSmartRegisterFragment extends SecuredNativeSmartRegisterCursorAdapterFragment {
     private final ClientActionHandler clientActionHandler = new ClientActionHandler();
-
-    public WomanSmartRegisterFragment(){
-        super(null);
-    }
-
-    @SuppressLint("ValidFragment")
-    public WomanSmartRegisterFragment(FormController formController) {
-        super(formController);
-    }
-
-    @Override
-    protected SmartRegisterPaginatedAdapter adapter() {
-        return null;
-        // FIXME path_conflict
-        /* return new SmartRegisterPaginatedCursorAdapter(getActivity(),
-                new SmartRegisterCursorBuilder("pkwoman", null, (CursorSortOption) getDefaultOptionsProvider().sortOption())
-                , clientsProvider()); */
-    }
 
     @Override
     protected SecuredNativeSmartRegisterActivity.DefaultOptionsProvider getDefaultOptionsProvider() {
@@ -90,17 +84,113 @@ public class WomanSmartRegisterFragment extends SmartClientRegisterFragment {
     }
 
     @Override
+    protected SecuredNativeSmartRegisterActivity.NavBarOptionsProvider getNavBarOptionsProvider() {
+        return new SecuredNativeSmartRegisterActivity.NavBarOptionsProvider() {
+
+            @Override
+            public DialogOption[] filterOptions() {
+                return new DialogOption[]{};
+            }
+
+            @Override
+            public DialogOption[] serviceModeOptions() {
+                return new DialogOption[]{
+                };
+            }
+
+            @Override
+            public DialogOption[] sortingOptions() {
+                return new DialogOption[]{
+                        new CursorCommonObjectSort(getResources().getString(R.string.woman_alphabetical_sort), "first_name"),
+                        new DateSort("Age", "dob"),
+                        new StatusSort("Due Status"),
+                        new CursorCommonObjectSort(getResources().getString(R.string.id_sort), "program_client_id")
+                };
+            }
+
+            @Override
+            public String searchHint() {
+                return Context.getInstance().getStringResource(R.string.search_hint);
+            }
+        };
+    }//end of method
+
+    @Override
     protected SmartRegisterClientsProvider clientsProvider() {
-        return new WomanSmartClientsProvider(getActivity(), clientActionHandler, context.alertService());
+        return null;
     }
 
     @Override
     protected void onInitialization() {
-        //   context.formSubmissionRouter().getHandlerMap().put("woman_followup", new WomanFollowupHandler(new WomanService(context.allTimelineEvents(), context.allCommonsRepositoryobjects("pkwoman"), context.alertService())));
     }
 
     @Override
-    protected void onCreation() { }
+    protected void startRegistration() {
+        ((WomanSmartRegisterActivity) getActivity()).startFormActivity("woman_enrollment", null, null);
+    }
+
+    @Override
+    protected void onCreation() {
+    }
+
+    @Override
+    protected void onResumption() {
+        super.onResumption();
+        getDefaultOptionsProvider();
+        if (isPausedOrRefreshList()) {
+            initializeQueries();
+        }
+        updateSearchView();
+        try {
+            LoginActivity.setLanguage();
+        } catch (Exception e) {
+
+        }
+
+    }
+
+    @Override
+    public void setupViews(View view) {
+        super.setupViews(view);
+        view.findViewById(R.id.btn_report_month).setVisibility(INVISIBLE);
+        view.findViewById(R.id.service_mode_selection).setVisibility(INVISIBLE);
+
+        ImageButton startregister = (ImageButton) view.findViewById(org.ei.opensrp.R.id.register_client);
+        startregister.setVisibility(View.GONE);
+        clientsView.setVisibility(View.VISIBLE);
+        clientsProgressView.setVisibility(View.INVISIBLE);
+        setServiceModeViewDrawableRight(null);
+        initializeQueries();
+        updateSearchView();
+    }
+
+    public void initializeQueries() {
+        String tableName = "pkwoman";
+
+        WomanSmartClientsProvider hhscp = new WomanSmartClientsProvider(getActivity(), clientActionHandler, context.alertService());
+        clientAdapter = new SmartRegisterPaginatedCursorAdapter(getActivity(), null, hhscp, Context.getInstance().commonrepository(tableName));
+        clientsView.setAdapter(clientAdapter);
+
+        setTablename(tableName);
+        SmartRegisterQueryBuilder countqueryBUilder = new SmartRegisterQueryBuilder();
+        countqueryBUilder.SelectInitiateMainTableCounts(tableName);
+        countSelect = countqueryBUilder.mainCondition("");
+        mainCondition = "";
+        super.CountExecute();
+
+        SmartRegisterQueryBuilder queryBUilder = new SmartRegisterQueryBuilder();
+        queryBUilder.SelectInitiateMainTable(tableName, new String[]{"relationalid", "details", "program_client_id", "first_name", "husband_name", "father_name", "dob", "epi_card_number", "contact_phone_number", "vaccines", "vaccines_2", "provider_uc", "provider_town", "provider_id", "provider_location_id", "client_reg_date", "last_name", "gender", "father_name", "marriage", "husband_name", "town", "union_council", "address1", "address", "reminders_approval", "final_edd", "final_ga", "tt1_retro", "tt2_retro", "tt3_retro", "tt4_retro", "tt1", "tt2", "tt3", "tt4", "tt5", "date", "pregnant"});
+        mainSelect = queryBUilder.mainCondition("");
+        Sortqueries = ((CursorSortOption) getDefaultOptionsProvider().sortOption()).sort();
+
+        currentlimit = 20;
+        currentoffset = 0;
+
+        super.filterandSortInInitializeQueries();
+
+        updateSearchView();
+        refresh();
+    }
 
     private class ClientActionHandler implements View.OnClickListener {
         @Override
@@ -118,11 +208,61 @@ public class WomanSmartRegisterFragment extends SmartClientRegisterFragment {
                     getActivity().finish();
                     break;
                 case R.id.woman_next_visit_holder:
-                    // FIXME path_conflict
-                    //startForm(formName, (SmartRegisterClient) view.getTag(), map);
+                    showFragmentDialog(new EditDialogOptionModel(map), view.getTag());
                     break;
             }
         }
+    }
+
+    public void updateSearchView() {
+        getSearchView().addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+            }
+
+            @Override
+            public void onTextChanged(final CharSequence cs, int start, int before, int count) {
+
+                if (cs.toString().equalsIgnoreCase("")) {
+                    filters = "";
+                } else {
+                    filters = cs.toString();
+                }
+                joinTable = "";
+                mainCondition = "";
+                getSearchCancelView().setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
+                CountExecute();
+                filterandSortExecute();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+    }
+
+    private class EditDialogOptionModel implements DialogOptionModel {
+        HashMap<String, String> map;
+
+        EditDialogOptionModel(HashMap<String, String> map) {
+            this.map = map;
+        }
+
+        @Override
+        public DialogOption[] getDialogOptions() {
+            return getEditOptions(map);
+        }
+
+        @Override
+        public void onDialogOptionSelection(DialogOption option, Object tag) {
+            onEditSelection((EditOption) option, (SmartRegisterClient) tag);
+        }
+
+    }
+
+    private DialogOption[] getEditOptions(HashMap<String, String> map) {
+        return ((WomanSmartRegisterActivity) getActivity()).getEditOptions(map);
     }
 
     private HashMap<String, String> getPreloadVaccineData(CommonPersonObjectClient client) {
@@ -136,6 +276,8 @@ public class WomanSmartRegisterFragment extends SmartClientRegisterFragment {
         return map;
     }
 
+    //TODO EC model
+    /*
     private HashMap<String, String> getPreloadVaccineData(Client client) throws JSONException, ParseException {
         HashMap<String, String> map = new HashMap<>();
         map.put("e_tt1", getObsValue(getClientEventDb(), client, true, "tt1", "tt1_retro"));
@@ -145,20 +287,21 @@ public class WomanSmartRegisterFragment extends SmartClientRegisterFragment {
         map.put("e_tt5", getObsValue(getClientEventDb(), client, true, "tt5", "tt5_retro"));
 
         return map;
-    }
+    }*/
 
-    @Override
+    //TODO path_conflict
+    //@Override
     protected String getRegistrationForm(HashMap<String, String> overrides) {
         return "woman_enrollment";
     }
 
-    @Override
+    //@Override
     protected String getOAFollowupForm(Client client, HashMap<String, String> overridemap) {
         overridemap.putAll(followupOverrides(client));
         return "offsite_woman_followup";
     }
 
-    @Override
+    //@Override
     protected Map<String, String> customFieldOverrides() {
         Map<String, String> m = new HashMap<>();
         m.put("gender", "female");
@@ -221,7 +364,8 @@ public class WomanSmartRegisterFragment extends SmartClientRegisterFragment {
         Object epi = client.getAttribute("EPI Card Number");
         map.put("existing_epi_card_number", epi == null ? "" : epi.toString());
 
-        try{
+        //TODO EC model
+        /* try{
             map.put("existing_father_name", getObsValue(getClientEventDb(), client, true, "father_name", "1594AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
             map.put("existing_husband_name", getObsValue(getClientEventDb(), client, true, "husband_name", "5617AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
             map.put("husband_name", getObsValue(getClientEventDb(), client, true, "husband_name", "5617AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
@@ -233,7 +377,7 @@ public class WomanSmartRegisterFragment extends SmartClientRegisterFragment {
         }
         catch (Exception e){
             e.printStackTrace();
-        }
+        } */
         return map;
     }
 

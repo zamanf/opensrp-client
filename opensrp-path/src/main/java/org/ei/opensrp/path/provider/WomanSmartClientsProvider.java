@@ -4,24 +4,23 @@ import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
+import org.ei.opensrp.cursoradapter.SmartRegisterCLientsProviderForCursorAdapter;
 import org.ei.opensrp.domain.Alert;
-import org.ei.opensrp.service.AlertService;
-import org.ei.opensrp.util.StringUtil;
 import org.ei.opensrp.path.R;
 import org.ei.opensrp.path.db.VaccineRepo;
+import org.ei.opensrp.service.AlertService;
+import org.ei.opensrp.util.StringUtil;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.contract.SmartRegisterClients;
 import org.ei.opensrp.view.dialog.FilterOption;
 import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
-import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.view.viewHolder.OnClickFormLauncher;
 import org.joda.time.DateTime;
 import org.joda.time.Years;
@@ -43,7 +42,7 @@ import static util.VaccinatorUtils.nextVaccineDue;
  * Created by Ahmed on 19-Oct-15.
  * @author Maimoona
  */
-public class WomanSmartClientsProvider implements SmartRegisterClientsProvider {
+public class WomanSmartClientsProvider implements SmartRegisterCLientsProviderForCursorAdapter {
 
 
     private final LayoutInflater inflater;
@@ -64,7 +63,7 @@ public class WomanSmartClientsProvider implements SmartRegisterClientsProvider {
 
 
     @Override
-    public View getView(SmartRegisterClient client, View convertView, ViewGroup viewGroup) {
+    public void getView(SmartRegisterClient client, View convertView) {
         CommonPersonObjectClient pc = (CommonPersonObjectClient) client;
 
         fillValue((TextView)convertView.findViewById(R.id.woman_id), pc.getColumnmaps(), "program_client_id", false);
@@ -143,7 +142,7 @@ public class WomanSmartClientsProvider implements SmartRegisterClientsProvider {
         convertView.findViewById(R.id.woman_profile_info_layout).setOnClickListener(onClickListener);
 
         convertView.setLayoutParams(clientViewLayoutParams);
-        return convertView;
+
     }
 
     private void deactivateNextVaccine(String vaccineViewText, String vaccineDateText, int color, View convertView){
@@ -174,11 +173,6 @@ public class WomanSmartClientsProvider implements SmartRegisterClientsProvider {
     }
 
     @Override
-    public SmartRegisterClients getClients() {
-        throw new UnsupportedOperationException("Operation not supported");
-    }
-
-    @Override
     public SmartRegisterClients updateClients(FilterOption villageFilter, ServiceModeOption serviceModeOption, FilterOption searchFilter, SortOption sortOption) {
         throw new UnsupportedOperationException("Operation not supported");
     }
@@ -193,9 +187,8 @@ public class WomanSmartClientsProvider implements SmartRegisterClientsProvider {
         throw new UnsupportedOperationException("Operation not supported");
     }
 
-    // FIXME path_conflict
-    //@Override
-    public View inflateLayoutForAdapter() {
+    @Override
+    public View inflatelayoutForCursorAdapter() {
         return inflater().inflate(R.layout.smart_register_woman_client, null);
     }
 
