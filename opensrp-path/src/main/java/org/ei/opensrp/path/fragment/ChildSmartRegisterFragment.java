@@ -191,7 +191,7 @@ public class ChildSmartRegisterFragment extends SecuredNativeSmartRegisterCursor
         super.CountExecute();
 
         SmartRegisterQueryBuilder queryBUilder = new SmartRegisterQueryBuilder();
-        queryBUilder.SelectInitiateMainTable(tableName, new String[]{"relationalid", "details","program_client_id", "epi_card_number", "first_name", "last_name", "father_name", "mother_name", "contact_phone_number", "dob"});
+        queryBUilder.SelectInitiateMainTable(tableName, new String[]{"relationalid", "details", "program_client_id", "first_name", "last_name", "gender", "mother_name", "father_name", "dob", "epi_card_number", "contact_phone_number", "provider_uc", "provider_town", "provider_id", "provider_location_id", "client_reg_date", "vaccines_2", "bcg", "opv0", "pcv1", "opv1", "penta1", "pcv2", "opv2", "penta2", "pcv3", "opv3", "penta3", "ipv", "measles1", "measles2", "bcg_retro", "opv0_retro", "pcv1_retro", "opv1_retro", "penta1_retro", "pcv2_retro", "opv2_retro", "penta2_retro", "pcv3_retro", "opv3_retro", "penta3_retro", "ipv_retro", "measles1_retro", "measles2_retro" });
         mainSelect = queryBUilder.mainCondition("");
         Sortqueries = ((CursorSortOption) getDefaultOptionsProvider().sortOption()).sort();
 
