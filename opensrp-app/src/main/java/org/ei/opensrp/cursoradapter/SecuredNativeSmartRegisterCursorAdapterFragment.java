@@ -245,7 +245,6 @@ public abstract class SecuredNativeSmartRegisterCursorAdapterFragment extends Se
 
             @Override
             public void onTextChanged(CharSequence cs, int start, int before, int count) {
-
             }
 
             @Override

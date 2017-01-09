@@ -214,9 +214,7 @@ public class KIClientsProvider implements SmartRegisterCLientsProviderForCursorA
       //  return convertView;
     }
 
-    
-
-    //    @Override
+//    @Override
     public SmartRegisterClients getClients() {
         return controller.getClients();
     }
@@ -305,9 +303,7 @@ public class KIClientsProvider implements SmartRegisterCLientsProviderForCursorA
         else {
             TextMonth.setText("-");
         }
-
     }
-
 
     class ViewHolder {
 

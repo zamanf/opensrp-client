@@ -1,9 +1,7 @@
 package org.ei.opensrp.indonesia.fragment;
 
-import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -197,6 +195,7 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
 //        list.setBackgroundColor(Color.RED);
         initializeQueries();
     }
+
     private String filterStringForAll(){
         return "";
     }
@@ -217,7 +216,17 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
     public void initializeQueries(){
         try {
         KIClientsProvider kiscp = new KIClientsProvider(getActivity(),clientActionHandler,context.alertService());
-        clientAdapter = new SmartRegisterPaginatedCursorAdapter(getActivity(), null, kiscp, new CommonRepository("ec_kartu_ibu",new String []{"ec_kartu_ibu.is_closed", "ec_kartu_ibu.namalengkap", "ec_kartu_ibu.umur","ec_kartu_ibu.namaSuami","ec_anak.namaBayi","ec_anak.tanggalLahirAnak","noIbu","ec_kartu_ibu.isOutOfArea"}));
+        clientAdapter = new SmartRegisterPaginatedCursorAdapter(getActivity(), null, kiscp,
+                new CommonRepository(
+                        "ec_kartu_ibu",
+                        new String []{"ec_kartu_ibu.is_closed",
+                                "ec_kartu_ibu.namalengkap",
+                                "ec_kartu_ibu.umur",
+                                "ec_kartu_ibu.namaSuami",
+                                "ec_anak.namaBayi",
+                                "ec_anak.tanggalLahirAnak",
+                                "noIbu",
+                                "ec_kartu_ibu.isOutOfArea"}));
         clientsView.setAdapter(clientAdapter);
 
         setTablename("ec_kartu_ibu");
@@ -229,10 +238,21 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
         countSelect = countqueryBUilder.mainCondition(mainCondition);
         super.CountExecute();
 
-        SmartRegisterQueryBuilder queryBUilder = new SmartRegisterQueryBuilder();
-        queryBUilder.SelectInitiateMainTable("ec_kartu_ibu", new String[]{"ec_kartu_ibu.relationalid","ec_kartu_ibu.is_closed", "ec_kartu_ibu.details", "ec_kartu_ibu.isOutOfArea", "ec_kartu_ibu.namalengkap", "ec_kartu_ibu.umur", "ec_kartu_ibu.namaSuami",  "ec_anak.namaBayi", "ec_anak.tanggalLahirAnak", "noIbu"});
-        queryBUilder.customJoin("LEFT JOIN ec_anak ON ec_kartu_ibu.id = ec_anak.relational_id ");
-        mainSelect = queryBUilder.mainCondition(mainCondition);
+        SmartRegisterQueryBuilder queryBuilder = new SmartRegisterQueryBuilder();
+        queryBuilder.SelectInitiateMainTable("ec_kartu_ibu",
+                new String[]{
+                        "ec_kartu_ibu.relationalid",
+                        "ec_kartu_ibu.is_closed",
+                        "ec_kartu_ibu.details",
+                        "ec_kartu_ibu.isOutOfArea",
+                        "ec_kartu_ibu.namalengkap",
+                        "ec_kartu_ibu.umur",
+                        "ec_kartu_ibu.namaSuami",
+                        "ec_anak.namaBayi",
+                        "ec_anak.tanggalLahirAnak",
+                        "noIbu"});
+        queryBuilder.customJoin("LEFT JOIN ec_anak ON ec_kartu_ibu.id = ec_anak.relational_id ");
+        mainSelect = queryBuilder.mainCondition(mainCondition);
         Sortqueries = KiSortByNameAZ();
 
         currentlimit = 20;
@@ -249,7 +269,6 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
         }
         
     }
-
 
     @Override
     public void startRegistration() {
@@ -304,9 +323,7 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
         return " umur DESC";
     }
 
-    private String KiSortByNoIbu() {
-        return " noIbu ASC";
-    }
+    private String KiSortByNoIbu() { return " noIbu ASC"; }
 
     private String KiSortByEdd() {
          return " htp IS NULL, htp";
@@ -379,26 +396,27 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
     @Override
     public void setupSearchView(View view) {
         searchView = (EditText) view.findViewById(org.ei.opensrp.R.id.edt_search);
-        searchView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CharSequence selections[] = new CharSequence[] {"Name", "Photo"};
-                final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("");
-                builder.setItems(selections, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int opt) {
-                        if (opt == 0) searchTextChangeListener() ; else getFacialRecord();
-                    }
-                });
-                builder.show();
-
-            }
-        });
-
-
+//        searchView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                CharSequence selections[] = new CharSequence[] {"Name", "Photo"};
+//                final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//                builder.setTitle("");
+//                builder.setItems(selections, new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int opt) {
+//                        if (opt == 0) searchTextChangeListener() ; else getFacialRecord();
+//                        searchTextChangeListener();
+//                    }
+//                });
+//                builder.show();
+//
+//            }
+//        });
+//
+//
         searchCancelView = view.findViewById(org.ei.opensrp.R.id.btn_search_cancel);
-        searchCancelView.setOnClickListener(searchCancelHandler);
+//        searchCancelView.setOnClickListener(searchCancelHandler);
     }
 
     private void getFacialRecord() {
@@ -417,7 +435,7 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
             @Override
             public void onTextChanged(final CharSequence cs, int start, int before, int count) {
 
-                Log.e(TAG, "onTextChanged: "+"Number" );
+                Log.e(TAG, "onTextChanged: "+searchView.getText() );
                 (new AsyncTask() {
 //                    SmartRegisterClients filteredClients;
 
@@ -429,24 +447,26 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
 //                                .updateClients(getCurrentVillageFilter(), getCurrentServiceModeOption(),
 //                                        getCurrentSearchFilter(), getCurrentSortOption());
 //
+
                         filters = cs.toString();
-                        joinTable = "";
-                        mainCondition = " is_closed = 0 and jenisKontrasepsi != '0' ";
+//                        joinTable = "";
+//                        mainCondition = " is_closed = 0 and jenisKontrasepsi != '0' ";
+                        Log.e(TAG, "doInBackground: "+filters );
                         return null;
                     }
-
-                    @Override
-                    protected void onPostExecute(Object o) {
-//                        clientsAdapter
-//                                .refreshList(currentVillageFilter, currentServiceModeOption,
-//                                        currentSearchFilter, currentSortOption);
-//                        getClientsAdapter().refreshClients(filteredClients);
-//                        getClientsAdapter().notifyDataSetChanged();
-                        getSearchCancelView().setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
-                        CountExecute();
-                        filterandSortExecute();
-                        super.onPostExecute(o);
-                    }
+//
+//                    @Override
+//                    protected void onPostExecute(Object o) {
+////                        clientsAdapter
+////                                .refreshList(currentVillageFilter, currentServiceModeOption,
+////                                        currentSearchFilter, currentSortOption);
+////                        getClientsAdapter().refreshClients(filteredClients);
+////                        getClientsAdapter().notifyDataSetChanged();
+//                        getSearchCancelView().setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
+//                        CountExecute();
+//                        filterandSortExecute();
+//                        super.onPostExecute(o);
+//                    }
                 }).execute();
             }
 

@@ -17,13 +17,13 @@ repositories {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':opensrp-app')
     compile('com.crashlytics.sdk.android:crashlytics:2.5.3@aar') {
         transitive = true;
     }
     compile 'com.google.android.gms:play-services-appindexing:8.1.0'
-    compile files('libs/sd-sdk-facial-processing.jar')
+    androidTestCompile files('libs/sd-sdk-facial-processing.jar')
 }
 android {
     compileSdkVersion androidCompileSdkVersion

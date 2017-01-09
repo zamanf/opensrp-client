@@ -1,6 +1,7 @@
 package org.ei.opensrp.indonesia.application;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.util.Log;
 
 import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
@@ -13,6 +14,7 @@ import org.ei.opensrp.sync.DrishtiSyncScheduler;
 import org.ei.opensrp.view.activity.DrishtiApplication;
 import org.ei.opensrp.view.receiver.SyncBroadcastReceiver;
 
+import java.util.Arrays;
 import java.util.Locale;
 
 import static org.ei.opensrp.util.Log.logInfo;
@@ -28,6 +30,7 @@ import static org.ei.opensrp.util.Log.logInfo;
 
 public class BidanApplication extends DrishtiApplication {
 
+    private final static String TAG = BidanApplication.class.getSimpleName();
     @Override
     public void onCreate() {
         DrishtiSyncScheduler.setReceiverClass(SyncBroadcastReceiver.class);
@@ -39,6 +42,8 @@ public class BidanApplication extends DrishtiApplication {
         FlurryFacade.init(this);
         context = Context.getInstance();
         context.updateApplicationContext(getApplicationContext());
+
+        // 5. update global context instance
         context.updateCommonFtsObject(createCommonFtsObject());
         applyUserLanguagePreference();
         cleanUpSyncState();
@@ -81,11 +86,28 @@ public class BidanApplication extends DrishtiApplication {
                 getBaseContext().getResources().getDisplayMetrics());
     }
 
+    /**
+     * 1. Add register Table Name
+     * @return
+     */
+    private String[] getFtsTables(){
+        String[] ftsTables = { "ec_kartu_ibu", "ec_anak", "ec_ibu", "ec_pnc" };
+        return ftsTables;
+    }
+
+    /**
+     * 2. Add Search Fields
+     * @param tableName
+     * @return
+     */
     private String[] getFtsSearchFields(String tableName){
         if(tableName.equals("ec_kartu_ibu")){
 //            String[] ftsSearchFields =  { "namalengkap", "namaSuami", "id" };
-            String[] ftsSearchFields =  { "id" };
+//            String[] ftsSearchFields =  { "namalengkap" };
+            String[] ftsSearchFields =  { "base_entity_id" };
+            Log.e(TAG, "getFtsSearchFields: "+ Arrays.toString(ftsSearchFields));
             return ftsSearchFields;
+//            return null;
         } else if(tableName.equals("ec_anak")){
             String[] ftsSearchFields =  { "namaBayi" };
             return ftsSearchFields;
@@ -100,6 +122,11 @@ public class BidanApplication extends DrishtiApplication {
         return null;
     }
 
+    /**
+     * 2.b Add Sort Fields
+     * @param tableName
+     * @return
+     */
     private String[] getFtsSortFields(String tableName){
         if(tableName.equals("ec_kartu_ibu")) {
             String[] sortFields = { "namalengkap", "umur",  "noIbu", "htp"};
@@ -117,6 +144,28 @@ public class BidanApplication extends DrishtiApplication {
         return null;
     }
 
+    /**
+     * 3. Add Custom Relational Ids if Exist
+     * @param tableName
+     * @return
+     */
+    private String getFtsCustomRelationalId(String tableName){
+        if(tableName.equals("ec_anak")){
+            String customRelationalId = "relational_id";
+            return customRelationalId;
+        } else if(tableName.equals("ec_ibu")){
+            String customRelationalId =  "kartuIbuId" ;
+            return customRelationalId;
+        }
+        return null;
+    }
+
+
+    /**
+     * 4. Add Condition field, query has a main condition
+     * @param tableName
+     * @return
+     */
     private String[] getFtsMainConditions(String tableName){
         if(tableName.equals("ec_kartu_ibu")) {
             String[] mainConditions = { "is_closed", "details" , "jenisKontrasepsi" };
@@ -134,23 +183,10 @@ public class BidanApplication extends DrishtiApplication {
         return null;
     }
 
-    private String getFtsCustomRelationalId(String tableName){
-        if(tableName.equals("ec_anak")){
-            String customRelationalId = "relational_id";
-            return customRelationalId;
-        } else if(tableName.equals("ec_ibu")){
-            String customRelationalId =  "kartuIbuId" ;
-            return customRelationalId;
-        }
-        return null;
-    }
-
-
-    private String[] getFtsTables(){
-        String[] ftsTables = { "ec_kartu_ibu", "ec_anak", "ec_ibu", "ec_pnc" };
-        return ftsTables;
-    }
-
+    /**
+     * 5. Update context.commonFtsObject
+     * @return
+     */
     private CommonFtsObject createCommonFtsObject(){
         CommonFtsObject commonFtsObject = new CommonFtsObject(getFtsTables());
         for(String ftsTable: commonFtsObject.getTables()){

@@ -235,7 +235,6 @@ public abstract class SecuredNativeSmartRegisterFragment extends SecuredFragment
                 clientsAdapter
                         .refreshList(currentVillageFilter, currentServiceModeOption,
                                 currentSearchFilter, currentSortOption);
-
                 searchCancelView.setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
             }
 

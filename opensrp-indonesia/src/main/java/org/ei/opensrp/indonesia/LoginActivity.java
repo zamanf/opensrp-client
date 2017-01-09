@@ -100,8 +100,15 @@ public class LoginActivity extends Activity {
 //        View view = null;
         LayoutInflater inflater=getLayoutInflater();
         View view=inflater.inflate(R.layout.login,null);
-//        localLogin(view,"ec_bidan", "Satu2345");
 //        localLoginWith("ec_bidan", "Satu2345");
+        android.util.Log.e(TAG, "onCreate: "+context.userService().hasARegisteredUser() );
+        if (context.userService().hasARegisteredUser()) {
+//            localLogin(view, userName, password);
+            localLogin(view,"ec_bidan", "Satu2345");
+        } else {
+            remoteLogin(view,"ec_bidan", "Satu2345");
+
+        }
 
 
     }
@@ -353,6 +360,7 @@ public class LoginActivity extends Activity {
         res.updateConfiguration(conf, dm);
 
     }
+
     public static String switchLanguagePreference() {
         AllSharedPreferences allSharedPreferences = new AllSharedPreferences(getDefaultSharedPreferences(Context.getInstance().applicationContext()));
 

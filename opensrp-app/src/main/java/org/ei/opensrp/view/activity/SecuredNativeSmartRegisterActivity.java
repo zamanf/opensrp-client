@@ -252,7 +252,6 @@ public abstract class SecuredNativeSmartRegisterActivity extends SecuredActivity
                 clientsAdapter
                         .refreshList(currentVillageFilter, currentServiceModeOption,
                                 currentSearchFilter, currentSortOption);
-
                 searchCancelView.setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
             }
 
