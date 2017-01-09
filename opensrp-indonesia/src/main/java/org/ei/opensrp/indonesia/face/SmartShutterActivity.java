@@ -570,7 +570,7 @@ public class SmartShutterActivity extends Activity implements Camera.PreviewCall
                     cameraButton.setBackgroundResource(R.drawable.spin_animation);            // Get the background, which has been compiled to an AnimationDrawable object.
                     frameAnimation = (AnimationDrawable) cameraButton.getBackground();
 
-                    checkBoxVisiblity(true);        // As soon as the shutter button is pressed, make the check boxes visible.
+                    checkBoxVisiblity(true);    // As soon as the shutter button is pressed, make the check boxes visible.
 
                     // Start the animation (looped playback by default).
                     if (!animationPress) {

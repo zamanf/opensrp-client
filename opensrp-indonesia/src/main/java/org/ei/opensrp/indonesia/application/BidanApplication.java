@@ -102,9 +102,8 @@ public class BidanApplication extends DrishtiApplication {
      */
     private String[] getFtsSearchFields(String tableName){
         if(tableName.equals("ec_kartu_ibu")){
-//            String[] ftsSearchFields =  { "namalengkap", "namaSuami", "id" };
-//            String[] ftsSearchFields =  { "namalengkap" };
-            String[] ftsSearchFields =  { "base_entity_id" };
+            String[] ftsSearchFields =  { "namalengkap", "namaSuami", "base_entity_id" };
+//            String[] ftsSearchFields =  { "base_entity_id" };
             Log.e(TAG, "getFtsSearchFields: "+ Arrays.toString(ftsSearchFields));
             return ftsSearchFields;
 //            return null;

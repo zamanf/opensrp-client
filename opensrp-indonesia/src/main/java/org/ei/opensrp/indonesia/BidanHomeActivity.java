@@ -146,7 +146,7 @@ public class BidanHomeActivity extends SecuredActivity {
         SYNC_COMPLETED.addListener(onSyncCompleteListener);
         FORM_SUBMITTED.addListener(onFormSubmittedListener);
         ACTION_HANDLED.addListener(updateANMDetailsListener);
-        getSupportActionBar().setTitle("");
+        getSupportActionBar().setTitle("sss");
         getSupportActionBar().setIcon(getResources().getDrawable(org.ei.opensrp.indonesia.R.mipmap.logo));
         getSupportActionBar().setLogo(org.ei.opensrp.indonesia.R.mipmap.logo);
         getSupportActionBar().setDisplayUseLogoEnabled(true);

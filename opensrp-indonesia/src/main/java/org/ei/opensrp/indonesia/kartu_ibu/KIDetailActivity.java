@@ -137,16 +137,15 @@ public class KIDetailActivity extends Activity {
         DetailsRepository detailsRepository = org.ei.opensrp.Context.getInstance().detailsRepository();
         detailsRepository.updateDetails(kiclient);
 
-        if(kiclient.getDetails().get("profilepic")!= null){
+        if(kiclient.getDetails().get("profilepic_thumb")!= null){
 
             final int THUMBSIZE = FaceConstants.THUMBSIZE;
 
-            Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(kiclient.getDetails().get("profilepic") ),
+            Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(kiclient.getDetails().get("profilepic_thumb") ),
                     THUMBSIZE, THUMBSIZE);
             kiview.setImageBitmap(ThumbImage);
 
         } else {
-//            Log.e(TAG, "onCreate: "+"Profile Picture NULL" );
 
             kiview.setImageDrawable(getResources().getDrawable(R.mipmap.woman_placeholder));
         }

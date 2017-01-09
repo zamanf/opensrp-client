@@ -41,11 +41,10 @@ public class DrawView extends SurfaceView {
 
 
 	public DrawView(Context context, FaceData []faceArray, boolean inFrame) {
-		super(context);		
-
-		 setWillNotDraw(false);					// This call is necessary, or else the draw method will not be called. 
-		 mFaceArray = faceArray;
-		 _inFrame= inFrame;
+		super(context);
+        setWillNotDraw(false);
+        mFaceArray = faceArray;
+        _inFrame= inFrame;
 	}
 	
 

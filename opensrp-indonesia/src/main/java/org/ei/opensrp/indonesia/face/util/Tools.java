@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.media.MediaScannerConnection;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -31,12 +33,65 @@ public class Tools extends Activity {
     private static final String TAG = Tools.class.getSimpleName();
     private Canvas canvas = null;
 
+    public static boolean SavePictureToFile(android.content.Context context, Bitmap bitmap, String entityId) {
+        for (int i = 0; i < 2; i++) {
+            File pictureFile = getOutputMediaFile(i, entityId);
+
+            if (pictureFile == null) {
+                Log.e(TAG, "Error creating media file, check path permissions!");
+                return false;
+            }
+
+            try {
+                FileOutputStream fos = new FileOutputStream(pictureFile);
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                fos.close();
+                Log.e(TAG, "Wrote image to " + pictureFile);
+
+                MediaScannerConnection.scanFile(context,
+                        new String[]{pictureFile.toString()}, null,
+                        new MediaScannerConnection.OnScanCompletedListener() {
+                            public void onScanCompleted(String path, Uri uri) {
+                                Log.i("ExternalStorage", "Scanned " + path + ":");
+                                Log.i("ExternalStorage", "-> uri=" + uri);
+                    }
+                });
+                String photoPath = pictureFile.toString();
+                Log.e(TAG, "Photo Path = " + photoPath);
+
+//            Database
+                DetailsRepository detailsRepository = Context.getInstance().detailsRepository();
+
+                Long tsLong = System.currentTimeMillis()/1000;
+                detailsRepository.add(entityId, "profilepic"+i, photoPath, tsLong);
+//            kiclient.getDetails().get("profilepic");
+
+                return true;
+
+            } catch (FileNotFoundException e) {
+                Log.d(TAG, "File not found: " + e.getMessage());
+            } catch (IOException e) {
+                Log.d(TAG, "Error accessing file: " + e.getMessage());
+            }
+
+            if(i == 1) {
+                final int THUMBSIZE = FaceConstants.THUMBSIZE;
+                Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(
+                        BitmapFactory.decodeFile(""),
+                        THUMBSIZE, THUMBSIZE);
+            }
+
+
+        }
+        return false;
+    }
     public static boolean WritePictureToFile(android.content.Context context, Bitmap bitmap, String entityId) {
 
-        File pictureFile = getOutputMediaFile(entityId);
+        File pictureFile = getOutputMediaFile(0, entityId);
+        File thumbs_photo = getOutputMediaFile(1, entityId);
 
-        if (pictureFile == null) {
-            Log.e(TAG, "Error creating media file, check storage permissions ");
+        if (pictureFile == null || thumbs_photo == null) {
+            Log.e(TAG, "Error creating media file, check storage permissions!");
             return false;
         }
 
@@ -46,14 +101,26 @@ public class Tools extends Activity {
             fos.close();
             Log.e(TAG, "Wrote image to " + pictureFile);
 
-            MediaScannerConnection.scanFile(context, new String[]{pictureFile.toString()}, null, new MediaScannerConnection.OnScanCompletedListener() {
-                public void onScanCompleted(String path, Uri uri) {
-                    Log.i("ExternalStorage", "Scanned " + path + ":");
-                    Log.i("ExternalStorage", "-> uri=" + uri);
+            MediaScannerConnection.scanFile(context, new String[]{
+                    pictureFile.toString()}, null,
+                    new MediaScannerConnection.OnScanCompletedListener() {
+                        public void onScanCompleted(String path, Uri uri) {
+                            Log.i("ExternalStorage", "Scanned " + path + ":");
+                            Log.i("ExternalStorage", "-> uri=" + uri);
                 }
             });
             String photoPath = pictureFile.toString();
-            Log.e(TAG, "Path Name = " + photoPath);
+            Log.e(TAG, "Photo Path = " + photoPath);
+
+//            Create Thumbs
+            FileOutputStream tfos = new FileOutputStream(thumbs_photo);
+            final int THUMBSIZE = FaceConstants.THUMBSIZE;
+
+            Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(photoPath ),
+                    THUMBSIZE, THUMBSIZE);
+            ThumbImage.compress(Bitmap.CompressFormat.PNG, 100, tfos);
+            tfos.close();
+            Log.e(TAG, "Wrote image to " + thumbs_photo);
 
 
 //            KIDetailActivity.details = new HashMap<>();
@@ -61,12 +128,10 @@ public class Tools extends Activity {
 //            KIDetailActivity.details.put("profilepic",photoPath);
 
 
-//            Database
+//            Database Stored
             DetailsRepository detailsRepository = Context.getInstance().detailsRepository();
-
             Long tsLong = System.currentTimeMillis()/1000;
-            detailsRepository.add(entityId, "profilepic", photoPath, tsLong);
-//            kiclient.getDetails().get("profilepic");
+            detailsRepository.add(entityId, "profilepic_thumb", photoPath, tsLong);
 
             return true;
 
@@ -78,10 +143,12 @@ public class Tools extends Activity {
         return false;
     }
 
-    private static File getOutputMediaFile(String entityId) {
-
+    private static File getOutputMediaFile(Integer mode, String entityId) {
+        // Mode 0 = Original
+        // Mode 1 = Thumbs
+        String imgFolder = (mode == 0) ? "OPENSRP_SID":"OPENSRP_SID"+File.separator+".thumbs";
         File mediaStorageDir = new File(
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "OPENSRP_SID");
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), imgFolder);
 
         // Create the storage directory if it does not exist
         if (!mediaStorageDir.exists()) {
@@ -112,7 +179,6 @@ public class Tools extends Activity {
         return null;
 
     }
-
 
     public static void drawInfo(Rect rect, Bitmap mutableBitmap, float pixelDensity, String personName) {
         Log.e(TAG, "drawInfo: " );

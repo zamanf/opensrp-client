@@ -211,6 +211,7 @@ public class ImageConfirmation extends Activity {
         Log.e(TAG, "saveAndClose: "+ Arrays.toString(objFace.serializeRecogntionAlbum()));
 //        SmartShutterActivity.WritePictureToFile(ImageConfirmation.this, storedBitmap);
         Tools.WritePictureToFile(ImageConfirmation.this, storedBitmap, entityId);
+//        Tools.SavePictureToFile(ImageConfirmation.this, storedBitmap, entityId);
 //        resultIntent.putExtra("com.qualcomm.sdk.smartshutterapp.SmartShutterActivity.thumbnail", thumbnail);
         ImageConfirmation.this.finish();
         Intent resultIntent = new Intent(this, KIDetailActivity.class);
