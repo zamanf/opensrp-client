@@ -71,6 +71,7 @@ public abstract class SecuredNativeSmartRegisterCursorAdapterFragment extends Se
     public String tablename;
     public String countSelect;
     public String joinTable="";
+    public String[] joinAlerts;
 
     private static final int LOADER_ID = 0;
     private static final String INIT_LOADER = "init";
@@ -520,7 +521,7 @@ public abstract class SecuredNativeSmartRegisterCursorAdapterFragment extends Se
         String query = "";
         try{
             if(commonRepository().isFts() && (filters != null && !StringUtils.containsIgnoreCase(filters, "like"))){
-                String sql = sqb.searchQueryFts(tablename, joinTable, mainCondition, filters, Sortqueries, currentlimit, currentoffset);
+                String sql = sqb.searchQueryFts(tablename, joinTable, joinAlerts, mainCondition, filters, Sortqueries, currentlimit, currentoffset);
                 List<String> ids = commonRepository().findSearchIds(sql);
                 query = sqb.toStringFts(ids, tablename + "." + CommonRepository.ID_COLUMN, Sortqueries);
                 query = sqb.Endquery(query);
@@ -544,7 +545,7 @@ public abstract class SecuredNativeSmartRegisterCursorAdapterFragment extends Se
             SmartRegisterQueryBuilder sqb = new SmartRegisterQueryBuilder(countSelect);
             String query = "";
             if (commonRepository().isFts() && (filters != null && !StringUtils.containsIgnoreCase(filters, "like"))) {
-                String sql = sqb.countQueryFts(tablename, joinTable, mainCondition, filters);
+                String sql = sqb.countQueryFts(tablename, joinTable, joinAlerts, mainCondition, filters);
                 List<String> ids = commonRepository().findSearchIds(sql);
                 query = sqb.toStringFts(ids, tablename + "." + CommonRepository.ID_COLUMN);
                 query = sqb.Endquery(query);

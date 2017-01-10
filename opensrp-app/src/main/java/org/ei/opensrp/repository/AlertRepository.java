@@ -15,7 +15,8 @@ import static org.apache.commons.lang3.StringUtils.repeat;
 import static org.ei.drishti.dto.AlertStatus.*;
 
 public class AlertRepository extends DrishtiRepository {
-    private static final String ALERTS_SQL = "CREATE TABLE alerts(caseID VARCHAR, scheduleName VARCHAR, visitCode VARCHAR, status VARCHAR, startDate VARCHAR, expiryDate VARCHAR, completionDate VARCHAR)";
+    private static final String ALERTS_SQL = "CREATE virtual TABLE alerts using fts4 (caseID VARCHAR, scheduleName VARCHAR, visitCode VARCHAR, status VARCHAR, startDate VARCHAR, expiryDate VARCHAR, completionDate VARCHAR)";
+
     private static final String ALERTS_TABLE_NAME = "alerts";
     public static final String ALERTS_CASEID_COLUMN = "caseID";
     public static final String ALERTS_SCHEDULE_NAME_COLUMN = "scheduleName";
@@ -34,10 +35,14 @@ public class AlertRepository extends DrishtiRepository {
             ALERTS_COMPLETIONDATE_COLUMN
     };
     public static final String CASE_AND_VISIT_CODE_COLUMN_SELECTIONS = ALERTS_CASEID_COLUMN + " = ? AND " + ALERTS_VISIT_CODE_COLUMN + " = ?";
+    private static final String CASE_ID_INDEX = "CREATE INDEX " + ALERTS_TABLE_NAME + "_" + ALERTS_CASEID_COLUMN + "_index ON " + ALERTS_TABLE_NAME + "(" + ALERTS_CASEID_COLUMN + " COLLATE NOCASE);";
+
 
     @Override
     protected void onCreate(SQLiteDatabase database) {
         database.execSQL(ALERTS_SQL);
+        database.execSQL(CASE_ID_INDEX);
+
     }
 
     public List<Alert> allAlerts() {

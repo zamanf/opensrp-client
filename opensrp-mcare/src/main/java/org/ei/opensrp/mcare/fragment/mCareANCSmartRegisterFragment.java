@@ -34,7 +34,6 @@ import org.ei.opensrp.util.StringUtil;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
 import org.ei.opensrp.view.contract.ECClient;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
-import org.ei.opensrp.view.contract.SmartRegisterClients;
 import org.ei.opensrp.view.controller.VillageController;
 import org.ei.opensrp.view.customControls.CustomFontTextView;
 import org.ei.opensrp.view.dialog.AllClientsFilter;
@@ -52,8 +51,6 @@ import org.opensrp.api.util.TreeNode;
 
 import java.util.ArrayList;
 import java.util.Map;
-
-import util.AsyncTask;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
@@ -280,42 +277,19 @@ public class mCareANCSmartRegisterFragment extends SecuredNativeSmartRegisterCur
 
             @Override
             public void onTextChanged(final CharSequence cs, int start, int before, int count) {
-                (new AsyncTask() {
-                    SmartRegisterClients filteredClients;
 
-                    @Override
-                    protected Object doInBackground(Object[] params) {
-//                        currentSearchFilter =
-//                        setCurrentSearchFilter(new HHSearchOption(cs.toString()));
-//                        filteredClients = getClientsAdapter().getListItemProvider()
-//                                .updateClients(getCurrentVillageFilter(), getCurrentServiceModeOption(),
-//                                        getCurrentSearchFilter(), getCurrentSortOption());
-//
-                        if(cs.toString().equalsIgnoreCase("")){
-                            filters = "";
-                        }else {
-                            //filters = "and FWWOMFNAME Like '%" + cs.toString() + "%' or GOBHHID Like '%" + cs.toString() + "%'  or JiVitAHHID Like '%" + cs.toString() + "%' ";
-                            filters = cs.toString();
-                        }
-                        joinTable = "";
-                        mainCondition = "(Is_PNC is null or Is_PNC = '0') and FWWOMFNAME not null and FWWOMFNAME != \"\"   AND details  LIKE '%\"FWWOMVALID\":\"1\"%'";
-                        return null;
-                    }
+                if(cs.toString().equalsIgnoreCase("")){
+                    filters = "";
+                }else {
+                    //filters = "and FWWOMFNAME Like '%" + cs.toString() + "%' or GOBHHID Like '%" + cs.toString() + "%'  or JiVitAHHID Like '%" + cs.toString() + "%' ";
+                    filters = cs.toString();
+                }
+                joinTable = "";
+                mainCondition = "(Is_PNC is null or Is_PNC = '0') and FWWOMFNAME not null and FWWOMFNAME != \"\"   AND details  LIKE '%\"FWWOMVALID\":\"1\"%'";
 
-                    @Override
-                    protected void onPostExecute(Object o) {
-//                        clientsAdapter
-//                                .refreshList(currentVillageFilter, currentServiceModeOption,
-//                                        currentSearchFilter, currentSortOption);
-//                        getClientsAdapter().refreshClients(filteredClients);
-//                        getClientsAdapter().notifyDataSetChanged();
-                        getSearchCancelView().setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
-                        CountExecute();
-                        filterandSortExecute();
-                        super.onPostExecute(o);
-                    }
-                }).execute();
-
+                getSearchCancelView().setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
+                CountExecute();
+                filterandSortExecute();
 
             }
 
@@ -361,15 +335,11 @@ public class mCareANCSmartRegisterFragment extends SecuredNativeSmartRegisterCur
     }
     public String ancMainSelectWithJoins(){
         return "Select id as _id,relationalid,details,FWWOMFNAME,FWPSRLMP,FWSORTVALUE,JiVitAHHID,GOBHHID,Is_PNC,FWBNFSTS,FWBNFDTOO \n" +
-                "from mcaremother\n" +
-                "Left Join alerts on alerts.caseID = mcaremother.id and alerts.scheduleName = 'Ante Natal Care Reminder Visit'\n" +
-                "Left Join alerts as alerts2 on alerts2.caseID = mcaremother.id and alerts2.scheduleName = 'BirthNotificationPregnancyStatusFollowUp'";
+                "from mcaremother\n";
     }
     public String ancMainCountWithJoins(){
         return "Select Count(*) \n" +
-                "from mcaremother\n" +
-                "Left Join alerts on alerts.caseID = mcaremother.id and alerts.scheduleName = 'Ante Natal Care Reminder Visit'\n" +
-                "Left Join alerts as alerts2 on alerts2.caseID = mcaremother.id and alerts2.scheduleName = 'BirthNotificationPregnancyStatusFollowUp'";
+                "from mcaremother\n";
     }
     public void initializeQueries(){
         mCareANCSmartClientsProvider hhscp = new mCareANCSmartClientsProvider(getActivity(),clientActionHandler,context.alertService());
@@ -380,6 +350,11 @@ public class mCareANCSmartRegisterFragment extends SecuredNativeSmartRegisterCur
         SmartRegisterQueryBuilder countqueryBUilder = new SmartRegisterQueryBuilder(ancMainCountWithJoins());
         countSelect = countqueryBUilder.mainCondition("(mcaremother.Is_PNC is null or mcaremother.Is_PNC = '0') and mcaremother.FWWOMFNAME not null and mcaremother.FWWOMFNAME != \"\"   AND mcaremother.details  LIKE '%\"FWWOMVALID\":\"1\"%'");
         mainCondition = "(Is_PNC is null or Is_PNC = '0') and FWWOMFNAME not null and FWWOMFNAME != \"\"   AND details  LIKE '%\"FWWOMVALID\":\"1\"%'";
+
+        joinAlerts = new String[2];
+        joinAlerts[0] = "Ante Natal Care Reminder Visit";
+        joinAlerts[1] = "BirthNotificationPregnancyStatusFollowUp";
+
         super.CountExecute();
 
         SmartRegisterQueryBuilder queryBUilder = new SmartRegisterQueryBuilder(ancMainSelectWithJoins());

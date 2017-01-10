@@ -35,7 +35,6 @@ import org.ei.opensrp.util.StringUtil;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
 import org.ei.opensrp.view.contract.ECClient;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
-import org.ei.opensrp.view.contract.SmartRegisterClients;
 import org.ei.opensrp.view.controller.VillageController;
 import org.ei.opensrp.view.dialog.AllClientsFilter;
 import org.ei.opensrp.view.dialog.DialogOption;
@@ -52,8 +51,6 @@ import org.opensrp.api.util.TreeNode;
 
 import java.util.ArrayList;
 import java.util.Map;
-
-import util.AsyncTask;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
@@ -209,14 +206,16 @@ public class HouseHoldSmartRegisterFragment extends SecuredNativeSmartRegisterCu
         setTablename("household");
         SmartRegisterQueryBuilder countqueryBUilder = new SmartRegisterQueryBuilder();
         countqueryBUilder.SelectInitiateMainTableCounts("household");
-        countqueryBUilder.joinwithALerts("household","FW CENSUS");
         countSelect = countqueryBUilder.mainCondition(" FWHOHFNAME is not null ");
         mainCondition = " FWHOHFNAME is not null ";
+
+        joinAlerts = new String[1];
+        joinAlerts[0] = "FW CENSUS";
+
         super.CountExecute();
 
         SmartRegisterQueryBuilder queryBUilder = new SmartRegisterQueryBuilder();
         queryBUilder.SelectInitiateMainTable("household", new String[]{"relationalid", "details", "FWHOHFNAME", "FWGOBHHID", "FWJIVHHID"});
-        queryBUilder.joinwithALerts("household","FW CENSUS");
         mainSelect = queryBUilder.mainCondition(" FWHOHFNAME is not null ");
         Sortqueries = sortByAlertmethod();
 
@@ -330,37 +329,15 @@ public class HouseHoldSmartRegisterFragment extends SecuredNativeSmartRegisterCu
             @Override
             public void onTextChanged(final CharSequence cs, int start, int before, int count) {
 
-                (new AsyncTask() {
-                    SmartRegisterClients filteredClients;
+                //filters = "and FWHOHFNAME Like '%" + cs.toString() + "%' or FWGOBHHID Like '%" + cs.toString() + "%'  or FWJIVHHID Like '%" + cs.toString() + "%' ";
+                filters = cs.toString();
+                joinTable = "";
+                mainCondition = " FWHOHFNAME is not null ";
 
-                    @Override
-                    protected Object doInBackground(Object[] params) {
-//                        currentSearchFilter =
-//                        setCurrentSearchFilter(new HHSearchOption(cs.toString()));
-//                        filteredClients = getClientsAdapter().getListItemProvider()
-//                                .updateClients(getCurrentVillageFilter(), getCurrentServiceModeOption(),
-//                                        getCurrentSearchFilter(), getCurrentSortOption());
-//
-                        //filters = "and FWHOHFNAME Like '%" + cs.toString() + "%' or FWGOBHHID Like '%" + cs.toString() + "%'  or FWJIVHHID Like '%" + cs.toString() + "%' ";
-                        filters = cs.toString();
-                        joinTable = "";
-                        mainCondition = " FWHOHFNAME is not null ";
-                        return null;
-                    }
+                getSearchCancelView().setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
+                CountExecute();
+                filterandSortExecute();
 
-                    @Override
-                    protected void onPostExecute(Object o) {
-//                        clientsAdapter
-//                                .refreshList(currentVillageFilter, currentServiceModeOption,
-//                                        currentSearchFilter, currentSortOption);
-//                        getClientsAdapter().refreshClients(filteredClients);
-//                        getClientsAdapter().notifyDataSetChanged();
-                        getSearchCancelView().setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
-                        CountExecute();
-                        filterandSortExecute();
-                        super.onPostExecute(o);
-                    }
-                }).execute();
             }
 
             @Override
@@ -379,43 +356,14 @@ public class HouseHoldSmartRegisterFragment extends SecuredNativeSmartRegisterCu
 
             @Override
             public void onTextChanged(final CharSequence cs, int start, int before, int count) {
-                (new AsyncTask() {
-                    SmartRegisterClients filteredClients;
 
-                    @Override
-                    protected Object doInBackground(Object[] params) {
-//                        currentSearchFilter =
-//                        setCurrentSearchFilter(new HHSearchOption(cs.toString()));
-//                        filteredClients = getClientsAdapter().getListItemProvider()
-//                                .updateClients(getCurrentVillageFilter(), getCurrentServiceModeOption(),
-//                                        getCurrentSearchFilter(), getCurrentSortOption());
-//
-                        //filters = "and FWHOHFNAME Like '%"+cs.toString()+"%' or FWGOBHHID Like '%"+cs.toString()+"%'  or FWJIVHHID Like '%"+cs.toString()+"%' or household.id in (Select elco.relationalid from elco where FWWOMFNAME Like '%"+cs.toString()+"%' )";
-                        filters = cs.toString();
-                        joinTable = "elco";
-                        mainCondition = " FWHOHFNAME is not null ";
-                        return null;
-                    }
+                //filters = "and FWHOHFNAME Like '%"+cs.toString()+"%' or FWGOBHHID Like '%"+cs.toString()+"%'  or FWJIVHHID Like '%"+cs.toString()+"%' or household.id in (Select elco.relationalid from elco where FWWOMFNAME Like '%"+cs.toString()+"%' )";
+                filters = cs.toString();
+                joinTable = "elco";
+                mainCondition = " FWHOHFNAME is not null ";
 
-                    @Override
-                    protected void onPostExecute(Object o) {
-//                        clientsAdapter
-//                                .refreshList(currentVillageFilter, currentServiceModeOption,
-//                                        currentSearchFilter, currentSortOption);
-//                        getClientsAdapter().refreshClients(filteredClients);
-//                        getClientsAdapter().notifyDataSetChanged();
-                        getSearchCancelView().setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
-                        filterandSortExecute();
-                        super.onPostExecute(o);
-                    }
-                }).execute();
-//                currentSearchFilter = new HHSearchOption(cs.toString());
-//                clientsAdapter
-//                        .refreshList(currentVillageFilter, currentServiceModeOption,
-//                                currentSearchFilter, currentSortOption);
-//
-//                searchCancelView.setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
-
+                getSearchCancelView().setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
+                filterandSortExecute();
 
             }
 

@@ -30,7 +30,6 @@ import org.ei.opensrp.util.StringUtil;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
 import org.ei.opensrp.view.contract.ECClient;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
-import org.ei.opensrp.view.contract.SmartRegisterClients;
 import org.ei.opensrp.view.controller.VillageController;
 import org.ei.opensrp.view.dialog.AllClientsFilter;
 import org.ei.opensrp.view.dialog.DialogOption;
@@ -47,8 +46,6 @@ import org.opensrp.api.util.TreeNode;
 
 import java.util.ArrayList;
 import java.util.Map;
-
-import util.AsyncTask;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
@@ -293,42 +290,19 @@ public class ElcoSmartRegisterFragment extends SecuredNativeSmartRegisterCursorA
             @Override
             public void onTextChanged(final CharSequence cs, int start, int before, int count) {
 
-                (new AsyncTask() {
-                    SmartRegisterClients filteredClients;
+                if(cs.toString().equalsIgnoreCase("")){
+                    filters = "";
+                }else {
+                    //filters = "and FWWOMFNAME Like '%" + cs.toString() + "%' or GOBHHID Like '%" + cs.toString() + "%'  or JiVitAHHID Like '%" + cs.toString() + "%' ";
+                    filters = cs.toString();
+                }
+                joinTable = "";
+                mainCondition = " FWWOMFNAME != \"\"  and  FWWOMFNAME is not null  and details LIKE '%\"FWELIGIBLE\":\"1\"%' ";
 
-                    @Override
-                    protected Object doInBackground(Object[] params) {
-//                        currentSearchFilter =
-//                        setCurrentSearchFilter(new HHSearchOption(cs.toString()));
-//                        filteredClients = getClientsAdapter().getListItemProvider()
-//                                .updateClients(getCurrentVillageFilter(), getCurrentServiceModeOption(),
-//                                        getCurrentSearchFilter(), getCurrentSortOption());
-//
-                        if(cs.toString().equalsIgnoreCase("")){
-                            filters = "";
-                        }else {
-                            //filters = "and FWWOMFNAME Like '%" + cs.toString() + "%' or GOBHHID Like '%" + cs.toString() + "%'  or JiVitAHHID Like '%" + cs.toString() + "%' ";
-                            filters = cs.toString();
-                        }
-                        joinTable = "";
-                        mainCondition = " FWWOMFNAME != \"\"  and  FWWOMFNAME is not null  and details LIKE '%\"FWELIGIBLE\":\"1\"%' ";
-                        return null;
-                    }
-
-                    @Override
-                    protected void onPostExecute(Object o) {
-//                        clientsAdapter
-//                                .refreshList(currentVillageFilter, currentServiceModeOption,
-//                                        currentSearchFilter, currentSortOption);
-//                        getClientsAdapter().refreshClients(filteredClients);
-//                        getClientsAdapter().notifyDataSetChanged();
-                        getSearchCancelView().setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
-                        CountExecute();
-                        filterandSortExecute();
-                        super.onPostExecute(o);
-                    }
-                }).execute();
-            }
+                getSearchCancelView().setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
+                CountExecute();
+                filterandSortExecute();
+    }
 
             @Override
             public void afterTextChanged(Editable editable) {
@@ -345,47 +319,18 @@ public class ElcoSmartRegisterFragment extends SecuredNativeSmartRegisterCursorA
 
             @Override
             public void onTextChanged(final CharSequence cs, int start, int before, int count) {
-                (new AsyncTask() {
-                    SmartRegisterClients filteredClients;
 
-                    @Override
-                    protected Object doInBackground(Object[] params) {
-//                        currentSearchFilter =
-//                        setCurrentSearchFilter(new HHSearchOption(cs.toString()));
-//                        filteredClients = getClientsAdapter().getListItemProvider()
-//                                .updateClients(getCurrentVillageFilter(), getCurrentServiceModeOption(),
-//                                        getCurrentSearchFilter(), getCurrentSortOption());
-//
-                        if (cs.toString().equalsIgnoreCase("")) {
-                            filters = "";
-                        } else {
-                            //filters = "and FWWOMFNAME Like '%" + cs.toString() + "%' or GOBHHID Like '%" + cs.toString() + "%'  or JiVitAHHID Like '%" + cs.toString() + "%' ";
-                            filters = cs.toString();
-                        }
-                        joinTable = "";
-                        mainCondition = " FWWOMFNAME != \"\"  and  FWWOMFNAME is not null  and details LIKE '%\"FWELIGIBLE\":\"1\"%' ";
-                        return null;
-                    }
+                if (cs.toString().equalsIgnoreCase("")) {
+                    filters = "";
+                } else {
+                    //filters = "and FWWOMFNAME Like '%" + cs.toString() + "%' or GOBHHID Like '%" + cs.toString() + "%'  or JiVitAHHID Like '%" + cs.toString() + "%' ";
+                    filters = cs.toString();
+                }
+                joinTable = "";
+                mainCondition = " FWWOMFNAME != \"\"  and  FWWOMFNAME is not null  and details LIKE '%\"FWELIGIBLE\":\"1\"%' ";
 
-                    @Override
-                    protected void onPostExecute(Object o) {
-//                        clientsAdapter
-//                                .refreshList(currentVillageFilter, currentServiceModeOption,
-//                                        currentSearchFilter, currentSortOption);
-//                        getClientsAdapter().refreshClients(filteredClients);
-//                        getClientsAdapter().notifyDataSetChanged();
-                        getSearchCancelView().setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
-                        filterandSortExecute();
-                        super.onPostExecute(o);
-                    }
-                }).execute();
-//                currentSearchFilter = new HHSearchOption(cs.toString());
-//                clientsAdapter
-//                        .refreshList(currentVillageFilter, currentServiceModeOption,
-//                                currentSearchFilter, currentSortOption);
-//
-//                searchCancelView.setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
-
+                getSearchCancelView().setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
+                filterandSortExecute();
 
             }
 
@@ -417,14 +362,16 @@ public class ElcoSmartRegisterFragment extends SecuredNativeSmartRegisterCursorA
         setTablename("elco");
         SmartRegisterQueryBuilder countqueryBUilder = new SmartRegisterQueryBuilder();
         countqueryBUilder.SelectInitiateMainTableCounts("elco");
-        countqueryBUilder.joinwithALerts("elco","ELCO PSRF");
         countSelect = countqueryBUilder.mainCondition(" FWWOMFNAME != \"\"  and  FWWOMFNAME is not null  and details LIKE '%\"FWELIGIBLE\":\"1\"%' ");
         mainCondition = " FWWOMFNAME != \"\"  and  FWWOMFNAME is not null  and details LIKE '%\"FWELIGIBLE\":\"1\"%' ";
+
+        joinAlerts = new String[1];
+        joinAlerts[0] = "ELCO PSRF";
+
         super.CountExecute();
 
         SmartRegisterQueryBuilder queryBUilder = new SmartRegisterQueryBuilder();
         queryBUilder.SelectInitiateMainTable("elco", new String[]{"relationalid", "details", "FWWOMFNAME", "JiVitAHHID", "GOBHHID"});
-        queryBUilder.joinwithALerts("elco", "ELCO PSRF");
         mainSelect = queryBUilder.mainCondition(" FWWOMFNAME != \"\"  and FWWOMFNAME is not null  and details LIKE '%\"FWELIGIBLE\":\"1\"%' ");
         Sortqueries = sortByAlertmethod();
 

@@ -32,7 +32,6 @@ import org.ei.opensrp.util.StringUtil;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
 import org.ei.opensrp.view.contract.ECClient;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
-import org.ei.opensrp.view.contract.SmartRegisterClients;
 import org.ei.opensrp.view.controller.VillageController;
 import org.ei.opensrp.view.customControls.CustomFontTextView;
 import org.ei.opensrp.view.dialog.AllClientsFilter;
@@ -50,8 +49,6 @@ import org.opensrp.api.util.TreeNode;
 
 import java.util.ArrayList;
 import java.util.Map;
-
-import util.AsyncTask;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
@@ -260,44 +257,19 @@ public class mCareChildSmartRegisterFragment extends SecuredNativeSmartRegisterC
 
             @Override
             public void onTextChanged(final CharSequence cs, int start, int before, int count) {
-                (new AsyncTask() {
-                    SmartRegisterClients filteredClients;
 
-                    @Override
-                    protected Object doInBackground(Object[] params) {
-//                        currentSearchFilter =
-//                        setCurrentSearchFilter(new HHSearchOption(cs.toString()));
-//                        filteredClients = getClientsAdapter().getListItemProvider()
-//                                .updateClients(getCurrentVillageFilter(), getCurrentServiceModeOption(),
-//                                        getCurrentSearchFilter(), getCurrentSortOption());
-//
-                        if(cs.toString().equalsIgnoreCase("")){
-                            filters = "";
-                        }else {
-                            //filters = "and FWWOMFNAME Like '%" + cs.toString() + "%' or GOBHHID Like '%" + cs.toString() + "%'  or JiVitAHHID Like '%" + cs.toString() + "%' ";
-                            filters =  cs.toString();
-                        }
-                        joinTable = "";
-                        mainCondition = " FWBNFGEN is not null ";
-                        return null;
-                    }
+                if(cs.toString().equalsIgnoreCase("")){
+                    filters = "";
+                }else {
+                    //filters = "and FWWOMFNAME Like '%" + cs.toString() + "%' or GOBHHID Like '%" + cs.toString() + "%'  or JiVitAHHID Like '%" + cs.toString() + "%' ";
+                    filters =  cs.toString();
+                }
+                joinTable = "";
+                mainCondition = " FWBNFGEN is not null ";
 
-                    @Override
-                    protected void onPostExecute(Object o) {
-//                        clientsAdapter
-//                                .refreshList(currentVillageFilter, currentServiceModeOption,
-//                                        currentSearchFilter, currentSortOption);
-//                        getClientsAdapter().refreshClients(filteredClients);
-//                        getClientsAdapter().notifyDataSetChanged();
-                        getSearchCancelView().setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
-                        CountExecute();
-                        filterandSortExecute();
-                        super.onPostExecute(o);
-                    }
-                }).execute();
-
-
-
+                getSearchCancelView().setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
+                CountExecute();
+                filterandSortExecute();
 
             }
 
@@ -352,6 +324,10 @@ public class mCareChildSmartRegisterFragment extends SecuredNativeSmartRegisterC
         SmartRegisterQueryBuilder countqueryBUilder = new SmartRegisterQueryBuilder(childMainCountWithJoins());
         countSelect = countqueryBUilder.mainCondition(" mcarechild.FWBNFGEN is not null ");
         mainCondition = " FWBNFGEN is not null ";
+
+        joinAlerts = new String[1];
+        joinAlerts[0] = "Essential Newborn Care Checklist";
+
         super.CountExecute();
 
         SmartRegisterQueryBuilder queryBUilder = new SmartRegisterQueryBuilder(childMainSelectWithJoins());
@@ -381,14 +357,12 @@ public class mCareChildSmartRegisterFragment extends SecuredNativeSmartRegisterC
     public String childMainSelectWithJoins(){
         return "Select mcarechild.id as _id,mcarechild.relationalid,mcarechild.details,mcarechild.FWBNFGEN \n" +
                 "from mcarechild\n" +
-                "Left Join mcaremother on mcarechild.relationalid = mcaremother.id \n" +
-                "Left Join alerts on alerts.caseID = mcarechild.id and alerts.scheduleName = 'Essential Newborn Care Checklist'";
+                "Left Join mcaremother on mcarechild.relationalid = mcaremother.id ";
     }
     public String childMainCountWithJoins() {
         return "Select Count(*) \n" +
                 "from mcarechild\n" +
-                "Left Join mcaremother on mcarechild.relationalid = mcaremother.id \n" +
-                "Left Join alerts on alerts.caseID = mcarechild.id and alerts.scheduleName = 'Essential Newborn Care Checklist'";
+                "Left Join mcaremother on mcarechild.relationalid = mcaremother.id ";
     }
 
     private String sortBySortValue(){

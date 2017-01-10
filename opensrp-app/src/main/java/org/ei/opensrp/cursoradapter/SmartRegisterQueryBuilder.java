@@ -148,38 +148,50 @@ public class SmartRegisterQueryBuilder {
             res += String.format(" WHERE %s IN (%s) ", idColumn, joinedIds);
 
             if (StringUtils.isNotBlank(sort)) {
-                if(innerSort(sort)) {
-                    res += " ORDER BY CASE " + idColumn;
-                    for (int i = 0; i < ids.size(); i++) {
-                        res += " WHEN '" + ids.get(i) + "' THEN " + i;
-                    }
-                    res += " END ";
-                } else {
-                    res += " ORDER BY " + sort;
+                res += " ORDER BY CASE " + idColumn;
+                for (int i = 0; i < ids.size(); i++) {
+                    res += " WHEN '" + ids.get(i) + "' THEN " + i;
                 }
+                res += " END ";
             }
         }
 
         return res;
     }
 
-    public String searchQueryFts(String tablename, String searchJoinTable, String mainCondition, String searchFilter, String sort, int limit, int offset){
+    public String searchQueryFts(String tablename, String searchJoinTable, String[] joinAlerts, String mainCondition, String searchFilter, String sort, int limit, int offset){
         if(StringUtils.isNotBlank(searchJoinTable) && StringUtils.isNotBlank(searchFilter)){
-            String query = "SELECT " + CommonFtsObject.idColumn + " FROM " + CommonFtsObject.searchTableName(tablename)  + phraseClause(tablename, searchJoinTable, mainCondition, searchFilter) + orderByClause(sort) + limitClause(limit, offset);
+            String query = "SELECT " + CommonFtsObject.idColumn + " FROM " + CommonFtsObject.searchTableName(tablename) + joinwithALertsFts(CommonFtsObject.searchTableName(tablename), joinAlerts) + phraseClause(tablename, searchJoinTable, mainCondition, searchFilter) + orderByClause(sort) + limitClause(limit, offset);
             return query;
         }
-        String query = "SELECT " + CommonFtsObject.idColumn + " FROM " + CommonFtsObject.searchTableName(tablename)  + phraseClause(mainCondition, searchFilter) + orderByClause(sort) + limitClause(limit, offset);
+        String query = "SELECT " + CommonFtsObject.idColumn + " FROM " + CommonFtsObject.searchTableName(tablename) + joinwithALertsFts(CommonFtsObject.searchTableName(tablename), joinAlerts) + phraseClause(mainCondition, searchFilter) + orderByClause(sort) + limitClause(limit, offset);
         return query;
     }
 
-
-    public String countQueryFts(String tablename, String searchJoinTable, String mainCondition, String searchFilter){
+    public String countQueryFts(String tablename, String searchJoinTable, String[] joinAlerts, String mainCondition, String searchFilter){
         if(StringUtils.isNotBlank(searchJoinTable) && StringUtils.isNotBlank(searchFilter)){
-            String query = "SELECT " + CommonFtsObject.idColumn + " FROM " + CommonFtsObject.searchTableName(tablename)  + phraseClause(searchJoinTable, mainCondition, searchFilter);
+            String query = "SELECT " + CommonFtsObject.idColumn + " FROM " + CommonFtsObject.searchTableName(tablename)  + joinwithALertsFts(CommonFtsObject.searchTableName(tablename), joinAlerts) + phraseClause(searchJoinTable, mainCondition, searchFilter);
             return query;
         }
-        String query = "SELECT " + CommonFtsObject.idColumn + " FROM " + CommonFtsObject.searchTableName(tablename)  + phraseClause(mainCondition, searchFilter);
+        String query = "SELECT " + CommonFtsObject.idColumn + " FROM " + CommonFtsObject.searchTableName(tablename) + joinwithALertsFts(CommonFtsObject.searchTableName(tablename), joinAlerts)  + phraseClause(mainCondition, searchFilter);
         return query;
+    }
+
+    public String joinwithALertsFts(String tablename, String[] joinAlerts){
+        if(joinAlerts == null || joinAlerts.length == 0 ){
+            return "";
+        }
+
+        String joinQuery =  "";
+        if(joinAlerts.length == 1 && StringUtils.isNotBlank(joinAlerts[0])) {
+            joinQuery = " LEFT JOIN alerts ON alerts.caseID = " + tablename + "." + CommonFtsObject.idColumn + "  AND  alerts.scheduleName = '" + joinAlerts[0] + "'";
+        }
+
+        if(joinAlerts.length == 2 && StringUtils.isNotBlank(joinAlerts[1])) {
+            joinQuery += " LEFT JOIN  alerts as alerts2 ON alerts2.caseID = " + tablename + "." + CommonFtsObject.idColumn + "  AND  alerts2.scheduleName = '" + joinAlerts[1] + "'";
+        }
+
+        return joinQuery;
     }
 
     private String phraseClause(String mainCondition, String phrase){
@@ -205,7 +217,7 @@ public class SmartRegisterQueryBuilder {
     }
 
     private String orderByClause(String sort){
-        if(StringUtils.isNotBlank(sort) && innerSort(sort)){
+        if(StringUtils.isNotBlank(sort)){
             return " ORDER BY " + sort;
         }
         return "";
@@ -213,10 +225,6 @@ public class SmartRegisterQueryBuilder {
 
     private String limitClause(int limit, int offset){
         return " LIMIT " +  offset + "," + limit;
-    }
-
-    private boolean innerSort(String sort){
-        return !sort.contains("alerts".trim()) && !StringUtils.containsIgnoreCase(StringUtils.normalizeSpace(sort), "case when");
     }
 
     private String mainConditionClause(String mainCondition){

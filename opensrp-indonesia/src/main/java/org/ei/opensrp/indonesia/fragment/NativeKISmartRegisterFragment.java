@@ -18,12 +18,11 @@ import org.ei.opensrp.cursoradapter.CursorCommonObjectSort;
 import org.ei.opensrp.cursoradapter.SecuredNativeSmartRegisterCursorAdapterFragment;
 import org.ei.opensrp.cursoradapter.SmartRegisterPaginatedCursorAdapter;
 import org.ei.opensrp.cursoradapter.SmartRegisterQueryBuilder;
-import org.ei.opensrp.indonesia.kartu_ibu.AllKartuIbuServiceMode;
 import org.ei.opensrp.indonesia.LoginActivity;
 import org.ei.opensrp.indonesia.R;
-
-import org.ei.opensrp.indonesia.kartu_ibu.KICommonObjectFilterOption;
+import org.ei.opensrp.indonesia.kartu_ibu.AllKartuIbuServiceMode;
 import org.ei.opensrp.indonesia.kartu_ibu.KIClientsProvider;
+import org.ei.opensrp.indonesia.kartu_ibu.KICommonObjectFilterOption;
 import org.ei.opensrp.indonesia.kartu_ibu.KIDetailActivity;
 import org.ei.opensrp.indonesia.kartu_ibu.NativeKISmartRegisterActivity;
 import org.ei.opensrp.indonesia.lib.FlurryFacade;
@@ -32,7 +31,6 @@ import org.ei.opensrp.util.StringUtil;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
 import org.ei.opensrp.view.contract.ECClient;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
-import org.ei.opensrp.view.contract.SmartRegisterClients;
 import org.ei.opensrp.view.controller.VillageController;
 import org.ei.opensrp.view.dialog.AllClientsFilter;
 import org.ei.opensrp.view.dialog.DialogOption;
@@ -51,8 +49,6 @@ import org.opensrp.api.util.TreeNode;
 
 import java.util.ArrayList;
 import java.util.Map;
-
-import util.AsyncTask;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
@@ -352,36 +348,13 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
             @Override
             public void onTextChanged(final CharSequence cs, int start, int before, int count) {
 
-                (new AsyncTask() {
-                    SmartRegisterClients filteredClients;
+                filters = cs.toString();
+                joinTable = "";
+                mainCondition = " isClosed !='true' ";
 
-                    @Override
-                    protected Object doInBackground(Object[] params) {
-//                        currentSearchFilter =
-//                        setCurrentSearchFilter(new HHSearchOption(cs.toString()));
-//                        filteredClients = getClientsAdapter().getListItemProvider()
-//                                .updateClients(getCurrentVillageFilter(), getCurrentServiceModeOption(),
-//                                        getCurrentSearchFilter(), getCurrentSortOption());
-//
-                        filters = cs.toString();
-                        joinTable = "";
-                        mainCondition = " isClosed !='true' ";
-                        return null;
-                    }
-
-                    @Override
-                    protected void onPostExecute(Object o) {
-//                        clientsAdapter
-//                                .refreshList(currentVillageFilter, currentServiceModeOption,
-//                                        currentSearchFilter, currentSortOption);
-//                        getClientsAdapter().refreshClients(filteredClients);
-//                        getClientsAdapter().notifyDataSetChanged();
-                        getSearchCancelView().setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
-                        CountExecute();
-                        filterandSortExecute();
-                        super.onPostExecute(o);
-                    }
-                }).execute();
+                getSearchCancelView().setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
+                CountExecute();
+                filterandSortExecute();
             }
 
             @Override
@@ -400,43 +373,13 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
 
             @Override
             public void onTextChanged(final CharSequence cs, int start, int before, int count) {
-                (new AsyncTask() {
-                    SmartRegisterClients filteredClients;
 
-                    @Override
-                    protected Object doInBackground(Object[] params) {
-//                        currentSearchFilter =
-//                        setCurrentSearchFilter(new HHSearchOption(cs.toString()));
-//                        filteredClients = getClientsAdapter().getListItemProvider()
-//                                .updateClients(getCurrentVillageFilter(), getCurrentServiceModeOption(),
-//                                        getCurrentSearchFilter(), getCurrentSortOption());
-//
+                filters = cs.toString();
+                joinTable = "";
+                mainCondition = " isClosed !='true' ";
 
-                        filters = cs.toString();
-                        joinTable = "";
-                        mainCondition = " isClosed !='true' ";
-                        return null;
-                    }
-
-                    @Override
-                    protected void onPostExecute(Object o) {
-//                        clientsAdapter
-//                                .refreshList(currentVillageFilter, currentServiceModeOption,
-//                                        currentSearchFilter, currentSortOption);
-//                        getClientsAdapter().refreshClients(filteredClients);
-//                        getClientsAdapter().notifyDataSetChanged();
-                        getSearchCancelView().setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
-                        filterandSortExecute();
-                        super.onPostExecute(o);
-                    }
-                }).execute();
-//                currentSearchFilter = new HHSearchOption(cs.toString());
-//                clientsAdapter
-//                        .refreshList(currentVillageFilter, currentServiceModeOption,
-//                                currentSearchFilter, currentSortOption);
-//
-//                searchCancelView.setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
-
+                getSearchCancelView().setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
+                filterandSortExecute();
 
             }
 

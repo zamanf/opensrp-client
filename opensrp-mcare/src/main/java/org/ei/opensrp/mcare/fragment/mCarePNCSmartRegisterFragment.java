@@ -34,7 +34,6 @@ import org.ei.opensrp.util.StringUtil;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
 import org.ei.opensrp.view.contract.ECClient;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
-import org.ei.opensrp.view.contract.SmartRegisterClients;
 import org.ei.opensrp.view.controller.VillageController;
 import org.ei.opensrp.view.customControls.CustomFontTextView;
 import org.ei.opensrp.view.dialog.AllClientsFilter;
@@ -52,8 +51,6 @@ import org.opensrp.api.util.TreeNode;
 
 import java.util.ArrayList;
 import java.util.Map;
-
-import util.AsyncTask;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
@@ -274,34 +271,19 @@ public class mCarePNCSmartRegisterFragment extends SecuredNativeSmartRegisterCur
 
             @Override
             public void onTextChanged(final CharSequence cs, int start, int before, int count) {
-                (new AsyncTask() {
-                    SmartRegisterClients filteredClients;
 
-                    @Override
-                    protected Object doInBackground(Object[] params) {
+                if(cs.toString().equalsIgnoreCase("")){
+                    filters = "";
+                }else {
+                    //filters = "and FWWOMFNAME Like '%" + cs.toString() + "%' or GOBHHID Like '%" + cs.toString() + "%'  or JiVitAHHID Like '%" + cs.toString() + "%' ";
+                    filters = cs.toString();
+                }
+                joinTable = "";
+                mainCondition = " Is_PNC = '1'  and FWWOMFNAME not null and FWWOMFNAME != \"\"   AND details  LIKE '%\"FWWOMVALID\":\"1\"%'";
 
-//
-                        if(cs.toString().equalsIgnoreCase("")){
-                            filters = "";
-                        }else {
-                            //filters = "and FWWOMFNAME Like '%" + cs.toString() + "%' or GOBHHID Like '%" + cs.toString() + "%'  or JiVitAHHID Like '%" + cs.toString() + "%' ";
-                            filters = cs.toString();
-                        }
-                        joinTable = "";
-                        mainCondition = " Is_PNC = '1'  and FWWOMFNAME not null and FWWOMFNAME != \"\"   AND details  LIKE '%\"FWWOMVALID\":\"1\"%'";
-                        return null;
-                    }
-
-                    @Override
-                    protected void onPostExecute(Object o) {
-//
-                        getSearchCancelView().setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
-                        CountExecute();
-                        filterandSortExecute();
-                        super.onPostExecute(o);
-                    }
-                }).execute();
-
+                getSearchCancelView().setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
+                CountExecute();
+                filterandSortExecute();
 
             }
 
@@ -350,13 +332,11 @@ public class mCarePNCSmartRegisterFragment extends SecuredNativeSmartRegisterCur
 
     public String pncMainSelectWithJoins(){
         return "Select id as _id,relationalid,details,FWWOMFNAME,FWPSRLMP,FWSORTVALUE,JiVitAHHID,GOBHHID,Is_PNC,FWBNFSTS,FWBNFDTOO \n" +
-                "from mcaremother\n" +
-                "Left Join alerts on alerts.caseID = mcaremother.id and alerts.scheduleName = 'Post Natal Care Reminder Visit' ";
+                "from mcaremother\n";
     }
     public String pncMainCountWithJoins(){
         return "Select Count(*) \n" +
-                "from mcaremother\n" +
-                "Left Join alerts on alerts.caseID = mcaremother.id and alerts.scheduleName = 'Post Natal Care Reminder Visit'";
+                "from mcaremother\n";
     }
     public void initializeQueries(){
         mCarePNCSmartClientsProvider hhscp = new mCarePNCSmartClientsProvider(getActivity(),clientActionHandler,context.alertService());
@@ -367,6 +347,10 @@ public class mCarePNCSmartRegisterFragment extends SecuredNativeSmartRegisterCur
         SmartRegisterQueryBuilder countqueryBUilder = new SmartRegisterQueryBuilder(pncMainCountWithJoins());
         countSelect = countqueryBUilder.mainCondition(" mcaremother.Is_PNC = '1'  and mcaremother.FWWOMFNAME not null and mcaremother.FWWOMFNAME != \"\"   AND mcaremother.details  LIKE '%\"FWWOMVALID\":\"1\"%'");
         mainCondition = " Is_PNC = '1'  and FWWOMFNAME not null and FWWOMFNAME != \"\"   AND details  LIKE '%\"FWWOMVALID\":\"1\"%'";
+
+        joinAlerts = new String[1];
+        joinAlerts[0] = "Post Natal Care Reminder Visit";
+
         super.CountExecute();
 
         SmartRegisterQueryBuilder queryBUilder = new SmartRegisterQueryBuilder(pncMainSelectWithJoins());
