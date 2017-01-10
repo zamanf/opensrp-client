@@ -13,13 +13,23 @@
     <TextView
         android:text="Hello World!"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:id="@+id/textView" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/btn_clients"
         android:text="Clients"
-        />
+        android:layout_below="@+id/textView"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bluetooth"
+        android:id="@+id/btn_bluetooth"
+        android:layout_below="@+id/btn_clients"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
