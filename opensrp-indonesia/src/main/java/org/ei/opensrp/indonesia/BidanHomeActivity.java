@@ -17,7 +17,7 @@ import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.CommonPersonObjectController;
 import org.ei.opensrp.cursoradapter.SmartRegisterQueryBuilder;
 import org.ei.opensrp.event.Listener;
-import org.ei.opensrp.indonesia.fr.PhotoLiveConstant;
+import org.ei.opensrp.indonesia.face.fr.PhotoLiveConstant;
 import org.ei.opensrp.indonesia.lib.FlurryFacade;
 import org.ei.opensrp.service.PendingFormSubmissionService;
 import org.ei.opensrp.sync.SyncAfterFetchListener;
@@ -112,11 +112,15 @@ public class BidanHomeActivity extends SecuredActivity {
         DisplayFormFragment.okMessage = getResources().getString(R.string.okforminputerror);
       //  context.formSubmissionRouter().getHandlerMap().put("census_enrollment_form", new ANChandler());
 
-// FacialActivity Recognition
+//// FacialActivity Recognition
+//        faceObj = FacialProcessing.getInstance();
+//        Log.e(TAG, "onCreation: "+faceObj.toString() );
 //        if(faceObj == null) {
 //            faceObj = FacialProcessing.getInstance();
+//            Log.e(TAG, "onCreation: faceObj Null" );
 //        } else {
 //            faceObj.release();
+//            Log.e(TAG, "onCreation: faceObj Not Null" );
 //        }
 //        initSingleRun();
 
@@ -351,15 +355,12 @@ public class BidanHomeActivity extends SecuredActivity {
                 loadAlbum(); // De-serialize a previously stored album.
                 if (faceObj != null) {
                     faceObj.setRecognitionConfidence(PhotoLiveConstant.CONFIDENCE_VALUE);
-//                    faceObj.setProcessingMode(FacialProcessing.FP_MODES.FP_MODE_STILL);
-                } else{
+                    faceObj.setProcessingMode(FacialProcessing.FP_MODES.FP_MODE_VIDEO);
+                } else {
                     throw new UnsupportedOperationException("An instance is already in use");
                 }
-            } else
-
-            {
+            } else {
                 Log.e(TAG, "Feature FacialActivity Recognition is NOT supported");
-//                FlurryFacade.logEvent("Sorry, FacialActivity Recognition Feature is NOT supported!");
                 AlertDialog.Builder builder= new AlertDialog.Builder(this);
 
                 builder.setTitle("Incompatible Hardware!");
@@ -371,7 +372,6 @@ public class BidanHomeActivity extends SecuredActivity {
                                 BidanHomeActivity.this.finish();
                             }});
                 builder.show();
-
             }
         }
     }
@@ -391,7 +391,7 @@ public class BidanHomeActivity extends SecuredActivity {
                 albumArray[i] = Byte.parseByte(splitStringArray[i]);
             }
             faceObj.deserializeRecognitionAlbum(albumArray);
-            Log.e(TAG, "De-Serialized Album");
+            Log.e(TAG, "De-Serialized Album Success!");
         }
     }
 

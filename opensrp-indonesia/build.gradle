@@ -22,8 +22,10 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.5.3@aar') {
         transitive = true;
     }
-    compile 'com.google.android.gms:play-services-appindexing:8.1.0'
-    androidTestCompile files('libs/sd-sdk-facial-processing.jar')
+    compile 'com.google.android.gms:play-services-appindexing:9.8.0'
+    compile files('libs/sd-sdk-facial-processing.jar')
+//    compile 'com.akexorcist:bluetoothspp:1.0.0'
+
 }
 android {
     compileSdkVersion androidCompileSdkVersion

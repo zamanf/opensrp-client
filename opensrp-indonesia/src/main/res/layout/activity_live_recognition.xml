@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="org.ei.opensrp.indonesia.fr.activity.PhotoLive" >
+    tools:context=".face.fr.activity.PhotoLive" >
 
     <FrameLayout
         android:id="@+id/cameraPreview2"

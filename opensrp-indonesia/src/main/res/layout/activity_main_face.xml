@@ -15,7 +15,7 @@
     android:paddingLeft="0dp"
     android:paddingRight="0dp"
     android:paddingTop="0dp"
-    tools:context=".face.SmartShutterActivity" >
+    tools:context=".face.camera.SmartShutterActivity" >
     
 	<FrameLayout
         android:id="@+id/cameraPreview"

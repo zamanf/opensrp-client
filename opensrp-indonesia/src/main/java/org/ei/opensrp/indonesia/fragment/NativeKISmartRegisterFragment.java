@@ -1,7 +1,9 @@
 package org.ei.opensrp.indonesia.fragment;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -23,7 +25,7 @@ import org.ei.opensrp.cursoradapter.SmartRegisterPaginatedCursorAdapter;
 import org.ei.opensrp.cursoradapter.SmartRegisterQueryBuilder;
 import org.ei.opensrp.indonesia.LoginActivity;
 import org.ei.opensrp.indonesia.R;
-import org.ei.opensrp.indonesia.face.SmartShutterActivity;
+import org.ei.opensrp.indonesia.face.camera.SmartShutterActivity;
 import org.ei.opensrp.indonesia.kartu_ibu.AllKartuIbuServiceMode;
 import org.ei.opensrp.indonesia.kartu_ibu.KIClientsProvider;
 import org.ei.opensrp.indonesia.kartu_ibu.KICommonObjectFilterOption;
@@ -215,7 +217,9 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
 
     public void initializeQueries(){
         try {
-        KIClientsProvider kiscp = new KIClientsProvider(getActivity(),clientActionHandler,context.alertService());
+        KIClientsProvider kiscp = new KIClientsProvider(getActivity(),
+                clientActionHandler,
+                context.alertService());
         clientAdapter = new SmartRegisterPaginatedCursorAdapter(getActivity(), null, kiscp,
                 new CommonRepository(
                         "ec_kartu_ibu",
@@ -396,36 +400,39 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
     @Override
     public void setupSearchView(View view) {
         searchView = (EditText) view.findViewById(org.ei.opensrp.R.id.edt_search);
-//        searchView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                CharSequence selections[] = new CharSequence[] {"Name", "Photo"};
-//                final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-//                builder.setTitle("");
-//                builder.setItems(selections, new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int opt) {
-//                        if (opt == 0) searchTextChangeListener() ; else getFacialRecord();
+        searchView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CharSequence selections[] = new CharSequence[] {"Name", "Photo"};
+                final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("");
+                builder.setItems(selections, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int opt) {
+                        if (opt == 0) searchTextChangeListener("") ; else getFacialRecord();
 //                        searchTextChangeListener();
-//                    }
-//                });
-//                builder.show();
-//
-//            }
-//        });
-//
-//
+                    }
+                });
+                builder.show();
+
+            }
+        });
+
+
         searchCancelView = view.findViewById(org.ei.opensrp.R.id.btn_search_cancel);
 //        searchCancelView.setOnClickListener(searchCancelHandler);
     }
 
-    private void getFacialRecord() {
+    public void getFacialRecord() {
+        Log.e(TAG, "getFacialRecord: " );
         Intent intent = new Intent(getActivity(),SmartShutterActivity.class);
-        intent.putExtra("IdentifyPerson", true);
+        intent.putExtra("org.sid.sidface.ImageConfirmation.identify", true);
         startActivity(intent);
+//        searchTextChangeListener("0941");
     }
 
-    private void searchTextChangeListener() {
+    private void searchTextChangeListener(String s) {
+        Log.e(TAG, "searchTextChangeListener: "+s );
         searchView.setHint(getNavBarOptionsProvider().searchHint());
         searchView.addTextChangedListener(new TextWatcher() {
             @Override

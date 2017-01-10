@@ -21,7 +21,7 @@ import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.commonregistry.CommonPersonObjectController;
 import org.ei.opensrp.cursoradapter.SmartRegisterCLientsProviderForCursorAdapter;
 import org.ei.opensrp.indonesia.R;
-import org.ei.opensrp.indonesia.face.util.FaceConstants;
+import org.ei.opensrp.indonesia.face.camera.util.FaceConstants;
 import org.ei.opensrp.repository.DetailsRepository;
 import org.ei.opensrp.service.AlertService;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
@@ -53,8 +53,8 @@ public class KIClientsProvider implements SmartRegisterCLientsProviderForCursorA
 
     AlertService alertService;
     public KIClientsProvider(Context context,
-                                         View.OnClickListener onClickListener,
-                                         AlertService alertService) {
+                             View.OnClickListener onClickListener,
+                             AlertService alertService) {
         this.onClickListener = onClickListener;
 //        this.controller = controller;
         this.context = context;
@@ -106,25 +106,26 @@ public class KIClientsProvider implements SmartRegisterCLientsProviderForCursorA
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        viewHolder.follow_up.setOnClickListener(onClickListener);
-        viewHolder.follow_up.setTag(smartRegisterClient);
-        viewHolder.profilelayout.setOnClickListener(onClickListener);
-        viewHolder.profilelayout.setTag(smartRegisterClient);
-
-        CommonPersonObjectClient pc = (CommonPersonObjectClient) smartRegisterClient;
-
         if (iconPencilDrawable == null) {
             iconPencilDrawable = context.getResources().getDrawable(R.drawable.ic_pencil);
         }
+
+        viewHolder.profilelayout.setOnClickListener(onClickListener);
+        viewHolder.profilelayout.setTag(smartRegisterClient);
         viewHolder.follow_up.setImageDrawable(iconPencilDrawable);
         viewHolder.follow_up.setOnClickListener(onClickListener);
+        viewHolder.follow_up.setOnClickListener(onClickListener);
+        viewHolder.follow_up.setTag(smartRegisterClient);
+
+        CommonPersonObjectClient pc = (CommonPersonObjectClient) smartRegisterClient;
+
 
         // set flag High Risk
 
         DetailsRepository detailsRepository = org.ei.opensrp.Context.getInstance().detailsRepository();
         detailsRepository.updateDetails(pc);
 
-        System.out.println("Detail: " + pc.getDetails().toString());
+//        System.out.println("Detail: " + pc.getDetails().toString());
 
         //Set image as Icon
         final ImageView kiview = (ImageView)convertView.findViewById(R.id.img_profile);
@@ -189,7 +190,6 @@ public class KIClientsProvider implements SmartRegisterCLientsProviderForCursorA
         }
         viewHolder.children_age_left.setText(pc.getColumnmaps().get("namaBayi")!=null?"Name : "+pc.getColumnmaps().get("namaBayi"):"");
         viewHolder.children_age_right.setText(pc.getColumnmaps().get("tanggalLahirAnak")!=null?"DOB : "+pc.getColumnmaps().get("tanggalLahirAnak").substring(0, pc.getColumnmaps().get("tanggalLahirAnak").indexOf("T")):"");
-
 
         viewHolder.hr_badge.setVisibility(View.INVISIBLE);
         viewHolder.hrp_badge.setVisibility(View.INVISIBLE);

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="5dp" >
+
+
+    <TextView
+        android:id="@+id/textView1"
+        android:background="@drawable/border"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:lines="2"
+        android:textColor="#FFA500"
+        android:textSize="20sp"
+        android:layout_toLeftOf="@+id/uid_upd_btn"
+        android:layout_toStartOf="@+id/uid_upd_btn" />
+
+
+    <Button
+        android:id="@+id/uid_upd_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/uid_del_btn"
+        android:text="Update" />
+
+    <Button
+        android:id="@+id/uid_del_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:text="Delete" />
+
+</RelativeLayout>

@@ -81,27 +81,28 @@
             android:name=".child.AnakDetailActivity"
             android:screenOrientation="landscape"
             android:theme="@style/AppThemeNoTitle"/>
-        <activity android:name=".fr.activity.PhotoLive"
+        <activity android:name=".face.fr.activity.PhotoLive"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
 
         <activity
-            android:name=".fr.LiveRecognition"
+            android:name=".face.fr.LiveRecognitionActivity"
             android:label="LiveRecognition"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:screenOrientation="portrait" >
         </activity>
-        <activity android:name=".fr.activity.ImageConfirmation"
+        <activity android:name=".face.fr.activity.ImageConfirmation"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
 
-        <activity android:name=".fr.activity.ConfirmImage"
+        <activity android:name=".face.fr.activity.ConfirmImage"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
 
-        <activity android:name=".face.SmartShutterActivity" />
-        <activity android:name=".face.ImageConfirmation" />
+        <activity android:name=".face.camera.SmartShutterActivity" />
+        <activity android:name=".face.camera.ImageConfirmation" />
+        <activity android:name=".face.camera.util.Tools" />
 
 
-        <activity android:name=".sidface.FacialActivity" />
-        <activity android:name=".sidface.FaceConfirmation" />
+        <!--<activity android:name=".face.sidface.FacialActivity" />-->
+        <!--<activity android:name=".face.sidface.FaceConfirmation" />-->
 
         <!-- ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->

@@ -1,7 +1,6 @@
 package org.ei.opensrp.indonesia.application;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.util.Log;
 
 import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
@@ -14,7 +13,6 @@ import org.ei.opensrp.sync.DrishtiSyncScheduler;
 import org.ei.opensrp.view.activity.DrishtiApplication;
 import org.ei.opensrp.view.receiver.SyncBroadcastReceiver;
 
-import java.util.Arrays;
 import java.util.Locale;
 
 import static org.ei.opensrp.util.Log.logInfo;
@@ -33,7 +31,7 @@ public class BidanApplication extends DrishtiApplication {
     private final static String TAG = BidanApplication.class.getSimpleName();
     @Override
     public void onCreate() {
-        DrishtiSyncScheduler.setReceiverClass(SyncBroadcastReceiver.class);
+//        DrishtiSyncScheduler.setReceiverClass(SyncBroadcastReceiver.class);
         super.onCreate();
         //  ACRA.init(this);
 
@@ -103,10 +101,7 @@ public class BidanApplication extends DrishtiApplication {
     private String[] getFtsSearchFields(String tableName){
         if(tableName.equals("ec_kartu_ibu")){
             String[] ftsSearchFields =  { "namalengkap", "namaSuami", "base_entity_id" };
-//            String[] ftsSearchFields =  { "base_entity_id" };
-            Log.e(TAG, "getFtsSearchFields: "+ Arrays.toString(ftsSearchFields));
             return ftsSearchFields;
-//            return null;
         } else if(tableName.equals("ec_anak")){
             String[] ftsSearchFields =  { "namaBayi" };
             return ftsSearchFields;

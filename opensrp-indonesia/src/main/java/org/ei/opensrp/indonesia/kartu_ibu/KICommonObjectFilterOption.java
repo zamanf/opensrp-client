@@ -10,12 +10,8 @@ public class KICommonObjectFilterOption implements CursorFilterOption {
 
     @Override
     public String filter() {
-
-
         return " and kartu_ibu.details LIKE '%"+criteria+"%'";
     }
-
-
 
     public KICommonObjectFilterOption(String criteria, String fieldname, String filteroptionname) {
         this.criteria = criteria;

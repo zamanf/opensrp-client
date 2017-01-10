@@ -1,4 +1,5 @@
 /build
-/src/main/java/org/ei/opensrp/indonesia/fr
-/src/main/java/org/ei/opensrp/indonesia/sidface
+/org/ei/opensrp/indonesia/face/fr
+/org/ei/opensrp/indonesia/face/sidface
 /src/main/java/org/ei/opensrp/indonesia/face
+/org/ei/opensrp/indonesia/LoginActivity.java
