@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
+import org.ei.opensrp.cursoradapter.SmartRegisterCLientsProviderForCursorAdapter;
 import org.ei.opensrp.path.R;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.service.AlertService;
@@ -30,7 +31,7 @@ import static util.Utils.addAsInts;
 import static util.Utils.fillValue;
 import static util.Utils.getValue;
 
-public class FieldMonitorSmartClientsProvider implements SmartRegisterClientsProvider {
+public class FieldMonitorSmartClientsProvider implements SmartRegisterCLientsProviderForCursorAdapter {
 
     private final LayoutInflater inflater;
     private final Context context;
@@ -123,7 +124,7 @@ public class FieldMonitorSmartClientsProvider implements SmartRegisterClientsPro
     }
 
     @Override
-    public View getView(SmartRegisterClient client, View parentView, ViewGroup viewGroup) {
+    public void getView(SmartRegisterClient client, View parentView) {
         CommonPersonObjectClient pc = (CommonPersonObjectClient) client;
 
         String dateentered = pc.getColumnmaps().get("date");
@@ -208,13 +209,7 @@ public class FieldMonitorSmartClientsProvider implements SmartRegisterClientsPro
 
         parentView.setTag(R.id.client_details_tag, client);
         parentView.setOnClickListener(onClickListener);
-        return parentView;
-    }
 
-
-    @Override
-    public SmartRegisterClients getClients() {
-        throw new UnsupportedOperationException("Operation not supported");
     }
 
     @Override
@@ -233,9 +228,8 @@ public class FieldMonitorSmartClientsProvider implements SmartRegisterClientsPro
         throw new UnsupportedOperationException("Operation not supported");
     }
 
-    // FIXME path_conflict
-    //@Override
-    public View inflateLayoutForAdapter() {
+    @Override
+    public View inflatelayoutForCursorAdapter() {
         if(byMonthlyAndByDaily.equals(ByMonthByDay.ByDay)){
             return inflater().inflate(R.layout.smart_register_field_daily_client, null);
         }

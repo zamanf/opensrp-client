@@ -179,7 +179,7 @@ public class WomanSmartRegisterFragment extends SecuredNativeSmartRegisterCursor
         super.CountExecute();
 
         SmartRegisterQueryBuilder queryBUilder = new SmartRegisterQueryBuilder();
-        queryBUilder.SelectInitiateMainTable(tableName, new String[]{"relationalid", "details", "program_client_id", "first_name", "husband_name", "father_name", "dob", "epi_card_number", "contact_phone_number", "vaccines", "vaccines_2", "provider_uc", "provider_town", "provider_id", "provider_location_id", "client_reg_date", "last_name", "gender", "father_name", "marriage", "husband_name", "town", "union_council", "address1", "address", "reminders_approval", "final_edd", "final_ga", "tt1_retro", "tt2_retro", "tt3_retro", "tt4_retro", "tt1", "tt2", "tt3", "tt4", "tt5", "date", "pregnant"});
+        queryBUilder.SelectInitiateMainTable(tableName, new String[]{"relationalid", "details", "program_client_id", "first_name", "husband_name", "father_name", "dob", "epi_card_number", "contact_phone_number", "vaccines", "vaccines_2", "provider_uc", "provider_town", "provider_id", "provider_location_id", "client_reg_date", "last_name", "gender", "marriage", "town", "union_council", "address1", "address", "reminders_approval", "final_edd", "final_ga", "tt1_retro", "tt2_retro", "tt3_retro", "tt4_retro", "tt1", "tt2", "tt3", "tt4", "tt5", "date", "pregnant"});
         mainSelect = queryBUilder.mainCondition("");
         Sortqueries = ((CursorSortOption) getDefaultOptionsProvider().sortOption()).sort();
 
