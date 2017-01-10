@@ -6,11 +6,9 @@ import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import org.ei.opensrp.Context;
-import org.ei.opensrp.adapter.SmartRegisterPaginatedAdapter;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.cursoradapter.CursorCommonObjectFilterOption;
 import org.ei.opensrp.cursoradapter.CursorSortOption;
@@ -24,9 +22,7 @@ import org.ei.opensrp.path.activity.FieldMonitorDailyDetailActivity;
 import org.ei.opensrp.path.activity.FieldMonitorMonthlyDetailActivity;
 import org.ei.opensrp.path.activity.FieldMonitorSmartRegisterActivity;
 import org.ei.opensrp.path.option.DateSort;
-import org.ei.opensrp.path.option.ReportFilterOption;
 import org.ei.opensrp.path.provider.FieldMonitorSmartClientsProvider;
-import org.ei.opensrp.path.provider.WomanSmartClientsProvider;
 import org.ei.opensrp.path.servicemode.StockDailyServiceModeOption;
 import org.ei.opensrp.path.servicemode.StockMonthlyServiceModeOption;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
@@ -232,18 +228,6 @@ public class FieldMonitorRegisterFragment extends SecuredNativeSmartRegisterCurs
         add("(select sum(total_wasted) c from stock where report='daily' and SUBSTR(date,1,7)=SUBSTR(t.date,1,7)) total_monthly_wasted");
     }};
 
-    @Override
-    protected SmartRegisterPaginatedAdapter adapter() {
-        setCurrentSearchFilter(new ReportFilterOption(""));
-        return null;
-
-        // FIXME path_conflict
-        /* return new SmartRegisterPaginatedCursorAdapter(getActivity(),
-                new SmartRegisterCursorBuilder("stock", isDailyRegister()?"report='daily'":"report='monthly'",
-                        "t", (isDailyRegister()?customColumnsDaily:customColumnsMonthly).toArray(new String[]{}), (CursorSortOption) getDefaultOptionsProvider().sortOption())
-                , clientsProvider()); */
-    }
-
     private boolean isDailyRegister() {
         return getCurrentServiceModeOption() == null || getCurrentServiceModeOption().name().toLowerCase().contains("dail");
     }
@@ -258,8 +242,6 @@ public class FieldMonitorRegisterFragment extends SecuredNativeSmartRegisterCurs
         view.findViewById(R.id.btn_report_month).setVisibility(INVISIBLE);
         view.findViewById(R.id.service_mode_selection).setVisibility(INVISIBLE);
 
-        ImageButton startregister = (ImageButton) view.findViewById(org.ei.opensrp.R.id.register_client);
-        startregister.setVisibility(View.GONE);
         clientsView.setVisibility(View.VISIBLE);
         clientsProgressView.setVisibility(View.INVISIBLE);
         setServiceModeViewDrawableRight(null);

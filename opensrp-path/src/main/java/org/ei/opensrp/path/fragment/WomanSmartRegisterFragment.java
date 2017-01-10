@@ -3,7 +3,6 @@ package org.ei.opensrp.path.fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.widget.ImageButton;
 
 import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
@@ -155,8 +154,6 @@ public class WomanSmartRegisterFragment extends SecuredNativeSmartRegisterCursor
         view.findViewById(R.id.btn_report_month).setVisibility(INVISIBLE);
         view.findViewById(R.id.service_mode_selection).setVisibility(INVISIBLE);
 
-        ImageButton startregister = (ImageButton) view.findViewById(org.ei.opensrp.R.id.register_client);
-        startregister.setVisibility(View.GONE);
         clientsView.setVisibility(View.VISIBLE);
         clientsProgressView.setVisibility(View.INVISIBLE);
         setServiceModeViewDrawableRight(null);
