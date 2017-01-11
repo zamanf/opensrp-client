@@ -75,15 +75,6 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
 
     private final ClientActionHandler clientActionHandler = new ClientActionHandler();
     private String locationDialogTAG = "locationDialogTAG";
-    @Override
-    protected void onCreation() {
-        //
-    }
-
-//    @Override
-//    protected SmartRegisterPaginatedAdapter adapter() {
-//        return new SmartRegisterPaginatedAdapter(clientsProvider());
-//    }
 
     @Override
     protected SecuredNativeSmartRegisterActivity.DefaultOptionsProvider getDefaultOptionsProvider() {
@@ -176,13 +167,36 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
         return null;
     }
 
-    private DialogOption[] getEditOptions() {
-        return ((NativeKISmartRegisterActivity)getActivity()).getEditOptions();
+    @Override
+    protected void onInitialization() {
+        //  context.formSubmissionRouter().getHandlerMap().put("census_enrollment_form", new CensusEnrollmentHandler());
     }
 
     @Override
-    protected void onInitialization() {
-      //  context.formSubmissionRouter().getHandlerMap().put("census_enrollment_form", new CensusEnrollmentHandler());
+    protected void startRegistration() {
+        FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
+        Fragment prev = getActivity().getFragmentManager().findFragmentByTag(locationDialogTAG);
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+        LocationSelectorDialogFragment
+                .newInstance((NativeKISmartRegisterActivity) getActivity(), new EditDialogOptionModel(), context.anmLocationController().get(), "kartu_ibu_registration")
+                .show(ft, locationDialogTAG);
+    }
+
+    @Override
+    protected void onCreation() {
+        //
+    }
+
+//    @Override
+//    protected SmartRegisterPaginatedAdapter adapter() {
+//        return new SmartRegisterPaginatedAdapter(clientsProvider());
+//    }
+
+    private DialogOption[] getEditOptions() {
+        return ((NativeKISmartRegisterActivity)getActivity()).getEditOptions();
     }
 
     @Override
@@ -220,6 +234,7 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
         KIClientsProvider kiscp = new KIClientsProvider(getActivity(),
                 clientActionHandler,
                 context.alertService());
+
         clientAdapter = new SmartRegisterPaginatedCursorAdapter(getActivity(), null, kiscp,
                 new CommonRepository(
                         "ec_kartu_ibu",
@@ -274,19 +289,6 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
         
     }
 
-    @Override
-    public void startRegistration() {
-        FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
-        Fragment prev = getActivity().getFragmentManager().findFragmentByTag(locationDialogTAG);
-        if (prev != null) {
-            ft.remove(prev);
-        }
-        ft.addToBackStack(null);
-        LocationSelectorDialogFragment
-                .newInstance((NativeKISmartRegisterActivity) getActivity(), new EditDialogOptionModel(), context.anmLocationController().get(), "kartu_ibu_registration")
-                .show(ft, locationDialogTAG);
-    }
-
     private class ClientActionHandler implements View.OnClickListener {
         @Override
         public void onClick(View view) {
@@ -294,6 +296,7 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
                 case R.id.profile_info_layout:
                     FlurryFacade.logEvent("click_detail_view_on_kohort_ibu_dashboard");
                    KIDetailActivity.kiclient = (CommonPersonObjectClient)view.getTag();
+                    Log.e(TAG, "onClick: "+KIDetailActivity.kiclient );
                     Intent intent = new Intent(getActivity(),KIDetailActivity.class);
                     startActivity(intent);
                     getActivity().finish();
@@ -400,17 +403,20 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
     @Override
     public void setupSearchView(View view) {
         searchView = (EditText) view.findViewById(org.ei.opensrp.R.id.edt_search);
+//        String s = "09";
+//        searchView.setText(s);
+//        searchTextChangeListener(s);
         searchView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CharSequence selections[] = new CharSequence[] {"Name", "Photo"};
+                CharSequence selections[] = new CharSequence[]{"Name", "Photo"};
                 final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle("");
                 builder.setItems(selections, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int opt) {
-                        if (opt == 0) searchTextChangeListener("") ; else getFacialRecord();
-//                        searchTextChangeListener();
+                        if (opt == 0) searchTextChangeListener("");
+                        else getFacialRecord();
                     }
                 });
                 builder.show();
@@ -418,9 +424,8 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
             }
         });
 
-
         searchCancelView = view.findViewById(org.ei.opensrp.R.id.btn_search_cancel);
-//        searchCancelView.setOnClickListener(searchCancelHandler);
+        searchCancelView.setOnClickListener(searchCancelHandler);
     }
 
     public void getFacialRecord() {
@@ -428,7 +433,6 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
         Intent intent = new Intent(getActivity(),SmartShutterActivity.class);
         intent.putExtra("org.sid.sidface.ImageConfirmation.identify", true);
         startActivity(intent);
-//        searchTextChangeListener("0941");
     }
 
     private void searchTextChangeListener(String s) {

@@ -55,12 +55,15 @@ public class KIDetailActivity extends Activity {
     public static CommonPersonObjectClient kiclient;
     public static HashMap<String, String> details;
 
+    static String bindobject;
+    static String entityid;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Context context = Context.getInstance();
+//        Context context = Context.getInstance();
         setContentView(R.layout.ki_detail_activity);
-
 
         final ImageView kiview = (ImageView) findViewById(R.id.motherdetailprofileview);
         //header
@@ -154,7 +157,7 @@ public class KIDetailActivity extends Activity {
         nik.setText(getResources().getString(R.string.nik) + (kiclient.getDetails().get("nik") != null ? kiclient.getDetails().get("nik") : "-"));
         husband_name.setText(getResources().getString(R.string.husband_name) + (kiclient.getColumnmaps().get("namaSuami") != null ? kiclient.getColumnmaps().get("namaSuami") : "-"));
         dob.setText(getResources().getString(R.string.dob) + (kiclient.getDetails().get("tanggalLahir") != null ? kiclient.getDetails().get("tanggalLahir") : "-"));
-        phone.setText("No HP: " + (kiclient.getDetails().get("NomorTelponHp") != null ? kiclient.getDetails().get("NomorTelponHp") : "-"));
+        phone.setText(getResources().getString(R.string.cell_phone) + (kiclient.getDetails().get("NomorTelponHp") != null ? kiclient.getDetails().get("NomorTelponHp") : "-"));
         //risk
         if (kiclient.getDetails().get("highRiskPregnancyYoungMaternalAge") != null) {
             risk1.setText(getResources().getString(R.string.highRiskPregnancyYoungMaternalAge) + humanize(kiclient.getDetails().get("highRiskPregnancyYoungMaternalAge")));
@@ -176,9 +179,7 @@ public class KIDetailActivity extends Activity {
 
         //detail
         village.setText(": " + humanize(kiclient.getDetails().get("cityVillage") != null ? kiclient.getDetails().get("cityVillage") : "-"));
-//        village.setText(": "+humanize(kiclient.getDetails().get("id") != null ? kiclient.getDetails().get("id") : "-"));
         subvillage.setText(": " + humanize(kiclient.getDetails().get("address1") != null ? kiclient.getDetails().get("address1") : "-"));
-//        subvillage.setText(": "+humanize (kiclient.getDetails().get("id") != null ? kiclient.getDetails().get("id") : "-"));
         age.setText(": " + humanize(kiclient.getColumnmaps().get("umur") != null ? kiclient.getColumnmaps().get("umur") : "-"));
         alamat.setText(": " + humanize(kiclient.getDetails().get("address3") != null ? kiclient.getDetails().get("address3") : "-"));
         education.setText(": " + humanize(kiclient.getDetails().get("pendidikan") != null ? kiclient.getDetails().get("pendidikan") : "-"));
@@ -274,108 +275,106 @@ public class KIDetailActivity extends Activity {
     }
 
 
-    String mCurrentPhotoPath;
-
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-
-        // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = "file:" + image.getAbsolutePath();
-        return image;
-    }
-
-    static final int REQUEST_TAKE_PHOTO = 1;
-    static ImageView mImageView;
-    static File currentfile;
-    static String bindobject;
-    static String entityid;
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        Log.e(TAG, "onActivityResult: " + "Result");
-
-        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
-//            Bundle extras = data.getExtras();
-//            String imageBitmap = (String) extras.get(MediaStore.EXTRA_OUTPUT);
-//            Toast.makeText(this,imageBitmap,Toast.LENGTH_LONG).show();
-            HashMap<String, String> details = new HashMap<String, String>();
-            details.put("profilepic", currentfile.getAbsolutePath());
-            saveimagereference(bindobject, entityid, details);
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-            Bitmap bitmap = BitmapFactory.decodeFile(currentfile.getPath(), options);
-            mImageView.setImageBitmap(bitmap);
-        }
-    }
-
-    public void saveimagereference(String bindobject, String entityid, Map<String, String> details) {
-        Context.getInstance().allCommonsRepositoryobjects(bindobject).mergeDetails(entityid, details);
-        String anmId = Context.getInstance().allSharedPreferences().fetchRegisteredANM();
-        ProfileImage profileImage = new ProfileImage(UUID.randomUUID().toString(), anmId, entityid, "Image", details.get("profilepic"), ImageRepository.TYPE_Unsynced, "dp");
-        ((ImageRepository) Context.getInstance().imageRepository()).add(profileImage);
-//                kiclient.entityId();
-//        Toast.makeText(this,entityid,Toast.LENGTH_LONG).show();
-    }
-
-    public static void setImagetoHolderFromUri(Activity activity, String file, ImageView view, int placeholder) {
-        view.setImageDrawable(activity.getResources().getDrawable(placeholder));
-        File externalFile = new File(file);
-        Uri external = Uri.fromFile(externalFile);
-        view.setImageURI(external);
-    }
-
-    private void dispatchTakePictureIntent(ImageView imageView) {
-        mImageView = imageView;
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-                // Error occurred while creating the File
-
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                currentfile = photoFile;
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-                        Uri.fromFile(photoFile));
-                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-            }
-        }
-    }
-
-    public static void setImagetoHolder(Activity activity, String file, ImageView view, int placeholder) {
-        mImageThumbSize = 300;
-        mImageThumbSpacing = Context.getInstance().applicationContext().getResources().getDimensionPixelSize(R.dimen.image_thumbnail_spacing);
-
-        ImageCache.ImageCacheParams cacheParams = new ImageCache.ImageCacheParams(activity, IMAGE_CACHE_DIR);
-        cacheParams.setMemCacheSizePercent(0.50f); // Set memory cache to 25% of app memory
-        mImageFetcher = new ImageFetcher(activity, mImageThumbSize);
-        mImageFetcher.setLoadingImage(placeholder);
-        mImageFetcher.addImageCache(activity.getFragmentManager(), cacheParams);
-//        Toast.makeText(activity,file,Toast.LENGTH_LONG).show();
-        mImageFetcher.loadImage("file:///" + file, view);
-
-//        Uri.parse(new File("/sdcard/cats.jpg")
-
-//        BitmapFactory.Options options = new BitmapFactory.Options();
-//        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-//        Bitmap bitmap = BitmapFactory.decodeFile(file, options);
-//        view.setImageBitmap(bitmap);
-    }
+//    String mCurrentPhotoPath;
+//
+//    private File createImageFile() throws IOException {
+//        // Create an image file name
+//        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+//        String imageFileName = "JPEG_" + timeStamp + "_";
+//        File storageDir = Environment.getExternalStoragePublicDirectory(
+//                Environment.DIRECTORY_PICTURES);
+//        File image = File.createTempFile(
+//                imageFileName,  /* prefix */
+//                ".jpg",         /* suffix */
+//                storageDir      /* directory */
+//        );
+//
+//        // Save a file: path for use with ACTION_VIEW intents
+//        mCurrentPhotoPath = "file:" + image.getAbsolutePath();
+//        return image;
+//    }
+//
+//    static final int REQUEST_TAKE_PHOTO = 1;
+//    static ImageView mImageView;
+//    static File currentfile;
+//
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//
+//        Log.e(TAG, "onActivityResult: " + "Result");
+//
+//        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
+////            Bundle extras = data.getExtras();
+////            String imageBitmap = (String) extras.get(MediaStore.EXTRA_OUTPUT);
+////            Toast.makeText(this,imageBitmap,Toast.LENGTH_LONG).show();
+//            HashMap<String, String> details = new HashMap<String, String>();
+//            details.put("profilepic", currentfile.getAbsolutePath());
+//            saveimagereference(bindobject, entityid, details);
+//            BitmapFactory.Options options = new BitmapFactory.Options();
+//            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+//            Bitmap bitmap = BitmapFactory.decodeFile(currentfile.getPath(), options);
+//            mImageView.setImageBitmap(bitmap);
+//        }
+//    }
+//
+//    public void saveimagereference(String bindobject, String entityid, Map<String, String> details) {
+//        Context.getInstance().allCommonsRepositoryobjects(bindobject).mergeDetails(entityid, details);
+//        String anmId = Context.getInstance().allSharedPreferences().fetchRegisteredANM();
+//        ProfileImage profileImage = new ProfileImage(UUID.randomUUID().toString(), anmId, entityid, "Image", details.get("profilepic"), ImageRepository.TYPE_Unsynced, "dp");
+//        ((ImageRepository) Context.getInstance().imageRepository()).add(profileImage);
+////                kiclient.entityId();
+////        Toast.makeText(this,entityid,Toast.LENGTH_LONG).show();
+//    }
+//
+//    public static void setImagetoHolderFromUri(Activity activity, String file, ImageView view, int placeholder) {
+//        view.setImageDrawable(activity.getResources().getDrawable(placeholder));
+//        File externalFile = new File(file);
+//        Uri external = Uri.fromFile(externalFile);
+//        view.setImageURI(external);
+//    }
+//
+//    private void dispatchTakePictureIntent(ImageView imageView) {
+//        mImageView = imageView;
+//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        // Ensure that there's a camera activity to handle the intent
+//        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+//            // Create the File where the photo should go
+//            File photoFile = null;
+//            try {
+//                photoFile = createImageFile();
+//            } catch (IOException ex) {
+//                // Error occurred while creating the File
+//
+//            }
+//            // Continue only if the File was successfully created
+//            if (photoFile != null) {
+//                currentfile = photoFile;
+//                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+//                        Uri.fromFile(photoFile));
+//                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+//            }
+//        }
+//    }
+//
+//    public static void setImagetoHolder(Activity activity, String file, ImageView view, int placeholder) {
+//        mImageThumbSize = 300;
+//        mImageThumbSpacing = Context.getInstance().applicationContext().getResources().getDimensionPixelSize(R.dimen.image_thumbnail_spacing);
+//
+//        ImageCache.ImageCacheParams cacheParams = new ImageCache.ImageCacheParams(activity, IMAGE_CACHE_DIR);
+//        cacheParams.setMemCacheSizePercent(0.50f); // Set memory cache to 25% of app memory
+//        mImageFetcher = new ImageFetcher(activity, mImageThumbSize);
+//        mImageFetcher.setLoadingImage(placeholder);
+//        mImageFetcher.addImageCache(activity.getFragmentManager(), cacheParams);
+////        Toast.makeText(activity,file,Toast.LENGTH_LONG).show();
+//        mImageFetcher.loadImage("file:///" + file, view);
+//
+////        Uri.parse(new File("/sdcard/cats.jpg")
+//
+////        BitmapFactory.Options options = new BitmapFactory.Options();
+////        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+////        Bitmap bitmap = BitmapFactory.decodeFile(file, options);
+////        view.setImageBitmap(bitmap);
+//    }
 
 
 }

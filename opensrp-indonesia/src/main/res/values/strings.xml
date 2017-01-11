@@ -551,4 +551,7 @@
     <string name="mother_already_registered_in_fp">Mother already registered</string>
     <string name="desc">Description</string>
     <string name="action_settings">Settings</string>
+    <string name="desc_trash">Button Cancel</string>
+    <string name="desc_approval">Button Approval</string>
+    <string name="cell_phone">No. HP</string>
 </resources>

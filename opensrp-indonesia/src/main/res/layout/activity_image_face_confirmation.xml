@@ -1,12 +1,3 @@
-<!--
-/* ======================================================================
- *  Copyright 2014 Qualcomm Technologies, Inc. All Rights Reserved.
- *  QTI Proprietary and Confidential.
- *  =====================================================================
- * @file    activity_image_confirmation.xml
- *
- */-->
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -16,29 +7,31 @@
     <ImageView
         android:contentDescription="@string/desc"
         android:id="@+id/iv_confirmationView"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_alignParentTop="true"/>
 
       <ImageView
-          android:contentDescription="@string/desc"
-          android:id="@+id/iv_approve"
-          android:layout_width="50dp"
-          android:layout_height="50dp"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
           android:layout_alignParentBottom="true"
           android:layout_alignParentRight="true"
           android:layout_marginRight="55dp"
-          android:background="@drawable/confirm" />
+          android:background="@drawable/confirm"
+          android:contentDescription="@string/desc_approval"
+          android:id="@+id/iv_approve"
+          />
 
       <ImageView
-          android:contentDescription="@string/desc"
-          android:id="@+id/iv_cancel"
-          android:layout_width="50dp"
-          android:layout_height="50dp"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
           android:layout_alignParentBottom="true"
           android:layout_alignParentLeft="true"
           android:layout_marginLeft="55dp"
-          android:background="@drawable/trash" />
+          android:background="@drawable/trash"
+          android:contentDescription="@string/desc_trash"
+          android:id="@+id/iv_cancel"
+          />
 
 
 </RelativeLayout>
