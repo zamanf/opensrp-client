@@ -401,7 +401,7 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
      * @param view
      */
     @Override
-    public void setupSearchView(View view) {
+    public void setupSearchView(final View view) {
         searchView = (EditText) view.findViewById(org.ei.opensrp.R.id.edt_search);
 //        String s = "09";
 //        searchView.setText(s);
@@ -416,7 +416,7 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
                     @Override
                     public void onClick(DialogInterface dialog, int opt) {
                         if (opt == 0) searchTextChangeListener("");
-                        else getFacialRecord();
+                        else getFacialRecord(view);
                     }
                 });
                 builder.show();
@@ -428,8 +428,10 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
         searchCancelView.setOnClickListener(searchCancelHandler);
     }
 
-    public void getFacialRecord() {
+    public void getFacialRecord(View view) {
         Log.e(TAG, "getFacialRecord: " );
+        SmartShutterActivity.kidetail = (CommonPersonObjectClient)view.getTag();
+
         Intent intent = new Intent(getActivity(),SmartShutterActivity.class);
         intent.putExtra("org.sid.sidface.ImageConfirmation.identify", true);
         startActivity(intent);
