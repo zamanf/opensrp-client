@@ -33,6 +33,7 @@ public abstract class SecuredActivity extends ActionBarActivity {
     protected FormController formController;
     protected ANMController anmController;
     protected NavigationController navigationController;
+    protected final int MENU_ITEM_LOGOUT = 2312;
     private String metaData;
 
     @Override
@@ -80,9 +81,23 @@ public abstract class SecuredActivity extends ActionBarActivity {
             Toast.makeText(this, "Language preference set to " + newLanguagePreference + ". Please restart the application.", LENGTH_SHORT).show();
 
             return super.onOptionsItemSelected(item);
+        } else if (i == MENU_ITEM_LOGOUT) {
+            context.userService().logoutSession();
+
+            return super.onOptionsItemSelected(item);
         } else {
             return super.onOptionsItemSelected(item);
         }
+    }
+
+    /**
+     * Attaches a logout menu item to the provided menu
+     *
+     * @param menu      The menu to attach the logout menu item
+     * @param titleRes  The string resource to use as the title for the menu item
+     */
+    protected void attachLogoutMenuItem(Menu menu, int titleRes) {
+        menu.add(0, MENU_ITEM_LOGOUT, menu.size(), titleRes);
     }
 
     @Override
