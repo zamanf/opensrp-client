@@ -324,10 +324,6 @@ public class mCareChildSmartRegisterFragment extends SecuredNativeSmartRegisterC
         SmartRegisterQueryBuilder countqueryBUilder = new SmartRegisterQueryBuilder(childMainCountWithJoins());
         countSelect = countqueryBUilder.mainCondition(" mcarechild.FWBNFGEN is not null ");
         mainCondition = " FWBNFGEN is not null ";
-
-        joinAlerts = new String[1];
-        joinAlerts[0] = "Essential Newborn Care Checklist";
-
         super.CountExecute();
 
         SmartRegisterQueryBuilder queryBUilder = new SmartRegisterQueryBuilder(childMainSelectWithJoins());
@@ -345,14 +341,13 @@ public class mCareChildSmartRegisterFragment extends SecuredNativeSmartRegisterC
 
     }
     private String sortByAlertmethod() {
-        return " CASE WHEN alerts.status = 'urgent' THEN '1'"
-                +
-                "WHEN alerts.status = 'upcoming' THEN '2'\n" +
-                "WHEN alerts.status = 'normal' THEN '3'\n" +
-                "WHEN alerts.status = 'expired' THEN '4'\n" +
-                "WHEN alerts.status is Null THEN '5'\n" +
-                "WHEN alerts.status = 'complete' THEN '6'\n" +
-                "Else alerts.status END ASC";
+        return " CASE WHEN Essential_Newborn_Care_Checklist = 'urgent' THEN '1'\n" +
+                "WHEN Essential_Newborn_Care_Checklist = 'upcoming' THEN '2'\n" +
+                "WHEN Essential_Newborn_Care_Checklist = 'normal' THEN '3'\n" +
+                "WHEN Essential_Newborn_Care_Checklist = 'expired' THEN '4'\n" +
+                "WHEN Essential_Newborn_Care_Checklist is Null THEN '5'\n" +
+                "WHEN Essential_Newborn_Care_Checklist = 'complete' THEN '6'\n" +
+                "Else Essential_Newborn_Care_Checklist END ASC";
     }
     public String childMainSelectWithJoins(){
         return "Select mcarechild.id as _id,mcarechild.relationalid,mcarechild.details,mcarechild.FWBNFGEN \n" +
@@ -378,13 +373,13 @@ public class mCareChildSmartRegisterFragment extends SecuredNativeSmartRegisterC
         return " GOBHHID ASC";
     }
     private String filterStringForENCCRV1(){
-        return "and alerts.visitCode LIKE '%enccrv_1%'";
+        return "enccrv_1";
     }
     private String filterStringForENCCRV2(){
-        return "and alerts.visitCode LIKE '%enccrv_2%'";
+        return "enccrv_2";
     }
     private String filterStringForENCCRV3(){
-        return "and alerts.visitCode LIKE '%enccrv_3%'";
+        return "enccrv_3";
     }
 
 }

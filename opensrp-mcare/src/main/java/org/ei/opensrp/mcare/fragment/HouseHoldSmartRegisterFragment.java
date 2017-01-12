@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -54,6 +55,7 @@ import java.util.Map;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
+import static java.lang.String.valueOf;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 /**
@@ -142,7 +144,7 @@ public class HouseHoldSmartRegisterFragment extends SecuredNativeSmartRegisterCu
                 return new DialogOption[]{
 //                        new HouseholdCensusDueDateSort(),
 
-                        new CursorCommonObjectSort(getResources().getString(R.string.due_status),sortByAlertmethod()),
+                        new CursorCommonObjectSort(getResources().getString(R.string.due_status),filters.contains("nidImage")? householdSortByName() : sortByAlertmethod()),
                         new CursorCommonObjectSort(getResources().getString(R.string.hh_alphabetical_sort),householdSortByName()),
                         new CursorCommonObjectSort(getResources().getString(R.string.hh_fwGobhhid_sort),householdSortByFWGOBHHID()),
                         new CursorCommonObjectSort(getResources().getString(R.string.hh_fwJivhhid_sort),householdSortByFWJIVHHID())
@@ -190,13 +192,12 @@ public class HouseHoldSmartRegisterFragment extends SecuredNativeSmartRegisterCu
     }
 
     private String sortByAlertmethod() {
-       return " CASE WHEN alerts.status = 'urgent' THEN '1'"
-         +
-        "WHEN alerts.status = 'upcoming' THEN '2'\n" +
-                "WHEN alerts.status = 'normal' THEN '3'\n" +
-                "WHEN alerts.status = 'expired' THEN '4'\n" +
-                "WHEN alerts.status is Null THEN '5'\n" +
-                "Else alerts.status END ASC";
+       return " CASE WHEN FW_CENSUS = 'urgent' THEN '1'\n" +
+                "WHEN FW_CENSUS = 'upcoming' THEN '2'\n" +
+                "WHEN FW_CENSUS = 'normal' THEN '3'\n" +
+                "WHEN FW_CENSUS = 'expired' THEN '4'\n" +
+                "WHEN FW_CENSUS is Null THEN '5'\n" +
+                "Else FW_CENSUS END ASC";
     }
     public void initializeQueries(){
         HouseHoldSmartClientsProvider hhscp = new HouseHoldSmartClientsProvider(getActivity(),clientActionHandler,context.alertService());
@@ -208,10 +209,6 @@ public class HouseHoldSmartRegisterFragment extends SecuredNativeSmartRegisterCu
         countqueryBUilder.SelectInitiateMainTableCounts("household");
         countSelect = countqueryBUilder.mainCondition(" FWHOHFNAME is not null ");
         mainCondition = " FWHOHFNAME is not null ";
-
-        joinAlerts = new String[1];
-        joinAlerts[0] = "FW CENSUS";
-
         super.CountExecute();
 
         SmartRegisterQueryBuilder queryBUilder = new SmartRegisterQueryBuilder();
@@ -388,9 +385,51 @@ public class HouseHoldSmartRegisterFragment extends SecuredNativeSmartRegisterCu
         }
     }
 
-    private void checkforNidMissing(View view) {
-        RelativeLayout titlelayout = (RelativeLayout)view.findViewById(org.ei.opensrp.R.id.register_nav_bar_container);
-        if(anyNIdmissing(controller)) {
+    private void checkforNidMissing(final View view) {
+
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                boolean toreturn = false;
+                CommonRepository commonRepository = context.commonrepository("household");
+                setTablename("household");
+                SmartRegisterQueryBuilder countqueryBUilder = new SmartRegisterQueryBuilder();
+                countqueryBUilder.SelectInitiateMainTableCounts("household");
+                countqueryBUilder.joinwithALerts("household", "FW CENSUS");
+                countqueryBUilder.mainCondition(" FWHOHFNAME is not null ");
+                String nidfilters = "and household.id in (Select elco.relationalid from elco where details not Like '%nidImage%' and details LIKE '%\"FWELIGIBLE\":\"1\"%' )";
+
+                countqueryBUilder.addCondition(nidfilters);
+                Cursor c = commonRepository.RawCustomQueryForAdapter(countqueryBUilder.Endquery(countqueryBUilder.toString()));
+                c.moveToFirst();
+                int missingnidCount = c.getInt(0);
+                c.close();
+                if(missingnidCount>0){
+                    toreturn = true;
+                }
+
+                final boolean anyNIdmissing = toreturn;
+
+                Handler mainHandler = new Handler(getActivity().getMainLooper());
+
+                Runnable myRunnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        RelativeLayout titlelayout = (RelativeLayout)view.findViewById(org.ei.opensrp.R.id.register_nav_bar_container);
+                        updateNidView(titlelayout, anyNIdmissing);
+                    }
+                };
+                mainHandler.post(myRunnable);
+            }
+        }).start();
+
+
+    }
+
+    private void updateNidView(RelativeLayout titlelayout, boolean anyNIdmissing){
+        if(anyNIdmissing) {
             try {
                 titlelayout.removeView(getActivity().findViewById(R.id.warnid)) ;
 
@@ -419,6 +458,7 @@ public class HouseHoldSmartRegisterFragment extends SecuredNativeSmartRegisterCu
 //                                    getCurrentSearchFilter(), getCurrentSortOption());
                     filters = "and household.id in (Select elco.relationalid from elco where details not Like '%nidImage%' and details LIKE '%\"FWELIGIBLE\":\"1\"%' )";
                     joinTable = "";
+                    Sortqueries = householdSortByName();
                     CountExecute();
                     filterandSortExecute();
 
@@ -429,48 +469,7 @@ public class HouseHoldSmartRegisterFragment extends SecuredNativeSmartRegisterCu
         }
     }
 
-    private boolean anyNIdmissing(CommonPersonObjectController controller) {
-        boolean toreturn = false;
-//        List<CommonPersonObject> allchildelco = null;
-//        CommonPersonObjectClients clients = controller.getClients();
-//        ArrayList<String> list = new ArrayList<String>();
-//        AllCommonsRepository allElcoRepository = Context.getInstance().allCommonsRepositoryobjects("elco");
-//
-//        for(int i = 0;i <clients.size();i++) {
-//
-//            list.add((clients.get(i).entityId()));
-//
-//        }
-//        allchildelco = allElcoRepository.findByRelationalIDs(list);
-//
-//        if(allchildelco != null) {
-//            for (int i = 0; i < allchildelco.size(); i++) {
-//                if (allchildelco.get(i).getDetails().get("FWELIGIBLE").equalsIgnoreCase("1")) {
-//                    if (allchildelco.get(i).getDetails().get("nidImage") == null) {
-//                        toreturn = true;
-//                    }
-//                }
-//            }
-//        }
-        CommonRepository commonRepository = context.commonrepository("household");
-        setTablename("household");
-        SmartRegisterQueryBuilder countqueryBUilder = new SmartRegisterQueryBuilder();
-        countqueryBUilder.SelectInitiateMainTableCounts("household");
-        countqueryBUilder.joinwithALerts("household", "FW CENSUS");
-        countqueryBUilder.mainCondition(" FWHOHFNAME is not null ");
-        String nidfilters = "and household.id in (Select elco.relationalid from elco where details not Like '%nidImage%' and details LIKE '%\"FWELIGIBLE\":\"1\"%' )";
 
-        countqueryBUilder.addCondition(nidfilters);
-        Cursor c = commonRepository.RawCustomQueryForAdapter(countqueryBUilder.Endquery(countqueryBUilder.toString()));
-        c.moveToFirst();
-        int missingnidCount = c.getInt(0);
-        c.close();
-        if(missingnidCount>0){
-            toreturn = true;
-        }
-        return toreturn;
-//        return false;
-    }
 
 
 }

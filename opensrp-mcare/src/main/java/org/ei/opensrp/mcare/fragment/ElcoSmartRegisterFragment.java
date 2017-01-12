@@ -364,10 +364,6 @@ public class ElcoSmartRegisterFragment extends SecuredNativeSmartRegisterCursorA
         countqueryBUilder.SelectInitiateMainTableCounts("elco");
         countSelect = countqueryBUilder.mainCondition(" FWWOMFNAME != \"\"  and  FWWOMFNAME is not null  and details LIKE '%\"FWELIGIBLE\":\"1\"%' ");
         mainCondition = " FWWOMFNAME != \"\"  and  FWWOMFNAME is not null  and details LIKE '%\"FWELIGIBLE\":\"1\"%' ";
-
-        joinAlerts = new String[1];
-        joinAlerts[0] = "ELCO PSRF";
-
         super.CountExecute();
 
         SmartRegisterQueryBuilder queryBUilder = new SmartRegisterQueryBuilder();
@@ -386,14 +382,13 @@ public class ElcoSmartRegisterFragment extends SecuredNativeSmartRegisterCursorA
 
     }
     private String sortByAlertmethod() {
-        return " CASE WHEN alerts.status = 'urgent' THEN '1'"
-                +
-                "WHEN alerts.status = 'upcoming' THEN '2'\n" +
-                "WHEN alerts.status = 'normal' THEN '3'\n" +
-                "WHEN alerts.status = 'expired' THEN '4'\n" +
-                "WHEN alerts.status is Null THEN '5'\n" +
-                "WHEN alerts.status = 'complete' THEN '6'\n" +
-                "Else alerts.status END ASC";
+        return " CASE WHEN ELCO_PSRF = 'urgent' THEN '1'\n" +
+                "WHEN ELCO_PSRF = 'upcoming' THEN '2'\n" +
+                "WHEN ELCO_PSRF = 'normal' THEN '3'\n" +
+                "WHEN ELCO_PSRF = 'expired' THEN '4'\n" +
+                "WHEN ELCO_PSRF is Null THEN '5'\n" +
+                "WHEN ELCO_PSRF = 'complete' THEN '6'\n" +
+                "Else ELCO_PSRF END ASC";
     }
 
 }

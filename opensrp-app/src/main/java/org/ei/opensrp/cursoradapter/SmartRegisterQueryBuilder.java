@@ -159,39 +159,22 @@ public class SmartRegisterQueryBuilder {
         return res;
     }
 
-    public String searchQueryFts(String tablename, String searchJoinTable, String[] joinAlerts, String mainCondition, String searchFilter, String sort, int limit, int offset){
+    public String searchQueryFts(String tablename, String searchJoinTable, String mainCondition, String searchFilter, String sort, int limit, int offset){
         if(StringUtils.isNotBlank(searchJoinTable) && StringUtils.isNotBlank(searchFilter)){
-            String query = "SELECT " + CommonFtsObject.idColumn + " FROM " + CommonFtsObject.searchTableName(tablename) + joinwithALertsFts(CommonFtsObject.searchTableName(tablename), joinAlerts) + phraseClause(tablename, searchJoinTable, mainCondition, searchFilter) + orderByClause(sort) + limitClause(limit, offset);
+            String query = "SELECT " + CommonFtsObject.idColumn + " FROM " + CommonFtsObject.searchTableName(tablename) + phraseClause(tablename, searchJoinTable, mainCondition, searchFilter) + orderByClause(sort) + limitClause(limit, offset);
             return query;
         }
-        String query = "SELECT " + CommonFtsObject.idColumn + " FROM " + CommonFtsObject.searchTableName(tablename) + joinwithALertsFts(CommonFtsObject.searchTableName(tablename), joinAlerts) + phraseClause(mainCondition, searchFilter) + orderByClause(sort) + limitClause(limit, offset);
+        String query = "SELECT " + CommonFtsObject.idColumn + " FROM " + CommonFtsObject.searchTableName(tablename) + phraseClause(mainCondition, searchFilter) + orderByClause(sort) + limitClause(limit, offset);
         return query;
     }
 
-    public String countQueryFts(String tablename, String searchJoinTable, String[] joinAlerts, String mainCondition, String searchFilter){
-        if(StringUtils.isNotBlank(searchJoinTable) && StringUtils.isNotBlank(searchFilter)){
-            String query = "SELECT " + CommonFtsObject.idColumn + " FROM " + CommonFtsObject.searchTableName(tablename)  + joinwithALertsFts(CommonFtsObject.searchTableName(tablename), joinAlerts) + phraseClause(searchJoinTable, mainCondition, searchFilter);
+    public String countQueryFts(String tablename, String searchJoinTable, String mainCondition, String searchFilter) {
+        if (StringUtils.isNotBlank(searchJoinTable) && StringUtils.isNotBlank(searchFilter)) {
+            String query = "SELECT " + CommonFtsObject.idColumn + " FROM " + CommonFtsObject.searchTableName(tablename) + phraseClause(searchJoinTable, mainCondition, searchFilter);
             return query;
         }
-        String query = "SELECT " + CommonFtsObject.idColumn + " FROM " + CommonFtsObject.searchTableName(tablename) + joinwithALertsFts(CommonFtsObject.searchTableName(tablename), joinAlerts)  + phraseClause(mainCondition, searchFilter);
+        String query = "SELECT " + CommonFtsObject.idColumn + " FROM " + CommonFtsObject.searchTableName(tablename) + phraseClause(mainCondition, searchFilter);
         return query;
-    }
-
-    public String joinwithALertsFts(String tablename, String[] joinAlerts){
-        if(joinAlerts == null || joinAlerts.length == 0 ){
-            return "";
-        }
-
-        String joinQuery =  "";
-        if(joinAlerts.length == 1 && StringUtils.isNotBlank(joinAlerts[0])) {
-            joinQuery = " LEFT JOIN alerts ON alerts.caseID = " + tablename + "." + CommonFtsObject.idColumn + "  AND  alerts.scheduleName = '" + joinAlerts[0] + "'";
-        }
-
-        if(joinAlerts.length == 2 && StringUtils.isNotBlank(joinAlerts[1])) {
-            joinQuery += " LEFT JOIN  alerts as alerts2 ON alerts2.caseID = " + tablename + "." + CommonFtsObject.idColumn + "  AND  alerts2.scheduleName = '" + joinAlerts[1] + "'";
-        }
-
-        return joinQuery;
     }
 
     private String phraseClause(String mainCondition, String phrase){

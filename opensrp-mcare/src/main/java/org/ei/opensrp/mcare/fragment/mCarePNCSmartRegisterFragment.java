@@ -347,10 +347,6 @@ public class mCarePNCSmartRegisterFragment extends SecuredNativeSmartRegisterCur
         SmartRegisterQueryBuilder countqueryBUilder = new SmartRegisterQueryBuilder(pncMainCountWithJoins());
         countSelect = countqueryBUilder.mainCondition(" mcaremother.Is_PNC = '1'  and mcaremother.FWWOMFNAME not null and mcaremother.FWWOMFNAME != \"\"   AND mcaremother.details  LIKE '%\"FWWOMVALID\":\"1\"%'");
         mainCondition = " Is_PNC = '1'  and FWWOMFNAME not null and FWWOMFNAME != \"\"   AND details  LIKE '%\"FWWOMVALID\":\"1\"%'";
-
-        joinAlerts = new String[1];
-        joinAlerts[0] = "Post Natal Care Reminder Visit";
-
         super.CountExecute();
 
         SmartRegisterQueryBuilder queryBUilder = new SmartRegisterQueryBuilder(pncMainSelectWithJoins());
@@ -367,14 +363,13 @@ public class mCarePNCSmartRegisterFragment extends SecuredNativeSmartRegisterCur
 
     }
     private String sortByAlertmethod() {
-        return " CASE WHEN alerts.status = 'urgent' THEN '1'"
-                +
-                "WHEN alerts.status = 'upcoming' THEN '2'\n" +
-                "WHEN alerts.status = 'normal' THEN '3'\n" +
-                "WHEN alerts.status = 'expired' THEN '4'\n" +
-                "WHEN alerts.status is Null THEN '5'\n" +
-                "WHEN alerts.status = 'complete' THEN '6'\n" +
-                "Else alerts.status END ASC";
+        return " CASE WHEN Post_Natal_Care_Reminder_Visit = 'urgent' THEN '1'\n" +
+                "WHEN Post_Natal_Care_Reminder_Visit = 'upcoming' THEN '2'\n" +
+                "WHEN Post_Natal_Care_Reminder_Visit = 'normal' THEN '3'\n" +
+                "WHEN Post_Natal_Care_Reminder_Visit = 'expired' THEN '4'\n" +
+                "WHEN Post_Natal_Care_Reminder_Visit is Null THEN '5'\n" +
+                "WHEN Post_Natal_Care_Reminder_Visit = 'complete' THEN '6'\n" +
+                "Else Post_Natal_Care_Reminder_Visit END ASC";
     }
     private String sortBySortValue(){
         return " FWSORTVALUE ASC";
@@ -398,13 +393,13 @@ public class mCarePNCSmartRegisterFragment extends SecuredNativeSmartRegisterCur
                 "Else mcaremother.FWBNFSTS END ASC";
     }
     private String filterStringForPNCRV1(){
-        return "and alerts.visitCode LIKE '%pncrv_1%'";
+        return "pncrv_1";
     }
     private String filterStringForPNCRV2(){
-        return "and alerts.visitCode LIKE '%pncrv_2%'";
+        return "pncrv_2";
     }
     private String filterStringForPNCRV3(){
-        return "and alerts.visitCode LIKE '%pncrv_3%'";
+        return "pncrv_3";
     }
 
 

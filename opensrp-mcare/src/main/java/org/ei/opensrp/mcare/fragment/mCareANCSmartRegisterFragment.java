@@ -350,11 +350,6 @@ public class mCareANCSmartRegisterFragment extends SecuredNativeSmartRegisterCur
         SmartRegisterQueryBuilder countqueryBUilder = new SmartRegisterQueryBuilder(ancMainCountWithJoins());
         countSelect = countqueryBUilder.mainCondition("(mcaremother.Is_PNC is null or mcaremother.Is_PNC = '0') and mcaremother.FWWOMFNAME not null and mcaremother.FWWOMFNAME != \"\"   AND mcaremother.details  LIKE '%\"FWWOMVALID\":\"1\"%'");
         mainCondition = "(Is_PNC is null or Is_PNC = '0') and FWWOMFNAME not null and FWWOMFNAME != \"\"   AND details  LIKE '%\"FWWOMVALID\":\"1\"%'";
-
-        joinAlerts = new String[2];
-        joinAlerts[0] = "Ante Natal Care Reminder Visit";
-        joinAlerts[1] = "BirthNotificationPregnancyStatusFollowUp";
-
         super.CountExecute();
 
         SmartRegisterQueryBuilder queryBUilder = new SmartRegisterQueryBuilder(ancMainSelectWithJoins());
@@ -383,49 +378,49 @@ public class mCareANCSmartRegisterFragment extends SecuredNativeSmartRegisterCur
         return " FWPSRLMP ASC";
     }
     private String filterStringForANCRV1(){
-        return "and alerts.visitCode LIKE '%ancrv_1%'";
+        return "ancrv_1";
     }
     private String filterStringForANCRV2(){
-        return "and alerts.visitCode LIKE '%ancrv_2%'";
+        return "ancrv_2";
     }
     private String filterStringForANCRV3(){
-        return "and alerts.visitCode LIKE '%ancrv_3%'";
+        return "ancrv_3";
     }
     private String filterStringForANCRV4(){
-        return "and alerts.visitCode LIKE '%ancrv_4%'";
+        return "ancrv_4";
     }
     private String sortByGOBHHID(){
         return " GOBHHID ASC";
     }
     private String sortByAlertmethod() {
-        return " CASE WHEN alerts.status = 'urgent' and alerts2.status = 'urgent' THEN 1 "
+        return " CASE WHEN Ante_Natal_Care_Reminder_Visit = 'urgent' and BirthNotificationPregnancyStatusFollowUp = 'urgent' THEN 1 "
                 +
-                "WHEN alerts.status = 'upcoming' and alerts2.status = 'urgent' THEN  2\n" +
-                "WHEN alerts.status = 'normal' and alerts2.status = 'urgent' THEN 3\n" +
-                "WHEN alerts.status = 'expired' and alerts2.status = 'urgent' THEN 4\n" +
-                "WHEN alerts.status is null and alerts2.status = 'urgent' THEN 5\n" +
+                "WHEN Ante_Natal_Care_Reminder_Visit = 'upcoming' and BirthNotificationPregnancyStatusFollowUp = 'urgent' THEN  2\n" +
+                "WHEN Ante_Natal_Care_Reminder_Visit = 'normal' and BirthNotificationPregnancyStatusFollowUp = 'urgent' THEN 3\n" +
+                "WHEN Ante_Natal_Care_Reminder_Visit = 'expired' and BirthNotificationPregnancyStatusFollowUp = 'urgent' THEN 4\n" +
+                "WHEN Ante_Natal_Care_Reminder_Visit is null and BirthNotificationPregnancyStatusFollowUp = 'urgent' THEN 5\n" +
 
-                "WHEN alerts.status = 'urgent' and alerts2.status = 'upcoming' THEN 6\n" +
-                "WHEN alerts.status = 'upcoming' and alerts2.status = 'upcoming' THEN 7\n" +
-                "WHEN alerts.status = 'normal' and alerts2.status = 'upcoming' THEN 8\n" +
-                "WHEN alerts.status = 'expired' and alerts2.status = 'upcoming' THEN 9\n" +
-                "WHEN alerts.status is null and alerts2.status = 'upcoming' THEN 10\n" +
+                "WHEN Ante_Natal_Care_Reminder_Visit = 'urgent' and BirthNotificationPregnancyStatusFollowUp = 'upcoming' THEN 6\n" +
+                "WHEN Ante_Natal_Care_Reminder_Visit = 'upcoming' and BirthNotificationPregnancyStatusFollowUp = 'upcoming' THEN 7\n" +
+                "WHEN Ante_Natal_Care_Reminder_Visit = 'normal' and BirthNotificationPregnancyStatusFollowUp = 'upcoming' THEN 8\n" +
+                "WHEN Ante_Natal_Care_Reminder_Visit = 'expired' and BirthNotificationPregnancyStatusFollowUp = 'upcoming' THEN 9\n" +
+                "WHEN Ante_Natal_Care_Reminder_Visit is null and BirthNotificationPregnancyStatusFollowUp = 'upcoming' THEN 10\n" +
 
-                "WHEN alerts.status = 'urgent' and alerts2.status = 'normal' THEN 11\n" +
-                "WHEN alerts.status = 'upcoming' and alerts2.status = 'normal' THEN 12\n" +
-                "WHEN alerts.status = 'normal' and alerts2.status = 'normal' THEN 13\n" +
-                "WHEN alerts.status = 'expired' and alerts2.status = 'normal' THEN 14\n" +
-                "WHEN alerts.status is null and alerts2.status = 'normal' THEN 15\n" +
+                "WHEN Ante_Natal_Care_Reminder_Visit = 'urgent' and BirthNotificationPregnancyStatusFollowUp = 'normal' THEN 11\n" +
+                "WHEN Ante_Natal_Care_Reminder_Visit = 'upcoming' and BirthNotificationPregnancyStatusFollowUp = 'normal' THEN 12\n" +
+                "WHEN Ante_Natal_Care_Reminder_Visit = 'normal' and BirthNotificationPregnancyStatusFollowUp = 'normal' THEN 13\n" +
+                "WHEN Ante_Natal_Care_Reminder_Visit = 'expired' and BirthNotificationPregnancyStatusFollowUp = 'normal' THEN 14\n" +
+                "WHEN Ante_Natal_Care_Reminder_Visit is null and BirthNotificationPregnancyStatusFollowUp = 'normal' THEN 15\n" +
 
-                "WHEN alerts.status = 'urgent' and alerts2.status = 'expired' THEN 16\n" +
-                "WHEN alerts.status = 'upcoming' and alerts2.status = 'expired' THEN 17\n" +
-                "WHEN alerts.status = 'normal' and alerts2.status = 'expired' THEN 18\n" +
-                "WHEN alerts.status = 'expired' and alerts2.status = 'expired' THEN 19\n" +
-                "WHEN alerts.status is null and alerts2.status = 'expired' THEN 20\n" +
+                "WHEN Ante_Natal_Care_Reminder_Visit = 'urgent' and BirthNotificationPregnancyStatusFollowUp = 'expired' THEN 16\n" +
+                "WHEN Ante_Natal_Care_Reminder_Visit = 'upcoming' and BirthNotificationPregnancyStatusFollowUp = 'expired' THEN 17\n" +
+                "WHEN Ante_Natal_Care_Reminder_Visit = 'normal' and BirthNotificationPregnancyStatusFollowUp = 'expired' THEN 18\n" +
+                "WHEN Ante_Natal_Care_Reminder_Visit = 'expired' and BirthNotificationPregnancyStatusFollowUp = 'expired' THEN 19\n" +
+                "WHEN Ante_Natal_Care_Reminder_Visit is null and BirthNotificationPregnancyStatusFollowUp = 'expired' THEN 20\n" +
 
-                "WHEN alerts2.status is null THEN 9999\n" +
-                "WHEN alerts.status = \"\" THEN 99999\n" +
-//                "WHEN alerts2.status is null THEN '18'\n" +
-                "Else alerts.status END ASC";
+                "WHEN BirthNotificationPregnancyStatusFollowUp is null THEN 9999\n" +
+                "WHEN Ante_Natal_Care_Reminder_Visit = \"\" THEN 99999\n" +
+//                "WHEN BirthNotificationPregnancyStatusFollowUp is null THEN '18'\n" +
+                "Else Ante_Natal_Care_Reminder_Visit END ASC";
     }
 }
