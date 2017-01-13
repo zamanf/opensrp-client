@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 
+import org.apache.commons.lang3.StringUtils;
 import org.ei.opensrp.Context;
 import org.ei.opensrp.adapter.SmartRegisterPaginatedAdapter;
 import org.ei.opensrp.commonregistry.CommonPersonObject;
@@ -16,6 +17,7 @@ import org.ei.opensrp.commonregistry.CommonRepository;
 import org.ei.opensrp.commonregistry.ControllerFilterMap;
 import org.ei.opensrp.cursoradapter.CursorCommonObjectFilterOption;
 import org.ei.opensrp.cursoradapter.CursorCommonObjectSort;
+import org.ei.opensrp.cursoradapter.CursorFilterOption;
 import org.ei.opensrp.cursoradapter.SecuredNativeSmartRegisterCursorAdapterFragment;
 import org.ei.opensrp.cursoradapter.SmartRegisterPaginatedCursorAdapter;
 import org.ei.opensrp.cursoradapter.SmartRegisterQueryBuilder;
@@ -387,10 +389,10 @@ public class mCarePNCSmartRegisterFragment extends SecuredNativeSmartRegisterCur
     }
 
     private String sortByOutcomeStatis() {
-        return " CASE WHEN mcaremother.FWBNFSTS = '3' THEN '1'"
+        return " CASE WHEN FWBNFSTS = '3' THEN '1'"
                 +
-                "WHEN mcaremother.FWBNFSTS = '4' THEN '2'\n" +
-                "Else mcaremother.FWBNFSTS END ASC";
+                "WHEN FWBNFSTS = '4' THEN '2'\n" +
+                "Else FWBNFSTS END ASC";
     }
     private String filterStringForPNCRV1(){
         return "pncrv_1";
@@ -403,5 +405,22 @@ public class mCarePNCSmartRegisterFragment extends SecuredNativeSmartRegisterCur
     }
 
 
+    /**
+     * Override filter to capture fts filter by location
+     * @param filter
+     */
+    @Override
+    public void onFilterSelection(FilterOption filter) {
+        appliedVillageFilterView.setText(filter.name());
+        filters = ((CursorFilterOption)filter).filter();
+        mainCondition = " Is_PNC = '1'  and FWWOMFNAME not null and FWWOMFNAME != \"\"   AND details  LIKE '%\"FWWOMVALID\":\"1\"%'";
+
+        if(StringUtils.isNotBlank(filters) && filters.contains(" and details LIKE ")){
+            mainCondition += filters;
+            filters = "";
+        }
+        CountExecute();
+        filterandSortExecute();
+    }
 
 }

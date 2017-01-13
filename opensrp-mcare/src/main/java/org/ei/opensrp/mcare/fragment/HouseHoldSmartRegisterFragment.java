@@ -13,12 +13,14 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import org.apache.commons.lang3.StringUtils;
 import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.commonregistry.CommonPersonObjectController;
 import org.ei.opensrp.commonregistry.CommonRepository;
 import org.ei.opensrp.cursoradapter.CursorCommonObjectFilterOption;
 import org.ei.opensrp.cursoradapter.CursorCommonObjectSort;
+import org.ei.opensrp.cursoradapter.CursorFilterOption;
 import org.ei.opensrp.cursoradapter.SecuredNativeSmartRegisterCursorAdapterFragment;
 import org.ei.opensrp.cursoradapter.SmartRegisterPaginatedCursorAdapter;
 import org.ei.opensrp.cursoradapter.SmartRegisterQueryBuilder;
@@ -199,6 +201,7 @@ public class HouseHoldSmartRegisterFragment extends SecuredNativeSmartRegisterCu
                 "WHEN FW_CENSUS is Null THEN '5'\n" +
                 "Else FW_CENSUS END ASC";
     }
+
     public void initializeQueries(){
         HouseHoldSmartClientsProvider hhscp = new HouseHoldSmartClientsProvider(getActivity(),clientActionHandler,context.alertService());
         clientAdapter = new SmartRegisterPaginatedCursorAdapter(getActivity(), null, hhscp, new CommonRepository("household",new String []{"FWHOHFNAME", "FWGOBHHID","FWJIVHHID"}));
@@ -267,7 +270,7 @@ public class HouseHoldSmartRegisterFragment extends SecuredNativeSmartRegisterCu
 
 
     private String filterStringForOneOrMoreElco(){
-        return "and details not LIKE '%\"ELCO\":\"0\"%'";
+        return " and details not LIKE '%\"ELCO\":\"0\"%'";
     }
     private String filterStringForNoElco(){
         return " and details LIKE '%\"ELCO\":\"0\"%'";
@@ -397,7 +400,7 @@ public class HouseHoldSmartRegisterFragment extends SecuredNativeSmartRegisterCu
                 setTablename("household");
                 SmartRegisterQueryBuilder countqueryBUilder = new SmartRegisterQueryBuilder();
                 countqueryBUilder.SelectInitiateMainTableCounts("household");
-                countqueryBUilder.joinwithALerts("household", "FW CENSUS");
+                // countqueryBUilder.joinwithALerts("household", "FW CENSUS");
                 countqueryBUilder.mainCondition(" FWHOHFNAME is not null ");
                 String nidfilters = "and household.id in (Select elco.relationalid from elco where details not Like '%nidImage%' and details LIKE '%\"FWELIGIBLE\":\"1\"%' )";
 
@@ -469,7 +472,21 @@ public class HouseHoldSmartRegisterFragment extends SecuredNativeSmartRegisterCu
         }
     }
 
+    /**
+     * Override filter to capture fts filter by location
+     * @param filter
+     */
+    @Override
+    public void onFilterSelection(FilterOption filter) {
+        appliedVillageFilterView.setText(filter.name());
+        filters = ((CursorFilterOption)filter).filter();
+        mainCondition = " FWHOHFNAME is not null ";
 
-
-
+        if(StringUtils.isNotBlank(filters) && (filters.contains(" and details LIKE ") || filters.contains(" and details not LIKE"))){
+            mainCondition += filters;
+            filters = "";
+        }
+        CountExecute();
+        filterandSortExecute();
+    }
 }

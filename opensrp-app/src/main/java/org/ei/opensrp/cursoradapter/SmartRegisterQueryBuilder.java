@@ -179,7 +179,7 @@ public class SmartRegisterQueryBuilder {
 
     private String phraseClause(String mainCondition, String phrase){
         if(StringUtils.isNotBlank(phrase)) {
-            String phraseClause = " WHERE " + mainConditionClause(mainCondition) + CommonFtsObject.phraseColumnName + " MATCH '" + phrase + "*'";
+            String phraseClause = " WHERE " + mainConditionClause(mainCondition) + CommonFtsObject.phraseColumnName + matchPhrase(phrase);
             return phraseClause;
         }else if(StringUtils.isNotBlank(mainCondition)){
             return " WHERE " + mainCondition;
@@ -188,15 +188,28 @@ public class SmartRegisterQueryBuilder {
     }
 
     private String phraseClause(String joinTable, String mainCondition, String phrase){
-        String phraseClause = " WHERE " + mainConditionClause(mainCondition) + CommonFtsObject.phraseColumnName + " MATCH '" + phrase + "*'" +
-                    " UNION SELECT " + CommonFtsObject.relationalIdColumn + " FROM " + CommonFtsObject.searchTableName(joinTable) + " WHERE " + CommonFtsObject.phraseColumnName + " MATCH '" + phrase + "*'";
+        String phraseClause = " WHERE " + mainConditionClause(mainCondition) + CommonFtsObject.phraseColumnName + matchPhrase(phrase) +
+                    " UNION SELECT " + CommonFtsObject.relationalIdColumn + " FROM " + CommonFtsObject.searchTableName(joinTable) + " WHERE " + CommonFtsObject.phraseColumnName + matchPhrase(phrase);
         return phraseClause;
     }
 
     private String phraseClause(String tableName, String joinTable, String mainCondition, String phrase){
-        String phraseClause = " WHERE " + CommonFtsObject.idColumn + " IN ( SELECT " + CommonFtsObject.idColumn + " FROM " + CommonFtsObject.searchTableName(tableName) + " WHERE " + mainConditionClause(mainCondition) + CommonFtsObject.phraseColumnName + " MATCH '" + phrase + "*'" +
-                " UNION SELECT " + CommonFtsObject.relationalIdColumn + " FROM " + CommonFtsObject.searchTableName(joinTable) + " WHERE " + CommonFtsObject.phraseColumnName + " MATCH '" + phrase + "*' )";
+        String phraseClause = " WHERE " + CommonFtsObject.idColumn + " IN ( SELECT " + CommonFtsObject.idColumn + " FROM " + CommonFtsObject.searchTableName(tableName) + " WHERE " + mainConditionClause(mainCondition) + CommonFtsObject.phraseColumnName + matchPhrase(phrase) +
+                " UNION SELECT " + CommonFtsObject.relationalIdColumn + " FROM " + CommonFtsObject.searchTableName(joinTable) + " WHERE " + CommonFtsObject.phraseColumnName + matchPhrase(phrase) + " )";
         return phraseClause;
+    }
+
+    private String matchPhrase(String phrase){
+        if(phrase == null){
+            phrase = "";
+        }
+
+        // Underscore does not work well in fts search
+        if(phrase.contains("_")) {
+            phrase = phrase.replace("_", "");
+        }
+        return " MATCH '" + phrase + "*' ";
+
     }
 
     private String orderByClause(String sort){

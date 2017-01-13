@@ -7,8 +7,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 
+import org.apache.commons.lang3.StringUtils;
 import org.ei.opensrp.Context;
 import org.ei.opensrp.adapter.SmartRegisterPaginatedAdapter;
+import org.ei.opensrp.commonregistry.CommonFtsObject;
 import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.commonregistry.CommonPersonObjectController;
@@ -16,6 +18,7 @@ import org.ei.opensrp.commonregistry.CommonRepository;
 import org.ei.opensrp.commonregistry.ControllerFilterMap;
 import org.ei.opensrp.cursoradapter.CursorCommonObjectFilterOption;
 import org.ei.opensrp.cursoradapter.CursorCommonObjectSort;
+import org.ei.opensrp.cursoradapter.CursorFilterOption;
 import org.ei.opensrp.cursoradapter.SecuredNativeSmartRegisterCursorAdapterFragment;
 import org.ei.opensrp.cursoradapter.SmartRegisterPaginatedCursorAdapter;
 import org.ei.opensrp.cursoradapter.SmartRegisterQueryBuilder;
@@ -258,11 +261,11 @@ public class mCareChildSmartRegisterFragment extends SecuredNativeSmartRegisterC
             @Override
             public void onTextChanged(final CharSequence cs, int start, int before, int count) {
 
-                if(cs.toString().equalsIgnoreCase("")){
+                if (cs.toString().equalsIgnoreCase("")) {
                     filters = "";
-                }else {
+                } else {
                     //filters = "and FWWOMFNAME Like '%" + cs.toString() + "%' or GOBHHID Like '%" + cs.toString() + "%'  or JiVitAHHID Like '%" + cs.toString() + "%' ";
-                    filters =  cs.toString();
+                    filters = cs.toString();
                 }
                 joinTable = "";
                 mainCondition = " FWBNFGEN is not null ";
@@ -288,7 +291,7 @@ public class mCareChildSmartRegisterFragment extends SecuredNativeSmartRegisterC
             }else{
                 StringUtil.humanize(entry.getValue().getLabel());
                 String name = StringUtil.humanize(entry.getValue().getLabel());
-                dialogOptionslist.add(new CursorCommonObjectFilterOption(name,"and mcaremother.details like '%"+name +"%'"));
+                dialogOptionslist.add(new CursorCommonObjectFilterOption(name," and mcaremother.details like '%"+name +"%'"));
 
             }
         }
@@ -351,13 +354,11 @@ public class mCareChildSmartRegisterFragment extends SecuredNativeSmartRegisterC
     }
     public String childMainSelectWithJoins(){
         return "Select mcarechild.id as _id,mcarechild.relationalid,mcarechild.details,mcarechild.FWBNFGEN \n" +
-                "from mcarechild\n" +
-                "Left Join mcaremother on mcarechild.relationalid = mcaremother.id ";
+                "from mcarechild\n";
     }
     public String childMainCountWithJoins() {
         return "Select Count(*) \n" +
-                "from mcarechild\n" +
-                "Left Join mcaremother on mcarechild.relationalid = mcaremother.id ";
+                "from mcarechild\n";
     }
 
     private String sortBySortValue(){
@@ -380,6 +381,25 @@ public class mCareChildSmartRegisterFragment extends SecuredNativeSmartRegisterC
     }
     private String filterStringForENCCRV3(){
         return "enccrv_3";
+    }
+
+    /**
+     * Override filter to capture fts filter by location
+     * @param filter
+     */
+    @Override
+    public void onFilterSelection(FilterOption filter) {
+        appliedVillageFilterView.setText(filter.name());
+        filters = ((CursorFilterOption)filter).filter();
+        mainCondition = " FWBNFGEN is not null ";
+
+        if(StringUtils.isNotBlank(filters) && filters.contains(" and mcaremother.details like ")){
+            String searchString = filters.replace(" and mcaremother.details like ", "");
+            mainCondition += " AND "+ CommonFtsObject.relationalIdColumn +" IN (SELECT "+CommonFtsObject.idColumn+ " FROM " + CommonFtsObject.searchTableName("mcaremother")+ " WHERE details LIKE " + searchString+ " ) ";
+            filters = "";
+        }
+        CountExecute();
+        filterandSortExecute();
     }
 
 }

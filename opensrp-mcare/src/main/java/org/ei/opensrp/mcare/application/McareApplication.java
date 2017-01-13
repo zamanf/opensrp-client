@@ -125,7 +125,7 @@ public class McareApplication extends DrishtiApplication {
             String[] sortFields = {"FWWOMFNAME", "GOBHHID", "JiVitAHHID", "alerts.ELCO_PSRF"};
             return sortFields;
         } else if(tableName.equals("mcaremother")){
-            String[] sortFields = {"FWWOMFNAME", "GOBHHID", "JiVitAHHID", "FWPSRLMP", "FWBNFDTOO", "FWSORTVALUE", "alerts.Ante_Natal_Care_Reminder_Visit", "alerts.BirthNotificationPregnancyStatusFollowUp", "alerts.Post_Natal_Care_Reminder_Visit"};
+            String[] sortFields = {"FWWOMFNAME", "GOBHHID", "JiVitAHHID", "FWPSRLMP", "FWBNFDTOO", "FWSORTVALUE", "FWBNFSTS", "alerts.Ante_Natal_Care_Reminder_Visit", "alerts.BirthNotificationPregnancyStatusFollowUp", "alerts.Post_Natal_Care_Reminder_Visit"};
             return sortFields;
         } else if(tableName.equals("mcarechild")){
             String[] sortFields = {"FWWOMFNAME", "GOBHHID", "JiVitAHHID", "FWSORTVALUE", "alerts.Essential_Newborn_Care_Checklist"};
@@ -136,7 +136,7 @@ public class McareApplication extends DrishtiApplication {
 
     private String[] getFtsMainConditions(String tableName){
         if(tableName.equals("household")) {
-            String[] mainConditions = {"FWHOHFNAME"};
+            String[] mainConditions = {"FWHOHFNAME", "details"};
             return mainConditions;
         } else if(tableName.equals("elco")){
             String[] mainConditions = {"FWWOMFNAME", "details"};
@@ -145,7 +145,7 @@ public class McareApplication extends DrishtiApplication {
             String[] mainConditions = {"FWWOMFNAME", "Is_PNC", "details"};
             return mainConditions;
         } else if(tableName.equals("mcarechild")){
-            String[] mainConditions = {"FWBNFGEN"};
+            String[] mainConditions = {"FWBNFGEN",  "details"};
             return mainConditions;
         }
         return null;

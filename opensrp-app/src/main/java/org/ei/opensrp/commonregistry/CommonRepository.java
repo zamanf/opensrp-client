@@ -430,6 +430,11 @@ public class CommonRepository extends DrishtiRepository {
                 }
             }
 
+            // Underscore does not work well in fts search
+            if(value.contains("_")) {
+                value = value.replace("_", "");
+            }
+
             List<String> ftsSearchColumns = new ArrayList<String>();
             ftsSearchColumns.add(oldSearchValue);
             ftsSearchColumns.add(value);

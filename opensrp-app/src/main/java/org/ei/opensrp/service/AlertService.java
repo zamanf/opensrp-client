@@ -88,7 +88,7 @@ public class AlertService {
                 String field = scheduleName.replace(" ", "_");
                 // update alert status
                 updateFtsSearchInACR(bindType, entityId, field, status.value());
-                if (statusChange && StringUtils.isNotBlank(visitCode) && commonFtsObject.alertUpdateVisitCode(scheduleName)) {
+                if (!statusChange && StringUtils.isNotBlank(visitCode) && commonFtsObject.alertUpdateVisitCode(scheduleName)) {
                     // update alert visit code
                     updateFtsSearchInACR(bindType, entityId, CommonFtsObject.phraseColumnName, visitCode);
                 }
