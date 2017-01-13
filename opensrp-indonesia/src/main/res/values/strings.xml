@@ -546,4 +546,5 @@
     <string name="fe">FE:</string>
     <string name="Nutrition_status">Nutrition Status:</string>
     <string name="lila">MUAC:</string>
+    <string name="logout">Logout</string>
 </resources>
