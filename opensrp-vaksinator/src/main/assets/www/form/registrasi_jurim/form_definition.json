@@ -15,11 +15,6 @@
         "shouldLoadValue": true
       },
       {
-        "name": "unique_id",
-        "bind": "/model/instance/registrasi_vaksinator/unique_id",
-        "shouldLoadValue": true
-      },
-      {
         "name": "existing_Village",
         "bind": "/model/instance/registrasi_vaksinator/Village",
         "shouldLoadValue": true
@@ -113,6 +108,7 @@
             "name": "id",
             "shouldLoadValue": true
           },
+
           {
             "name": "relationalid",
             "shouldLoadValue": true
@@ -124,6 +120,11 @@
           {
             "name": "ibu_entity_id",
             "source": "kartu_ibu.id",
+            "shouldLoadValue": true
+          },
+          {
+            "name": "unique_id",
+            "bind": "/model/instance/registrasi_vaksinator/unique_id",
             "shouldLoadValue": true
           },
           {
