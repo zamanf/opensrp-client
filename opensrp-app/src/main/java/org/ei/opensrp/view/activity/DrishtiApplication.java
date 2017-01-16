@@ -3,8 +3,11 @@ package org.ei.opensrp.view.activity;
 import android.app.Application;
 import android.util.Log;
 
+import org.ei.opensrp.AllConstants;
 import org.ei.opensrp.Context;
+import org.ei.opensrp.util.BitmapImageCache;
 
+import java.io.File;
 import java.util.Locale;
 
 
@@ -13,14 +16,32 @@ public class DrishtiApplication extends Application {
 
     protected Locale locale = null;
     protected Context context;
+    private static BitmapImageCache memoryImageCache;
+    private static DrishtiApplication mInstance;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        mInstance=this;
     }
-
+    public static synchronized DrishtiApplication getInstance() {
+        return mInstance;
+    }
     public void logoutCurrentUser(){
         Log.e(TAG, "Child classes should implement this function");
+    }
+
+    public static BitmapImageCache getMemoryCacheInstance() {
+        if (memoryImageCache == null) {
+            memoryImageCache = new BitmapImageCache(BitmapImageCache.calculateMemCacheSize(AllConstants.ImageCache.MEM_CACHE_PERCENT));
+        }
+
+        return memoryImageCache;
+    }
+
+    public static String getAppDir(){
+        File appDir = DrishtiApplication.getInstance().getApplicationContext().getDir("opensrp", android.content.Context.MODE_PRIVATE); //Creating an internal dir;
+        return appDir.getAbsolutePath();
     }
 
 }
