@@ -194,7 +194,7 @@ public class BidanHomeActivity extends SecuredActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
-        attachLogoutMenuItem(menu, R.string.logout);
+        attachLogoutMenuItem(menu);
         return true;
     }
 

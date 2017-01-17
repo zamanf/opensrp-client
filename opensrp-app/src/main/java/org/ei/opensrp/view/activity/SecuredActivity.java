@@ -94,10 +94,9 @@ public abstract class SecuredActivity extends ActionBarActivity {
      * Attaches a logout menu item to the provided menu
      *
      * @param menu      The menu to attach the logout menu item
-     * @param titleRes  The string resource to use as the title for the menu item
      */
-    protected void attachLogoutMenuItem(Menu menu, int titleRes) {
-        menu.add(0, MENU_ITEM_LOGOUT, menu.size(), titleRes);
+    protected void attachLogoutMenuItem(Menu menu) {
+        menu.add(0, MENU_ITEM_LOGOUT, menu.size(), R.string.logout_text);
     }
 
     @Override
