@@ -31,6 +31,7 @@ import com.android.volley.toolbox.Volley;
 
 import org.apache.http.HttpResponse;
 import org.ei.opensrp.AllConstants;
+import org.ei.opensrp.R;
 import org.ei.opensrp.domain.ProfileImage;
 import org.ei.opensrp.repository.ImageRepository;
 import org.ei.opensrp.view.activity.DrishtiApplication;
@@ -341,7 +342,7 @@ public class OpenSRPImageLoader extends ImageLoader {
                 public HttpResponse performRequest(Request<?> request, Map<String, String> headers)
                         throws IOException, AuthFailureError {
 
-                   // FIXME headers.putAll(DrishtiApplication.getAuthParams());
+                    headers.putAll(org.ei.opensrp.Context.getInstance().allSettings().getAuthParams());
 
                     return super.performRequest(request, headers);
                 }
@@ -356,7 +357,7 @@ public class OpenSRPImageLoader extends ImageLoader {
                 public HttpResponse performRequest(Request<?> request, Map<String, String> headers)
                         throws IOException, AuthFailureError {
 
-                   //FIXME headers.putAll(DrishtiApplication.getAuthParams());
+                     headers.putAll(org.ei.opensrp.Context.getInstance().allSettings().getAuthParams());
 
                     return super.performRequest(request, headers);
                 }
@@ -468,7 +469,7 @@ public class OpenSRPImageLoader extends ImageLoader {
                     // perform I/O on non UI thread
                     if (!isImmediate) {
                         // used to pass absolute file name value to saveStaticImageToDisk method in thread
-                        final String absoluteFileName = DrishtiApplication.getAppDir() + File.separator + view.getTag();
+                        final String absoluteFileName = DrishtiApplication.getAppDir() + File.separator + view.getTag(R.id.image_name);
 
                         new Thread(new Runnable() {
                             @Override
