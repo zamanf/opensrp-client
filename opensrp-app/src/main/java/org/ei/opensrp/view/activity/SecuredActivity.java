@@ -104,6 +104,7 @@ public abstract class SecuredActivity extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
+        attachLogoutMenuItem(menu);
         return true;
     }
 
