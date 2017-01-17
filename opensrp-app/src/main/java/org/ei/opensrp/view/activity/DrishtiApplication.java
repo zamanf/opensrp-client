@@ -14,7 +14,7 @@ import java.io.File;
 import java.util.Locale;
 
 
-public class DrishtiApplication extends Application {
+public abstract class DrishtiApplication extends Application {
     private static final String TAG = "DrishtiApplication";
 
     protected Locale locale = null;
@@ -31,9 +31,8 @@ public class DrishtiApplication extends Application {
     public static synchronized DrishtiApplication getInstance() {
         return mInstance;
     }
-    public void logoutCurrentUser(){
-        Log.e(TAG, "Child classes should implement this function");
-    }
+
+    public abstract void logoutCurrentUser();
 
     public static BitmapImageCache getMemoryCacheInstance() {
         if (memoryImageCache == null) {
