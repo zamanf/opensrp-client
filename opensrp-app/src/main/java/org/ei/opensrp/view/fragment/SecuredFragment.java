@@ -13,6 +13,7 @@ import org.ei.opensrp.AllConstants;
 import org.ei.opensrp.Context;
 import org.ei.opensrp.R;
 import org.ei.opensrp.event.Listener;
+import org.ei.opensrp.view.activity.DrishtiApplication;
 import org.ei.opensrp.view.activity.FormActivity;
 import org.ei.opensrp.view.activity.LoginActivity;
 import org.ei.opensrp.view.activity.MicroFormActivity;
@@ -57,8 +58,8 @@ public abstract class SecuredFragment extends Fragment {
         ON_LOGOUT.addListener(logoutListener);
 
         if (context.IsUserLoggedOut()) {
-            startActivity(new Intent(getActivity(), LoginActivity.class));
-            context.userService().logoutSession();
+            DrishtiApplication application = (DrishtiApplication)this.getActivity().getApplication();
+            application.logoutCurrentUser();
             return;
         }
         formController = new FormController((SecuredActivity)getActivity());
@@ -71,8 +72,8 @@ public abstract class SecuredFragment extends Fragment {
     public void onResume() {
         super.onResume();
         if (context.IsUserLoggedOut()) {
-            context.userService().logoutSession();
-            startActivity(new Intent(getActivity(), LoginActivity.class));
+            DrishtiApplication application = (DrishtiApplication)this.getActivity().getApplication();
+            application.logoutCurrentUser();
             return;
         }
 
