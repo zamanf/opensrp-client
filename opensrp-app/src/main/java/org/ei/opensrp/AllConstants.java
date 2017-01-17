@@ -352,7 +352,7 @@ public class AllConstants {
         //filter by team e.g. team = user1,user2,user3
         public static final String FILTER_TEAM = "team";
 
-
+    }
 
     public static final int ANIMATION_FADE_IN_TIME = 250;
 

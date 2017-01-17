@@ -1,12 +1,8 @@
 package org.ei.opensrp.view.activity;
 
 import android.app.Application;
-
-import android.support.multidex.MultiDex;
-import android.support.multidex.MultiDexApplication;
-
 import android.os.Build;
-
+import android.support.multidex.MultiDex;
 import android.util.Log;
 
 import org.ei.opensrp.AllConstants;
