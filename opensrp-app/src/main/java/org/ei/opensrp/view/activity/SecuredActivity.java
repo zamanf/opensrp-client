@@ -82,7 +82,8 @@ public abstract class SecuredActivity extends ActionBarActivity {
 
             return super.onOptionsItemSelected(item);
         } else if (i == MENU_ITEM_LOGOUT) {
-            context.userService().logoutSession();
+            DrishtiApplication application = (DrishtiApplication)getApplication();
+            application.logoutCurrentUser();
 
             return super.onOptionsItemSelected(item);
         } else {
