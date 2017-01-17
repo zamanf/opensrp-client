@@ -604,4 +604,5 @@ public abstract class SecuredNativeSmartRegisterActivity extends SecuredActivity
         return null;
     }
 
+
 }
