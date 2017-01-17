@@ -85,7 +85,7 @@ public class ProfileImage {
         String ext = FileUtilities.getFileExtension(this.filepath);
         String url = format("{0}/{1}/{2}",
                 Context.getInstance().allSharedPreferences().fetchBaseURL(""),
-                AllConstants.IMAGES_PATH, ext);
+                AllConstants.IMAGES_PATH, (entityID+"."+ext));
         return url;
     }
 }
