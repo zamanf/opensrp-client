@@ -2,6 +2,8 @@ package org.ei.opensrp.path.application;
 
 import android.content.res.Configuration;
 
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
 import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.CommonFtsObject;
 import org.ei.opensrp.path.receiver.CESyncReceiver;
@@ -24,6 +26,7 @@ public class VaccinatorApplication extends DrishtiApplication{
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
         DrishtiSyncScheduler.setReceiverClass(SyncBroadcastReceiver.class);
 
         context = Context.getInstance();
