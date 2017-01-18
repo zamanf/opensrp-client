@@ -137,7 +137,7 @@ public class OpenSRPImageLoader extends ImageLoader {
      * @return ImageContainer that will contain either the specified default bitmap or the loaded bitmap. If the default was returned, the
      * {@link OpenSRPImageLoader} will be invoked when the request is fulfilled.
      */
-    public void get(final String imageId, final OpenSRPImageListener cachedImageListener) {
+    public void getImageWithId(final String imageId, final OpenSRPImageListener cachedImageListener) {
 
         try {
             if (imageId == null || imageId.isEmpty()) {
