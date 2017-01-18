@@ -2,6 +2,10 @@ package org.ei.opensrp.path.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
@@ -21,6 +25,7 @@ import org.joda.time.Years;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -117,7 +122,7 @@ public class ChildDetailActivity extends DetailActivity implements VaccinationAc
     }
 
     public String getEntityIdentifier() {
-        if(client == null){
+        if (client == null) {
             return "";
         }
         return nonEmptyValue(client.getColumnmaps(), true, false, "existing_program_client_id", "program_client_id");
@@ -211,7 +216,7 @@ public class ChildDetailActivity extends DetailActivity implements VaccinationAc
             vaccineWrapper.setPatientName(getValue(client.getColumnmaps(), "first_name", true) + " " + getValue(client.getColumnmaps(), "last_name", true));
 
             String existingAge = VaccinateActionUtils.retrieveExistingAge(formSubmissionWrapper);
-            if(StringUtils.isNotBlank(existingAge)){
+            if (StringUtils.isNotBlank(existingAge)) {
                 vaccineWrapper.setExistingAge(existingAge);
             }
 
@@ -235,6 +240,19 @@ public class ChildDetailActivity extends DetailActivity implements VaccinationAc
         } else if (agey >= 5 && hasAnyEmptyValue(client.getColumnmaps(), "_retro", vl)) {
             addStatusTag(this, table, "Partially Immunized", true);
         }
+
+        final List<TableLayout> tableLayouts = new ArrayList<>();
+        tableLayouts.add(dt);
+        tableLayouts.add(dt2);
+
+        Button edtBtn = (Button) findViewById(R.id.child_edit_btn);
+        edtBtn.setTag(getString(R.string.edit));
+        edtBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                updateEditView(view, tableLayouts);
+            }
+        });
     }
 
     @Override
@@ -290,4 +308,5 @@ public class ChildDetailActivity extends DetailActivity implements VaccinationAc
         }
         super.finish();
     }
+
 }

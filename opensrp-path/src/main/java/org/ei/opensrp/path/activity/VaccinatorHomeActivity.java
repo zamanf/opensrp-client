@@ -34,7 +34,6 @@ import static org.ei.opensrp.event.Event.SYNC_STARTED;
 public class VaccinatorHomeActivity extends SecuredActivity {
     private MenuItem updateMenuItem;
     private MenuItem remainingFormsToSyncMenuItem;
-    private PendingFormSubmissionService pendingFormSubmissionService;
 
     private Listener<Boolean> onSyncStartListener = new Listener<Boolean>() {
         @Override
@@ -118,7 +117,6 @@ public class VaccinatorHomeActivity extends SecuredActivity {
     }
 
     private void initialize() {
-        pendingFormSubmissionService = context.pendingFormSubmissionService();
         SYNC_STARTED.addListener(onSyncStartListener);
         SYNC_COMPLETED.addListener(onSyncCompleteListener);
         FORM_SUBMITTED.addListener(onFormSubmittedListener);
@@ -240,7 +238,7 @@ public class VaccinatorHomeActivity extends SecuredActivity {
             return;
         }
 
-        long size = pendingFormSubmissionService.pendingFormSubmissionCount();
+        long size = context.pendingFormSubmissionService().pendingFormSubmissionCount();
         if (size > 0) {
             remainingFormsToSyncMenuItem.setTitle(valueOf(size) + " " + getString(R.string.unsynced_forms_count_message));
             remainingFormsToSyncMenuItem.setVisible(true);

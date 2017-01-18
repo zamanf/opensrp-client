@@ -2,6 +2,8 @@ package org.ei.opensrp.path.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
@@ -20,6 +22,7 @@ import org.joda.time.Years;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -201,6 +204,20 @@ public class WomanDetailActivity extends DetailActivity implements VaccinationAc
         pt.addView(tr);
         tr = getDataRow(this, "GA (weeks)", getValue(client.getColumnmaps(), "final_ga", "N/A", false), null);
         pt.addView(tr);
+
+
+        final List<TableLayout> tableLayouts = new ArrayList<>();
+        tableLayouts.add(dt);
+        tableLayouts.add(dt2);
+
+        Button edtBtn = (Button) findViewById(R.id.woman_edit_btn);
+        edtBtn.setTag(getString(R.string.edit));
+        edtBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updateEditView(view, tableLayouts);
+            }
+        });
     }
 
     @Override
