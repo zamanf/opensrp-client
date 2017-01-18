@@ -237,7 +237,10 @@ public class PNCDetailActivity extends Activity {
         nama.setText(getResources().getString(R.string.name)+ humanize(ibuparent.getColumnmaps().get("namalengkap") != null ? ibuparent.getColumnmaps().get("namalengkap") : "-"));
         nik.setText(getResources().getString(R.string.nik)+humanize (ibuparent.getDetails().get("nik") != null ? ibuparent.getDetails().get("nik") : "-"));
         husband_name.setText(getResources().getString(R.string.husband_name)+ humanize(ibuparent.getColumnmaps().get("namaSuami") != null ? ibuparent.getColumnmaps().get("namaSuami") : "-"));
-        dob.setText(getResources().getString(R.string.dob)+ humanize(ibuparent.getDetails().get("tanggalLahir") != null ? ibuparent.getDetails().get("tanggalLahir") : "-"));
+        String tgl = ibuparent.getDetails().get("tanggalLahir") != null ? ibuparent.getDetails().get("tanggalLahir") : "-";
+        String tgl_lahir = tgl.substring(0, tgl.indexOf("T"));
+        dob.setText(getResources().getString(R.string.dob)+ tgl_lahir);
+        //dob.setText(getResources().getString(R.string.dob)+ humanize(ibuparent.getDetails().get("tanggalLahir") != null ? ibuparent.getDetails().get("tanggalLahir") : "-"));
         phone.setText("No HP: "+ (ibuparent.getDetails().get("NomorTelponHp") != null ? ibuparent.getDetails().get("NomorTelponHp") : "-"));
 
 

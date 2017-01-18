@@ -549,4 +549,5 @@
     <string name="Nutrition_status">Nutrition Status:</string>
     <string name="lila">MUAC:</string>
     <string name="mother_already_registered_in_fp">Mother already registered</string>
+    <string name="pnc_ke">PNC Visit</string>
 </resources>
