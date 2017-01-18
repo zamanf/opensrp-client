@@ -39,7 +39,6 @@ import static org.ei.opensrp.indonesia.AllConstantsINA.FormNames.KARTU_IBU_ANC_V
 import static org.ei.opensrp.indonesia.AllConstantsINA.FormNames.KARTU_IBU_ANC_VISIT_LABTEST;
 import static org.ei.opensrp.indonesia.AllConstantsINA.FormNames.KARTU_IBU_PNC_REGISTRATION;
 import static org.ei.opensrp.indonesia.AllConstantsINA.FormNames.KOHORT_KB_CLOSE;
-import static org.ei.opensrp.indonesia.AllConstantsINA.FormNames.KOHORT_KB_EDIT;
 import static org.ei.opensrp.indonesia.AllConstantsINA.FormNames.KOHORT_KB_REGISTER;
 import static org.ei.opensrp.indonesia.AllConstantsINA.FormNames.KOHORT_KB_UPDATE;
 

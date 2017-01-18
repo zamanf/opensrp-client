@@ -300,9 +300,17 @@ public class KIDetailActivity extends Activity {
 //            Bundle extras = data.getExtras();
 //            String imageBitmap = (String) extras.get(MediaStore.EXTRA_OUTPUT);
 //            Toast.makeText(this,imageBitmap,Toast.LENGTH_LONG).show();
+
+/*
             HashMap<String,String> details = new HashMap<String,String>();
             details.put("profilepic",currentfile.getAbsolutePath());
             saveimagereference(bindobject,entityid,details);
+*/
+
+            Long tsLong = System.currentTimeMillis()/1000;
+            DetailsRepository detailsRepository = org.ei.opensrp.Context.getInstance().detailsRepository();
+            detailsRepository.add(entityid, "profilepic", currentfile.getAbsolutePath(), tsLong);
+
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inPreferredConfig = Bitmap.Config.ARGB_8888;
             Bitmap bitmap = BitmapFactory.decodeFile(currentfile.getPath(), options);

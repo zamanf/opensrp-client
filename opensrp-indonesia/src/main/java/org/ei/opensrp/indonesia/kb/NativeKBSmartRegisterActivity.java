@@ -43,7 +43,6 @@ import static org.ei.opensrp.R.string.no_button_label;
 import static org.ei.opensrp.R.string.yes_button_label;
 import static org.ei.opensrp.indonesia.AllConstantsINA.FormNames.KARTU_IBU_REGISTRATION;
 import static org.ei.opensrp.indonesia.AllConstantsINA.FormNames.KOHORT_KB_CLOSE;
-import static org.ei.opensrp.indonesia.AllConstantsINA.FormNames.KOHORT_KB_EDIT;
 import static org.ei.opensrp.indonesia.AllConstantsINA.FormNames.KOHORT_KB_REGISTER;
 import static org.ei.opensrp.indonesia.AllConstantsINA.FormNames.KOHORT_KB_UPDATE;
 

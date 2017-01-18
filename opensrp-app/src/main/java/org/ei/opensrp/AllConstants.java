@@ -331,9 +331,9 @@ public class AllConstants {
         public static final String BATCHES_REPLICATED = "BATCHES_REPLICATED";
         public static final String COUCHDB_PORT = "5984";
 
-        public static final String COUCH_DATABASE_NAME = "gizi";
-        public static final String COUCH_DATABASE_USER = "";
-        public static final String COUCH_DATABASE_PASS = "";
+        public static final String COUCH_DATABASE_NAME = "opensrp";
+        public static final String COUCH_DATABASE_USER = "rootuser";
+        public static final String COUCH_DATABASE_PASS = "adminpass";
 
     }
     public static class SyncFilters {
