@@ -164,7 +164,8 @@ public class WomanSmartRegisterFragment extends SecuredNativeSmartRegisterCursor
     public void initializeQueries() {
         String tableName = "pkwoman";
 
-        WomanSmartClientsProvider hhscp = new WomanSmartClientsProvider(getActivity(), clientActionHandler, context.alertService());
+        WomanSmartClientsProvider hhscp = new WomanSmartClientsProvider(getActivity(),
+                clientActionHandler, context().alertService());
         clientAdapter = new SmartRegisterPaginatedCursorAdapter(getActivity(), null, hhscp, Context.getInstance().commonrepository(tableName));
         clientsView.setAdapter(clientAdapter);
 

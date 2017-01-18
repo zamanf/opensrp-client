@@ -113,7 +113,7 @@ public class mCareChildSmartRegisterFragment extends SecuredNativeSmartRegisterC
                 dialogOptionslist.add(new CursorCommonObjectFilterOption(getString(R.string.filter_by_encc2),filterStringForENCCRV2()));
                 dialogOptionslist.add(new CursorCommonObjectFilterOption(getString(R.string.filter_by_encc3),filterStringForENCCRV3()));
 
-                String locationjson = context.anmLocationController().get();
+                String locationjson = context().anmLocationController().get();
                 LocationTree locationTree = EntityUtils.fromJson(locationjson, LocationTree.class);
 
                 Map<String,TreeNode<String, Location>> locationMap =
@@ -344,7 +344,8 @@ public class mCareChildSmartRegisterFragment extends SecuredNativeSmartRegisterC
         }
     }
     public void initializeQueries(){
-        mCareChildSmartClientsProvider hhscp = new mCareChildSmartClientsProvider(getActivity(), clientActionHandler,context.alertService());
+        mCareChildSmartClientsProvider hhscp = new mCareChildSmartClientsProvider(getActivity(),
+                clientActionHandler,context().alertService());
         clientAdapter = new SmartRegisterPaginatedCursorAdapter(getActivity(), null, hhscp, new CommonRepository("mcarechild",new String []{ "FWBNFGEN"}));
         clientsView.setAdapter(clientAdapter);
 

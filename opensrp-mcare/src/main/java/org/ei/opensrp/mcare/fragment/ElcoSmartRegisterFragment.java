@@ -107,7 +107,7 @@ public class ElcoSmartRegisterFragment extends SecuredNativeSmartRegisterCursorA
             public DialogOption[] filterOptions() {
                 ArrayList<DialogOption> dialogOptionslist = new ArrayList<DialogOption>();
                 dialogOptionslist.add(new CursorCommonObjectFilterOption(getString(R.string.filter_by_all_label),""));
-                String locationjson = context.anmLocationController().get();
+                String locationjson = context().anmLocationController().get();
                 LocationTree locationTree = EntityUtils.fromJson(locationjson, LocationTree.class);
 
                 Map<String,TreeNode<String, Location>> locationMap =
@@ -158,7 +158,7 @@ public class ElcoSmartRegisterFragment extends SecuredNativeSmartRegisterCursorA
     protected void onInitialization() {
 
 
-        context.formSubmissionRouter().getHandlerMap().put("psrf_form", new PSRFHandler());
+        context().formSubmissionRouter().getHandlerMap().put("psrf_form", new PSRFHandler());
     }
 
     @Override
@@ -410,7 +410,8 @@ public class ElcoSmartRegisterFragment extends SecuredNativeSmartRegisterCursorA
         }
     }
     public void initializeQueries(){
-        ElcoSmartClientsProvider hhscp = new ElcoSmartClientsProvider(getActivity(),clientActionHandler,context.alertService());
+        ElcoSmartClientsProvider hhscp = new ElcoSmartClientsProvider(getActivity(),
+                clientActionHandler,context().alertService());
         clientAdapter = new SmartRegisterPaginatedCursorAdapter(getActivity(), null, hhscp, new CommonRepository("elco",new String []{ "FWWOMFNAME", "JiVitAHHID", "GOBHHID"}));
         clientsView.setAdapter(clientAdapter);
 

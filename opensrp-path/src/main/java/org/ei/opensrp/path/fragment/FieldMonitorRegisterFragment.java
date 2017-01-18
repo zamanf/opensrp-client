@@ -252,7 +252,9 @@ public class FieldMonitorRegisterFragment extends SecuredNativeSmartRegisterCurs
     public void initializeQueries() {
         String tableName = "stock";
 
-        FieldMonitorSmartClientsProvider hhscp = new FieldMonitorSmartClientsProvider(getActivity(), clientActionHandler, context.alertService(), isDailyRegister() ? FieldMonitorSmartClientsProvider.ByMonthByDay.ByDay : FieldMonitorSmartClientsProvider.ByMonthByDay.ByMonth);
+        FieldMonitorSmartClientsProvider hhscp = new FieldMonitorSmartClientsProvider(getActivity(),
+                clientActionHandler, context().alertService(),
+                isDailyRegister() ? FieldMonitorSmartClientsProvider.ByMonthByDay.ByDay : FieldMonitorSmartClientsProvider.ByMonthByDay.ByMonth);
         clientAdapter = new SmartRegisterPaginatedCursorAdapter(getActivity(), null, hhscp, Context.getInstance().commonrepository(tableName));
         clientsView.setAdapter(clientAdapter);
 

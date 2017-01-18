@@ -119,7 +119,7 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
            //     dialogOptionslist.add(new CursorCommonObjectFilterOption(getString(R.string.hh_no_mwra),filterStringForNoElco()));
           //      dialogOptionslist.add(new CursorCommonObjectFilterOption(getString(R.string.hh_has_mwra),filterStringForOneOrMoreElco()));
 
-                String locationjson = context.anmLocationController().get();
+                String locationjson = context().anmLocationController().get();
                 LocationTree locationTree = EntityUtils.fromJson(locationjson, LocationTree.class);
 
                 Map<String,TreeNode<String, Location>> locationMap =
@@ -206,7 +206,8 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
                 "Else alerts.status END ASC";
     }
     public void initializeQueries(){
-        KIClientsProvider kiscp = new KIClientsProvider(getActivity(),clientActionHandler,context.alertService());
+        KIClientsProvider kiscp = new KIClientsProvider(getActivity(),clientActionHandler,
+                context().alertService());
         clientAdapter = new SmartRegisterPaginatedCursorAdapter(getActivity(), null, kiscp, new CommonRepository("kartu_ibu",new String []{"kartu_ibu.isClosed", "namalengkap", "umur", "ibu.type","namaSuami","ibu.ancDate","ibu.ancKe","ibu.hariKeKF","anak.namaBayi","anak.tanggalLahirAnak","ibu.id","noIbu","htp","kartu_ibu.isOutOfArea"}));
         clientsView.setAdapter(clientAdapter);
 
@@ -249,7 +250,9 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
         }
         ft.addToBackStack(null);
         LocationSelectorDialogFragment
-                .newInstance((NativeKISmartRegisterActivity) getActivity(), new EditDialogOptionModel(), context.anmLocationController().get(), "kartu_ibu_registration")
+                .newInstance((NativeKISmartRegisterActivity) getActivity(), new
+                        EditDialogOptionModel(), context().anmLocationController().get(),
+                        "kartu_ibu_registration")
                 .show(ft, locationDialogTAG);
     }
 

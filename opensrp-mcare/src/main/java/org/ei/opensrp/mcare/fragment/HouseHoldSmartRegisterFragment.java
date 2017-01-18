@@ -121,7 +121,7 @@ public class HouseHoldSmartRegisterFragment extends SecuredNativeSmartRegisterCu
                 dialogOptionslist.add(new CursorCommonObjectFilterOption(getString(R.string.hh_no_mwra),filterStringForNoElco()));
                 dialogOptionslist.add(new CursorCommonObjectFilterOption(getString(R.string.hh_has_mwra),filterStringForOneOrMoreElco()));
 
-                String locationjson = context.anmLocationController().get();
+                String locationjson = context().anmLocationController().get();
                 LocationTree locationTree = EntityUtils.fromJson(locationjson, LocationTree.class);
 
                 Map<String,TreeNode<String, Location>> locationMap =
@@ -176,7 +176,8 @@ public class HouseHoldSmartRegisterFragment extends SecuredNativeSmartRegisterCu
 
     @Override
     protected void onInitialization() {
-        context.formSubmissionRouter().getHandlerMap().put("census_enrollment_form", new CensusEnrollmentHandler());
+        context().formSubmissionRouter().getHandlerMap().put("census_enrollment_form", new
+                CensusEnrollmentHandler());
     }
 
     @Override
@@ -202,7 +203,8 @@ public class HouseHoldSmartRegisterFragment extends SecuredNativeSmartRegisterCu
                 "Else alerts.status END ASC";
     }
     public void initializeQueries(){
-        HouseHoldSmartClientsProvider hhscp = new HouseHoldSmartClientsProvider(getActivity(),clientActionHandler,context.alertService());
+        HouseHoldSmartClientsProvider hhscp = new HouseHoldSmartClientsProvider(getActivity(),
+                clientActionHandler,context().alertService());
         clientAdapter = new SmartRegisterPaginatedCursorAdapter(getActivity(), null, hhscp, new CommonRepository("household",new String []{"FWHOHFNAME", "FWGOBHHID","FWJIVHHID"}));
         clientsView.setAdapter(clientAdapter);
 
@@ -242,7 +244,9 @@ public class HouseHoldSmartRegisterFragment extends SecuredNativeSmartRegisterCu
         }
         ft.addToBackStack(null);
         McareLocationSelectorDialogFragment
-                .newInstance((HouseHoldSmartRegisterActivity) getActivity(), new EditDialogOptionModel(), context.anmLocationController().get(), "new_household_registration")
+                .newInstance((HouseHoldSmartRegisterActivity) getActivity(), new
+                        EditDialogOptionModel(), context().anmLocationController().get(),
+                        "new_household_registration")
                 .show(ft, locationDialogTAG);
     }
 
@@ -504,7 +508,7 @@ public class HouseHoldSmartRegisterFragment extends SecuredNativeSmartRegisterCu
 //                }
 //            }
 //        }
-        CommonRepository commonRepository = context.commonrepository("household");
+        CommonRepository commonRepository = context().commonrepository("household");
         setTablename("household");
         SmartRegisterQueryBuilder countqueryBUilder = new SmartRegisterQueryBuilder();
         countqueryBUilder.SelectInitiateMainTableCounts("household");

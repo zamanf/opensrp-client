@@ -134,7 +134,7 @@ public class NativeKIANCSmartRegisterFragment extends SecuredNativeSmartRegister
                 //     dialogOptionslist.add(new CursorCommonObjectFilterOption(getString(R.string.hh_no_mwra),filterStringForNoElco()));
                 //      dialogOptionslist.add(new CursorCommonObjectFilterOption(getString(R.string.hh_has_mwra),filterStringForOneOrMoreElco()));
 
-                String locationjson = context.anmLocationController().get();
+                String locationjson = context().anmLocationController().get();
                 LocationTree locationTree = EntityUtils.fromJson(locationjson, LocationTree.class);
 
                 Map<String,TreeNode<String, Location>> locationMap =
@@ -218,7 +218,8 @@ public class NativeKIANCSmartRegisterFragment extends SecuredNativeSmartRegister
                 "Else alerts.status END ASC";
     }
     public void initializeQueries(){
-        KIANCClientsProvider kiscp = new KIANCClientsProvider(getActivity(),clientActionHandler,context.alertService());
+        KIANCClientsProvider kiscp = new KIANCClientsProvider(getActivity(),clientActionHandler,
+                context().alertService());
         clientAdapter = new SmartRegisterPaginatedCursorAdapter(getActivity(), null, kiscp, new CommonRepository("ibu",new String []{"ibu.isClosed", "ibu.ancDate", "ibu.ancKe","kartu_ibu.namalengkap","kartu_ibu.umur","kartu_ibu.namaSuami"}));
         clientsView.setAdapter(clientAdapter);
 

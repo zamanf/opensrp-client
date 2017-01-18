@@ -137,7 +137,7 @@ public class NativeKIAnakSmartRegisterFragment extends SecuredNativeSmartRegiste
                 //     dialogOptionslist.add(new CursorCommonObjectFilterOption(getString(R.string.hh_no_mwra),filterStringForNoElco()));
                 //      dialogOptionslist.add(new CursorCommonObjectFilterOption(getString(R.string.hh_has_mwra),filterStringForOneOrMoreElco()));
 
-                String locationjson = context.anmLocationController().get();
+                String locationjson = context().anmLocationController().get();
                 LocationTree locationTree = EntityUtils.fromJson(locationjson, LocationTree.class);
 
                 Map<String,TreeNode<String, Location>> locationMap =
@@ -226,7 +226,8 @@ public class NativeKIAnakSmartRegisterFragment extends SecuredNativeSmartRegiste
 
         ///------------------------------------------------------------------
 
-        AnakRegisterClientsProvider anakscp = new AnakRegisterClientsProvider(getActivity(),clientActionHandler,context.alertService());
+        AnakRegisterClientsProvider anakscp = new AnakRegisterClientsProvider(getActivity(),
+                clientActionHandler,context().alertService());
         clientAdapter = new SmartRegisterPaginatedCursorAdapter(getActivity(), null, anakscp, new CommonRepository("anak",new String []{"namaBayi", "tanggalLahirAnak", "anak.isClosed"}));
         clientsView.setAdapter(clientAdapter);
 
