@@ -16,6 +16,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MotionEvent;
@@ -34,6 +35,7 @@ import org.ei.opensrp.indonesia.R;
 import org.ei.opensrp.indonesia.face.camera.util.FaceConstants;
 import org.ei.opensrp.indonesia.face.camera.util.Tools;
 import org.ei.opensrp.indonesia.kartu_ibu.KIDetailActivity;
+import org.ei.opensrp.indonesia.kartu_ibu.NativeKISmartRegisterActivity;
 import org.ei.opensrp.view.activity.SecuredActivity;
 
 import java.util.Arrays;
@@ -59,6 +61,7 @@ public class ImageConfirmation extends Activity {
     Tools tools;
     HashMap<String, String> hash;
     private String selectedPersonName = "";
+    private Parcelable[] kiclient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +74,7 @@ public class ImageConfirmation extends Activity {
         boolean switchCamera = extras.getBoolean("com.qualcomm.sdk.smartshutterapp.ImageConfirmation.switchCamera");
         entityId = extras.getString("org.sid.sidface.ImageConfirmation.id");
         identifyPerson = extras.getBoolean("org.sid.sidface.ImageConfirmation.identify");
+        kiclient = extras.getParcelableArray("org.sid.sidface.ImageConfirmation.kiclient");
 
         storedBitmap = BitmapFactory.decodeByteArray(data, 0, data.length, null);
 
@@ -131,6 +135,7 @@ public class ImageConfirmation extends Activity {
                                 selectedPersonName = entry.getKey();
                             }
                         }
+
                         Toast.makeText(getApplicationContext(), selectedPersonName, Toast.LENGTH_SHORT).show();
 
 //                        Draw Info on Image
@@ -178,17 +183,21 @@ public class ImageConfirmation extends Activity {
         AllCommonsRepository ibuRepository = org.ei.opensrp.Context.getInstance().allCommonsRepositoryobjects("ec_kartu_ibu");
         CommonPersonObject kiclient = ibuRepository.findByCaseID(selectedPersonName);
 
-        Log.e(TAG, "onCreate: IbuRepo "+ibuRepository );
-        Log.e(TAG, "onCreate: Id "+selectedPersonName );
-        Log.e(TAG, "onCreate: KiClient "+kiclient.getCaseId() );
+//        Log.e(TAG, "onCreate: IbuRepo "+ibuRepository );
+//        Log.e(TAG, "onCreate: Id "+selectedPersonName );
+//        Log.e(TAG, "onCreate: KiClient "+kiclient.getCaseId() );
 
 //      CommonRepository commonrepository = new CommonRepository("ibu", new String[]{"ibu.isClosed", "ibu.ancDate", "ibu.ancKe", "kartu_ibu.namalengkap", "kartu_ibu.umur", "kartu_ibu.namaSuami"}););
-        CommonRepository commonrepository = new CommonRepository("ec_kartu_ibu",new String []{"ec_kartu_ibu.is_closed", "ec_kartu_ibu.namalengkap", "ec_kartu_ibu.umur","ec_kartu_ibu.namaSuami"});
-        Log.e(TAG, "onCreate: KiClient "+commonrepository );
-        CommonPersonObject personinlist = commonrepository.findByCaseID(selectedPersonName);
-        CommonPersonObjectClient pClient = new CommonPersonObjectClient(personinlist.getCaseId(), personinlist.getDetails(), personinlist.getDetails().get("ec_kartu_ibu.namalengkap"));
-        KIDetailActivity.kiclient = pClient;
-        Intent intent = new Intent(ImageConfirmation.this,KIDetailActivity.class);
+//        CommonRepository commonrepository = new CommonRepository("ec_kartu_ibu",new String []{"ec_kartu_ibu.is_closed", "ec_kartu_ibu.namalengkap", "ec_kartu_ibu.umur","ec_kartu_ibu.namaSuami"});
+//        Log.e(TAG, "onCreate: CommonRespository "+commonrepository );
+//        CommonPersonObject personinlist = commonrepository.findByCaseID(selectedPersonName);
+//        CommonPersonObjectClient pClient = new CommonPersonObjectClient(personinlist.getCaseId(), personinlist.getDetails(), personinlist.getDetails().get("ec_kartu_ibu.namalengkap"));
+//        KIDetailActivity.kiclient = pClient;
+//        Intent intent = new Intent(ImageConfirmation.this,KIDetailActivity.class);
+        Intent intent = new Intent(ImageConfirmation.this, NativeKISmartRegisterActivity.class);
+        intent.putExtra("org.ei.opensrp.indonesia.face.face_mode", true);
+        intent.putExtra("org.ei.opensrp.indonesia.face.base_id", selectedPersonName);
+
         startActivity(intent);
 
     }
@@ -301,7 +310,6 @@ public class ImageConfirmation extends Activity {
         }
         editor.apply();
     }
-
 
     public void saveAlbum() {
         byte[] albumBuffer = SmartShutterActivity.faceProc.serializeRecogntionAlbum();

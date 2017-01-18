@@ -88,7 +88,7 @@
         android:gravity="bottom" />
     
      <ImageView
-        android:id="@+id/perfectMode"
+        android:id="@+id/clientList"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_alignLeft="@+id/menu"
@@ -96,6 +96,16 @@
         android:layout_alignTop="@+id/menu"
         android:gravity="center" />
      
+     <ImageView
+         android:id="@+id/perfectMode"
+         android:layout_width="50dp"
+         android:layout_height="50dp"
+         android:layout_alignLeft="@+id/menu"
+         android:layout_alignRight="@+id/menu"
+         android:layout_marginTop= "4dp"
+         android:layout_below="@+id/clientList"
+         android:gravity="center" />
+
      <ImageView
         android:id="@+id/faceDetection"
         android:layout_width="55dp"
@@ -125,10 +135,5 @@
         android:layout_marginTop="4dp"
         android:layout_below="@+id/switchCamera"
         android:gravity="center"  />
-
-
-
-
-
 
 </RelativeLayout>

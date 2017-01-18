@@ -5,6 +5,8 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.Image;
+import android.os.Parcelable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -140,8 +142,6 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
                 FlurryFacade.logEvent("click_sorting_option_on_kohort_ibu_dashboard");
                 return new DialogOption[]{
 //                        new HouseholdCensusDueDateSort(),
-
-
                         new CursorCommonObjectSort(getResources().getString(R.string.sort_by_name_label),KiSortByNameAZ()),
                         new CursorCommonObjectSort(getResources().getString(R.string.sort_by_name_label_reverse),KiSortByNameZA()),
                         new CursorCommonObjectSort(getResources().getString(R.string.sort_by_wife_age_label),KiSortByAge()),
@@ -199,6 +199,8 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
         return ((NativeKISmartRegisterActivity)getActivity()).getEditOptions();
     }
 
+    public static String criteria;
+
     @Override
     public void setupViews(View view) {
         getDefaultOptionsProvider();
@@ -209,7 +211,9 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
         clientsView.setVisibility(View.VISIBLE);
         clientsProgressView.setVisibility(View.INVISIBLE);
 //        list.setBackgroundColor(Color.RED);
-        initializeQueries();
+        
+        Log.e(TAG, "setupViews: "+ getCriteria() );
+        initializeQueries(getCriteria());
     }
 
     private String filterStringForAll(){
@@ -229,13 +233,13 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
         return "Select Count(*) from ec_kartu_ibu";
     }
 
-    public void initializeQueries(){
+    public void initializeQueries(String s){
+
         try {
-        KIClientsProvider kiscp = new KIClientsProvider(getActivity(),
-                clientActionHandler,
+            KIClientsProvider kiscp = new KIClientsProvider(getActivity(), clientActionHandler,
                 context.alertService());
 
-        clientAdapter = new SmartRegisterPaginatedCursorAdapter(getActivity(), null, kiscp,
+            clientAdapter = new SmartRegisterPaginatedCursorAdapter(getActivity(), null, kiscp,
                 new CommonRepository(
                         "ec_kartu_ibu",
                         new String []{"ec_kartu_ibu.is_closed",
@@ -246,13 +250,22 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
                                 "ec_anak.tanggalLahirAnak",
                                 "noIbu",
                                 "ec_kartu_ibu.isOutOfArea"}));
-        clientsView.setAdapter(clientAdapter);
+            clientsView.setAdapter(clientAdapter);
 
-        setTablename("ec_kartu_ibu");
-        SmartRegisterQueryBuilder countqueryBUilder = new SmartRegisterQueryBuilder();
-        countqueryBUilder.SelectInitiateMainTableCounts("ec_kartu_ibu");
-        countqueryBUilder.customJoin("LEFT JOIN ec_anak ON ec_kartu_ibu.id = ec_anak.relational_id ");
-        mainCondition = " is_closed = 0 ";
+            setTablename("ec_kartu_ibu");
+
+            SmartRegisterQueryBuilder countqueryBUilder = new SmartRegisterQueryBuilder();
+
+            countqueryBUilder.SelectInitiateMainTableCounts("ec_kartu_ibu");
+
+            countqueryBUilder.customJoin("LEFT JOIN ec_anak ON ec_kartu_ibu.id = ec_anak.relational_id ");
+
+            if (s != null){
+                mainCondition = " is_closed = 0 AND object_id LIKE '%"+s+"%'";
+            } else {
+                mainCondition = " is_closed = 0";
+            }
+
         joinTable = "";
         countSelect = countqueryBUilder.mainCondition(mainCondition);
         super.CountExecute();
@@ -280,13 +293,13 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
         super.filterandSortInInitializeQueries();
 
         updateSearchView();
+            Log.e(TAG, "initializeQueries: "+s );
         refresh();
         } catch (Exception e){
             e.printStackTrace();
         }
         finally {
         }
-        
     }
 
     private class ClientActionHandler implements View.OnClickListener {
@@ -344,7 +357,6 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
         @Override
         public void onDialogOptionSelection(DialogOption option, Object tag) {
 
-
             if(option.name().equalsIgnoreCase(getString(R.string.str_register_anc_form) ) ) {
                 CommonPersonObjectClient pc = KIDetailActivity.kiclient;
                 AllCommonsRepository iburep = org.ei.opensrp.Context.getInstance().allCommonsRepositoryobjects("ec_ibu");
@@ -384,7 +396,7 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
 //        super.onResumption();
         getDefaultOptionsProvider();
         if(isPausedOrRefreshList()) {
-            initializeQueries();
+            initializeQueries("");
         }
    //     updateSearchView();
 //
@@ -403,15 +415,13 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
     @Override
     public void setupSearchView(final View view) {
         searchView = (EditText) view.findViewById(org.ei.opensrp.R.id.edt_search);
-//        String s = "09";
-//        searchView.setText(s);
-//        searchTextChangeListener(s);
         searchView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 CharSequence selections[] = new CharSequence[]{"Name", "Photo"};
+//                Image selections[] = new Image[]{};
                 final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("");
+                builder.setTitle("Please Choose one, Search by");
                 builder.setItems(selections, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int opt) {
@@ -420,7 +430,6 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
                     }
                 });
                 builder.show();
-
             }
         });
 
@@ -432,28 +441,31 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
         Log.e(TAG, "getFacialRecord: " );
         SmartShutterActivity.kidetail = (CommonPersonObjectClient)view.getTag();
 
-        Intent intent = new Intent(getActivity(),SmartShutterActivity.class);
+        Intent intent = new Intent(getActivity(), SmartShutterActivity.class);
         intent.putExtra("org.sid.sidface.ImageConfirmation.identify", true);
+        intent.putExtra("org.sid.sidface.ImageConfirmation.kidetail", (Parcelable) SmartShutterActivity.kidetail);
         startActivity(intent);
     }
 
-    private void searchTextChangeListener(String s) {
-        Log.e(TAG, "searchTextChangeListener: "+s );
-        searchView.setHint(getNavBarOptionsProvider().searchHint());
-        searchView.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-            }
+    public void searchTextChangeListener(String s) {
+        Log.e(TAG, "searchTextChangeListener: " + s);
+        if (s != null) {
+            filters =  s;
+        } else {
+            searchView.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+                }
 
-            @Override
-            public void onTextChanged(final CharSequence cs, int start, int before, int count) {
+                @Override
+                public void onTextChanged(final CharSequence cs, int start, int before, int count) {
 
-                Log.e(TAG, "onTextChanged: "+searchView.getText() );
-                (new AsyncTask() {
+                    Log.e(TAG, "onTextChanged: " + searchView.getText());
+                    (new AsyncTask() {
 //                    SmartRegisterClients filteredClients;
 
-                    @Override
-                    protected Object doInBackground(Object[] params) {
+                        @Override
+                        protected Object doInBackground(Object[] params) {
 //                        currentSearchFilter =
 //                        setCurrentSearchFilter(new HHSearchOption(cs.toString()));
 //                        filteredClients = getClientsAdapter().getListItemProvider()
@@ -461,12 +473,12 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
 //                                        getCurrentSearchFilter(), getCurrentSortOption());
 //
 
-                        filters = cs.toString();
+                            filters = cs.toString();
 //                        joinTable = "";
 //                        mainCondition = " is_closed = 0 and jenisKontrasepsi != '0' ";
-                        Log.e(TAG, "doInBackground: "+filters );
-                        return null;
-                    }
+                            Log.e(TAG, "doInBackground: " + filters);
+                            return null;
+                        }
 //
 //                    @Override
 //                    protected void onPostExecute(Object o) {
@@ -480,14 +492,14 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
 //                        filterandSortExecute();
 //                        super.onPostExecute(o);
 //                    }
-                }).execute();
-            }
+                    }).execute();
+                }
 
-            @Override
-            public void afterTextChanged(Editable editable) {
-            }
-        });
-
+                @Override
+                public void afterTextChanged(Editable editable) {
+                }
+            });
+        }
     }
 
     public void updateSearchView(){
@@ -534,8 +546,6 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
 //                                currentSearchFilter, currentSortOption);
 //
 //                searchCancelView.setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
-
-
             }
 
             @Override
@@ -560,4 +570,11 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
         }
     }
 
+    public void setCriteria(String criteria) {
+        this.criteria = criteria;
+    }
+
+    public static String getCriteria(){
+        return criteria;
+    }
 }

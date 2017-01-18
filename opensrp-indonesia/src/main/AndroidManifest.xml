@@ -99,6 +99,7 @@
         <activity android:name=".face.camera.SmartShutterActivity" />
         <activity android:name=".face.camera.ImageConfirmation" />
         <activity android:name=".face.camera.util.Tools" />
+        <activity android:name=".face.camera.ClientsList" />
 
 
         <!--<activity android:name=".face.sidface.FacialActivity" />-->

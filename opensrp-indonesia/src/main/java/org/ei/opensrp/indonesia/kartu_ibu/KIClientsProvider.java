@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.media.ThumbnailUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
@@ -52,9 +53,8 @@ public class KIClientsProvider implements SmartRegisterCLientsProviderForCursorA
     protected CommonPersonObjectController controller;
 
     AlertService alertService;
-    public KIClientsProvider(Context context,
-                             View.OnClickListener onClickListener,
-                             AlertService alertService) {
+
+    public KIClientsProvider(Context context, View.OnClickListener onClickListener, AlertService alertService) {
         this.onClickListener = onClickListener;
 //        this.controller = controller;
         this.context = context;
@@ -119,14 +119,10 @@ public class KIClientsProvider implements SmartRegisterCLientsProviderForCursorA
 
         CommonPersonObjectClient pc = (CommonPersonObjectClient) smartRegisterClient;
 
-
         // set flag High Risk
-
         DetailsRepository detailsRepository = org.ei.opensrp.Context.getInstance().detailsRepository();
         detailsRepository.updateDetails(pc);
-
 //        System.out.println("Detail: " + pc.getDetails().toString());
-
         //Set image as Icon
         final ImageView kiview = (ImageView)convertView.findViewById(R.id.img_profile);
         if (pc.getDetails().get("profilepic_thumb") != null) {
@@ -159,10 +155,14 @@ public class KIClientsProvider implements SmartRegisterCLientsProviderForCursorA
         viewHolder.visit_status.setText("");
 
         AllCommonsRepository iburep = org.ei.opensrp.Context.getInstance().allCommonsRepositoryobjects("ec_ibu");
+//        Log.e("TAG", "getView: "+ pc.entityId() );
         final CommonPersonObject ibuparent = iburep.findByCaseID(pc.entityId());
+        String a = "";
+//        Log.e("TAG", "getView: "+ ibuparent );
+//        Log.e("TAG", "getView: "+ ((ibuparent != null )?ibuparent.getCaseId():"Null"));
         if(ibuparent != null) {
             short anc_isclosed = ibuparent.getClosed();
-            //check anc  status
+            //check anc status
             if (anc_isclosed == 0) {
                 detailsRepository.updateDetails(ibuparent);
                 checkMonth(pc.getDetails().get("htp"),viewHolder.edd_due);

@@ -28,6 +28,7 @@ import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
@@ -41,6 +42,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.qualcomm.snapdragon.sdk.face.FaceData;
 import com.qualcomm.snapdragon.sdk.face.FacialProcessing;
@@ -50,12 +52,14 @@ import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.indonesia.R;
 import org.ei.opensrp.indonesia.face.camera.util.FaceConstants;
 import org.ei.opensrp.indonesia.face.camera.util.Tools;
+import org.ei.opensrp.indonesia.face.sidface.utils.AppConstant;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -107,6 +111,8 @@ public class SmartShutterActivity extends Activity implements Camera.PreviewCall
     private static String entityId;
     private boolean identifyPerson = false;
 
+    private ImageView clientListButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,6 +125,9 @@ public class SmartShutterActivity extends Activity implements Camera.PreviewCall
         Bundle extras = getIntent().getExtras();
         entityId = extras.getString("org.sid.sidface.ImageConfirmation.id");
         identifyPerson = extras.getBoolean("org.sid.sidface.ImageConfirmation.identify");
+        kidetail = extras.getParcelable("org.sid.sidface.ImageConfirmation.kidetail");
+
+        Log.e(TAG, "onCreate: "+kidetail );
 
         initializeFlags();
 
@@ -137,6 +146,8 @@ public class SmartShutterActivity extends Activity implements Camera.PreviewCall
         faceDetectionActionListener();
         perfectPhotoActionListener();
         flashActionListener();
+
+        clientListActionListener();
 
         startCameraAndInitialize();
 
@@ -307,7 +318,6 @@ public class SmartShutterActivity extends Activity implements Camera.PreviewCall
                 }
             }
         }
-
     }
 
     @Override
@@ -326,7 +336,6 @@ public class SmartShutterActivity extends Activity implements Camera.PreviewCall
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-
             case 0:
                 if (resultCode == RESULT_OK) {
                     if (requestCode == 0) {
@@ -484,6 +493,11 @@ public class SmartShutterActivity extends Activity implements Camera.PreviewCall
         flashButton = (ImageView) findViewById(R.id.flash);
         flashButton.setVisibility(View.INVISIBLE);                            // Initially make flashButton invisible. Make it visible only when the settings button is pressed.
 
+        clientListButton = (ImageView) findViewById(R.id.clientList);
+        clientListButton.setVisibility(View.INVISIBLE);
+        clientListButton.setImageResource(R.drawable.faces);
+//        clientListButton.setImageResource(R.drawable.perfect_mode_off);
+
         if (flashButtonPress == "FLASH_MODE_OFF")                            // Change the flash image depending on the button that is being pressed.
         {
             flashButton.setImageResource(R.drawable.flash_off);
@@ -515,6 +529,18 @@ public class SmartShutterActivity extends Activity implements Camera.PreviewCall
         eyeBlink = (CheckBox) findViewById(R.id.blinkCheckBox);
         eyeBlink.setVisibility(View.GONE);
         eyeBlink.setTextColor(Color.YELLOW);
+    }
+
+    private void clientListActionListener(){
+        clientListButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SmartShutterActivity.this, ClientsList.class);
+
+                startActivity(intent);
+            }
+        });
+
     }
 
     /*
@@ -618,6 +644,8 @@ public class SmartShutterActivity extends Activity implements Camera.PreviewCall
                     if (_qcSDKEnabled) {
                         faceDetectionButton.setVisibility(View.VISIBLE);
                         perfectPhotoButton.setVisibility(View.VISIBLE);
+                        clientListButton.setVisibility(View.VISIBLE);
+
                     }
                     menu.setVisibility(View.VISIBLE);
                     switchCameraButton.setVisibility(View.VISIBLE);
@@ -631,7 +659,7 @@ public class SmartShutterActivity extends Activity implements Camera.PreviewCall
                     perfectPhotoButton.setVisibility(View.INVISIBLE);
                     flashButton.setVisibility(View.INVISIBLE);
                     settingsButtonPress = false;
-                }
+                    clientListButton.setVisibility(View.INVISIBLE);                }
             }
 
         });
@@ -650,7 +678,6 @@ public class SmartShutterActivity extends Activity implements Camera.PreviewCall
                 return false;
             }
         });
-
     }
 
     /*
@@ -840,9 +867,9 @@ public class SmartShutterActivity extends Activity implements Camera.PreviewCall
         intent.putExtra("com.qualcomm.sdk.smartshutterapp.ImageConfirmation.orientation", displayAngle);
         intent.putExtra("org.sid.sidface.ImageConfirmation.id", entityId);
         intent.putExtra("org.sid.sidface.ImageConfirmation.identify", identifyPerson);
+        intent.putExtra("org.sid.sidface.ImageConfirmation.kidetail", (Parcelable) kidetail);
         startActivityForResult(intent, 1);
     }
-
 
     private void setFlagsTrue() {
         smileFlag = true;
@@ -910,6 +937,60 @@ public class SmartShutterActivity extends Activity implements Camera.PreviewCall
         hash.putAll((Map<? extends String, ? extends String>) settings.getAll());
         return hash;
     }
+
+    public void resetAlbum() {
+
+        AlertDialog.Builder builder= new AlertDialog.Builder(this.getApplicationContext());
+
+        builder.setTitle("Are you Sure?");
+        builder.setMessage("All photos and media will lose!");
+        builder.setNegativeButton("CANCEL", null);
+        builder.setPositiveButton("ERASE", doEmpty);
+        builder.show();
+    }
+
+    private DialogInterface.OnClickListener doEmpty = new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int id) {
+            boolean result = faceProc.resetAlbum();
+            if (result) {
+                HashMap<String, String> hashMap = retrieveHash(getApplicationContext());
+                hashMap.clear();
+                saveHash(hashMap, getApplicationContext());
+                saveAlbum();
+                Toast.makeText(getApplicationContext(),
+                        "Album Reset Successful.",
+                        Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(
+                        getApplicationContext(),
+                        "Internal Error. Reset album failed",
+                        Toast.LENGTH_LONG).show();
+            }
+        }
+    };
+
+    protected void saveHash(HashMap<String, String> hashMap, Context context) {
+        SharedPreferences settings = context.getSharedPreferences(AppConstant.HASH_NAME, 0);
+
+        SharedPreferences.Editor editor = settings.edit();
+        editor.clear();
+        Log.e(TAG, "Hash Save Size = " + hashMap.size());
+        for (String s : hashMap.keySet()) {
+            editor.putString(s, hashMap.get(s));
+        }
+        editor.apply();
+    }
+
+
+    public void saveAlbum() {
+        byte[] albumBuffer = faceProc.serializeRecogntionAlbum();
+        SharedPreferences settings = getSharedPreferences(AppConstant.ALBUM_NAME, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("albumArray", Arrays.toString(albumBuffer));
+        editor.apply();
+    }
+
+
 
 
 }
