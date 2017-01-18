@@ -92,7 +92,7 @@ public class ElcoSmartRegisterActivity extends SecuredNativeSmartRegisterActivit
             }
         });
 
-        ziggyService = context.ziggyService();
+        ziggyService = context().ziggyService();
     }
     private String[] buildFormNameList(){
         List<String> formNames = new ArrayList<String>();
@@ -147,9 +147,11 @@ public class ElcoSmartRegisterActivity extends SecuredNativeSmartRegisterActivit
     }
 
     public DialogOption[] getEditOptions(CommonPersonObjectClient elco) {
-        AllCommonsRepository allelcoRepository = context.getInstance().allCommonsRepositoryobjects("elco");
+        AllCommonsRepository allelcoRepository = context().getInstance()
+                .allCommonsRepositoryobjects("elco");
         CommonPersonObject elcoobject = allelcoRepository.findByCaseID(elco.entityId());
-        AllCommonsRepository householdrep = context.getInstance().allCommonsRepositoryobjects("household");
+        AllCommonsRepository householdrep = context().getInstance()
+                .allCommonsRepositoryobjects("household");
         CommonPersonObject householdparent = householdrep.findByCaseID(elcoobject.getRelationalId());
         String alertstate = "";
         alertstate = getalertstateofelco(elco);
@@ -279,7 +281,7 @@ public class ElcoSmartRegisterActivity extends SecuredNativeSmartRegisterActivit
 
             ziggyService.saveForm(getParams(submission), submission.instance());
 
-            FormSubmissionService formSubmissionService = context.formSubmissionService();
+            FormSubmissionService formSubmissionService = context().formSubmissionService();
             formSubmissionService.updateFTSsearch(submission);
 
             Log.v("we are here", "hhregister");
