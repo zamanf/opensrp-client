@@ -651,7 +651,7 @@ public abstract class SecuredNativeSmartRegisterCursorAdapterFragment extends Se
     }
 
     public CommonRepository commonRepository(){
-        return context.commonrepository(tablename);
+        return context().commonrepository(tablename);
     }
 
     public boolean isPausedOrRefreshList(){

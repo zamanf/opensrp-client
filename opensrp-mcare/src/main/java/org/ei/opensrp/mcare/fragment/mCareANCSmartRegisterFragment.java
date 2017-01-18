@@ -115,7 +115,7 @@ public class mCareANCSmartRegisterFragment extends SecuredNativeSmartRegisterCur
                 dialogOptionslist.add(new CursorCommonObjectFilterOption(getString(R.string.filter_by_anc3),filterStringForANCRV3()));
                 dialogOptionslist.add(new CursorCommonObjectFilterOption(getString(R.string.filter_by_anc4),filterStringForANCRV4()));
 
-                String locationjson = context.anmLocationController().get();
+                String locationjson = context().anmLocationController().get();
                 LocationTree locationTree = EntityUtils.fromJson(locationjson, LocationTree.class);
 
                 Map<String,TreeNode<String, Location>> locationMap =
@@ -165,7 +165,7 @@ public class mCareANCSmartRegisterFragment extends SecuredNativeSmartRegisterCur
     @Override
     protected void onInitialization() {
 
-        context.formSubmissionRouter().getHandlerMap().put("psrf_form",new PSRFHandler());
+        context().formSubmissionRouter().getHandlerMap().put("psrf_form",new PSRFHandler());
     }
 
     @Override
@@ -344,7 +344,8 @@ public class mCareANCSmartRegisterFragment extends SecuredNativeSmartRegisterCur
                 "from mcaremother\n";
     }
     public void initializeQueries(){
-        mCareANCSmartClientsProvider hhscp = new mCareANCSmartClientsProvider(getActivity(),clientActionHandler,context.alertService());
+        mCareANCSmartClientsProvider hhscp = new mCareANCSmartClientsProvider(getActivity(),
+                clientActionHandler,context().alertService());
         clientAdapter = new SmartRegisterPaginatedCursorAdapter(getActivity(), null, hhscp, new CommonRepository("mcaremother",new String []{"FWWOMFNAME","FWPSRLMP","FWSORTVALUE","JiVitAHHID","GOBHHID","Is_PNC","FWBNFSTS","FWBNFDTOO"}));
         clientsView.setAdapter(clientAdapter);
 

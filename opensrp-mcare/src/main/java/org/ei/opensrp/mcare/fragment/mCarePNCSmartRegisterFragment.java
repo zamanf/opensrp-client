@@ -114,7 +114,7 @@ public class mCarePNCSmartRegisterFragment extends SecuredNativeSmartRegisterCur
                 dialogOptionslist.add(new CursorCommonObjectFilterOption(getString(R.string.filter_by_pncrv2),filterStringForPNCRV2()));
                 dialogOptionslist.add(new CursorCommonObjectFilterOption(getString(R.string.filter_by_pncrv3),filterStringForPNCRV3()));
 
-                String locationjson = context.anmLocationController().get();
+                String locationjson = context().anmLocationController().get();
                 LocationTree locationTree = EntityUtils.fromJson(locationjson, LocationTree.class);
 
                 Map<String,TreeNode<String, Location>> locationMap =
@@ -341,7 +341,8 @@ public class mCarePNCSmartRegisterFragment extends SecuredNativeSmartRegisterCur
                 "from mcaremother\n";
     }
     public void initializeQueries(){
-        mCarePNCSmartClientsProvider hhscp = new mCarePNCSmartClientsProvider(getActivity(),clientActionHandler,context.alertService());
+        mCarePNCSmartClientsProvider hhscp = new mCarePNCSmartClientsProvider(getActivity(),
+                clientActionHandler,context().alertService());
         clientAdapter = new SmartRegisterPaginatedCursorAdapter(getActivity(), null, hhscp, new CommonRepository("mcaremother",new String []{"FWWOMFNAME","FWPSRLMP","FWSORTVALUE","JiVitAHHID","GOBHHID","Is_PNC","FWBNFSTS","FWBNFDTOO"}));
         clientsView.setAdapter(clientAdapter);
 
