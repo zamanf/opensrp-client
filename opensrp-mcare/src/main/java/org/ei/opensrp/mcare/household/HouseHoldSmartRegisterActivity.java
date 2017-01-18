@@ -177,6 +177,7 @@ public class HouseHoldSmartRegisterActivity extends SecuredNativeSmartRegisterAc
                 }
 
                 DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(formIndex);
+                displayFormFragment.setFormPartialSaving(false);
                 if (displayFormFragment != null) {
                     displayFormFragment.setFormData(data);
                     displayFormFragment.setRecordId(entityId);
@@ -205,6 +206,7 @@ public class HouseHoldSmartRegisterActivity extends SecuredNativeSmartRegisterAc
 
                 //hack reset the form
                 DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(prevPageIndex);
+                displayFormFragment.setFormPartialSaving(false);
                 if (displayFormFragment != null) {
                     displayFormFragment.hideTranslucentProgressDialog();
                     displayFormFragment.setFormData(null);
