@@ -1,12 +1,18 @@
 package org.ei.opensrp.domain;
 
+import org.ei.opensrp.AllConstants;
+import org.ei.opensrp.Context;
+import org.ei.opensrp.util.FileUtilities;
+
+import static java.text.MessageFormat.format;
+
 public class ProfileImage {
     private String imageid;
     private String anmId;
     private String entityID;
     private String contenttype;
-    private  String filepath;
-    private  String syncStatus;
+    private String filepath;
+    private String syncStatus;
     private String filecategory;
 
     public ProfileImage(String imageid, String anmId, String entityID, String contenttype, String filepath, String syncStatus, String filecategory) {
@@ -73,5 +79,13 @@ public class ProfileImage {
 
     public void setSyncStatus(String syncStatus) {
         this.syncStatus = syncStatus;
+    }
+
+    public String getImageUrl() {
+        String ext = FileUtilities.getFileExtension(this.filepath);
+        String url = format("{0}/{1}/{2}",
+                Context.getInstance().allSharedPreferences().fetchBaseURL(""),
+                AllConstants.IMAGES_PATH, (entityID+"."+ext));
+        return url;
     }
 }

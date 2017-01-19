@@ -33,6 +33,7 @@ public abstract class SecuredActivity extends ActionBarActivity {
     protected FormController formController;
     protected ANMController anmController;
     protected NavigationController navigationController;
+    protected final int MENU_ITEM_LOGOUT = 2312;
     private String metaData;
 
     @Override
@@ -80,15 +81,30 @@ public abstract class SecuredActivity extends ActionBarActivity {
             Toast.makeText(this, "Language preference set to " + newLanguagePreference + ". Please restart the application.", LENGTH_SHORT).show();
 
             return super.onOptionsItemSelected(item);
+        } else if (i == MENU_ITEM_LOGOUT) {
+            DrishtiApplication application = (DrishtiApplication)getApplication();
+            application.logoutCurrentUser();
+
+            return super.onOptionsItemSelected(item);
         } else {
             return super.onOptionsItemSelected(item);
         }
+    }
+
+    /**
+     * Attaches a logout menu item to the provided menu
+     *
+     * @param menu      The menu to attach the logout menu item
+     */
+    protected void attachLogoutMenuItem(Menu menu) {
+        menu.add(0, MENU_ITEM_LOGOUT, menu.size(), R.string.logout_text);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
+        attachLogoutMenuItem(menu);
         return true;
     }
 
