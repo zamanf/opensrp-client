@@ -27,20 +27,22 @@ import android.widget.TextView;
 
 import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
-import org.ei.opensrp.commonregistry.CommonPersonObjectController;
 import org.ei.opensrp.domain.ProfileImage;
-import org.ei.opensrp.event.Listener;
 import org.ei.opensrp.path.R;
+import org.ei.opensrp.path.domain.FormSubmissionWrapper;
 import org.ei.opensrp.repository.ImageRepository;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import util.VaccinateActionUtils;
 
 import static util.Utils.convertDateFormat;
 import static util.Utils.setProfiePic;
@@ -52,13 +54,17 @@ public abstract class DetailActivity extends Activity {
     static File currentPhoto;
     static ImageView mImageView;
     public static final String EXTRA_OBJECT = "extraObject";
+    public static final String EXTRA_CLIENT = "extraClient";
 
-    protected static CommonPersonObjectClient client;
-    private static CommonPersonObjectController controller;
 
-    public static void startDetailActivity(android.content.Context context, CommonPersonObjectClient clientobj, Class<? extends DetailActivity> detailActivity) {
-        client = clientobj;
-        context.startActivity(new Intent(context, detailActivity));
+    public static void startDetailActivity(android.content.Context context, CommonPersonObjectClient client, Class<? extends DetailActivity> detailActivity) {
+        Intent intent = new Intent(context, detailActivity);
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(EXTRA_CLIENT, client);
+        intent.putExtras(bundle);
+
+        context.startActivity(intent);
     }
 
     protected abstract int layoutResId();
@@ -67,13 +73,13 @@ public abstract class DetailActivity extends Activity {
 
     protected abstract String titleBarId();
 
-    protected abstract void generateView();
+    protected abstract void generateView(CommonPersonObjectClient client);
 
     protected abstract Class onBackActivity();
 
     protected abstract Integer profilePicContainerId();
 
-    protected abstract Integer defaultProfilePicResId();
+    protected abstract Integer defaultProfilePicResId(CommonPersonObjectClient client);
 
     protected abstract String bindType();
 
@@ -92,7 +98,8 @@ public abstract class DetailActivity extends Activity {
 
         ((TextView) findViewById(org.ei.opensrp.R.id.detail_today)).setText(convertDateFormat(new SimpleDateFormat("yyyy-MM-dd").format(new Date()), true));
 
-        generateView();
+        final CommonPersonObjectClient client = retrieveCommonPersonObjectClient();
+        generateView(client);
 
         ImageButton back = (ImageButton) findViewById(org.ei.opensrp.R.id.btn_back_to_home);
         back.setOnClickListener(new View.OnClickListener() {
@@ -109,7 +116,7 @@ public abstract class DetailActivity extends Activity {
             mImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    dispatchTakePictureIntent(mImageView);
+                    dispatchTakePictureIntent(mImageView, client);
                 }
             });
 
@@ -119,7 +126,7 @@ public abstract class DetailActivity extends Activity {
             if (photo != null) {
                 setProfiePicFromPath(this, mImageView, photo.getFilepath(), org.ei.opensrp.R.drawable.ic_pencil);
             } else {
-                setProfiePic(this, mImageView, defaultProfilePicResId(), org.ei.opensrp.R.drawable.ic_pencil);
+                setProfiePic(this, mImageView, defaultProfilePicResId(client), org.ei.opensrp.R.drawable.ic_pencil);
             }
         }
     }
@@ -131,7 +138,7 @@ public abstract class DetailActivity extends Activity {
         overridePendingTransition(0, 0);
     }
 
-    private File createImageFile() throws IOException {
+    private File createImageFile(CommonPersonObjectClient client) throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = bindType() + "_" + timeStamp + "_" + client.entityId();
         File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
@@ -150,14 +157,14 @@ public abstract class DetailActivity extends Activity {
         ((ImageRepository) Context.getInstance().imageRepository()).add(profileImage);
     }
 
-    private void dispatchTakePictureIntent(ImageView imageView) {
+    private void dispatchTakePictureIntent(ImageView imageView, CommonPersonObjectClient client) {
         this.mImageView = imageView;
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             // Create the File where the photo should go
             try {
-                currentPhoto = createImageFile();
+                currentPhoto = createImageFile(client);
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -174,7 +181,7 @@ public abstract class DetailActivity extends Activity {
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
             HashMap<String, String> details = new HashMap<String, String>();
             details.put("profilepic", currentPhoto.getAbsolutePath());
-            saveImageReference(bindType(), client.entityId(), details);
+            //saveImageReference(bindType(), client.entityId(), details);
             setProfiePicFromPath(this, mImageView, currentPhoto.getAbsolutePath(), org.ei.opensrp.R.drawable.ic_pencil);
         }
     }
@@ -226,7 +233,42 @@ public abstract class DetailActivity extends Activity {
         return bmp;
     }
 
+    // Custom form submission
+    protected FormSubmissionWrapper retrieveFormSubmissionWrapper() {
+        Bundle extras = this.getIntent().getExtras();
+        if (extras != null) {
+            Serializable serializable = extras.getSerializable(EXTRA_OBJECT);
+            if (serializable != null && serializable instanceof FormSubmissionWrapper) {
+                return (FormSubmissionWrapper) serializable;
+            }
+        }
+        return null;
+    }
 
+    protected void saveFormSubmission(FormSubmissionWrapper formSubmissionWrapper){
+        if (formSubmissionWrapper != null && formSubmissionWrapper.updates() > 0) {
+            final android.content.Context context = this;
+            String data = formSubmissionWrapper.updateFormSubmission();
+            if (data != null) {
+                VaccinateActionUtils.saveFormSubmission(context, data, formSubmissionWrapper.getEntityId(), formSubmissionWrapper.getFormName(), formSubmissionWrapper.getOverrides());
+            }
+        }
+    }
+
+    // Retrieve common person object client
+    protected CommonPersonObjectClient retrieveCommonPersonObjectClient() {
+        Bundle extras = this.getIntent().getExtras();
+        if (extras != null) {
+            Serializable serializable = extras.getSerializable(EXTRA_CLIENT);
+            if (serializable != null && serializable instanceof CommonPersonObjectClient) {
+                return (CommonPersonObjectClient) serializable;
+            }
+        }
+        return null;
+    }
+
+
+    // Demographics edits
     private void updateEditViews(TableLayout table, boolean toEdit) {
         for (int i = 0; i < table.getChildCount(); i++) {
             View view = table.getChildAt(i);
