@@ -237,7 +237,7 @@ public class VaccinatorHomeActivity extends SecuredActivity {
             return;
         }
 
-        long size = context.pendingFormSubmissionService().pendingFormSubmissionCount();
+        long size = Context.getInstance().updateApplicationContext(this.getApplicationContext()).pendingFormSubmissionService().pendingFormSubmissionCount();
         if (size > 0) {
             remainingFormsToSyncMenuItem.setTitle(valueOf(size) + " " + getString(R.string.unsynced_forms_count_message));
             remainingFormsToSyncMenuItem.setVisible(true);
