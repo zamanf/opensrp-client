@@ -2,6 +2,8 @@ package org.ei.opensrp.path.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
@@ -10,16 +12,16 @@ import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.domain.Alert;
 import org.ei.opensrp.domain.form.FieldOverrides;
-import org.ei.opensrp.path.domain.FormSubmissionWrapper;
 import org.ei.opensrp.path.R;
 import org.ei.opensrp.path.db.VaccineRepo;
+import org.ei.opensrp.path.domain.FormSubmissionWrapper;
 import org.ei.opensrp.path.domain.VaccineWrapper;
 import org.ei.opensrp.path.listener.VaccinationActionListener;
 import org.joda.time.DateTime;
 import org.joda.time.Years;
 import org.json.JSONObject;
 
-import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,7 +57,7 @@ public class WomanDetailActivity extends DetailActivity implements VaccinationAc
 
     @Override
     protected String titleBarId() {
-        return getEntityIdentifier();
+        return getEntityIdentifier(retrieveCommonPersonObjectClient());
     }
 
     @Override
@@ -69,13 +71,11 @@ public class WomanDetailActivity extends DetailActivity implements VaccinationAc
     }
 
     @Override
-    protected Integer defaultProfilePicResId() {
+    protected Integer defaultProfilePicResId(CommonPersonObjectClient client) {
         return R.drawable.pk_woman_avtar;
     }
 
     public static void startDetailActivity(android.content.Context context, CommonPersonObjectClient clientobj, HashMap<String, String> overrideStringmap, String formName, Class<? extends DetailActivity> detailActivity) {
-
-        client = clientobj;
 
         if (overrideStringmap == null) {
             org.ei.opensrp.util.Log.logDebug("overrides data is null");
@@ -90,6 +90,7 @@ public class WomanDetailActivity extends DetailActivity implements VaccinationAc
 
         Bundle bundle = new Bundle();
         bundle.putSerializable(EXTRA_OBJECT, formSubmissionWrapper);
+        bundle.putSerializable(EXTRA_CLIENT, clientobj);
         Intent intent = new Intent(context, detailActivity);
         intent.putExtras(bundle);
 
@@ -107,7 +108,7 @@ public class WomanDetailActivity extends DetailActivity implements VaccinationAc
         return true;
     }
 
-    public String getEntityIdentifier() {
+    public String getEntityIdentifier(CommonPersonObjectClient client) {
         if(client == null){
             return "";
         }
@@ -115,14 +116,14 @@ public class WomanDetailActivity extends DetailActivity implements VaccinationAc
     }
 
     @Override
-    protected void generateView() {
-        retrieveFormSubmissionWrapper();
+    protected void generateView(CommonPersonObjectClient client) {
+        this.formSubmissionWrapper = retrieveFormSubmissionWrapper();
 
         //WOMAN BASIC INFORMATION
         TableLayout dt = (TableLayout) findViewById(R.id.woman_detail_info_table1);
 
         //setting value in WOMAN basic information textviews
-        TableRow tr = getDataRow(this, "Program ID", getEntityIdentifier(), null);
+        TableRow tr = getDataRow(this, "Program ID", getEntityIdentifier(client), null);
         dt.addView(tr);
 
         tr = getDataRow(this, "EPI Card Number", getValue(client.getColumnmaps(), "epi_card_number", false), null);
@@ -201,6 +202,20 @@ public class WomanDetailActivity extends DetailActivity implements VaccinationAc
         pt.addView(tr);
         tr = getDataRow(this, "GA (weeks)", getValue(client.getColumnmaps(), "final_ga", "N/A", false), null);
         pt.addView(tr);
+
+
+        final List<TableLayout> tableLayouts = new ArrayList<>();
+        tableLayouts.add(dt);
+        tableLayouts.add(dt2);
+
+        Button edtBtn = (Button) findViewById(R.id.woman_edit_btn);
+        edtBtn.setTag(getString(R.string.edit));
+        edtBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updateEditView(view, tableLayouts);
+            }
+        });
     }
 
     @Override
@@ -231,29 +246,13 @@ public class WomanDetailActivity extends DetailActivity implements VaccinationAc
         return VaccinateActionUtils.findRow(table, tag.getVaccine().name());
     }
 
-    public void retrieveFormSubmissionWrapper() {
-        Bundle extras = this.getIntent().getExtras();
-        if (extras != null) {
-            Serializable serializable = extras.getSerializable(EXTRA_OBJECT);
-            if (serializable != null && serializable instanceof FormSubmissionWrapper) {
-                this.formSubmissionWrapper = (FormSubmissionWrapper) serializable;
-            }
-        }
-    }
-
     public FormSubmissionWrapper getFormSubmissionWrapper() {
         return formSubmissionWrapper;
     }
 
     @Override
     public void finish() {
-        if (formSubmissionWrapper != null && formSubmissionWrapper.updates() > 0) {
-            final android.content.Context context = this;
-            String data = formSubmissionWrapper.updateFormSubmission();
-            if (data != null) {
-                VaccinateActionUtils.saveFormSubmission(context, data, formSubmissionWrapper.getEntityId(), formSubmissionWrapper.getFormName(), formSubmissionWrapper.getOverrides());
-            }
-        }
+        saveFormSubmission(formSubmissionWrapper);
         super.finish();
     }
 }

@@ -2,6 +2,8 @@ package org.ei.opensrp.path.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
@@ -10,9 +12,9 @@ import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.domain.Alert;
 import org.ei.opensrp.domain.form.FieldOverrides;
-import org.ei.opensrp.path.domain.FormSubmissionWrapper;
 import org.ei.opensrp.path.R;
 import org.ei.opensrp.path.db.VaccineRepo;
+import org.ei.opensrp.path.domain.FormSubmissionWrapper;
 import org.ei.opensrp.path.domain.VaccineWrapper;
 import org.ei.opensrp.path.listener.VaccinationActionListener;
 import org.joda.time.DateTime;
@@ -20,7 +22,7 @@ import org.joda.time.Months;
 import org.joda.time.Years;
 import org.json.JSONObject;
 
-import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -56,7 +58,7 @@ public class ChildDetailActivity extends DetailActivity implements VaccinationAc
 
     @Override
     protected String titleBarId() {
-        return getEntityIdentifier();
+        return getEntityIdentifier(retrieveCommonPersonObjectClient());
     }
 
     @Override
@@ -70,8 +72,6 @@ public class ChildDetailActivity extends DetailActivity implements VaccinationAc
     }
 
     public static void startDetailActivity(android.content.Context context, CommonPersonObjectClient clientobj, HashMap<String, String> overrideStringmap, String formName, Class<? extends DetailActivity> detailActivity) {
-
-        client = clientobj;
 
         if (overrideStringmap == null) {
             org.ei.opensrp.util.Log.logDebug("overrides data is null");
@@ -87,6 +87,7 @@ public class ChildDetailActivity extends DetailActivity implements VaccinationAc
 
         Bundle bundle = new Bundle();
         bundle.putSerializable(EXTRA_OBJECT, formSubmissionWrapper);
+        bundle.putSerializable(EXTRA_CLIENT, clientobj);
         Intent intent = new Intent(context, detailActivity);
         intent.putExtras(bundle);
 
@@ -95,7 +96,7 @@ public class ChildDetailActivity extends DetailActivity implements VaccinationAc
     }
 
     @Override
-    protected Integer defaultProfilePicResId() {
+    protected Integer defaultProfilePicResId(CommonPersonObjectClient client) {
         String gender = getValue(client, "gender", true);
         if (gender.equalsIgnoreCase("female")) {
             return R.drawable.child_girl_infant;
@@ -116,23 +117,23 @@ public class ChildDetailActivity extends DetailActivity implements VaccinationAc
         return true;
     }
 
-    public String getEntityIdentifier() {
-        if(client == null){
+    public String getEntityIdentifier(CommonPersonObjectClient client) {
+        if (client == null) {
             return "";
         }
         return nonEmptyValue(client.getColumnmaps(), true, false, "existing_program_client_id", "program_client_id");
     }
 
     @Override
-    protected void generateView() {
+    protected void generateView(CommonPersonObjectClient client) {
 
-        retrieveFormSubmissionWrapper();
+        this.formSubmissionWrapper = retrieveFormSubmissionWrapper();
 
         //BASIC INFORMATION
         TableLayout dt = (TableLayout) findViewById(R.id.child_detail_info_table1);
 
         //setting value in basic information textviews
-        TableRow tr = getDataRow(this, "Program ID", getEntityIdentifier(), null);
+        TableRow tr = getDataRow(this, "Program ID", getEntityIdentifier(client), null);
         dt.addView(tr);
 
         tr = getDataRow(this, "EPI Card Number", getValue(client.getColumnmaps(), "epi_card_number", false), null);
@@ -211,7 +212,7 @@ public class ChildDetailActivity extends DetailActivity implements VaccinationAc
             vaccineWrapper.setPatientName(getValue(client.getColumnmaps(), "first_name", true) + " " + getValue(client.getColumnmaps(), "last_name", true));
 
             String existingAge = VaccinateActionUtils.retrieveExistingAge(formSubmissionWrapper);
-            if(StringUtils.isNotBlank(existingAge)){
+            if (StringUtils.isNotBlank(existingAge)) {
                 vaccineWrapper.setExistingAge(existingAge);
             }
 
@@ -235,6 +236,19 @@ public class ChildDetailActivity extends DetailActivity implements VaccinationAc
         } else if (agey >= 5 && hasAnyEmptyValue(client.getColumnmaps(), "_retro", vl)) {
             addStatusTag(this, table, "Partially Immunized", true);
         }
+
+        final List<TableLayout> tableLayouts = new ArrayList<>();
+        tableLayouts.add(dt);
+        tableLayouts.add(dt2);
+
+        Button edtBtn = (Button) findViewById(R.id.child_edit_btn);
+        edtBtn.setTag(getString(R.string.edit));
+        edtBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                updateEditView(view, tableLayouts);
+            }
+        });
     }
 
     @Override
@@ -265,29 +279,14 @@ public class ChildDetailActivity extends DetailActivity implements VaccinationAc
         return VaccinateActionUtils.findRow(tables, tag.getVaccine().name());
     }
 
-    public void retrieveFormSubmissionWrapper() {
-        Bundle extras = this.getIntent().getExtras();
-        if (extras != null) {
-            Serializable serializable = extras.getSerializable(EXTRA_OBJECT);
-            if (serializable != null && serializable instanceof FormSubmissionWrapper) {
-                this.formSubmissionWrapper = (FormSubmissionWrapper) serializable;
-            }
-        }
-    }
-
     public FormSubmissionWrapper getFormSubmissionWrapper() {
         return formSubmissionWrapper;
     }
 
     @Override
     public void finish() {
-        if (formSubmissionWrapper != null && formSubmissionWrapper.updates() > 0) {
-            final android.content.Context context = this;
-            String data = formSubmissionWrapper.updateFormSubmission();
-            if (data != null) {
-                VaccinateActionUtils.saveFormSubmission(context, data, formSubmissionWrapper.getEntityId(), formSubmissionWrapper.getFormName(), formSubmissionWrapper.getOverrides());
-            }
-        }
+        saveFormSubmission(formSubmissionWrapper);
         super.finish();
     }
+
 }

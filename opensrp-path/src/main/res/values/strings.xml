@@ -100,4 +100,7 @@
     <string name="child_followup">Child Follow Up</string>
     <string name="woman_followup">Woman Follow Up</string>
 
+    <string name="edit">Edit</string>
+    <string name="save">Save</string>
+
 </resources>

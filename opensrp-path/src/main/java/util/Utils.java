@@ -24,9 +24,11 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.text.Html;
+import android.text.InputType;
 import android.text.Spanned;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -44,6 +46,7 @@ import org.apache.commons.lang3.text.WordUtils;
 import org.ei.drishti.dto.AlertStatus;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.domain.ProfileImage;
+import org.ei.opensrp.path.R;
 import org.ei.opensrp.repository.ImageRepository;
 import org.ei.opensrp.util.StringUtil;
 import org.joda.time.DateTime;
@@ -286,12 +289,13 @@ public class Utils {
         l.setBackgroundColor(Color.WHITE);
         tr.addView(l);
 
-        TextView v = new TextView(context);
+        EditText v = new EditText(context);
         v.setText(value);
         v.setPadding(20, 2, 20, 2);
         v.setTextColor(Color.BLACK);
         v.setTextSize(14);
         v.setBackgroundColor(Color.WHITE);
+        v.setInputType(InputType.TYPE_NULL);
         tr.addView(v);
 
         return tr;

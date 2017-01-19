@@ -6,6 +6,7 @@ import android.widget.TextView;
 
 import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.CommonPersonObject;
+import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.path.R;
 import org.joda.time.DateTime;
 
@@ -45,7 +46,7 @@ public class FieldMonitorDailyDetailActivity extends DetailActivity {
     protected Integer profilePicContainerId() { return null; }
 
     @Override
-    protected Integer defaultProfilePicResId(){ return null; };
+    protected Integer defaultProfilePicResId(CommonPersonObjectClient client){ return null; };
 
     @Override
     protected String bindType() {
@@ -58,7 +59,7 @@ public class FieldMonitorDailyDetailActivity extends DetailActivity {
     }
 
     @Override
-    protected void generateView() {
+    protected void  generateView(CommonPersonObjectClient client) {
         HashMap<String, String> provider =  providerDetails();
 
         TableLayout dt = (TableLayout) findViewById(R.id.field_detail_info_table1);
