@@ -184,9 +184,6 @@ public class VaccinatorHomeActivity extends SecuredActivity {
         super.onPrepareOptionsMenu(menu);
         updateMenuItem = menu.findItem(R.id.updateMenuItem);
         remainingFormsToSyncMenuItem = menu.findItem(R.id.remainingFormsToSyncMenuItem);
-
-        updateSyncIndicator();
-        updateRemainingFormsToSyncCount();
         return true;
     }
 
@@ -234,7 +231,7 @@ public class VaccinatorHomeActivity extends SecuredActivity {
     }
 
     private void updateRemainingFormsToSyncCount() {
-        if (remainingFormsToSyncMenuItem == null) {
+        if (remainingFormsToSyncMenuItem == null || context.IsUserLoggedOut()) {
             return;
         }
 
