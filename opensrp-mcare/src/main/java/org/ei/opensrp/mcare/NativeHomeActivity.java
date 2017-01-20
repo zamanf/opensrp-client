@@ -1,6 +1,5 @@
 package org.ei.opensrp.mcare;
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.util.Log;
 import android.view.Menu;
@@ -13,7 +12,6 @@ import android.widget.Toast;
 import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.commonregistry.CommonPersonObjectController;
-import org.ei.opensrp.commonregistry.CommonRepository;
 import org.ei.opensrp.commonregistry.ControllerFilterMap;
 import org.ei.opensrp.cursoradapter.SmartRegisterQueryBuilder;
 import org.ei.opensrp.event.Listener;
@@ -223,6 +221,7 @@ public class NativeHomeActivity extends SecuredActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
+        attachLogoutMenuItem(menu);
         return true;
     }
 
