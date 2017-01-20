@@ -182,7 +182,7 @@ public class GiziSmartClientsProvider implements SmartRegisterCLientsProviderFor
        }
 
 
-        viewHolder.gender.setText( pc.getDetails().get("gender") != null ? pc.getDetails().get("gender"):"");
+        viewHolder.gender.setText( pc.getDetails().get("gender") != null ? setGender(pc.getDetails().get("gender")):"-");
         viewHolder.visitDate.setText(context.getString(R.string.tanggal) +  " "+(pc.getDetails().get("tanggalPenimbangan")!=null?pc.getDetails().get("tanggalPenimbangan"):"-"));
         viewHolder.height.setText(context.getString(R.string.height) + " " + (pc.getDetails().get("tinggiBadan") != null ? pc.getDetails().get("tinggiBadan") : "-") + " Cm");
         viewHolder.weight.setText(context.getString(R.string.weight) + " " + (pc.getDetails().get("beratBadan") != null ? pc.getDetails().get("beratBadan") : "-") + " Kg");
@@ -247,6 +247,10 @@ public class GiziSmartClientsProvider implements SmartRegisterCLientsProviderFor
             default:
                 return "";
         }
+    }
+
+    private String setGender(String gender){
+        return gender.toLowerCase().contains("em") ? context.getString(R.string.child_female) : context.getString(R.string.child_male);
     }
 
     private boolean isLate(String lastVisitDate,int threshold){

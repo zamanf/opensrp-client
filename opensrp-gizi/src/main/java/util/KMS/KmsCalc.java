@@ -65,17 +65,18 @@ public class KmsCalc {
         bayi.BGM = bayi.isMale()
                 ? KmsConstants.maleBGM[bayi.getAge()]>bayi.getWeight()
                 : KmsConstants.femaleBGM[bayi.getAge()]>bayi.getWeight();
-        return " "+(bayi.BGM ? "Yes":"No");
+        return ""+(bayi.BGM ? "Yes":"No");
     }
 
     public String cekBawahKuning(KmsPerson bayi){
+        int umur = bayi.getAge();
         bayi.GarisKuning = bayi.isMale()
                 ? ((KmsConstants.maleGarisKuning[bayi.getAge()][0]<=bayi.getWeight())
                 && (bayi.getWeight()<=KmsConstants.maleGarisKuning[bayi.getAge()][1]))
                 : ((KmsConstants.femaleGarisKuning[bayi.getAge()][0]<=bayi.getWeight())
                 && (bayi.getWeight()<=KmsConstants.femaleGarisKuning[bayi.getAge()][1]))
         ;
-        return " "+(bayi.GarisKuning ? "Yes":"No");
+        return ""+(bayi.GarisKuning ? "Yes":"No");
     }
 
 }

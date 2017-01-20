@@ -415,7 +415,10 @@
     <string name="lastVitA">Vitamin A terakhir diberikan:</string>
     <string name="lastAnthelmintic">Obat cacing terakhir diberikan:</string>
 
-    <string name="year_unit">th</string>
+    <string name="vitamin_a_pnc_2">Vitamin A setelah 2 jam: </string>
+    <string name="vitamin_a_pnc_24">Vitamin A setelah 24 jam: </string>
+
+    <string name="years_unit">th</string>
     <string name="kunjunganTerakhir">Kunjungan Terakhir</string>
     <string name="usiaKandungan">Usia Kandungan</string>
     <string name="lila">Lingkar Lengan</string>
