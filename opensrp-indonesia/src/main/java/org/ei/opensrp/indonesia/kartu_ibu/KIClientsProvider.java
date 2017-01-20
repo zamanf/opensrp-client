@@ -2,20 +2,15 @@ package org.ei.opensrp.indonesia.kartu_ibu;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.google.common.base.Strings;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ei.opensrp.commonregistry.AllCommonsRepository;
@@ -23,41 +18,25 @@ import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.commonregistry.CommonPersonObjectController;
 import org.ei.opensrp.cursoradapter.SmartRegisterCLientsProviderForCursorAdapter;
-import org.ei.opensrp.domain.Alert;
 import org.ei.opensrp.indonesia.R;
-
-import org.ei.opensrp.provider.SmartRegisterClientsProvider;
+import org.ei.opensrp.indonesia.application.BidanApplication;
 import org.ei.opensrp.repository.DetailsRepository;
+import org.ei.opensrp.repository.ImageRepository;
 import org.ei.opensrp.service.AlertService;
-import org.ei.opensrp.util.DateUtil;
-import org.ei.opensrp.view.contract.AlertDTO;
+import org.ei.opensrp.util.FileUtilities;
+import org.ei.opensrp.util.OpenSRPImageLoader;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.contract.SmartRegisterClients;
 import org.ei.opensrp.view.dialog.FilterOption;
 import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
-import org.ei.opensrp.view.viewHolder.ECProfilePhotoLoader;
 import org.ei.opensrp.view.viewHolder.OnClickFormLauncher;
-import org.ei.opensrp.view.viewHolder.ProfilePhotoLoader;
-import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.joda.time.Months;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.List;
-
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
-import static org.ei.opensrp.util.StringUtil.humanize;
-import static org.ei.opensrp.view.controller.ECSmartRegisterController.STATUS_DATE_FIELD;
-import static org.ei.opensrp.view.controller.ECSmartRegisterController.STATUS_TYPE_FIELD;
 import static org.joda.time.LocalDateTime.parse;
 
 /**
@@ -67,11 +46,13 @@ public class KIClientsProvider implements SmartRegisterCLientsProviderForCursorA
     private final LayoutInflater inflater;
     private final Context context;
     private final View.OnClickListener onClickListener;
+    private final OpenSRPImageLoader mImageLoader;
     private Drawable iconPencilDrawable;
     private final int txtColorBlack;
     private final AbsListView.LayoutParams clientViewLayoutParams;
 
     protected CommonPersonObjectController controller;
+    ImageRepository imageRepo =null;
 
     AlertService alertService;
     public KIClientsProvider(Context context,
@@ -86,6 +67,8 @@ public class KIClientsProvider implements SmartRegisterCLientsProviderForCursorA
         clientViewLayoutParams = new AbsListView.LayoutParams(MATCH_PARENT,
                 (int) context.getResources().getDimension(org.ei.opensrp.R.dimen.list_item_height));
         txtColorBlack = context.getResources().getColor(org.ei.opensrp.R.color.text_black);
+        mImageLoader = BidanApplication.getInstance().getCachedImageLoaderInstance();
+        imageRepo= (ImageRepository) org.ei.opensrp.Context.imageRepository();
 
     }
 
@@ -171,7 +154,18 @@ public class KIClientsProvider implements SmartRegisterCLientsProviderForCursorA
         viewHolder.anc_status_layout.setText("");
         viewHolder.date_status.setText("");
         viewHolder.visit_status.setText("");
+        //start profile image
+        viewHolder.profilepic.setTag(R.id.entity_id, pc.getColumnmaps().get("_id"));//required when saving file to disk
+        if(pc.getDetails().containsKey("imageid")){//image already in local storage most likey ):
+            mImageLoader.getImageWithId(pc.getColumnmaps().get("_id"), OpenSRPImageLoader.getStaticImageListener(viewHolder.profilepic, R.drawable.woman_placeholder, R.drawable.woman_placeholder));
 
+        }else{
+            //create the url for download the image
+            String url= FileUtilities.getImageUrl(pc.getColumnmaps().get("_id"));
+            mImageLoader.get(url, OpenSRPImageLoader.getStaticImageListener(viewHolder.profilepic, R.drawable.woman_placeholder, R.drawable.woman_placeholder));
+
+        }
+       //end profile image
         AllCommonsRepository iburep = org.ei.opensrp.Context.getInstance().allCommonsRepositoryobjects("ec_ibu");
         final CommonPersonObject ibuparent = iburep.findByCaseID(pc.entityId());
         if(ibuparent != null) {
