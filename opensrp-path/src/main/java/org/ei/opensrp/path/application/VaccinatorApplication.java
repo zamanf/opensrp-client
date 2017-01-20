@@ -36,6 +36,7 @@ public class VaccinatorApplication extends DrishtiApplication{
         cleanUpSyncState();
         startCESyncService(getApplicationContext());
         ConfigSyncReceiver.scheduleFirstSync(getApplicationContext());
+        setCrashlyticsUser(context);
     }
 
     private void cleanUpSyncState() {
@@ -102,5 +103,17 @@ public class VaccinatorApplication extends DrishtiApplication{
             commonFtsObject.updateSortFields(ftsTable, getFtsSortFields(ftsTable));
         }
         return commonFtsObject;
+    }
+
+    /**
+     * This method sets the Crashlytics user to whichever username was used to log in last
+     *
+     * @param context   The user's context
+     */
+    public static void setCrashlyticsUser(Context context) {
+        if(context != null && context.userService() != null
+                && context.userService().getAllSharedPreferences() != null) {
+            Crashlytics.setUserName(context.userService().getAllSharedPreferences().fetchRegisteredANM());
+        }
     }
 }
