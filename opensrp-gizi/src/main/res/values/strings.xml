@@ -422,8 +422,13 @@
     <string name="sistolik">Systolic</string>
     <string name="diastolik">Diastolic</string>
 
+    <string name="vitamin_a_pnc_2">Vitamin A after 2 hrs: </string>
+    <string name="vitamin_a_pnc_24">Vitamin A after 24 hrs: </string>
+
     <string name="form_name_visit">Monthly Visit</string>
-    <string name="year_unit">yr</string>
+
+    <string name="years_unit">yrs</string>
+    <string name="hours_unit">hrs</string>
     <string name="weight_unit">Kg</string>
     <string name="length_unit">Cm</string>
     <string name="x_axis_label">Month</string>

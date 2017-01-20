@@ -75,6 +75,20 @@ public class UniqueIdRepository extends SQLiteOpenHelper{
         return uids;
     }
 
+    public List<String> getAllUniqueIdString() {
+        SQLiteDatabase database = this.getReadableDatabase();
+        Cursor cursor = database.rawQuery("SELECT id, " + UNIQUE_ID_COLUMN +
+                        " FROM " + UNIQUE_ID_TABLE_NAME, new String[]{});
+        cursor.moveToFirst();
+        List<String> uids = new ArrayList<>();
+        while(!cursor.isAfterLast()) {
+                uids.add(cursor.getString(1));
+                cursor.moveToNext();
+            }
+        cursor.close();
+        return uids;
+    }
+    
     public void deleteUsedId(int lastUsedId){
         SQLiteDatabase database = this.getWritableDatabase();
         List<Long> allUniqueId = this.getAllUniqueId();

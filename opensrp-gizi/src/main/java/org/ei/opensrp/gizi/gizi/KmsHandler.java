@@ -57,7 +57,7 @@ public class KmsHandler  implements FormSubmissionHandler {
        // detailsRepository.add(entityID, "preload_history_tinggi", submission.getFieldValue("history_tinggi")!= null ? submission.getFieldValue("history_tinggi") :"0#0", tsLong);
         detailsRepository.add(entityID, "preload_history_tinggi", tinggi, tsLong);
         detailsRepository.add(entityID, "kunjunganSebelumnya", lastVisitDate, tsLong);
-        //detailsRepository.add(entityID, "history_umur", umurs, tsLong);
+        detailsRepository.add(entityID, "history_umur", umurs, tsLong);
 
         if(submission.getFieldValue("tanggalPenimbangan") != null)
         {

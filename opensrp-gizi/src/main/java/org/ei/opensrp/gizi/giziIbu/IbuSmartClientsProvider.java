@@ -130,7 +130,7 @@ public class IbuSmartClientsProvider implements SmartRegisterCLientsProviderForC
         viewHolder.namaSuami.setText(getColumnMaps("namaSuami", pc));
         viewHolder.dusun.setText(getDetails("posyandu", pc));
         viewHolder.tanggalLahir.setText(getDetails("tanggalLahir",pc));
-        viewHolder.umur.setText(getDetails("umur",pc) + " "+context.getString(R.string.year_unit));
+        viewHolder.umur.setText(getDetails("umur",pc) + " "+context.getString(R.string.years_unit));
 
         viewHolder.lastANCVisit.setText(context.getString(R.string.kunjunganTerakhir) + ": " + getDetails("ancDate", pc));
         viewHolder.HPHT.setText(context.getString(R.string.usiaKandungan)+": "+(usiaKandungan(getDetails("tanggalHPHT",pc),getDetails("ancDate",pc))!= -1
@@ -140,8 +140,8 @@ public class IbuSmartClientsProvider implements SmartRegisterCLientsProviderForC
 
         viewHolder.sistolik.setText(context.getString(R.string.sistolik)+": "+getDetails("tandaVitalTDSistolik",pc));
         viewHolder.diastolik.setText(context.getString(R.string.diastolik)+": "+getDetails("tandaVitalTDDiastolik",pc));
-        viewHolder.vitaminA2.setText(context.getString(R.string.str_vitamin_a)+" 2: "+getDetails("vitaminA2jamPP",pc));
-        viewHolder.vitaminA24.setText(context.getString(R.string.sistolik)+" 24: "+getDetails("vitaminA24jamPP",pc));
+        viewHolder.vitaminA2.setText(context.getString(R.string.vitamin_a_pnc_2)+getDetails("vitaminA2jamPP",pc));
+        viewHolder.vitaminA24.setText(context.getString(R.string.vitamin_a_pnc_24)+getDetails("vitaminA24jamPP",pc));
     }
     public SmartRegisterClients getClients() {
         return controller.getClients();
