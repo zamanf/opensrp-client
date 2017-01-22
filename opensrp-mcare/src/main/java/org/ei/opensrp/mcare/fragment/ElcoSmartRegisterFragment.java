@@ -384,7 +384,8 @@ public class ElcoSmartRegisterFragment extends SecuredNativeSmartRegisterCursorA
 
     }
     private String sortByAlertmethod() {
-        return " CASE WHEN ELCO_PSRF = 'urgent' THEN '1'\n" +
+        return " CASE When (details LIKE '%\"psrf_schedule_logic\":\"0\"%') THEN '7' \n"+
+                " WHEN ELCO_PSRF = 'urgent' THEN '1'\n" +
                 "WHEN ELCO_PSRF = 'upcoming' THEN '2'\n" +
                 "WHEN ELCO_PSRF = 'normal' THEN '3'\n" +
                 "WHEN ELCO_PSRF = 'expired' THEN '4'\n" +
