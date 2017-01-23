@@ -21,7 +21,6 @@ import org.ei.opensrp.cursoradapter.SmartRegisterCLientsProviderForCursorAdapter
 import org.ei.opensrp.indonesia.R;
 import org.ei.opensrp.indonesia.application.BidanApplication;
 import org.ei.opensrp.repository.DetailsRepository;
-import org.ei.opensrp.repository.ImageRepository;
 import org.ei.opensrp.service.AlertService;
 import org.ei.opensrp.util.FileUtilities;
 import org.ei.opensrp.util.OpenSRPImageLoader;
@@ -52,7 +51,6 @@ public class KIClientsProvider implements SmartRegisterCLientsProviderForCursorA
     private final AbsListView.LayoutParams clientViewLayoutParams;
 
     protected CommonPersonObjectController controller;
-    ImageRepository imageRepo =null;
 
     AlertService alertService;
     public KIClientsProvider(Context context,
@@ -68,7 +66,6 @@ public class KIClientsProvider implements SmartRegisterCLientsProviderForCursorA
                 (int) context.getResources().getDimension(org.ei.opensrp.R.dimen.list_item_height));
         txtColorBlack = context.getResources().getColor(org.ei.opensrp.R.color.text_black);
         mImageLoader = BidanApplication.getInstance().getCachedImageLoaderInstance();
-        imageRepo= (ImageRepository) org.ei.opensrp.Context.imageRepository();
 
     }
 

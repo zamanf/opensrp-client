@@ -7,11 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.ei.opensrp.commonregistry.AllCommonsRepository;
@@ -20,9 +18,11 @@ import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.commonregistry.CommonPersonObjectController;
 import org.ei.opensrp.cursoradapter.SmartRegisterCLientsProviderForCursorAdapter;
 import org.ei.opensrp.indonesia.R;
-import org.ei.opensrp.indonesia.kartu_ibu.KIDetailActivity;
+import org.ei.opensrp.indonesia.application.BidanApplication;
 import org.ei.opensrp.repository.DetailsRepository;
 import org.ei.opensrp.service.AlertService;
+import org.ei.opensrp.util.FileUtilities;
+import org.ei.opensrp.util.OpenSRPImageLoader;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.contract.SmartRegisterClients;
 import org.ei.opensrp.view.dialog.FilterOption;
@@ -34,21 +34,17 @@ import org.joda.time.Months;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
-import static org.joda.time.LocalDateTime.parse;
-
 import static org.ei.opensrp.util.StringUtil.humanize;
+import static org.joda.time.LocalDateTime.parse;
 
 public class AnakRegisterClientsProvider implements SmartRegisterCLientsProviderForCursorAdapter {
     private final LayoutInflater inflater;
     private final Context context;
     private final View.OnClickListener onClickListener;
+    private final OpenSRPImageLoader mImageLoader;
     private Drawable iconPencilDrawable;
     private final int txtColorBlack;
     private final AbsListView.LayoutParams clientViewLayoutParams;
@@ -68,6 +64,8 @@ public class AnakRegisterClientsProvider implements SmartRegisterCLientsProvider
         clientViewLayoutParams = new AbsListView.LayoutParams(MATCH_PARENT,
                 (int) context.getResources().getDimension(org.ei.opensrp.R.dimen.list_item_height));
         txtColorBlack = context.getResources().getColor(org.ei.opensrp.R.color.text_black);
+        mImageLoader = BidanApplication.getInstance().getCachedImageLoaderInstance();
+
 
     }
 
@@ -160,6 +158,19 @@ public class AnakRegisterClientsProvider implements SmartRegisterCLientsProvider
         //delivery documentation
         viewHolder.anak_register_dob.setText(pc.getColumnmaps().get("tanggalLahirAnak")!=null?pc.getColumnmaps().get("tanggalLahirAnak").substring(0, pc.getColumnmaps().get("tanggalLahirAnak").indexOf("T")):"");
         viewHolder.berat_lahir.setText(pc.getDetails().get("beratLahir")!=null?pc.getDetails().get("beratLahir"):"");
+
+        //start profile image
+        viewHolder.profilepic.setTag(R.id.entity_id, pc.getColumnmaps().get("_id"));//required when saving file to disk
+        if(pc.getDetails().containsKey("imageid")){//image already in local storage most likey ):
+            mImageLoader.getImageWithId(pc.getColumnmaps().get("_id"), OpenSRPImageLoader.getStaticImageListener(viewHolder.profilepic, R.drawable.woman_placeholder, R.drawable.woman_placeholder));
+
+        }else{
+            //create the url for download the image
+            String url= FileUtilities.getImageUrl(pc.getColumnmaps().get("_id"));
+            mImageLoader.get(url, OpenSRPImageLoader.getStaticImageListener(viewHolder.profilepic, R.drawable.woman_placeholder, R.drawable.woman_placeholder));
+
+        }
+        //end profile image
 
         //immunization
         checkVisibility(pc.getDetails().get("hb0"),null, viewHolder.hb0_no, viewHolder.hb0_yes);
