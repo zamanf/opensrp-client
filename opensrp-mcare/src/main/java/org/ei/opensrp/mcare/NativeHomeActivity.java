@@ -2,7 +2,7 @@ package org.ei.opensrp.mcare;
 
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Handler
+import android.os.Handler;
 
 import android.util.Log;
 import android.database.Cursor;
@@ -27,6 +27,7 @@ import org.ei.opensrp.mcare.anc.nbnfhandler;
 import org.ei.opensrp.mcare.child.encc1handler;
 import org.ei.opensrp.mcare.child.encc2handler;
 import org.ei.opensrp.mcare.child.encc3handler;
+import org.ei.opensrp.mcare.elco.MIS_elco_form_handler;
 import org.ei.opensrp.mcare.elco.PSRFHandler;
 import org.ei.opensrp.mcare.household.CensusEnrollmentHandler;
 import org.ei.opensrp.mcare.household.tutorial.tutorialCircleViewFlow;
@@ -127,7 +128,7 @@ public class NativeHomeActivity extends SecuredActivity {
         context.formSubmissionRouter().getHandlerMap().put("encc_visit_2", new encc2handler());
         context.formSubmissionRouter().getHandlerMap().put("encc_visit_3", new encc3handler());
 
-
+        context.formSubmissionRouter().getHandlerMap().put("mis_elco", new MIS_elco_form_handler());
         context.formSubmissionRouter().getHandlerMap().put("birthnotificationpregnancystatusfollowup", new nbnfhandler());
 
     }
