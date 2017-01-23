@@ -1,9 +1,9 @@
 package org.ei.opensrp.mcare;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Handler;
+import android.os.Handler
+
 import android.util.Log;
 import android.database.Cursor;
 import android.view.Menu;
@@ -27,10 +27,8 @@ import org.ei.opensrp.mcare.anc.nbnfhandler;
 import org.ei.opensrp.mcare.child.encc1handler;
 import org.ei.opensrp.mcare.child.encc2handler;
 import org.ei.opensrp.mcare.child.encc3handler;
-import org.ei.opensrp.mcare.elco.ElcoPSRFDueDateSort;
 import org.ei.opensrp.mcare.elco.PSRFHandler;
 import org.ei.opensrp.mcare.household.CensusEnrollmentHandler;
-import org.ei.opensrp.mcare.household.HouseholdCensusDueDateSort;
 import org.ei.opensrp.mcare.household.tutorial.tutorialCircleViewFlow;
 import org.ei.opensrp.mcare.pnc.pnc1handler;
 import org.ei.opensrp.mcare.pnc.pnc2handler;
@@ -44,8 +42,6 @@ import org.ei.opensrp.view.contract.HomeContext;
 import org.ei.opensrp.view.controller.NativeAfterANMDetailsFetchListener;
 import org.ei.opensrp.view.controller.NativeUpdateANMDetailsTask;
 import org.ei.opensrp.view.fragment.DisplayFormFragment;
-
-import java.util.ArrayList;
 
 import static android.widget.Toast.LENGTH_SHORT;
 import static java.lang.String.valueOf;
@@ -236,6 +232,7 @@ public class NativeHomeActivity extends SecuredActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
+        attachLogoutMenuItem(menu);
         return true;
     }
 
