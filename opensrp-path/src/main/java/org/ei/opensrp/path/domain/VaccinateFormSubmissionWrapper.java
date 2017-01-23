@@ -18,21 +18,21 @@ import util.VaccinateActionUtils;
 /**
  * Created by keyman on 22/11/2016.
  */
-public class FormSubmissionWrapper implements Serializable {
+public class VaccinateFormSubmissionWrapper implements Serializable {
 
-    String formData;
+    private String formData;
 
-    String entityId;
+    private String entityId;
 
-    String formName;
+    private String formName;
 
-    String metaData;
+    private String metaData;
 
-    String category;
+    private String category;
 
-    HashMap<VaccineRepo.Vaccine, VaccineWrapper> map;
+    private HashMap<VaccineRepo.Vaccine, VaccineWrapper> map;
 
-    public FormSubmissionWrapper(String formData, String entityId, String formName, String metaData, String category) {
+    public VaccinateFormSubmissionWrapper(String formData, String entityId, String formName, String metaData, String category) {
         this.formData = formData;
         this.entityId = entityId;
         this.formName = formName;
@@ -143,7 +143,7 @@ public class FormSubmissionWrapper implements Serializable {
             String data = XML.toString(formSubmission);
             return data;
         } catch (Exception e) {
-            Log.e(FormSubmissionWrapper.class.getName(), "", e);
+            Log.e(VaccinateFormSubmissionWrapper.class.getName(), "", e);
         }
         return null;
     }

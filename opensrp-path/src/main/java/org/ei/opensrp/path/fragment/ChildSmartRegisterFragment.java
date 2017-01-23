@@ -199,10 +199,11 @@ public class ChildSmartRegisterFragment extends SecuredNativeSmartRegisterCursor
             map.putAll(providerDetails());
 
             String formName = "child_followup";
+            String registerFormName =  "child_enrollment";
 
             switch (view.getId()) {
                 case R.id.child_profile_info_layout:
-                    ChildDetailActivity.startDetailActivity(getActivity(), (CommonPersonObjectClient) view.getTag(), map, formName, ChildDetailActivity.class);
+                    ChildDetailActivity.startDetailActivity(getActivity(), (CommonPersonObjectClient) view.getTag(), map, formName, registerFormName, ChildDetailActivity.class);
                     getActivity().finish();
                     break;
                 case R.id.child_next_visit_holder:

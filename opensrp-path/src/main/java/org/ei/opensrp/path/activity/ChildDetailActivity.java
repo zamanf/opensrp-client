@@ -14,7 +14,8 @@ import org.ei.opensrp.domain.Alert;
 import org.ei.opensrp.domain.form.FieldOverrides;
 import org.ei.opensrp.path.R;
 import org.ei.opensrp.path.db.VaccineRepo;
-import org.ei.opensrp.path.domain.FormSubmissionWrapper;
+import org.ei.opensrp.path.domain.EditFormSubmissionWrapper;
+import org.ei.opensrp.path.domain.VaccinateFormSubmissionWrapper;
 import org.ei.opensrp.path.domain.VaccineWrapper;
 import org.ei.opensrp.path.listener.VaccinationActionListener;
 import org.joda.time.DateTime;
@@ -44,7 +45,9 @@ public class ChildDetailActivity extends DetailActivity implements VaccinationAc
 
     Set<TableLayout> tables;
 
-    public FormSubmissionWrapper formSubmissionWrapper;
+    private VaccinateFormSubmissionWrapper vaccinateFormSubmissionWrapper;
+    private EditFormSubmissionWrapper editFormSubmissionWrapper;
+
 
     @Override
     protected int layoutResId() {
@@ -71,7 +74,7 @@ public class ChildDetailActivity extends DetailActivity implements VaccinationAc
         return R.id.child_profilepic;
     }
 
-    public static void startDetailActivity(android.content.Context context, CommonPersonObjectClient clientobj, HashMap<String, String> overrideStringmap, String formName, Class<? extends DetailActivity> detailActivity) {
+    public static void startDetailActivity(android.content.Context context, CommonPersonObjectClient clientobj, HashMap<String, String> overrideStringmap, String formName, String registerFormName, Class<? extends DetailActivity> detailActivity) {
 
         if (overrideStringmap == null) {
             org.ei.opensrp.util.Log.logDebug("overrides data is null");
@@ -82,11 +85,14 @@ public class ChildDetailActivity extends DetailActivity implements VaccinationAc
         org.ei.opensrp.util.Log.logDebug("fieldOverrides data is : " + metaData);
 
         String data = VaccinateActionUtils.formData(context, clientobj.entityId(), formName, metaData);
+        VaccinateFormSubmissionWrapper vaccinateFormSubmissionWrapper = new VaccinateFormSubmissionWrapper(data, clientobj.entityId(), formName, metaData, "child");
 
-        FormSubmissionWrapper formSubmissionWrapper = new FormSubmissionWrapper(data, clientobj.entityId(), formName, metaData, "child");
+        String editData = VaccinateActionUtils.formData(context, clientobj.entityId(), registerFormName, null);
+        EditFormSubmissionWrapper editFormSubmissionWrapper = new EditFormSubmissionWrapper(editData, clientobj.entityId(), registerFormName, null, "child");
 
         Bundle bundle = new Bundle();
-        bundle.putSerializable(EXTRA_OBJECT, formSubmissionWrapper);
+        bundle.putSerializable(EXTRA_VACCINATE_OBJECT, vaccinateFormSubmissionWrapper);
+        bundle.putSerializable(EXTRA_EDIT_OBJECT, editFormSubmissionWrapper);
         bundle.putSerializable(EXTRA_CLIENT, clientobj);
         Intent intent = new Intent(context, detailActivity);
         intent.putExtras(bundle);
@@ -127,7 +133,7 @@ public class ChildDetailActivity extends DetailActivity implements VaccinationAc
     @Override
     protected void generateView(CommonPersonObjectClient client) {
 
-        this.formSubmissionWrapper = retrieveFormSubmissionWrapper();
+        this.vaccinateFormSubmissionWrapper = retrieveFormSubmissionWrapper();
 
         //BASIC INFORMATION
         TableLayout dt = (TableLayout) findViewById(R.id.child_detail_info_table1);
@@ -136,10 +142,10 @@ public class ChildDetailActivity extends DetailActivity implements VaccinationAc
         TableRow tr = getDataRow(this, "Program ID", getEntityIdentifier(client), null);
         dt.addView(tr);
 
-        tr = getDataRow(this, "EPI Card Number", getValue(client.getColumnmaps(), "epi_card_number", false), null);
+        tr = getDataRow(this, "EPI Card Number", getValue(client.getColumnmaps(), "epi_card_number", false), "epi_card_number", null);
         dt.addView(tr);
 
-        tr = getDataRow(this, "Child's Name", getValue(client.getColumnmaps(), "first_name", true) + " " + getValue(client.getColumnmaps(), "last_name", true), null);
+        tr = getDataRow(this, "Child's Name", getValue(client.getColumnmaps(), "first_name", true) + " " + getValue(client.getColumnmaps(), "last_name", true), "first_name last_name", null);
         dt.addView(tr);
 
         int months = -1;
@@ -148,24 +154,24 @@ public class ChildDetailActivity extends DetailActivity implements VaccinationAc
         } catch (Exception e) {
             e.printStackTrace();
         }
-        tr = getDataRow(this, "Birthdate (Age)", convertDateFormat(getValue(client.getColumnmaps(), "dob", false), "No DoB", true) + " (" + (months < 0 ? "" : (months + "")) + " months" + ")", null);
+        tr = getDataRow(this, "Birthdate (Age)", convertDateFormat(getValue(client.getColumnmaps(), "dob", false), "No DoB", true) + " (" + (months < 0 ? "" : (months + "")) + " months" + ")", "dob", null);
         dt.addView(tr);
 
-        tr = getDataRow(this, "Gender", getValue(client.getColumnmaps(), "gender", true), null);
+        tr = getDataRow(this, "Gender", getValue(client.getColumnmaps(), "gender", true), "gender", null);
         dt.addView(tr);
 
-        tr = getDataRow(this, "Ethnicity", getValue(client, "ethnicity", true), null);
+        tr = getDataRow(this, "Ethnicity", getValue(client, "ethnicity", true), "ethnicity", null);
         dt.addView(tr);
 
         TableLayout dt2 = (TableLayout) findViewById(R.id.child_detail_info_table2);
 
-        tr = getDataRow(this, "Mother's Name", getValue(client.getColumnmaps(), "mother_name", true), null);
+        tr = getDataRow(this, "Mother's Name", getValue(client.getColumnmaps(), "mother_name", true), "mother_name", null);
         dt2.addView(tr);
 
-        tr = getDataRow(this, "Father's Name", getValue(client.getColumnmaps(), "father_name", true), null);
+        tr = getDataRow(this, "Father's Name", getValue(client.getColumnmaps(), "father_name", true), "father_name", null);
         dt2.addView(tr);
 
-        tr = getDataRow(this, "Contact Number", getValue(client.getColumnmaps(), "contact_phone_number", false), null);
+        tr = getDataRow(this, "Contact Number", getValue(client.getColumnmaps(), "contact_phone_number", false), "contact_phone_number", null);
         dt2.addView(tr);
         tr = getDataRow(this, "Address", getValue(client.getColumnmaps(), "address1", true)
                 + ", \nUC: " + getValue(client.getColumnmaps(), "union_council", true)
@@ -211,7 +217,7 @@ public class ChildDetailActivity extends DetailActivity implements VaccinationAc
             vaccineWrapper.setPatientNumber(getValue(client.getColumnmaps(), "epi_card_number", false));
             vaccineWrapper.setPatientName(getValue(client.getColumnmaps(), "first_name", true) + " " + getValue(client.getColumnmaps(), "last_name", true));
 
-            String existingAge = VaccinateActionUtils.retrieveExistingAge(formSubmissionWrapper);
+            String existingAge = VaccinateActionUtils.retrieveExistingAge(vaccinateFormSubmissionWrapper);
             if (StringUtils.isNotBlank(existingAge)) {
                 vaccineWrapper.setExistingAge(existingAge);
             }
@@ -241,12 +247,13 @@ public class ChildDetailActivity extends DetailActivity implements VaccinationAc
         tableLayouts.add(dt);
         tableLayouts.add(dt2);
 
+        this.editFormSubmissionWrapper = retrieveEditFormSubmissionWrapper();
         Button edtBtn = (Button) findViewById(R.id.child_edit_btn);
         edtBtn.setTag(getString(R.string.edit));
         edtBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                updateEditView(view, tableLayouts);
+                updateEditView(view, tableLayouts, editFormSubmissionWrapper);
             }
         });
     }
@@ -279,13 +286,13 @@ public class ChildDetailActivity extends DetailActivity implements VaccinationAc
         return VaccinateActionUtils.findRow(tables, tag.getVaccine().name());
     }
 
-    public FormSubmissionWrapper getFormSubmissionWrapper() {
-        return formSubmissionWrapper;
+    public VaccinateFormSubmissionWrapper getVaccinateFormSubmissionWrapper() {
+        return vaccinateFormSubmissionWrapper;
     }
 
     @Override
     public void finish() {
-        saveFormSubmission(formSubmissionWrapper);
+        saveFormSubmission(vaccinateFormSubmissionWrapper);
         super.finish();
     }
 

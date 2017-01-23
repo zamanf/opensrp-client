@@ -47,6 +47,7 @@ import org.ei.drishti.dto.AlertStatus;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.domain.ProfileImage;
 import org.ei.opensrp.path.R;
+import org.ei.opensrp.path.domain.EditWrapper;
 import org.ei.opensrp.repository.ImageRepository;
 import org.ei.opensrp.util.StringUtil;
 import org.joda.time.DateTime;
@@ -289,14 +290,47 @@ public class Utils {
         l.setBackgroundColor(Color.WHITE);
         tr.addView(l);
 
-        EditText v = new EditText(context);
+        TextView v = new TextView(context);
         v.setText(value);
         v.setPadding(20, 2, 20, 2);
         v.setTextColor(Color.BLACK);
         v.setTextSize(14);
         v.setBackgroundColor(Color.WHITE);
-        v.setInputType(InputType.TYPE_NULL);
         tr.addView(v);
+
+        return tr;
+    }
+
+    public static TableRow getDataRow(Context context, String label, String value, String field, TableRow row){
+        TableRow tr = row;
+        if(row == null){
+            tr = new TableRow(context);
+            TableRow.LayoutParams trlp = new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            tr.setLayoutParams(trlp);
+            tr.setPadding(10, 5, 10, 5);
+        }
+
+        TextView l = new TextView(context);
+        l.setText(label + ": ");
+        l.setPadding(20, 2, 20, 2);
+        l.setTextColor(Color.BLACK);
+        l.setTextSize(14);
+        l.setBackgroundColor(Color.WHITE);
+        tr.addView(l);
+
+        EditWrapper editWrapper = new EditWrapper();
+        editWrapper.setCurrentValue(value);
+        editWrapper.setField(field);
+
+        EditText e = new EditText(context);
+        e.setTag(editWrapper);
+        e.setText(value);
+        e.setPadding(20, 2, 20, 2);
+        e.setTextColor(Color.BLACK);
+        e.setTextSize(14);
+        e.setBackgroundColor(Color.WHITE);
+        e.setInputType(InputType.TYPE_NULL);
+        tr.addView(e);
 
         return tr;
     }

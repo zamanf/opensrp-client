@@ -198,10 +198,11 @@ public class WomanSmartRegisterFragment extends SecuredNativeSmartRegisterCursor
             map.putAll(providerDetails());
 
             String formName = "woman_followup";
+            String registerFormName = "woman_enrollment";
 
             switch (view.getId()) {
                 case R.id.woman_profile_info_layout:
-                    WomanDetailActivity.startDetailActivity(getActivity(), (CommonPersonObjectClient) view.getTag(), map, formName, WomanDetailActivity.class);
+                    WomanDetailActivity.startDetailActivity(getActivity(), (CommonPersonObjectClient) view.getTag(), map, formName, registerFormName, WomanDetailActivity.class);
                     getActivity().finish();
                     break;
                 case R.id.woman_next_visit_holder:
