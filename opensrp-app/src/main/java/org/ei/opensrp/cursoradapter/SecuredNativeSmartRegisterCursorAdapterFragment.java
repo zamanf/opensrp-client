@@ -553,6 +553,8 @@ public abstract class SecuredNativeSmartRegisterCursorAdapterFragment extends Se
                 query = sqb.orderbyCondition(Sortqueries);
                 query = sqb.Endquery(query);
             }
+
+            Log.i(getClass().getName(), query);
             c = commonRepository().RawCustomQueryForAdapter(query);
             c.moveToFirst();
             totalcount = c.getInt(0);

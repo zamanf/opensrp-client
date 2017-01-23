@@ -2,8 +2,8 @@ package org.ei.opensrp.mcare.application;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.util.Pair;
 
-import org.acra.ACRA;
 import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
 import org.ei.opensrp.Context;
@@ -14,7 +14,9 @@ import org.ei.opensrp.view.activity.DrishtiApplication;
 import org.ei.opensrp.view.receiver.SyncBroadcastReceiver;
 import static org.ei.opensrp.util.Log.logInfo;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * Created by koros on 1/22/16.
@@ -106,10 +108,10 @@ public class McareApplication extends DrishtiApplication {
             String[] ftsSearchFields =  { "FWWOMFNAME", "GOBHHID", "JiVitAHHID" };
             return ftsSearchFields;
         } else if (tableName.equals("mcaremother")){
-            String[] ftsSearchFields =  { "FWWOMFNAME", "GOBHHID", "JiVitAHHID", "Is_PNC" };
+            String[] ftsSearchFields =  { "FWWOMFNAME", "GOBHHID", "JiVitAHHID", "Is_PNC", "alerts.visitCode" };
             return ftsSearchFields;
         } else if (tableName.equals("mcarechild")){
-            String[] ftsSearchFields =  { "FWWOMFNAME", "GOBHHID", "JiVitAHHID" };
+            String[] ftsSearchFields =  { "FWWOMFNAME", "GOBHHID", "JiVitAHHID", "alerts.visitCode" };
             return ftsSearchFields;
         }
         return null;
@@ -117,16 +119,16 @@ public class McareApplication extends DrishtiApplication {
 
     private String[] getFtsSortFields(String tableName){
         if(tableName.equals("household")) {
-            String[] sortFields = {"FWHOHFNAME", "FWGOBHHID", "FWJIVHHID"};
+            String[] sortFields = {"FWHOHFNAME", "FWGOBHHID", "FWJIVHHID", "alerts.FW_CENSUS"};
             return sortFields;
         } else if(tableName.equals("elco")){
-            String[] sortFields = {"FWWOMFNAME", "GOBHHID", "JiVitAHHID"};
+            String[] sortFields = {"FWWOMFNAME", "GOBHHID", "JiVitAHHID", "alerts.ELCO_PSRF"};
             return sortFields;
         } else if(tableName.equals("mcaremother")){
-            String[] sortFields = {"FWWOMFNAME", "GOBHHID", "JiVitAHHID", "FWPSRLMP", "FWBNFDTOO", "FWSORTVALUE"};
+            String[] sortFields = {"FWWOMFNAME", "GOBHHID", "JiVitAHHID", "FWPSRLMP", "FWBNFDTOO", "FWSORTVALUE", "FWBNFSTS", "alerts.Ante_Natal_Care_Reminder_Visit", "alerts.BirthNotificationPregnancyStatusFollowUp", "alerts.Post_Natal_Care_Reminder_Visit"};
             return sortFields;
         } else if(tableName.equals("mcarechild")){
-            String[] sortFields = {"FWWOMFNAME", "GOBHHID", "JiVitAHHID", "FWSORTVALUE"};
+            String[] sortFields = {"FWWOMFNAME", "GOBHHID", "JiVitAHHID", "FWSORTVALUE", "alerts.Essential_Newborn_Care_Checklist"};
             return sortFields;
         }
         return null;
@@ -134,7 +136,7 @@ public class McareApplication extends DrishtiApplication {
 
     private String[] getFtsMainConditions(String tableName){
         if(tableName.equals("household")) {
-            String[] mainConditions = {"FWHOHFNAME"};
+            String[] mainConditions = {"FWHOHFNAME", "details"};
             return mainConditions;
         } else if(tableName.equals("elco")){
             String[] mainConditions = {"FWWOMFNAME", "details"};
@@ -143,7 +145,7 @@ public class McareApplication extends DrishtiApplication {
             String[] mainConditions = {"FWWOMFNAME", "Is_PNC", "details"};
             return mainConditions;
         } else if(tableName.equals("mcarechild")){
-            String[] mainConditions = {"FWBNFGEN"};
+            String[] mainConditions = {"FWBNFGEN",  "details"};
             return mainConditions;
         }
         return null;
@@ -154,6 +156,27 @@ public class McareApplication extends DrishtiApplication {
         return ftsTables;
     }
 
+    /**
+     * Map value Pair<TableName, updateVisitCode>
+     * @return
+     */
+    private Map<String, Pair<String, Boolean>> getAlertScheduleMap(){
+        Map<String, Pair<String, Boolean>> map = new HashMap<String, Pair<String, Boolean>>();
+        map.put("FW CENSUS", Pair.create("household", false));
+        map.put("ELCO PSRF", Pair.create("elco", false));
+        map.put("Ante Natal Care Reminder Visit", Pair.create("mcaremother", true));
+        map.put("BirthNotificationPregnancyStatusFollowUp",  Pair.create("mcaremother", false));
+        map.put("Post Natal Care Reminder Visit", Pair.create("mcaremother", true));
+        map.put("Essential Newborn Care Checklist", Pair.create("mcarechild", true));
+
+        return map;
+    }
+
+    private String[] getAlertFilterVisitCodes(){
+        String[] ftsTables = { "ancrv_1", "ancrv_2", "ancrv_3", "ancrv_4", "pncrv_1", "pncrv_2", "pncrv_3", "enccrv_1", "enccrv_2", "enccrv_3" };
+        return ftsTables;
+    }
+
     private CommonFtsObject createCommonFtsObject(){
         CommonFtsObject commonFtsObject = new CommonFtsObject(getFtsTables());
         for(String ftsTable: commonFtsObject.getTables()){
@@ -161,6 +184,8 @@ public class McareApplication extends DrishtiApplication {
             commonFtsObject.updateSortFields(ftsTable, getFtsSortFields(ftsTable));
             commonFtsObject.updateMainConditions(ftsTable, getFtsMainConditions(ftsTable));
         }
+        commonFtsObject.updateAlertScheduleMap(getAlertScheduleMap());
+        commonFtsObject.updateAlertFilterVisitCodes(getAlertFilterVisitCodes());
         return commonFtsObject;
     }
 
