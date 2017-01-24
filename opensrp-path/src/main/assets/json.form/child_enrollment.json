@@ -1,6 +1,8 @@
 {
+  "count":"2",
   "step1": {
     "title": "Child Information",
+    "next":"step2",
     "fields": [
       {
         "key": "first_name",
@@ -32,21 +34,25 @@
       {
         "key": "dob",
         "type": "edit_text",
-        "hint": "*DOB",
-        "v_required": {
-          "value": "true",
-          "err": "Please enter the date of birth"
+        "hint": "*DOB (dd/mm/yyyy)",
+        "v_regex" : {
+          "value" : "(([0,1,2][1-9])|(3[0,1]))/((0[1,9])|(1[0-2]))/201[6,7]",
+          "err" : "Please enter a valid date"
         }
       },
       {
         "key": "national_id",
         "type": "edit_text",
-        "hint": "*National ID"
+        "hint": "National ID"
       },
       {
         "key": "birth_weight",
         "type": "edit_text",
-        "hint": "Birth weight"
+        "hint": "Birth weight (KGs)",
+        "v_regex" : {
+          "value" : "((([0-9])|1[0,5])\.[0-9]{1,3})|99",
+          "err" : "Please enter a valid weight in KGs e.g 2.0 or 99 if unknown"
+        }
       },
       {
         "key": "place_of_birth",
@@ -56,13 +62,35 @@
       {
         "key": "date_first_seen",
         "type": "edit_text",
-        "hint": "Date first seen"
+        "hint": "Date first seen (dd/mm/yyyy)",
+        "v_regex" : {
+          "value" : "((([0,1,2][1-9])|(3[0,1]))/((0[1,9])|(1[0-2]))/201[6,7])|99",
+          "err" : "Please enter a valid date or 99 if unknown"
+        }
       },
       {
-        "key": "place_of_birth",
-        "type": "edit_text",
-        "hint": "Place of birth"
-      }
+        "key": "hiv_exposure",
+        "type": "radio",
+        "hint": "*HIV exposure?",
+        "options": [
+          {
+            "key": "child_exposed",
+            "text": "Child exposed"
+          },
+          {
+            "key": "child_not_exposed",
+            "text": "Child not exposed"
+          },
+          {
+            "key": "msu",
+            "text": "MSU"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Please enter HIV exposure"
+        }
+      },
     ]
   },
   "step2": {
@@ -114,18 +142,18 @@
         "key": "primary_caregiver_phone",
         "type": "edit_text",
         "hint": "*Primary caregiver phone number (phone number must be 10 digits and begin with 095 or 096 or 097)",
-        "v_required": {
-          "value": "true",
-          "err": "Please enter the primary caregiver's phone number"
+        "v_regex" : {
+          "value" : "09[5,7][0-9]{7}",
+          "err" : "Please enter a valid phone number"
         }
       },
       {
         "key": "chw_phone",
         "type": "edit_text",
         "hint": "*CHW phone number (phone number must be 10 digits and begin with 095 or 096 or 097)",
-        "v_required": {
-          "value": "true",
-          "err": "Please enter the CHW's phone number"
+        "v_regex" : {
+          "value" : "09[5,7][0-9]{7}",
+          "err" : "Please enter a valid phone number"
         }
       }
     ]
