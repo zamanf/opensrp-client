@@ -1,7 +1,9 @@
 package org.ei.opensrp.indonesia.face.camera.util;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -17,6 +19,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.ei.opensrp.Context;
 import org.ei.opensrp.indonesia.face.camera.SmartShutterActivity;
@@ -33,7 +36,7 @@ import java.util.Map;
 /**
  * Created by wildan on 1/4/17.
  */
-public class Tools extends Activity {
+public class Tools {
 
     private static final String TAG = Tools.class.getSimpleName();
     public static final int CONFIDENCE_VALUE = 58;
@@ -91,6 +94,7 @@ public class Tools extends Activity {
         }
         return false;
     }
+
     public static boolean WritePictureToFile(android.content.Context context, Bitmap bitmap, String entityId) {
 
         File pictureFile = getOutputMediaFile(0, entityId);
@@ -273,34 +277,86 @@ public class Tools extends Activity {
     }
 
     public void saveAlbum() {
-        byte[] albumBuffer = SmartShutterActivity.faceProc.serializeRecogntionAlbum();
+//        byte[] albumBuffer = SmartShutterActivity.faceProc.serializeRecogntionAlbum();
 //		saveCloud(albumBuffer);
-        Log.e(TAG, "Size of byte Array =" + albumBuffer.length);
-        SharedPreferences settings = getSharedPreferences(FaceConstants.ALBUM_NAME, 0);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString("albumArray", Arrays.toString(albumBuffer));
-        editor.apply();
+//        Log.e(TAG, "Size of byte Array =" + albumBuffer.length);
+//        SharedPreferences settings = getSharedPreferences(FaceConstants.ALBUM_NAME, 0);
+//        SharedPreferences.Editor editor = settings.edit();
+//        editor.putString("albumArray", Arrays.toString(albumBuffer));
+//        editor.apply();
     }
-
 
     public void loadAlbum() {
 //        Toast.makeText(this, "Load FacialActivity Album", Toast.LENGTH_SHORT).show();
-        Log.e(TAG, "loadAlbum: " );
-        SharedPreferences settings = getSharedPreferences(FaceConstants.ALBUM_NAME, 0);
-        String arrayOfString = settings.getString("albumArray", null);
+//        Log.e(TAG, "loadAlbum: ");
+//        SharedPreferences settings = getSharedPreferences(FaceConstants.ALBUM_NAME, 0);
+//        String arrayOfString = settings.getString("albumArray", null);
 
-        byte[] albumArray;
-        if (arrayOfString != null) {
-            String[] splitStringArray = arrayOfString.substring(1,
-                    arrayOfString.length() - 1).split(", ");
-
-            albumArray = new byte[splitStringArray.length];
-            for (int i = 0; i < splitStringArray.length; i++) {
-                albumArray[i] = Byte.parseByte(splitStringArray[i]);
-            }
-            SmartShutterActivity.faceProc.deserializeRecognitionAlbum(albumArray);
-            Log.e(TAG, "De-Serialized Album Success!");
-        }
+//        byte[] albumArray;
+//        if (arrayOfString != null) {
+//            String[] splitStringArray = arrayOfString.substring(1,
+//                    arrayOfString.length() - 1).split(", ");
+//
+//            albumArray = new byte[splitStringArray.length];
+//            for (int i = 0; i < splitStringArray.length; i++) {
+//                albumArray[i] = Byte.parseByte(splitStringArray[i]);
+//            }
+//            SmartShutterActivity.faceProc.deserializeRecognitionAlbum(albumArray);
+//            Log.e(TAG, "De-Serialized Album Success!");
+//        }
     }
+
+    public static void alertDialog(android.content.Context context, int opt){
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
+        Tools tools = new Tools();
+//        alertDialog.setMessage(message);
+        String message = "";
+        switch (opt){
+            case 0 :
+                message = "Are you sure to empty The Album?";
+//                doEmpty;
+                break;
+            case 1 :
+                message = "Are you sure to delete item";
+                break;
+            default:
+                break;
+        }
+        alertDialog.setMessage(message);
+//        alertDialog.setButton("OK", do);
+        alertDialog.setPositiveButton("ERASE", tools.doEmpty);
+        alertDialog.show();
+    }
+
+    private DialogInterface.OnClickListener doEmpty = new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int id) {
+            boolean result = SmartShutterActivity.faceProc.resetAlbum();
+            if (result) {
+//                HashMap<String, String> hashMap = SmartShutterActivity.retrieveHash(getApplicationContext());
+//                HashMap<String, String> hashMap = retrieveHash(getApplicationContext());
+//                HashMap<String, String> hashMap = retrieveHash();
+//                hashMap.clear();
+//                SmartShutterActivity ss = new SmartShutterActivity();
+//                saveHash(hashMap, getApplicationContext());
+//                saveAlbum();
+//                Toast.makeText(getApplicationContext(),
+//                        "Album Reset Successful.",
+//                        Toast.LENGTH_LONG).show();
+            } else {
+//                Toast.makeText(
+//                        getApplicationContext(),
+//                        "Internal Error. Reset album failed",
+//                        Toast.LENGTH_LONG).show();
+            }
+        }
+    };
+
+//    private HashMap<String, String> retrieveHash() {
+//        SharedPreferences appPrefs = getSharedPreferences(FaceConstants.HASH_NAME, MODE_PRIVATE);
+//        HashMap<String, String> hash = new HashMap<String, String>();
+//        hash.putAll((Map<? extends String, ? extends String>) appPrefs.getAll());
+//        return hash;
+//    }
+
 
 }

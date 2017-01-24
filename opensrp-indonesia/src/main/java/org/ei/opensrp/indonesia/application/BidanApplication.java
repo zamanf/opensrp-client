@@ -98,19 +98,20 @@ public class BidanApplication extends DrishtiApplication {
      * @param tableName
      * @return
      */
+//    WD , "base_entity_id"
     private String[] getFtsSearchFields(String tableName){
         if(tableName.equals("ec_kartu_ibu")){
             String[] ftsSearchFields =  { "namalengkap", "namaSuami", "base_entity_id" };
             return ftsSearchFields;
         } else if(tableName.equals("ec_anak")){
-            String[] ftsSearchFields =  { "namaBayi" };
+            String[] ftsSearchFields =  { "namaBayi", "base_entity_id" };
             return ftsSearchFields;
         } else if (tableName.equals("ec_ibu")){
-            String[] ftsSearchFields =  { "namalengkap", "namaSuami"};
+            String[] ftsSearchFields =  { "namalengkap", "namaSuami", "base_entity_id"};
             return ftsSearchFields;
         }
         else if (tableName.equals("ec_pnc")) {
-            String[] ftsSearchFields = {"namalengkap", "namaSuami"};
+            String[] ftsSearchFields = {"namalengkap", "namaSuami", "base_entity_id"};
             return ftsSearchFields;
         }
         return null;

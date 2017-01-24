@@ -78,6 +78,8 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
     private final ClientActionHandler clientActionHandler = new ClientActionHandler();
     private String locationDialogTAG = "locationDialogTAG";
 
+    public static String criteria;
+
     @Override
     protected SecuredNativeSmartRegisterActivity.DefaultOptionsProvider getDefaultOptionsProvider() {
         return new SecuredNativeSmartRegisterActivity.DefaultOptionsProvider() {
@@ -181,7 +183,8 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
         }
         ft.addToBackStack(null);
         LocationSelectorDialogFragment
-                .newInstance((NativeKISmartRegisterActivity) getActivity(), new EditDialogOptionModel(), context.anmLocationController().get(), "kartu_ibu_registration")
+                .newInstance((NativeKISmartRegisterActivity) getActivity(),
+                        new EditDialogOptionModel(), context.anmLocationController().get(), "kartu_ibu_registration")
                 .show(ft, locationDialogTAG);
     }
 
@@ -199,7 +202,6 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
         return ((NativeKISmartRegisterActivity)getActivity()).getEditOptions();
     }
 
-    public static String criteria;
 
     @Override
     public void setupViews(View view) {
@@ -211,7 +213,8 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
         clientsView.setVisibility(View.VISIBLE);
         clientsProgressView.setVisibility(View.INVISIBLE);
 //        list.setBackgroundColor(Color.RED);
-        
+
+//        WD
         Log.e(TAG, "setupViews: "+ getCriteria() );
         initializeQueries(getCriteria());
     }
@@ -220,24 +223,10 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
         return "";
     }
 
-    private String sortByAlertmethod() {
-        return " CASE WHEN alerts.status = 'urgent' THEN '1'" +
-                "WHEN alerts.status = 'upcoming' THEN '2'\n" +
-                "WHEN alerts.status = 'normal' THEN '3'\n" +
-                "WHEN alerts.status = 'expired' THEN '4'\n" +
-                "WHEN alerts.status is Null THEN '5'\n" +
-                "Else alerts.status END ASC";
-    }
-
-    public String KartuIbuMainCount(){
-        return "Select Count(*) from ec_kartu_ibu";
-    }
-
     public void initializeQueries(String s){
-
         try {
             KIClientsProvider kiscp = new KIClientsProvider(getActivity(), clientActionHandler,
-                context.alertService());
+                    context.alertService());
 
             clientAdapter = new SmartRegisterPaginatedCursorAdapter(getActivity(), null, kiscp,
                 new CommonRepository(
@@ -265,13 +254,11 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
             } else {
                 mainCondition = " is_closed = 0";
             }
-
-        joinTable = "";
-        countSelect = countqueryBUilder.mainCondition(mainCondition);
-        super.CountExecute();
-
-        SmartRegisterQueryBuilder queryBuilder = new SmartRegisterQueryBuilder();
-        queryBuilder.SelectInitiateMainTable("ec_kartu_ibu",
+            joinTable = "";
+            countSelect = countqueryBUilder.mainCondition(mainCondition);
+            super.CountExecute();
+            SmartRegisterQueryBuilder queryBuilder = new SmartRegisterQueryBuilder();
+            queryBuilder.SelectInitiateMainTable("ec_kartu_ibu",
                 new String[]{
                         "ec_kartu_ibu.relationalid",
                         "ec_kartu_ibu.is_closed",
@@ -283,21 +270,22 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
                         "ec_anak.namaBayi",
                         "ec_anak.tanggalLahirAnak",
                         "noIbu"});
-        queryBuilder.customJoin("LEFT JOIN ec_anak ON ec_kartu_ibu.id = ec_anak.relational_id ");
-        mainSelect = queryBuilder.mainCondition(mainCondition);
-        Sortqueries = KiSortByNameAZ();
+            queryBuilder.customJoin("LEFT JOIN ec_anak ON ec_kartu_ibu.id = ec_anak.relational_id ");
+            mainSelect = queryBuilder.mainCondition(mainCondition);
+            Sortqueries = KiSortByNameAZ();
 
-        currentlimit = 20;
-        currentoffset = 0;
+            currentlimit = 20;
+            currentoffset = 0;
 
-        super.filterandSortInInitializeQueries();
-
-        updateSearchView();
+            super.filterandSortInInitializeQueries();
+            updateSearchView();
             Log.e(TAG, "initializeQueries: "+s );
-        refresh();
+            refresh();
+
         } catch (Exception e){
             e.printStackTrace();
         }
+
         finally {
         }
     }
@@ -308,7 +296,7 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
             switch (view.getId()) {
                 case R.id.profile_info_layout:
                     FlurryFacade.logEvent("click_detail_view_on_kohort_ibu_dashboard");
-                   KIDetailActivity.kiclient = (CommonPersonObjectClient)view.getTag();
+                    KIDetailActivity.kiclient = (CommonPersonObjectClient)view.getTag();
                     Log.e(TAG, "onClick: "+KIDetailActivity.kiclient );
                     Intent intent = new Intent(getActivity(),KIDetailActivity.class);
                     startActivity(intent);
@@ -330,6 +318,11 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
             navigationController.startEC(client.entityId());
         }
     }
+
+    /**
+     * Sorting Method
+     * @return
+     */
 
     private String KiSortByNameAZ() {
         return " namalengkap ASC";
@@ -368,6 +361,7 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
                         return;
                     }
                 }
+
                /* AllCommonsRepository pncrep = org.ei.opensrp.Context.getInstance().allCommonsRepositoryobjects("ec_pnc");
                 final CommonPersonObject pncparent = pncrep.findByCaseID(pc.entityId());
                 if (pncparent != null) {
@@ -394,11 +388,15 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
     @Override
     protected void onResumption() {
 //        super.onResumption();
+
         getDefaultOptionsProvider();
+
+        Log.e(TAG, "onResumption: " + isPausedOrRefreshList());
+
         if(isPausedOrRefreshList()) {
             initializeQueries("");
         }
-   //     updateSearchView();
+//        updateSearchView();
 //
         try{
             LoginActivity.setLanguage();
@@ -412,6 +410,7 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
      *
      * @param view
      */
+//    WD
     @Override
     public void setupSearchView(final View view) {
         searchView = (EditText) view.findViewById(org.ei.opensrp.R.id.edt_search);
@@ -438,10 +437,11 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
     }
 
     public void getFacialRecord(View view) {
-        Log.e(TAG, "getFacialRecord: " );
+        Log.e(TAG, "getFacialRecord: ");
         SmartShutterActivity.kidetail = (CommonPersonObjectClient)view.getTag();
 
         Intent intent = new Intent(getActivity(), SmartShutterActivity.class);
+        intent.putExtra("org.sid.sidface.ImageConfirmation.origin", NativeKISmartRegisterFragment.class.getSimpleName());
         intent.putExtra("org.sid.sidface.ImageConfirmation.identify", true);
         intent.putExtra("org.sid.sidface.ImageConfirmation.kidetail", (Parcelable) SmartShutterActivity.kidetail);
         startActivity(intent);
@@ -570,6 +570,21 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
         }
     }
 
+
+    private String sortByAlertmethod() {
+        return " CASE WHEN alerts.status = 'urgent' THEN '1'" +
+                "WHEN alerts.status = 'upcoming' THEN '2'\n" +
+                "WHEN alerts.status = 'normal' THEN '3'\n" +
+                "WHEN alerts.status = 'expired' THEN '4'\n" +
+                "WHEN alerts.status is Null THEN '5'\n" +
+                "Else alerts.status END ASC";
+    }
+
+    public String KartuIbuMainCount(){
+        return "Select Count(*) from ec_kartu_ibu";
+    }
+
+//    WD
     public void setCriteria(String criteria) {
         this.criteria = criteria;
     }

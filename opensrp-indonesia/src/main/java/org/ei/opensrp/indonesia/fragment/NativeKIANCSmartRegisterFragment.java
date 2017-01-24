@@ -1,10 +1,14 @@
 package org.ei.opensrp.indonesia.fragment;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Parcelable;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -28,6 +32,7 @@ import org.ei.opensrp.indonesia.anc.ANCDetailActivity;
 import org.ei.opensrp.indonesia.anc.KIANCClientsProvider;
 import org.ei.opensrp.indonesia.anc.KIANCOverviewServiceMode;
 import org.ei.opensrp.indonesia.anc.NativeKIANCSmartRegisterActivity;
+import org.ei.opensrp.indonesia.face.camera.SmartShutterActivity;
 import org.ei.opensrp.indonesia.kartu_ibu.AllKartuIbuServiceMode;
 import org.ei.opensrp.indonesia.kartu_ibu.KIClientsProvider;
 import org.ei.opensrp.indonesia.kartu_ibu.KICommonObjectFilterOption;
@@ -77,6 +82,8 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
  */
 public class NativeKIANCSmartRegisterFragment extends SecuredNativeSmartRegisterCursorAdapterFragment {
 
+    private static final String TAG = NativeKIANCSmartRegisterFragment.class.getSimpleName();
+
     private SmartRegisterClientsProvider clientProvider = null;
     private CommonPersonObjectController controller;
     private VillageController villageController;
@@ -84,6 +91,10 @@ public class NativeKIANCSmartRegisterFragment extends SecuredNativeSmartRegister
 
     private final ClientActionHandler clientActionHandler = new ClientActionHandler();
     private String locationDialogTAG = "locationDialogTAG";
+
+    public static String criteria;
+
+
     @Override
     protected void onCreation() {
         //
@@ -221,47 +232,12 @@ public class NativeKIANCSmartRegisterFragment extends SecuredNativeSmartRegister
         return "Select ec_ibu.id as _id, ec_ibu.namalengkap,ec_ibu.namaSuami,ec_kartu_ibu.umur,ec_ibu.is_closed,ec_ibu.ancDate,ec_ibu.ancKe  \n" +
                 "from ec_ibu Left Join ec_kartu_ibu on  ec_ibu.id = ec_kartu_ibu.id ";
     }
+
     public String ancCounts(){
         return "Select Count(*) \n" +
                 "from ec_ibu Left Join ec_kartu_ibu on  ec_ibu.id = ec_kartu_ibu.id ";
     }
-    /*public void initializeQueries(){
-         try {
-        KIANCClientsProvider kiscp = new KIANCClientsProvider(getActivity(),clientActionHandler,context.alertService());
-        clientAdapter = new SmartRegisterPaginatedCursorAdapter(getActivity(), null, kiscp, new CommonRepository("ec_ibu",new String []{"ec_ibu.isClosed", "ec_ibu.ancDate", "ec_ibu.ancKe","ec_ibu.namalengkap","ec_ibu.namaSuami"}));
-        clientsView.setAdapter(clientAdapter);
 
-        setTablename("ec_ibu");
-        SmartRegisterQueryBuilder countqueryBUilder = new SmartRegisterQueryBuilder();
-        countqueryBUilder.SelectInitiateMainTableCounts("ec_ibu");
-     //   countqueryBUilder.customJoin("LEFT JOIN kartu_ibu ON ibu.id = kartu_ibu.id");
-        mainCondition = " isClosed !=0 and pptest = 'Positive'";
-             joinTable = "";
-             countSelect = countqueryBUilder.mainCondition(mainCondition);
-             super.CountExecute();
-
-
-        SmartRegisterQueryBuilder queryBUilder = new SmartRegisterQueryBuilder();
-        queryBUilder.SelectInitiateMainTable("ec_ibu", new String[]{"ec_ibu.isClosed", "ec_ibu.details", "ec_ibu.ancDate", "ec_ibu.ancKe","ec_ibu.namalengkap","ec_ibu.namaSuami"});
-         //    countqueryBUilder.customJoin("LEFT JOIN kartu_ibu ON ibu.id = kartu_ibu.id");
-             mainSelect = queryBUilder.mainCondition(mainCondition);
-     //   Sortqueries = KiSortByNameAZ();
-
-
-             currentlimit = 20;
-             currentoffset = 0;
-
-             super.filterandSortInInitializeQueries();
-
-             updateSearchView();
-             refresh();
-
-         } catch (Exception e){
-             e.printStackTrace();
-         }
-         finally {
-         }
-    }*/
     public void initializeQueries(){
         try {
             KIANCClientsProvider kiscp = new KIANCClientsProvider(getActivity(),clientActionHandler,context.alertService());
@@ -386,8 +362,107 @@ public class NativeKIANCSmartRegisterFragment extends SecuredNativeSmartRegister
         }
 
     }
+
+    /**
+     *
+     * @param view
+     */
+//    WD
     @Override
-    public void setupSearchView(View view) {
+    public void setupSearchView(final View view) {
+        searchView = (EditText) view.findViewById(org.ei.opensrp.R.id.edt_search);
+        searchView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CharSequence selections[] = new CharSequence[]{"Name", "Photo"};
+//                Image selections[] = new Image[]{};
+                final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Please Choose one, Search by");
+                builder.setItems(selections, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int opt) {
+                        if (opt == 0) searchTextChangeListener("");
+                        else getFacialRecord(view);
+                    }
+                });
+                builder.show();
+            }
+        });
+
+        searchCancelView = view.findViewById(org.ei.opensrp.R.id.btn_search_cancel);
+        searchCancelView.setOnClickListener(searchCancelHandler);
+    }
+
+    //    WD
+    public void getFacialRecord(View view) {
+        Log.e(TAG, "getFacialRecord: ");
+        SmartShutterActivity.kidetail = (CommonPersonObjectClient)view.getTag();
+
+        Intent intent = new Intent(getActivity(), SmartShutterActivity.class);
+        intent.putExtra("org.sid.sidface.ImageConfirmation.origin", NativeKIANCSmartRegisterFragment.class.getSimpleName());
+        intent.putExtra("org.sid.sidface.ImageConfirmation.identify", true);
+        intent.putExtra("org.sid.sidface.ImageConfirmation.kidetail", (Parcelable) SmartShutterActivity.kidetail);
+        startActivity(intent);
+    }
+
+    //    WD
+    public void searchTextChangeListener(String s) {
+        Log.e(TAG, "searchTextChangeListener: " + s);
+        if (s != null) {
+            filters =  s;
+        } else {
+            searchView.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+                }
+
+                @Override
+                public void onTextChanged(final CharSequence cs, int start, int before, int count) {
+
+                    Log.e(TAG, "onTextChanged: " + searchView.getText());
+                    (new AsyncTask() {
+//                    SmartRegisterClients filteredClients;
+
+                        @Override
+                        protected Object doInBackground(Object[] params) {
+//                        currentSearchFilter =
+//                        setCurrentSearchFilter(new HHSearchOption(cs.toString()));
+//                        filteredClients = getClientsAdapter().getListItemProvider()
+//                                .updateClients(getCurrentVillageFilter(), getCurrentServiceModeOption(),
+//                                        getCurrentSearchFilter(), getCurrentSortOption());
+//
+
+                            filters = cs.toString();
+//                        joinTable = "";
+//                        mainCondition = " is_closed = 0 and jenisKontrasepsi != '0' ";
+                            Log.e(TAG, "doInBackground: " + filters);
+                            return null;
+                        }
+//
+//                    @Override
+//                    protected void onPostExecute(Object o) {
+////                        clientsAdapter
+////                                .refreshList(currentVillageFilter, currentServiceModeOption,
+////                                        currentSearchFilter, currentSortOption);
+////                        getClientsAdapter().refreshClients(filteredClients);
+////                        getClientsAdapter().notifyDataSetChanged();
+//                        getSearchCancelView().setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
+//                        CountExecute();
+//                        filterandSortExecute();
+//                        super.onPostExecute(o);
+//                    }
+                    }).execute();
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                }
+            });
+        }
+    }
+
+
+    public void setupSearchViewOld(View view) {
         searchView = (EditText) view.findViewById(org.ei.opensrp.R.id.edt_search);
         searchView.setHint(getNavBarOptionsProvider().searchHint());
         searchView.addTextChangedListener(new TextWatcher() {
@@ -506,5 +581,12 @@ public class NativeKIANCSmartRegisterFragment extends SecuredNativeSmartRegister
         }
     }
 
+    public void setCriteria(String criteria) {
+        this.criteria = criteria;
+    }
+
+    public static String getCriteria(){
+        return criteria;
+    }
 
 }

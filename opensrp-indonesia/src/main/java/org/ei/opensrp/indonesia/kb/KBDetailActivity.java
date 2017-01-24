@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -19,6 +20,8 @@ import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.domain.ProfileImage;
 import org.ei.opensrp.indonesia.R;
+import org.ei.opensrp.indonesia.face.camera.SmartShutterActivity;
+import org.ei.opensrp.indonesia.face.camera.util.FaceConstants;
 import org.ei.opensrp.indonesia.kartu_ibu.NativeKISmartRegisterActivity;
 import org.ei.opensrp.indonesia.lib.FlurryFacade;
 import org.ei.opensrp.repository.DetailsRepository;
@@ -147,20 +150,29 @@ public class KBDetailActivity extends Activity {
         DetailsRepository detailsRepository = org.ei.opensrp.Context.getInstance().detailsRepository();
         detailsRepository.updateDetails(kiclient);
 
-        if(kiclient.getDetails().get("profilepic")!= null){
-            setImagetoHolderFromUri(KBDetailActivity.this, kiclient.getDetails().get("profilepic"), kiview, R.mipmap.woman_placeholder);
+//        Profile Picture
+
+//        if(kiclient.getDetails().get("profilepic")!= null){
+//            setImagetoHolderFromUri(KBDetailActivity.this, kiclient.getDetails().get("profilepic"), kiview, R.mipmap.woman_placeholder);
+//        }
+        if (kiclient.getDetails().get("profilepic_thumb") != null) {
+
+            final int THUMBSIZE = FaceConstants.THUMBSIZE;
+
+            Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(kiclient.getDetails().get("profilepic_thumb")),
+                    THUMBSIZE, THUMBSIZE);
+            kiview.setImageBitmap(ThumbImage);
+
+        } else {
+
+            kiview.setImageDrawable(getResources().getDrawable(R.mipmap.woman_placeholder));
         }
-
-
-
 
         nama.setText(getResources().getString(R.string.name)+ (kiclient.getColumnmaps().get("namalengkap") != null ? kiclient.getColumnmaps().get("namalengkap") : "-"));
         nik.setText(getResources().getString(R.string.nik)+ (kiclient.getDetails().get("nik") != null ? kiclient.getDetails().get("nik") : "-"));
         husband_name.setText(getResources().getString(R.string.husband_name)+ (kiclient.getColumnmaps().get("namaSuami") != null ? kiclient.getColumnmaps().get("namaSuami") : "-"));
         dob.setText(getResources().getString(R.string.dob)+ (kiclient.getDetails().get("tanggalLahir") != null ? kiclient.getDetails().get("tanggalLahir") : "-"));
         phone.setText("No HP: "+ (kiclient.getDetails().get("NomorTelponHp") != null ? kiclient.getDetails().get("NomorTelponHp") : "-"));
-
-
 
         //risk
         if(kiclient.getDetails().get("highRiskPregnancyYoungMaternalAge") != null ){
@@ -268,6 +280,25 @@ public class KBDetailActivity extends Activity {
             }
         });
 
+        kiview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FlurryFacade.logEvent("taking_mother_pictures_on_kohort_kb_detail_view");
+//                bindobject = "kartu_ibu";
+//                entityid = kiclient.entityId();
+//                entityid = kiclient.getDetails().get("nik");
+                entityid = kiclient.entityId();
+//                dispatchTakePictureIntent(kiview);
+//                Intent intent = new Intent(KIDetailActivity.this, LiveRecognition.class);
+//                Intent intent = new Intent(KIDetailActivity.this, FacialActivity.class);
+                Intent intent = new Intent(KBDetailActivity.this, SmartShutterActivity.class);
+//                Intent intent = new Intent(KIDetailActivity.this, PhotoLive.class);
+//                Intent intent = new Intent(KIDetailActivity.this, LiveRecognitionActivity.class);
+                intent.putExtra("IdentifyPerson", false);
+                intent.putExtra("org.sid.sidface.ImageConfirmation.id", entityid);
+                startActivity(intent);
+            }
+        });
     }
 
 

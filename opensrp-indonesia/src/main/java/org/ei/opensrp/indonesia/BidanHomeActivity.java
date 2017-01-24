@@ -112,18 +112,6 @@ public class BidanHomeActivity extends SecuredActivity {
         DisplayFormFragment.okMessage = getResources().getString(R.string.okforminputerror);
       //  context.formSubmissionRouter().getHandlerMap().put("census_enrollment_form", new ANChandler());
 
-//// FacialActivity Recognition
-//        faceObj = FacialProcessing.getInstance();
-//        Log.e(TAG, "onCreation: "+faceObj.toString() );
-//        if(faceObj == null) {
-//            faceObj = FacialProcessing.getInstance();
-//            Log.e(TAG, "onCreation: faceObj Null" );
-//        } else {
-//            faceObj.release();
-//            Log.e(TAG, "onCreation: faceObj Not Null" );
-//        }
-//        initSingleRun();
-
     }
 
     private void setupViews() {
@@ -150,7 +138,8 @@ public class BidanHomeActivity extends SecuredActivity {
         SYNC_COMPLETED.addListener(onSyncCompleteListener);
         FORM_SUBMITTED.addListener(onFormSubmittedListener);
         ACTION_HANDLED.addListener(updateANMDetailsListener);
-        getSupportActionBar().setTitle("sss");
+
+        getSupportActionBar().setTitle("");
         getSupportActionBar().setIcon(getResources().getDrawable(org.ei.opensrp.indonesia.R.mipmap.logo));
         getSupportActionBar().setLogo(org.ei.opensrp.indonesia.R.mipmap.logo);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
@@ -338,61 +327,5 @@ public class BidanHomeActivity extends SecuredActivity {
             }
         }
     };
-
-//    FacialActivity Recognition
-    public static boolean activityStartedOnce = false;
-
-    private void initSingleRun() {
-
-        if (!activityStartedOnce) {
-            activityStartedOnce = true;
-            // Check if FacialActivity Recognition feature is supported, else give alert.
-            boolean isSupported = FacialProcessing.isFeatureSupported(FacialProcessing.FEATURE_LIST.FEATURE_FACIAL_RECOGNITION);
-            if (isSupported) {
-//                Log.d(TAG, "Feature FacialActivity Recognition is supported");
-                FlurryFacade.logEvent("Awesome!, Feature FacialActivity Recognition is supported");
-
-                loadAlbum(); // De-serialize a previously stored album.
-                if (faceObj != null) {
-                    faceObj.setRecognitionConfidence(PhotoLiveConstant.CONFIDENCE_VALUE);
-                    faceObj.setProcessingMode(FacialProcessing.FP_MODES.FP_MODE_VIDEO);
-                } else {
-                    throw new UnsupportedOperationException("An instance is already in use");
-                }
-            } else {
-                Log.e(TAG, "Feature FacialActivity Recognition is NOT supported");
-                AlertDialog.Builder builder= new AlertDialog.Builder(this);
-
-                builder.setTitle("Incompatible Hardware!");
-                builder.setMessage("Your Smartphone doesn't support Qualcomm's FacialActivity Recognition feature.");
-                builder.setNegativeButton("OK",
-                        new DialogInterface.OnClickListener(){
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                BidanHomeActivity.this.finish();
-                            }});
-                builder.show();
-            }
-        }
-    }
-
-    public void loadAlbum() {
-        Toast.makeText(BidanHomeActivity.this, "Load FacialActivity Album", Toast.LENGTH_SHORT).show();
-        SharedPreferences settings = getSharedPreferences(PhotoLiveConstant.ALBUM_NAME, 0);
-        String arrayOfString = settings.getString("albumArray", null);
-
-        byte[] albumArray;
-        if (arrayOfString != null) {
-            String[] splitStringArray = arrayOfString.substring(1,
-                    arrayOfString.length() - 1).split(", ");
-
-            albumArray = new byte[splitStringArray.length];
-            for (int i = 0; i < splitStringArray.length; i++) {
-                albumArray[i] = Byte.parseByte(splitStringArray[i]);
-            }
-            faceObj.deserializeRecognitionAlbum(albumArray);
-            Log.e(TAG, "De-Serialized Album Success!");
-        }
-    }
 
 }

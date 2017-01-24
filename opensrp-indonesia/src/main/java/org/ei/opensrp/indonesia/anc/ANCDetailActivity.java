@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -19,6 +20,8 @@ import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.domain.ProfileImage;
 import org.ei.opensrp.indonesia.R;
+import org.ei.opensrp.indonesia.face.camera.SmartShutterActivity;
+import org.ei.opensrp.indonesia.face.camera.util.FaceConstants;
 import org.ei.opensrp.indonesia.kartu_ibu.NativeKISmartRegisterActivity;
 import org.ei.opensrp.indonesia.lib.FlurryFacade;
 import org.ei.opensrp.repository.DetailsRepository;
@@ -56,6 +59,10 @@ public class ANCDetailActivity extends Activity {
     //image retrieving
 
     public static CommonPersonObjectClient ancclient;
+
+    static String bindobject;
+    static String entityid;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,7 +107,6 @@ public class ANCDetailActivity extends Activity {
         TextView persentasiJanin = (TextView) findViewById(R.id.txt_persentasiJanin);
         TextView jumlahJanin = (TextView) findViewById(R.id.txt_jumlahJanin);
 
-
         TextView statusImunisasitt = (TextView) findViewById(R.id.txt_statusImunisasitt);
         TextView pelayananfe = (TextView) findViewById(R.id.txt_pelayananfe);
         TextView komplikasidalamKehamilan = (TextView) findViewById(R.id.txt_komplikasidalamKehamilan);
@@ -122,7 +128,6 @@ public class ANCDetailActivity extends Activity {
         TextView laboratoriumThalasemia = (TextView) findViewById(R.id.txt_laboratoriumThalasemia);
         TextView laboratoriumSifilis = (TextView) findViewById(R.id.txt_laboratoriumSifilis);
         TextView laboratoriumHbsAg = (TextView) findViewById(R.id.txt_laboratoriumHbsAg);
-
 
         //detail RISK
         TextView highRiskSTIBBVs = (TextView) findViewById(R.id.txt_highRiskSTIBBVs);
@@ -187,7 +192,6 @@ public class ANCDetailActivity extends Activity {
         persentasiJanin.setText(": "+humanize (ancclient.getDetails().get("persentasiJanin") != null ? ancclient.getDetails().get("persentasiJanin") : "-"));
         jumlahJanin.setText(": "+ humanize(ancclient.getDetails().get("jumlahJanin") != null ? ancclient.getDetails().get("jumlahJanin") : "-"));
 
-
         statusImunisasitt.setText(": "+ humanizeAndDoUPPERCASE (ancclient.getDetails().get("statusImunisasitt") != null ? ancclient.getDetails().get("statusImunisasitt") : "-"));
         pelayananfe.setText(": "+humanize (ancclient.getDetails().get("pelayananfe") != null ? ancclient.getDetails().get("pelayananfe") : "-"));
         komplikasidalamKehamilan.setText(": "+humanize (ancclient.getDetails().get("komplikasidalamKehamilan") != null ? ancclient.getDetails().get("komplikasidalamKehamilan") : "-"));
@@ -208,10 +212,7 @@ public class ANCDetailActivity extends Activity {
         laboratoriumSifilis.setText(": "+ humanize(ancclient.getDetails().get("laboratoriumSifilis") != null ? ancclient.getDetails().get("laboratoriumSifilis") : "-"));
         laboratoriumHbsAg.setText(": "+humanize (ancclient.getDetails().get("laboratoriumHbsAg") != null ? ancclient.getDetails().get("laboratoriumHbsAg") : "-"));
 
-
-
         //risk detail
-
         txt_lbl_highRiskLabourFetusMalpresentation.setText(humanize(ancclient.getDetails().get("highRiskLabourFetusMalpresentation") != null ? ancclient.getDetails().get("highRiskLabourFetusMalpresentation") : "-"));
         txt_highRisklabourFetusNumber.setText(humanize(ancclient.getDetails().get("highRisklabourFetusNumber") != null ? ancclient.getDetails().get("highRisklabourFetusNumber") : "-"));
         txt_highRiskLabourFetusSize.setText(humanize(ancclient.getDetails().get("highRiskLabourFetusSize") != null ? ancclient.getDetails().get("highRiskLabourFetusSize") : "-"));
@@ -230,19 +231,31 @@ public class ANCDetailActivity extends Activity {
         highRiskPostPartumPIH.setText(humanize(ancclient.getDetails().get("highRiskPostPartumPIH") != null ? ancclient.getDetails().get("highRiskPostPartumPIH") : "-"));
         highRiskPostPartumDistosia.setText(humanize(ancclient.getDetails().get("highRiskPostPartumDistosia") != null ? ancclient.getDetails().get("highRiskPostPartumDistosia") : "-"));
 
-
-
-
-
         ancKe.setText(": "+(ancclient.getDetails().get("ancKe") != null ? ancclient.getDetails().get("ancKe") : "-"));
 
         ancDate.setText(": "+ (ancclient.getDetails().get("ancDate") != null ? ancclient.getDetails().get("ancDate") : "-"));
-        if(ancclient.getDetails().get("profilepic")!= null){
-            setImagetoHolderFromUri(ANCDetailActivity.this, ancclient.getDetails().get("profilepic"), kiview, R.mipmap.woman_placeholder);
-        }
-        else {
+
+
+//        Profile Picture
+        if (ancclient.getDetails().get("profilepic_thumb") != null) {
+
+            final int THUMBSIZE = FaceConstants.THUMBSIZE;
+
+            Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(ancclient.getDetails().get("profilepic_thumb")),
+                    THUMBSIZE, THUMBSIZE);
+            kiview.setImageBitmap(ThumbImage);
+
+        } else {
+
             kiview.setImageDrawable(getResources().getDrawable(R.mipmap.woman_placeholder));
         }
+
+//        if(ancclient.getDetails().get("profilepic")!= null){
+//            setImagetoHolderFromUri(ANCDetailActivity.this, ancclient.getDetails().get("profilepic"), kiview, R.mipmap.woman_placeholder);
+//        }
+//        else {
+//            kiview.setImageDrawable(getResources().getDrawable(R.mipmap.woman_placeholder));
+//        }
 
         nama.setText(getResources().getString(R.string.name)+ (ancclient.getColumnmaps().get("namalengkap") != null ? ancclient.getColumnmaps().get("namalengkap") : "-"));
         nik.setText(getResources().getString(R.string.nik)+ (ancclient.getDetails().get("nik") != null ? ancclient.getDetails().get("nik") : "-"));
@@ -306,113 +319,21 @@ public class ANCDetailActivity extends Activity {
             }
         });
 
-
-    }
-
-
-
-    String mCurrentPhotoPath;
-
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-
-        // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = "file:" + image.getAbsolutePath();
-        return image;
-    }
-    static final int REQUEST_TAKE_PHOTO = 1;
-    static ImageView mImageView;
-    static File currentfile;
-    static String bindobject;
-    static String entityid;
-    private void dispatchTakePictureIntent(ImageView imageView) {
-        mImageView = imageView;
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-                // Error occurred while creating the File
-
+        kiview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FlurryFacade.logEvent("taking_mother_pictures_on_kohort_ibu_detail_view");
+                bindobject = "anc";
+                entityid = ancclient.entityId();
+                Intent intent = new Intent(ANCDetailActivity.this, SmartShutterActivity.class);
+                intent.putExtra("IdentifyPerson", false);
+                intent.putExtra("org.sid.sidface.ImageConfirmation.id", entityid);
+                startActivity(intent);
             }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                currentfile = photoFile;
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-                        Uri.fromFile(photoFile));
-                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-            }
-        }
+        });
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
-//            Bundle extras = data.getExtras();
-//            String imageBitmap = (String) extras.get(MediaStore.EXTRA_OUTPUT);
-//            Toast.makeText(this,imageBitmap,Toast.LENGTH_LONG).show();
-            HashMap<String,String> details = new HashMap<String,String>();
-            details.put("profilepic",currentfile.getAbsolutePath());
-            saveimagereference(bindobject,entityid,details);
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-            Bitmap bitmap = BitmapFactory.decodeFile(currentfile.getPath(), options);
-            mImageView.setImageBitmap(bitmap);
-        }
-    }
-    public void saveimagereference(String bindobject,String entityid,Map<String,String> details){
-        Context.getInstance().allCommonsRepositoryobjects(bindobject).mergeDetails(entityid,details);
-        String anmId = Context.getInstance().allSharedPreferences().fetchRegisteredANM();
-        ProfileImage profileImage = new ProfileImage(UUID.randomUUID().toString(),anmId,entityid,"Image",details.get("profilepic"), ImageRepository.TYPE_Unsynced,"dp");
-        ((ImageRepository) Context.getInstance().imageRepository()).add(profileImage);
-//                ancclient.entityId();
-//        Toast.makeText(this,entityid,Toast.LENGTH_LONG).show();
-    }
-    public static void setImagetoHolder(Activity activity, String file, ImageView view, int placeholder){
-        mImageThumbSize = 300;
-        mImageThumbSpacing = Context.getInstance().applicationContext().getResources().getDimensionPixelSize(R.dimen.image_thumbnail_spacing);
 
-
-        ImageCache.ImageCacheParams cacheParams =
-                new ImageCache.ImageCacheParams(activity, IMAGE_CACHE_DIR);
-        cacheParams.setMemCacheSizePercent(0.50f); // Set memory cache to 25% of app memory
-        mImageFetcher = new ImageFetcher(activity, mImageThumbSize);
-        mImageFetcher.setLoadingImage(placeholder);
-        mImageFetcher.addImageCache(activity.getFragmentManager(), cacheParams);
-//        Toast.makeText(activity,file,Toast.LENGTH_LONG).show();
-        mImageFetcher.loadImage("file:///"+file,view);
-
-//        Uri.parse(new File("/sdcard/cats.jpg")
-
-
-
-
-
-//        BitmapFactory.Options options = new BitmapFactory.Options();
-//        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-//        Bitmap bitmap = BitmapFactory.decodeFile(file, options);
-//        view.setImageBitmap(bitmap);
-    }
-    public static void setImagetoHolderFromUri(Activity activity,String file, ImageView view, int placeholder){
-        view.setImageDrawable(activity.getResources().getDrawable(placeholder));
-        File externalFile = new File(file);
-        Uri external = Uri.fromFile(externalFile);
-        view.setImageURI(external);
-
-
-    }
     @Override
     public void onBackPressed() {
         finish();

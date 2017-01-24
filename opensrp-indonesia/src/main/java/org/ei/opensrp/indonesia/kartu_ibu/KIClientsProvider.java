@@ -125,6 +125,7 @@ public class KIClientsProvider implements SmartRegisterCLientsProviderForCursorA
 //        System.out.println("Detail: " + pc.getDetails().toString());
         //Set image as Icon
         final ImageView kiview = (ImageView)convertView.findViewById(R.id.img_profile);
+//        Profile Picture
         if (pc.getDetails().get("profilepic_thumb") != null) {
             final int THUMBSIZE = FaceConstants.THUMBSIZE;
 

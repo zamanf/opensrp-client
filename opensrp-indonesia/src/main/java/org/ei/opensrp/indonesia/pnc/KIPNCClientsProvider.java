@@ -1,7 +1,10 @@
 package org.ei.opensrp.indonesia.pnc;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.media.ThumbnailUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +23,7 @@ import org.ei.opensrp.commonregistry.CommonPersonObjectController;
 import org.ei.opensrp.cursoradapter.SmartRegisterCLientsProviderForCursorAdapter;
 import org.ei.opensrp.domain.Alert;
 import org.ei.opensrp.indonesia.R;
+import org.ei.opensrp.indonesia.face.camera.util.FaceConstants;
 import org.ei.opensrp.repository.DetailsRepository;
 import org.ei.opensrp.service.AlertService;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
@@ -70,6 +74,8 @@ public class KIPNCClientsProvider implements SmartRegisterCLientsProviderForCurs
     public void getView(SmartRegisterClient smartRegisterClient, View convertView) {
 
         ViewHolder viewHolder;
+        CommonPersonObjectClient pc = (CommonPersonObjectClient) smartRegisterClient;
+
         if(convertView.getTag() == null || !(convertView.getTag() instanceof  ViewHolder)) {
             viewHolder = new ViewHolder();
             viewHolder.profilelayout = (LinearLayout) convertView.findViewById(R.id.profile_info_layout);
@@ -111,13 +117,26 @@ public class KIPNCClientsProvider implements SmartRegisterCLientsProviderForCurs
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        viewHolder.profilepic.setImageDrawable(context.getResources().getDrawable(R.mipmap.woman_placeholder));
+//        Set image as Icon
+        final ImageView kiview = (ImageView)convertView.findViewById(R.id.img_profile);
+//        Profile Picture
+        if (pc.getDetails().get("profilepic_thumb") != null) {
+            final int THUMBSIZE = FaceConstants.THUMBSIZE;
+
+            Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(
+                    BitmapFactory.decodeFile(pc.getDetails().get("profilepic_thumb")),
+                    THUMBSIZE, THUMBSIZE);
+            kiview.setImageBitmap(ThumbImage);
+
+        } else {
+            viewHolder.profilepic.setImageDrawable(context.getResources().getDrawable(R.drawable.woman_placeholder));
+        }
+
 
         viewHolder.follow_up.setOnClickListener(onClickListener);
         viewHolder.follow_up.setTag(smartRegisterClient);
         viewHolder.profilelayout.setOnClickListener(onClickListener);
         viewHolder.profilelayout.setTag(smartRegisterClient);
-        CommonPersonObjectClient pc = (CommonPersonObjectClient) smartRegisterClient;
         if (iconPencilDrawable == null) {
             iconPencilDrawable = context.getResources().getDrawable(R.drawable.ic_pencil);
         }
@@ -193,11 +212,6 @@ public class KIPNCClientsProvider implements SmartRegisterCLientsProviderForCurs
 
       //  viewHolder.KF.setText(anakparent.getDetails().get("saatLahirsd5JamKondisibayi")!=null?anakparent.getDetails().get("saatLahirsd5JamKondisibayi"):"");
       //  viewHolder.KF.setText(anakparent.getDetails().get("saatLahirsd5JamKondisibayi")!=null?anakparent.getDetails().get("saatLahirsd5JamKondisibayi")+","+anakparent.getDetails().get("beratLahir"):"-");
-
-
-
-
-
 
         convertView.setLayoutParams(clientViewLayoutParams);
      //   return convertView;

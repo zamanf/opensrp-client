@@ -50,9 +50,15 @@ import com.qualcomm.snapdragon.sdk.face.FacialProcessing.PREVIEW_ROTATION_ANGLE;
 
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.indonesia.R;
+import org.ei.opensrp.indonesia.anc.NativeKIANCSmartRegisterActivity;
+import org.ei.opensrp.indonesia.child.NativeKIAnakSmartRegisterActivity;
 import org.ei.opensrp.indonesia.face.camera.util.FaceConstants;
 import org.ei.opensrp.indonesia.face.camera.util.Tools;
 import org.ei.opensrp.indonesia.face.sidface.utils.AppConstant;
+import org.ei.opensrp.indonesia.fragment.*;
+import org.ei.opensrp.indonesia.kartu_ibu.NativeKISmartRegisterActivity;
+import org.ei.opensrp.indonesia.kb.NativeKBSmartRegisterActivity;
+import org.ei.opensrp.indonesia.pnc.NativeKIPNCSmartRegisterActivity;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -62,6 +68,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 public class SmartShutterActivity extends Activity implements Camera.PreviewCallback {
@@ -112,13 +119,20 @@ public class SmartShutterActivity extends Activity implements Camera.PreviewCall
     private boolean identifyPerson = false;
 
     private ImageView clientListButton;
+    HashMap<String, String> hash;
+    private String selectedPersonName;
+    long t_startCamera = 0;
+    double t_stopCamera = 0;
+    String str_origin_class;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        t_startCamera = System.nanoTime();
         super.onCreate(savedInstanceState);
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_main_face);
 
@@ -126,6 +140,7 @@ public class SmartShutterActivity extends Activity implements Camera.PreviewCall
         entityId = extras.getString("org.sid.sidface.ImageConfirmation.id");
         identifyPerson = extras.getBoolean("org.sid.sidface.ImageConfirmation.identify");
         kidetail = extras.getParcelable("org.sid.sidface.ImageConfirmation.kidetail");
+        str_origin_class = extras.getString("org.sid.sidface.ImageConfirmation.origin");
 
         Log.e(TAG, "onCreate: "+kidetail );
 
@@ -136,6 +151,7 @@ public class SmartShutterActivity extends Activity implements Camera.PreviewCall
         animationFadeOut = AnimationUtils.loadAnimation(SmartShutterActivity.this, R.anim.fadeout);
 
         initializeImageButtons();
+        hash = SmartShutterActivity.retrieveHash(getApplicationContext());
 
         settingsButtonPress = false;
 
@@ -212,22 +228,24 @@ public class SmartShutterActivity extends Activity implements Camera.PreviewCall
             }
             faceProc.setProcessingMode(FacialProcessing.FP_MODES.FP_MODE_VIDEO);
 
-
             Parameters params = cameraObj.getParameters();
             Size previewSize = params.getPreviewSize();
             int previewWidth = params.getPreviewSize().width;
             int previewHeight = params.getPreviewSize().height;
-            Log.d("TAG", "Preview Size = " + previewWidth + "*" + previewHeight);
+            Log.e(TAG, "Preview Size = " + previewWidth + " x " + previewHeight);
             // Landscape mode - front camera
-            if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE && !switchCamera) {
+            if (this.getResources().getConfiguration().orientation ==
+                    Configuration.ORIENTATION_LANDSCAPE && !switchCamera) {
                 faceProc.setFrame(data, previewSize.width, previewSize.height, true, angleEnum);
             }
             // landscape mode - back camera
-            else if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE && switchCamera) {
+            else if (this.getResources().getConfiguration().orientation ==
+                    Configuration.ORIENTATION_LANDSCAPE && switchCamera) {
                 faceProc.setFrame(data, previewSize.width, previewSize.height, false, angleEnum);
             }
             // Portrait mode - front camera
-            else if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT && !switchCamera) {
+            else if (this.getResources().getConfiguration().orientation ==
+                    Configuration.ORIENTATION_PORTRAIT && !switchCamera) {
                 faceProc.setFrame(data, previewSize.width, previewSize.height, true, angleEnum);
             }
             // Portrait mode - back camera
@@ -238,7 +256,7 @@ public class SmartShutterActivity extends Activity implements Camera.PreviewCall
             numFaces = faceProc.getNumFaces();        // Detecting the number of faces in the frame.
 
             if (numFaces == 0) {
-                Log.d("TAG", "No Face Detected");
+                Log.e(TAG, "No Face Detected");
                 smile.setChecked(false);
                 eyeBlink.setChecked(false);
                 gazeAngle.setChecked(false);
@@ -250,24 +268,71 @@ public class SmartShutterActivity extends Activity implements Camera.PreviewCall
                 }
 
             } else {
-                Log.d("TAG", "Face Detected");
+                Log.e(TAG, "Face Detected");
                 faceArray = faceProc.getFaceData();
 
                 if (faceArray == null) {
-                    Log.e("TAG", "Face array is null");
+                    Log.e(TAG, "Face array is null");
                 } else {
                     int surfaceWidth = mPreview.getWidth();
                     int surfaceHeight = mPreview.getHeight();
                     faceProc.normalizeCoordinates(surfaceWidth, surfaceHeight);
+
+                    if (identifyPerson && faceArray[0].getPersonId() != -111){
+                        String selectedPersonId = Integer.toString(faceArray[0].getPersonId());
+                        Iterator<HashMap.Entry<String, String>> iter = hash.entrySet().iterator();
+                        // Default name is the person is unknown
+                        selectedPersonName = "Not Identified";
+                        while (iter.hasNext()) {
+                            Log.e(TAG, "In");
+                            HashMap.Entry<String, String> entry = iter.next();
+                            if (entry.getValue().equals(selectedPersonId)) {
+                                selectedPersonName = entry.getKey();
+                                t_stopCamera = (System.nanoTime() - t_startCamera)/1000000000.0D;
+                            }
+                        }
+
+//                        Log.e(TAG, "onPreviewFrame: t_start"+t_startCamera );
+
+                        Class<?> origin_class = this.getClass();
+
+                        Log.e(TAG, "onPreviewFrame: init"+origin_class.getSimpleName() );
+                        Log.e(TAG, "onPreviewFrame: origin"+str_origin_class );
+
+                        if(str_origin_class.equals(NativeKISmartRegisterFragment.class.getSimpleName())){
+                            origin_class = NativeKISmartRegisterActivity.class;
+                        } else if(str_origin_class.equals(NativeKBSmartRegisterFragment.class.getSimpleName())){
+                            origin_class = NativeKBSmartRegisterActivity.class;
+                        } else if(str_origin_class.equals(NativeKIAnakSmartRegisterFragment.class.getSimpleName())){
+                            origin_class = NativeKIAnakSmartRegisterActivity.class;
+                        } else if(str_origin_class.equals(NativeKIANCSmartRegisterFragment.class.getSimpleName())){
+                            origin_class = NativeKIANCSmartRegisterActivity.class;
+                        } else if(str_origin_class.equals(NativeKIPNCSmartRegisterFragment.class.getSimpleName())){
+                            origin_class = NativeKIPNCSmartRegisterActivity.class;
+                        }
+
+                        Log.e(TAG, "onPreviewFrame: "+origin_class.getSimpleName() );
+                        Intent intent = new Intent(SmartShutterActivity.this, origin_class);
+                        intent.putExtra("org.ei.opensrp.indonesia.face.face_mode", true);
+                        intent.putExtra("org.ei.opensrp.indonesia.face.base_id", selectedPersonName);
+                        intent.putExtra("org.ei.opensrp.indonesia.face.proc_time", t_stopCamera);
+
+                        startActivity(intent);
+
+                    }
+
+//                    Options
                     if (faceDetectionButtonPress) {
                         preview.removeView(drawView);                    // Remove the previously created view to avoid unnecessary stacking of Views.
                         drawView = new DrawView(this, faceArray, true);
+                        Log.e(TAG, "onPreviewFrame: "+faceArray[0].getPersonId() );
                         preview.addView(drawView);
                     } else {
                         preview.removeView(drawView);
                         drawView = new DrawView(this, null, false);
                         preview.addView(drawView);
                     }
+
                     if (perfectModeButtonPress) {
                         for (int i = 0; i < numFaces; i++) {
                             if (faceArray[i].getSmileValue() < 75) {
@@ -357,7 +422,7 @@ public class SmartShutterActivity extends Activity implements Camera.PreviewCall
      */
     ShutterCallback shutterCallback = new ShutterCallback() {
         public void onShutter() {
-            Log.d("TAG", "onShutter'd");
+            Log.d(TAG, "onShutter'd");
         }
     };
 
@@ -425,7 +490,7 @@ public class SmartShutterActivity extends Activity implements Camera.PreviewCall
         _qcSDKEnabled = FacialProcessing.isFeatureSupported(FacialProcessing.FEATURE_LIST.FEATURE_FACIAL_PROCESSING);
 
         if (_qcSDKEnabled && faceProc == null) {
-            Log.e("TAG", "Feature is supported");
+            Log.e(TAG, "Feature is supported");
             // Calling the FacialActivity Processing Constructor.
             faceProc = FacialProcessing.getInstance();
             faceProc.setRecognitionConfidence(Tools.CONFIDENCE_VALUE);
@@ -434,7 +499,7 @@ public class SmartShutterActivity extends Activity implements Camera.PreviewCall
             loadAlbum();
 
         } else if (!_qcSDKEnabled && !activityStartedOnce) {
-            Log.e("TAG", "Feature is NOT supported");
+            Log.e(TAG, "Feature is NOT supported");
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(SmartShutterActivity.this);
 
             // set title
@@ -796,7 +861,7 @@ public class SmartShutterActivity extends Activity implements Camera.PreviewCall
     public static boolean WritePictureToFile(Context context, Bitmap bitmap) {
         File pictureFile = getOutputMediaFile();
         if (pictureFile == null) {
-            Log.e("TAG", "Error creating media file, check storage permissions ");
+            Log.e(TAG, "Error creating media file, check storage permissions ");
             return false;
         }
 
@@ -804,7 +869,7 @@ public class SmartShutterActivity extends Activity implements Camera.PreviewCall
             FileOutputStream fos = new FileOutputStream(pictureFile);
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
             fos.close();
-            Log.e("TAG", "Wrote image to " + pictureFile);
+            Log.e(TAG, "Wrote image to " + pictureFile);
 
             MediaScannerConnection.scanFile(context, new String[]{pictureFile.toString()}, null, new MediaScannerConnection.OnScanCompletedListener() {
                 public void onScanCompleted(String path, Uri uri) {
@@ -813,13 +878,13 @@ public class SmartShutterActivity extends Activity implements Camera.PreviewCall
                 }
             });
             pathName = pictureFile.toString();
-            Log.e("TAG", "Path Name = " + pathName);
+            Log.e(TAG, "Path Name = " + pathName);
             return true;
 
         } catch (FileNotFoundException e) {
-            Log.d("TAG", "File not found: " + e.getMessage());
+            Log.d(TAG, "File not found: " + e.getMessage());
         } catch (IOException e) {
-            Log.d("TAG", "Error accessing file: " + e.getMessage());
+            Log.d(TAG, "Error accessing file: " + e.getMessage());
         }
         return false;
     }
@@ -840,9 +905,9 @@ public class SmartShutterActivity extends Activity implements Camera.PreviewCall
 
         // Create the storage directory if it does not exist
         if (!mediaStorageDir.exists()) {
-            Log.e("TAG", "failed to find directory " + mediaStorageDir.getAbsolutePath());
+            Log.e(TAG, "failed to find directory " + mediaStorageDir.getAbsolutePath());
             if (!mediaStorageDir.mkdirs()) {
-                Log.e("TAG", "failed to create directory " + mediaStorageDir.getAbsolutePath());
+                Log.e(TAG, "failed to create directory " + mediaStorageDir.getAbsolutePath());
                 return null;
             }
         }
@@ -981,7 +1046,6 @@ public class SmartShutterActivity extends Activity implements Camera.PreviewCall
         editor.apply();
     }
 
-
     public void saveAlbum() {
         byte[] albumBuffer = faceProc.serializeRecogntionAlbum();
         SharedPreferences settings = getSharedPreferences(AppConstant.ALBUM_NAME, 0);
@@ -989,8 +1053,5 @@ public class SmartShutterActivity extends Activity implements Camera.PreviewCall
         editor.putString("albumArray", Arrays.toString(albumBuffer));
         editor.apply();
     }
-
-
-
 
 }

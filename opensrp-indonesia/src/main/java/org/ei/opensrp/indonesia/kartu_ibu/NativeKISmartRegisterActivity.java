@@ -1,16 +1,19 @@
 package org.ei.opensrp.indonesia.kartu_ibu;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.ei.opensrp.domain.form.FieldOverrides;
 import org.ei.opensrp.domain.form.FormSubmission;
 import org.ei.opensrp.indonesia.LoginActivity;
 import org.ei.opensrp.indonesia.R;
+import org.ei.opensrp.indonesia.fragment.NativeKISRFragment;
 import org.ei.opensrp.indonesia.fragment.NativeKISmartRegisterFragment;
 import org.ei.opensrp.indonesia.lib.FlurryFacade;
 import org.ei.opensrp.indonesia.pageradapter.BaseRegisterActivityPagerAdapter;
@@ -34,13 +37,16 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+import android.support.v4.app.Fragment;
+
 import static org.ei.opensrp.indonesia.AllConstantsINA.FormNames.ANAK_BAYI_REGISTRATION;
 import static org.ei.opensrp.indonesia.AllConstantsINA.FormNames.KARTU_IBU_CLOSE;
 import static org.ei.opensrp.indonesia.AllConstantsINA.FormNames.KARTU_IBU_REGISTRATION;
 /**
  * Created by Dimas Ciputra on 2/18/15.
  */
-public class NativeKISmartRegisterActivity extends SecuredNativeSmartRegisterActivity implements LocationSelectorDialogFragment.OnLocationSelectedListener{
+public class NativeKISmartRegisterActivity extends SecuredNativeSmartRegisterActivity implements
+        LocationSelectorDialogFragment.OnLocationSelectedListener{
 
     public static final String TAG = "KIActivity";
     @Bind(R.id.view_pager)
@@ -53,6 +59,7 @@ public class NativeKISmartRegisterActivity extends SecuredNativeSmartRegisterAct
 
     ZiggyService ziggyService;
 
+    NativeKISmartRegisterFragment nf = new NativeKISmartRegisterFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,32 +71,33 @@ public class NativeKISmartRegisterActivity extends SecuredNativeSmartRegisterAct
         FlurryFacade.logEvent("kohort_ibu_dashboard");
         formNames = this.buildFormNameList();
 
+//        WD
         Bundle extras = getIntent().getExtras();
         if (extras != null){
             boolean mode_face = extras.getBoolean("org.ei.opensrp.indonesia.face.face_mode");
             String base_id = extras.getString("org.ei.opensrp.indonesia.face.base_id");
-            NativeKISmartRegisterFragment nf = new NativeKISmartRegisterFragment();
+            double proc_time = extras.getDouble("org.ei.opensrp.indonesia.face.proc_time");
+//            Log.e(TAG, "onCreate: "+proc_time );
 
-        if (mode_face){
-//            nf.criteria = base_id;
-            nf.setCriteria(base_id);
-            mBaseFragment = new NativeKISmartRegisterFragment();
+            if (mode_face){
+                nf.setCriteria(base_id);
+                mBaseFragment = new NativeKISmartRegisterFragment();
 
-            Log.e(TAG, "onCreate: " + base_id);
-            AlertDialog.Builder builder= new AlertDialog.Builder(this);
-            builder.setTitle("Is it Right Clients ?");
-            builder.setMessage("Please Confirm : " + base_id);
-            builder.setNegativeButton("CANCEL", listener);
-            builder.setPositiveButton("YES", null);
-            builder.show();
-        }
+                Log.e(TAG, "onCreate: " + base_id);
+                AlertDialog.Builder builder= new AlertDialog.Builder(this);
+                builder.setTitle("Is it Right Clients ?");
+                builder.setMessage("Process Time : " + proc_time + " s");
+                builder.setNegativeButton("CANCEL", listener);
+                builder.setPositiveButton("YES", null);
+                builder.show();
+            }
         } else {
             mBaseFragment = new NativeKISmartRegisterFragment();
         }
 
-
         // Instantiate a ViewPager and a PagerAdapter.
-        mPagerAdapter = new BaseRegisterActivityPagerAdapter(getSupportFragmentManager(), formNames, mBaseFragment);
+        mPagerAdapter = new BaseRegisterActivityPagerAdapter(getSupportFragmentManager(), formNames,
+                mBaseFragment);
         mPager.setOffscreenPageLimit(formNames.length);
         mPager.setAdapter(mPagerAdapter);
         mPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
@@ -104,7 +112,8 @@ public class NativeKISmartRegisterActivity extends SecuredNativeSmartRegisterAct
     }
 
     public void onPageChanged(int page){
-        setRequestedOrientation(page == 0 ? ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        setRequestedOrientation(page == 0 ? ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE :
+                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         LoginActivity.setLanguage();
     }
 
@@ -167,12 +176,14 @@ public class NativeKISmartRegisterActivity extends SecuredNativeSmartRegisterAct
     }
 
     @Override
-    public void saveFormSubmission(String formSubmission, String id, String formName, JSONObject fieldOverrides){
+    public void saveFormSubmission(String formSubmission, String id, String formName,
+                                   JSONObject fieldOverrides){
         Log.v("fieldoverride", fieldOverrides.toString());
         // save the form
         try{
             FormUtils formUtils = FormUtils.getInstance(getApplicationContext());
-            FormSubmission submission = formUtils.generateFormSubmisionFromXMLString(id, formSubmission, formName, fieldOverrides);
+            FormSubmission submission = formUtils.generateFormSubmisionFromXMLString(id,
+                    formSubmission, formName, fieldOverrides);
             ziggyService.saveForm(getParams(submission), submission.instance());
             ClientProcessor.getInstance(getApplicationContext()).processClient();
 
@@ -202,7 +213,8 @@ public class NativeKISmartRegisterActivity extends SecuredNativeSmartRegisterAct
                 //check if there is previously saved data for the form
                 data = getPreviouslySavedDataForForm(formName, metaData, entityId);
                 if (data == null){
-                    data = FormUtils.getInstance(getApplicationContext()).generateXMLInputForFormWithEntityId(entityId, formName, metaData);
+                    data = FormUtils.getInstance(getApplicationContext()).
+                            generateXMLInputForFormWithEntityId(entityId, formName, metaData);
                 }
 
                 DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(formIndex);
@@ -227,7 +239,8 @@ public class NativeKISmartRegisterActivity extends SecuredNativeSmartRegisterAct
             @Override
             public void run() {
                 mPager.setCurrentItem(0, false);
-                SecuredNativeSmartRegisterFragment registerFragment = (SecuredNativeSmartRegisterFragment) findFragmentByPosition(0);
+                SecuredNativeSmartRegisterFragment registerFragment =
+                        (SecuredNativeSmartRegisterFragment) findFragmentByPosition(0);
                 if (registerFragment != null && data != null) {
                     registerFragment.refreshListView();
                 }
@@ -246,7 +259,7 @@ public class NativeKISmartRegisterActivity extends SecuredNativeSmartRegisterAct
 
     }
 
-    public android.support.v4.app.Fragment findFragmentByPosition(int position) {
+    public Fragment findFragmentByPosition(int position) {
         FragmentPagerAdapter fragmentPagerAdapter = mPagerAdapter;
         return getSupportFragmentManager().findFragmentByTag("android:switcher:" + mPager.getId() + ":" + fragmentPagerAdapter.getItemId(position));
     }
@@ -257,10 +270,17 @@ public class NativeKISmartRegisterActivity extends SecuredNativeSmartRegisterAct
 
     @Override
     public void onBackPressed() {
+
+//        WD
+        nf.setCriteria("");
+        Log.e(TAG, "onBackPressed: "+currentPage );
         if (currentPage != 0) {
             switchToBaseFragment(null);
         } else if (currentPage == 0) {
             super.onBackPressed(); // allow back key only if we are
+            Log.e(TAG, "onBackPressed: " + currentPage);
+//            switchToBaseFragment(null);
+
         }
     }
 
@@ -299,6 +319,15 @@ public class NativeKISmartRegisterActivity extends SecuredNativeSmartRegisterAct
     private DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
+//            mBaseFragment = new NativeKISmartRegisterFragment();
+
+//            nf.setCriteria("");
+//            onBackPressed();
+            Log.e(TAG, "onClick: Cancel");
+
+            Intent intent= new Intent(NativeKISmartRegisterActivity.this,NativeKISmartRegisterActivity.class);
+            startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
+//            Toast.makeText(NativeKISmartRegisterActivity.this, mBaseFragment.toString(), Toast.LENGTH_SHORT).show();
 
         }
     };

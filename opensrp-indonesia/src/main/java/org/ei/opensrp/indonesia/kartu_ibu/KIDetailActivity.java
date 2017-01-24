@@ -140,6 +140,7 @@ public class KIDetailActivity extends Activity {
         DetailsRepository detailsRepository = org.ei.opensrp.Context.getInstance().detailsRepository();
         detailsRepository.updateDetails(kiclient);
 
+//        Profile Picture
         if (kiclient.getDetails().get("profilepic_thumb") != null) {
 
             final int THUMBSIZE = FaceConstants.THUMBSIZE;

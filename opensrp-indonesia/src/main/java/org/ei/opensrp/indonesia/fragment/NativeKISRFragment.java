@@ -8,6 +8,8 @@ import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
  * Created by wildan on 1/11/17.
  */
 public class NativeKISRFragment extends SecuredNativeSmartRegisterCursorAdapterFragment {
+    private String criteria;
+
     @Override
     protected SecuredNativeSmartRegisterActivity.DefaultOptionsProvider getDefaultOptionsProvider() {
         return null;
@@ -36,5 +38,9 @@ public class NativeKISRFragment extends SecuredNativeSmartRegisterCursorAdapterF
     @Override
     protected void onCreation() {
 
+    }
+
+    public void setCriteria(String criteria) {
+        this.criteria = criteria;
     }
 }

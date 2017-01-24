@@ -2,7 +2,10 @@ package org.ei.opensrp.indonesia.child;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.media.ThumbnailUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +23,7 @@ import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.commonregistry.CommonPersonObjectController;
 import org.ei.opensrp.cursoradapter.SmartRegisterCLientsProviderForCursorAdapter;
 import org.ei.opensrp.indonesia.R;
+import org.ei.opensrp.indonesia.face.camera.util.FaceConstants;
 import org.ei.opensrp.indonesia.kartu_ibu.KIDetailActivity;
 import org.ei.opensrp.repository.DetailsRepository;
 import org.ei.opensrp.service.AlertService;
@@ -140,11 +144,17 @@ public class AnakRegisterClientsProvider implements SmartRegisterCLientsProvider
         detailsRepository.updateDetails(pc);
 
         final ImageView childview = (ImageView)convertView.findViewById(R.id.img_profile);
-        if (pc.getDetails().get("profilepic") != null) {
-            AnakDetailActivity.setImagetoHolderFromUri((Activity) context, pc.getDetails().get("profilepic"), childview, R.mipmap.child_boy);
+
+        if (pc.getDetails().get("profilepic_thumb") != null) {
+            final int THUMBSIZE = FaceConstants.THUMBSIZE;
+
+            Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(
+                    BitmapFactory.decodeFile(pc.getDetails().get("profilepic_thumb")),
+                    THUMBSIZE, THUMBSIZE);
+            childview.setImageBitmap(ThumbImage);
             childview.setTag(smartRegisterClient);
-        }
-        else {
+
+        } else {
             if(pc.getDetails().get("gender") != null && pc.getDetails().get("gender").equals("male")) {
                 viewHolder.profilepic.setImageDrawable(context.getResources().getDrawable(R.drawable.child_boy_infant));
             }
@@ -154,6 +164,21 @@ public class AnakRegisterClientsProvider implements SmartRegisterCLientsProvider
             else
                 viewHolder.profilepic.setImageDrawable(context.getResources().getDrawable(R.drawable.child_girl_infant));
         }
+
+//        if (pc.getDetails().get("profilepic") != null) {
+//            AnakDetailActivity.setImagetoHolderFromUri((Activity) context, pc.getDetails().get("profilepic"), childview, R.mipmap.child_boy);
+//            childview.setTag(smartRegisterClient);
+//        }
+//        else {
+//            if(pc.getDetails().get("gender") != null && pc.getDetails().get("gender").equals("male")) {
+//                viewHolder.profilepic.setImageDrawable(context.getResources().getDrawable(R.drawable.child_boy_infant));
+//            }
+//            else if(pc.getDetails().get("gender") != null && pc.getDetails().get("gender").equals("laki")) {
+//                viewHolder.profilepic.setImageDrawable(context.getResources().getDrawable(R.drawable.child_boy_infant));
+//            }
+//            else
+//                viewHolder.profilepic.setImageDrawable(context.getResources().getDrawable(R.drawable.child_girl_infant));
+//        }
 
 
         viewHolder.childs_name.setText(pc.getColumnmaps().get("namaBayi")!=null?pc.getColumnmaps().get("namaBayi"):"");
@@ -188,25 +213,12 @@ public class AnakRegisterClientsProvider implements SmartRegisterCLientsProvider
 
         AllCommonsRepository iburep = org.ei.opensrp.Context.getInstance().allCommonsRepositoryobjects("ec_ibu");
         final CommonPersonObject ibuparent = iburep.findByCaseID(childobject.getColumnmaps().get("relational_id"));
-//<<<<<<< HEAD
         if(ibuparent !=null) {
             detailsRepository.updateDetails(ibuparent);
             String tempat = ibuparent.getDetails().get("tempatBersalin")!=null?ibuparent.getDetails().get("tempatBersalin"):"";
             viewHolder.tempat_lahir.setText(tempat.equals("podok_bersalin_desa")?"POLINDES":tempat.equals("pusat_kesehatan_masyarakat_pembantu")?"Puskesmas pembantu":tempat.equals("pusat_kesehatan_masyarakat")?"Puskesmas":humanize(tempat));
 
         }
-
-/*=======
-//        detailsRepository.updateDetails(ibuparent);
-
-
-
-        if(ibuparent !=null) {
-            detailsRepository.updateDetails(ibuparent);
-            String tempat = ibuparent.getDetails().get("tempatBersalin")!=null?ibuparent.getDetails().get("tempatBersalin"):"";
-            place(tempat, viewHolder.tempat_lahir);
-        }
->>>>>>> issue276*/
 
         AllCommonsRepository kirep = org.ei.opensrp.Context.getInstance().allCommonsRepositoryobjects("ec_kartu_ibu");
         final CommonPersonObject kiparent = kirep.findByCaseID(childobject.getColumnmaps().get("relational_id"));

@@ -2,7 +2,10 @@ package org.ei.opensrp.indonesia.anc;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.media.ThumbnailUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +25,7 @@ import org.ei.opensrp.commonregistry.CommonPersonObjectController;
 import org.ei.opensrp.cursoradapter.SmartRegisterCLientsProviderForCursorAdapter;
 import org.ei.opensrp.domain.Alert;
 import org.ei.opensrp.indonesia.R;
+import org.ei.opensrp.indonesia.face.camera.util.FaceConstants;
 import org.ei.opensrp.indonesia.kartu_ibu.KIDetailActivity;
 import org.ei.opensrp.repository.DetailsRepository;
 import org.ei.opensrp.service.AlertService;
@@ -58,6 +62,7 @@ public class KIANCClientsProvider implements SmartRegisterCLientsProviderForCurs
     protected CommonPersonObjectController controller;
 
     AlertService alertService;
+
     public KIANCClientsProvider(Context context,
                                 View.OnClickListener onClickListener,
                                 AlertService alertService) {
@@ -143,10 +148,6 @@ public class KIANCClientsProvider implements SmartRegisterCLientsProviderForCurs
             pc.setDetails(details);
         }
 
-
-
-
-
         viewHolder.hr_badge.setVisibility(View.INVISIBLE);
         viewHolder.hrp_badge.setVisibility(View.INVISIBLE);
         viewHolder.img_hrl_badge.setVisibility(View.INVISIBLE);
@@ -166,15 +167,29 @@ public class KIANCClientsProvider implements SmartRegisterCLientsProviderForCurs
                 pc.getDetails().get("highRiskLabourTBRisk"),null,null,null,null,null,viewHolder.img_hrl_badge);
 
         final ImageView kiview = (ImageView)convertView.findViewById(R.id.img_profile);
-        if (pc.getDetails().get("profilepic") != null) {
-            ANCDetailActivity.setImagetoHolderFromUri((Activity) context, pc.getDetails().get("profilepic"), kiview, R.mipmap.woman_placeholder);
+
+        if (pc.getDetails().get("profilepic_thumb") != null) {
+            final int THUMBSIZE = FaceConstants.THUMBSIZE;
+
+            Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(
+                    BitmapFactory.decodeFile(pc.getDetails().get("profilepic_thumb")),
+                    THUMBSIZE, THUMBSIZE);
+            kiview.setImageBitmap(ThumbImage);
             kiview.setTag(smartRegisterClient);
-        }
-        else {
 
+        } else {
             viewHolder.profilepic.setImageDrawable(context.getResources().getDrawable(R.drawable.woman_placeholder));
-
         }
+
+//        if (pc.getDetails().get("profilepic") != null) {
+//            ANCDetailActivity.setImagetoHolderFromUri((Activity) context, pc.getDetails().get("profilepic"), kiview, R.mipmap.woman_placeholder);
+//            kiview.setTag(smartRegisterClient);
+//        }
+//        else {
+//
+//            viewHolder.profilepic.setImageDrawable(context.getResources().getDrawable(R.drawable.woman_placeholder));
+//
+//        }
 
         viewHolder.wife_name.setText(pc.getColumnmaps().get("namalengkap")!=null?pc.getColumnmaps().get("namalengkap"):"");
         viewHolder.husband_name.setText(pc.getColumnmaps().get("namaSuami")!=null?pc.getColumnmaps().get("namaSuami"):"");

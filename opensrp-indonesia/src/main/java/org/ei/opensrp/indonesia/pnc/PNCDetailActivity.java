@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -20,6 +21,8 @@ import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.domain.ProfileImage;
 import org.ei.opensrp.indonesia.R;
 import org.ei.opensrp.indonesia.anc.NativeKIANCSmartRegisterActivity;
+import org.ei.opensrp.indonesia.face.camera.SmartShutterActivity;
+import org.ei.opensrp.indonesia.face.camera.util.FaceConstants;
 import org.ei.opensrp.indonesia.kartu_ibu.NativeKISmartRegisterActivity;
 import org.ei.opensrp.indonesia.lib.FlurryFacade;
 import org.ei.opensrp.repository.DetailsRepository;
@@ -56,13 +59,15 @@ public class PNCDetailActivity extends Activity {
     //image retrieving
 
     public static CommonPersonObjectClient pncclient;
+    private String entityid;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Context context = Context.getInstance();
         setContentView(R.layout.pnc_detail_activity);
 
-        final ImageView kiview = (ImageView)findViewById(R.id.motherdetailprofileview);
+        final ImageView pncview = (ImageView)findViewById(R.id.motherdetailprofileview);
         //header
         TextView today = (TextView) findViewById(R.id.detail_today);
 
@@ -80,7 +85,6 @@ public class PNCDetailActivity extends Activity {
         TextView risk6 = (TextView) findViewById(R.id.txt_risk6);
         TextView risk7 = (TextView) findViewById(R.id.txt_risk7);
         TextView risk8 = (TextView) findViewById(R.id.txt_risk8);
-
 
         //detail data
         TextView txt_keadaanIbu = (TextView) findViewById(R.id.txt_keadaanIbu);
@@ -224,23 +228,35 @@ public class PNCDetailActivity extends Activity {
 
         txt_hariKeKF.setText(": "+ humanizeAndDoUPPERCASE(kiobject.getColumnmaps().get("hariKeKF") != null ? kiobject.getColumnmaps().get("hariKeKF") : "-"));
 
-        if(ibuparent.getDetails().get("profilepic")!= null){
-            setImagetoHolderFromUri(PNCDetailActivity.this, ibuparent.getDetails().get("profilepic"), kiview, R.mipmap.woman_placeholder);
+//        Propile Picture
+        if (ibuparent.getDetails().get("profilepic_thumb") != null) {
+
+            final int THUMBSIZE = FaceConstants.THUMBSIZE;
+
+            Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(ibuparent.getDetails().get("profilepic_thumb")),
+                    THUMBSIZE, THUMBSIZE);
+            pncview.setImageBitmap(ThumbImage);
+
+        } else {
+
+            pncview.setImageDrawable(getResources().getDrawable(R.mipmap.woman_placeholder));
         }
-        else {
-            kiview.setImageDrawable(getResources().getDrawable(R.mipmap.woman_placeholder));
-        }
+
+//        if(ibuparent.getDetails().get("profilepic")!= null){
+//            setImagetoHolderFromUri(PNCDetailActivity.this, ibuparent.getDetails().get("profilepic"), pncview, R.mipmap.woman_placeholder);
+//        }
+//        else {
+//            pncview.setImageDrawable(getResources().getDrawable(R.mipmap.woman_placeholder));
+//        }
+
         txt_tandaVitalTDDiastolik.setText(": "+humanize (ibuparent.getDetails().get("tandaVitalTDDiastolik") != null ? ibuparent.getDetails().get("tandaVitalTDDiastolik") : "-"));
         txt_tandaVitalTDSistolik.setText(": "+humanize (ibuparent.getDetails().get("tandaVitalTDSistolik") != null ? ibuparent.getDetails().get("tandaVitalTDSistolik") : "-"));
-
 
         nama.setText(getResources().getString(R.string.name)+ humanize(ibuparent.getColumnmaps().get("namalengkap") != null ? ibuparent.getColumnmaps().get("namalengkap") : "-"));
         nik.setText(getResources().getString(R.string.nik)+humanize (ibuparent.getDetails().get("nik") != null ? ibuparent.getDetails().get("nik") : "-"));
         husband_name.setText(getResources().getString(R.string.husband_name)+ humanize(ibuparent.getColumnmaps().get("namaSuami") != null ? ibuparent.getColumnmaps().get("namaSuami") : "-"));
         dob.setText(getResources().getString(R.string.dob)+ humanize(ibuparent.getDetails().get("tanggalLahir") != null ? ibuparent.getDetails().get("tanggalLahir") : "-"));
         phone.setText("No HP: "+ (ibuparent.getDetails().get("NomorTelponHp") != null ? ibuparent.getDetails().get("NomorTelponHp") : "-"));
-
-
 
         //risk
         if(ibuparent.getDetails().get("highRiskPregnancyYoungMaternalAge") != null ){
@@ -297,6 +313,20 @@ public class PNCDetailActivity extends Activity {
                 findViewById(R.id.show_more_detail).setVisibility(View.GONE);
             }
         });
+
+        pncview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FlurryFacade.logEvent("taking_mother_pictures_on_kohort_kb_detail_view");
+//                bindobject = "kartu_ibu";
+                entityid = pncclient.entityId();
+                Intent intent = new Intent(PNCDetailActivity.this, SmartShutterActivity.class);
+                intent.putExtra("IdentifyPerson", false);
+                intent.putExtra("org.sid.sidface.ImageConfirmation.id", entityid);
+                startActivity(intent);
+            }
+        });
+
 
     }
 

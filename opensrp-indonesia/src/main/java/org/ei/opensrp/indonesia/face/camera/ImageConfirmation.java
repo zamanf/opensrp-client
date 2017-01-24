@@ -178,7 +178,7 @@ public class ImageConfirmation extends Activity {
         buttonJob();
     }
 
-    private void showDetailUser(String selectedPersonName) {
+    public void showDetailUser(String selectedPersonName) {
 
         AllCommonsRepository ibuRepository = org.ei.opensrp.Context.getInstance().allCommonsRepositoryobjects("ec_kartu_ibu");
         CommonPersonObject kiclient = ibuRepository.findByCaseID(selectedPersonName);
@@ -285,7 +285,7 @@ public class ImageConfirmation extends Activity {
         saveAlbum();
         Tools.WritePictureToFile(ImageConfirmation.this, storedBitmap, entityId);
 //        Tools.SavePictureToFile(ImageConfirmation.this, storedBitmap, entityId);
-//        resultIntent.putExtra("com.qualcomm.sdk.smartshutterapp.SmartShutterActivity.thumbnail", thumbnail);
+//        resultIntent.putExtra("com.qualcomm.sdk.smartshutterappgit .SmartShutterActivity.thumbnail", thumbnail);
         ImageConfirmation.this.finish();
         Intent resultIntent = new Intent(this, KIDetailActivity.class);
         setResult(RESULT_OK, resultIntent);

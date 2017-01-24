@@ -53,7 +53,7 @@ public class DrawView extends SurfaceView {
 		
 		if(_inFrame)				// If the face detected is in frame. 
 		{					
-			for(int i=0; i<mFaceArray.length; i++)
+			for(int i = 0; i < mFaceArray.length; i++)
 			{
 				leftEyeBrush.setColor(Color.RED);
 				canvas.drawCircle(mFaceArray[i].leftEye.x, mFaceArray[i].leftEye.y, 5f, leftEyeBrush);
@@ -81,24 +81,24 @@ public class DrawView extends SurfaceView {
 	 * Function to set the color of the stroke based on smile value
 	 */
 	private void setRectColor(FaceData faceData, Paint rectBrush) {
-		if(faceData.getSmileValue()<40)
-		{
+		if(faceData.getSmileValue()<40) {
+
 			rectBrush.setColor(Color.RED);
-		}
-		else if(faceData.getSmileValue()<55)
-		{
+
+		} else if(faceData.getSmileValue()<55) {
+
 			rectBrush.setColor(Color.parseColor("#FE642E"));		// Red-Orange
-		}
-		else if(faceData.getSmileValue()<70)
-		{
+
+		} else if(faceData.getSmileValue()<70) {
+
 			rectBrush.setColor(Color.parseColor("#D7DF01"));		// Orange-Yellow
-		}
-		else if(faceData.getSmileValue()<85)
-		{
+
+		} else if(faceData.getSmileValue()<85) {
+
 			rectBrush.setColor(Color.parseColor("#86B404"));		// Yellow-Green
-		}
-		else
-		{
+
+		} else {
+
 			rectBrush.setColor(Color.parseColor("#5FB404"));		// Green
 		}		
 		

@@ -5,8 +5,10 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Parcelable;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -21,6 +23,7 @@ import org.ei.opensrp.cursoradapter.SmartRegisterPaginatedCursorAdapter;
 import org.ei.opensrp.cursoradapter.SmartRegisterQueryBuilder;
 import org.ei.opensrp.indonesia.LoginActivity;
 import org.ei.opensrp.indonesia.R;
+import org.ei.opensrp.indonesia.face.camera.SmartShutterActivity;
 import org.ei.opensrp.indonesia.kartu_ibu.KICommonObjectFilterOption;
 import org.ei.opensrp.indonesia.kb.AllKBServiceMode;
 import org.ei.opensrp.indonesia.kb.KBClientsProvider;
@@ -64,6 +67,8 @@ import static org.ei.opensrp.indonesia.AllConstantsINA.FormNames.KOHORT_KB_REGIS
  */
 public class NativeKBSmartRegisterFragment extends SecuredNativeSmartRegisterCursorAdapterFragment {
 
+    private static final String TAG = NativeKBSmartRegisterFragment.class.getSimpleName();
+
     private SmartRegisterClientsProvider clientProvider = null;
     private CommonPersonObjectController controller;
     private VillageController villageController;
@@ -71,6 +76,10 @@ public class NativeKBSmartRegisterFragment extends SecuredNativeSmartRegisterCur
 
     private final ClientActionHandler clientActionHandler = new ClientActionHandler();
     private String locationDialogTAG = "locationDialogTAG";
+
+    public static String criteria;
+
+
     @Override
     protected void onCreation() {
         //
@@ -194,6 +203,7 @@ public class NativeKBSmartRegisterFragment extends SecuredNativeSmartRegisterCur
     private String filterStringForAll(){
         return "";
     }
+
     private String sortByAlertmethod() {
         return " CASE WHEN alerts.status = 'urgent' THEN '1'"
                 +
@@ -336,13 +346,106 @@ public class NativeKBSmartRegisterFragment extends SecuredNativeSmartRegisterCur
      * @param view
      */
     @Override
-    public void setupSearchView(View view) {
+    public void setupSearchView(final View view) {
+        searchView = (EditText) view.findViewById(org.ei.opensrp.R.id.edt_search);
+        searchView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CharSequence selections[] = new CharSequence[]{"Name", "Photo"};
+//                Image selections[] = new Image[]{};
+                final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Please Choose one, Search by");
+                builder.setItems(selections, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int opt) {
+                        if (opt == 0) searchTextChangeListener("");
+                        else getFacialRecord(view);
+                    }
+                });
+                builder.show();
+            }
+        });
+
+        searchCancelView = view.findViewById(org.ei.opensrp.R.id.btn_search_cancel);
+        searchCancelView.setOnClickListener(searchCancelHandler);
+    }
+
+//    WD
+    public void getFacialRecord(View view) {
+        Log.e(TAG, "getFacialRecord: ");
+        SmartShutterActivity.kidetail = (CommonPersonObjectClient)view.getTag();
+
+        Intent intent = new Intent(getActivity(), SmartShutterActivity.class);
+        intent.putExtra("org.sid.sidface.ImageConfirmation.origin", NativeKBSmartRegisterFragment.class.getSimpleName());
+        intent.putExtra("org.sid.sidface.ImageConfirmation.identify", true);
+        intent.putExtra("org.sid.sidface.ImageConfirmation.kidetail", (Parcelable) SmartShutterActivity.kidetail);
+        startActivity(intent);
+    }
+
+//    WD
+    public void searchTextChangeListener(String s) {
+        Log.e(TAG, "searchTextChangeListener: " + s);
+        if (s != null) {
+            filters =  s;
+        } else {
+            searchView.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+                }
+
+                @Override
+                public void onTextChanged(final CharSequence cs, int start, int before, int count) {
+
+                    Log.e(TAG, "onTextChanged: " + searchView.getText());
+                    (new AsyncTask() {
+//                    SmartRegisterClients filteredClients;
+
+                        @Override
+                        protected Object doInBackground(Object[] params) {
+//                        currentSearchFilter =
+//                        setCurrentSearchFilter(new HHSearchOption(cs.toString()));
+//                        filteredClients = getClientsAdapter().getListItemProvider()
+//                                .updateClients(getCurrentVillageFilter(), getCurrentServiceModeOption(),
+//                                        getCurrentSearchFilter(), getCurrentSortOption());
+//
+
+                            filters = cs.toString();
+//                        joinTable = "";
+//                        mainCondition = " is_closed = 0 and jenisKontrasepsi != '0' ";
+                            Log.e(TAG, "doInBackground: " + filters);
+                            return null;
+                        }
+//
+//                    @Override
+//                    protected void onPostExecute(Object o) {
+////                        clientsAdapter
+////                                .refreshList(currentVillageFilter, currentServiceModeOption,
+////                                        currentSearchFilter, currentSortOption);
+////                        getClientsAdapter().refreshClients(filteredClients);
+////                        getClientsAdapter().notifyDataSetChanged();
+//                        getSearchCancelView().setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
+//                        CountExecute();
+//                        filterandSortExecute();
+//                        super.onPostExecute(o);
+//                    }
+                    }).execute();
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                }
+            });
+        }
+    }
+
+
+    public void setupSearchView_old(View view) {
         searchView = (EditText) view.findViewById(org.ei.opensrp.R.id.edt_search);
 
         searchView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CharSequence selections[] = new CharSequence[] {"Detail View", "Charts"};
+                CharSequence selections[] = new CharSequence[]{"Detail View", "Charts"};
 //                ChildDetailActivity.childclient = (CommonPersonObjectClient) view.getTag();
 //                GiziGrowthChartActivity.client = (CommonPersonObjectClient)view.getTag();
                 final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -351,11 +454,10 @@ public class NativeKBSmartRegisterFragment extends SecuredNativeSmartRegisterCur
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // the user clicked on colors[which]
-                        if(which == 0)
-                        {
-//                            Intent intent = new Intent(getActivity(),ChildDetailActivity.class);
-//                            startActivity(intent);
-//                            getActivity().finish();
+                        if (which == 0) {
+////                            Intent intent = new Intent(getActivity(),ChildDetailActivity.class);
+////                            startActivity(intent);
+////                            getActivity().finish();
                             searchView.setHint(getNavBarOptionsProvider().searchHint());
                             searchView.addTextChangedListener(new TextWatcher() {
                                 @Override
@@ -401,8 +503,7 @@ public class NativeKBSmartRegisterFragment extends SecuredNativeSmartRegisterCur
                                 public void afterTextChanged(Editable editable) {
                                 }
                             });
-                        }
-                        else if(which == 1){
+                        } else if (which == 1) {
 //                            Intent intent = new Intent(getActivity(),GiziGrowthChartActivity.class);
 //                            startActivity(intent);
 //                            getActivity().finish();
@@ -487,5 +588,13 @@ public class NativeKBSmartRegisterFragment extends SecuredNativeSmartRegisterCur
         }
     }
 
+    //    WD
+    public void setCriteria(String criteria) {
+        this.criteria = criteria;
+    }
+
+    public static String getCriteria(){
+        return criteria;
+    }
 
 }
