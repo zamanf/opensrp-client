@@ -17,11 +17,12 @@ import android.widget.TextView;
 
 import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.CommonPersonObject;
+import org.ei.opensrp.path.R;
 import org.ei.opensrp.path.fragment.table.ChildVaccineTable;
 import org.ei.opensrp.path.fragment.table.FieldStockVaccineTable;
 import org.ei.opensrp.path.fragment.table.WomanVaccineTable;
 import org.ei.opensrp.util.Log;
-import org.ei.opensrp.path.R;
+import org.ei.opensrp.view.activity.DrishtiApplication;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -31,7 +32,6 @@ import java.util.List;
 public class VaccineReportActivity extends AppCompatActivity {
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
-    private Context context;
     private ViewPager mViewPager;
     private CommonPersonObject childObject;
     private CommonPersonObject womanVaccineObjectForField;
@@ -45,8 +45,14 @@ public class VaccineReportActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
+
+        if (context().IsUserLoggedOut()) {
+            DrishtiApplication application = (DrishtiApplication)getApplication();
+            application.logoutCurrentUser();
+            return;
+        }
+
         setContentView(R.layout.activity_vaccine_report);
-        context = Context.getInstance();
 
 
         Date date = new Date();
@@ -100,7 +106,7 @@ public class VaccineReportActivity extends AppCompatActivity {
                 "(select count(*) c from pkchild where measles2 between '" + startDate + "' and '" + endDate + "' and (date('now')-dob)<1  ) measles2_0," +
                 "(select count(*) c from pkchild where measles2 between '" + startDate + "' and '" + endDate + "' and (date('now')-dob)=1  ) measles2_1," +
                 "(select count(*) c from pkchild where measles2 between '" + startDate + "' and '" + endDate + "' and (date('now')-dob)>2  ) measles2_2  from pkchild limit 1;";
-        List<CommonPersonObject> childList = context.allCommonsRepositoryobjects("pkchild").customQuery(childTablesql, new String[]{}, "pkchild");
+        List<CommonPersonObject> childList = context().allCommonsRepositoryobjects("pkchild").customQuery(childTablesql, new String[]{}, "pkchild");
         if (childList.size() < 1) {
             childObject = null;
         } else {
@@ -115,7 +121,7 @@ public class VaccineReportActivity extends AppCompatActivity {
                 "(select count(*) c from pkwoman where tt4 between '" + startDate + "' and '" + endDate + "' ) tt4," +
                 "(select count(*) c from pkwoman where tt5 between '" + startDate + "' and '" + endDate + "' ) tt5 " +
                 "from pkwoman limit 1;";
-        List<CommonPersonObject> womanVaccineListForField = context.allCommonsRepositoryobjects("pkwoman").customQuery(womanVaccineSQlForField, new String[]{}, "pkwoman");
+        List<CommonPersonObject> womanVaccineListForField = context().allCommonsRepositoryobjects("pkwoman").customQuery(womanVaccineSQlForField, new String[]{}, "pkwoman");
         if (womanVaccineListForField.size() < 1) {
             womanVaccineObjectForField = null;
         } else {
@@ -126,7 +132,7 @@ public class VaccineReportActivity extends AppCompatActivity {
         String reportMonth = year + "-" + month + "-";
         String fieldVaccineSQL = "select * from stock where date like '" + reportMonth + "%' and report='monthly'";
 
-        List<CommonPersonObject> fieldVaccineListForField = context.allCommonsRepositoryobjects("stock").customQueryForCompleteRow(fieldVaccineSQL, new String[]{}, "stock");
+        List<CommonPersonObject> fieldVaccineListForField = context().allCommonsRepositoryobjects("stock").customQueryForCompleteRow(fieldVaccineSQL, new String[]{}, "stock");
         if (fieldVaccineListForField.size() < 1) {
             fieldVaccineObjectForField = null;
         } else {
@@ -134,7 +140,7 @@ public class VaccineReportActivity extends AppCompatActivity {
             fieldVaccineObjectForField = fieldVaccineListForField.get(0);
 
         }
-        //fieldVaccineObjectForField= context.allCommonsRepositoryobjects("field").customQueryForCompleteRow(fieldVaccineSQL, new String[]{}, "field").get(0);
+        //fieldVaccineObjectForField= context().allCommonsRepositoryobjects("field").customQueryForCompleteRow(fieldVaccineSQL, new String[]{}, "field").get(0);
 
         String childVaccineForFieldSQL = "select (" +
                 "select count(*) c from pkchild where bcg between '" + startDate + "' and '" + endDate + "') bcg," +
@@ -153,7 +159,7 @@ public class VaccineReportActivity extends AppCompatActivity {
                 "from pkchild limit 1 ;";
 
 
-        List<CommonPersonObject> childVaccineListForField = context.allCommonsRepositoryobjects("pkchild").customQuery(childVaccineForFieldSQL, new String[]{}, "pkchild");
+        List<CommonPersonObject> childVaccineListForField = context().allCommonsRepositoryobjects("pkchild").customQuery(childVaccineForFieldSQL, new String[]{}, "pkchild");
         if (childVaccineListForField.size() < 1) {
             childVaccineForFieldObject = null;
 
@@ -162,7 +168,7 @@ public class VaccineReportActivity extends AppCompatActivity {
             childVaccineForFieldObject = childVaccineListForField.get(0);
 
         }
-        // childVaccineForFieldObject=context.allCommonsRepositoryobjects("pkchild").customQuery(childVaccineForFieldSQL, new String[]{}, "pkchild").get(0);
+        // childVaccineForFieldObject=context().allCommonsRepositoryobjects("pkchild").customQuery(childVaccineForFieldSQL, new String[]{}, "pkchild").get(0);
 
         String pregnantWomanSQL = "select " +
                 "(select count(*) c from pkwoman where tt1 between '" + startDate + "' and '" + endDate + "' and pregnant='yes') tt1," +
@@ -171,7 +177,7 @@ public class VaccineReportActivity extends AppCompatActivity {
                 "(select count(*) c from pkwoman where tt4 between '" + startDate + "' and '" + endDate + "' and pregnant='yes') tt4," +
                 "(select count(*) c from pkwoman where tt5 between '" + startDate + "' and '" + endDate + "' and pregnant='yes') tt5 " +
                 "from pkwoman limit 1;    ";
-        List<CommonPersonObject> pregnantVaccineList = context.allCommonsRepositoryobjects("pkwoman").customQuery(pregnantWomanSQL, new String[]{}, "pkwoman");
+        List<CommonPersonObject> pregnantVaccineList = context().allCommonsRepositoryobjects("pkwoman").customQuery(pregnantWomanSQL, new String[]{}, "pkwoman");
         if (pregnantVaccineList.size() < 1) {
 
             pregnantWomanObject = null;
@@ -189,7 +195,7 @@ public class VaccineReportActivity extends AppCompatActivity {
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
-        //  pregnantWomanObject=context.allCommonsRepositoryobjects("pkwoman").customQuery(pregnantWomanSQL, new String[]{}, "pkwoman").get(0);
+        //  pregnantWomanObject=context().allCommonsRepositoryobjects("pkwoman").customQuery(pregnantWomanSQL, new String[]{}, "pkwoman").get(0);
 
         Log.logDebug("Reached fieldVaccineObjectForField ");
     }
@@ -288,5 +294,20 @@ public class VaccineReportActivity extends AppCompatActivity {
             textView.setText("This Feature is not added yet !");
             return rootView;
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (context().IsUserLoggedOut()) {
+            DrishtiApplication application = (DrishtiApplication)getApplication();
+            application.logoutCurrentUser();
+            return;
+        }
+    }
+
+
+    protected Context context() {
+        return Context.getInstance().updateApplicationContext(this.getApplicationContext());
     }
 }

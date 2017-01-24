@@ -31,6 +31,7 @@ import org.ei.opensrp.domain.ProfileImage;
 import org.ei.opensrp.path.R;
 import org.ei.opensrp.path.domain.FormSubmissionWrapper;
 import org.ei.opensrp.repository.ImageRepository;
+import org.ei.opensrp.view.activity.DrishtiApplication;
 
 import java.io.File;
 import java.io.IOException;
@@ -89,6 +90,13 @@ public abstract class DetailActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
+
+        if (context().IsUserLoggedOut()) {
+            DrishtiApplication application = (DrishtiApplication)getApplication();
+            application.logoutCurrentUser();
+            return;
+        }
+
         //setting view
         setContentView(layoutResId());
 
@@ -129,6 +137,17 @@ public abstract class DetailActivity extends Activity {
                 setProfiePic(this, mImageView, defaultProfilePicResId(client), org.ei.opensrp.R.drawable.ic_pencil);
             }
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (context().IsUserLoggedOut()) {
+            DrishtiApplication application = (DrishtiApplication)getApplication();
+            application.logoutCurrentUser();
+            return;
+        }
+
     }
 
     @Override
@@ -316,4 +335,7 @@ public abstract class DetailActivity extends Activity {
         }
     }
 
+    protected Context context() {
+        return Context.getInstance().updateApplicationContext(this.getApplicationContext());
+    }
 }
