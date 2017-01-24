@@ -24,29 +24,8 @@ public class IbuSearchOption implements FilterOption {
         CommonPersonObjectClient currentclient = (CommonPersonObjectClient) client;
 //        AllCommonsRepository allElcoRepository = new AllCommonsRepository("elco");
         if(!result) {
-            if(currentclient.getDetails().get("namaBayi") != null) {
-                if (currentclient.getDetails().get("namaBayi").toLowerCase().contains(criteria.toLowerCase())) {
-                    result = true;
-                }
-            }
-        }
-        if(!result) {
-            if(currentclient.getDetails().get("namaIbu") != null) {
-                if (currentclient.getDetails().get("namaIbu").toLowerCase().contains(criteria.toLowerCase())) {
-                    result = true;
-                }
-            }
-        }
-        if(!result) {
-            if(currentclient.getDetails().get("namaOrtu") != null) {
-                if (currentclient.getDetails().get("namaOrtu").toLowerCase().contains(criteria.toLowerCase())) {
-                    result = true;
-                }
-            }
-        }
-        if(!result) {
-            if(currentclient.getDetails().get("dusun") != null) {
-                if (currentclient.getDetails().get("dusun").toLowerCase().contains(criteria.toLowerCase())) {
+            if(currentclient.getDetails().get("namaLengkap") != null) {
+                if (currentclient.getDetails().get("namaLengkap").toLowerCase().contains(criteria.toLowerCase())) {
                     result = true;
                 }
             }

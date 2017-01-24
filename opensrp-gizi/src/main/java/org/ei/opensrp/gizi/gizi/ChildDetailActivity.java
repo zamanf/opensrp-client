@@ -143,7 +143,7 @@ public class ChildDetailActivity extends Activity {
 
         header_name.setText(R.string.child_profile);
         subheader.setText(R.string.child_profile);
-        uniqueId.setText(getString(R.string.unique_id) + " " + (childclient.getDetails().get("unique_id") != null ? childclient.getDetails().get("unique_id"):"-"));
+        uniqueId.setText(getString(R.string.unique_id) + " " + (childclient.getDetails().get("UniqueId") != null ? childclient.getDetails().get("UniqueId"):"-"));
         nama.setText(getString(R.string.child_name) +" "+ (childclient.getDetails().get("namaBayi") != null ? childclient.getDetails().get("namaBayi") : "-"));
 
         AllCommonsRepository childRepository = org.ei.opensrp.Context.getInstance().allCommonsRepositoryobjects("ec_anak");
@@ -160,6 +160,7 @@ public class ChildDetailActivity extends Activity {
             father_name.setText(getString(R.string.father_name)+" " + namaayah);
             mother_name.setText(getString(R.string.mother_name) +" " +namaibu);
             village_name.setText(getString(R.string.village) +" "+ (kiparent.getDetails().get("cityVillage") != null ? kiparent.getDetails().get("cityVillage") : "-"));
+            posyandu.setText(getString(R.string.posyandu) +" "+ (kiparent.getDetails().get("address1") != null ? kiparent.getDetails().get("address1") : "-"));
           //  village_name.setText(getString(R.string.village) + kiparent.getDetails().get("cityVillage") != null ? ": " + kiparent.getDetails().get("cityVillage") : "");
            // subVillage.setText(kiparent.getDetails().get("address1") != null ? ": " + kiparent.getDetails().get("address1") : "");
             // viewHolder.no_ibu.setText(kiparent.getDetails().get("noBayi") != null ? kiparent.getDetails().get("noBayi") : "");
@@ -170,7 +171,7 @@ public class ChildDetailActivity extends Activity {
                 : childclient.getDetails().get("namaOrtu")!=null
                     ? childclient.getDetails().get("namaOrtu")
                     : "-"));*/
-        posyandu.setText(getString(R.string.posyandu) +" "+ (childclient.getDetails().get("posyandu") != null ? childclient.getDetails().get("posyandu") : "-"));
+
         
       /*  village_name.setText(getString(R.string.village) +" "+ (childclient.getDetails().get("desa") != null ? childclient.getDetails().get("desa") : "-"));*/
 
@@ -198,7 +199,7 @@ public class ChildDetailActivity extends Activity {
             dua_t.setText(getString(R.string.dua_t) +" "+ (childclient.getDetails().get("dua_t") != null ? yesNo(childclient.getDetails().get("dua_t")) : "-"));
             bgm.setText(getString(R.string.bgm) + " "+ (childclient.getDetails().get("bgm") != null ? yesNo(childclient.getDetails().get("bgm")) : "-"));
             under_yellow_line.setText(getString(R.string.under_yellow_line) + " "+ (childclient.getDetails().get("garis_kuning") != null ? yesNo(childclient.getDetails().get("garis_kuning")) : "-"));
-            breast_feeding.setText(getString(R.string.asi) + " " + (childclient.getDetails().get("mp_asi") != null ? yesNo(childclient.getDetails().get("mp_asi")) : "-"));
+            breast_feeding.setText(getString(R.string.asi) + " " + (childclient.getDetails().get("asi") != null ? yesNo(childclient.getDetails().get("asi")) : "-"));
             nutrition_status.setText(getString(R.string.nutrition_status) + " "+ (childclient.getDetails().get("nutrition_status") != null ? weightStatus(childclient.getDetails().get("nutrition_status")) : "-"));
 
         Log.logInfo("Berat :" +berats);
@@ -253,6 +254,7 @@ public class ChildDetailActivity extends Activity {
 
     }
 
+    // english: fEMale, bahasa: perEMpuan, both have EM; since en: male, bhs: laki, both no EM
     private  String gender(String value){
         if (value.toLowerCase().contains("em"))
             return getString(R.string.child_female);

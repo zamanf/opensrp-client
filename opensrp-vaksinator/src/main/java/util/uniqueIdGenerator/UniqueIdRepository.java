@@ -47,10 +47,10 @@ public class UniqueIdRepository extends SQLiteOpenHelper{
     public String getUniqueIdFromLastUsedId(String lastUsedId) {
         SQLiteDatabase database = this.getReadableDatabase();
         Cursor cursor = database.rawQuery("SELECT " + UNIQUE_ID_COLUMN +
-                    " FROM " + UNIQUE_ID_TABLE_NAME +
-                    " WHERE " + UNIQUE_ID_COLUMN + " > ?" +
-                    " ORDER BY " + UNIQUE_ID_COLUMN + " ASC  " +
-                    " LIMIT 1", new String[]{lastUsedId});
+                " FROM " + UNIQUE_ID_TABLE_NAME +
+                " WHERE " + UNIQUE_ID_COLUMN + " > ?" +
+                " ORDER BY " + UNIQUE_ID_COLUMN + " ASC  " +
+                " LIMIT 1", new String[]{lastUsedId});
         String uniqueId = null;
         if(cursor!=null) {
             if(cursor.moveToFirst()) {
@@ -69,6 +69,20 @@ public class UniqueIdRepository extends SQLiteOpenHelper{
         List<Long> uids = new ArrayList<>();
         while(!cursor.isAfterLast()) {
             uids.add(cursor.getLong(1));
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return uids;
+    }
+
+    public List<String> getAllUniqueIdString() {
+        SQLiteDatabase database = this.getReadableDatabase();
+        Cursor cursor = database.rawQuery("SELECT id, " + UNIQUE_ID_COLUMN +
+                " FROM " + UNIQUE_ID_TABLE_NAME, new String[]{});
+        cursor.moveToFirst();
+        List<String> uids = new ArrayList<>();
+        while(!cursor.isAfterLast()) {
+            uids.add(cursor.getString(1));
             cursor.moveToNext();
         }
         cursor.close();

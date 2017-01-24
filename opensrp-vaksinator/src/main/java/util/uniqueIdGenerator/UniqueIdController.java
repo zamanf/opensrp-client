@@ -27,7 +27,8 @@ public class UniqueIdController {
 
     public String getUniqueId() {
         List<Long> uids = getAllUniqueId();
-        return processLatestUniqueId(uids);
+        List<String> uidstring = getAllUniqueIdString();
+        return processLatestUniqueId(uids,uidstring);
     }
 
     public String getUniqueIdJson() {
@@ -46,6 +47,7 @@ public class UniqueIdController {
 
     public void updateCurrentUniqueId(String id) {
         Long ids = Long.parseLong(allSettings.fetchCurrentId());
+        id = id.length()>8? id.substring(0,8) : id;
         if((ids > 20000000) || (ids < Long.parseLong(id))) {
             allSettings.saveCurrentId(id);
         }
@@ -55,6 +57,9 @@ public class UniqueIdController {
         return uniqueIdRepository.getAllUniqueId();
     }
 
+    public List<String> getAllUniqueIdString() {
+        return uniqueIdRepository.getAllUniqueIdString();
+    }
     public void saveUniqueId(String uniqueId) {
         uniqueIdRepository.saveUniqueId(uniqueId);
     }
@@ -99,6 +104,17 @@ public class UniqueIdController {
         int index = Arrays.binarySearch(uids.toArray(), currentId);
         if(index<-1) index = -1;
         return index >= uids.size()-1 ? null : "" + String.valueOf(uids.get(index+1));
+    }
+
+    @Nullable
+    private String processLatestUniqueId(List<Long> uids,List<String>uidstring) {
+        Long currentId = Long.parseLong(allSettings.fetchCurrentId()) > 20000000 ? 10000000 : Long.parseLong(allSettings.fetchCurrentId());
+        if(uids == null || uids.isEmpty() || currentId > uids.get(uids.size() - 1)) {
+            return null;
+        }
+        int index = Arrays.binarySearch(uids.toArray(), currentId);
+        if(index<-1) index = -1;
+        return index >= uidstring.size()-1 ? null : "" + String.valueOf(uidstring.get(index+1));
     }
 
 }

@@ -10,7 +10,6 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-//import org.ei.opensrp.Context;
 import org.ei.opensrp.Context;
 import org.ei.opensrp.vaksinator.LoginActivity;
 import org.ei.opensrp.util.Cache;
@@ -47,9 +46,9 @@ public class Generator {
     }
 
     public AllSettingsINA allSettingsINA() {
-        context.initRepository();
+        context.initializeRepositoryForUniqueId();
         if(allSettingsINA == null)
-            allSettingsINA = new AllSettingsINA(context.allSharedPreferences(), context.settingsRepository());
+            allSettingsINA = new AllSettingsINA(context.allSharedPreferences(), context.getSettingsRepositoryforUniqueId());
 
         return allSettingsINA;
     }
@@ -67,10 +66,10 @@ public class Generator {
         if(uniqueIdController == null)
             uniqueIdController = new UniqueIdController(uniqueIdRepository(), allSettingsINA(), uIdsCache());
         return uniqueIdController;
-        }
+    }
     public UniqueIdService uniqueIdService() {
         if (uniqueIdService == null)
-            uniqueIdService = new UniqueIdService(context.httpAgent(), context.configuration(), uniqueIdController(), allSettingsINA(), context.allSharedPreferences());
+            uniqueIdService = new UniqueIdService(context.getHttpAgent(), context.configuration(), uniqueIdController(), allSettingsINA(), context.allSharedPreferences());
         return uniqueIdService;
     }
 
