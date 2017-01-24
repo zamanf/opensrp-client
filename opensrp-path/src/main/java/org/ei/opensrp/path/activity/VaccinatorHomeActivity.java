@@ -150,10 +150,14 @@ public class VaccinatorHomeActivity extends SecuredActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final String childCount = context.commonrepository("pkchild").rawQuery("SELECT COUNT(*) c FROM pkchild").get(0).get("c");
-                final String womanCount = context.commonrepository("pkwoman").rawQuery("SELECT COUNT(*) c FROM pkwoman").get(0).get("c");
-                final String stockCountD = context.commonrepository("stock").rawQuery("SELECT COUNT(*) c FROM stock WHERE report='daily'").get(0).get("c");
-                final String stockCountM = context.commonrepository("stock").rawQuery("SELECT COUNT(*) c FROM stock WHERE report='monthly'").get(0).get("c");
+                final String childCount = context().commonrepository("pkchild")
+                        .rawQuery("SELECT COUNT(*) c FROM pkchild").get(0).get("c");
+                final String womanCount = context().commonrepository("pkwoman")
+                        .rawQuery("SELECT COUNT(*) c FROM pkwoman").get(0).get("c");
+                final String stockCountD = context().commonrepository("stock")
+                        .rawQuery("SELECT COUNT(*) c FROM stock WHERE report='daily'").get(0).get("c");
+                final String stockCountM = context().commonrepository("stock")
+                        .rawQuery("SELECT COUNT(*) c FROM stock WHERE report='monthly'").get(0).get("c");
 
                 Handler mainHandler = new Handler(getMainLooper());
 
@@ -175,6 +179,7 @@ public class VaccinatorHomeActivity extends SecuredActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
+        attachLogoutMenuItem(menu);
         return true;
     }
 
@@ -183,9 +188,6 @@ public class VaccinatorHomeActivity extends SecuredActivity {
         super.onPrepareOptionsMenu(menu);
         updateMenuItem = menu.findItem(R.id.updateMenuItem);
         remainingFormsToSyncMenuItem = menu.findItem(R.id.remainingFormsToSyncMenuItem);
-
-        updateSyncIndicator();
-        updateRemainingFormsToSyncCount();
         return true;
     }
 
@@ -208,8 +210,8 @@ public class VaccinatorHomeActivity extends SecuredActivity {
 
     public void updateFromServer() {
         UpdateActionsTask updateActionsTask = new UpdateActionsTask(
-                this, context.actionService(), context.formSubmissionSyncService(),
-                new SyncProgressIndicator(), context.allFormVersionSyncService());
+                this, context().actionService(), context().formSubmissionSyncService(),
+                new SyncProgressIndicator(), context().allFormVersionSyncService());
         updateActionsTask.updateFromServer(new SyncAfterFetchListener());
     }
 
@@ -225,7 +227,7 @@ public class VaccinatorHomeActivity extends SecuredActivity {
 
     private void updateSyncIndicator() {
         if (updateMenuItem != null) {
-            if (context.allSharedPreferences().fetchIsSyncInProgress()) {
+            if (context().allSharedPreferences().fetchIsSyncInProgress()) {
                 updateMenuItem.setActionView(R.layout.progress);
             } else
                 updateMenuItem.setActionView(null);
@@ -233,11 +235,11 @@ public class VaccinatorHomeActivity extends SecuredActivity {
     }
 
     private void updateRemainingFormsToSyncCount() {
-        if (remainingFormsToSyncMenuItem == null) {
+        if (remainingFormsToSyncMenuItem == null || context().IsUserLoggedOut()) {
             return;
         }
 
-        long size = context.pendingFormSubmissionService().pendingFormSubmissionCount();
+        long size = Context.getInstance().updateApplicationContext(this.getApplicationContext()).pendingFormSubmissionService().pendingFormSubmissionCount();
         if (size > 0) {
             remainingFormsToSyncMenuItem.setTitle(valueOf(size) + " " + getString(R.string.unsynced_forms_count_message));
             remainingFormsToSyncMenuItem.setVisible(true);

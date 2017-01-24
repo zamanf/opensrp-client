@@ -165,7 +165,8 @@ public class ChildSmartRegisterFragment extends SecuredNativeSmartRegisterCursor
     public void initializeQueries() {
         String tableName = "pkchild";
 
-        ChildSmartClientsProvider hhscp = new ChildSmartClientsProvider(getActivity(), clientActionHandler, context.alertService());
+        ChildSmartClientsProvider hhscp = new ChildSmartClientsProvider(getActivity(),
+                clientActionHandler, context().alertService());
         clientAdapter = new SmartRegisterPaginatedCursorAdapter(getActivity(), null, hhscp, Context.getInstance().commonrepository(tableName));
         clientsView.setAdapter(clientAdapter);
 

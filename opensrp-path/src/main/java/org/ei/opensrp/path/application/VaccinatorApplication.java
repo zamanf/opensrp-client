@@ -1,9 +1,11 @@
 package org.ei.opensrp.path.application;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 
 import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.CommonFtsObject;
+import org.ei.opensrp.path.activity.LoginActivity;
 import org.ei.opensrp.path.receiver.CESyncReceiver;
 import org.ei.opensrp.path.receiver.ConfigSyncReceiver;
 import org.ei.opensrp.sync.DrishtiSyncScheduler;
@@ -33,6 +35,14 @@ public class VaccinatorApplication extends DrishtiApplication{
         cleanUpSyncState();
         startCESyncService(getApplicationContext());
         ConfigSyncReceiver.scheduleFirstSync(getApplicationContext());
+    }
+
+    @Override
+    public void logoutCurrentUser() {
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        getApplicationContext().startActivity(intent);
+        context.userService().logoutSession();
     }
 
     private void cleanUpSyncState() {
