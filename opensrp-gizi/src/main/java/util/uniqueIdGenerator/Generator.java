@@ -20,8 +20,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 
-//import org.ei.opensrp.Context;
-
 /**
  * Created by Null on 2016-10-13.
  */
@@ -48,9 +46,9 @@ public class Generator {
     }
 
     public AllSettingsINA allSettingsINA() {
-        context.initRepository();
+        context.initializeRepositoryForUniqueId();
         if(allSettingsINA == null)
-            allSettingsINA = new AllSettingsINA(context.allSharedPreferences(), context.settingsRepository());
+            allSettingsINA = new AllSettingsINA(context.allSharedPreferences(), context.getSettingsRepositoryforUniqueId());
 
         return allSettingsINA;
     }
@@ -71,7 +69,7 @@ public class Generator {
         }
     public UniqueIdService uniqueIdService() {
         if (uniqueIdService == null)
-            uniqueIdService = new UniqueIdService(context.httpAgent(), context.configuration(), uniqueIdController(), allSettingsINA(), context.allSharedPreferences());
+            uniqueIdService = new UniqueIdService(context.getHttpAgent(), context.configuration(), uniqueIdController(), allSettingsINA(), context.allSharedPreferences());
         return uniqueIdService;
     }
 

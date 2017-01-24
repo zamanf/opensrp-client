@@ -486,14 +486,14 @@ public class Context {
         return formSubmissionSyncService;
     }
 
-    public HTTPAgent httpAgent() {
+    protected HTTPAgent httpAgent() {
         if (httpAgent == null) {
             httpAgent = new HTTPAgent(applicationContext, allSettings(), allSharedPreferences(), configuration());
         }
         return httpAgent;
     }
 
-    public Repository initRepository() {
+    protected Repository initRepository() {
         if(configuration().appName().equals(AllConstants.APP_NAME_INDONESIA)) {
             return null;
         }
@@ -603,7 +603,7 @@ public class Context {
         return alertRepository;
     }
 
-    public SettingsRepository settingsRepository() {
+    protected SettingsRepository settingsRepository() {
         if (settingsRepository == null) {
             settingsRepository = new SettingsRepository();
         }
@@ -984,10 +984,6 @@ public class Context {
         this.applicationContext = applicationContext;
     }
 
-    public Repository initializeRepository(){
-        return this.initRepository();
-    }
-
     protected Repository getRepository() {
         return repository;
     }
@@ -1025,6 +1021,18 @@ public class Context {
         }
         return customHumanReadableConceptResponse;
     }
+
+
+    //unique id getter method
+
+    public SettingsRepository getSettingsRepositoryforUniqueId(){
+        return this.settingsRepository();
+    }
+
+    public Repository initializeRepositoryForUniqueId(){
+        return this.initRepository();
+    }
+
 
     ///////////////////////////////////////////////////////////////////////////////
 }
