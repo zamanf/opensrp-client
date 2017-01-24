@@ -191,5 +191,11 @@ public class McareApplication extends DrishtiApplication {
         commonFtsObject.updateAlertFilterVisitCodes(getAlertFilterVisitCodes());
         return commonFtsObject;
     }
+    public static void setCrashlyticsUser(Context context) {
+                if(context != null && context.userService() != null
+                                && context.allSharedPreferences() != null) {
+                       Crashlytics.setUserName(context.allSharedPreferences().fetchRegisteredANM());
+                   }
+           }
 
 }
