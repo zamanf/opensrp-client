@@ -8,6 +8,8 @@ import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.util.Log;
 
+import org.ei.opensrp.AllConstants;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,6 +18,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
+
+import static java.text.MessageFormat.format;
 
 /**
  * Created by raihan on 5/25/15.
@@ -120,5 +124,11 @@ public class FileUtilities {
             }
         }
         return mUserAgent;
+    }
+    public static String getImageUrl(String entityID) {
+        String url = format("{0}/{1}/{2}",
+                org.ei.opensrp.Context.getInstance().allSharedPreferences().fetchBaseURL(""),
+                AllConstants.IMAGES_PATH, (entityID));
+        return url;
     }
 }

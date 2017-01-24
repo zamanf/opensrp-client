@@ -43,6 +43,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * A class that wraps up remote image loading requests using the Volley library combined with a memory cache. A single instance of this class should be created
@@ -468,13 +469,11 @@ public class OpenSRPImageLoader extends ImageLoader {
 
                     // perform I/O on non UI thread
                     if (!isImmediate) {
-                        // used to pass absolute file name value to saveStaticImageToDisk method in thread
-                        final String absoluteFileName = DrishtiApplication.getAppDir() + File.separator + view.getTag(R.id.image_name);
-
+                    //pass the entity id to act as the file name . Remember to always set this value as a tag in the image view
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
-                                OpenSRPImageLoader.saveStaticImageToDisk(absoluteFileName, response.getBitmap());
+                                OpenSRPImageLoader.saveStaticImageToDisk(view.getTag(R.id.entity_id).toString(), response.getBitmap());
                             }
                         }).start();
                     }
@@ -497,12 +496,20 @@ public class OpenSRPImageLoader extends ImageLoader {
         }
     }
 
-    public static void saveStaticImageToDisk(String absoluteFileName, Bitmap image) {
+    /**
+     * Save image to the local storage.If an image is downloaded from the server it's compressed to jpeg format and the entityid
+     * becomes the file name
+     * @param entityId
+     * @param image
+     */
+
+    public static void saveStaticImageToDisk(String entityId, Bitmap image) {
         if (image != null) {
             OutputStream os = null;
             try {
 
-                if (absoluteFileName != null && !absoluteFileName.isEmpty()) {
+                if (entityId != null && !entityId.isEmpty()) {
+                    final String absoluteFileName = DrishtiApplication.getAppDir() + File.separator + entityId+".JPEG";
 
                     File outputFile = new File(absoluteFileName);
                     os = new FileOutputStream(outputFile);
@@ -513,6 +520,15 @@ public class OpenSRPImageLoader extends ImageLoader {
                         throw new IllegalArgumentException("Failed to save static image, could not retrieve image compression format from name "
                                 + absoluteFileName);
                     }
+                    // insert into the db
+                    ProfileImage profileImage= new ProfileImage();
+                    profileImage.setImageid(UUID.randomUUID().toString());
+                    profileImage.setEntityID(entityId);
+                    profileImage.setFilepath(absoluteFileName);
+                    profileImage.setFilecategory("profilepic");
+                    profileImage.setSyncStatus(ImageRepository.TYPE_Synced);
+                    ImageRepository imageRepo = (ImageRepository) org.ei.opensrp.Context.imageRepository();
+                    imageRepo.add(profileImage);
                 }
 
             } catch (FileNotFoundException e) {

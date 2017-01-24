@@ -1,6 +1,9 @@
 package org.ei.opensrp.mcare;
 
 import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Handler;
+
 import android.util.Log;
 import android.database.Cursor;
 import android.view.Menu;
@@ -24,6 +27,7 @@ import org.ei.opensrp.mcare.anc.nbnfhandler;
 import org.ei.opensrp.mcare.child.encc1handler;
 import org.ei.opensrp.mcare.child.encc2handler;
 import org.ei.opensrp.mcare.child.encc3handler;
+import org.ei.opensrp.mcare.elco.MIS_elco_form_handler;
 import org.ei.opensrp.mcare.elco.PSRFHandler;
 import org.ei.opensrp.mcare.household.CensusEnrollmentHandler;
 import org.ei.opensrp.mcare.household.tutorial.tutorialCircleViewFlow;
@@ -136,6 +140,7 @@ public class NativeHomeActivity extends SecuredActivity {
         context().formSubmissionRouter().getHandlerMap().put(
                 "birthnotificationpregnancystatusfollowup", new nbnfhandler());
 
+
     }
 
     private void setupViews() {
@@ -190,37 +195,49 @@ public class NativeHomeActivity extends SecuredActivity {
     }
 
     private void updateRegisterCounts(HomeContext homeContext) {
-               SmartRegisterQueryBuilder sqb = new SmartRegisterQueryBuilder();
-        Cursor hhcountcursor = context().commonrepository("household").RawCustomQueryForAdapter(
-                sqb.queryForCountOnRegisters("household", "household.FWHOHFNAME NOT Null and household.FWHOHFNAME != ''"));
-        hhcountcursor.moveToFirst();
-        hhcount= hhcountcursor.getInt(0);
-        hhcountcursor.close();
-        Cursor elcocountcursor = context().commonrepository("elco").RawCustomQueryForAdapter(
-                sqb.queryForCountOnRegisters("elco","elco.FWWOMFNAME NOT NULL and elco.FWWOMFNAME !=''  AND elco.details  LIKE '%\"FWELIGIBLE\":\"1\"%'"));
-        elcocountcursor.moveToFirst();
-        elcocount= elcocountcursor.getInt(0);
-        elcocountcursor.close();
-        Cursor anccountcursor = context().commonrepository("mcaremother").RawCustomQueryForAdapter(
-                sqb.queryForCountOnRegisters("mcaremother","(mcaremother.Is_PNC is null or mcaremother.Is_PNC = '0') and mcaremother.FWWOMFNAME is not NUll  AND mcaremother.FWWOMFNAME != \"\"      AND mcaremother.details  LIKE '%\"FWWOMVALID\":\"1\"%'"));
-        anccountcursor.moveToFirst();
-        anccount= anccountcursor.getInt(0);
-        anccountcursor.close();
-        Cursor pnccountcursor = context().commonrepository("mcaremother").RawCustomQueryForAdapter(
-                sqb.queryForCountOnRegisters("mcaremother","mcaremother.Is_PNC = '1' and mcaremother.FWWOMFNAME is not NUll  AND mcaremother.FWWOMFNAME != \"\"      AND mcaremother.details  LIKE '%\"FWWOMVALID\":\"1\"%'"));
-        pnccountcursor.moveToFirst();
-        pnccount= pnccountcursor.getInt(0);
-        pnccountcursor.close();
-        Cursor childcountcursor = context().commonrepository("mcarechild").RawCustomQueryForAdapter(
-                sqb.queryForCountOnRegisters("mcarechild"," mcarechild.FWBNFGEN is not NUll "));
-        childcountcursor.moveToFirst();
-        childcount= childcountcursor.getInt(0);
-        childcountcursor.close();
-        pncRegisterClientCountView.setText(valueOf(pnccount));
-        ecRegisterClientCountView.setText(valueOf(hhcount));
-        ancRegisterClientCountView.setText(valueOf(anccount));
-        fpRegisterClientCountView.setText(valueOf(elcocount));
-        childRegisterClientCountView.setText(valueOf(childcount));
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                SmartRegisterQueryBuilder sqb = new SmartRegisterQueryBuilder();
+
+                Cursor hhcountcursor = context().commonrepository("household").RawCustomQueryForAdapter(sqb.queryForCountOnRegisters("household", "household.FWHOHFNAME NOT Null and household.FWHOHFNAME != ''"));
+                hhcountcursor.moveToFirst();
+                hhcount= hhcountcursor.getInt(0);
+                hhcountcursor.close();
+                Cursor elcocountcursor = context().commonrepository("elco").RawCustomQueryForAdapter(sqb.queryForCountOnRegisters("elco","elco.FWWOMFNAME NOT NULL and elco.FWWOMFNAME !=''  AND elco.details  LIKE '%\"FWELIGIBLE\":\"1\"%'"));
+                elcocountcursor.moveToFirst();
+                elcocount= elcocountcursor.getInt(0);
+                elcocountcursor.close();
+                Cursor anccountcursor = context().commonrepository("mcaremother").RawCustomQueryForAdapter(sqb.queryForCountOnRegisters("mcaremother","(mcaremother.Is_PNC is null or mcaremother.Is_PNC = '0') and mcaremother.FWWOMFNAME is not NUll  AND mcaremother.FWWOMFNAME != \"\"      AND mcaremother.details  LIKE '%\"FWWOMVALID\":\"1\"%'"));
+                anccountcursor.moveToFirst();
+                anccount= anccountcursor.getInt(0);
+                anccountcursor.close();
+                Cursor pnccountcursor = context().commonrepository("mcaremother").RawCustomQueryForAdapter(sqb.queryForCountOnRegisters("mcaremother","mcaremother.Is_PNC = '1' and mcaremother.FWWOMFNAME is not NUll  AND mcaremother.FWWOMFNAME != \"\"      AND mcaremother.details  LIKE '%\"FWWOMVALID\":\"1\"%'"));
+                pnccountcursor.moveToFirst();
+                pnccount= pnccountcursor.getInt(0);
+                pnccountcursor.close();
+                Cursor childcountcursor = context().commonrepository("mcarechild").RawCustomQueryForAdapter(sqb.queryForCountOnRegisters("mcarechild"," mcarechild.FWBNFGEN is not NUll "));
+                childcountcursor.moveToFirst();
+                childcount= childcountcursor.getInt(0);
+                childcountcursor.close();
+
+                Handler mainHandler = new Handler(getMainLooper());
+
+                Runnable myRunnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        pncRegisterClientCountView.setText(valueOf(pnccount));
+                        ecRegisterClientCountView.setText(valueOf(hhcount));
+                        ancRegisterClientCountView.setText(valueOf(anccount));
+                        fpRegisterClientCountView.setText(valueOf(elcocount));
+                        childRegisterClientCountView.setText(valueOf(childcount));
+                    }
+                };
+                mainHandler.post(myRunnable);
+            }
+        }).start();
+
     }
 
     @Override
