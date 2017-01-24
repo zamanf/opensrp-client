@@ -41,7 +41,6 @@ public class CheckBoxFactory implements FormWidgetFactory {
             checkBox.setTag(R.id.childKey, item.getString("key"));
             checkBox.setGravity(Gravity.CENTER_VERTICAL);
             checkBox.setTextSize(16);
-            checkBox.setTypeface(Typeface.createFromAsset(context.getAssets(), FONT_REGULAR_PATH));
             checkBox.setOnCheckedChangeListener(listener);
             if (!TextUtils.isEmpty(item.optString("value"))) {
                 checkBox.setChecked(Boolean.valueOf(item.optString("value")));

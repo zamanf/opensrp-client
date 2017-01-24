@@ -32,7 +32,6 @@ public class FormUtils {
         textView.setId(ViewUtil.generateViewId());
         textView.setTextSize(textSizeInSp);
         textView.setLayoutParams(layoutParams);
-        textView.setTypeface(Typeface.createFromAsset(context.getAssets(), fontPath));
         return textView;
     }
 
