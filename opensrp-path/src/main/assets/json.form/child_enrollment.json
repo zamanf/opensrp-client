@@ -1,0 +1,133 @@
+{
+  "step1": {
+    "title": "Child Information",
+    "fields": [
+      {
+        "key": "first_name",
+        "type": "edit_text",
+        "hint": "First name (optional)"
+      },
+      {
+        "key": "last_name",
+        "type": "edit_text",
+        "hint": "*Last name",
+        "v_required": {
+          "value": "true",
+          "err": "Please enter the last name"
+        }
+      },
+      {
+        "key": "gender",
+        "type": "spinner",
+        "hint": "*Gender",
+        "values": [
+          "Male",
+          "Female"
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Please enter the gender"
+        }
+      },
+      {
+        "key": "dob",
+        "type": "edit_text",
+        "hint": "*DOB",
+        "v_required": {
+          "value": "true",
+          "err": "Please enter the date of birth"
+        }
+      },
+      {
+        "key": "national_id",
+        "type": "edit_text",
+        "hint": "*National ID"
+      },
+      {
+        "key": "birth_weight",
+        "type": "edit_text",
+        "hint": "Birth weight"
+      },
+      {
+        "key": "place_of_birth",
+        "type": "edit_text",
+        "hint": "Place of birth"
+      },
+      {
+        "key": "date_first_seen",
+        "type": "edit_text",
+        "hint": "Date first seen"
+      },
+      {
+        "key": "place_of_birth",
+        "type": "edit_text",
+        "hint": "Place of birth"
+      }
+    ]
+  },
+  "step2": {
+    "title": "Parent, primary caregiver, and CHW information",
+    "fields": [
+      {
+        "key": "father_name",
+        "type": "edit_text",
+        "hint": "*Father name",
+        "v_required": {
+          "value": "true",
+          "err": "Please enter the name of the father"
+        }
+      },
+      {
+        "key": "father_national_id",
+        "type": "edit_text",
+        "hint": "Father National Registration Card (NRC) number"
+      },
+      {
+        "key": "mother_name",
+        "type": "edit_text",
+        "hint": "*Mother name",
+        "v_required": {
+          "value": "true",
+          "err": "Please enter the name of the mother"
+        }
+      },
+      {
+        "key": "is_primary_caregiver",
+        "type": "radio",
+        "hint": "*Is the primary caregiver?",
+        "options": [
+          {
+            "key": "yes",
+            "text": "Yes"
+          },
+          {
+            "key": "no",
+            "text": "No"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Please enter if is the primary caregiver"
+        }
+      },
+      {
+        "key": "primary_caregiver_phone",
+        "type": "edit_text",
+        "hint": "*Primary caregiver phone number (phone number must be 10 digits and begin with 095 or 096 or 097)",
+        "v_required": {
+          "value": "true",
+          "err": "Please enter the primary caregiver's phone number"
+        }
+      },
+      {
+        "key": "chw_phone",
+        "type": "edit_text",
+        "hint": "*CHW phone number (phone number must be 10 digits and begin with 095 or 096 or 097)",
+        "v_required": {
+          "value": "true",
+          "err": "Please enter the CHW's phone number"
+        }
+      }
+    ]
+  }
+}

@@ -9,14 +9,15 @@ buildscript {
     }
 }
 apply plugin: 'com.android.application'
-dependencies {
-    compile project(':opensrp-app')
-    compile 'com.android.support:design:22.2.1'
-    compile 'com.android.support:support-v4:22.1.1'
-    compile 'com.squareup.picasso:picasso:2.5.2'
+
+repositories {
+    maven {
+        url "https://jitpack.io"
+    }
 }
+
 android {
-    compileSdkVersion 23
+    compileSdkVersion 22
     buildToolsVersion "23.0.2"
 
     defaultConfig {
@@ -46,4 +47,11 @@ android {
     }
 }
 
-
+dependencies {
+    compile project(':opensrp-app')
+    compile project(':android-json-form-wizard')
+    compile 'com.android.support:design:22.2.1'
+    compile 'com.android.support:support-v4:22.1.1'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    //compile 'com.github.vijayrawatsan:android-json-form-wizard:1.1.1-SNAPSHOT'
+}

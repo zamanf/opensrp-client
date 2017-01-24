@@ -2,6 +2,7 @@ package org.ei.opensrp.path.fragment;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 
 import org.ei.opensrp.Context;

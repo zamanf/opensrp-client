@@ -6,6 +6,7 @@ import android.util.Xml;
 import org.ei.opensrp.domain.SyncStatus;
 import org.ei.opensrp.domain.form.FormSubmission;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.XML;
 import org.w3c.dom.Attr;
@@ -16,9 +17,11 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xmlpull.v1.XmlSerializer;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.text.Format;
 import java.text.SimpleDateFormat;
@@ -744,6 +747,31 @@ public class FormUtils {
         }
         //Log.d("File", fileContents);
         return fileContents;
+    }
+
+    public JSONObject getFormJson(String formIdentity) {
+        if (mContext != null) {
+            try {
+                InputStream inputStream = mContext.getApplicationContext().getAssets()
+                        .open("json.form/" + formIdentity + ".json");
+                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream,
+                        "UTF-8"));
+                String jsonString;
+                StringBuilder stringBuilder = new StringBuilder();
+                while ((jsonString = reader.readLine()) != null) {
+                    stringBuilder.append(jsonString);
+                }
+                inputStream.close();
+
+                return new JSONObject(stringBuilder.toString());
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return null;
     }
 
     public static int getIndexForFormName(String formName, String[] formNames){
