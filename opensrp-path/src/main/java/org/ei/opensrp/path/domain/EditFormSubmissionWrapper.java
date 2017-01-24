@@ -129,8 +129,12 @@ public class EditFormSubmissionWrapper implements Serializable {
     private void editJson(JSONObject encounterJson, String field, String currentValue, String newValue){
       try {
           JSONObject fieldJson = VaccinateActionUtils.find(encounterJson, field);
-          if (fieldJson != null && fieldJson.has("content")) {
-              if (fieldJson.getString("content").equals(currentValue)) {
+          if (fieldJson != null) {
+              if(fieldJson.has("content")) {
+                  if (fieldJson.getString("content").equals(currentValue)) {
+                      VaccinateActionUtils.updateJson(encounterJson, field, newValue);
+                  }
+              } else {
                   VaccinateActionUtils.updateJson(encounterJson, field, newValue);
               }
           }

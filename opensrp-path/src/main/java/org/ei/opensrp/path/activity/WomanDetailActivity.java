@@ -45,7 +45,6 @@ public class WomanDetailActivity extends DetailActivity implements VaccinationAc
     TableLayout table;
 
     private VaccinateFormSubmissionWrapper vaccinateFormSubmissionWrapper;
-    private EditFormSubmissionWrapper editFormSubmissionWrapper;
 
     @Override
     protected int layoutResId() {
@@ -132,10 +131,10 @@ public class WomanDetailActivity extends DetailActivity implements VaccinationAc
         TableRow tr = getDataRow(this, "Program ID", getEntityIdentifier(client), null);
         dt.addView(tr);
 
-        tr = getDataRow(this, "EPI Card Number", getValue(client.getColumnmaps(), "epi_card_number", false), null);
+        tr = getDataRow(this, "EPI Card Number", getValue(client.getColumnmaps(), "epi_card_number", false), "epi_card_number", null);
         dt.addView(tr);
 
-        tr = getDataRow(this, "Woman's Name", getValue(client.getColumnmaps(), "first_name", true), null);
+        tr = getDataRow(this, "Woman's Name", getValue(client.getColumnmaps(), "first_name", true), "first_name", null);
         dt.addView(tr);
 
         int age = -1;
@@ -144,21 +143,21 @@ public class WomanDetailActivity extends DetailActivity implements VaccinationAc
         } catch (Exception e) {
             e.printStackTrace();
         }
-        tr = getDataRow(this, "Birthdate (Age)", convertDateFormat(getValue(client.getColumnmaps(), "dob", false), "No DoB", true) + " (" + age + " years)", null);
+        tr = getDataRow(this, "Birthdate (Age)", convertDateFormat(getValue(client.getColumnmaps(), "dob", false), "No DoB", true) + " (" + age + " years)", "dob", null);
         dt.addView(tr);
 
-        tr = getDataRow(this, "Father's Name", getValue(client.getColumnmaps(), "father_name", true), null);
+        tr = getDataRow(this, "Father's Name", getValue(client.getColumnmaps(), "father_name", true), "father_name", null);
         dt.addView(tr);
 
-        tr = getDataRow(this, "Husband's Name", getValue(client.getColumnmaps(), "husband_name", true), null);
+        tr = getDataRow(this, "Husband's Name", getValue(client.getColumnmaps(), "husband_name", true), "husband_name", null);
         dt.addView(tr);
 
         TableLayout dt2 = (TableLayout) findViewById(R.id.woman_detail_info_table2);
-        tr = getDataRow(this, "Ethnicity", getValue(client, "ethnicity", true), null);
+        tr = getDataRow(this, "Ethnicity", getValue(client, "ethnicity", true), "ethnicity", null);
         dt2.addView(tr);
-        tr = getDataRow(this, "Married", getValue(client.getColumnmaps(), "marriage", true), null);
+        tr = getDataRow(this, "Married", getValue(client.getColumnmaps(), "marriage", true), "marriage", null);
         dt2.addView(tr);
-        tr = getDataRow(this, "Contact Number", getValue(client.getColumnmaps(), "contact_phone_number", true), null);
+        tr = getDataRow(this, "Contact Number", getValue(client.getColumnmaps(), "contact_phone_number", true), "contact_phone_number", null);
         dt2.addView(tr);
         tr = getDataRow(this, "Address", getValue(client.getColumnmaps(), "address1", true)
                 + ", \nUC: " + getValue(client.getColumnmaps(), "union_council", true)
@@ -214,7 +213,7 @@ public class WomanDetailActivity extends DetailActivity implements VaccinationAc
         tableLayouts.add(dt);
         tableLayouts.add(dt2);
 
-        this.editFormSubmissionWrapper = retrieveEditFormSubmissionWrapper();
+        final EditFormSubmissionWrapper editFormSubmissionWrapper = retrieveEditFormSubmissionWrapper();
         Button edtBtn = (Button) findViewById(R.id.woman_edit_btn);
         edtBtn.setTag(getString(R.string.edit));
         edtBtn.setOnClickListener(new View.OnClickListener() {

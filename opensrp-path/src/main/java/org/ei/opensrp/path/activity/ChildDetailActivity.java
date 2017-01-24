@@ -46,8 +46,6 @@ public class ChildDetailActivity extends DetailActivity implements VaccinationAc
     Set<TableLayout> tables;
 
     private VaccinateFormSubmissionWrapper vaccinateFormSubmissionWrapper;
-    private EditFormSubmissionWrapper editFormSubmissionWrapper;
-
 
     @Override
     protected int layoutResId() {
@@ -247,7 +245,7 @@ public class ChildDetailActivity extends DetailActivity implements VaccinationAc
         tableLayouts.add(dt);
         tableLayouts.add(dt2);
 
-        this.editFormSubmissionWrapper = retrieveEditFormSubmissionWrapper();
+        final EditFormSubmissionWrapper editFormSubmissionWrapper = retrieveEditFormSubmissionWrapper();
         Button edtBtn = (Button) findViewById(R.id.child_edit_btn);
         edtBtn.setTag(getString(R.string.edit));
         edtBtn.setOnClickListener(new View.OnClickListener(){
