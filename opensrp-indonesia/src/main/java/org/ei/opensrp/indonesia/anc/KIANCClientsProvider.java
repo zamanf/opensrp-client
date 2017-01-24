@@ -167,7 +167,7 @@ public class KIANCClientsProvider implements SmartRegisterCLientsProviderForCurs
         final ImageView kiview = (ImageView)convertView.findViewById(R.id.img_profile);
         //start profile image
         viewHolder.profilepic.setTag(R.id.entity_id, pc.getColumnmaps().get("_id"));//required when saving file to disk
-        if(pc.getDetails().containsKey("imageid")){//image already in local storage most likey ):
+        if(pc.getDetails().containsKey("imageid") && pc.getDetails().get("imageid")!=null && !pc.getDetails().get("imageid").isEmpty()){//image already in local storage most likey ):
             mImageLoader.getImageWithId(pc.getColumnmaps().get("_id"), OpenSRPImageLoader.getStaticImageListener(viewHolder.profilepic, R.drawable.woman_placeholder, R.drawable.woman_placeholder));
 
         }else{
