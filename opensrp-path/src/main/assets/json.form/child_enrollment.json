@@ -1,8 +1,8 @@
 {
-  "count":"2",
+  "count": "2",
   "step1": {
     "title": "Child Information",
-    "next":"step2",
+    "next": "step2",
     "fields": [
       {
         "key": "first_name",
@@ -33,12 +33,12 @@
       },
       {
         "key": "dob",
-        "type": "edit_text",
-        "hint": "*DOB (dd/mm/yyyy)",
-        "v_regex" : {
-          "value" : "(([0,1,2][1-9])|(3[0,1]))/((0[1,9])|(1[0-2]))/201[6,7]",
-          "err" : "Please enter a valid date"
-        }
+        "type": "date_picker",
+        "hint": "*Date of Birth",
+        "default": "today",
+        "expanded": true,
+        "min_date": "2016-01-01",
+        "max_date": "today"
       },
       {
         "key": "national_id",
@@ -49,9 +49,9 @@
         "key": "birth_weight",
         "type": "edit_text",
         "hint": "Birth weight (KGs)",
-        "v_regex" : {
-          "value" : "((([0-9])|1[0,5])\.[0-9]{1,3})|99",
-          "err" : "Please enter a valid weight in KGs e.g 2.0 or 99 if unknown"
+        "v_regex": {
+          "value": "((([0-9])|1[0,5])\.[0-9]{1,3})|99",
+          "err": "Please enter a valid weight in KGs e.g 2.0 or 99 if unknown"
         }
       },
       {
@@ -61,12 +61,12 @@
       },
       {
         "key": "date_first_seen",
-        "type": "edit_text",
-        "hint": "Date first seen (dd/mm/yyyy)",
-        "v_regex" : {
-          "value" : "((([0,1,2][1-9])|(3[0,1]))/((0[1,9])|(1[0-2]))/201[6,7])|99",
-          "err" : "Please enter a valid date or 99 if unknown"
-        }
+        "type": "date_picker",
+        "hint": "Date first seen (set to 31-12-2015 if unknown)",
+        "default": "2015-12-31",
+        "expanded": true,
+        "min_date": "2015-12-31",
+        "max_date": "today - 1"
       },
       {
         "key": "hiv_exposure",
@@ -90,7 +90,7 @@
           "value": "true",
           "err": "Please enter HIV exposure"
         }
-      },
+      }
     ]
   },
   "step2": {
@@ -142,18 +142,18 @@
         "key": "primary_caregiver_phone",
         "type": "edit_text",
         "hint": "*Primary caregiver phone number (phone number must be 10 digits and begin with 095 or 096 or 097)",
-        "v_regex" : {
-          "value" : "09[5,7][0-9]{7}",
-          "err" : "Please enter a valid phone number"
+        "v_regex": {
+          "value": "09[5,7][0-9]{7}",
+          "err": "Please enter a valid phone number"
         }
       },
       {
         "key": "chw_phone",
         "type": "edit_text",
         "hint": "*CHW phone number (phone number must be 10 digits and begin with 095 or 096 or 097)",
-        "v_regex" : {
-          "value" : "09[5,7][0-9]{7}",
-          "err" : "Please enter a valid phone number"
+        "v_regex": {
+          "value": "09[5,7][0-9]{7}",
+          "err": "Please enter a valid phone number"
         }
       }
     ]
