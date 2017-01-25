@@ -36,6 +36,8 @@ import org.joda.time.Months;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.io.File;
+
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static org.joda.time.LocalDateTime.parse;
 
@@ -43,6 +45,8 @@ import static org.joda.time.LocalDateTime.parse;
  * Created by Dimas Ciputra on 2/16/15.
  */
 public class KIClientsProvider implements SmartRegisterCLientsProviderForCursorAdapter {
+
+    private final String TAG = KIClientsProvider.class.getSimpleName();
     private final LayoutInflater inflater;
     private final Context context;
     private final View.OnClickListener onClickListener;
@@ -53,6 +57,9 @@ public class KIClientsProvider implements SmartRegisterCLientsProviderForCursorA
     protected CommonPersonObjectController controller;
 
     AlertService alertService;
+
+    private String photo_path;
+    private File tb_photo;
 
     public KIClientsProvider(Context context, View.OnClickListener onClickListener, AlertService alertService) {
         this.onClickListener = onClickListener;
@@ -126,13 +133,29 @@ public class KIClientsProvider implements SmartRegisterCLientsProviderForCursorA
         //Set image as Icon
         final ImageView kiview = (ImageView)convertView.findViewById(R.id.img_profile);
 //        Profile Picture
-        if (pc.getDetails().get("profilepic_thumb") != null) {
-            final int THUMBSIZE = FaceConstants.THUMBSIZE;
 
-            Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(
-                    BitmapFactory.decodeFile(pc.getDetails().get("profilepic_thumb") ),
-                    THUMBSIZE, THUMBSIZE);
-            kiview.setImageBitmap(ThumbImage);
+        photo_path = pc.getDetails().get("profilepic_thumb");
+        final int THUMBSIZE = FaceConstants.THUMBSIZE;
+
+        if (photo_path != null) {
+            tb_photo = new File(photo_path);
+            if (!tb_photo.exists()) {
+                Log.e(TAG, "onCreate: here " );
+                viewHolder.profilepic.setImageDrawable(context.getResources().getDrawable(R.drawable.not_found_404));
+            } else {
+                Log.e(TAG, "onCreate: here exist " );
+                Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(
+                        BitmapFactory.decodeFile(photo_path),
+                        THUMBSIZE, THUMBSIZE);
+                kiview.setImageBitmap(ThumbImage);
+            }
+//            if (pc.getDetails().get("profilepic_thumb") != null) {
+//            final int THUMBSIZE = FaceConstants.THUMBSIZE;
+//
+//            Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(
+//                    BitmapFactory.decodeFile(pc.getDetails().get("profilepic_thumb") ),
+//                    THUMBSIZE, THUMBSIZE);
+//            kiview.setImageBitmap(ThumbImage);
 
         } else {
             viewHolder.profilepic.setImageDrawable(context.getResources().getDrawable(R.drawable.woman_placeholder));
@@ -141,7 +164,7 @@ public class KIClientsProvider implements SmartRegisterCLientsProviderForCursorA
         viewHolder.wife_name.setText(pc.getColumnmaps().get("namalengkap")!=null?pc.getColumnmaps().get("namalengkap"):"");
         viewHolder.husband_name.setText(pc.getColumnmaps().get("namaSuami")!=null?pc.getColumnmaps().get("namaSuami"):"");
 //        viewHolder.village_name.setText(pc.getDetails().get("id")!=null?pc.getDetails().get("id"):"");
-        viewHolder.village_name.setText(pc.getDetails().get("village")!=null?pc.getDetails().get("village"):"");
+        viewHolder.village_name.setText(pc.getDetails().get("address1")!=null?pc.getDetails().get("address1"):"");
         viewHolder.wife_age.setText(pc.getColumnmaps().get("umur")!=null?pc.getColumnmaps().get("umur"):"");
         viewHolder.no_ibu.setText(pc.getDetails().get("noIbu")!=null?pc.getDetails().get("noIbu"):"");
         viewHolder.unique_id.setText(pc.getDetails().get("nik")!=null?pc.getDetails().get("nik"):"");

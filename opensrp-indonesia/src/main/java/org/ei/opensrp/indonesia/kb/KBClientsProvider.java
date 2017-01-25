@@ -2,8 +2,12 @@ package org.ei.opensrp.indonesia.kb;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.media.ThumbnailUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +29,7 @@ import org.ei.opensrp.cursoradapter.SmartRegisterCLientsProviderForCursorAdapter
 import org.ei.opensrp.domain.Alert;
 import org.ei.opensrp.indonesia.R;
 
+import org.ei.opensrp.indonesia.face.camera.util.FaceConstants;
 import org.ei.opensrp.indonesia.kartu_ibu.KIDetailActivity;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.repository.DetailsRepository;
@@ -39,6 +44,7 @@ import org.ei.opensrp.view.viewHolder.ECProfilePhotoLoader;
 import org.ei.opensrp.view.viewHolder.OnClickFormLauncher;
 import org.ei.opensrp.view.viewHolder.ProfilePhotoLoader;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -56,6 +62,9 @@ import static org.ei.opensrp.view.controller.ECSmartRegisterController.STATUS_TY
  * Created by Dimas Ciputra on 2/16/15.
  */
 public class KBClientsProvider implements SmartRegisterCLientsProviderForCursorAdapter {
+
+    private final String TAG = KBClientsProvider.class.getSimpleName();
+
     private final LayoutInflater inflater;
     private final Context context;
     private final View.OnClickListener onClickListener;
@@ -66,6 +75,10 @@ public class KBClientsProvider implements SmartRegisterCLientsProviderForCursorA
     protected CommonPersonObjectController controller;
 
     AlertService alertService;
+
+    private String photo_path;
+    private File tb_photo;
+
     public KBClientsProvider(Context context,
                              View.OnClickListener onClickListener,
                              AlertService alertService) {
@@ -153,11 +166,27 @@ public class KBClientsProvider implements SmartRegisterCLientsProviderForCursorA
 
         //set image
         final ImageView kiview = (ImageView)convertView.findViewById(R.id.img_profile);
-        if (pc.getDetails().get("profilepic") != null) {
-//            KIDetailActivity.setImagetoHolderFromUri((Activity) context, pc.getDetails().get("profilepic"), kiview, R.mipmap.woman_placeholder);
-//            kiview.setTag(smartRegisterClient);
-        }
-        else {
+//        if (pc.getDetails().get("profilepic") != null) {
+////            KIDetailActivity.setImagetoHolderFromUri((Activity) context, pc.getDetails().get("profilepic"), kiview, R.mipmap.woman_placeholder);
+////            kiview.setTag(smartRegisterClient);
+//        }
+
+        photo_path = pc.getDetails().get("profilepic_thumb");
+        final int THUMBSIZE = FaceConstants.THUMBSIZE;
+
+        if (photo_path != null) {
+            tb_photo = new File(photo_path);
+            if (!tb_photo.exists()) {
+//                Log.e(TAG, "onCreate: here ");
+                viewHolder.profilepic.setImageDrawable(context.getResources().getDrawable(R.drawable.not_found_404));
+            } else {
+//                Log.e(TAG, "onCreate: here exist " );
+                Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(
+                        BitmapFactory.decodeFile(photo_path),
+                        THUMBSIZE, THUMBSIZE);
+                kiview.setImageBitmap(ThumbImage);
+            }
+        } else {
 
             viewHolder.profilepic.setImageDrawable(context.getResources().getDrawable(R.drawable.woman_placeholder));
 

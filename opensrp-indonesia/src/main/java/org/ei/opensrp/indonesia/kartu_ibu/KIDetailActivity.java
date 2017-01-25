@@ -58,7 +58,6 @@ public class KIDetailActivity extends Activity {
     static String bindobject;
     static String entityid;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,7 +94,6 @@ public class KIDetailActivity extends Activity {
         TextView gakin = (TextView) findViewById(R.id.txt_gakin);
         TextView blood_type = (TextView) findViewById(R.id.txt_blood);
         TextView asuransi = (TextView) findViewById(R.id.txt_asuransi);
-
 
         //detail RISK
         TextView highRiskSTIBBVs = (TextView) findViewById(R.id.txt_highRiskSTIBBVs);

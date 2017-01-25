@@ -41,6 +41,7 @@ import org.joda.time.Months;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
@@ -62,6 +63,9 @@ public class KIANCClientsProvider implements SmartRegisterCLientsProviderForCurs
     protected CommonPersonObjectController controller;
 
     AlertService alertService;
+
+    private String photo_path;
+    private File tb_photo;
 
     public KIANCClientsProvider(Context context,
                                 View.OnClickListener onClickListener,
@@ -168,14 +172,30 @@ public class KIANCClientsProvider implements SmartRegisterCLientsProviderForCurs
 
         final ImageView kiview = (ImageView)convertView.findViewById(R.id.img_profile);
 
-        if (pc.getDetails().get("profilepic_thumb") != null) {
-            final int THUMBSIZE = FaceConstants.THUMBSIZE;
+//        if (pc.getDetails().get("profilepic_thumb") != null) {
+//            final int THUMBSIZE = FaceConstants.THUMBSIZE;
+//
+//            Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(
+//                    BitmapFactory.decodeFile(pc.getDetails().get("profilepic_thumb")),
+//                    THUMBSIZE, THUMBSIZE);
+//            kiview.setImageBitmap(ThumbImage);
+//            kiview.setTag(smartRegisterClient);
+//
+        photo_path = pc.getDetails().get("profilepic_thumb");
+        final int THUMBSIZE = FaceConstants.THUMBSIZE;
 
-            Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(
-                    BitmapFactory.decodeFile(pc.getDetails().get("profilepic_thumb")),
-                    THUMBSIZE, THUMBSIZE);
-            kiview.setImageBitmap(ThumbImage);
-            kiview.setTag(smartRegisterClient);
+        if (photo_path != null) {
+            tb_photo = new File(photo_path);
+            if (!tb_photo.exists()) {
+//                Log.e(TAG, "onCreate: here ");
+                viewHolder.profilepic.setImageDrawable(context.getResources().getDrawable(R.drawable.not_found_404));
+            } else {
+//                Log.e(TAG, "onCreate: here exist " );
+                Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(
+                        BitmapFactory.decodeFile(photo_path),
+                        THUMBSIZE, THUMBSIZE);
+                kiview.setImageBitmap(ThumbImage);
+            }
 
         } else {
             viewHolder.profilepic.setImageDrawable(context.getResources().getDrawable(R.drawable.woman_placeholder));

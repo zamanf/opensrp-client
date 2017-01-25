@@ -12,15 +12,15 @@
         android:layout_alignParentTop="true"/>
 
       <ImageView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
+          android:layout_width="40dp"
+          android:layout_height="40dp"
           android:layout_alignParentBottom="true"
           android:layout_alignParentRight="true"
           android:layout_marginRight="55dp"
-          android:background="@drawable/confirm"
+          android:background="@drawable/ic_checked_white"
           android:contentDescription="@string/desc_approval"
           android:id="@+id/iv_approve"
-          />
+          android:layout_alignTop="@+id/iv_cancel" />
 
       <ImageView
           android:layout_width="wrap_content"

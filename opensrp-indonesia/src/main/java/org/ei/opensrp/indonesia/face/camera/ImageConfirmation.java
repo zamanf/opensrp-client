@@ -9,6 +9,7 @@
 package org.ei.opensrp.indonesia.face.camera;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -74,23 +75,24 @@ public class ImageConfirmation extends Activity {
 
     String str_origin_class;
 
+    byte[] data;
+    int angle;
+    boolean switchCamera;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_face_confirmation);
 
-        Bundle extras = getIntent().getExtras();
-        byte[] data = getIntent().getByteArrayExtra("com.qualcomm.sdk.smartshutterapp.ImageConfirmation");
-        int angle = extras.getInt("com.qualcomm.sdk.smartshutterapp.ImageConfirmation.orientation");
-        boolean switchCamera = extras.getBoolean("com.qualcomm.sdk.smartshutterapp.ImageConfirmation.switchCamera");
-        entityId = extras.getString("org.sid.sidface.ImageConfirmation.id");
-        identifyPerson = extras.getBoolean("org.sid.sidface.ImageConfirmation.identify");
-        kiclient = extras.getParcelableArray("org.sid.sidface.ImageConfirmation.kiclient");
-        str_origin_class = extras.getString("org.sid.sidface.ImageConfirmation.origin");
+        init_gui();
+
+        init_extras();
 
         storedBitmap = BitmapFactory.decodeByteArray(data, 0, data.length, null);
-
-        ImageView confirmationView = (ImageView) findViewById(R.id.iv_confirmationView);    // New view on which the image will be displayed.
+        objFace = SmartShutterActivity.faceProc;
+//        if (objFace == null) {
+//            objFace = FacialProcessing.getInstance();
+//        }
 
         Matrix mat = new Matrix();
         if (!switchCamera) {
@@ -103,11 +105,7 @@ public class ImageConfirmation extends Activity {
         }
 //        TODO : Image from gallery
 
-        objFace = SmartShutterActivity.faceProc;
-//        if (objFace == null) {
-//            objFace = FacialProcessing.getInstance();
-//        }
-
+//        Retrieve data from Local Storage
         hash = SmartShutterActivity.retrieveHash(getApplicationContext());
 
         boolean result = objFace.setBitmap(storedBitmap);
@@ -126,15 +124,17 @@ public class ImageConfirmation extends Activity {
         objFace.normalizeCoordinates(imageViewSurfaceWidth, imageViewSurfaceHeight);
 
         if(result){
-            Log.e(TAG, "onCreate: SetBitmap objFace "+"Success" );
+//            Log.e(TAG, "onCreate: SetBitmap objFace "+"Success" );
             if(faceDatas != null){
-                Log.e(TAG, "onCreate: faceDatas "+"NotNull" );
+//                Log.e(TAG, "onCreate: faceDatas "+"NotNull" );
                 rects = new Rect[faceDatas.length];
                 for (int i = 0; i < faceDatas.length; i++) {
                     Rect rect = faceDatas[i].rect;
                     rects[i] = rect;
 
                     float pixelDensity = getResources().getDisplayMetrics().density;
+
+//                    Identify or new record
                     if (identifyPerson) {
                         String selectedPersonId = Integer.toString(faceDatas[i].getPersonId());
                         Iterator<HashMap.Entry<String, String>> iter = hash.entrySet().iterator();
@@ -156,6 +156,7 @@ public class ImageConfirmation extends Activity {
                         showDetailUser(selectedPersonName);
 
                     } else {
+
                         Tools.drawRectFace(rect, mutableBitmap, pixelDensity);
                         Log.e(TAG, "onCreate: PersonId "+faceDatas[i].getPersonId() );
                         if(faceDatas[i].getPersonId() < 0){
@@ -167,8 +168,17 @@ public class ImageConfirmation extends Activity {
                             saveHash(hash, getApplicationContext());
                             saveAlbum();
                         } else {
-                            Log.e(TAG, "onCreate: Similar face found "+
-                                    Integer.toString(faceDatas[i].getRecognitionConfidence()) );
+                            Log.e(TAG, "onCreate: Similar face found " +
+                                    Integer.toString(faceDatas[i].getRecognitionConfidence()));
+
+                            AlertDialog.Builder builder= new AlertDialog.Builder(this);
+
+                            builder.setTitle("Are you Sure?");
+                            builder.setMessage("Similar Face Found! : Confidence "+faceDatas[i].getRecognitionConfidence());
+                            builder.setNegativeButton("CANCEL", null);
+                            builder.show();
+                            confirmButton.setVisibility(View.INVISIBLE);
+
                         }
 
 //                        TODO: asign selectedPersonName to search
@@ -179,6 +189,10 @@ public class ImageConfirmation extends Activity {
                 } // end for count faces
             } else {
                 Log.e(TAG, "onCreate: faceDatas "+"Null" );
+                Toast.makeText(ImageConfirmation.this, "No Face Detected", Toast.LENGTH_SHORT).show();
+                Intent resultIntent = new Intent();
+                setResult(RESULT_CANCELED, resultIntent);
+                ImageConfirmation.this.finish();
             }
         } else {
             Log.e(TAG, "onCreate: SetBitmap objFace"+"Failed" );
@@ -188,6 +202,35 @@ public class ImageConfirmation extends Activity {
 //        confirmationView.setImageBitmap(mutableBitmap);            // Setting the view with the bitmap image that came in.
 
         buttonJob();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.image_confirmation, menu);
+        return true;
+    }
+
+    /**
+     * Method to get Info from previous Intent
+     */
+    private void init_extras() {
+        Bundle extras = getIntent().getExtras();
+        data = getIntent().getByteArrayExtra("com.qualcomm.sdk.smartshutterapp.ImageConfirmation");
+        angle = extras.getInt("com.qualcomm.sdk.smartshutterapp.ImageConfirmation.orientation");
+        switchCamera = extras.getBoolean("com.qualcomm.sdk.smartshutterapp.ImageConfirmation.switchCamera");
+        entityId = extras.getString("org.sid.sidface.ImageConfirmation.id");
+        identifyPerson = extras.getBoolean("org.sid.sidface.ImageConfirmation.identify");
+        kiclient = extras.getParcelableArray("org.sid.sidface.ImageConfirmation.kiclient");
+        str_origin_class = extras.getString("org.sid.sidface.ImageConfirmation.origin");
+
+    }
+
+
+    private void init_gui() {
+        confirmationView = (ImageView) findViewById(R.id.iv_confirmationView);  // Display New Photo
+        trashButton = (ImageView) findViewById(R.id.iv_cancel);
+        confirmButton = (ImageView) findViewById(R.id.iv_approve);
     }
 
     public void showDetailUser(String selectedPersonName) {
@@ -206,10 +249,11 @@ public class ImageConfirmation extends Activity {
 //        CommonPersonObjectClient pClient = new CommonPersonObjectClient(personinlist.getCaseId(), personinlist.getDetails(), personinlist.getDetails().get("ec_kartu_ibu.namalengkap"));
 //        KIDetailActivity.kiclient = pClient;
 //        Intent intent = new Intent(ImageConfirmation.this,KIDetailActivity.class);
+
         Class<?> origin_class = this.getClass();
 
         Log.e(TAG, "onPreviewFrame: init"+origin_class.getSimpleName() );
-        Log.e(TAG, "onPreviewFrame: origin"+str_origin_class );
+        Log.e(TAG, "onPreviewFrame: origin" + str_origin_class);
 
         if(str_origin_class.equals(NativeKISmartRegisterFragment.class.getSimpleName())){
             origin_class = NativeKISmartRegisterActivity.class;
@@ -223,7 +267,7 @@ public class ImageConfirmation extends Activity {
             origin_class = NativeKIPNCSmartRegisterActivity.class;
         }
 
-        Intent intent = new Intent(ImageConfirmation.this, NativeKISmartRegisterActivity.class);
+        Intent intent = new Intent(ImageConfirmation.this, origin_class);
         intent.putExtra("org.ei.opensrp.indonesia.face.face_mode", true);
         intent.putExtra("org.ei.opensrp.indonesia.face.base_id", selectedPersonName);
 
@@ -236,19 +280,18 @@ public class ImageConfirmation extends Activity {
      */
     private void buttonJob() {
         // If approved then save the image and close.
-        confirmButton = (ImageView) findViewById(R.id.iv_approve);
         confirmButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
-                Log.e(TAG, "onClick: "+identifyPerson );
-                if(!identifyPerson){
+                Log.e(TAG, "onClick: " + identifyPerson);
+                if (!identifyPerson) {
                     saveAndClose(entityId);
                 } else {
 //                    SmartRegisterQueryBuilder sqb = new SmartRegisterQueryBuilder();
 //                    Cursor cursor = getApplicationContext().
-                    KIDetailActivity.kiclient = (CommonPersonObjectClient)arg0.getTag();
-                    Log.e(TAG, "onClick: "+KIDetailActivity.kiclient );
+                    KIDetailActivity.kiclient = (CommonPersonObjectClient) arg0.getTag();
+                    Log.e(TAG, "onClick: " + KIDetailActivity.kiclient);
 //                    Intent intent = new Intent(ImageConfirmation.this,KIDetailActivity.class);
                     Log.e(TAG, "onClick: " + selectedPersonName);
 //                    startActivity(intent);
@@ -273,7 +316,6 @@ public class ImageConfirmation extends Activity {
         });
 
         // Trash the image and return back to the camera preview.
-        trashButton = (ImageView) findViewById(R.id.iv_cancel);
         trashButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -319,13 +361,6 @@ public class ImageConfirmation extends Activity {
         Intent resultIntent = new Intent(this, KIDetailActivity.class);
         setResult(RESULT_OK, resultIntent);
         startActivityForResult(resultIntent, 1);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.image_confirmation, menu);
-        return true;
     }
 
     public void saveHash(HashMap<String, String> hashMap, android.content.Context context) {

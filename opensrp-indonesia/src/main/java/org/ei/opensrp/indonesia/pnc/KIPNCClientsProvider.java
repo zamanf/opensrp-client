@@ -33,6 +33,7 @@ import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
 import org.ei.opensrp.view.viewHolder.OnClickFormLauncher;
 
+import java.io.File;
 import java.text.BreakIterator;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +46,7 @@ import static org.ei.opensrp.util.StringUtil.humanizeAndDoUPPERCASE;
  * Created by Dimas Ciputra on 3/4/15.
  */
 public class KIPNCClientsProvider implements SmartRegisterCLientsProviderForCursorAdapter {
+    private final String TAG = KIPNCClientsProvider.class.getSimpleName();
     private final LayoutInflater inflater;
     private final Context context;
     private final View.OnClickListener onClickListener;
@@ -55,6 +57,10 @@ public class KIPNCClientsProvider implements SmartRegisterCLientsProviderForCurs
     protected CommonPersonObjectController controller;
 
     AlertService alertService;
+
+    private String photo_path;
+    private File tb_photo;
+
     public KIPNCClientsProvider(Context context,
                                 View.OnClickListener onClickListener,
                                 AlertService alertService) {
@@ -117,17 +123,33 @@ public class KIPNCClientsProvider implements SmartRegisterCLientsProviderForCurs
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-//        Set image as Icon
+////        Set image as Icon
         final ImageView kiview = (ImageView)convertView.findViewById(R.id.img_profile);
 //        Profile Picture
-        if (pc.getDetails().get("profilepic_thumb") != null) {
-            final int THUMBSIZE = FaceConstants.THUMBSIZE;
 
-            Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(
-                    BitmapFactory.decodeFile(pc.getDetails().get("profilepic_thumb")),
-                    THUMBSIZE, THUMBSIZE);
-            kiview.setImageBitmap(ThumbImage);
+//        if (pc.getDetails().get("profilepic_thumb") != null) {
+//            final int THUMBSIZE = FaceConstants.THUMBSIZE;
+//
+//            Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(
+//                    BitmapFactory.decodeFile(pc.getDetails().get("profilepic_thumb")),
+//                    THUMBSIZE, THUMBSIZE);
+//            kiview.setImageBitmap(ThumbImage);
+//
+        photo_path = pc.getDetails().get("profilepic_thumb");
+        final int THUMBSIZE = FaceConstants.THUMBSIZE;
 
+        if (photo_path != null) {
+            tb_photo = new File(photo_path);
+            if (!tb_photo.exists()) {
+//                Log.e(TAG, "onCreate: here ");
+                viewHolder.profilepic.setImageDrawable(context.getResources().getDrawable(R.drawable.not_found_404));
+            } else {
+//                Log.e(TAG, "onCreate: here exist " );
+                Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(
+                        BitmapFactory.decodeFile(photo_path),
+                        THUMBSIZE, THUMBSIZE);
+                kiview.setImageBitmap(ThumbImage);
+            }
         } else {
             viewHolder.profilepic.setImageDrawable(context.getResources().getDrawable(R.drawable.woman_placeholder));
         }
