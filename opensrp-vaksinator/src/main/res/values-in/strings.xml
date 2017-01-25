@@ -239,7 +239,7 @@
 
     <string name="anc_label">ANC:</string>
     <string name="hb_test_label">Hb Test</string>
-    <string name="edd_label">"EDD: "</string>
+    <string name="edd_label">"HTPT: "</string>
     <string name="str_days_past_due">day (s) past due</string>
     <string name="lmp_label">LMP:</string>
     <string name="str_weeks">minggu</string>
@@ -316,6 +316,7 @@
     <string name="hh_inhabitants_details">HH Inhabitants Details</string>
     <string name="household_entries">All Household Entries</string>
     <string name="vaksinator">VAKSINASI ANAK</string>
+    <string name="registerTT">REGISTER TT IBU</string>
     <string name="test">Register Vaksinator</string>
     <string name="hh_register_title_in_short">HH</string>
 
@@ -426,6 +427,24 @@
     <string name="campakVisitLabel">Kunjungan Imunisasi Campak</string>
     <string name="dptTambahanVisitLabel">Kunjungan Imunisasi DPT/HB Tambahan</string>
     <string name="campakTambahanVisitLabel">Kunjungan Imunisasi Campak Tambahan</string>
+
+    <!--
+        TT REGISTER STRING LIBRARY
+    -->
+    <string name="motherID">No. Ibu:</string>
+    <string name="lila">Lila</string>
+    <string name="weight">Berat Badan</string>
+    <string name="last_visit_date">Kunj. terakhir: </string>
+    <string name="anc_ke">ANC ke </string>
+    <string name="visit_number">Kunjungan ke-</string>
+    <string name="header_klinis">Status Klinis</string>
+    <string name="header_pemeriksaan">Pemeriksaan</string>
+    <string name="header_history_anc">Riwayat ANC</string>
+    <string name="tt_status">Status TT</string>
+    <string name="cm">cm</string>
+    <string name="kg">kg</string>
+    <string name="week">minggu</string>
+    <string name="clinical_age">Usia Klinis: </string>
 
     <color name="vaccBlue">#FF9BC1FB</color>
 

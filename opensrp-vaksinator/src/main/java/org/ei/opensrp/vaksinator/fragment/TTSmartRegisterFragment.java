@@ -97,7 +97,7 @@ public class TTSmartRegisterFragment extends SecuredNativeSmartRegisterCursorAda
 
             @Override
             public String nameInShortFormForTitle() {
-                return Context.getInstance().getStringResource(R.string.vaksinator);
+                return Context.getInstance().getStringResource(R.string.registerTT);
             }
         };
     }

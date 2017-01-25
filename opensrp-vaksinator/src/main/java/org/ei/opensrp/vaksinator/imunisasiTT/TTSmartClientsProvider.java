@@ -4,11 +4,12 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.ei.opensrp.commonregistry.AllCommonsRepository;
@@ -16,6 +17,7 @@ import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.commonregistry.CommonPersonObjectController;
 import org.ei.opensrp.cursoradapter.SmartRegisterCLientsProviderForCursorAdapter;
+import org.ei.opensrp.domain.Alert;
 import org.ei.opensrp.repository.DetailsRepository;
 import org.ei.opensrp.vaksinator.R;
 import org.ei.opensrp.service.AlertService;
@@ -25,12 +27,12 @@ import org.ei.opensrp.view.dialog.FilterOption;
 import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
 import org.ei.opensrp.view.viewHolder.OnClickFormLauncher;
+import org.w3c.dom.Text;
 
-import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.Map;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
-import static org.joda.time.LocalDateTime.parse;
 
 /**
  * Created by Dimas Ciputra on 2/16/15.
@@ -47,10 +49,9 @@ public class TTSmartClientsProvider implements SmartRegisterCLientsProviderForCu
 
     AlertService alertService;
     public TTSmartClientsProvider(Context context,
-                                     View.OnClickListener onClickListener,
-                                     AlertService alertService) {
+                                View.OnClickListener onClickListener,
+                                AlertService alertService) {
         this.onClickListener = onClickListener;
-//        this.controller = controller;
         this.context = context;
         this.alertService = alertService;
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -63,219 +64,128 @@ public class TTSmartClientsProvider implements SmartRegisterCLientsProviderForCu
 
     @Override
     public void getView(SmartRegisterClient smartRegisterClient, View convertView) {
+
         ViewHolder viewHolder;
-
-        if(convertView.getTag() == null || !(convertView.getTag() instanceof  ViewHolder)){
+        if(convertView.getTag() == null || !(convertView.getTag() instanceof  ViewHolder)) {
             viewHolder = new ViewHolder();
-            viewHolder.profilelayout =  (LinearLayout)convertView.findViewById(R.id.profile_info_layout);
-            //----------Child Basic Information
-            viewHolder.namaIbu = (TextView)convertView.findViewById(R.id.ttNamaIbu);
-            viewHolder.namaSuami = (TextView)convertView.findViewById(R.id.ttNamaSuami);
-            viewHolder.dusun = (TextView)convertView.findViewById(R.id.ttDusun);
-            viewHolder.tanggalLahir = (TextView)convertView.findViewById(R.id.ttTanggalLahir);
+            viewHolder.profilelayout = (LinearLayout) convertView.findViewById(R.id.profile_info_layout);
 
-            viewHolder.tt1Logo = (ImageView)convertView.findViewById(R.id.tt1Logo);
-            viewHolder.tt2Logo = (ImageView)convertView.findViewById(R.id.tt2Logo);
-            viewHolder.tt3Logo = (ImageView)convertView.findViewById(R.id.tt3Logo);
-            viewHolder.tt4Logo = (ImageView)convertView.findViewById(R.id.tt4Logo);
-            viewHolder.tt5Logo = (ImageView)convertView.findViewById(R.id.tt5Logo);
+            viewHolder.wife_name = (TextView) convertView.findViewById(R.id.wife_name);
+            viewHolder.husband_name = (TextView) convertView.findViewById(R.id.txt_husband_name);
+            viewHolder.village_name = (TextView) convertView.findViewById(R.id.txt_village_name);
+            viewHolder.wife_age = (TextView) convertView.findViewById(R.id.wife_age);
+            viewHolder.no_ibu = (TextView) convertView.findViewById(R.id.no_ibu);
+            viewHolder.unique_id = (TextView) convertView.findViewById(R.id.unique_id);
 
-            viewHolder.tt1Tanggal = (TextView)convertView.findViewById(R.id.tanggalTT1);
-            viewHolder.tt2Tanggal = (TextView)convertView.findViewById(R.id.tanggalTT2);
-            viewHolder.tt3Tanggal = (TextView)convertView.findViewById(R.id.tanggalTT3);
-            viewHolder.tt4Tanggal = (TextView)convertView.findViewById(R.id.tanggalTT4);
-            viewHolder.tt5Tanggal = (TextView)convertView.findViewById(R.id.tanggalTT5);
+            viewHolder.hr_badge = (ImageView) convertView.findViewById(R.id.img_hr_badge);
+            viewHolder.bpl_badge = (ImageView) convertView.findViewById(R.id.img_bpl_badge);
+            viewHolder.usia_klinis = (TextView) convertView.findViewById(R.id.txt_usia_klinis);
+            viewHolder.edd_due = (TextView) convertView.findViewById(R.id.lbl_htpt);
+            viewHolder.htpt = (TextView) convertView.findViewById(R.id.txt_htpt);
+            viewHolder.ki_lila_bb = (TextView) convertView.findViewById(R.id.txt_ki_lila_bb);
+            viewHolder.beratbadan_tb = (TextView) convertView.findViewById(R.id.txt_ki_beratbadan_tb);
+            viewHolder.tanggal_kunjungan_anc = (TextView) convertView.findViewById(R.id.txt_tanggal_kunjungan_anc);
+            viewHolder.anc_number = (TextView) convertView.findViewById(R.id.txt_anc_number);
+            viewHolder.kunjugan_ke = (TextView) convertView.findViewById(R.id.txt_kunjugan_ke);
 
+            viewHolder.status_layout = (RelativeLayout) convertView.findViewById(R.id.anc_status_layout);
+            viewHolder.status_type = (TextView) convertView.findViewById(R.id.txt_tt_status_type);
+            viewHolder.status_date = (TextView) convertView.findViewById(R.id.txt_status_date_anc);
+            viewHolder.alert_status = (TextView) convertView.findViewById(R.id.txt_alert_status);
 
-            viewHolder.profilepic =(ImageView)convertView.findViewById(R.id.profilepic);
-            viewHolder.follow_up = (ImageButton)convertView.findViewById(R.id.btn_edit);
-//            viewHolder.profilepic.setImageDrawable(context.getResources().getDrawable(R.drawable.child_boy_infant));
-            viewHolder.profilepic =(ImageView)convertView.findViewById(R.id.img_profile);
+            viewHolder.profilepic = (ImageView) convertView.findViewById(R.id.img_profile);
+            viewHolder.follow_up = (ImageButton) convertView.findViewById(R.id.btn_edit);
             convertView.setTag(viewHolder);
+
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        CommonPersonObjectClient pc = (CommonPersonObjectClient) smartRegisterClient;
-        /*viewHolder.follow_up.setOnClickListener(onClickListener);
+
+        viewHolder.profilepic.setImageDrawable(context.getResources().getDrawable(R.mipmap.woman_placeholder));
+
+        viewHolder.follow_up.setOnClickListener(onClickListener);
         viewHolder.follow_up.setTag(smartRegisterClient);
         viewHolder.profilelayout.setOnClickListener(onClickListener);
         viewHolder.profilelayout.setTag(smartRegisterClient);
-
+        CommonPersonObjectClient pc = (CommonPersonObjectClient) smartRegisterClient;
         if (iconPencilDrawable == null) {
             iconPencilDrawable = context.getResources().getDrawable(R.drawable.ic_pencil);
         }
         viewHolder.follow_up.setImageDrawable(iconPencilDrawable);
-        viewHolder.follow_up.setOnClickListener(onClickListener);*/
+        viewHolder.follow_up.setOnClickListener(onClickListener);
+        //set image
 
-                                                                                                                            // IMPORTANT : data has 2 type: columnMaps and details
+        AllCommonsRepository allancRepository =  org.ei.opensrp.Context.getInstance().allCommonsRepositoryobjects("ec_ibu");
+        CommonPersonObject ancobject = allancRepository.findByCaseID(pc.entityId());
 
-        AllCommonsRepository allancRepository =  org.ei.opensrp.Context.getInstance().allCommonsRepositoryobjects("ec_ibu");// get all data from ec_ibu table
-        CommonPersonObject ancobject = allancRepository.findByCaseID(pc.entityId());                                        // get all data related to entity id and transform it into CommonPersonObject
+        DetailsRepository detailsRepository = org.ei.opensrp.Context.getInstance().detailsRepository();
+        Map<String, String> details =  detailsRepository.getAllDetailsForClient(pc.entityId());
+        details.putAll(ancobject.getColumnmaps());
 
-        DetailsRepository detailsRepository = org.ei.opensrp.Context.getInstance().detailsRepository();                     // gather all details from repository
-        Map<String, String> details =  detailsRepository.getAllDetailsForClient(pc.entityId());                             // get specific detail from all details based on entity id
-        details.putAll(ancobject.getColumnmaps());                                                                          // combine all columnMaps and details into 1 object.
-
-        if(pc.getDetails() != null) {                                                                                       // used to update client details with details built on previous step
+        if(pc.getDetails() != null) {
             pc.getDetails().putAll(details);
         }else{
             pc.setDetails(details);
         }
-        viewHolder.namaIbu.setText(pc.getColumnmaps().get("namalengkap")!=null?pc.getColumnmaps().get("namalengkap"):"");
-        viewHolder.namaSuami.setText(pc.getColumnmaps().get("namaSuami")!=null?pc.getColumnmaps().get("namaSuami"):"");
-        viewHolder.dusun.setText(pc.getDetails().get("address1")!=null?pc.getDetails().get("address1"):"");
-        viewHolder.tanggalLahir.setText(pc.getDetails().get("umur")!=null?pc.getDetails().get("umur"):"");
 
-        String AncDate = "";
-        boolean tt = false;
-        if( pc.getDetails().get("statusImunisasitt") != null) {
-            if (pc.getDetails().get("statusImunisasitt").equals("tt_ke_0")) {
-                AncDate = pc.getDetails().get("ancDate") != null ? pc.getDetails().get("ancDate") : "-";
-                tt = true;
-            }
+        final ImageView kiview = (ImageView)convertView.findViewById(R.id.img_profile);
+        if (pc.getDetails().get("profilepic") != null) {
+        }
+        else {
+            viewHolder.profilepic.setImageDrawable(context.getResources().getDrawable(R.drawable.woman_placeholder));
         }
 
-        /*DetailsRepository detailsRepository = org.ei.opensrp.Context.getInstance().detailsRepository();
-        detailsRepository.updateDetails(pc);
+        System.out.println("details: "+pc.getDetails().toString());
 
-        String ages = pc.getColumnmaps().get("tanggalLahirAnak").substring(0, pc.getColumnmaps().get("tanggalLahirAnak").indexOf("T"));
+        viewHolder.wife_name.setText(pc.getColumnmaps().get("namalengkap") != null ? pc.getColumnmaps().get("namalengkap") : "");
+        viewHolder.husband_name.setText(pc.getColumnmaps().get("namaSuami")!=null?pc.getColumnmaps().get("namaSuami"):"");
+        viewHolder.village_name.setText(pc.getDetails().get("address1")!=null?pc.getDetails().get("address1"):"");
+        viewHolder.wife_age.setText(pc.getDetails().get("umur")!=null?pc.getDetails().get("umur"):"");
+        viewHolder.no_ibu.setText(pc.getDetails().get("noIbu")!=null?pc.getDetails().get("noIbu"):"");
+        viewHolder.unique_id.setText(pc.getDetails().get("nik")!=null?pc.getDetails().get("nik"):"");
 
-        int umur = pc.getColumnmaps().get("tanggalLahirAnak") != null ? age(ages) : 0;
+        viewHolder.usia_klinis.setText(pc.getDetails().get("usiaKlinis")!=null?context.getString(R.string.clinical_age)+" "+pc.getDetails().get("usiaKlinis")+" "+context.getString(R.string.week):"-");
+        viewHolder.edd_due.setText(context.getString(R.string.edd_label));
+        viewHolder.htpt.setText(pc.getDetails().get("htp")!=null?pc.getDetails().get("htp"):"-");
 
-        viewHolder.namaIbu.setText(pc.getColumnmaps().get("namaBayi") != null ? pc.getColumnmaps().get("namaBayi") : " ");
+        viewHolder.ki_lila_bb.setText((pc.getDetails().get("hasilPemeriksaanLILA")!=null?pc.getDetails().get("hasilPemeriksaanLILA"):"-")+" "+context.getString(R.string.cm));
+        viewHolder.beratbadan_tb.setText((pc.getDetails().get("bbKg")!=null?pc.getDetails().get("bbKg"):"-")+" "+context.getString(R.string.kg));
 
-        AllCommonsRepository childRepository = org.ei.opensrp.Context.getInstance().allCommonsRepositoryobjects("ec_anak");
-        CommonPersonObject childobject = childRepository.findByCaseID(pc.entityId());
+        String AncDate = pc.getDetails().get("ancDate")!=null?pc.getDetails().get("ancDate"):"-";
+        String AncKe = pc.getDetails().get("ancKe")!=null?pc.getDetails().get("ancKe"):"-";
+        String KunjunganKe = pc.getDetails().get("kunjunganKe")!=null?pc.getDetails().get("kunjunganKe"):"-";
 
-        AllCommonsRepository kirep = org.ei.opensrp.Context.getInstance().allCommonsRepositoryobjects("ec_kartu_ibu");
-        final CommonPersonObject kiparent = kirep.findByCaseID(childobject.getColumnmaps().get("relational_id"));
+        viewHolder.tanggal_kunjungan_anc.setText(context.getString(R.string.last_visit_date) + " " + AncDate);
+        viewHolder.anc_number.setText(context.getString(R.string.anc_ke) + " " + AncKe);
+        viewHolder.kunjugan_ke.setText(context.getString(R.string.visit_number) + KunjunganKe);
 
-        if(kiparent != null) {
-            detailsRepository.updateDetails(kiparent);
-            String namaayah = kiparent.getDetails().get("namaSuami") != null ? kiparent.getDetails().get("namaSuami") : "";
-            String namaibu = kiparent.getColumnmaps().get("namalengkap") != null ? kiparent.getColumnmaps().get("namalengkap") : "";
+        viewHolder.status_type.setText("");
+        viewHolder.status_date.setText("");
+        viewHolder.status_layout.setBackgroundColor(context.getResources().getColor(org.ei.opensrp.R.color.status_bar_text_almost_white));
+        viewHolder.alert_status.setText("");
 
-            viewHolder.namaIbu.setText(namaibu);
-            viewHolder.namaSuami.setText(namaayah);
-            // viewHolder.no_ibu.setText(kiparent.getDetails().get("noBayi") != null ? kiparent.getDetails().get("noBayi") : "");
-        }
-
-        viewHolder.tanggalLahir.setText(kiparent.getColumnmaps().get("tanggalLahir")!=null
-                ?     Integer.toString(age(ages)/12)+" "+ context.getResources().getString(R.string.year_short)
-                + ", "+Integer.toString(age(ages)%12)+" "+ context.getResources().getString(R.string.month_short)
-                : " ");*/
-
-        viewHolder.tt1Tanggal.setText(AncDate);
-        viewHolder.tt2Tanggal.setText("0000-00-00");
-        viewHolder.tt3Tanggal.setText("0000-00-00");
-        viewHolder.tt4Tanggal.setText("0000-00-00");
-        viewHolder.tt5Tanggal.setText("0000-00-00");
-
-        setIcon(viewHolder.tt1Logo, tt);
-        setIcon(viewHolder.tt2Logo,true);
-        setIcon(viewHolder.tt3Logo,true);
-        setIcon(viewHolder.tt4Logo,true);
-        setIcon(viewHolder.tt5Logo,true);
+        viewHolder.status_type.setText(pc.getDetails().get("statusImunisasitt")!= null ? ttStatus(pc.getDetails().get("statusImunisasitt")):"None");
 
         convertView.setLayoutParams(clientViewLayoutParams);
-        //  return convertView;
-    }
-    CommonPersonObjectController householdelcocontroller;
-
-    private String latestDate(String[]dates){
-        String max = dates[0]!=null
-                ? dates[0].length()==10
-                ? dates[0]
-                : "0000-00-00"
-                :"0000-00-00";
-        for(int i=1;i<dates.length;i++){
-            if(dates[i]==null)
-                continue;
-            if(dates[i].length()<10)
-                continue;
-            max =   (((Integer.parseInt(max.substring(0,4))-Integer.parseInt(dates[i].substring(0,4)))*360)
-                    +((Integer.parseInt(max.substring(5,7))-Integer.parseInt(dates[i].substring(5,7)))*30)
-                    +(Integer.parseInt(max.substring(8,10))-Integer.parseInt(dates[i].substring(8,10)))
-            )<0 ? dates[i]:max;
-        }
-        return max.equals("0000-00-00")? "" : max;
     }
 
-    //  updating icon
-    private void setIcon(ImageView image, boolean isGiven) {
-        image.setImageResource(isGiven ? R.drawable.ic_yes_large : R.drawable.abc_list_divider_mtrl_alpha);
+    private String ttStatus(String status){
+        if(status.contains("0"))
+            return "TT 0";
+        else if(status.contains("1"))
+            return "TT 1";
+        else if(status.contains("2"))
+            return "TT 2";
+        else if(status.contains("3"))
+            return "TT 3";
+        else if(status.contains("4"))
+            return "TT 4";
+        else if(status.contains("5"))
+            return "TT 5";
+        else
+            return "None";
     }
 
-    private void setIcon(FrameLayout frame,ImageView image, String oldCode, String detailID,int umur, int indicator, CommonPersonObjectClient pc) {
-        if(hasDate(pc,oldCode)){
-            image.setImageResource(pc.getDetails().get(oldCode).contains("-")
-                            ? R.drawable.ic_yes_large
-                            : umur > indicator
-                                ? R.drawable.vacc_late
-                                : R.drawable.abc_list_divider_mtrl_alpha
-            );
-            return;
-        }
-
-        frame.setBackgroundColor(context.getResources().getColor(R.color.abc_background_cache_hint_selector_material_light));
-
-        String[]var = detailID.split(",");
-        boolean complete = false;
-        boolean someComplete = false;
-
-        for(int i=0;i<var.length;i++){
-            someComplete = someComplete || (pc.getDetails().get(var[i]) != null && pc.getDetails().get(var[i]).length()>6);
-        }
-
-        if(someComplete){
-            complete=true;
-            for(int i=0;i<var.length;i++){
-                complete = complete && (pc.getDetails().get(var[i]) != null && pc.getDetails().get(var[i]).length()>6);
-            }
-        }
-
-        image.setImageResource(complete
-                        ? R.drawable.ic_yes_large
-                        : someComplete
-                        ? R.drawable.vacc_due
-                        : umur > indicator
-                        ? R.drawable.vacc_late
-                        : R.drawable.abc_list_divider_mtrl_alpha
-        );
-
-        if((umur == indicator) && !(complete || someComplete))
-            frame.setBackgroundColor(context.getResources().getColor(R.color.vaccBlue));
-    }
-/*
-    * Used to check if the variable contains a date (10 character which representing yyyy-MM-dd) or not
-    * params:
-    * CommonPersonObjectClient pc
-    * String variable
-    *
-    * return:
-    * true - if the variable contains date
-    * false - if the variable null or less than 10 character length
-    * */
-
-    private boolean hasDate(CommonPersonObjectClient pc, String variable){
-        return pc.getDetails().get(variable)!=null && pc.getDetails().get(variable).length()>6;
-    }
-
-    //  month age calculation
-    private int age(String date){
-        String []dateOfBirth = date.split("-");
-        String []currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date()).split("-");
-
-        int tahun = Integer.parseInt(currentDate[0]) - Integer.parseInt(dateOfBirth[0]);
-        int bulan = Integer.parseInt(currentDate[1]) - Integer.parseInt(dateOfBirth[1]);
-        int hari = Integer.parseInt(currentDate[2]) - Integer.parseInt(dateOfBirth[2]);
-
-        int result = ((tahun*360) + (bulan*30) + hari)/30;
-        result = result < 0 ? 0 : result;
-
-        return result;
-    }
-    //    @Override
     public SmartRegisterClients getClients() {
         return controller.getClients();
     }
@@ -296,37 +206,54 @@ public class TTSmartClientsProvider implements SmartRegisterCLientsProviderForCu
         return null;
     }
 
-
     public LayoutInflater inflater() {
         return inflater;
     }
 
     @Override
     public View inflatelayoutForCursorAdapter() {
-        View View = inflater().inflate(R.layout.smart_register_tt_client, null);
+        View View = (ViewGroup) inflater().inflate(R.layout.smart_register_tt_client, null);
         return View;
     }
 
+    public void risk (String risk1,String risk2,String risk3,String risk4,String risk5,String risk6,String risk7,String risk8,String risk9,String risk10,ImageView riskview){
+//        if(risk1 != null && risk1.equals("yes")
+//                || risk2 != null && risk2.equals("yes")
+//                || risk3 != null && risk3.equals("yes")
+//                || risk4 != null && risk4.equals("yes")
+//                || risk5 != null && risk5.equals("yes")
+//                || risk6 != null && risk6.equals("yes")
+//                || risk7 != null && risk7.equals("yes")
+//                || risk8 != null && risk8.equals("yes")
+//                || risk9 != null && risk9.equals("yes")
+//                || risk10 != null && risk10.equals("yes")){
+//        }
+    }
     class ViewHolder {
+
+        TextView wife_name ;
+        TextView husband_name ;
+        TextView village_name;
+        TextView wife_age;
         LinearLayout profilelayout;
         ImageView profilepic;
         ImageButton follow_up;
-        public TextView namaIbu;
-        public TextView namaSuami;
-        public TextView dusun;
-        public TextView tanggalLahir;
-        public ImageView tt1Logo;
-        public ImageView tt2Logo;
-        public ImageView tt3Logo;
-        public ImageView tt4Logo;
-        public ImageView tt5Logo;
-        public TextView tt1Tanggal;
-        public TextView tt2Tanggal;
-        public TextView tt3Tanggal;
-        public TextView tt4Tanggal;
-        public TextView tt5Tanggal;
-
-
+        TextView no_ibu;
+        TextView unique_id;
+        TextView usia_klinis;
+        TextView htpt;
+        TextView ki_lila_bb;
+        TextView beratbadan_tb;
+        TextView status_type;
+        TextView status_date;
+        TextView alert_status;
+        RelativeLayout status_layout;
+        TextView tanggal_kunjungan_anc;
+        TextView anc_number;
+        TextView kunjugan_ke;
+        ImageView hr_badge  ;
+        ImageView bpl_badge;
+        TextView edd_due;
     }
 
 
