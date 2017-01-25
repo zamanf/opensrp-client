@@ -32,10 +32,19 @@ import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.commonregistry.CommonRepository;
 import org.ei.opensrp.indonesia.R;
+import org.ei.opensrp.indonesia.anc.NativeKIANCSmartRegisterActivity;
+import org.ei.opensrp.indonesia.child.NativeKIAnakSmartRegisterActivity;
 import org.ei.opensrp.indonesia.face.camera.util.FaceConstants;
 import org.ei.opensrp.indonesia.face.camera.util.Tools;
+import org.ei.opensrp.indonesia.fragment.NativeKBSmartRegisterFragment;
+import org.ei.opensrp.indonesia.fragment.NativeKIANCSmartRegisterFragment;
+import org.ei.opensrp.indonesia.fragment.NativeKIAnakSmartRegisterFragment;
+import org.ei.opensrp.indonesia.fragment.NativeKIPNCSmartRegisterFragment;
+import org.ei.opensrp.indonesia.fragment.NativeKISmartRegisterFragment;
 import org.ei.opensrp.indonesia.kartu_ibu.KIDetailActivity;
 import org.ei.opensrp.indonesia.kartu_ibu.NativeKISmartRegisterActivity;
+import org.ei.opensrp.indonesia.kb.NativeKBSmartRegisterActivity;
+import org.ei.opensrp.indonesia.pnc.NativeKIPNCSmartRegisterActivity;
 import org.ei.opensrp.view.activity.SecuredActivity;
 
 import java.util.Arrays;
@@ -63,6 +72,8 @@ public class ImageConfirmation extends Activity {
     private String selectedPersonName = "";
     private Parcelable[] kiclient;
 
+    String str_origin_class;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +86,7 @@ public class ImageConfirmation extends Activity {
         entityId = extras.getString("org.sid.sidface.ImageConfirmation.id");
         identifyPerson = extras.getBoolean("org.sid.sidface.ImageConfirmation.identify");
         kiclient = extras.getParcelableArray("org.sid.sidface.ImageConfirmation.kiclient");
+        str_origin_class = extras.getString("org.sid.sidface.ImageConfirmation.origin");
 
         storedBitmap = BitmapFactory.decodeByteArray(data, 0, data.length, null);
 
@@ -194,6 +206,23 @@ public class ImageConfirmation extends Activity {
 //        CommonPersonObjectClient pClient = new CommonPersonObjectClient(personinlist.getCaseId(), personinlist.getDetails(), personinlist.getDetails().get("ec_kartu_ibu.namalengkap"));
 //        KIDetailActivity.kiclient = pClient;
 //        Intent intent = new Intent(ImageConfirmation.this,KIDetailActivity.class);
+        Class<?> origin_class = this.getClass();
+
+        Log.e(TAG, "onPreviewFrame: init"+origin_class.getSimpleName() );
+        Log.e(TAG, "onPreviewFrame: origin"+str_origin_class );
+
+        if(str_origin_class.equals(NativeKISmartRegisterFragment.class.getSimpleName())){
+            origin_class = NativeKISmartRegisterActivity.class;
+        } else if(str_origin_class.equals(NativeKBSmartRegisterFragment.class.getSimpleName())){
+            origin_class = NativeKBSmartRegisterActivity.class;
+        } else if(str_origin_class.equals(NativeKIAnakSmartRegisterFragment.class.getSimpleName())){
+            origin_class = NativeKIAnakSmartRegisterActivity.class;
+        } else if(str_origin_class.equals(NativeKIANCSmartRegisterFragment.class.getSimpleName())){
+            origin_class = NativeKIANCSmartRegisterActivity.class;
+        } else if(str_origin_class.equals(NativeKIPNCSmartRegisterFragment.class.getSimpleName())){
+            origin_class = NativeKIPNCSmartRegisterActivity.class;
+        }
+
         Intent intent = new Intent(ImageConfirmation.this, NativeKISmartRegisterActivity.class);
         intent.putExtra("org.ei.opensrp.indonesia.face.face_mode", true);
         intent.putExtra("org.ei.opensrp.indonesia.face.base_id", selectedPersonName);

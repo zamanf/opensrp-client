@@ -24,9 +24,11 @@ import org.ei.opensrp.indonesia.anc.NativeKIANCSmartRegisterActivity;
 import org.ei.opensrp.indonesia.face.camera.SmartShutterActivity;
 import org.ei.opensrp.indonesia.face.camera.util.FaceConstants;
 import org.ei.opensrp.indonesia.kartu_ibu.NativeKISmartRegisterActivity;
+import org.ei.opensrp.indonesia.kb.NativeKBSmartRegisterActivity;
 import org.ei.opensrp.indonesia.lib.FlurryFacade;
 import org.ei.opensrp.repository.DetailsRepository;
 import org.ei.opensrp.repository.ImageRepository;
+import org.ei.opensrp.view.activity.NativePNCSmartRegisterActivity;
 
 import java.io.File;
 import java.io.IOException;
@@ -336,6 +338,14 @@ public class PNCDetailActivity extends Activity {
         File externalFile = new File(file);
         Uri external = Uri.fromFile(externalFile);
         view.setImageURI(external);
+
+
+    }
+    @Override
+    public void onBackPressed() {
+        finish();
+        startActivity(new Intent(this, NativePNCSmartRegisterActivity.class));
+        overridePendingTransition(0, 0);
 
 
     }

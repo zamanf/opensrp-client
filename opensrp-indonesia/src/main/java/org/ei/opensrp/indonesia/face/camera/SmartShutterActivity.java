@@ -278,6 +278,7 @@ public class SmartShutterActivity extends Activity implements Camera.PreviewCall
                     int surfaceHeight = mPreview.getHeight();
                     faceProc.normalizeCoordinates(surfaceWidth, surfaceHeight);
 
+                    Log.e(TAG, "onPreviewFrame: personId"+faceArray[0].getPersonId() );
                     if (identifyPerson && faceArray[0].getPersonId() != -111){
                         String selectedPersonId = Integer.toString(faceArray[0].getPersonId());
                         Iterator<HashMap.Entry<String, String>> iter = hash.entrySet().iterator();
@@ -543,18 +544,25 @@ public class SmartShutterActivity extends Activity implements Camera.PreviewCall
      * Function to Initialize all the image buttons that are there in the view and sets its visibility and image resources here.
      */
     private void initializeImageButtons() {
-        cameraButton = (ImageView) findViewById(R.id.cameraButton);            // Camera Shutter Button
+        cameraButton = (ImageView) findViewById(R.id.cameraButton);     // Camera Shutter Button
+
         galleryButton = (ImageView) findViewById(R.id.gallery);
         galleryButton.setImageResource(R.drawable.gallery);
+        galleryButton.setVisibility(View.INVISIBLE);
+
         settingsButton = (ImageView) findViewById(R.id.settings);
+
         switchCameraButton = (ImageView) findViewById(R.id.switchCamera);
         switchCameraButton.setImageResource(R.drawable.switch_camera_front);
         switchCameraButton.setVisibility(View.INVISIBLE);                    // Initially make switchCamera invisible. Make it visible only when the settings button is pressed.
+
         menu = (ImageView) findViewById(R.id.menu);
         menu.setVisibility(View.INVISIBLE);                    // Initially make menu invisible. Make it visible only when the settings button is pressed.
+
         perfectPhotoButton = (ImageView) findViewById(R.id.perfectMode);
         perfectPhotoButton.setVisibility(View.INVISIBLE);                    // Initially make perfectMode invisible. Make it visible only when the settings button is pressed.
         perfectPhotoButton.setImageResource(R.drawable.perfect_mode_off);
+
         flashButton = (ImageView) findViewById(R.id.flash);
         flashButton.setVisibility(View.INVISIBLE);                            // Initially make flashButton invisible. Make it visible only when the settings button is pressed.
 
@@ -933,6 +941,7 @@ public class SmartShutterActivity extends Activity implements Camera.PreviewCall
         intent.putExtra("org.sid.sidface.ImageConfirmation.id", entityId);
         intent.putExtra("org.sid.sidface.ImageConfirmation.identify", identifyPerson);
         intent.putExtra("org.sid.sidface.ImageConfirmation.kidetail", (Parcelable) kidetail);
+        intent.putExtra("org.sid.sidface.ImageConfirmation.origin", str_origin_class);
         startActivityForResult(intent, 1);
     }
 
