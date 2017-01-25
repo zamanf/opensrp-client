@@ -9,6 +9,7 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -25,6 +26,7 @@ import com.vijay.jsonwizard.utils.ImageUtils;
 import com.vijay.jsonwizard.utils.ValidationStatus;
 import com.vijay.jsonwizard.views.JsonFormFragmentView;
 import com.vijay.jsonwizard.viewstates.JsonFormFragmentViewState;
+import com.vijay.jsonwizard.widgets.DatePickerFactory;
 import com.vijay.jsonwizard.widgets.EditTextFactory;
 import com.vijay.jsonwizard.widgets.ImagePickerFactory;
 import com.vijay.jsonwizard.widgets.SpinnerFactory;
@@ -32,6 +34,7 @@ import com.vijay.jsonwizard.widgets.SpinnerFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Calendar;
 import java.util.List;
 
 import fr.ganfra.materialspinner.MaterialSpinner;
@@ -133,6 +136,14 @@ public class JsonFormFragmentPresenter extends MvpBasePresenter<JsonFormFragment
                 } else {
                     spinner.setError(null);
                 }
+            } else if (childAt instanceof DatePicker) {
+                DatePicker datePicker = (DatePicker) childAt;
+                Calendar calendarDate = Calendar.getInstance();
+                calendarDate.set(Calendar.DAY_OF_MONTH, datePicker.getDayOfMonth());
+                calendarDate.set(Calendar.MONTH, datePicker.getMonth());
+                calendarDate.set(Calendar.YEAR, datePicker.getYear());
+                getView().writeValue(mStepName, key,
+                        DatePickerFactory.DATE_FORMAT.format(calendarDate.getTime()));
             }
         }
         return new ValidationStatus(true, null);
