@@ -305,7 +305,7 @@ public class VaksinatorDetailActivity extends Activity {
 //            String imageBitmap = (String) extras.get(MediaStore.EXTRA_OUTPUT);
 //            Toast.makeText(this,imageBitmap,Toast.LENGTH_LONG).show();
             HashMap<String,String> details = new HashMap<String,String>();
-            details.put("profilepic", currentfile.getAbsolutePath());
+            details.put("profilepic",currentfile.getAbsolutePath());
             saveimagereference(bindobject,entityid,details);
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inPreferredConfig = Bitmap.Config.ARGB_8888;
