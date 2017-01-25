@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -62,6 +63,10 @@ public class PNCDetailActivity extends Activity {
 
     public static CommonPersonObjectClient pncclient;
     private String entityid;
+
+
+    private String photo_path;
+    private File tb_photo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -230,26 +235,27 @@ public class PNCDetailActivity extends Activity {
 
         txt_hariKeKF.setText(": "+ humanizeAndDoUPPERCASE(kiobject.getColumnmaps().get("hariKeKF") != null ? kiobject.getColumnmaps().get("hariKeKF") : "-"));
 
-//        Propile Picture
-        if (ibuparent.getDetails().get("profilepic_thumb") != null) {
+//        Profile Picture
+        Log.e(TAG, "onCreate: "+ibuparent.getDetails() );
+        photo_path = ibuparent.getDetails().get("profilepic_thumb");
+        final int THUMBSIZE = FaceConstants.THUMBSIZE;
 
-            final int THUMBSIZE = FaceConstants.THUMBSIZE;
-
-            Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(ibuparent.getDetails().get("profilepic_thumb")),
-                    THUMBSIZE, THUMBSIZE);
-            pncview.setImageBitmap(ThumbImage);
-
+        if (photo_path != null) {
+            tb_photo = new File(photo_path);
+            if (!tb_photo.exists()) {
+                Log.e(TAG, "onCreate: here ");
+                pncview.setImageDrawable(getResources().getDrawable(R.drawable.not_found_404));
+            } else {
+                Log.e(TAG, "onCreate: here exist " );
+                Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(
+                        BitmapFactory.decodeFile(photo_path),
+                        THUMBSIZE, THUMBSIZE);
+                pncview.setImageBitmap(ThumbImage);
+            }
         } else {
 
             pncview.setImageDrawable(getResources().getDrawable(R.mipmap.woman_placeholder));
         }
-
-//        if(ibuparent.getDetails().get("profilepic")!= null){
-//            setImagetoHolderFromUri(PNCDetailActivity.this, ibuparent.getDetails().get("profilepic"), pncview, R.mipmap.woman_placeholder);
-//        }
-//        else {
-//            pncview.setImageDrawable(getResources().getDrawable(R.mipmap.woman_placeholder));
-//        }
 
         txt_tandaVitalTDDiastolik.setText(": "+humanize (ibuparent.getDetails().get("tandaVitalTDDiastolik") != null ? ibuparent.getDetails().get("tandaVitalTDDiastolik") : "-"));
         txt_tandaVitalTDSistolik.setText(": "+humanize (ibuparent.getDetails().get("tandaVitalTDSistolik") != null ? ibuparent.getDetails().get("tandaVitalTDSistolik") : "-"));

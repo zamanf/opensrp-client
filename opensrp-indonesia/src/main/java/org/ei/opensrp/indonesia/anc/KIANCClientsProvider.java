@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.media.ThumbnailUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +54,7 @@ import static org.joda.time.LocalDateTime.parse;
  * Created by Dimas Ciputra on 3/4/15.
  */
 public class KIANCClientsProvider implements SmartRegisterCLientsProviderForCursorAdapter {
+    private static final String TAG = KIANCClientsProvider.class.getSimpleName();
     private final LayoutInflater inflater;
     private final Context context;
     private final View.OnClickListener onClickListener;
@@ -181,6 +183,7 @@ public class KIANCClientsProvider implements SmartRegisterCLientsProviderForCurs
 //            kiview.setImageBitmap(ThumbImage);
 //            kiview.setTag(smartRegisterClient);
 //
+        Log.e(TAG, "getView: "+pc.getDetails() );
         photo_path = pc.getDetails().get("profilepic_thumb");
         final int THUMBSIZE = FaceConstants.THUMBSIZE;
 

@@ -57,6 +57,10 @@ public class KBDetailActivity extends Activity {
     //image retrieving
 
     public static CommonPersonObjectClient kiclient;
+
+    private String photo_path;
+    private File tb_photo;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -151,20 +155,22 @@ public class KBDetailActivity extends Activity {
         detailsRepository.updateDetails(kiclient);
 
 //        Profile Picture
+        photo_path = kiclient.getDetails().get("profilepic_thumb");
+        final int THUMBSIZE = FaceConstants.THUMBSIZE;
 
-//        if(kiclient.getDetails().get("profilepic")!= null){
-//            setImagetoHolderFromUri(KBDetailActivity.this, kiclient.getDetails().get("profilepic"), kiview, R.mipmap.woman_placeholder);
-//        }
-        if (kiclient.getDetails().get("profilepic_thumb") != null) {
-
-            final int THUMBSIZE = FaceConstants.THUMBSIZE;
-
-            Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(kiclient.getDetails().get("profilepic_thumb")),
-                    THUMBSIZE, THUMBSIZE);
-            kiview.setImageBitmap(ThumbImage);
-
+        if (photo_path != null) {
+            tb_photo = new File(photo_path);
+            if (!tb_photo.exists()) {
+//                Log.e(TAG, "onCreate: here ");
+                kiview.setImageDrawable(getResources().getDrawable(R.drawable.not_found_404));
+            } else {
+//                Log.e(TAG, "onCreate: here exist " );
+                Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(
+                        BitmapFactory.decodeFile(photo_path),
+                        THUMBSIZE, THUMBSIZE);
+                kiview.setImageBitmap(ThumbImage);
+            }
         } else {
-
             kiview.setImageDrawable(getResources().getDrawable(R.mipmap.woman_placeholder));
         }
 
@@ -387,10 +393,6 @@ public class KBDetailActivity extends Activity {
         mImageFetcher.loadImage("file:///"+file,view);
 
 //        Uri.parse(new File("/sdcard/cats.jpg")
-
-
-
-
 
 //        BitmapFactory.Options options = new BitmapFactory.Options();
 //        options.inPreferredConfig = Bitmap.Config.ARGB_8888;

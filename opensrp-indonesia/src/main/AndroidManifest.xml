@@ -3,6 +3,17 @@
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
 
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false"/>
@@ -101,6 +112,31 @@
         <activity android:name=".face.camera.util.Tools" />
         <activity android:name=".face.camera.ClientsList" />
 
+        <activity
+            android:name=".bluetooth.bpm.ABI"
+            android:label="@string/title_activity_abi"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".bluetooth.bpm.BG1"
+            android:label="@string/title_activity_bg1"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".bluetooth.bpm.BP7"
+            android:label="@string/title_activity_bp7"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".bluetooth.bpm.HS6"
+            android:label="@string/title_activity_hs6"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".bluetooth.bpm.ContinuaBP"
+            android:label="ContinuaBP"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".bluetooth.bpm.MainActivity"
+            android:label="@string/title_activity_bpm_main"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <!--<activity android:name=".face.sidface.FacialActivity" />-->
         <!--<activity android:name=".face.sidface.FaceConfirmation" />-->

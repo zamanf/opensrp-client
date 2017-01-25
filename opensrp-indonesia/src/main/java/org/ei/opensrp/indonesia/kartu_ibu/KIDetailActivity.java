@@ -58,6 +58,9 @@ public class KIDetailActivity extends Activity {
     static String bindobject;
     static String entityid;
 
+    private String photo_path;
+    private File tb_photo;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -138,15 +141,23 @@ public class KIDetailActivity extends Activity {
         DetailsRepository detailsRepository = org.ei.opensrp.Context.getInstance().detailsRepository();
         detailsRepository.updateDetails(kiclient);
 
+
 //        Profile Picture
-        if (kiclient.getDetails().get("profilepic_thumb") != null) {
+        photo_path = kiclient.getDetails().get("profilepic_thumb");
+        final int THUMBSIZE = FaceConstants.THUMBSIZE;
 
-            final int THUMBSIZE = FaceConstants.THUMBSIZE;
-
-            Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(kiclient.getDetails().get("profilepic_thumb")),
-                    THUMBSIZE, THUMBSIZE);
-            kiview.setImageBitmap(ThumbImage);
-
+        if (photo_path != null) {
+            tb_photo = new File(photo_path);
+            if (!tb_photo.exists()) {
+//                Log.e(TAG, "onCreate: here ");
+                kiview.setImageDrawable(getResources().getDrawable(R.drawable.not_found_404));
+            } else {
+//                Log.e(TAG, "onCreate: here exist " );
+                Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(
+                        BitmapFactory.decodeFile(photo_path),
+                        THUMBSIZE, THUMBSIZE);
+                kiview.setImageBitmap(ThumbImage);
+            }
         } else {
 
             kiview.setImageDrawable(getResources().getDrawable(R.mipmap.woman_placeholder));

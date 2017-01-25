@@ -16,17 +16,6 @@ repositories {
     maven { url 'https://maven.fabric.io/public' }
 }
 
-dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile project(':opensrp-app')
-    compile('com.crashlytics.sdk.android:crashlytics:2.5.3@aar') {
-        transitive = true;
-    }
-    compile 'com.google.android.gms:play-services-appindexing:9.8.0'
-    compile files('libs/sd-sdk-facial-processing.jar')
-//    compile 'com.akexorcist:bluetoothspp:1.0.0'
-
-}
 android {
     compileSdkVersion androidCompileSdkVersion
     buildToolsVersion androidBuildToolsVersion
@@ -67,5 +56,28 @@ android {
         abortOnError false
     }
 }
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile project(':opensrp-app')
+    compile('com.crashlytics.sdk.android:crashlytics:2.5.3@aar') {
+        transitive = true;
+    }
+    compile 'com.google.android.gms:play-services-appindexing:9.8.0'
+    compile files('libs/sd-sdk-facial-processing.jar')
+//    compile 'com.akexorcist:bluetoothspp:1.0.0'
+
+    testCompile 'junit:junit:4.12'
+//    compile 'com.android.support:appcompat-v7:23.0.1'
+    compile 'com.android.support:design:25.1.0'
+    compile files('libs/d2xx.jar')
+    compile files('libs/pl2303driver.jar')
+    compile files('libs/smartlinklib3.6.4_product.jar')
+    compile files('libs/iHealthLibrary_2.3.1.4.jar')
+
+//    compile 'com.android.support:appcompat-v7:22.2.1'
+//    compile 'com.android.support:design:22.2.1'
+}
+
 
 

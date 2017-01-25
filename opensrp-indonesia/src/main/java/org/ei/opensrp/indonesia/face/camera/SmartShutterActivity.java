@@ -78,7 +78,7 @@ public class SmartShutterActivity extends Activity implements Camera.PreviewCall
 
     Camera cameraObj;
     FrameLayout preview;
-    CameraSurfacePreview mPreview;
+    CameraPreview mPreview;
     public static FacialProcessing faceProc;
     DrawView drawView;
     FaceData[] faceArray;
@@ -533,7 +533,7 @@ public class SmartShutterActivity extends Activity implements Camera.PreviewCall
         }
 
         // Create a new surface on which Camera will be displayed.
-        mPreview = new CameraSurfacePreview(SmartShutterActivity.this, cameraObj);
+        mPreview = new CameraPreview(SmartShutterActivity.this, cameraObj);
         preview = (FrameLayout) findViewById(R.id.cameraPreview);
         preview.addView(mPreview);
         cameraObj.setPreviewCallback(SmartShutterActivity.this);

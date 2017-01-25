@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.media.ThumbnailUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,8 +71,7 @@ public class KIPNCClientsProvider implements SmartRegisterCLientsProviderForCurs
         this.alertService = alertService;
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        clientViewLayoutParams = new AbsListView.LayoutParams(MATCH_PARENT,
-                (int) context.getResources().getDimension(org.ei.opensrp.R.dimen.list_item_height));
+        clientViewLayoutParams = new AbsListView.LayoutParams(MATCH_PARENT, (int) context.getResources().getDimension(org.ei.opensrp.R.dimen.list_item_height));
         txtColorBlack = context.getResources().getColor(org.ei.opensrp.R.color.text_black);
 
     }
@@ -80,9 +80,8 @@ public class KIPNCClientsProvider implements SmartRegisterCLientsProviderForCurs
     public void getView(SmartRegisterClient smartRegisterClient, View convertView) {
 
         ViewHolder viewHolder;
-        CommonPersonObjectClient pc = (CommonPersonObjectClient) smartRegisterClient;
 
-        if(convertView.getTag() == null || !(convertView.getTag() instanceof  ViewHolder)) {
+        if (convertView.getTag() == null || !(convertView.getTag() instanceof ViewHolder)) {
             viewHolder = new ViewHolder();
             viewHolder.profilelayout = (LinearLayout) convertView.findViewById(R.id.profile_info_layout);
 
@@ -124,7 +123,7 @@ public class KIPNCClientsProvider implements SmartRegisterCLientsProviderForCurs
         }
 
 ////        Set image as Icon
-        final ImageView kiview = (ImageView)convertView.findViewById(R.id.img_profile);
+        final ImageView kiview = (ImageView) convertView.findViewById(R.id.img_profile);
 //        Profile Picture
 
 //        if (pc.getDetails().get("profilepic_thumb") != null) {
@@ -135,16 +134,19 @@ public class KIPNCClientsProvider implements SmartRegisterCLientsProviderForCurs
 //                    THUMBSIZE, THUMBSIZE);
 //            kiview.setImageBitmap(ThumbImage);
 //
+        CommonPersonObjectClient pc = (CommonPersonObjectClient) smartRegisterClient;
         photo_path = pc.getDetails().get("profilepic_thumb");
+
+        Log.e(TAG, "getView: photo path "+pc.getDetails() );
         final int THUMBSIZE = FaceConstants.THUMBSIZE;
 
         if (photo_path != null) {
             tb_photo = new File(photo_path);
             if (!tb_photo.exists()) {
-//                Log.e(TAG, "onCreate: here ");
+                Log.e(TAG, "onCreate: here ");
                 viewHolder.profilepic.setImageDrawable(context.getResources().getDrawable(R.drawable.not_found_404));
             } else {
-//                Log.e(TAG, "onCreate: here exist " );
+                Log.e(TAG, "onCreate: here exist ");
                 Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(
                         BitmapFactory.decodeFile(photo_path),
                         THUMBSIZE, THUMBSIZE);
@@ -153,7 +155,6 @@ public class KIPNCClientsProvider implements SmartRegisterCLientsProviderForCurs
         } else {
             viewHolder.profilepic.setImageDrawable(context.getResources().getDrawable(R.drawable.woman_placeholder));
         }
-
 
         viewHolder.follow_up.setOnClickListener(onClickListener);
         viewHolder.follow_up.setTag(smartRegisterClient);
@@ -166,79 +167,76 @@ public class KIPNCClientsProvider implements SmartRegisterCLientsProviderForCurs
         viewHolder.follow_up.setOnClickListener(onClickListener);
         //set image
 
-        AllCommonsRepository allancRepository =  org.ei.opensrp.Context.getInstance().allCommonsRepositoryobjects("ec_pnc");
+        AllCommonsRepository allancRepository = org.ei.opensrp.Context.getInstance().allCommonsRepositoryobjects("ec_pnc");
         CommonPersonObject pncobject = allancRepository.findByCaseID(pc.entityId());
 
         DetailsRepository detailsRepository = org.ei.opensrp.Context.getInstance().detailsRepository();
         detailsRepository.updateDetails(pc);
-        Map<String, String> details =  detailsRepository.getAllDetailsForClient(pc.entityId());
+        Map<String, String> details = detailsRepository.getAllDetailsForClient(pc.entityId());
         details.putAll(pncobject.getColumnmaps());
 
-        if(pc.getDetails() != null) {
+        if (pc.getDetails() != null) {
             pc.getDetails().putAll(details);
-        }else{
+        } else {
             pc.setDetails(details);
         }
 
-        
-        viewHolder.tanggal_bersalin.setText(humanize(pc.getDetails().get("tanggalKalaIAktif")!=null?pc.getDetails().get("tanggalKalaIAktif"):""));
-        String tempat =pc.getDetails().get("tempatBersalin")!=null?pc.getDetails().get("tempatBersalin"):"";
-        viewHolder.tempat_persalinan.setText(tempat.equals("podok_bersalin_desa")?"POLINDES":tempat.equals("pusat_kesehatan_masyarakat_pembantu")?"Puskesmas pembantu":tempat.equals("pusat_kesehatan_masyarakat")?"Puskesmas":humanize(tempat));
-        viewHolder.dok_tipe.setText(humanize(pc.getDetails().get("caraPersalinanIbu")!=null?pc.getDetails().get("caraPersalinanIbu"):""));
-        viewHolder.komplikasi.setText(humanize(pc.getDetails().get("komplikasi")!=null?pc.getDetails().get("komplikasi"):""));
+        viewHolder.tanggal_bersalin.setText(humanize(pc.getDetails().get("tanggalKalaIAktif") != null ? pc.getDetails().get("tanggalKalaIAktif") : ""));
+        String tempat = pc.getDetails().get("tempatBersalin") != null ? pc.getDetails().get("tempatBersalin") : "";
+        viewHolder.tempat_persalinan.setText(tempat.equals("podok_bersalin_desa") ? "POLINDES" : tempat.equals("pusat_kesehatan_masyarakat_pembantu") ? "Puskesmas pembantu" : tempat.equals("pusat_kesehatan_masyarakat") ? "Puskesmas" : humanize(tempat));
+        viewHolder.dok_tipe.setText(humanize(pc.getDetails().get("caraPersalinanIbu") != null ? pc.getDetails().get("caraPersalinanIbu") : ""));
+        viewHolder.komplikasi.setText(humanize(pc.getDetails().get("komplikasi") != null ? pc.getDetails().get("komplikasi") : ""));
+
+        String date = pc.getDetails().get("PNCDate") != null ? pc.getDetails().get("PNCDate") : "";
+        String vit_a = pc.getDetails().get("pelayananfe") != null ? pc.getDetails().get("pelayananfe") : "";
+        viewHolder.tanggal_kunjungan.setText(context.getString(R.string.str_pnc_delivery_date) + " " + date);
+
+        viewHolder.vit_a.setText(context.getString(R.string.fe) + " " + vit_a);
+
+        viewHolder.td_suhu.setText(humanize(pc.getDetails().get("tandaVitalSuhu") != null ? pc.getDetails().get("tandaVitalSuhu") : ""));
 
 
-        String date = pc.getDetails().get("PNCDate")!=null?pc.getDetails().get("PNCDate"):"";
-        String vit_a = pc.getDetails().get("pelayananfe")!=null?pc.getDetails().get("pelayananfe"):"";
-        viewHolder.tanggal_kunjungan.setText(context.getString(R.string.str_pnc_delivery_date) +" "+ date);
-
-        viewHolder.vit_a.setText(context.getString(R.string.fe)+" "+vit_a);
-
-        viewHolder.td_suhu.setText(humanize(pc.getDetails().get("tandaVitalSuhu")!=null?pc.getDetails().get("tandaVitalSuhu"):""));
-
-      
-        viewHolder.td_sistolik.setText(humanize(pc.getDetails().get("tandaVitalTDSistolik")!=null?pc.getDetails().get("tandaVitalTDSistolik"):""));
-        viewHolder.td_diastolik.setText(humanize(pc.getDetails().get("tandaVitalTDDiastolik")!=null?pc.getDetails().get("tandaVitalTDDiastolik"):""));
+        viewHolder.td_sistolik.setText(humanize(pc.getDetails().get("tandaVitalTDSistolik") != null ? pc.getDetails().get("tandaVitalTDSistolik") : ""));
+        viewHolder.td_diastolik.setText(humanize(pc.getDetails().get("tandaVitalTDDiastolik") != null ? pc.getDetails().get("tandaVitalTDDiastolik") : ""));
 
         viewHolder.hr_badge.setVisibility(View.INVISIBLE);
         viewHolder.hrp_badge.setVisibility(View.INVISIBLE);
         viewHolder.img_hrl_badge.setVisibility(View.INVISIBLE);
 
         //Risk flag
-        risk(pc.getDetails().get("highRiskSTIBBVs"),pc.getDetails().get("highRiskEctopicPregnancy"),pc.getDetails().get("highRiskCardiovascularDiseaseRecord"),
-                pc.getDetails().get("highRiskDidneyDisorder"),pc.getDetails().get("highRiskHeartDisorder"),pc.getDetails().get("highRiskAsthma"),
-                pc.getDetails().get("highRiskTuberculosis"),pc.getDetails().get("highRiskMalaria"),pc.getDetails().get("highRiskPregnancyYoungMaternalAge"),
-                pc.getDetails().get("highRiskPregnancyOldMaternalAge"),viewHolder.hr_badge);
+        risk(pc.getDetails().get("highRiskSTIBBVs"), pc.getDetails().get("highRiskEctopicPregnancy"), pc.getDetails().get("highRiskCardiovascularDiseaseRecord"),
+                pc.getDetails().get("highRiskDidneyDisorder"), pc.getDetails().get("highRiskHeartDisorder"), pc.getDetails().get("highRiskAsthma"),
+                pc.getDetails().get("highRiskTuberculosis"), pc.getDetails().get("highRiskMalaria"), pc.getDetails().get("highRiskPregnancyYoungMaternalAge"),
+                pc.getDetails().get("highRiskPregnancyOldMaternalAge"), viewHolder.hr_badge);
 
-        risk(pc.getDetails().get("highRiskPregnancyPIH"),pc.getDetails().get("highRiskPregnancyProteinEnergyMalnutrition"),
+        risk(pc.getDetails().get("highRiskPregnancyPIH"), pc.getDetails().get("highRiskPregnancyProteinEnergyMalnutrition"),
                 pc.getDetails().get("HighRiskPregnancyTooManyChildren"),
-                pc.getDetails().get("highRiskPregnancyDiabetes"),pc.getDetails().get("highRiskPregnancyAnemia"),null,null,null,null,null,viewHolder.hrp_badge);
+                pc.getDetails().get("highRiskPregnancyDiabetes"), pc.getDetails().get("highRiskPregnancyAnemia"), null, null, null, null, null, viewHolder.hrp_badge);
 
-        risk(pc.getDetails().get("highRiskLabourFetusMalpresentation"),pc.getDetails().get("highRiskLabourFetusSize"),
-                pc.getDetails().get("highRisklabourFetusNumber"),pc.getDetails().get("HighRiskLabourSectionCesareaRecord"),
-                pc.getDetails().get("highRiskLabourTBRisk"),null,null,null,null,null,viewHolder.img_hrl_badge);
+        risk(pc.getDetails().get("highRiskLabourFetusMalpresentation"), pc.getDetails().get("highRiskLabourFetusSize"),
+                pc.getDetails().get("highRisklabourFetusNumber"), pc.getDetails().get("HighRiskLabourSectionCesareaRecord"),
+                pc.getDetails().get("highRiskLabourTBRisk"), null, null, null, null, null, viewHolder.img_hrl_badge);
 
-        String kf_ke = pc.getDetails().get("hariKeKF")!=null?pc.getDetails().get("hariKeKF"):"";
-        viewHolder.KF.setText(context.getString(R.string.hari_ke_kf)+" "+ humanizeAndDoUPPERCASE(kf_ke));
-        viewHolder.wife_name.setText(pc.getColumnmaps().get("namalengkap")!=null?pc.getColumnmaps().get("namalengkap"):"");
-        viewHolder.husband_name.setText(pc.getColumnmaps().get("namaSuami")!=null?pc.getColumnmaps().get("namaSuami"):"");
-        viewHolder.village_name.setText(pc.getDetails().get("address1")!=null?pc.getDetails().get("address1"):"");
-        viewHolder.wife_age.setText(pc.getColumnmaps().get("umur")!=null?pc.getColumnmaps().get("umur"):"");
-        viewHolder.pnc_id.setText(pc.getDetails().get("noIbu")!=null?pc.getDetails().get("noIbu"):"");
+        String kf_ke = pc.getDetails().get("hariKeKF") != null ? pc.getDetails().get("hariKeKF") : "";
+        viewHolder.KF.setText(context.getString(R.string.hari_ke_kf) + " " + humanizeAndDoUPPERCASE(kf_ke));
+        viewHolder.wife_name.setText(pc.getColumnmaps().get("namalengkap") != null ? pc.getColumnmaps().get("namalengkap") : "");
+        viewHolder.husband_name.setText(pc.getColumnmaps().get("namaSuami") != null ? pc.getColumnmaps().get("namaSuami") : "");
+        viewHolder.village_name.setText(pc.getDetails().get("address1") != null ? pc.getDetails().get("address1") : "");
+        viewHolder.wife_age.setText(pc.getColumnmaps().get("umur") != null ? pc.getColumnmaps().get("umur") : "");
+        viewHolder.pnc_id.setText(pc.getDetails().get("noIbu") != null ? pc.getDetails().get("noIbu") : "");
 
-     //   viewHolder.unique_id.setText(pc.getDetails().get("unique_id")!=null?pc.getDetails().get("unique_id"):"");
-
+        //   viewHolder.unique_id.setText(pc.getDetails().get("unique_id")!=null?pc.getDetails().get("unique_id"):"");
 
         //  AllCommonsRepository anakrep = org.ei.opensrp.Context.getInstance().allCommonsRepositoryobjects("anak");
         //    final CommonPersonObject anakparent = anakrep.findByCaseID(pc.getColumnmaps().get("id"));
 
-      //  viewHolder.KF.setText(anakparent.getDetails().get("saatLahirsd5JamKondisibayi")!=null?anakparent.getDetails().get("saatLahirsd5JamKondisibayi"):"");
-      //  viewHolder.KF.setText(anakparent.getDetails().get("saatLahirsd5JamKondisibayi")!=null?anakparent.getDetails().get("saatLahirsd5JamKondisibayi")+","+anakparent.getDetails().get("beratLahir"):"-");
+        //  viewHolder.KF.setText(anakparent.getDetails().get("saatLahirsd5JamKondisibayi")!=null?anakparent.getDetails().get("saatLahirsd5JamKondisibayi"):"");
+        //  viewHolder.KF.setText(anakparent.getDetails().get("saatLahirsd5JamKondisibayi")!=null?anakparent.getDetails().get("saatLahirsd5JamKondisibayi")+","+anakparent.getDetails().get("beratLahir"):"-");
 
         convertView.setLayoutParams(clientViewLayoutParams);
-     //   return convertView;
+        //   return convertView;
     }
-   // CommonPersonObjectController householdelcocontroller;
+    // CommonPersonObjectController householdelcocontroller;
 
 
     //    @Override
@@ -271,8 +269,9 @@ public class KIPNCClientsProvider implements SmartRegisterCLientsProviderForCurs
         View View = (ViewGroup) inflater().inflate(R.layout.smart_register_ki_pnc_client, null);
         return View;
     }
-    public void risk (String risk1,String risk2,String risk3,String risk4,String risk5,String risk6,String risk7,String risk8,String risk9,String risk10,ImageView riskview){
-        if(risk1 != null && risk1.equals("yes")
+
+    public void risk(String risk1, String risk2, String risk3, String risk4, String risk5, String risk6, String risk7, String risk8, String risk9, String risk10, ImageView riskview) {
+        if (risk1 != null && risk1.equals("yes")
                 || risk2 != null && risk2.equals("yes")
                 || risk3 != null && risk3.equals("yes")
                 || risk4 != null && risk4.equals("yes")
@@ -281,16 +280,17 @@ public class KIPNCClientsProvider implements SmartRegisterCLientsProviderForCurs
                 || risk7 != null && risk7.equals("yes")
                 || risk8 != null && risk8.equals("yes")
                 || risk9 != null && risk9.equals("yes")
-                || risk10 != null && risk10.equals("yes")){
+                || risk10 != null && risk10.equals("yes")) {
 
             riskview.setVisibility(View.VISIBLE);
         }
 
     }
+
     class ViewHolder {
 
-        TextView wife_name ;
-        TextView husband_name ;
+        TextView wife_name;
+        TextView husband_name;
         TextView village_name;
         TextView wife_age;
         LinearLayout profilelayout;
@@ -313,25 +313,24 @@ public class KIPNCClientsProvider implements SmartRegisterCLientsProviderForCurs
         TextView status_date;
         TextView alert_status;
         RelativeLayout status_layout;
-         TextView tanggal_kunjungan_anc;
-         TextView anc_number;
-         TextView kunjugan_ke;
-         ImageView hr_badge  ;
-         ImageView hp_badge;
-         ImageView hrpp_badge;
-         ImageView bpl_badge;
-         ImageView hrp_badge;
+        TextView tanggal_kunjungan_anc;
+        TextView anc_number;
+        TextView kunjugan_ke;
+        ImageView hr_badge;
+        ImageView hp_badge;
+        ImageView hrpp_badge;
+        ImageView bpl_badge;
+        ImageView hrp_badge;
         ImageView img_hrl_badge;
 
-
-         TextView komplikasi;
-         TextView kondisi_ibu;
-         TextView KF;
-         TextView vit_a;
+        TextView komplikasi;
+        TextView kondisi_ibu;
+        TextView KF;
+        TextView vit_a;
         TextView pnc_id;
-         TextView td_sistolik;
-         TextView td_diastolik;
-         TextView td_suhu;
+        TextView td_sistolik;
+        TextView td_diastolik;
+        TextView td_suhu;
     }
 
 

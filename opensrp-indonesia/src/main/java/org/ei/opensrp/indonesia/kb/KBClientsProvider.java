@@ -166,10 +166,6 @@ public class KBClientsProvider implements SmartRegisterCLientsProviderForCursorA
 
         //set image
         final ImageView kiview = (ImageView)convertView.findViewById(R.id.img_profile);
-//        if (pc.getDetails().get("profilepic") != null) {
-////            KIDetailActivity.setImagetoHolderFromUri((Activity) context, pc.getDetails().get("profilepic"), kiview, R.mipmap.woman_placeholder);
-////            kiview.setTag(smartRegisterClient);
-//        }
 
         photo_path = pc.getDetails().get("profilepic_thumb");
         final int THUMBSIZE = FaceConstants.THUMBSIZE;

@@ -583,4 +583,9 @@
   </string>
     <string name="groupCheckCross">Check Cross</string>
     <string name="reset_album">Reset Album</string>
+    <string name="title_activity_bpm_main">Blood Pressure Main</string>
+    <string name="title_activity_abi">ABI</string>
+    <string name="title_activity_bg1">BG1</string>
+    <string name="title_activity_bp7">BP7</string>
+    <string name="title_activity_hs6">HS6</string>
 </resources>

@@ -63,6 +63,10 @@ public class ANCDetailActivity extends Activity {
     static String bindobject;
     static String entityid;
 
+    private String photo_path;
+    private File tb_photo;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -237,25 +241,26 @@ public class ANCDetailActivity extends Activity {
 
 
 //        Profile Picture
-        if (ancclient.getDetails().get("profilepic_thumb") != null) {
 
-            final int THUMBSIZE = FaceConstants.THUMBSIZE;
+        photo_path = ancclient.getDetails().get("profilepic_thumb");
+        final int THUMBSIZE = FaceConstants.THUMBSIZE;
 
-            Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(ancclient.getDetails().get("profilepic_thumb")),
-                    THUMBSIZE, THUMBSIZE);
-            kiview.setImageBitmap(ThumbImage);
-
+        if (photo_path != null) {
+            tb_photo = new File(photo_path);
+            if (!tb_photo.exists()) {
+//                Log.e(TAG, "onCreate: here ");
+                kiview.setImageDrawable(getResources().getDrawable(R.drawable.not_found_404));
+            } else {
+//                Log.e(TAG, "onCreate: here exist " );
+                Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(
+                        BitmapFactory.decodeFile(photo_path),
+                        THUMBSIZE, THUMBSIZE);
+                kiview.setImageBitmap(ThumbImage);
+            }
         } else {
 
             kiview.setImageDrawable(getResources().getDrawable(R.mipmap.woman_placeholder));
         }
-
-//        if(ancclient.getDetails().get("profilepic")!= null){
-//            setImagetoHolderFromUri(ANCDetailActivity.this, ancclient.getDetails().get("profilepic"), kiview, R.mipmap.woman_placeholder);
-//        }
-//        else {
-//            kiview.setImageDrawable(getResources().getDrawable(R.mipmap.woman_placeholder));
-//        }
 
         nama.setText(getResources().getString(R.string.name)+ (ancclient.getColumnmaps().get("namalengkap") != null ? ancclient.getColumnmaps().get("namalengkap") : "-"));
         nik.setText(getResources().getString(R.string.nik)+ (ancclient.getDetails().get("nik") != null ? ancclient.getDetails().get("nik") : "-"));
