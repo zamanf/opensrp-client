@@ -1,9 +1,16 @@
 package org.ei.opensrp.path.fragment;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ProgressBar;
 
+import org.apache.commons.lang3.StringUtils;
 import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.cursoradapter.CursorCommonObjectFilterOption;
@@ -23,6 +30,9 @@ import org.ei.opensrp.path.option.StatusSort;
 import org.ei.opensrp.path.provider.ChildSmartClientsProvider;
 import org.ei.opensrp.path.servicemode.VaccinationServiceModeOption;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
+import org.ei.opensrp.view.BackgroundAction;
+import org.ei.opensrp.view.LockingBackgroundTask;
+import org.ei.opensrp.view.ProgressIndicator;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.dialog.DialogOption;
@@ -36,6 +46,8 @@ import org.joda.time.Days;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import util.GlobalSearchUtils;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
@@ -141,6 +153,7 @@ public class ChildSmartRegisterFragment extends SecuredNativeSmartRegisterCursor
             initializeQueries();
         }
         updateSearchView();
+        updateGlobalSearchView();
         try {
             LoginActivity.setLanguage();
         } catch (Exception e) {
@@ -178,7 +191,7 @@ public class ChildSmartRegisterFragment extends SecuredNativeSmartRegisterCursor
         super.CountExecute();
 
         SmartRegisterQueryBuilder queryBUilder = new SmartRegisterQueryBuilder();
-        queryBUilder.SelectInitiateMainTable(tableName, new String[]{"relationalid", "details", "program_client_id", "first_name", "last_name", "gender", "mother_name", "father_name", "dob", "epi_card_number", "contact_phone_number", "provider_uc", "provider_town", "provider_id", "provider_location_id", "client_reg_date", "vaccines_2", "bcg", "opv0", "pcv1", "opv1", "penta1", "pcv2", "opv2", "penta2", "pcv3", "opv3", "penta3", "ipv", "measles1", "measles2", "bcg_retro", "opv0_retro", "pcv1_retro", "opv1_retro", "penta1_retro", "pcv2_retro", "opv2_retro", "penta2_retro", "pcv3_retro", "opv3_retro", "penta3_retro", "ipv_retro", "measles1_retro", "measles2_retro" });
+        queryBUilder.SelectInitiateMainTable(tableName, new String[]{"relationalid", "details", "program_client_id", "first_name", "last_name", "gender", "mother_name", "father_name", "dob", "epi_card_number", "contact_phone_number", "provider_uc", "provider_town", "provider_id", "provider_location_id", "client_reg_date", "vaccines_2", "bcg", "opv0", "pcv1", "opv1", "penta1", "pcv2", "opv2", "penta2", "pcv3", "opv3", "penta3", "ipv", "measles1", "measles2", "bcg_retro", "opv0_retro", "pcv1_retro", "opv1_retro", "penta1_retro", "pcv2_retro", "opv2_retro", "penta2_retro", "pcv3_retro", "opv3_retro", "penta3_retro", "ipv_retro", "measles1_retro", "measles2_retro"});
         mainSelect = queryBUilder.mainCondition("");
         Sortqueries = ((CursorSortOption) getDefaultOptionsProvider().sortOption()).sort();
 
@@ -395,4 +408,47 @@ public class ChildSmartRegisterFragment extends SecuredNativeSmartRegisterCursor
         } */
         return map;
     }
+
+    private void updateGlobalSearchView() {
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        View view = inflater.inflate(R.layout.global_search, null);
+
+        final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
+        final EditText txtSearch = (EditText) view.findViewById(R.id.text_search);
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setView(view).setPositiveButton(R.string.search, null).setNegativeButton(R.string.cancel, null);
+        final AlertDialog alertDialog = builder.create();
+
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+
+            @Override
+            public void onShow(DialogInterface dialog) {
+
+                Button button = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
+                button.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        if(StringUtils.isNotBlank(txtSearch.getText().toString())) {
+                            GlobalSearchUtils.backgroundSearch(txtSearch.getText().toString(), progressBar);
+                        }
+
+                    }
+                });
+            }
+        });
+
+        Button globalSearchButton = ((Button) mView.findViewById(org.ei.opensrp.R.id.global_search));
+        globalSearchButton.setVisibility(VISIBLE);
+
+        globalSearchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.show();
+            }
+        });
+    }
+
 }
