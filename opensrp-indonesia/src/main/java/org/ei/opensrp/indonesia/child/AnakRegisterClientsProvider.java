@@ -21,7 +21,6 @@ import org.ei.opensrp.indonesia.R;
 import org.ei.opensrp.indonesia.application.BidanApplication;
 import org.ei.opensrp.repository.DetailsRepository;
 import org.ei.opensrp.service.AlertService;
-import org.ei.opensrp.util.FileUtilities;
 import org.ei.opensrp.util.OpenSRPImageLoader;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.contract.SmartRegisterClients;
@@ -160,15 +159,11 @@ public class AnakRegisterClientsProvider implements SmartRegisterCLientsProvider
         viewHolder.berat_lahir.setText(pc.getDetails().get("beratLahir")!=null?pc.getDetails().get("beratLahir"):"");
 
         //start profile image
-        viewHolder.profilepic.setTag(R.id.entity_id, pc.getColumnmaps().get("_id"));//required when saving file to disk
-        if(pc.getDetails().containsKey("imageid") && pc.getDetails().get("imageid")!=null && !pc.getDetails().get("imageid").isEmpty()){//image already in local storage most likey ):
-            mImageLoader.getImageWithId(pc.getColumnmaps().get("_id"), OpenSRPImageLoader.getStaticImageListener(viewHolder.profilepic, R.drawable.woman_placeholder, R.drawable.woman_placeholder));
+        viewHolder.profilepic.setTag(R.id.entity_id, pc.getCaseId());//required when saving file to disk
 
-        }else{
-            //create the url for download the image
-            String url= FileUtilities.getImageUrl(pc.getColumnmaps().get("_id"));
-            mImageLoader.get(url, OpenSRPImageLoader.getStaticImageListener(viewHolder.profilepic, R.drawable.woman_placeholder, R.drawable.woman_placeholder));
-
+        if(pc.getCaseId()!=null){//image already in local storage most likey ):
+            //set profile image by passing the client id.If the image doesn't exist in the image repository then download and save locally
+            BidanApplication.getInstance().getCachedImageLoaderInstance().getImageByClientId(pc.getCaseId(), OpenSRPImageLoader.getStaticImageListener(viewHolder.profilepic, R.mipmap.woman_placeholder, R.mipmap.woman_placeholder));
         }
         //end profile image
 

@@ -19,9 +19,11 @@ import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.domain.ProfileImage;
 import org.ei.opensrp.indonesia.R;
+import org.ei.opensrp.indonesia.application.BidanApplication;
 import org.ei.opensrp.indonesia.kartu_ibu.NativeKISmartRegisterActivity;
 import org.ei.opensrp.repository.DetailsRepository;
 import org.ei.opensrp.repository.ImageRepository;
+import org.ei.opensrp.util.OpenSRPImageLoader;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,7 +37,6 @@ import util.ImageCache;
 import util.ImageFetcher;
 
 import static org.ei.opensrp.util.StringUtil.humanize;
-import static org.ei.opensrp.util.StringUtil.humanizeAndDoUPPERCASE;
 /**
  * Created by Iq on 07/09/16.
  */
@@ -51,6 +52,7 @@ public class AnakDetailActivity extends Activity {
     private static ImageFetcher mImageFetcher;
 
     public static CommonPersonObjectClient childclient;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,19 +107,19 @@ public class AnakDetailActivity extends Activity {
         DetailsRepository detailsRepository = org.ei.opensrp.Context.getInstance().detailsRepository();
         detailsRepository.updateDetails(childclient);
 
-        if(childclient.getDetails().get("profilepic")!= null){
-                setImagetoHolderFromUri(AnakDetailActivity.this, childclient.getDetails().get("profilepic"), childview, R.drawable.child_boy_infant);
+        String gender=childclient.getDetails().containsKey("gender")?childclient.getDetails().get("gender"):"laki";
+
+
+        //start profile image
+
+        int placeholderDrawable= gender.equalsIgnoreCase("male")?R.drawable.child_boy_infant:R.drawable.child_girl_infant;
+        childview.setTag(R.id.entity_id, childclient.getCaseId());//required when saving file to disk
+        if(childclient.getCaseId()!=null){//image already in local storage most likey ):
+            //set profile image by passing the client id.If the image doesn't exist in the image repository then download and save locally
+            BidanApplication.getInstance().getCachedImageLoaderInstance().getImageByClientId(childclient.getCaseId(), OpenSRPImageLoader.getStaticImageListener(childview, placeholderDrawable, placeholderDrawable));
+
         }
-        else {
-            if(childclient.getDetails().get("gender") != null && childclient.getDetails().get("gender").equals("laki")) {
-                childview.setImageDrawable(getResources().getDrawable(R.drawable.child_boy_infant));
-            }   else if(childclient.getDetails().get("gender") != null && childclient.getDetails().get("gender").equals("male")) {
-                childview.setImageDrawable(getResources().getDrawable(R.drawable.child_boy_infant));
-            }
-            else {
-                childview.setImageDrawable(getResources().getDrawable(R.drawable.child_girl_infant));
-            }
-        }
+        //end profile image
 
         AllCommonsRepository childRepository = org.ei.opensrp.Context.getInstance().allCommonsRepositoryobjects("ec_anak");
 
