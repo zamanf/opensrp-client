@@ -1,15 +1,29 @@
 package com.vijay.jsonwizard.widgets;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
+import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.widget.DatePicker;
 
+import com.rengwuxian.materialedittext.MaterialEditText;
+import com.rey.material.util.ViewUtil;
 import com.vijay.jsonwizard.R;
 import com.vijay.jsonwizard.interfaces.CommonListener;
 import com.vijay.jsonwizard.interfaces.FormWidgetFactory;
+import com.vijay.jsonwizard.validators.edittext.RequiredValidator;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.ParseException;
@@ -32,50 +46,67 @@ import static com.vijay.jsonwizard.utils.FormUtils.getTextViewWith;
  */
 public class DatePickerFactory implements FormWidgetFactory {
 
-    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy");
 
     @Override
     public List<View> getViewsFromJson(String stepName, Context context, JSONObject jsonObject,
                                        CommonListener listener) throws Exception {
         List<View> views = new ArrayList<>(1);
+        try {
+            final MaterialEditText editText = (MaterialEditText) LayoutInflater.from(context).inflate(
+                    R.layout.item_edit_text, null);
+            editText.setHint(jsonObject.getString("hint"));
+            editText.setFloatingLabelText(jsonObject.getString("hint"));
+            editText.setId(ViewUtil.generateViewId());
+            editText.setTag(R.id.key, jsonObject.getString("key"));
+            if(jsonObject.has("v_required")) {
+                JSONObject requiredObject = jsonObject.optJSONObject("v_required");
+                String requiredValue = requiredObject.getString("value");
+                if (!TextUtils.isEmpty(requiredValue)) {
+                    if (Boolean.TRUE.toString().equalsIgnoreCase(requiredValue)) {
+                        editText.addValidator(new RequiredValidator(requiredObject.getString("err")));
+                    }
+                }
+            }
 
-        views.add(getTextViewWith(context, 16, jsonObject.getString("hint"),
-                jsonObject.getString("key"), jsonObject.getString("type"),
-                getLayoutParams(MATCH_PARENT, WRAP_CONTENT, 0, 0, 0, 0), FONT_BOLD_PATH));
+            if(jsonObject.has("default")) {
+                editText.setText(DATE_FORMAT.format(getDate(jsonObject.getString("default")).getTime()));
+            }
 
-        DatePicker datePicker = (DatePicker) LayoutInflater.from(context).inflate(
-                R.layout.item_date_picker, null);
-        datePicker.setTag(R.id.key, jsonObject.getString("key"));
+            final ContextThemeWrapper themedContext;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                themedContext = new ContextThemeWrapper(context,
+                        android.R.style.Theme_Holo_Light_Dialog_NoActionBar);
+            } else {
+                themedContext = new ContextThemeWrapper(context,
+                        android.R.style.Theme_Light_NoTitleBar);
+            }
+            final DatePickerDialog datePickerDialog = new DatePickerDialog(themedContext,
+                    jsonObject, editText);
+            //datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-        Calendar defaultCalendar = Calendar.getInstance();
+            editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if(hasFocus) {
+                        datePickerDialog.setDate(getDate(editText.getText().toString()));
+                        datePickerDialog.show();
+                    }
+                }
+            });
 
-        if (jsonObject.has("default")) {
-            defaultCalendar = getDate(jsonObject.getString("default"));
+            editText.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    editText.setText("");
+                    return true;
+                }
+            });
+
+            views.add(editText);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        datePicker.updateDate(
-                defaultCalendar.get(Calendar.YEAR),
-                defaultCalendar.get(Calendar.MONTH),
-                defaultCalendar.get(Calendar.DAY_OF_MONTH));
-
-        if (jsonObject.has("min_date") && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            datePicker.setMinDate(getDate(jsonObject.getString("min_date"))
-                    .getTimeInMillis());
-        }
-
-        if (jsonObject.has("max_date") && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            datePicker.setMaxDate(getDate(jsonObject.getString("max_date"))
-                    .getTimeInMillis());
-        }
-
-        if (jsonObject.has("expanded") && jsonObject.getBoolean("expanded") == true
-                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            datePicker.setCalendarViewShown(true);
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            datePicker.setCalendarViewShown(false);
-        }
-
-        views.add(datePicker);
 
         return views;
     }
@@ -91,7 +122,7 @@ public class DatePickerFactory implements FormWidgetFactory {
     private static Calendar getDate(String dayString) {
         Calendar calendarDate = Calendar.getInstance();
 
-        if (dayString != null) {
+        if (dayString != null && dayString.trim().length() > 0) {
             dayString = dayString.trim().toLowerCase();
             if (!dayString.equals("today")) {
                 Pattern pattern = Pattern.compile("today\\s*([-\\+])\\s*(\\d+)");
@@ -114,5 +145,80 @@ public class DatePickerFactory implements FormWidgetFactory {
         }
 
         return calendarDate;
+    }
+
+    public static class DatePickerDialog {
+        private final DatePicker datePicker;
+        private final MaterialEditText parentEditText;
+        private final AlertDialog alertDialog;
+
+        public DatePickerDialog(Context context, JSONObject formField, MaterialEditText parentEditText) {
+            this.parentEditText = parentEditText;
+
+            LayoutInflater inflater = LayoutInflater.from(context);
+            View inflatedView = inflater.inflate(R.layout.dialog_date_picker, null);
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setView(inflatedView);
+
+            datePicker = (DatePicker) inflatedView.findViewById(R.id.date_picker);
+
+            try {
+                if (formField.has("min_date") && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                    datePicker.setMinDate(getDate(formField.getString("min_date"))
+                            .getTimeInMillis());
+                }
+
+                if (formField.has("max_date") && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                    datePicker.setMaxDate(getDate(formField.getString("max_date"))
+                            .getTimeInMillis());
+                }
+
+                if (formField.has("expanded") && formField.getBoolean("expanded") == true
+                        && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                    datePicker.setCalendarViewShown(true);
+                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                    datePicker.setCalendarViewShown(false);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            builder.setCancelable(false);
+            builder.setPositiveButton(context.getResources().getString(R.string.label_ok),
+                    new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Calendar calendarDate = Calendar.getInstance();
+                    calendarDate.set(Calendar.DAY_OF_MONTH, datePicker.getDayOfMonth());
+                    calendarDate.set(Calendar.MONTH, datePicker.getMonth());
+                    calendarDate.set(Calendar.YEAR, datePicker.getYear());
+                    DatePickerDialog.this.parentEditText.setText(DATE_FORMAT.format(calendarDate.getTime()));
+
+                    dialog.dismiss();
+                }
+            });
+            builder.setNegativeButton(context.getResources().getString(R.string.label_cancel),
+                    new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+
+            alertDialog = builder.create();
+        }
+
+        public void setDate(Calendar calendarDate) {
+            if(calendarDate != null) {
+                datePicker.updateDate(
+                        calendarDate.get(Calendar.YEAR),
+                        calendarDate.get(Calendar.MONTH),
+                        calendarDate.get(Calendar.DAY_OF_MONTH));
+            }
+        }
+
+        public void show() {
+            alertDialog.show();
+        }
     }
 }

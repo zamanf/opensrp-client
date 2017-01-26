@@ -136,14 +136,6 @@ public class JsonFormFragmentPresenter extends MvpBasePresenter<JsonFormFragment
                 } else {
                     spinner.setError(null);
                 }
-            } else if (childAt instanceof DatePicker) {
-                DatePicker datePicker = (DatePicker) childAt;
-                Calendar calendarDate = Calendar.getInstance();
-                calendarDate.set(Calendar.DAY_OF_MONTH, datePicker.getDayOfMonth());
-                calendarDate.set(Calendar.MONTH, datePicker.getMonth());
-                calendarDate.set(Calendar.YEAR, datePicker.getYear());
-                getView().writeValue(mStepName, key,
-                        DatePickerFactory.DATE_FORMAT.format(calendarDate.getTime()));
             }
         }
         return new ValidationStatus(true, null);
