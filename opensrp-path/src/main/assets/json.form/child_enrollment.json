@@ -35,10 +35,13 @@
         "key": "dob",
         "type": "date_picker",
         "hint": "*Date of Birth",
-        "default": "today",
         "expanded": true,
-        "min_date": "2016-01-01",
-        "max_date": "today"
+        "min_date": "01-01-2016",
+        "max_date": "today",
+        "v_required": {
+          "value": "true",
+          "err": "Please enter the date of birth"
+        }
       },
       {
         "key": "national_id",
@@ -62,11 +65,10 @@
       {
         "key": "date_first_seen",
         "type": "date_picker",
-        "hint": "Date first seen (set to 31-12-2015 if unknown)",
-        "default": "2015-12-31",
+        "hint": "Date first seen",
         "expanded": true,
-        "min_date": "2015-12-31",
-        "max_date": "today - 1"
+        "min_date": "01-01-2016",
+        "max_date": "today"
       },
       {
         "key": "hiv_exposure",
