@@ -133,15 +133,16 @@ public class OpenSRPImageLoader extends ImageLoader {
     /**
      * Retrieves a locally stored image using the id of the image from the images db table. If the file is not present, this function will also attempt to
      * retrieve it using url of the source image.
+     * The assumption here is that this method will be used to fetch profile images whereby the name of the file is equals to the client's base entity id
      *
-     * @param imageId- The id of the image to be retrieved
+     * @param entityId- The id of the image to be retrieved
      * @return ImageContainer that will contain either the specified default bitmap or the loaded bitmap. If the default was returned, the
      * {@link OpenSRPImageLoader} will be invoked when the request is fulfilled.
      */
-    public void getImageWithId(final String imageId, final OpenSRPImageListener cachedImageListener) {
+    public void getImageByClientId(final String entityId, final OpenSRPImageListener cachedImageListener) {
 
         try {
-            if (imageId == null || imageId.isEmpty()) {
+            if (entityId == null || entityId.isEmpty()) {
 
                 /***
                  * If imageId is NULL, just return the image with resource id "defaultImageResId"
@@ -154,8 +155,14 @@ public class OpenSRPImageLoader extends ImageLoader {
             } else {
                 //get image record from the db
                 ImageRepository imageRepo = (ImageRepository)org.ei.opensrp.Context.imageRepository();
-                ProfileImage imageRecord = imageRepo.findByEntityId(imageId);
-                get(imageRecord, cachedImageListener);
+                ProfileImage imageRecord = imageRepo.findByEntityId(entityId);
+                if(imageRecord!=null) {
+                    get(imageRecord, cachedImageListener);
+                }else{
+                    String url= FileUtilities.getImageUrl(entityId);
+                    get(url,cachedImageListener);
+
+                }
             }
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
