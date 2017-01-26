@@ -116,7 +116,7 @@ public class NativeKBSmartRegisterFragment extends SecuredNativeSmartRegisterCur
                 //     dialogOptionslist.add(new CursorCommonObjectFilterOption(getString(R.string.hh_no_mwra),filterStringForNoElco()));
                 //      dialogOptionslist.add(new CursorCommonObjectFilterOption(getString(R.string.hh_has_mwra),filterStringForOneOrMoreElco()));
 
-                String locationjson = context.anmLocationController().get();
+                String locationjson = context().anmLocationController().get();
                 LocationTree locationTree = EntityUtils.fromJson(locationjson, LocationTree.class);
 
                 Map<String,TreeNode<String, Location>> locationMap =
@@ -199,7 +199,8 @@ public class NativeKBSmartRegisterFragment extends SecuredNativeSmartRegisterCur
                 "Else alerts.status END ASC";
     }
     public void initializeQueries(){
-        KBClientsProvider kiscp = new KBClientsProvider(getActivity(),clientActionHandler,context.alertService());
+        KBClientsProvider kiscp = new KBClientsProvider(getActivity(),clientActionHandler,
+                context().alertService());
         clientAdapter = new SmartRegisterPaginatedCursorAdapter(getActivity(), null, kiscp, new CommonRepository("kartu_ibu",new String []{"kartu_ibu.isClosed", "namalengkap", "umur","namaSuami","ibu.id", "kartu_ibu.isOutOfArea"}));
         clientsView.setAdapter(clientAdapter);
 
@@ -240,7 +241,9 @@ public class NativeKBSmartRegisterFragment extends SecuredNativeSmartRegisterCur
         }
         ft.addToBackStack(null);
         LocationSelectorDialogFragment
-                .newInstance((NativeKBSmartRegisterActivity) getActivity(), new EditDialogOptionModel(), context.anmLocationController().get(), KOHORT_KB_REGISTER)
+                .newInstance((NativeKBSmartRegisterActivity) getActivity(), new
+                        EditDialogOptionModel(), context().anmLocationController().get(),
+                        KOHORT_KB_REGISTER)
                 .show(ft, locationDialogTAG);
     }
 

@@ -113,7 +113,7 @@ public class NativeKIPNCSmartRegisterFragment extends SecuredNativeSmartRegister
 
                 dialogOptionslist.add(new CursorCommonObjectFilterOption(getString(R.string.filter_by_all_label),filterStringForAll()));
 
-                String locationjson = context.anmLocationController().get();
+                String locationjson = context().anmLocationController().get();
                 LocationTree locationTree = EntityUtils.fromJson(locationjson, LocationTree.class);
 
                 Map<String,TreeNode<String, Location>> locationMap =
@@ -196,7 +196,8 @@ public class NativeKIPNCSmartRegisterFragment extends SecuredNativeSmartRegister
                 "Else alerts.status END ASC";
     }
     public void initializeQueries(){
-        KIPNCClientsProvider kiscp = new KIPNCClientsProvider(getActivity(),clientActionHandler,context.alertService());
+        KIPNCClientsProvider kiscp = new KIPNCClientsProvider(getActivity(),clientActionHandler,
+                context().alertService());
         clientAdapter = new SmartRegisterPaginatedCursorAdapter(getActivity(), null, kiscp, new CommonRepository("ibu",new String []{"ibu.isClosed",  "ibu.hariKeKF","kartu_ibu.namalengkap","kartu_ibu.umur","kartu_ibu.namaSuami"}));
         clientsView.setAdapter(clientAdapter);
 
@@ -237,7 +238,9 @@ public class NativeKIPNCSmartRegisterFragment extends SecuredNativeSmartRegister
         }
         ft.addToBackStack(null);
         LocationSelectorDialogFragment
-                .newInstance((NativeKIPNCSmartRegisterActivity) getActivity(), new EditDialogOptionModel(), context.anmLocationController().get(), "kartu_pnc_regitration_oa")
+                .newInstance((NativeKIPNCSmartRegisterActivity) getActivity(), new
+                        EditDialogOptionModel(), context().anmLocationController().get(),
+                        "kartu_pnc_regitration_oa")
                 .show(ft, locationDialogTAG);
     }
 
