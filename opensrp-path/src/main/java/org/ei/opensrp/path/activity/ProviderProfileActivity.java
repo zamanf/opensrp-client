@@ -6,7 +6,9 @@ import android.view.Window;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
+import org.ei.opensrp.Context;
 import org.ei.opensrp.path.R;
+import org.ei.opensrp.view.activity.DrishtiApplication;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -25,6 +27,13 @@ public class ProviderProfileActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
+
+        if (context().IsUserLoggedOut()) {
+            DrishtiApplication application = (DrishtiApplication)getApplication();
+            application.logoutCurrentUser();
+            return;
+        }
+
         setContentView(R.layout.provider_profile);
 
         HashMap<String, String> providerdt = VaccinatorUtils.providerDetails();
@@ -49,5 +58,20 @@ public class ProviderProfileActivity extends Activity {
         dt.addView(getDataRow(this, "Town", getValue(providerdt, "provider_town", true), null));
         dt.addView(getDataRow(this, "UC", getValue(providerdt, "provider_uc", true), null));
         dt.addView(getDataRow(this, "Center", getValue(providerdt, "provider_location_id", true), null));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (context().IsUserLoggedOut()) {
+            DrishtiApplication application = (DrishtiApplication)getApplication();
+            application.logoutCurrentUser();
+            return;
+        }
+
+    }
+
+    protected Context context() {
+        return Context.getInstance().updateApplicationContext(this.getApplicationContext());
     }
 }

@@ -92,7 +92,7 @@ public class ElcoSmartRegisterActivity extends SecuredNativeSmartRegisterActivit
             }
         });
 
-        ziggyService = context.ziggyService();
+        ziggyService = context().ziggyService();
     }
     private String[] buildFormNameList(){
         List<String> formNames = new ArrayList<String>();
@@ -147,9 +147,11 @@ public class ElcoSmartRegisterActivity extends SecuredNativeSmartRegisterActivit
     }
 
     public DialogOption[] getEditOptions(CommonPersonObjectClient elco) {
-        AllCommonsRepository allelcoRepository = context.getInstance().allCommonsRepositoryobjects("elco");
+        AllCommonsRepository allelcoRepository = context().getInstance()
+                .allCommonsRepositoryobjects("elco");
         CommonPersonObject elcoobject = allelcoRepository.findByCaseID(elco.entityId());
-        AllCommonsRepository householdrep = context.getInstance().allCommonsRepositoryobjects("household");
+        AllCommonsRepository householdrep = context().getInstance()
+                .allCommonsRepositoryobjects("household");
         CommonPersonObject householdparent = householdrep.findByCaseID(elcoobject.getRelationalId());
         String alertstate = "";
         alertstate = getalertstateofelco(elco);
@@ -205,7 +207,6 @@ public class ElcoSmartRegisterActivity extends SecuredNativeSmartRegisterActivit
                 DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(formIndex);
 
                 if (displayFormFragment != null) {
-                    displayFormFragment.setFormPartialSaving(false);
                     displayFormFragment.setFormData(data);
                     displayFormFragment.setRecordId(entityId);
                     displayFormFragment.setFieldOverides(metaData);
@@ -279,7 +280,7 @@ public class ElcoSmartRegisterActivity extends SecuredNativeSmartRegisterActivit
 
             ziggyService.saveForm(getParams(submission), submission.instance());
 
-            FormSubmissionService formSubmissionService = context.formSubmissionService();
+            FormSubmissionService formSubmissionService = context().formSubmissionService();
             formSubmissionService.updateFTSsearch(submission);
 
             Log.v("we are here", "hhregister");
@@ -293,7 +294,6 @@ public class ElcoSmartRegisterActivity extends SecuredNativeSmartRegisterActivit
             DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(currentPage);
 
             if (displayFormFragment != null) {
-                displayFormFragment.setFormPartialSaving(false);
                 displayFormFragment.hideTranslucentProgressDialog();
             }
             e.printStackTrace();
@@ -317,7 +317,6 @@ public class ElcoSmartRegisterActivity extends SecuredNativeSmartRegisterActivit
                     }
                     DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(prevPageIndex);
                     if (displayFormFragment != null) {
-                        displayFormFragment.setFormPartialSaving(false);
                         displayFormFragment.hideTranslucentProgressDialog();
                         displayFormFragment.setFormData(null);
                     }
@@ -328,7 +327,6 @@ public class ElcoSmartRegisterActivity extends SecuredNativeSmartRegisterActivit
                     SecuredFragment registerFragment = (SecuredFragment) findFragmentByPosition(1);
                     DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(prevPageIndex);
                     if (displayFormFragment != null) {
-                        displayFormFragment.setFormPartialSaving(false);
                         displayFormFragment.hideTranslucentProgressDialog();
                         displayFormFragment.setFormData(null);
                     }

@@ -204,7 +204,6 @@ public class mCareChildSmartRegisterActivity extends SecuredNativeSmartRegisterA
 
                 DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(formIndex);
                 if (displayFormFragment != null) {
-                    displayFormFragment.setFormPartialSaving(false);
                     displayFormFragment.setFormData(data);
                     displayFormFragment.setRecordId(entityId);
                     displayFormFragment.setFieldOverides(metaData);
@@ -290,7 +289,6 @@ public class mCareChildSmartRegisterActivity extends SecuredNativeSmartRegisterA
         }catch (Exception e){
             DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(currentPage);
             if (displayFormFragment != null) {
-                displayFormFragment.setFormPartialSaving(false);
                 displayFormFragment.hideTranslucentProgressDialog();
             }
             e.printStackTrace();
@@ -312,7 +310,6 @@ public class mCareChildSmartRegisterActivity extends SecuredNativeSmartRegisterA
                 //hack reset the form
                 DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(prevPageIndex);
                 if (displayFormFragment != null) {
-                    displayFormFragment.setFormPartialSaving(false);
                     displayFormFragment.hideTranslucentProgressDialog();
                     displayFormFragment.setFormData(null);
                 }
