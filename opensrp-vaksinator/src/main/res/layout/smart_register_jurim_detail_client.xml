@@ -99,13 +99,6 @@
                     android:textSize="14dp" />
 
                 <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Posyandu"
-                    android:id="@+id/healthPostLabel"
-                    android:textSize="14dp" />
-
-                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Desa"
@@ -175,13 +168,6 @@
                     android:layout_height="wrap_content"
                     android:text=": "
                     android:id="@+id/motherName"
-                    android:textSize="14dp" />
-
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text=": "
-                    android:id="@+id/posyandu"
                     android:textSize="14dp" />
 
                 <TextView

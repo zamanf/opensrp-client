@@ -208,7 +208,7 @@ public class TTSmartRegisterFragment extends SecuredNativeSmartRegisterCursorAda
            SmartRegisterQueryBuilder countqueryBUilder = new SmartRegisterQueryBuilder();
            countqueryBUilder.SelectInitiateMainTableCounts("ec_ibu");
            countqueryBUilder.customJoin("LEFT JOIN ec_kartu_ibu on ec_kartu_ibu.id = ec_ibu.id");
-           mainCondition = " ec_ibu.is_closed = 0 and pptest ='Positive' ";
+           mainCondition = " is_closed = 0 and pptest ='Positive' ";
            joinTable = "";
            countSelect = countqueryBUilder.mainCondition(mainCondition);
            super.CountExecute();

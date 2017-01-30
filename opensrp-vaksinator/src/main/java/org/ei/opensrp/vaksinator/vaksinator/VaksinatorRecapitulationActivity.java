@@ -8,11 +8,14 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import org.ei.opensrp.Context;
+import org.ei.opensrp.commonregistry.AllCommonsRepository;
+import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.vaksinator.R;
 import org.ei.opensrp.view.activity.ReportsActivity;
 
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -34,50 +37,61 @@ public class VaksinatorRecapitulationActivity extends ReportsActivity {
         context = Context.getInstance();
         setContentView(R.layout.smart_register_jurim_client_reporting);
 
-        Context otherContext = Context.getInstance().updateApplicationContext(this.getApplicationContext());
+        AllCommonsRepository childRepository = org.ei.opensrp.Context.getInstance().allCommonsRepositoryobjects("ec_anak");
+        List <CommonPersonObject> childobject = childRepository.all();
+        System.out.println("ec anak size "+childobject.size());
+        for(int i=1;i<childobject.size();i++){
+            if(childobject.get(i).getCaseId()!=null)
+                System.out.println("detail size of "+i+": "+childobject.get(i).getDetails().size());
+            else
+                System.out.println("detail size of "+i+": ");
 
-        org.ei.opensrp.commonregistry.CommonPersonObjectController data = new org.ei.opensrp.commonregistry.CommonPersonObjectController(otherContext.allCommonsRepositoryobjects("anak"),
-                otherContext.allBeneficiaries(), otherContext.listCache(),
-                otherContext.personObjectClientsCache(), "nama_bayi", "anak", "tanggal_lahir", 
-                org.ei.opensrp.commonregistry.CommonPersonObjectController.ByColumnAndByDetails.byDetails);
+        }
 
-        final org.ei.opensrp.commonregistry.CommonPersonObjectClients clients = data.getClients();
-        final LocalVariable var = new LocalVariable();
-
-        var.setDefaultSpinnerDate();
-        updateView(var, clients, var.monthSpinner.getSelectedItemPosition() + 1, Integer.parseInt(var.yearSpinner.getSelectedItem().toString()));
-        var.setSubtitle(((org.ei.opensrp.commonregistry.CommonPersonObjectClient) clients.get(0)).getDetails().get("desa"));
-
-        var.monthSpinner.setOnItemSelectedListener(
-                new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView <?> parentView, View selectedItemView, int position, long id) {
-                        updateView(var,clients,var.monthSpinner.getSelectedItemPosition()+1,Integer.parseInt(var.yearSpinner.getSelectedItem().toString()));
-                        var.setSubtitle(((org.ei.opensrp.commonregistry.CommonPersonObjectClient) clients.get(0)).getDetails().get("desa"));
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parentView) {
-
-                    }
-                }
-        );
-
-        var.yearSpinner.setOnItemSelectedListener(
-                new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                        updateView(var,clients,var.monthSpinner.getSelectedItemPosition()+1,Integer.parseInt(var.yearSpinner.getSelectedItem().toString()));
-                        var.setSubtitle(((org.ei.opensrp.commonregistry.CommonPersonObjectClient)clients.get(0)).getDetails().get("desa"));
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parentView) {
-
-                    }
-                }
-        );
-
+//        Context otherContext = Context.getInstance().updateApplicationContext(this.getApplicationContext());
+//
+//        org.ei.opensrp.commonregistry.CommonPersonObjectController data = new org.ei.opensrp.commonregistry.CommonPersonObjectController(otherContext.allCommonsRepositoryobjects("anak"),
+//                otherContext.allBeneficiaries(), otherContext.listCache(),
+//                otherContext.personObjectClientsCache(), "nama_bayi", "anak", "tanggal_lahir",
+//                org.ei.opensrp.commonregistry.CommonPersonObjectController.ByColumnAndByDetails.byDetails);
+//
+//        final org.ei.opensrp.commonregistry.CommonPersonObjectClients clients = data.getClients();
+//        final LocalVariable var = new LocalVariable();
+//
+//        var.setDefaultSpinnerDate();
+//        updateView(var, clients, var.monthSpinner.getSelectedItemPosition() + 1, Integer.parseInt(var.yearSpinner.getSelectedItem().toString()));
+//        var.setSubtitle(((org.ei.opensrp.commonregistry.CommonPersonObjectClient) clients.get(0)).getDetails().get("desa"));
+//
+//        var.monthSpinner.setOnItemSelectedListener(
+//                new AdapterView.OnItemSelectedListener() {
+//                    @Override
+//                    public void onItemSelected(AdapterView <?> parentView, View selectedItemView, int position, long id) {
+//                        updateView(var,clients,var.monthSpinner.getSelectedItemPosition()+1,Integer.parseInt(var.yearSpinner.getSelectedItem().toString()));
+//                        var.setSubtitle(((org.ei.opensrp.commonregistry.CommonPersonObjectClient) clients.get(0)).getDetails().get("desa"));
+//                    }
+//
+//                    @Override
+//                    public void onNothingSelected(AdapterView<?> parentView) {
+//
+//                    }
+//                }
+//        );
+//
+//        var.yearSpinner.setOnItemSelectedListener(
+//                new AdapterView.OnItemSelectedListener() {
+//                    @Override
+//                    public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+//                        updateView(var,clients,var.monthSpinner.getSelectedItemPosition()+1,Integer.parseInt(var.yearSpinner.getSelectedItem().toString()));
+//                        var.setSubtitle(((org.ei.opensrp.commonregistry.CommonPersonObjectClient)clients.get(0)).getDetails().get("desa"));
+//                    }
+//
+//                    @Override
+//                    public void onNothingSelected(AdapterView<?> parentView) {
+//
+//                    }
+//                }
+//        );
+//
         ImageButton backButton = (ImageButton) findViewById(R.id.btn_back_to_home);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
