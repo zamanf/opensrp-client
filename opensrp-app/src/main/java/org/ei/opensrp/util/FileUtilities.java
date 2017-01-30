@@ -128,7 +128,7 @@ public class FileUtilities {
     public static String getImageUrl(String entityID) {
         String url = format("{0}/{1}/{2}",
                 org.ei.opensrp.Context.getInstance().allSharedPreferences().fetchBaseURL(""),
-                AllConstants.IMAGES_PATH, (entityID));
+                AllConstants.PROFILE_IMAGES_DOWNLOAD_PATH, entityID);
         return url;
     }
 }
