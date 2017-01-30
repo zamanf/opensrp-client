@@ -3,6 +3,8 @@ package org.ei.opensrp.path.application;
 import android.content.Intent;
 import android.content.res.Configuration;
 
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
 import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.CommonFtsObject;
 import org.ei.opensrp.path.activity.LoginActivity;
@@ -26,6 +28,7 @@ public class VaccinatorApplication extends DrishtiApplication{
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
         DrishtiSyncScheduler.setReceiverClass(SyncBroadcastReceiver.class);
 
         context = Context.getInstance();
@@ -35,6 +38,7 @@ public class VaccinatorApplication extends DrishtiApplication{
         cleanUpSyncState();
         startCESyncService(getApplicationContext());
         ConfigSyncReceiver.scheduleFirstSync(getApplicationContext());
+        setCrashlyticsUser(context);
     }
 
     @Override
@@ -109,5 +113,17 @@ public class VaccinatorApplication extends DrishtiApplication{
             commonFtsObject.updateSortFields(ftsTable, getFtsSortFields(ftsTable));
         }
         return commonFtsObject;
+    }
+
+    /**
+     * This method sets the Crashlytics user to whichever username was used to log in last
+     *
+     * @param context   The user's context
+     */
+    public static void setCrashlyticsUser(Context context) {
+        if(context != null && context.userService() != null
+                && context.userService().getAllSharedPreferences() != null) {
+            Crashlytics.setUserName(context.userService().getAllSharedPreferences().fetchRegisteredANM());
+        }
     }
 }

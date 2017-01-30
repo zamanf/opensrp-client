@@ -53,6 +53,10 @@ public class UserService {
         return httpAgent.urlCanBeAccessWithGivenCredentials(requestURL, userName, password);
     }
 
+    public AllSharedPreferences getAllSharedPreferences() {
+        return allSharedPreferences;
+    }
+
     public Response<String> getLocationInformation() {
         String requestURL = configuration.dristhiBaseURL() + OPENSRP_LOCATION_URL_PATH;
         return httpAgent.fetch(requestURL);

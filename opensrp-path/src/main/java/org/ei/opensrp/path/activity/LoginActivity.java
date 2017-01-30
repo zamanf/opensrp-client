@@ -20,12 +20,15 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
+
 import org.ei.opensrp.Context;
 import org.ei.opensrp.domain.LoginResponse;
 import org.ei.opensrp.domain.Response;
 import org.ei.opensrp.domain.ResponseStatus;
 import org.ei.opensrp.event.Listener;
 import org.ei.opensrp.path.R;
+import org.ei.opensrp.path.application.VaccinatorApplication;
 import org.ei.opensrp.repository.AllSharedPreferences;
 import org.ei.opensrp.sync.DrishtiSyncScheduler;
 import org.ei.opensrp.util.Log;
@@ -321,6 +324,7 @@ public class LoginActivity extends Activity {
     }
 
     private void goToHome() {
+        VaccinatorApplication.setCrashlyticsUser(context);
         startActivity(new Intent(this, VaccinatorHomeActivity.class));
         finish();
     }
