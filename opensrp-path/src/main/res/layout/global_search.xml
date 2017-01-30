@@ -9,18 +9,18 @@
         android:layout_height="64dp"
         android:background="@color/light_blue"
         android:gravity="center"
-        android:text="@string/global_search"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
+        android:text="@string/global_search"
         android:textColor="@color/status_bar_text_almost_white"
-        android:textSize="20sp"/>
+        android:textSize="20sp" />
 
     <ProgressBar
         android:id="@+id/progress_bar"
+        style="@android:style/Widget.Holo.ProgressBar.Large"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        style="@android:style/Widget.Holo.ProgressBar.Small"
         android:visibility="gone" />
 
     <EditText
@@ -32,5 +32,21 @@
         android:layout_marginRight="4dp"
         android:layout_marginTop="16dp"
         android:hint="@string/global_search_hint"
+        android:imeOptions="actionSearch"
         android:inputType="text" />
+
+    <ListView
+        android:id="@+id/list_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/empty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:text="No Records found"
+        android:visibility="gone" />
+
 </LinearLayout>
