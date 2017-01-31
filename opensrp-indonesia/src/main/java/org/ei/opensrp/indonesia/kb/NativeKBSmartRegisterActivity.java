@@ -87,14 +87,15 @@ public class NativeKBSmartRegisterActivity extends SecuredNativeSmartRegisterAct
             }
         });
 
+
         if(LoginActivity.generator.uniqueIdController().needToRefillUniqueId(LoginActivity.generator.UNIQUE_ID_LIMIT)) {
             String toastMessage =   "need to refill unique id, its only "+
                                     LoginActivity.generator.uniqueIdController().countRemainingUniqueId()+
                                     " remaining";
-            Toast.makeText(context.applicationContext(), toastMessage, Toast.LENGTH_LONG).show();
+            Toast.makeText(context().applicationContext(), toastMessage, Toast.LENGTH_LONG).show();
         }
 
-        ziggyService = context.ziggyService();
+        ziggyService = context().ziggyService();
 
     }
     public void onPageChanged(int page){
@@ -173,8 +174,8 @@ public class NativeKBSmartRegisterActivity extends SecuredNativeSmartRegisterAct
             ziggyService.saveForm(getParams(submission), submission.instance());
             ClientProcessor.getInstance(getApplicationContext()).processClient();
 
-            context.formSubmissionService().updateFTSsearch(submission);
-            context.formSubmissionRouter().handleSubmission(submission, formName);
+            context().formSubmissionService().updateFTSsearch(submission);
+            context().formSubmissionRouter().handleSubmission(submission, formName);
 
             if(formName.equals("kartu_ibu_registration")){
                 saveuniqueid();

@@ -3,6 +3,7 @@ package org.ei.opensrp.mcare.anc;
 import android.app.Activity;
 import android.content.Context;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -180,7 +181,7 @@ public class mCareANCSmartClientsProvider implements SmartRegisterCLientsProvide
                 edd.setText(Html.fromHtml(EDDSourcestring));
             }
         } catch (ParseException e) {
-            e.printStackTrace();
+            Log.e(getClass().getName(), "Exception", e);
         }
         constructRiskFlagView(pc,itemView);
         constructANCReminderDueBlock(pc.getColumnmaps().get("FWPSRLMP")!=null?pc.getColumnmaps().get("FWPSRLMP"):"",pc, itemView);
@@ -681,7 +682,7 @@ public class mCareANCSmartClientsProvider implements SmartRegisterCLientsProvide
             anc_date.setTime(calendar.getTime().getTime());
             ancdate = format.format(anc_date);
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(getClass().getName(), "Exception", e);
             ancdate = "";
         }
         return ancdate;

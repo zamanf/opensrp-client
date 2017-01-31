@@ -23,10 +23,8 @@ import org.ei.opensrp.mcare.fragment.ElcoSmartRegisterFragment;
 import org.ei.opensrp.mcare.pageradapter.BaseRegisterActivityPagerAdapter;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.repository.AllSharedPreferences;
-import org.ei.opensrp.service.FormSubmissionService;
 import org.ei.opensrp.sync.ClientProcessor;
 import org.ei.opensrp.util.FormUtils;
-import org.ei.opensrp.util.StringUtil;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
 import org.ei.opensrp.view.contract.SmartRegisterClients;
 import org.ei.opensrp.view.dialog.DialogOption;
@@ -37,13 +35,10 @@ import org.ei.opensrp.view.fragment.SecuredFragment;
 import org.ei.opensrp.view.fragment.SecuredNativeSmartRegisterFragment;
 import org.ei.opensrp.view.viewpager.OpenSRPViewPager;
 import org.json.JSONObject;
-import org.opensrp.api.domain.Location;
-import org.opensrp.api.util.TreeNode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -92,6 +87,7 @@ public class ElcoSmartRegisterActivity extends SecuredNativeSmartRegisterActivit
             }
         });
 
+        ziggyService = context().ziggyService();
     }
     private String[] buildFormNameList(){
         List<String> formNames = new ArrayList<String>();
@@ -220,7 +216,6 @@ public class ElcoSmartRegisterActivity extends SecuredNativeSmartRegisterActivit
                 DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(formIndex);
 
                 if (displayFormFragment != null) {
-                    displayFormFragment.setFormPartialSaving(false);
                     displayFormFragment.setFormData(data);
                     displayFormFragment.setRecordId(entityId);
                     displayFormFragment.setFieldOverides(metaData);
@@ -294,8 +289,8 @@ public class ElcoSmartRegisterActivity extends SecuredNativeSmartRegisterActivit
             ziggyService.saveForm(getParams(submission), submission.instance());
             ClientProcessor.getInstance(getApplicationContext()).processClient();
 
-            context.formSubmissionService().updateFTSsearch(submission);
-            context.formSubmissionRouter().handleSubmission(submission, formName);
+            context().formSubmissionService().updateFTSsearch(submission);
+            context().formSubmissionRouter().handleSubmission(submission, formName);
 
             switchToBaseFragment(formSubmission);
 
@@ -304,7 +299,6 @@ public class ElcoSmartRegisterActivity extends SecuredNativeSmartRegisterActivit
             DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(currentPage);
 
             if (displayFormFragment != null) {
-                displayFormFragment.setFormPartialSaving(false);
                 displayFormFragment.hideTranslucentProgressDialog();
             }
             Log.e("", "Form Submission Error", e);;
@@ -328,7 +322,6 @@ public class ElcoSmartRegisterActivity extends SecuredNativeSmartRegisterActivit
                     }
                     DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(prevPageIndex);
                     if (displayFormFragment != null) {
-                        displayFormFragment.setFormPartialSaving(false);
                         displayFormFragment.hideTranslucentProgressDialog();
                         displayFormFragment.setFormData(null);
                     }
@@ -339,7 +332,6 @@ public class ElcoSmartRegisterActivity extends SecuredNativeSmartRegisterActivit
                     SecuredFragment registerFragment = (SecuredFragment) findFragmentByPosition(1);
                     DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(prevPageIndex);
                     if (displayFormFragment != null) {
-                        displayFormFragment.setFormPartialSaving(false);
                         displayFormFragment.hideTranslucentProgressDialog();
                         displayFormFragment.setFormData(null);
                     }
