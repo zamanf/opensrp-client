@@ -69,7 +69,6 @@ public class VaksinatorDetailActivity extends Activity {
         TextView nameLabel = (TextView) findViewById(R.id.nameLabel);
         TextView fatherLabel = (TextView) findViewById(R.id.fatherNameLabel);
         TextView motherLabel = (TextView) findViewById(R.id.motherNameLabel);
-        TextView posyanduLabel = (TextView) findViewById(R.id.healthPostLabel);
         TextView villageLabel = (TextView) findViewById(R.id.villageLabel);
         TextView subVillageLabel = (TextView) findViewById(R.id.subVillageLabel);
         TextView dateOfBirthLabel = (TextView) findViewById(R.id.dateOfBirthLabel);
@@ -85,7 +84,6 @@ public class VaksinatorDetailActivity extends Activity {
         TextView nama = (TextView) findViewById(R.id.childName);
         TextView motherName = (TextView) findViewById(R.id.motherName);
         TextView fatherName = (TextView) findViewById(R.id.fatherName);
-        TextView posyandu = (TextView) findViewById(R.id.posyandu);
         TextView village = (TextView) findViewById(R.id.village);
         TextView subVillage = (TextView) findViewById(R.id.subvillage);
         TextView dateOfBirth = (TextView) findViewById(R.id.dateOfBirth);
@@ -142,7 +140,6 @@ public class VaksinatorDetailActivity extends Activity {
         nameLabel.setText(getString(R.string.namaAnak));
         fatherLabel.setText(getString(R.string.namaAyah));
         motherLabel.setText(getString(R.string.namaIbu));
-        posyanduLabel.setText(getString(R.string.posyandu));
         villageLabel.setText(getString(R.string.desa));
         subVillageLabel.setText(getString(R.string.dusun));
         dateOfBirthLabel.setText(getString(R.string.tanggalLahir));
@@ -164,6 +161,8 @@ public class VaksinatorDetailActivity extends Activity {
 
         AllCommonsRepository kirep = org.ei.opensrp.Context.getInstance().allCommonsRepositoryobjects("ec_kartu_ibu");
         final CommonPersonObject kiparent = kirep.findByCaseID(childobject.getColumnmaps().get("relational_id"));
+
+        System.out.println("details: "+controller.getDetails().toString());
 
         if(kiparent != null) {
             detailsRepository.updateDetails(kiparent);
@@ -196,15 +195,11 @@ public class VaksinatorDetailActivity extends Activity {
                     : "-")
         );
 */
-        posyandu.setText(": " + (controller.getDetails().get("nama_lokasi") != null
-                ? controller.getDetails().get("nama_lokasi")
-                : controller.getDetails().get("posyandu")!=null
-                    ? controller.getDetails().get("posyandu")
-                    : "-"));
-        dateOfBirth.setText(": " + (controller.getColumnmaps().get("tanggalLahirAnak") != null ? controller.getColumnmaps().get("tanggalLahirAnak") : "-"));
-        birthWeight.setText(": " + (controller.getDetails().get("berat_badan_saat_lahir") != null
+
+        dateOfBirth.setText(": " + (controller.getColumnmaps().get("tanggalLahirAnak") != null ? controller.getColumnmaps().get("tanggalLahirAnak").substring(0,10) : "-"));
+        birthWeight.setText(": " + (controller.getDetails().get("beratLahir") != null
                                     ? Double.toString(Integer.parseInt(controller.getDetails()
-                                                        .get("berat_badan_saat_lahir"))/1000)
+                                                        .get("beratLahir"))/1000)
                                                         + " kg"
                                     : "-"));
         antipiretik.setText(": " + (controller.getDetails().get("getAntypiretic") != null ? controller.getDetails().get("getAntypiretic") : "-"));
@@ -217,16 +212,16 @@ public class VaksinatorDetailActivity extends Activity {
 
         bcg.setText(": " + (controller.getDetails().get("bcg") != null ? controller.getDetails().get("bcg") : "-"));
         pol1.setText(": " + (controller.getDetails().get("polio1") != null ? controller.getDetails().get("polio1") : "-"));
-        dpt1.setText(": " + (controller.getDetails().get("dptHb1") != null ? controller.getDetails().get("dpt_hb1") : "-"));
+        dpt1.setText(": " + (controller.getDetails().get("dptHb1") != null ? controller.getDetails().get("dptHb1") : "-"));
         pol2.setText(": " + (controller.getDetails().get("polio2") != null ? controller.getDetails().get("polio2") : "-"));
-        dpt2.setText(": " + (controller.getDetails().get("dptHb2") != null ? controller.getDetails().get("dpt_hb2") : "-"));
+        dpt2.setText(": " + (controller.getDetails().get("dptHb2") != null ? controller.getDetails().get("dptHb2") : "-"));
         pol3.setText(": " + (controller.getDetails().get("polio3") != null ? controller.getDetails().get("polio3") : "-"));
-        dpt3.setText(": " + (controller.getDetails().get("dptHb3") != null ? controller.getDetails().get("dpt_hb3") : "-"));
+        dpt3.setText(": " + (controller.getDetails().get("dptHb3") != null ? controller.getDetails().get("dptHb3") : "-"));
         pol4.setText(": " + (controller.getDetails().get("polio4") != null ? controller.getDetails().get("polio4") : "-"));
         ipv.setText(": " + (controller.getDetails().get("ipv") != null ? controller.getDetails().get("ipv") : "-"));
-        measles.setText(": " + (controller.getDetails().get("imunisasi_campak") != null ? controller.getDetails().get("imunisasi_campak") : "-"));
+        measles.setText(": " + (controller.getDetails().get("campak") != null ? controller.getDetails().get("campak") : "-"));
 
-        complete.setText(": " + (controller.getDetails().get("imunisasi_lengkap") != null ? controller.getDetails().get("imunisasi_lengkap") : "-"));
+        complete.setText(": " + yesNo(isComplete()));
         additionalDPT.setText(": " + (controller.getDetails().get("dpt_hb_campak_lanjutan") != null ? controller.getDetails().get("dpt_hb_campak_lanjutan") : "-"));
         additionalMeasles.setText(": " + (controller.getDetails().get("dpt_hb_campak_lanjutan") != null ? controller.getDetails().get("dpt_hb_campak_lanjutan") : "-"));
 
@@ -275,6 +270,7 @@ public class VaksinatorDetailActivity extends Activity {
     static File currentfile;
     static String bindobject;
     static String entityid;
+
     private void dispatchTakePictureIntent(ImageView imageView) {
         mImageView = imageView;
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -304,9 +300,17 @@ public class VaksinatorDetailActivity extends Activity {
 //            Bundle extras = data.getExtras();
 //            String imageBitmap = (String) extras.get(MediaStore.EXTRA_OUTPUT);
 //            Toast.makeText(this,imageBitmap,Toast.LENGTH_LONG).show();
+
+/*
             HashMap<String,String> details = new HashMap<String,String>();
-            details.put("profilepic", currentfile.getAbsolutePath());
+            details.put("profilepic",currentfile.getAbsolutePath());
             saveimagereference(bindobject,entityid,details);
+*/
+
+            Long tsLong = System.currentTimeMillis()/1000;
+            DetailsRepository detailsRepository = org.ei.opensrp.Context.getInstance().detailsRepository();
+            detailsRepository.add(entityid, "profilepic", currentfile.getAbsolutePath(), tsLong);
+
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inPreferredConfig = Bitmap.Config.ARGB_8888;
             Bitmap bitmap = BitmapFactory.decodeFile(currentfile.getPath(), options);
@@ -318,10 +322,10 @@ public class VaksinatorDetailActivity extends Activity {
         String anmId = Context.getInstance().allSharedPreferences().fetchRegisteredANM();
         ProfileImage profileImage = new ProfileImage(UUID.randomUUID().toString(),anmId,entityid,"Image",details.get("profilepic"), ImageRepository.TYPE_Unsynced,"dp");
         ((ImageRepository) Context.getInstance().imageRepository()).add(profileImage);
-//                controller.entityId();
+//                kiclient.entityId();
 //        Toast.makeText(this,entityid,Toast.LENGTH_LONG).show();
     }
-    public static void setImagetoHolder(Activity activity,String file, ImageView view, int placeholder){
+    public static void setImagetoHolder(Activity activity, String file, ImageView view, int placeholder){
         mImageThumbSize = 300;
         mImageThumbSpacing = Context.getInstance().applicationContext().getResources().getDimensionPixelSize(R.dimen.image_thumbnail_spacing);
 
@@ -353,6 +357,23 @@ public class VaksinatorDetailActivity extends Activity {
         view.setImageURI(external);
 
 
+    }
+    private boolean isComplete(){
+        return (controller.getDetails().get("hb0") != null &&
+                controller.getDetails().get("bcg") != null &&
+                controller.getDetails().get("polio1") != null &&
+                controller.getDetails().get("dptHb1") != null &&
+                controller.getDetails().get("polio2") != null &&
+                controller.getDetails().get("dptHb2") != null &&
+                controller.getDetails().get("polio3") != null &&
+                controller.getDetails().get("dptHb3") != null &&
+                controller.getDetails().get("polio4") != null &&
+                controller.getDetails().get("campak") != null
+        );
+    }
+
+    public String yesNo(boolean cond){
+        return getString(cond? R.string.mcareyes_button_label : R.string.mcareno_button_label);
     }
     @Override
     public void onBackPressed() {

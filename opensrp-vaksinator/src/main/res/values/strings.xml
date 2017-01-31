@@ -25,6 +25,7 @@
     <string name="home_videos_label">Videos</string>
 
     <string name="vaksinator">CHILD VACCINATION</string>
+    <string name="registerTT">MOTHER TT REGISTER</string>
     <string name="videos_cannot_play_video_dialog_title">Cannot play video.</string>
     <string name="videos_IEC_not_installed_dialog_message">Please install IEC application to play the videos.
     </string>
@@ -429,6 +430,24 @@
     <string name="campakTambahanVisitLabel">Additional Measles Immunization Visit</string>
     <string name="moving">Moving</string>
 
+    <!--
+        TT REGISTER STRING LIBRARY
+    -->
+    <string name="motherID">Mother ID:</string>
+    <string name="lila">MUAC</string>
+    <string name="weight">Weight</string>
+    <string name="last_visit_date">Last ANC Visit</string>
+    <string name="anc_ke">Number of ANC: </string>
+    <string name="visit_number">Visit Number: </string>
+    <string name="header_klinis">Clinical Status</string>
+    <string name="header_pemeriksaan">Examination</string>
+    <string name="header_history_anc">ANC History</string>
+    <string name="tt_status">TT Status</string>
+    <string name="cm">cm</string>
+    <string name="kg">kg</string>
+    <string name="week">week</string>
+    <string name="clinical_age">Clinical Age:</string>
+    
     <color name="vaccBlue">#FF9BC1FB</color>
 
     <string name="month_list_prompt">Month</string>

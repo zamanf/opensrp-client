@@ -30,7 +30,6 @@ import org.ei.opensrp.util.StringUtil;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
 import org.ei.opensrp.view.contract.ECClient;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
-import org.ei.opensrp.view.contract.SmartRegisterClients;
 import org.ei.opensrp.view.controller.VillageController;
 import org.ei.opensrp.view.dialog.AllClientsFilter;
 import org.ei.opensrp.view.dialog.DialogOption;
@@ -49,8 +48,6 @@ import org.opensrp.api.util.TreeNode;
 
 import java.util.ArrayList;
 import java.util.Map;
-
-import util.AsyncTask;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
@@ -119,7 +116,7 @@ public class NativeKBSmartRegisterFragment extends SecuredNativeSmartRegisterCur
                 //     dialogOptionslist.add(new CursorCommonObjectFilterOption(getString(R.string.hh_no_mwra),filterStringForNoElco()));
                 //      dialogOptionslist.add(new CursorCommonObjectFilterOption(getString(R.string.hh_has_mwra),filterStringForOneOrMoreElco()));
 
-                String locationjson = context.anmLocationController().get();
+                String locationjson = context().anmLocationController().get();
                 LocationTree locationTree = EntityUtils.fromJson(locationjson, LocationTree.class);
 
                 Map<String,TreeNode<String, Location>> locationMap =
@@ -208,7 +205,7 @@ public class NativeKBSmartRegisterFragment extends SecuredNativeSmartRegisterCur
 
     public void initializeQueries(){
         try {
-            KBClientsProvider kiscp = new KBClientsProvider(getActivity(),clientActionHandler,context.alertService());
+            KBClientsProvider kiscp = new KBClientsProvider(getActivity(),clientActionHandler,context().alertService());
             clientAdapter = new SmartRegisterPaginatedCursorAdapter(getActivity(), null, kiscp, new CommonRepository("ec_kartu_ibu",new String []{"ec_kartu_ibu.is_closed", "namalengkap", "umur","namaSuami", "ec_kartu_ibu.isOutOfArea"}));
             clientsView.setAdapter(clientAdapter);
 
@@ -240,6 +237,7 @@ public class NativeKBSmartRegisterFragment extends SecuredNativeSmartRegisterCur
         finally {
         }
 
+
     }
 
 
@@ -253,7 +251,9 @@ public class NativeKBSmartRegisterFragment extends SecuredNativeSmartRegisterCur
         }
         ft.addToBackStack(null);
         LocationSelectorDialogFragment
-                .newInstance((NativeKBSmartRegisterActivity) getActivity(), new EditDialogOptionModel(), context.anmLocationController().get(), KOHORT_KB_REGISTER)
+                .newInstance((NativeKBSmartRegisterActivity) getActivity(), new
+                        EditDialogOptionModel(), context().anmLocationController().get(),
+                        KOHORT_KB_REGISTER)
                 .show(ft, locationDialogTAG);
     }
 
@@ -340,36 +340,14 @@ public class NativeKBSmartRegisterFragment extends SecuredNativeSmartRegisterCur
             @Override
             public void onTextChanged(final CharSequence cs, int start, int before, int count) {
 
-                (new AsyncTask() {
-                    SmartRegisterClients filteredClients;
+                filters = cs.toString();
+                joinTable = "";
+                mainCondition = " is_closed = 0 and jenisKontrasepsi != '0' ";
 
-                    @Override
-                    protected Object doInBackground(Object[] params) {
-//                        currentSearchFilter =
-//                        setCurrentSearchFilter(new HHSearchOption(cs.toString()));
-//                        filteredClients = getClientsAdapter().getListItemProvider()
-//                                .updateClients(getCurrentVillageFilter(), getCurrentServiceModeOption(),
-//                                        getCurrentSearchFilter(), getCurrentSortOption());
-//
-                        filters = cs.toString();
-                        joinTable = "";
-                        mainCondition = " is_closed = 0 and jenisKontrasepsi != '0' ";
-                        return null;
-                    }
 
-                    @Override
-                    protected void onPostExecute(Object o) {
-//                        clientsAdapter
-//                                .refreshList(currentVillageFilter, currentServiceModeOption,
-//                                        currentSearchFilter, currentSortOption);
-//                        getClientsAdapter().refreshClients(filteredClients);
-//                        getClientsAdapter().notifyDataSetChanged();
-                        getSearchCancelView().setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
-                        CountExecute();
-                        filterandSortExecute();
-                        super.onPostExecute(o);
-                    }
-                }).execute();
+                getSearchCancelView().setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
+                CountExecute();
+                filterandSortExecute();
             }
 
             @Override
@@ -388,42 +366,13 @@ public class NativeKBSmartRegisterFragment extends SecuredNativeSmartRegisterCur
 
             @Override
             public void onTextChanged(final CharSequence cs, int start, int before, int count) {
-                (new AsyncTask() {
-                    SmartRegisterClients filteredClients;
 
-                    @Override
-                    protected Object doInBackground(Object[] params) {
-//                        currentSearchFilter =
-//                        setCurrentSearchFilter(new HHSearchOption(cs.toString()));
-//                        filteredClients = getClientsAdapter().getListItemProvider()
-//                                .updateClients(getCurrentVillageFilter(), getCurrentServiceModeOption(),
-//                                        getCurrentSearchFilter(), getCurrentSortOption());
-//
-                        filters = cs.toString();
-                        joinTable = "";
-                        mainCondition = " is_closed = 0 and jenisKontrasepsi != '0' ";
-                        return null;
-                    }
+                filters = cs.toString();
+                joinTable = "";
+                mainCondition = " is_closed = 0 and jenisKontrasepsi != '0' ";
 
-                    @Override
-                    protected void onPostExecute(Object o) {
-//                        clientsAdapter
-//                                .refreshList(currentVillageFilter, currentServiceModeOption,
-//                                        currentSearchFilter, currentSortOption);
-//                        getClientsAdapter().refreshClients(filteredClients);
-//                        getClientsAdapter().notifyDataSetChanged();
-                        getSearchCancelView().setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
-                        filterandSortExecute();
-                        super.onPostExecute(o);
-                    }
-                }).execute();
-//                currentSearchFilter = new HHSearchOption(cs.toString());
-//                clientsAdapter
-//                        .refreshList(currentVillageFilter, currentServiceModeOption,
-//                                currentSearchFilter, currentSortOption);
-//
-//                searchCancelView.setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
-
+                getSearchCancelView().setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
+                filterandSortExecute();
 
             }
 

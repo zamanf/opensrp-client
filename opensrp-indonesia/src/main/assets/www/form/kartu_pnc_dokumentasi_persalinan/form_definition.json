@@ -250,7 +250,7 @@
           },
           {
             "name": "beratLahir",
-            "bind": "/model/instance/dok_persalinan_reviewed/child_registration/berat_bayi"
+            "bind": "/model/instance/dok_persalinan_reviewed/child_registration/berat_badan_saat_lahir"
           },
           {
             "name": "HighRiskChildLowBirthweght",

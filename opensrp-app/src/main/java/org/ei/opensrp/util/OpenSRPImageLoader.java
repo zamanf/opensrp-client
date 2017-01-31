@@ -139,7 +139,8 @@ public class OpenSRPImageLoader extends ImageLoader {
      * @return ImageContainer that will contain either the specified default bitmap or the loaded bitmap. If the default was returned, the
      * {@link OpenSRPImageLoader} will be invoked when the request is fulfilled.
      */
-    public void getImageByClientId(final String entityId, final OpenSRPImageListener cachedImageListener) {
+
+    public void getImageByClientId(final String entityId, final OpenSRPImageListener opensrpImageListener) {
 
         try {
             if (entityId == null || entityId.isEmpty()) {
@@ -147,9 +148,9 @@ public class OpenSRPImageLoader extends ImageLoader {
                 /***
                  * If imageId is NULL, just return the image with resource id "defaultImageResId"
                  */
-                ImageContainer imgContainer = new ImageContainer(null, null, null, cachedImageListener);
+                ImageContainer imgContainer = new ImageContainer(null, null, null, opensrpImageListener);
 
-                cachedImageListener.onResponse(imgContainer, true);
+                opensrpImageListener.onResponse(imgContainer, true);
                 return;
 
             } else {
@@ -157,10 +158,11 @@ public class OpenSRPImageLoader extends ImageLoader {
                 ImageRepository imageRepo = (ImageRepository)org.ei.opensrp.Context.imageRepository();
                 ProfileImage imageRecord = imageRepo.findByEntityId(entityId);
                 if(imageRecord!=null) {
-                    get(imageRecord, cachedImageListener);
+
+                    get(imageRecord, opensrpImageListener);
                 }else{
                     String url= FileUtilities.getImageUrl(entityId);
-                    get(url,cachedImageListener);
+                    get(url,opensrpImageListener);
 
                 }
             }
@@ -169,20 +171,20 @@ public class OpenSRPImageLoader extends ImageLoader {
         }
     }
 
-    public void get(final ProfileImage image, final OpenSRPImageListener cachedImageListener) {
+    public void get(final ProfileImage image, final OpenSRPImageListener opensrpImageListener) {
 
         try {
             /***
              * Non existent image record, display image with defaultImageResId
              */
             if (image == null) {
-                ImageContainer imgContainer = new ImageContainer(null, null, null, cachedImageListener);
-                cachedImageListener.onResponse(imgContainer, true);
+                ImageContainer imgContainer = new ImageContainer(null, null, null, opensrpImageListener);
+                opensrpImageListener.onResponse(imgContainer, true);
                 return;
             }
-            cachedImageListener.setAbsoluteFileName(image.getFilepath());
+            opensrpImageListener.setAbsoluteFileName(image.getFilepath());
 
-            LoadBitmapFromDiskTask loadBitmap = new LoadBitmapFromDiskTask(cachedImageListener, image, this);
+            LoadBitmapFromDiskTask loadBitmap = new LoadBitmapFromDiskTask(opensrpImageListener, image, this);
             loadBitmap.execute(image.getFilepath());
 
         } catch (Exception e) {
@@ -192,15 +194,15 @@ public class OpenSRPImageLoader extends ImageLoader {
 
     private class LoadBitmapFromDiskTask extends AsyncTask<String, Void, Bitmap> {
 
-        private OpenSRPImageListener cachedImageListener;
+        private OpenSRPImageListener opensrpImageListener;
         private ProfileImage imageRecord;
         private ImageView imageView;
         private OpenSRPImageLoader cachedImageLoader;
 
-        public LoadBitmapFromDiskTask(OpenSRPImageListener cachedImageListener, ProfileImage imageRecord, OpenSRPImageLoader cachedImageLoader) {
-            this.cachedImageListener = cachedImageListener;
+        public LoadBitmapFromDiskTask(OpenSRPImageListener opensrpImageListener, ProfileImage imageRecord, OpenSRPImageLoader cachedImageLoader) {
+            this.opensrpImageListener = opensrpImageListener;
             this.imageRecord = imageRecord;
-            this.imageView = cachedImageListener.getImageView();
+            this.imageView = opensrpImageListener.getImageView();
             this.cachedImageLoader = cachedImageLoader;
         }
 
@@ -219,14 +221,14 @@ public class OpenSRPImageLoader extends ImageLoader {
                  */
                 if (result != null) {
                     Log.i(TAG, "Found image on local storage, no download needed");
-                    ImageContainer imgContainer = new ImageContainer(result, null, null, cachedImageListener);
-                    if (cachedImageListener != null) {
-                        if (cachedImageListener.getHasImageViewTag()) {
-                            String imageId = cachedImageListener.getImageView().getTag().toString();
+                    ImageContainer imgContainer = new ImageContainer(result, null, null, opensrpImageListener);
+                    if (opensrpImageListener != null) {
+                        if (opensrpImageListener.getHasImageViewTag()) {
+                            String imageId = opensrpImageListener.getImageView().getTag().toString();
                             if (imageRecord.getEntityID().equalsIgnoreCase(imageId))
-                                cachedImageListener.onResponse(imgContainer, true);
+                                opensrpImageListener.onResponse(imgContainer, true);
                         } else
-                            cachedImageListener.onResponse(imgContainer, true);
+                            opensrpImageListener.onResponse(imgContainer, true);
                     }
                     return;
                 }
@@ -254,13 +256,13 @@ public class OpenSRPImageLoader extends ImageLoader {
                         }
                         if (requestUrl != null) {
                             // Queue new request to fetch image
-                            imageContainer = cachedImageLoader.get(requestUrl, cachedImageListener, 0, 0);
+                            imageContainer = cachedImageLoader.get(requestUrl, opensrpImageListener, 0, 0);
                             // Store request in ImageView tag
                             imageView.setTag(imageContainer);
                         } else {
                             // Use default image
-                            imageContainer = new ImageContainer(null, null, null, cachedImageListener);
-                            cachedImageListener.onResponse(imageContainer, true);
+                            imageContainer = new ImageContainer(null, null, null, opensrpImageListener);
+                            opensrpImageListener.onResponse(imageContainer, true);
                             // Nullify ImageView tag
                             imageView.setTag(null);
                         }

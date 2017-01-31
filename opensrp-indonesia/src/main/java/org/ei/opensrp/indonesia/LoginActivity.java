@@ -22,6 +22,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.flurry.android.FlurryAgent;
+
 import org.ei.opensrp.Context;
 import org.ei.opensrp.domain.LoginResponse;
 import org.ei.opensrp.domain.Response;
@@ -55,16 +57,17 @@ import static org.ei.opensrp.util.Log.logError;
 import static org.ei.opensrp.util.Log.logVerbose;
 
 public class LoginActivity extends Activity {
-
     private Context context;
     private EditText userNameEditText;
     private EditText passwordEditText;
     private ProgressDialog progressDialog;
     public static final String ENGLISH_LOCALE = "en";
     public static final String KANNADA_LOCALE = "kn";
+    public static final String BENGALI_LOCALE = "bn";
     public static final String BAHASA_LOCALE = "in";
     public static final String ENGLISH_LANGUAGE = "English";
     public static final String KANNADA_LANGUAGE = "Kannada";
+    public static final String Bengali_LANGUAGE = "Bengali";
     public static final String Bahasa_LANGUAGE = "Bahasa";
 
     public static Generator generator;
@@ -87,7 +90,7 @@ public class LoginActivity extends Activity {
         }
         setContentView(org.ei.opensrp.R.layout.login);
         ImageView loginglogo = (ImageView)findViewById(R.id.login_logo);
-        loginglogo.setImageDrawable(getResources().getDrawable(R.drawable.login_logo_bidan));
+        loginglogo.setImageDrawable(getResources().getDrawable(R.mipmap.login_logo));
         context = Context.getInstance().updateApplicationContext(this.getApplicationContext());
         initializeLoginFields();
         initializeBuildDetails();
@@ -178,6 +181,8 @@ public class LoginActivity extends Activity {
     private void localLogin(View view, String userName, String password) {
         if (context.userService().isValidLocalLogin(userName, password)) {
             localLoginWith(userName, password);
+            ErrorReportingFacade.setUsername("", userName);
+            FlurryAgent.setUserId(userName);
         } else {
             showErrorDialog(getString(org.ei.opensrp.R.string.login_failed_dialog_message));
             view.setClickable(true);
@@ -187,6 +192,8 @@ public class LoginActivity extends Activity {
     private void remoteLogin(final View view, final String userName, final String password) {
         tryRemoteLogin(userName, password, new Listener<LoginResponse>() {
             public void onEvent(LoginResponse loginResponse) {
+                ErrorReportingFacade.setUsername("", userName);
+                FlurryAgent.setUserId(userName);
                 if (loginResponse == SUCCESS) {
                     remoteLoginWith(userName, password, loginResponse.payload());
                 } else {
@@ -207,7 +214,7 @@ public class LoginActivity extends Activity {
             }
         });
 
-        tryGetUniqueId(userName, password, new Listener<ResponseStatus>() {
+/*        tryGetUniqueId(userName, password, new Listener<ResponseStatus>() {
             @Override
             public void onEvent(ResponseStatus data) {
                 if (data == ResponseStatus.failure) {
@@ -215,7 +222,7 @@ public class LoginActivity extends Activity {
                 }
                 goToHome();
             }
-        });
+        });*/
     }
 
     private void showErrorDialog(String message) {
@@ -302,8 +309,6 @@ public class LoginActivity extends Activity {
 
     private void localLoginWith(String userName, String password) {
         context.userService().localLogin(userName, password);
-        ErrorReportingFacade.setUsername("", userName);
-        FlurryFacade.setUserId(userName);
         LoginActivity.generator = new Generator(context,userName,password);
         goToHome();
         DrishtiSyncScheduler.startOnlyIfConnectedToNetwork(getApplicationContext());
@@ -311,8 +316,6 @@ public class LoginActivity extends Activity {
 
     private void remoteLoginWith(String userName, String password, String userInfo) {
         context.userService().remoteLogin(userName, password, userInfo);
-        ErrorReportingFacade.setUsername("", userName);
-        FlurryFacade.setUserId(userName);
         LoginActivity.generator = new Generator(context,userName,password);
         goToHome();
         DrishtiSyncScheduler.startOnlyIfConnectedToNetwork(getApplicationContext());
@@ -386,9 +389,9 @@ public class LoginActivity extends Activity {
         task.doActionInBackground(new BackgroundAction<ResponseStatus>() {
             @Override
             public ResponseStatus actionToDoInBackgroundThread() {
-                LoginActivity.generator = new Generator(context,username,password);                     // unique id part
-                LoginActivity.generator.uniqueIdService().syncUniqueIdFromServer(username, password);   // unique id part
-                return LoginActivity.generator.uniqueIdService().getLastUsedId(username, password);     // unique id part
+                LoginActivity.generator = new Generator(context,username,password);
+                LoginActivity.generator.uniqueIdService().syncUniqueIdFromServer(username, password);
+                return (LoginActivity.generator.uniqueIdService().getLastUsedId(username, password));
             }
 
             @Override

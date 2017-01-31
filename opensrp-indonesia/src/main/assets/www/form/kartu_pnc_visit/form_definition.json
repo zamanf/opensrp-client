@@ -54,14 +54,12 @@
       {
         "name": "tandaVitalTDSistolik",
         "bind": "/model/instance/PNC_visit_reviewed/tanda_vital_td_sistolik",
-        "source": "ibu.kartu_ibu.tandaVitalTDSistolik",
-        "shouldLoadValue": true
+        "source": "ibu.kartu_ibu.tandaVitalTDSistolik"
       },
       {
         "name": "tandaVitalTDDiastolik",
         "bind": "/model/instance/PNC_visit_reviewed/tanda_vital_td_diastolik",
-        "source": "ibu.kartu_ibu.tandaVitalTDDiastolik",
-        "shouldLoadValue": true
+        "source": "ibu.kartu_ibu.tandaVitalTDDiastolik"
       },
       {
         "name": "tandaVitalSuhu",

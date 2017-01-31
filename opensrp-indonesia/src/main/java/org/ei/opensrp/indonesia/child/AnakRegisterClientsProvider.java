@@ -179,7 +179,7 @@ public class AnakRegisterClientsProvider implements SmartRegisterCLientsProvider
 
         //child visit status
         String berat = pc.getDetails().get("beratBayi")!=null?" "+pc.getDetails().get("beratBayi"):pc.getDetails().get("beratBadan")!=null?pc.getDetails().get("beratBadan"):"";
-        String tanggal = pc.getDetails().get("tanggalKunjunganNeonatal")!=null?" "+pc.getDetails().get("tanggalKunjunganNeonatal"):pc.getDetails().get("tanggalPenimbangan")!=null?pc.getDetails().get("tanggalPenimbangan"):"";
+        String tanggal = pc.getDetails().get("tanggalKunjunganBayiPerbulan")!=null?" "+pc.getDetails().get("tanggalKunjunganBayiPerbulan"):pc.getDetails().get("tanggalPenimbangan")!=null?pc.getDetails().get("tanggalPenimbangan"):"";
         String tinggi = pc.getDetails().get("panjangBayi")!=null?" "+pc.getDetails().get("panjangBayi"):pc.getDetails().get("tinggiBadan")!=null?pc.getDetails().get("tinggiBadan"):"";
         String status_gizi = pc.getDetails().get("statusGizi")!=null?pc.getDetails().get("statusGizi"):"";
         String gizi = status_gizi.equals("GB")?"Gizi Buruk":status_gizi.equals("GK")?"Gizi Kurang":status_gizi.equals("GR")?"Gizi Rendah":"";

@@ -34,6 +34,9 @@ import org.joda.time.Months;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static org.joda.time.LocalDateTime.parse;
 
@@ -165,7 +168,7 @@ public class KIClientsProvider implements SmartRegisterCLientsProviderForCursorA
             if (anc_isclosed == 0) {
                 detailsRepository.updateDetails(ibuparent);
                 checkMonth(pc.getDetails().get("htp"),viewHolder.edd_due);
-                checkLastVisit(pc.getDetails().get("ancDate"),pc.getDetails().get("ancKe"),context.getString(R.string.service_anc),
+                checkLastVisit(pc.getDetails().get("ancDate"),context.getString(R.string.anc_ke) + ": "+pc.getDetails().get("ancKe"),context.getString(R.string.service_anc),
                                viewHolder.anc_status_layout,viewHolder.date_status,viewHolder.visit_status);
             }
             //if anc is 1(closed) set status to pnc
@@ -176,19 +179,30 @@ public class KIClientsProvider implements SmartRegisterCLientsProviderForCursorA
                 if (pnc_isclosed == 0) {
                     detailsRepository.updateDetails(pncparent);
                     checkMonth("delivered",viewHolder.edd_due);
-                    checkLastVisit(pc.getDetails().get("PNCDate"),pc.getDetails().get("hariKeKF"),context.getString(R.string.service_pnc),
+                    checkLastVisit(pc.getDetails().get("PNCDate"),context.getString(R.string.pnc_ke) + " "+pc.getDetails().get("hariKeKF"),context.getString(R.string.service_pnc),
                             viewHolder.anc_status_layout,viewHolder.date_status,viewHolder.visit_status);
                 }
             }
         }
         //last check if mother in PF (KB) service
         else if(!StringUtils.isNumeric(pc.getDetails().get("jenisKontrasepsi"))) {
-                checkLastVisit(pc.getDetails().get("tanggalkunjungan"),pc.getDetails().get("jenisKontrasepsi"),context.getString(R.string.service_fp),
+                checkLastVisit(pc.getDetails().get("tanggalkunjungan"),context.getString(R.string.fp_methods)+": "+pc.getDetails().get("jenisKontrasepsi"),context.getString(R.string.service_fp),
                         viewHolder.anc_status_layout,viewHolder.date_status,viewHolder.visit_status);
         }
-        viewHolder.children_age_left.setText(pc.getColumnmaps().get("namaBayi")!=null?"Name : "+pc.getColumnmaps().get("namaBayi"):"");
-        viewHolder.children_age_right.setText(pc.getColumnmaps().get("tanggalLahirAnak")!=null?"DOB : "+pc.getColumnmaps().get("tanggalLahirAnak").substring(0, pc.getColumnmaps().get("tanggalLahirAnak").indexOf("T")):"");
 
+
+
+        //anak
+        AllCommonsRepository anakrep = org.ei.opensrp.Context.getInstance().allCommonsRepositoryobjects("ec_anak");
+        ArrayList<String> list = new ArrayList<String>();
+        list.add((pc.entityId()));
+        List<CommonPersonObject> allchild = anakrep.findByRelational_IDs(list);
+        for (int i = 0; i < allchild.size(); i++) {
+            CommonPersonObject commonPersonObject = allchild.get(i);
+            detailsRepository.updateDetails(commonPersonObject);
+            viewHolder.children_age_left.setText(commonPersonObject.getColumnmaps().get("namaBayi") != null ? "Name : " + commonPersonObject.getColumnmaps().get("namaBayi") : "");
+            viewHolder.children_age_right.setText(commonPersonObject.getColumnmaps().get("tanggalLahirAnak") != null ? "DOB : " + commonPersonObject.getColumnmaps().get("tanggalLahirAnak").substring(0, commonPersonObject.getColumnmaps().get("tanggalLahirAnak").indexOf("T")) : "");
+        }
 
         viewHolder.hr_badge.setVisibility(View.INVISIBLE);
         viewHolder.hrp_badge.setVisibility(View.INVISIBLE);
@@ -259,15 +273,14 @@ public class KIClientsProvider implements SmartRegisterCLientsProviderForCursorA
 
             riskview.setVisibility(View.VISIBLE);
         }
-
     }
 
     public void checkLastVisit(String date,String visitNumber,String Status, TextView visitStatus,TextView visitDate, TextView VisitNumber ) {
-
+        String visit_stat="";
         String visit_date = date != null ? context.getString(R.string.date_visit_title) + " " + date : "";
-        String visit_stat = visitNumber != null ? context.getString(R.string.anc_ke) + " " + visitNumber : "";
+
+        VisitNumber.setText(visitNumber);
         visitDate.setText(visit_date);
-        VisitNumber.setText(visit_stat);
         visitStatus.setText(Status);
     }
 

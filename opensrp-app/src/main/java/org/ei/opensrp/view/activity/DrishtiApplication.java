@@ -65,4 +65,3 @@ public abstract class DrishtiApplication extends Application {
     }
 
 }
-
