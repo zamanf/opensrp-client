@@ -175,7 +175,7 @@ public class mCarePNCSmartClientsProvider implements SmartRegisterCLientsProvide
                    dateofdelivery.setText(Html.fromHtml("" +" "+ doolay(pc)));
 
         } catch (Exception e) {
-            e.printStackTrace();
+              Log.e(getClass().getName(), "Exception", e);
         }
 
         itemView.setLayoutParams(clientViewLayoutParams);
@@ -198,7 +198,7 @@ public class mCarePNCSmartClientsProvider implements SmartRegisterCLientsProvide
             edd_date.setTime(calendar.getTime().getTime());
             return McareApplication.convertToEnglishDigits(format.format(edd_date));
         } catch (ParseException e) {
-            e.printStackTrace();
+            Log.e(getClass().getName(), "Exception", e);
             return "";
         }
 
@@ -553,7 +553,7 @@ public class mCarePNCSmartClientsProvider implements SmartRegisterCLientsProvide
             pnc_date.setTime(calendar.getTime().getTime());
             pncdate = format.format(pnc_date);
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(getClass().getName(), "Exception", e);
             pncdate = "";
         }
         return pncdate;

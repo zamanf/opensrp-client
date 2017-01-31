@@ -115,7 +115,7 @@ public class ElcoSmartClientsProvider implements SmartRegisterCLientsProviderFor
             int calc_age = days / 365;
             age.setText("("+calc_age+") ");
         }catch (Exception e){
-            e.printStackTrace();
+            Log.e(getClass().getName(), "Exception", e);
         }
 
         if((pc.getDetails().get("FWWOMNID")!=null?pc.getDetails().get("FWWOMNID"):"").length()>0) {
@@ -166,7 +166,7 @@ public class ElcoSmartClientsProvider implements SmartRegisterCLientsProviderFor
                 }
             } catch (Exception e) {
                 // TODO Auto-generated catch block
-                e.printStackTrace();
+                Log.e(getClass().getName(), "Exception", e);
             }
         }else  if(householdparent.getDetails().get("FWNHREGDATE")!= null) {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -178,7 +178,7 @@ public class ElcoSmartClientsProvider implements SmartRegisterCLientsProviderFor
 
             } catch (Exception e) {
                 // TODO Auto-generated catch block
-                e.printStackTrace();
+                Log.e(getClass().getName(), "Exception", e);
             }
         }
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -187,12 +187,12 @@ public class ElcoSmartClientsProvider implements SmartRegisterCLientsProviderFor
         if(pc.getDetails().get("FWPSRDATE")!=null && pc.getDetails().get("FWPSRPREGSTS")!=null){
             if(pc.getDetails().get("FWPSRPREGSTS").equalsIgnoreCase("0") || pc.getDetails().get("FWPSRPREGSTS").equalsIgnoreCase("9")){
                  try {
-                Date regdate = format.parse(householdparent.getDetails().get("FWPSRDATE"));
+                Date regdate = format.parse(pc.getDetails().get("FWPSRDATE"));
 
                 lastdate = regdate;
                 } catch (Exception e) {
                     // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    Log.e(getClass().getName(), "Exception", e);
                 }
 
             }
@@ -249,7 +249,7 @@ public class ElcoSmartClientsProvider implements SmartRegisterCLientsProviderFor
                 }
 
                 }catch(ParseException e){
-                    e.printStackTrace();
+                Log.e(getClass().getName(), "Exception", e);
                 }
 
         }
@@ -354,7 +354,7 @@ public class ElcoSmartClientsProvider implements SmartRegisterCLientsProviderFor
                 }
             } catch (Exception e) {
                 // TODO Auto-generated catch block
-                e.printStackTrace();
+                Log.e(getClass().getName(), "Exception", e);
             }
         }else  if(householdparent.getDetails().get("FWNHREGDATE")!= null) {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -366,7 +366,7 @@ public class ElcoSmartClientsProvider implements SmartRegisterCLientsProviderFor
 
             } catch (Exception e) {
                 // TODO Auto-generated catch block
-                e.printStackTrace();
+                Log.e(getClass().getName(), "Exception", e);
             }
         }
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -379,7 +379,7 @@ public class ElcoSmartClientsProvider implements SmartRegisterCLientsProviderFor
                     lastdate = regdate;
                 } catch (Exception e) {
                     // TODO Auto-generated catch block
-                    e.printStackTrace();
+                     Log.e(getClass().getName(), "Exception", e);
                 }
             mis_elco_due.setBackgroundColor(context.getResources().getColor(R.color.alert_complete_green_mcare));
             mis_elco_due.setTextColor(context.getResources().getColor(R.color.status_bar_text_almost_white));
