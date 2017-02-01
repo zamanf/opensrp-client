@@ -29,7 +29,6 @@ import org.ei.opensrp.mcare.anc.mCareANCSmartRegisterActivity;
 import org.ei.opensrp.mcare.anc.mCareAncDetailActivity;
 import org.ei.opensrp.mcare.elco.ElcoMauzaCommonObjectFilterOption;
 import org.ei.opensrp.mcare.elco.ElcoPSRFDueDateSort;
-import org.ei.opensrp.mcare.elco.ElcoSearchOption;
 import org.ei.opensrp.mcare.elco.ElcoSmartRegisterActivity;
 import org.ei.opensrp.mcare.elco.PSRFHandler;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
@@ -280,36 +279,6 @@ public class mCareANCSmartRegisterFragment extends SecuredNativeSmartRegisterCur
 
             @Override
             public void onTextChanged(final CharSequence cs, int start, int before, int count) {
-<<<<<<< HEAD
-                (new AsyncTask() {
-                    SmartRegisterClients filteredClients;
-
-                    @Override
-                    protected Object doInBackground(Object[] params) {
-                        setCurrentSearchFilter(new ElcoSearchOption(cs.toString()));
-                        filteredClients = getClientsAdapter().getListItemProvider()
-                                .updateClients(getCurrentVillageFilter(), getCurrentServiceModeOption(),
-                                        getCurrentSearchFilter(), getCurrentSortOption());
-
-
-//                        currentSearchFilter =
-//                        setCurrentSearchFilter(new HHSearchOption(cs.toString()));
-//                        filteredClients = getClientsAdapter().getListItemProvider()
-//                                .updateClients(getCurrentVillageFilter(), getCurrentServiceModeOption(),
-//                                        getCurrentSearchFilter(), getCurrentSortOption());
-//
-                        if(cs.toString().equalsIgnoreCase("")){
-                            filters = "";
-                        }else {
-                            //filters = "and FWWOMFNAME Like '%" + cs.toString() + "%' or GOBHHID Like '%" + cs.toString() + "%'  or JiVitAHHID Like '%" + cs.toString() + "%' ";
-                            filters = cs.toString();
-                        }
-                        joinTable = "";
-                        mainCondition = " is_closed=0 AND FWWOMFNAME not null and FWWOMFNAME != \"\" ";
-                        return null;
-                    }
-=======
->>>>>>> v2
 
                 if(cs.toString().equalsIgnoreCase("")){
                     filters = "";
@@ -471,6 +440,6 @@ public class mCareANCSmartRegisterFragment extends SecuredNativeSmartRegisterCur
      */
     @Override
     public void onFilterSelection(FilterOption filter) {
-       super.onFilterSelection(filter);
+        super.onFilterSelection(filter);
     }
 }

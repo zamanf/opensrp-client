@@ -194,7 +194,7 @@ public class IbuSmartRegisterActivity extends SecuredNativeSmartRegisterActivity
 
         try {
             JSONObject locationJSON = new JSONObject(locationJSONString);
-            //   JSONObject uniqueId = new JSONObject(context.uniqueIdController().getUniqueIdJson());
+            //   JSONObject uniqueId = new JSONObject(context().uniqueIdController().getUniqueIdJson());
 
             combined = locationJSON;
             //     Iterator<String> iter = uniqueId.keys();
@@ -216,9 +216,9 @@ public class IbuSmartRegisterActivity extends SecuredNativeSmartRegisterActivity
 
    /* public void saveuniqueid() {
         try {
-            JSONObject uniqueId = new JSONObject(context.uniqueIdController().getUniqueIdJson());
+            JSONObject uniqueId = new JSONObject(context().uniqueIdController().getUniqueIdJson());
             String uniq = uniqueId.getString("unique_id");
-            context.uniqueIdController().updateCurrentUniqueId(uniq);
+            context().uniqueIdController().updateCurrentUniqueId(uniq);
 
         } catch (JSONException e) {
             e.printStackTrace();

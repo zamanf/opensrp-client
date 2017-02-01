@@ -167,7 +167,7 @@ public class GiziIbuSmartRegisterFragment extends SecuredNativeSmartRegisterCurs
     protected SmartRegisterClientsProvider clientsProvider() {
 //        if (clientProvider == null) {
 //            clientProvider = new HouseHoldSmartClientsProvider(
-//                    getActivity(),clientActionHandler , context.alertService());
+//                    getActivity(),clientActionHandler , context().alertService());
 //        }
         return null;
     }
@@ -178,7 +178,7 @@ public class GiziIbuSmartRegisterFragment extends SecuredNativeSmartRegisterCurs
 
     @Override
     protected void onInitialization() {
-         //  context.formSubmissionRouter().getHandlerMap().put("census_enrollment_form", new CensusEnrollmentHandler());
+         //  context().formSubmissionRouter().getHandlerMap().put("census_enrollment_form", new CensusEnrollmentHandler());
     }
 
     @Override
@@ -252,7 +252,7 @@ public class GiziIbuSmartRegisterFragment extends SecuredNativeSmartRegisterCurs
 //        }
 //        ft.addToBackStack(null);
 //        LocationSelectorDialogFragment
-//                .newInstance((GiziSmartRegisterActivity) getActivity(), new EditDialogOptionModel(), context.anmLocationController().get(), "registrasi_jurim")
+//                .newInstance((GiziSmartRegisterActivity) getActivity(), new EditDialogOptionModel(), context().anmLocationController().get(), "registrasi_jurim")
 //                .show(ft, locationDialogTAG);
     }
 

@@ -168,7 +168,7 @@ public class GiziSmartRegisterFragment extends SecuredNativeSmartRegisterCursorA
     protected SmartRegisterClientsProvider clientsProvider() {
 //        if (clientProvider == null) {
 //            clientProvider = new HouseHoldSmartClientsProvider(
-//                    getActivity(),clientActionHandler , context.alertService());
+//                    getActivity(),clientActionHandler , context().alertService());
 //        }
         return null;
     }
@@ -179,7 +179,7 @@ public class GiziSmartRegisterFragment extends SecuredNativeSmartRegisterCursorA
 
     @Override
     protected void onInitialization() {
-         //  context.formSubmissionRouter().getHandlerMap().put("census_enrollment_form", new CensusEnrollmentHandler());
+         //  context().formSubmissionRouter().getHandlerMap().put("census_enrollment_form", new CensusEnrollmentHandler());
     }
 
     @Override

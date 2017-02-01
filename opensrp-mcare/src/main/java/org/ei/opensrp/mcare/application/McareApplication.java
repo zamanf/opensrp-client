@@ -14,12 +14,9 @@ import org.ei.opensrp.sync.DrishtiSyncScheduler;
 import org.ei.opensrp.view.activity.DrishtiApplication;
 import org.ei.opensrp.view.receiver.SyncBroadcastReceiver;
 
-<<<<<<< HEAD
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 import static org.ei.opensrp.util.Log.logInfo;
 
-=======
->>>>>>> v2
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;

@@ -61,7 +61,6 @@ public class KBClientsProvider implements SmartRegisterCLientsProviderForCursorA
         txtColorBlack = context.getResources().getColor(org.ei.opensrp.R.color.text_black);
         mImageLoader = BidanApplication.getInstance().getCachedImageLoaderInstance();
 
-
     }
 
     @Override
