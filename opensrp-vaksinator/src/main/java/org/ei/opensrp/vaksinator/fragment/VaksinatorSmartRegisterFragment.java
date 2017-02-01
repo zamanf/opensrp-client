@@ -119,7 +119,7 @@ public class VaksinatorSmartRegisterFragment extends SecuredNativeSmartRegisterC
                 //     dialogOptionslist.add(new CursorCommonObjectFilterOption(getString(R.string.hh_no_mwra),filterStringForNoElco()));
                 //      dialogOptionslist.add(new CursorCommonObjectFilterOption(getString(R.string.hh_has_mwra),filterStringForOneOrMoreElco()));
 
-                String locationjson = context.anmLocationController().get();
+                String locationjson = context().anmLocationController().get();
                 LocationTree locationTree = EntityUtils.fromJson(locationjson, LocationTree.class);
 
                 Map<String,TreeNode<String, Location>> locationMap =
@@ -202,7 +202,7 @@ public class VaksinatorSmartRegisterFragment extends SecuredNativeSmartRegisterC
                 "Else alerts.status END ASC";
     }
     public void initializeQueries(){
-        VaksinatorClientsProvider kiscp = new VaksinatorClientsProvider(getActivity(),clientActionHandler,context.alertService());
+        VaksinatorClientsProvider kiscp = new VaksinatorClientsProvider(getActivity(),clientActionHandler,context().alertService());
         clientAdapter = new SmartRegisterPaginatedCursorAdapter(getActivity(), null, kiscp, new CommonRepository("ec_anak",new String []{"tanggalLahirAnak","namaBayi"}));
         clientsView.setAdapter(clientAdapter);
 
@@ -247,7 +247,7 @@ public class VaksinatorSmartRegisterFragment extends SecuredNativeSmartRegisterC
         }
         ft.addToBackStack(null);
         LocationSelectorDialogFragment
-                .newInstance((VaksinatorSmartRegisterActivity) getActivity(), new EditDialogOptionModel(), context.anmLocationController().get(), "registrasi_jurim")
+                .newInstance((VaksinatorSmartRegisterActivity) getActivity(), new EditDialogOptionModel(), context().anmLocationController().get(), "registrasi_jurim")
                 .show(ft, locationDialogTAG);
     }
 

@@ -125,7 +125,7 @@ public class NativeHomeActivity extends SecuredActivity {
     }
 
     private void initialize() {
-        pendingFormSubmissionService = context.pendingFormSubmissionService();
+        pendingFormSubmissionService = context().pendingFormSubmissionService();
         SYNC_STARTED.addListener(onSyncStartListener);
         SYNC_COMPLETED.addListener(onSyncCompleteListener);
         FORM_SUBMITTED.addListener(onFormSubmittedListener);
@@ -160,12 +160,12 @@ public class NativeHomeActivity extends SecuredActivity {
 
     private void updateRegisterCounts(HomeContext homeContext) {
         SmartRegisterQueryBuilder sqb = new SmartRegisterQueryBuilder();
-        Cursor childcountcursor = context.commonrepository("ec_anak").RawCustomQueryForAdapter(sqb.queryForCountOnRegisters("ec_anak_search", "ec_anak_search.is_closed=0"));
+        Cursor childcountcursor = context().commonrepository("ec_anak").RawCustomQueryForAdapter(sqb.queryForCountOnRegisters("ec_anak_search", "ec_anak_search.is_closed=0"));
         childcountcursor.moveToFirst();
         childcount= childcountcursor.getInt(0);
         childcountcursor.close();
 
-        Cursor kicountcursor = context.commonrepository("ec_ibu").RawCustomQueryForAdapter(sqb.queryForCountOnRegisters("ec_ibu", "ec_ibu.is_closed=0 and ec_ibu.pptest='Positive'" ));
+        Cursor kicountcursor = context().commonrepository("ec_ibu").RawCustomQueryForAdapter(sqb.queryForCountOnRegisters("ec_ibu", "ec_ibu.is_closed=0 and ec_ibu.pptest='Positive'" ));
         kicountcursor.moveToFirst();
         kicount= kicountcursor.getInt(0);
         kicountcursor.close();
@@ -221,15 +221,15 @@ public class NativeHomeActivity extends SecuredActivity {
 
     public void updateFromServer() {
         UpdateActionsTask updateActionsTask = new UpdateActionsTask(
-                this, context.actionService(), context.formSubmissionSyncService(),
-                new SyncProgressIndicator(), context.allFormVersionSyncService());
+                this, context().actionService(), context().formSubmissionSyncService(),
+                new SyncProgressIndicator(), context().allFormVersionSyncService());
         FlurryFacade.logEvent("click_update_from_server");
         updateActionsTask.updateFromServer(new SyncAfterFetchListener());
 
         if(LoginActivity.generator.uniqueIdController().needToRefillUniqueId(LoginActivity.generator.UNIQUE_ID_LIMIT))  // unique id part
             LoginActivity.generator.requestUniqueId();                                                                  // unique id part
 
-        String locationjson = context.anmLocationController().get();
+        String locationjson = context().anmLocationController().get();
         LocationTree locationTree = EntityUtils.fromJson(locationjson, LocationTree.class);
 
         Map<String,TreeNode<String, Location>> locationMap =
@@ -248,7 +248,7 @@ public class NativeHomeActivity extends SecuredActivity {
 
     private void updateSyncIndicator() {
         if (updateMenuItem != null) {
-            if (context.allSharedPreferences().fetchIsSyncInProgress()) {
+            if (context().allSharedPreferences().fetchIsSyncInProgress()) {
                 updateMenuItem.setActionView(R.layout.progress);
             } else
                 updateMenuItem.setActionView(null);
