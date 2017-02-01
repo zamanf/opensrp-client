@@ -36,6 +36,10 @@ android {
         targetSdkVersion 21
         versionCode 1
         versionName "1.0.0"
+        multiDexEnabled true
+        dexOptions {
+            javaMaxHeapSize "4g"
+        }
     }
     buildTypes {
         release {

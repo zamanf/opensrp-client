@@ -109,7 +109,7 @@ public class ChildDetailActivity extends DetailActivity implements VaccinationAc
 
     @Override
     protected String bindType() {
-        return "pkchild";
+        return "ec_child";
     }
 
     @Override

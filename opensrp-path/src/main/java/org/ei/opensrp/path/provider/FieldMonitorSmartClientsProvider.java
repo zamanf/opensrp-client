@@ -87,28 +87,28 @@ public class FieldMonitorSmartClientsProvider implements SmartRegisterCLientsPro
 
     private ArrayList<HashMap<String, String>> getUsed(String startDate, String endDate){
         String sql = "select " +
-                "(select count(*) c from pkwoman where tt1 between  '" + startDate + "' and '" + endDate + "') tt1," +
-                "(select count(*) c from pkwoman where tt2 between '" + startDate + "' and '" + endDate + "') tt2," +
-                "(select count(*) c from pkwoman where tt3 between '" + startDate + "' and '" + endDate + "') tt3," +
-                "(select count(*) c from pkwoman where tt4 between '" + startDate + "' and '" + endDate + "') tt4," +
-                "(select count(*) c from pkwoman where tt5 between '" + startDate + "' and '" + endDate + "') tt5,"+
-                "(select count(*) c from pkchild where bcg between '" + startDate + "' and '" + endDate + "') bcg," +
-                "(select count(*) c from pkchild where opv0 between '" + startDate + "' and '" + endDate + "') opv0," +
-                "(select count(*) c from pkchild where opv1 between '" + startDate + "' and '" + endDate + "') opv1," +
-                "(select count(*) c from pkchild where opv2 between '" + startDate + "' and '" + endDate + "') opv2," +
-                "(select count(*) c from pkchild where opv3 between '" + startDate + "' and '" + endDate + "') opv3, " +
-                "(select count(*) c from pkchild where ipv between '" + startDate + "' and '" + endDate + "') ipv, " +
-                "(select count(*) c from pkchild where pcv1 between '" + startDate + "' and '" + endDate + "') pcv1," +
-                "(select count(*) c from pkchild where pcv2 between '" + startDate + "' and '" + endDate + "') pcv2," +
-                "(select count(*) c from pkchild where pcv3 between '" + startDate + "' and '" + endDate + "') pcv3, " +
-                "(select count(*) c from pkchild where measles1 between '" + startDate + "' and '" + endDate + "') measles1, " +
-                "(select count(*) c from pkchild where measles2 between '" + startDate + "' and '" + endDate + "') measles2," +
-                "(select count(*) c from pkchild where penta1 between '" + startDate + "' and '" + endDate + "') penta1," +
-                "(select count(*) c from pkchild where penta2 between '" + startDate + "' and '" + endDate + "') penta2," +
-                "(select count(*) c from pkchild where penta3 between '" + startDate + "' and '" + endDate + "') penta3  " +
-                "from pkchild limit 1 ;";
+                "(select count(*) c from ec_woman where tt1 between  '" + startDate + "' and '" + endDate + "') tt1," +
+                "(select count(*) c from ec_woman where tt2 between '" + startDate + "' and '" + endDate + "') tt2," +
+                "(select count(*) c from ec_woman where tt3 between '" + startDate + "' and '" + endDate + "') tt3," +
+                "(select count(*) c from ec_woman where tt4 between '" + startDate + "' and '" + endDate + "') tt4," +
+                "(select count(*) c from ec_woman where tt5 between '" + startDate + "' and '" + endDate + "') tt5,"+
+                "(select count(*) c from ec_child where bcg between '" + startDate + "' and '" + endDate + "') bcg," +
+                "(select count(*) c from ec_child where opv0 between '" + startDate + "' and '" + endDate + "') opv0," +
+                "(select count(*) c from ec_child where opv1 between '" + startDate + "' and '" + endDate + "') opv1," +
+                "(select count(*) c from ec_child where opv2 between '" + startDate + "' and '" + endDate + "') opv2," +
+                "(select count(*) c from ec_child where opv3 between '" + startDate + "' and '" + endDate + "') opv3, " +
+                "(select count(*) c from ec_child where ipv between '" + startDate + "' and '" + endDate + "') ipv, " +
+                "(select count(*) c from ec_child where pcv1 between '" + startDate + "' and '" + endDate + "') pcv1," +
+                "(select count(*) c from ec_child where pcv2 between '" + startDate + "' and '" + endDate + "') pcv2," +
+                "(select count(*) c from ec_child where pcv3 between '" + startDate + "' and '" + endDate + "') pcv3, " +
+                "(select count(*) c from ec_child where measles1 between '" + startDate + "' and '" + endDate + "') measles1, " +
+                "(select count(*) c from ec_child where measles2 between '" + startDate + "' and '" + endDate + "') measles2," +
+                "(select count(*) c from ec_child where penta1 between '" + startDate + "' and '" + endDate + "') penta1," +
+                "(select count(*) c from ec_child where penta2 between '" + startDate + "' and '" + endDate + "') penta2," +
+                "(select count(*) c from ec_child where penta3 between '" + startDate + "' and '" + endDate + "') penta3  " +
+                "from ec_child limit 1 ;";
 
-        return org.ei.opensrp.Context.getInstance().commonrepository("pkchild").rawQuery(sql);
+        return org.ei.opensrp.Context.getInstance().commonrepository("ec_child").rawQuery(sql);
     }
 
     //todo refactor above method

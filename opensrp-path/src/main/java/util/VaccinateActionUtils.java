@@ -44,7 +44,12 @@ import static util.Utils.convertDateFormat;
 public class VaccinateActionUtils {
 
     public static String formData(Context context, String entityId, String formName, String metaData) {
-        return FormUtils.getInstance(context).generateXMLInputForFormWithEntityId(entityId, formName, metaData);
+        try {
+            return FormUtils.getInstance(context).generateXMLInputForFormWithEntityId(entityId, formName, metaData);
+        }catch (Exception e){
+            Log.e(VaccinateActionUtils.class.getName(), "", e);
+            return  null;
+        }
     }
 
     public static void updateJson(JSONObject jsonObject, String field, String value) {

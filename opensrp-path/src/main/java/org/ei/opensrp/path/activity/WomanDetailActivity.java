@@ -100,7 +100,7 @@ public class WomanDetailActivity extends DetailActivity implements VaccinationAc
 
     @Override
     protected String bindType() {
-        return "pkwoman";
+        return "ec_woman";
     }
 
     @Override

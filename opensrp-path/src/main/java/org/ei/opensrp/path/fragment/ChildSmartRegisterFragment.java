@@ -163,7 +163,7 @@ public class ChildSmartRegisterFragment extends SecuredNativeSmartRegisterCursor
     }
 
     public void initializeQueries() {
-        String tableName = "pkchild";
+        String tableName = "ec_child";
 
         ChildSmartClientsProvider hhscp = new ChildSmartClientsProvider(getActivity(),
                 clientActionHandler, context().alertService());

@@ -403,7 +403,9 @@ public class ClientProcessor {
                             String columnValue = null;
                             if (fieldValue == null) {
                                 //this means field_value and response_key are null so pick the value from the json object for the field_name
-                                columnValue = jsonDocObject.getString(fieldName);
+                                if(jsonDocObject.has(fieldName)) {
+                                    columnValue = jsonDocObject.getString(fieldName);
+                                }
                             } else {
                                 //this means field_value and response_key are not null e.g when retrieving some value in the events obs section
                                 String expectedFieldValue = jsonDocObject.getString(fieldName);
