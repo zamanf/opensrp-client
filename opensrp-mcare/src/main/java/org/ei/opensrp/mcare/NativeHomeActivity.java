@@ -136,10 +136,11 @@ public class NativeHomeActivity extends SecuredActivity {
         context().formSubmissionRouter().getHandlerMap().put("encc_visit_2", new encc2handler());
         context().formSubmissionRouter().getHandlerMap().put("encc_visit_3", new encc3handler());
 
-        context().formSubmissionRouter().getHandlerMap().put(
-                "mis_elco", new MIS_elco_form_handler());
+
         context().formSubmissionRouter().getHandlerMap().put(
                 "birthnotificationpregnancystatusfollowup", new nbnfhandler());
+
+
     }
 
     private void setupViews() {
@@ -170,6 +171,8 @@ public class NativeHomeActivity extends SecuredActivity {
         getSupportActionBar().setLogo(org.ei.opensrp.mcare.R.mipmap.logo);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+
         LoginActivity.setLanguage();
     }
 
@@ -234,6 +237,7 @@ public class NativeHomeActivity extends SecuredActivity {
                 mainHandler.post(myRunnable);
             }
         }).start();
+
     }
 
     @Override
