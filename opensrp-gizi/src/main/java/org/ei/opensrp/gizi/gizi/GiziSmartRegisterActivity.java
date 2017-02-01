@@ -99,10 +99,10 @@ public class GiziSmartRegisterActivity extends SecuredNativeSmartRegisterActivit
             String toastMessage =  "need to refill unique id, its only "+
                                    LoginActivity.generator.uniqueIdController().countRemainingUniqueId()+
                                    " remaining";
-            Toast.makeText(context.applicationContext(), toastMessage, Toast.LENGTH_LONG).show();
+            Toast.makeText(context().applicationContext(), toastMessage, Toast.LENGTH_LONG).show();
         }
         
-        ziggyService = context.ziggyService();
+        ziggyService = context().ziggyService();
     }
     public void onPageChanged(int page){
         setRequestedOrientation(page == 0 ? ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -129,7 +129,7 @@ public class GiziSmartRegisterActivity extends SecuredNativeSmartRegisterActivit
 
     @Override
     protected void onInitialization() {
-        context.formSubmissionRouter().getHandlerMap().put("kunjungan_gizi", new KmsHandler());
+        context().formSubmissionRouter().getHandlerMap().put("kunjungan_gizi", new KmsHandler());
     }
 
     @Override
@@ -155,8 +155,8 @@ public class GiziSmartRegisterActivity extends SecuredNativeSmartRegisterActivit
             ziggyService.saveForm(getParams(submission), submission.instance());
             ClientProcessor.getInstance(getApplicationContext()).processClient();
 
-            context.formSubmissionService().updateFTSsearch(submission);
-            context.formSubmissionRouter().handleSubmission(submission, formName);
+            context().formSubmissionService().updateFTSsearch(submission);
+            context().formSubmissionRouter().handleSubmission(submission, formName);
             //switch to forms list fragment
             switchToBaseFragment(formSubmission); // Unnecessary!! passing on data
 

@@ -67,7 +67,7 @@ public class AnakRegisterClientsProvider implements SmartRegisterCLientsProvider
 
         clientViewLayoutParams = new AbsListView.LayoutParams(MATCH_PARENT,
                 (int) context.getResources().getDimension(org.ei.opensrp.R.dimen.list_item_height));
-        txtColorBlack = context.getResources().getColor(org.ei.opensrp.R.color.text_black);
+        txtColorBlack = context().getResources().getColor(org.ei.opensrp.R.color.text_black);
 
     }
 
@@ -131,7 +131,7 @@ public class AnakRegisterClientsProvider implements SmartRegisterCLientsProvider
         viewHolder.profilelayout.setTag(smartRegisterClient);
         CommonPersonObjectClient pc = (CommonPersonObjectClient) smartRegisterClient;
         if (iconPencilDrawable == null) {
-            iconPencilDrawable = context.getResources().getDrawable(R.drawable.ic_pencil);
+            iconPencilDrawable = context().getResources().getDrawable(R.drawable.ic_pencil);
         }
         viewHolder.follow_up.setImageDrawable(iconPencilDrawable);
         viewHolder.follow_up.setOnClickListener(onClickListener);

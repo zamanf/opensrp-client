@@ -86,7 +86,7 @@ public class TTSmartRegisterActivity extends SecuredNativeSmartRegisterActivity 
             }
         });
 
-        ziggyService = context.ziggyService();
+        ziggyService = context().ziggyService();
     }
     public void onPageChanged(int page){
         setRequestedOrientation(page == 0 ? ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -159,8 +159,8 @@ public class TTSmartRegisterActivity extends SecuredNativeSmartRegisterActivity 
             ziggyService.saveForm(getParams(submission), submission.instance());
             ClientProcessor.getInstance(getApplicationContext()).processClient();
 
-            context.formSubmissionService().updateFTSsearch(submission);
-            context.formSubmissionRouter().handleSubmission(submission, formName);
+            context().formSubmissionService().updateFTSsearch(submission);
+            context().formSubmissionRouter().handleSubmission(submission, formName);
             //switch to forms list fragment
             switchToBaseFragment(formSubmission); // Unnecessary!! passing on data
 

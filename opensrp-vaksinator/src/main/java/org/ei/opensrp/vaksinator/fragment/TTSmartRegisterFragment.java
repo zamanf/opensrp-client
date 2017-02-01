@@ -115,7 +115,7 @@ public class TTSmartRegisterFragment extends SecuredNativeSmartRegisterCursorAda
                 //     dialogOptionslist.add(new CursorCommonObjectFilterOption(getString(R.string.hh_no_mwra),filterStringForNoElco()));
                 //      dialogOptionslist.add(new CursorCommonObjectFilterOption(getString(R.string.hh_has_mwra),filterStringForOneOrMoreElco()));
 
-                String locationjson = context.anmLocationController().get();
+                String locationjson = context().anmLocationController().get();
                 LocationTree locationTree = EntityUtils.fromJson(locationjson, LocationTree.class);
 
                 Map<String,TreeNode<String, Location>> locationMap =
@@ -200,7 +200,7 @@ public class TTSmartRegisterFragment extends SecuredNativeSmartRegisterCursorAda
 
    public void initializeQueries(){
        try {
-           TTSmartClientsProvider kiscp = new TTSmartClientsProvider(getActivity(),clientActionHandler,context.alertService());
+           TTSmartClientsProvider kiscp = new TTSmartClientsProvider(getActivity(),clientActionHandler,context().alertService());
            clientAdapter = new SmartRegisterPaginatedCursorAdapter(getActivity(), null, kiscp, new CommonRepository("ec_ibu",new String []{"ec_ibu.is_closed", "ec_kartu_ibu.namalengkap", "ec_kartu_ibu.namaSuami"}));
            clientsView.setAdapter(clientAdapter);
 

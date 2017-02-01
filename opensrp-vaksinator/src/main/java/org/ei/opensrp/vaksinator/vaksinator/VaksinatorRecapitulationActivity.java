@@ -27,7 +27,7 @@ public class VaksinatorRecapitulationActivity extends ReportsActivity {
     private static final String TAG = "ImageGridFragment";
     private static final String IMAGE_CACHE_DIR = "thumbs";
     //  private static KmsCalc  kmsCalc;
-
+    Context context;
     //image retrieving
 
     public static CommonPersonObjectClient controller;
