@@ -14,6 +14,9 @@ public class AllConstants {
     public static final String CASE_ID = "caseId";
     public static final String APP_NAME_INDONESIA = "OpenSRPIndonesia";
 
+    public static final String ENCRYPTED_PASSWORD_PREFIX = "crptPw-";
+    public static final String ENCRYPTED_GROUP_ID_PREFIX = "crptGrp-";
+    public static final String PIONEER_USER = "pioneerUser";
     public static final String LANGUAGE_PREFERENCE_KEY = "locale";
     public static final String ENGLISH_LOCALE = "en";
     public static final String KANNADA_LOCALE = "kn";
