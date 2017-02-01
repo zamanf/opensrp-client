@@ -68,6 +68,7 @@ public class ElcoSmartRegisterFragment extends SecuredNativeSmartRegisterCursorA
 
     private final ClientActionHandler clientActionHandler = new ClientActionHandler();
 
+
     @Override
     protected SmartRegisterPaginatedAdapter adapter() {
         return new SmartRegisterPaginatedAdapter(clientsProvider());
@@ -132,7 +133,7 @@ public class ElcoSmartRegisterFragment extends SecuredNativeSmartRegisterCursorA
                 return new DialogOption[]{
                         new CursorCommonObjectSort(getString(R.string.due_status),sortByAlertmethod()),
                         new CursorCommonObjectSort(getString(R.string.elco_alphabetical_sort),householdSortByName()),
-                         new CursorCommonObjectSort(Context.getInstance().applicationContext().getString(R.string.hh_fwGobhhid_sort),householdSortByFWGOBHHID()),
+                        new CursorCommonObjectSort(Context.getInstance().applicationContext().getString(R.string.hh_fwGobhhid_sort),householdSortByFWGOBHHID()),
                         new CursorCommonObjectSort( Context.getInstance().applicationContext().getString(R.string.hh_fwJivhhid_sort),householdSortByFWJIVHHID())
 
 //                        new CommonObjectSort(true,false,true,"age")
@@ -200,7 +201,7 @@ public class ElcoSmartRegisterFragment extends SecuredNativeSmartRegisterCursorA
 
 //        super.setupViews(view);
         view.findViewById(R.id.btn_report_month).setVisibility(INVISIBLE);
-           clientsView.setVisibility(View.VISIBLE);
+        clientsView.setVisibility(View.VISIBLE);
         clientsProgressView.setVisibility(View.INVISIBLE);
 //        list.setBackgroundColor(Color.RED);
         initializeQueries();
@@ -291,10 +292,6 @@ public class ElcoSmartRegisterFragment extends SecuredNativeSmartRegisterCursorA
 
             @Override
             public void onTextChanged(final CharSequence cs, int start, int before, int count) {
-<<<<<<< HEAD
-                (new AsyncTask() {
-                    SmartRegisterClients filteredClients;
-=======
 
                 if(cs.toString().equalsIgnoreCase("")){
                     filters = "";
@@ -304,12 +301,11 @@ public class ElcoSmartRegisterFragment extends SecuredNativeSmartRegisterCursorA
                 }
                 joinTable = "";
                 mainCondition = " FWWOMFNAME is not null and is_closed=0 ";
->>>>>>> v2
 
                 getSearchCancelView().setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
                 CountExecute();
                 filterandSortExecute();
-    }
+            }
 
             @Override
             public void afterTextChanged(Editable editable) {
