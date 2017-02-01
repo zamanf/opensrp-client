@@ -85,7 +85,7 @@ public class KIClientsProvider implements SmartRegisterCLientsProviderForCursorA
 
         clientViewLayoutParams = new AbsListView.LayoutParams(MATCH_PARENT,
                 (int) context.getResources().getDimension(org.ei.opensrp.R.dimen.list_item_height));
-        txtColorBlack = context().getResources().getColor(org.ei.opensrp.R.color.text_black);
+        txtColorBlack = context.getResources().getColor(org.ei.opensrp.R.color.text_black);
 
     }
 
@@ -133,7 +133,7 @@ public class KIClientsProvider implements SmartRegisterCLientsProviderForCursorA
         viewHolder.profilelayout.setTag(smartRegisterClient);
         CommonPersonObjectClient pc = (CommonPersonObjectClient) smartRegisterClient;
         if (iconPencilDrawable == null) {
-            iconPencilDrawable = context().getResources().getDrawable(R.drawable.ic_pencil);
+            iconPencilDrawable = context.getResources().getDrawable(R.drawable.ic_pencil);
         }
         viewHolder.follow_up.setImageDrawable(iconPencilDrawable);
         viewHolder.follow_up.setOnClickListener(onClickListener);
@@ -314,15 +314,15 @@ public class KIClientsProvider implements SmartRegisterCLientsProviderForCursorA
                 _dueEdd = "" + months + " " + context.getString(R.string.months_away);
             } else if (months == 0) {
                 TextMonth.setTextColor(context.getResources().getColor(R.color.light_blue));
-                _dueEdd = context().getString(R.string.this_month);
+                _dueEdd = context.getString(R.string.this_month);
             } else if (months < 0) {
                 TextMonth.setTextColor(context.getResources().getColor(R.color.alert_urgent_red));
-                _dueEdd = context().getString(R.string.edd_passed);
+                _dueEdd = context.getString(R.string.edd_passed);
             }
             TextMonth.setText(_dueEdd);
         }else if(htp.equals("delivered")){
             TextMonth.setTextColor(context.getResources().getColor(R.color.alert_complete_green));
-            _dueEdd = context().getString(R.string.delivered);
+            _dueEdd = context.getString(R.string.delivered);
             TextMonth.setText(_dueEdd);
         }
         else {
