@@ -52,8 +52,8 @@
         "key": "birth_weight",
         "type": "edit_text",
         "hint": "Birth weight (KGs)",
-        "v_regex": {
-          "value": "((([0-9])|1[0,5])\.[0-9]{1,3})|99",
+        "v_numeric": {
+          "value": "true",
           "err": "Please enter a valid weight in KGs e.g 2.0 or 99 if unknown"
         }
       },

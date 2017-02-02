@@ -113,7 +113,9 @@ public class EditTextFactory implements FormWidgetFactory {
             String numericValue = numericObject.optString("value");
             if (!TextUtils.isEmpty(numericValue)) {
                 if (Boolean.TRUE.toString().equalsIgnoreCase(numericValue)) {
-                    editText.addValidator(new RegexpValidator(numericObject.getString("err"), "[0-9]+"));
+                    editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                    editText.addValidator(new RegexpValidator(numericObject.getString("err"),
+                            "[0-9]*\\.?[0-9]*"));
                 }
             }
         }
