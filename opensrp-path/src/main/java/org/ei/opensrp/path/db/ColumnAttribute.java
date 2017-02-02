@@ -2,7 +2,7 @@ package org.ei.opensrp.path.db;
 
 public class ColumnAttribute {
 	public enum Type {
-		text, bool, date, list, map
+		text, bool, date, list, map, longnum
 	}
 
 	ColumnAttribute(Type type, boolean pk, boolean index) {

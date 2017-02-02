@@ -21,6 +21,8 @@ public abstract class BaseDataObject {
 	
 	private String voidReason;
 
+	private long serverVersion;
+
 	public BaseDataObject() {}
 	
 	public String getCreator() {
@@ -86,7 +88,15 @@ public abstract class BaseDataObject {
 	public void setVoidReason(String voidReason) {
 		this.voidReason = voidReason;
 	}
-	
+
+	public long getServerVersion() {
+		return serverVersion;
+	}
+
+	public void setServerVersion(long serverVersion) {
+		this.serverVersion = serverVersion;
+	}
+
 	public BaseDataObject withCreator(String creator) {
 		this.creator = creator;
 		return this;
@@ -126,5 +136,9 @@ public abstract class BaseDataObject {
 		this.voidReason = voidReason;
 		return this;
 	}
-    
+
+	public BaseDataObject withServerVersion(long serverVersion) {
+		this.serverVersion = serverVersion;
+		return this;
+	}
 }

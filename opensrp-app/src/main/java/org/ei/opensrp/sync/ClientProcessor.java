@@ -99,6 +99,26 @@ public class ClientProcessor {
         allSharedPreferences.saveLastSyncDate(lastSyncDate.getTime());
     }
 
+    public synchronized void processClient(List<JSONObject> events) throws Exception {
+
+        String clientClassificationStr = getFileContents("ec_client_classification.json");
+
+        if (!events.isEmpty()) {
+            for (JSONObject event : events) {
+
+                    JSONObject clientClassificationJson = new JSONObject(clientClassificationStr);
+                    if(isNullOrEmptyJSONObject(clientClassificationJson)){
+                        continue;
+                    }
+                    //iterate through the events
+                    if(event.has("client")) {
+                        processEvent(event, event.getJSONObject("client"), clientClassificationJson);
+                    }
+            }
+        }
+
+    }
+
     public Boolean processEvent(JSONObject event, JSONObject clientClassificationJson) throws Exception {
 
         try {
@@ -108,7 +128,7 @@ public class ClientProcessor {
             }
             //for data integrity check if a client exists, if not pull one from cloudant and insert in drishti sqlite db
     
-            JSONObject client = mCloudantDataHandler.getClientByBaseEntityId(baseEntityId);
+            JSONObject client = getClient(baseEntityId);
             if(isNullOrEmptyJSONObject(client)){
                 return false;
             }
@@ -123,6 +143,41 @@ public class ClientProcessor {
                 processClientClass(clientClass, event, client);
             }
     
+            // Incase the details have not been updated
+            boolean updated = event.has(detailsUpdated) ? event.getBoolean(detailsUpdated) : false;
+            if(!updated) {
+                updateClientDetailsTable(event, client);
+            }
+            return true;
+        } catch (Exception e) {
+            Log.e(TAG, e.toString(), e);
+            return null;
+        }
+    }
+
+    public Boolean processEvent(JSONObject event, JSONObject client, JSONObject clientClassificationJson) throws Exception {
+
+        try {
+            String baseEntityId = event.getString(baseEntityIdJSONKey);
+            if(event.has("creator")){
+                Log.i(TAG,"EVENT from openmrs");
+            }
+            //for data integrity check if a client exists, if not pull one from cloudant and insert in drishti sqlite db
+
+            if(isNullOrEmptyJSONObject(client)){
+                return false;
+            }
+
+            // Get the client type classification
+            JSONArray clientClasses = clientClassificationJson.getJSONArray("case_classification_rules");
+            if(isNullOrEmptyJSONArray(clientClasses)){
+                return false;
+            }
+            for (int i = 0; i < clientClasses.length(); i++) {
+                JSONObject clientClass = clientClasses.getJSONObject(i);
+                processClientClass(clientClass, event, client);
+            }
+
             // Incase the details have not been updated
             boolean updated = event.has(detailsUpdated) ? event.getBoolean(detailsUpdated) : false;
             if(!updated) {
@@ -814,6 +869,15 @@ public class ClientProcessor {
             updateRegisterCount(entityId);
         }
         Log.i(TAG, "Finished updateFTSsearch table: " + tableName);
+    }
+
+    private JSONObject getClient(String baseEntityId){
+        try{
+            return mCloudantDataHandler.getClientByBaseEntityId(baseEntityId);
+        } catch (Exception e){
+            Log.e(getClass().getName(), "", e);
+            return null;
+        }
     }
 
     private void updateRegisterCount(String entityId){

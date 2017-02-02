@@ -14,9 +14,9 @@ import org.ei.opensrp.Context;
 import org.ei.opensrp.event.Listener;
 import org.ei.opensrp.path.R;
 import org.ei.opensrp.path.controller.VaccinatorNavigationController;
+import org.ei.opensrp.path.sync.PathUpdateActionsTask;
 import org.ei.opensrp.sync.SyncAfterFetchListener;
 import org.ei.opensrp.sync.SyncProgressIndicator;
-import org.ei.opensrp.sync.UpdateActionsTask;
 import org.ei.opensrp.view.activity.SecuredActivity;
 import org.ei.opensrp.view.contract.HomeContext;
 import org.ei.opensrp.view.controller.NativeAfterANMDetailsFetchListener;
@@ -209,10 +209,10 @@ public class VaccinatorHomeActivity extends SecuredActivity {
     }
 
     public void updateFromServer() {
-        UpdateActionsTask updateActionsTask = new UpdateActionsTask(
+        PathUpdateActionsTask pathUpdateActionsTask = new PathUpdateActionsTask(
                 this, context().actionService(), context().formSubmissionSyncService(),
                 new SyncProgressIndicator(), context().allFormVersionSyncService());
-        updateActionsTask.updateFromServer(new SyncAfterFetchListener());
+        pathUpdateActionsTask.updateFromServer(new SyncAfterFetchListener());
     }
 
     @Override

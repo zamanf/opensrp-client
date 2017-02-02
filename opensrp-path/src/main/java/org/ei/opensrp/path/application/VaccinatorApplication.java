@@ -10,6 +10,7 @@ import org.ei.opensrp.commonregistry.CommonFtsObject;
 import org.ei.opensrp.path.activity.LoginActivity;
 import org.ei.opensrp.path.receiver.CESyncReceiver;
 import org.ei.opensrp.path.receiver.ConfigSyncReceiver;
+import org.ei.opensrp.path.receiver.PathSyncBroadcastReceiver;
 import org.ei.opensrp.sync.DrishtiSyncScheduler;
 import org.ei.opensrp.view.activity.DrishtiApplication;
 import org.ei.opensrp.view.receiver.SyncBroadcastReceiver;
@@ -29,7 +30,7 @@ public class VaccinatorApplication extends DrishtiApplication{
     public void onCreate() {
         super.onCreate();
         Fabric.with(this, new Crashlytics());
-        DrishtiSyncScheduler.setReceiverClass(SyncBroadcastReceiver.class);
+        DrishtiSyncScheduler.setReceiverClass(PathSyncBroadcastReceiver.class);
 
         context = Context.getInstance();
         context.updateApplicationContext(getApplicationContext());
