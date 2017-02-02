@@ -36,10 +36,11 @@ public class KmsHandler  implements FormSubmissionHandler {
         CommonPersonObject childobject = childRepository.findByCaseID(entityID);
         Long tsLong = System.currentTimeMillis()/1000;
 
-        String berats = submission.getFieldValue("history_berat")!= null ? submission.getFieldValue("history_berat") :"0";
+        String[]history = submission.getFieldValue("history_berat")!= null ? split(submission.getFieldValue("history_berat")) : new String []{"0","0"};
+        String berats = history[1];
         String[] history_berat = berats.split(",");
         double berat_sebelum = Double.parseDouble((history_berat.length) >=3 ? (history_berat[(history_berat.length)-3]) : "0");
-        String umurs = submission.getFieldValue("history_umur")!= null ? submission.getFieldValue("history_umur") :"0";
+        String umurs = history[0];
         String[] history_umur = umurs.split(",");
         String tinggi = submission.getFieldValue("history_tinggi")!= null ? submission.getFieldValue("history_tinggi") :"0#0";
         String lastVisitDate = submission.getFieldValue("tanggalPenimbangan") != null ? submission.getFieldValue("tanggalPenimbangan") : "-";
@@ -53,11 +54,11 @@ public class KmsHandler  implements FormSubmissionHandler {
 
         detailsRepository.add(entityID, "preload_umur", umurs, tsLong);
         detailsRepository.add(entityID, "berat_preload", berats, tsLong);
+        detailsRepository.add(entityID, "history_umur", umurs, tsLong);
 
-       // detailsRepository.add(entityID, "preload_history_tinggi", submission.getFieldValue("history_tinggi")!= null ? submission.getFieldValue("history_tinggi") :"0#0", tsLong);
+        // detailsRepository.add(entityID, "preload_history_tinggi", submission.getFieldValue("history_tinggi")!= null ? submission.getFieldValue("history_tinggi") :"0#0", tsLong);
         detailsRepository.add(entityID, "preload_history_tinggi", tinggi, tsLong);
         detailsRepository.add(entityID, "kunjunganSebelumnya", lastVisitDate, tsLong);
-        detailsRepository.add(entityID, "history_umur", umurs, tsLong);
 
         if(submission.getFieldValue("tanggalPenimbangan") != null)
         {
@@ -82,13 +83,9 @@ public class KmsHandler  implements FormSubmissionHandler {
                 }
                 wflStatus = zScore.getWFLZScoreClassification(wight_for_lenght);
 
-
-
                 detailsRepository.add(entityID, "underweight", wfaStatus, tsLong);
                 detailsRepository.add(entityID, "stunting", hfaStatus, tsLong);
                 detailsRepository.add(entityID, "wasting", wflStatus, tsLong);
-
-
 
             }
             else {
@@ -115,7 +112,7 @@ public class KmsHandler  implements FormSubmissionHandler {
             //KMS calculation lastVisitDate
             KmsPerson data = new KmsPerson(!gender.toLowerCase().contains("em"), dateOfBirth, berat, beraSebelum, lastVisitDate, berat_sebelum, tanggal_sebelumnya);
             KmsCalc calculator = new KmsCalc();
-            System.out.println("tanggal penimbangan = "+submission.getFieldValue("tanggalPenimbangan")+", "+lastVisitDate);
+            ////System.out.println("tanggal penimbangan = "+submission.getFieldValue("tanggalPenimbangan")+", "+lastVisitDate);
             int satu = Integer.parseInt(history_umur[history_umur.length-2])/30;
             int dua = Integer.parseInt(history_umur[history_umur.length-1])/30;
             String duat = history_berat.length <= 2  ? "-" : dua - satu >=2 ? "-" :calculator.cek2T(data);
@@ -141,5 +138,19 @@ public class KmsHandler  implements FormSubmissionHandler {
                 detailsRepository.add(entityID, "lastAnthelmintic", submission.getFieldValue("lastAnthelmintic"), tsLong);
             }
         }
+    }
+
+    private String[]split(String data){
+        if(!data.contains(":"))
+            return new String[]{"0","0"};
+        String []temp = data.split(",");
+        String []result = {"",""};
+        for(int i=0;i<temp.length;i++){
+            result[0]=result[0]+","+temp[i].split(":")[0];
+            result[1]=result[1]+","+temp[i].split(":")[1];
+        }
+        result[0]=result[0].substring(1,result[0].length());
+        result[1]=result[1].substring(1,result[1].length());
+        return result;
     }
 }

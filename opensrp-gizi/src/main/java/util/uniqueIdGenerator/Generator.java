@@ -103,21 +103,21 @@ public class Generator {
                     while ((line = reader.readLine()) != null) {
                         builder.append(line);
                     }
-                    System.out.println("builder string = "+builder.toString());
+                    //System.out.println("builder string = "+builder.toString());
                     return builder.toString();
                 } else {
                     Log.e("", "Failed to download file");
                 }
             } catch (ClientProtocolException e) {
-                System.out.println("failed !!! ClientProtocolException ");
+                //System.out.println("failed !!! ClientProtocolException ");
                 e.printStackTrace();
             } catch (IOException e) {
-                System.out.println("Failed !!! IOException");
+                //System.out.println("Failed !!! IOException");
                 e.printStackTrace();
             }
         } catch (Exception e) {
             Log.e("", e.getMessage());
-            System.out.println("Failed !!!, Exception");
+            //System.out.println("Failed !!!, Exception");
         }
         return "";
     }

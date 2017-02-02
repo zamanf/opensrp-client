@@ -106,6 +106,7 @@ public class ChildDetailActivity extends Activity {
         TextView lastAnthelmintic = (TextView) findViewById(R.id.txt_profile_last_anthelmintic);
 
         ImageButton back = (ImageButton) findViewById(org.ei.opensrp.R.id.btn_back_to_home);
+
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -187,15 +188,16 @@ public class ChildDetailActivity extends Activity {
         lastVitA.setText(getString(R.string.lastVitA)+" "+(childclient.getDetails().get("lastVitA")!=null ? childclient.getDetails().get("lastVitA") : "-"));
         lastAnthelmintic.setText(getString(R.string.lastAnthelmintic)+" "+(childclient.getDetails().get("lastAnthelmintic")!=null ? childclient.getDetails().get("lastAnthelmintic") : "-"));
         //set value
-        String berats = childclient.getDetails().get("history_berat")!= null ? childclient.getDetails().get("history_berat") :"0";
+        String[]data = childclient.getDetails().get("history_berat")!= null ? split(childclient.getDetails().get("history_berat")) : new String[]{"0","0"};
+        String berats = data[1];
         String[] history_berat = berats.split(",");
-        String tempUmurs = childclient.getDetails().get("preload_umur")!= null ? childclient.getDetails().get("preload_umur") :"0";
+        String tempUmurs = data[0];
         String[] history_umur = tempUmurs.split(",");
         String umurs="";
         for(int i=0;i<history_umur.length;i++){
             umurs = umurs + "," + Integer.toString(Integer.parseInt(history_umur[i])/30);
         }
-//        System.out.println("status : bgm = "+", garis kuning = "+", 2T = ");
+//        ////System.out.println("status : bgm = "+", garis kuning = "+", 2T = ");
             dua_t.setText(getString(R.string.dua_t) +" "+ (childclient.getDetails().get("dua_t") != null ? yesNo(childclient.getDetails().get("dua_t")) : "-"));
             bgm.setText(getString(R.string.bgm) + " "+ (childclient.getDetails().get("bgm") != null ? yesNo(childclient.getDetails().get("bgm")) : "-"));
             under_yellow_line.setText(getString(R.string.under_yellow_line) + " "+ (childclient.getDetails().get("garis_kuning") != null ? yesNo(childclient.getDetails().get("garis_kuning")) : "-"));
@@ -205,10 +207,11 @@ public class ChildDetailActivity extends Activity {
         Log.logInfo("Berat :" +berats);
         Log.logInfo("umurs :" +umurs.substring(1,umurs.length()));
         GraphView graph = (GraphView) findViewById(R.id.graph);
-        new GrowthChartGenerator(graph,childclient.getDetails().get("tanggalLahirAnak").contains("T")
+        new GrowthChartGenerator(graph,childclient.getDetails().get("gender"),
+                childclient.getDetails().get("tanggalLahirAnak").length() > 10
                 ? childclient.getDetails().get("tanggalLahirAnak").substring(0,10)
                 : childclient.getDetails().get("tanggalLahirAnak")
-            ,childclient.getDetails().get("gender"),umurs.substring(1,umurs.length()),berats);
+            ,umurs.substring(1,umurs.length()),berats);
         //set data for graph
        /* DataPoint dataPoint[] = new DataPoint[history_berat.length];
         for(int i=0;i<history_berat.length;i++){
@@ -281,7 +284,6 @@ public class ChildDetailActivity extends Activity {
     }
 
 
-
     String mCurrentPhotoPath;
 
     private File createImageFile() throws IOException {
@@ -305,6 +307,7 @@ public class ChildDetailActivity extends Activity {
     static File currentfile;
     static String bindobject;
     static String entityid;
+
     private void dispatchTakePictureIntent(ImageView imageView) {
         mImageView = imageView;
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -334,53 +337,32 @@ public class ChildDetailActivity extends Activity {
 //            Bundle extras = data.getExtras();
 //            String imageBitmap = (String) extras.get(MediaStore.EXTRA_OUTPUT);
 //            Toast.makeText(this,imageBitmap,Toast.LENGTH_LONG).show();
-            HashMap <String,String> details = new HashMap<String,String>();
+
+/*
+            HashMap<String,String> details = new HashMap<String,String>();
             details.put("profilepic",currentfile.getAbsolutePath());
             saveimagereference(bindobject,entityid,details);
+*/
+
+            Long tsLong = System.currentTimeMillis()/1000;
+            DetailsRepository detailsRepository = org.ei.opensrp.Context.getInstance().detailsRepository();
+            detailsRepository.add(entityid, "profilepic", currentfile.getAbsolutePath(), tsLong);
+
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inPreferredConfig = Bitmap.Config.ARGB_8888;
             Bitmap bitmap = BitmapFactory.decodeFile(currentfile.getPath(), options);
             mImageView.setImageBitmap(bitmap);
         }
     }
-
-    private boolean inTheSameRegion(String date){
-        if(date==null || date.length()<6)
-            return false;
-        int currentDate = Integer.parseInt(new SimpleDateFormat("MM").format(new java.util.Date()));
-        int visitDate = Integer.parseInt(date.substring(5, 7));
-
-        int currentYear = Integer.parseInt(new SimpleDateFormat("yyyy").format(new java.util.Date()));
-        int visitYear = Integer.parseInt(date.substring(0, 4));
-
-        boolean date1 = currentDate < 2 || currentDate >=8;
-        boolean date2 = visitDate < 2 || visitDate >=8;
-
-        int indicator = currentDate == 1 ? 2:1;
-
-        return (!((!date1 && date2) || (date1 && !date2)) && ((currentYear-visitYear)<indicator));
-    }
-
-    private boolean inTheSameRegionAnth(String date){
-        if(date==null || date.length()<6)
-            return false;
-        int visitDate = Integer.parseInt(date.substring(5, 7));
-
-        int currentYear = Integer.parseInt(new SimpleDateFormat("yyyy").format(new java.util.Date()));
-        int visitYear = Integer.parseInt(date.substring(0, 4));
-
-        return (((currentYear-visitYear)*12) + (8-visitDate)) <=12;
-    }
-
     public void saveimagereference(String bindobject,String entityid,Map<String,String> details){
         Context.getInstance().allCommonsRepositoryobjects(bindobject).mergeDetails(entityid,details);
         String anmId = Context.getInstance().allSharedPreferences().fetchRegisteredANM();
         ProfileImage profileImage = new ProfileImage(UUID.randomUUID().toString(),anmId,entityid,"Image",details.get("profilepic"), ImageRepository.TYPE_Unsynced,"dp");
         ((ImageRepository) Context.getInstance().imageRepository()).add(profileImage);
-//                childclient.entityId();
+//                kiclient.entityId();
 //        Toast.makeText(this,entityid,Toast.LENGTH_LONG).show();
     }
-    public static void setImagetoHolder(Activity activity,String file, ImageView view, int placeholder){
+    public static void setImagetoHolder(Activity activity, String file, ImageView view, int placeholder){
         mImageThumbSize = 300;
         mImageThumbSpacing = Context.getInstance().applicationContext().getResources().getDimensionPixelSize(R.dimen.image_thumbnail_spacing);
 
@@ -413,6 +395,49 @@ public class ChildDetailActivity extends Activity {
 
 
     }
+
+    private boolean inTheSameRegion(String date){
+        if(date==null || date.length()<6)
+            return false;
+        int currentDate = Integer.parseInt(new SimpleDateFormat("MM").format(new java.util.Date()));
+        int visitDate = Integer.parseInt(date.substring(5, 7));
+
+        int currentYear = Integer.parseInt(new SimpleDateFormat("yyyy").format(new java.util.Date()));
+        int visitYear = Integer.parseInt(date.substring(0, 4));
+
+        boolean date1 = currentDate < 2 || currentDate >=8;
+        boolean date2 = visitDate < 2 || visitDate >=8;
+
+        int indicator = currentDate == 1 ? 2:1;
+
+        return (!((!date1 && date2) || (date1 && !date2)) && ((currentYear-visitYear)<indicator));
+    }
+
+    private boolean inTheSameRegionAnth(String date){
+        if(date==null || date.length()<6)
+            return false;
+        int visitDate = Integer.parseInt(date.substring(5, 7));
+
+        int currentYear = Integer.parseInt(new SimpleDateFormat("yyyy").format(new java.util.Date()));
+        int visitYear = Integer.parseInt(date.substring(0, 4));
+
+        return (((currentYear-visitYear)*12) + (8-visitDate)) <=12;
+    }
+
+    private String[]split(String data){
+        if(!data.contains(":"))
+            return new String[]{"0","0"};
+        String []temp = data.split(",");
+        String []result = {"",""};
+        for(int i=0;i<temp.length;i++){
+            result[0]=result[0]+","+temp[i].split(":")[0];
+            result[1]=result[1]+","+temp[i].split(":")[1];
+        }
+        result[0]=result[0].substring(1,result[0].length());
+        result[1]=result[1].substring(1,result[1].length());
+        return result;
+    }
+
     @Override
     public void onBackPressed() {
         finish();

@@ -107,7 +107,7 @@ public class NativeHomeActivity extends SecuredActivity {
         String HomeStart = timer.format(new Date());
         Map<String, String> Home = new HashMap<String, String>();
         Home.put("start", HomeStart);
-        FlurryAgent.logEvent("gizi_home_dashboard",Home, true );
+//        FlurryAgent.logEvent("gizi_home_dashboard",Home, true );
 
     }
 
@@ -168,7 +168,7 @@ public class NativeHomeActivity extends SecuredActivity {
 
         anakRegisterClientCountView.setText(valueOf(childcount));
 
-        Cursor ibucountcursor = context.commonrepository("ibu").RawCustomQueryForAdapter(sqb.queryForCountOnRegisters("ec_kartu_ibu_search", "ec_kartu_ibu_search.is_closed=0"));
+        Cursor ibucountcursor = context.commonrepository("ec_ibu").RawCustomQueryForAdapter(sqb.queryForCountOnRegisters("ec_ibu", "ec_ibu.is_closed=0 and ec_ibu.pptest ='Positive'"));
         ibucountcursor.moveToFirst();
         ibucount= ibucountcursor.getInt(0);
         ibucountcursor.close();
@@ -225,7 +225,7 @@ public class NativeHomeActivity extends SecuredActivity {
         UpdateActionsTask updateActionsTask = new UpdateActionsTask(
                 this, context.actionService(), context.formSubmissionSyncService(),
                 new SyncProgressIndicator(), context.allFormVersionSyncService());
-        FlurryFacade.logEvent("click_update_from_server");
+//        FlurryFacade.logEvent("click_update_from_server");
         updateActionsTask.updateFromServer(new SyncAfterFetchListener());
         String locationjson = context.anmLocationController().get();
         LocationTree locationTree = EntityUtils.fromJson(locationjson, LocationTree.class);
