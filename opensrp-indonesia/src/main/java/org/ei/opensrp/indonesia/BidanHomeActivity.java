@@ -126,7 +126,7 @@ public class BidanHomeActivity extends SecuredActivity {
     }
 
     private void initialize() {
-        pendingFormSubmissionService = context.pendingFormSubmissionService();
+        pendingFormSubmissionService = context().pendingFormSubmissionService();
         SYNC_STARTED.addListener(onSyncStartListener);
         SYNC_COMPLETED.addListener(onSyncCompleteListener);
         FORM_SUBMITTED.addListener(onFormSubmittedListener);
@@ -161,27 +161,27 @@ public class BidanHomeActivity extends SecuredActivity {
 
     private void updateRegisterCounts(HomeContext homeContext) {
         SmartRegisterQueryBuilder sqb = new SmartRegisterQueryBuilder();
-        Cursor kicountcursor = context.commonrepository("ec_kartu_ibu").RawCustomQueryForAdapter(sqb.queryForCountOnRegisters("ec_kartu_ibu_search", "ec_kartu_ibu_search.is_closed=0"));
+        Cursor kicountcursor = context().commonrepository("ec_kartu_ibu").RawCustomQueryForAdapter(sqb.queryForCountOnRegisters("ec_kartu_ibu_search", "ec_kartu_ibu_search.is_closed=0"));
         kicountcursor.moveToFirst();
         kicount= kicountcursor.getInt(0);
         kicountcursor.close();
 
-        Cursor kbcountcursor = context.commonrepository("ec_kartu_ibu").RawCustomQueryForAdapter(sqb.queryForCountOnRegisters("ec_kartu_ibu_search", "ec_kartu_ibu_search.is_closed=0 and jenisKontrasepsi !='0'" ));
+        Cursor kbcountcursor = context().commonrepository("ec_kartu_ibu").RawCustomQueryForAdapter(sqb.queryForCountOnRegisters("ec_kartu_ibu_search", "ec_kartu_ibu_search.is_closed=0 and jenisKontrasepsi !='0'" ));
         kbcountcursor.moveToFirst();
         kbcount= kbcountcursor.getInt(0);
         kbcountcursor.close();
 
-        Cursor anccountcursor = context.commonrepository("ec_ibu").RawCustomQueryForAdapter(sqb.queryForCountOnRegisters("ec_ibu_search", "ec_ibu_search.is_closed=0 and ec_ibu_search.pptest ='Positive'"));
+        Cursor anccountcursor = context().commonrepository("ec_ibu").RawCustomQueryForAdapter(sqb.queryForCountOnRegisters("ec_ibu_search", "ec_ibu_search.is_closed=0 and ec_ibu_search.pptest ='Positive'"));
         anccountcursor.moveToFirst();
         anccount= anccountcursor.getInt(0);
         anccountcursor.close();
 
-        Cursor pnccountcursor = context.commonrepository("ec_pnc").RawCustomQueryForAdapter(sqb.queryForCountOnRegisters("ec_pnc_search", "ec_pnc_search.is_closed=0 and ec_pnc_search.keadaanIbu ='hidup'"));
+        Cursor pnccountcursor = context().commonrepository("ec_pnc").RawCustomQueryForAdapter(sqb.queryForCountOnRegisters("ec_pnc_search", "ec_pnc_search.is_closed=0 and ec_pnc_search.keadaanIbu ='hidup'"));
         pnccountcursor.moveToFirst();
         pnccount= pnccountcursor.getInt(0);
         pnccountcursor.close();
 
-        Cursor childcountcursor = context.commonrepository("anak").RawCustomQueryForAdapter(sqb.queryForCountOnRegisters("ec_anak_search", "ec_anak_search.is_closed=0"));
+        Cursor childcountcursor = context().commonrepository("anak").RawCustomQueryForAdapter(sqb.queryForCountOnRegisters("ec_anak_search", "ec_anak_search.is_closed=0"));
         childcountcursor.moveToFirst();
         childcount= childcountcursor.getInt(0);
         childcountcursor.close();
@@ -197,6 +197,7 @@ public class BidanHomeActivity extends SecuredActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
+        attachLogoutMenuItem(menu);
         return true;
     }
 
@@ -234,10 +235,10 @@ public class BidanHomeActivity extends SecuredActivity {
     public void updateFromServer() {
         FlurryFacade.logEvent("clicked_update_from_server");
         UpdateActionsTask updateActionsTask = new UpdateActionsTask(
-                this, context.actionService(), context.formSubmissionSyncService(),
-                new SyncProgressIndicator(), context.allFormVersionSyncService());
+                this, context().actionService(), context().formSubmissionSyncService(),
+                new SyncProgressIndicator(), context().allFormVersionSyncService());
         updateActionsTask.updateFromServer(new SyncAfterFetchListener());
-        String locationjson = context.anmLocationController().get();
+        String locationjson = context().anmLocationController().get();
         LocationTree locationTree = EntityUtils.fromJson(locationjson, LocationTree.class);
 
         Map<String,TreeNode<String, Location>> locationMap =
@@ -259,7 +260,7 @@ public class BidanHomeActivity extends SecuredActivity {
 
     private void updateSyncIndicator() {
         if (updateMenuItem != null) {
-            if (context.allSharedPreferences().fetchIsSyncInProgress()) {
+            if (context().allSharedPreferences().fetchIsSyncInProgress()) {
                 updateMenuItem.setActionView(R.layout.progress);
             } else
                 updateMenuItem.setActionView(null);

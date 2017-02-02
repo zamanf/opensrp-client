@@ -24,6 +24,7 @@ public class ProfileImage {
         this.syncStatus = syncStatus;
         this.filecategory = filecategory;
     }
+    public ProfileImage(){}
 
     public String getFilecategory() {
         return filecategory;

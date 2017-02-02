@@ -87,7 +87,7 @@ public class IbuSmartRegisterActivity extends SecuredNativeSmartRegisterActivity
             }
         });
 
-        ziggyService = context.ziggyService();
+        ziggyService = context().ziggyService();
     }
     public void onPageChanged(int page){
         setRequestedOrientation(page == 0 ? ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -114,7 +114,7 @@ public class IbuSmartRegisterActivity extends SecuredNativeSmartRegisterActivity
 
     @Override
     protected void onInitialization() {
-        context.formSubmissionRouter().getHandlerMap().put("kunjungan_gizi", new KmsHandler());
+        context().formSubmissionRouter().getHandlerMap().put("kunjungan_gizi", new KmsHandler());
     }
 
     @Override
@@ -140,8 +140,8 @@ public class IbuSmartRegisterActivity extends SecuredNativeSmartRegisterActivity
             ziggyService.saveForm(getParams(submission), submission.instance());
             ClientProcessor.getInstance(getApplicationContext()).processClient();
 
-            context.formSubmissionService().updateFTSsearch(submission);
-            context.formSubmissionRouter().handleSubmission(submission, formName);
+            context().formSubmissionService().updateFTSsearch(submission);
+            context().formSubmissionRouter().handleSubmission(submission, formName);
             //switch to forms list fragment
             switchToBaseFragment(formSubmission); // Unnecessary!! passing on data
 
@@ -194,7 +194,7 @@ public class IbuSmartRegisterActivity extends SecuredNativeSmartRegisterActivity
 
         try {
             JSONObject locationJSON = new JSONObject(locationJSONString);
-            //   JSONObject uniqueId = new JSONObject(context.uniqueIdController().getUniqueIdJson());
+            //   JSONObject uniqueId = new JSONObject(context().uniqueIdController().getUniqueIdJson());
 
             combined = locationJSON;
             //     Iterator<String> iter = uniqueId.keys();
@@ -216,9 +216,9 @@ public class IbuSmartRegisterActivity extends SecuredNativeSmartRegisterActivity
 
    /* public void saveuniqueid() {
         try {
-            JSONObject uniqueId = new JSONObject(context.uniqueIdController().getUniqueIdJson());
+            JSONObject uniqueId = new JSONObject(context().uniqueIdController().getUniqueIdJson());
             String uniq = uniqueId.getString("unique_id");
-            context.uniqueIdController().updateCurrentUniqueId(uniq);
+            context().uniqueIdController().updateCurrentUniqueId(uniq);
 
         } catch (JSONException e) {
             e.printStackTrace();

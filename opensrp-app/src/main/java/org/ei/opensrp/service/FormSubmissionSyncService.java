@@ -56,7 +56,7 @@ public class FormSubmissionSyncService {
             mCloudantSyncHandler.startPushReplication();
 
             mCountDownLatch.await();
-            //pushToServer();
+            pushToServer();
             new ImageUploadSyncService((ImageRepository) Context.imageRepository());
             return FetchStatus.fetched;
         }catch (Exception e) {

@@ -342,6 +342,7 @@ public class AllConstants {
         public static final String COUCH_DATABASE_PASS = "";
 
 
+
     }
     public static class SyncFilters {
         // These pull filters must be defined in your couchDB server for them to work
