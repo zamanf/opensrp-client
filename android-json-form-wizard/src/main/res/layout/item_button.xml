@@ -4,4 +4,4 @@
     android:layout_height="wrap_content"
     android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
     android:text=""
-    />
+    android:textSize="@dimen/default_text_size"/>
