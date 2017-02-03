@@ -48,7 +48,7 @@ public class IbuSmartRegisterActivity extends SecuredNativeSmartRegisterActivity
 
     SimpleDateFormat timer = new SimpleDateFormat("hh:mm:ss");
 
-    public static final String TAG = "GiziActivity";
+    public static final String TAG = "GiziIbuActivity";
     @Bind(R.id.view_pager)
     OpenSRPViewPager mPager;
     private FragmentPagerAdapter mPagerAdapter;

@@ -19,6 +19,10 @@ public class GrowthChartGenerator {
         this.yValue = yValue;
         this.dateOfBirth=dateOfBirth;
         this.gender = gender;
+        //System.out.println("XValue: "+xValue);
+        //System.out.println("YValue: "+yValue);
+        //System.out.println("DOB : "+dateOfBirth);
+        //System.out.println("gender: "+gender);
         a = new LineGraphSeries[3][];
         graphLine = this.gender.toLowerCase().contains("em") ? GraphConstant.girlWeightChart : GraphConstant.boyWeightChart;
         buildGraphTemplate();
@@ -113,7 +117,7 @@ public class GrowthChartGenerator {
         else
             createLineChart(graph,dateOfBirth,xValue,yValue);
 
-//        System.out.println("length of a = "+a[0].length + ","+a[1].length + ","+a[2].length);
+//        //System.out.println("length of a = "+a[0].length + ","+a[1].length + ","+a[2].length);
 
     }
 //
@@ -171,7 +175,7 @@ public class GrowthChartGenerator {
                 axis[counter]=axis[counter]+","+Integer.toString(dateInt[i]);
             }
         }
-        System.out.println("index of line 172 = "+index);
+        //System.out.println("index of line 172 = "+index);
         ArrayList<LineGraphSeries>list = new ArrayList<>();
         LineGraphSeries<DataPoint>temp = new LineGraphSeries<>();
         for(int i=0;i<series.length;i++){
@@ -192,12 +196,12 @@ public class GrowthChartGenerator {
     }
 
     private void createLineChart(GraphView graph, String dateOfBirth, String[]date, String[]value){
-        System.out.println("date length = "+date.length);
+        //System.out.println("date length = "+date.length);
         for(int i=0;i<date.length;i++){
             this.index=i;
-//            System.out.println("Z Score line chart : "+i);
-//            System.out.println("date "+i+" : "+date[i]);
-//            System.out.println("value "+i+" : "+value[i]);
+//            //System.out.println("Z Score line chart : "+i);
+//            //System.out.println("date "+i+" : "+date[i]);
+//            //System.out.println("value "+i+" : "+value[i]);
             createLineChart(graph, dateOfBirth, date[i], value[i]);
         }
     }

@@ -107,7 +107,7 @@ public class NativeHomeActivity extends SecuredActivity {
         String HomeStart = timer.format(new Date());
         Map<String, String> Home = new HashMap<String, String>();
         Home.put("start", HomeStart);
-        FlurryAgent.logEvent("gizi_home_dashboard",Home, true );
+//        FlurryAgent.logEvent("gizi_home_dashboard",Home, true );
 
     }
 
@@ -168,7 +168,11 @@ public class NativeHomeActivity extends SecuredActivity {
 
         anakRegisterClientCountView.setText(valueOf(childcount));
 
-        Cursor ibucountcursor = context().commonrepository("ibu").RawCustomQueryForAdapter(sqb.queryForCountOnRegisters("ec_kartu_ibu_search", "ec_kartu_ibu_search.is_closed=0"));
+//<<<<<<< HEAD
+//        Cursor ibucountcursor = context.commonrepository("ec_ibu").RawCustomQueryForAdapter(sqb.queryForCountOnRegisters("ec_ibu", "ec_ibu.is_closed=0 and ec_ibu.pptest ='Positive'"));
+//=======
+        Cursor ibucountcursor = context().commonrepository("ec_ibu").RawCustomQueryForAdapter(sqb.queryForCountOnRegisters("ec_ibu", "ec_ibu.is_closed=0 and ec_ibu.pptest ='Positive'"));
+//>>>>>>> a226fad729247ae36c3882a71e1d3f15be4ade8a
         ibucountcursor.moveToFirst();
         ibucount= ibucountcursor.getInt(0);
         ibucountcursor.close();
@@ -223,9 +227,15 @@ public class NativeHomeActivity extends SecuredActivity {
 
     public void updateFromServer() {
         UpdateActionsTask updateActionsTask = new UpdateActionsTask(
+//<<<<<<< HEAD
+//                this, context.actionService(), context.formSubmissionSyncService(),
+//                new SyncProgressIndicator(), context.allFormVersionSyncService());
+////        FlurryFacade.logEvent("click_update_from_server");
+//=======
                 this, context().actionService(), context().formSubmissionSyncService(),
                 new SyncProgressIndicator(), context().allFormVersionSyncService());
         FlurryFacade.logEvent("click_update_from_server");
+//>>>>>>> a226fad729247ae36c3882a71e1d3f15be4ade8a
         updateActionsTask.updateFromServer(new SyncAfterFetchListener());
         String locationjson = context().anmLocationController().get();
         LocationTree locationTree = EntityUtils.fromJson(locationjson, LocationTree.class);

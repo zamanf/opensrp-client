@@ -16,15 +16,15 @@ public class KmsCalc {
 
     public String cek2T(KmsPerson bayi){
         boolean status = true;
-       // System.out.println("check 2T");
+       // ////System.out.println("check 2T");
         String measureDate[] = {bayi.getLastVisitDate(),bayi.getSecondLastVisitDate()};
         double weight[] = {bayi.getWeight(),bayi.getPreviousWeight()};
         status = status && (cekWeightStatus(bayi.isMale(), bayi.getDateOfBirth(), measureDate, weight).toLowerCase().equals("not gaining weight"));
-        System.out.println("status 1: "+status+", weight: "+weight[0]+", "+weight[1]);
+        ////System.out.println("status 1: "+status+", weight: "+weight[0]+", "+weight[1]);
         String measureDate2[] = {bayi.getLastVisitDate(),bayi.getSecondLastVisitDate()};
         double weight2[] = {bayi.getPreviousWeight(),bayi.getSecondLastWeight()};
         status = status && (cekWeightStatus(bayi.isMale(), bayi.getDateOfBirth(), measureDate2, weight2).toLowerCase().equals("not gaining weight"));
-        System.out.println("status 2: "+status+", weight: "+weight2[0]+", "+weight2[1]);
+        ////System.out.println("status 2: "+status+", weight: "+weight2[0]+", "+weight2[1]);
         bayi.Tidak2Kali = status;
         return (bayi.Tidak2Kali ? "Yes":"No");
     }
@@ -32,7 +32,7 @@ public class KmsCalc {
 
 
     public String cekWeightStatus(KmsPerson bayi){
-        System.out.println("check weight status");
+        ////System.out.println("check weight status");
         String measureDate[] = {bayi.getLastVisitDate(),bayi.getSecondLastVisitDate()};
         double weight[] = {bayi.getWeight(),bayi.getPreviousWeight()};
         bayi.StatusBeratBadan = cekWeightStatus(bayi.isMale(),bayi.getDateOfBirth(),measureDate,weight);
@@ -70,12 +70,16 @@ public class KmsCalc {
 
     public String cekBawahKuning(KmsPerson bayi){
         int umur = bayi.getAge();
+        ////System.out.println(KmsConstants.femaleGarisKuning[bayi.getAge()][0]);
+        ////System.out.println(bayi.getWeight());
+        ////System.out.println(KmsConstants.femaleGarisKuning[bayi.getAge()][1]);
         bayi.GarisKuning = bayi.isMale()
                 ? ((KmsConstants.maleGarisKuning[bayi.getAge()][0]<=bayi.getWeight())
                 && (bayi.getWeight()<=KmsConstants.maleGarisKuning[bayi.getAge()][1]))
                 : ((KmsConstants.femaleGarisKuning[bayi.getAge()][0]<=bayi.getWeight())
                 && (bayi.getWeight()<=KmsConstants.femaleGarisKuning[bayi.getAge()][1]))
         ;
+        ////System.out.println(bayi.GarisKuning ? "yes":"no");
         return ""+(bayi.GarisKuning ? "Yes":"No");
     }
 

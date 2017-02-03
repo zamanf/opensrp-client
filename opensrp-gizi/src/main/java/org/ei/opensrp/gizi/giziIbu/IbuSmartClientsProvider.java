@@ -80,6 +80,8 @@ public class IbuSmartClientsProvider implements SmartRegisterCLientsProviderForC
             viewHolder.lastANCVisit = (TextView)convertView.findViewById(R.id.giziIbuVisitDate);
             viewHolder.HPHT = (TextView)convertView.findViewById(R.id.gizi_usia_kandungan);
             viewHolder.lila = (TextView)convertView.findViewById(R.id.gizi_ibu_lila);
+            viewHolder.hbLevel = (TextView)convertView.findViewById(R.id.gizi_ibu_HB);
+            viewHolder.weight = (TextView)convertView.findViewById(R.id.gizi_ibu_bb);
 
             viewHolder.sistolik = (TextView)convertView.findViewById(R.id.gizi_ibu_sistolik);
             viewHolder.diastolik = (TextView)convertView.findViewById(R.id.gizi_ibu_diastolik);
@@ -129,7 +131,7 @@ public class IbuSmartClientsProvider implements SmartRegisterCLientsProviderForC
         viewHolder.namaLengkap.setText(getColumnMaps("namalengkap", pc));
         viewHolder.namaSuami.setText(getColumnMaps("namaSuami", pc));
         viewHolder.dusun.setText(getDetails("posyandu", pc));
-        viewHolder.tanggalLahir.setText(getDetails("tanggalLahir",pc));
+        viewHolder.tanggalLahir.setText(getDetails("tanggalLahir",pc).substring(0, 10));
         viewHolder.umur.setText(getDetails("umur",pc) + " "+context.getString(R.string.years_unit));
 
         viewHolder.lastANCVisit.setText(context.getString(R.string.kunjunganTerakhir) + ": " + getDetails("ancDate", pc));
@@ -137,9 +139,13 @@ public class IbuSmartClientsProvider implements SmartRegisterCLientsProviderForC
                 ? Integer.toString(usiaKandungan(getDetails("tanggalHPHT",pc),getDetails("ancDate",pc)))
                 : "-")+ context.getString(R.string.str_weeks));
         viewHolder.lila.setText(context.getString(R.string.lila)+": "+getDetails("hasilPemeriksaanLILA",pc) + " cm");
+        viewHolder.hbLevel.setText(context.getString(R.string.hb_level)+": "+getDetails("laboratoriumPeriksaHbHasil",pc));
+        viewHolder.weight.setText(context.getString(R.string.str_weight)+" "+getDetails("bbKg",pc)+" "+context.getString(R.string.weight_unit));
 
         viewHolder.sistolik.setText(context.getString(R.string.sistolik)+": "+getDetails("tandaVitalTDSistolik",pc));
         viewHolder.diastolik.setText(context.getString(R.string.diastolik)+": "+getDetails("tandaVitalTDDiastolik",pc));
+
+
         viewHolder.vitaminA2.setText(context.getString(R.string.vitamin_a_pnc_2)+getDetails("vitaminA2jamPP",pc));
         viewHolder.vitaminA24.setText(context.getString(R.string.vitamin_a_pnc_24)+getDetails("vitaminA24jamPP",pc));
     }
@@ -197,6 +203,8 @@ public class IbuSmartClientsProvider implements SmartRegisterCLientsProviderForC
          TextView HPHT;
          TextView lastANCVisit;
          TextView lila;
+         TextView hbLevel;
+         TextView weight;
 
          TextView sistolik;
          TextView diastolik;

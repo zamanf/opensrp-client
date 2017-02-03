@@ -66,6 +66,9 @@ public class GiziGrowthChartActivity extends Activity{
 
         String []series=initiateSeries();
 
+        System.out.println("gender : "+client.getDetails().get("gender"));
+        System.out.println("DOB : "+client.getDetails().get("tanggalLahir"));
+
         new GrowthChartGenerator(lfaGraph, GraphConstant.LFA_CHART,client.getDetails().get("gender"),client.getDetails().get("tanggalLahir"),series[0],series[1]);
         lfaGraph.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
             @Override
@@ -106,8 +109,8 @@ public class GiziGrowthChartActivity extends Activity{
             }
         }else{
             series[0] = data[0].split(";")[0];
-            series[1] = data[0].split(";")[1];
-            series[2] = data[1].split(";")[0];
+            series[1] = data[1].split(";")[0];
+            series[2] = data[0].split(";")[1];
             series[3] = data[1].split(";")[1];
         }
         return series;
@@ -117,7 +120,7 @@ public class GiziGrowthChartActivity extends Activity{
         if(client.getDetails().get("history_tinggi")==null) {
             return "0#0";
         }
-        else if(client.getDetails().get("history_tinggi").length()<10) {
+        else if(client.getDetails().get("history_tinggi").length()<3) {
             return "0#0";
         }
         String ageSeries="";
