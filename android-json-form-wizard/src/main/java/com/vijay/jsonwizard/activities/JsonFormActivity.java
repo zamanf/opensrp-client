@@ -26,6 +26,10 @@ public class JsonFormActivity extends AppCompatActivity implements JsonApi {
     public void init(String json) {
         try {
             mJSONObject = new JSONObject(json);
+            if(!mJSONObject.has("encounter_type")) {
+                mJSONObject = new JSONObject();
+                throw new JSONException("Form encounter_type not set");
+            }
         } catch (JSONException e) {
             Log.d(TAG, "Initialization error. Json passed is invalid : " + e.getMessage());
         }
@@ -63,7 +67,8 @@ public class JsonFormActivity extends AppCompatActivity implements JsonApi {
     }
 
     @Override
-    public void writeValue(String stepName, String key, String value) throws JSONException {
+    public void writeValue(String stepName, String key, String value, String openMrsEntityParent,
+                           String openMrsEntity, String openMrsEntityId) throws JSONException {
         synchronized (mJSONObject) {
             JSONObject jsonObject = mJSONObject.getJSONObject(stepName);
             JSONArray fields = jsonObject.getJSONArray("fields");
@@ -72,6 +77,9 @@ public class JsonFormActivity extends AppCompatActivity implements JsonApi {
                 String keyAtIndex = item.getString("key");
                 if (key.equals(keyAtIndex)) {
                     item.put("value", value);
+                    item.put("openmrs_entity_parent", openMrsEntityParent);
+                    item.put("openmrs_entity", openMrsEntity);
+                    item.put("openmrs_entity_id", openMrsEntityId);
                     return;
                 }
             }
@@ -79,7 +87,9 @@ public class JsonFormActivity extends AppCompatActivity implements JsonApi {
     }
 
     @Override
-    public void writeValue(String stepName, String parentKey, String childObjectKey, String childKey, String value)
+    public void writeValue(String stepName, String parentKey, String childObjectKey, String childKey,
+                           String value, String openMrsEntityParent, String openMrsEntity,
+                           String openMrsEntityId)
             throws JSONException {
         synchronized (mJSONObject) {
             JSONObject jsonObject = mJSONObject.getJSONObject(stepName);

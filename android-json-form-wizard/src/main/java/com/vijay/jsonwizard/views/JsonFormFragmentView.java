@@ -49,9 +49,12 @@ public interface JsonFormFragmentView<VS extends ViewState> extends MvpView {
 
     void updateRelevantImageView(Bitmap bitmap, String imagePath, String currentKey);
 
-    void writeValue(String stepName, String key, String value);
+    void writeValue(String stepName, String key, String value, String openMrsEntityParent,
+                    String openMrsEntity, String openMrsEntityId);
 
-    void writeValue(String stepName, String prentKey, String childObjectKey, String childKey, String value);
+    void writeValue(String stepName, String prentKey, String childObjectKey, String childKey,
+                    String value, String openMrsEntityParent, String openMrsEntity,
+                    String openMrsEntityId);
 
     JSONObject getStep(String stepName);
 

@@ -45,12 +45,19 @@ public class DatePickerFactory implements FormWidgetFactory {
                                        CommonListener listener) throws Exception {
         List<View> views = new ArrayList<>(1);
         try {
+            String openMrsEntityParent = jsonObject.getString("openmrs_entity_parent");
+            String openMrsEntity = jsonObject.getString("openmrs_entity");
+            String openMrsEntityId = jsonObject.getString("openmrs_entity_id");
+
             final MaterialEditText editText = (MaterialEditText) LayoutInflater.from(context).inflate(
                     R.layout.item_edit_text, null);
             editText.setHint(jsonObject.getString("hint"));
             editText.setFloatingLabelText(jsonObject.getString("hint"));
             editText.setId(ViewUtil.generateViewId());
             editText.setTag(R.id.key, jsonObject.getString("key"));
+            editText.setTag(R.id.openmrs_entity_parent, openMrsEntityParent);
+            editText.setTag(R.id.openmrs_entity, openMrsEntity);
+            editText.setTag(R.id.openmrs_entity_id, openMrsEntityId);
             if(jsonObject.has("v_required")) {
                 JSONObject requiredObject = jsonObject.optJSONObject("v_required");
                 String requiredValue = requiredObject.getString("value");

@@ -29,10 +29,17 @@ public class ImagePickerFactory implements FormWidgetFactory {
 
     @Override
     public List<View> getViewsFromJson(String stepName, Context context, JSONObject jsonObject, CommonListener listener) throws Exception {
+        String openMrsEntityParent = jsonObject.getString("openmrs_entity_parent");
+        String openMrsEntity = jsonObject.getString("openmrs_entity");
+        String openMrsEntityId = jsonObject.getString("openmrs_entity_id");
+
         List<View> views = new ArrayList<>(1);
         ImageView imageView = new ImageView(context);
         imageView.setImageDrawable(context.getResources().getDrawable(R.mipmap.grey_bg));
         imageView.setTag(R.id.key, jsonObject.getString("key"));
+        imageView.setTag(R.id.openmrs_entity_parent, openMrsEntityParent);
+        imageView.setTag(R.id.openmrs_entity, openMrsEntity);
+        imageView.setTag(R.id.openmrs_entity_id, openMrsEntityId);
         imageView.setTag(R.id.type, jsonObject.getString("type"));
 
         JSONObject requiredObject = jsonObject.optJSONObject("v_required");
@@ -59,6 +66,9 @@ public class ImagePickerFactory implements FormWidgetFactory {
                 .getResources().getDimension(R.dimen.default_bottom_margin)));
         uploadButton.setOnClickListener(listener);
         uploadButton.setTag(R.id.key, jsonObject.getString("key"));
+        uploadButton.setTag(R.id.openmrs_entity_parent, openMrsEntityParent);
+        uploadButton.setTag(R.id.openmrs_entity, openMrsEntity);
+        uploadButton.setTag(R.id.openmrs_entity_id, openMrsEntityId);
         uploadButton.setTag(R.id.type, jsonObject.getString("type"));
         views.add(uploadButton);
         return views;

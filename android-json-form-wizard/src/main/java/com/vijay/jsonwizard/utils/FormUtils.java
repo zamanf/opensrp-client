@@ -23,12 +23,17 @@ public class FormUtils {
         return layoutParams;
     }
 
-    public static TextView getTextViewWith(Context context, int textSizeInSp, String text, String key, String type,
+    public static TextView getTextViewWith(Context context, int textSizeInSp, String text,
+                                           String key, String type, String openMrsEntityParent,
+                                           String openMrsEntity, String openMrsEntityId,
                                            LinearLayout.LayoutParams layoutParams, String fontPath) {
         TextView textView = new TextView(context);
         textView.setText(text);
         textView.setTag(R.id.key, key);
         textView.setTag(R.id.type, type);
+        textView.setTag(R.id.openmrs_entity_parent, openMrsEntityParent);
+        textView.setTag(R.id.openmrs_entity, openMrsEntity);
+        textView.setTag(R.id.openmrs_entity_id, openMrsEntityId);
         textView.setId(ViewUtil.generateViewId());
         textView.setTextSize(textSizeInSp);
         textView.setLayoutParams(layoutParams);

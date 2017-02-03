@@ -100,13 +100,17 @@ public class JsonFormFragmentPresenter extends MvpBasePresenter<JsonFormFragment
         for (int i = 0; i < childCount; i++) {
             View childAt = mainView.getChildAt(i);
             String key = (String) childAt.getTag(R.id.key);
+            String openMrsEntityParent = (String) childAt.getTag(R.id.openmrs_entity_parent);
+            String openMrsEntity = (String) childAt.getTag(R.id.openmrs_entity);
+            String openMrsEntityId = (String) childAt.getTag(R.id.openmrs_entity_id);
             if (childAt instanceof MaterialEditText) {
                 MaterialEditText editText = (MaterialEditText) childAt;
                 ValidationStatus validationStatus = EditTextFactory.validate(editText);
                 if (!validationStatus.isValid()) {
                     return validationStatus;
                 }
-                getView().writeValue(mStepName, key, editText.getText().toString());
+                getView().writeValue(mStepName, key, editText.getText().toString(),
+                        openMrsEntityParent, openMrsEntity, openMrsEntityId);
             } else if (childAt instanceof ImageView) {
                 ValidationStatus validationStatus = ImagePickerFactory.validate((ImageView) childAt);
                 if (!validationStatus.isValid()) {
@@ -114,18 +118,21 @@ public class JsonFormFragmentPresenter extends MvpBasePresenter<JsonFormFragment
                 }
                 Object path = childAt.getTag(R.id.imagePath);
                 if (path instanceof String) {
-                    getView().writeValue(mStepName, key, (String) path);
+                    getView().writeValue(mStepName, key, (String) path, openMrsEntityParent,
+                            openMrsEntity, openMrsEntityId);
                 }
             } else if (childAt instanceof CheckBox) {
                 String parentKey = (String) childAt.getTag(R.id.key);
                 String childKey = (String) childAt.getTag(R.id.childKey);
                 getView().writeValue(mStepName, parentKey, JsonFormConstants.OPTIONS_FIELD_NAME, childKey,
-                        String.valueOf(((CheckBox) childAt).isChecked()));
+                        String.valueOf(((CheckBox) childAt).isChecked()), openMrsEntityParent,
+                        openMrsEntity, openMrsEntityId);
             } else if (childAt instanceof RadioButton) {
                 String parentKey = (String) childAt.getTag(R.id.key);
                 String childKey = (String) childAt.getTag(R.id.childKey);
                 if (((RadioButton) childAt).isChecked()) {
-                    getView().writeValue(mStepName, parentKey, childKey);
+                    getView().writeValue(mStepName, parentKey, childKey, openMrsEntityParent,
+                            openMrsEntity, openMrsEntityId);
                 }
             } else if (childAt instanceof MaterialSpinner) {
                 MaterialSpinner spinner = (MaterialSpinner) childAt;
@@ -183,24 +190,36 @@ public class JsonFormFragmentPresenter extends MvpBasePresenter<JsonFormFragment
     public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
         if (compoundButton instanceof CheckBox) {
             String parentKey = (String) compoundButton.getTag(R.id.key);
+            String openMrsEntityParent = (String) compoundButton.getTag(R.id.openmrs_entity_parent);
+            String openMrsEntity = (String) compoundButton.getTag(R.id.openmrs_entity);
+            String openMrsEntityId = (String) compoundButton.getTag(R.id.openmrs_entity_id);
             String childKey = (String) compoundButton.getTag(R.id.childKey);
             getView().writeValue(mStepName, parentKey, JsonFormConstants.OPTIONS_FIELD_NAME, childKey,
-                    String.valueOf(((CheckBox) compoundButton).isChecked()));
+                    String.valueOf(((CheckBox) compoundButton).isChecked()), openMrsEntityParent,
+                    openMrsEntity, openMrsEntityId);
         } else if (compoundButton instanceof RadioButton) {
             if (isChecked) {
                 String parentKey = (String) compoundButton.getTag(R.id.key);
+                String openMrsEntityParent = (String) compoundButton.getTag(R.id.openmrs_entity_parent);
+                String openMrsEntity = (String) compoundButton.getTag(R.id.openmrs_entity);
+                String openMrsEntityId = (String) compoundButton.getTag(R.id.openmrs_entity_id);
                 String childKey = (String) compoundButton.getTag(R.id.childKey);
                 getView().unCheckAllExcept(parentKey, childKey);
-                getView().writeValue(mStepName, parentKey, childKey);
+                getView().writeValue(mStepName, parentKey, childKey, openMrsEntityParent,
+                        openMrsEntity, openMrsEntityId);
             }
         }
     }
 
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String parentKey = (String) parent.getTag(R.id.key);
+        String openMrsEntityParent = (String) parent.getTag(R.id.openmrs_entity_parent);
+        String openMrsEntity = (String) parent.getTag(R.id.openmrs_entity);
+        String openMrsEntityId = (String) parent.getTag(R.id.openmrs_entity_id);
         if (position >= 0) {
             String value = (String) parent.getItemAtPosition(position + 1);
-            getView().writeValue(mStepName, parentKey, value);
+            getView().writeValue(mStepName, parentKey, value, openMrsEntityParent, openMrsEntity,
+                    openMrsEntityId);
         }
     }
 }

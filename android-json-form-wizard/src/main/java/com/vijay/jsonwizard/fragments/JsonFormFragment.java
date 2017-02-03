@@ -140,9 +140,10 @@ public class JsonFormFragment extends MvpFragment<JsonFormFragmentPresenter, Jso
     }
 
     @Override
-    public void writeValue(String stepName, String key, String s) {
+    public void writeValue(String stepName, String key, String s, String openMrsEntityParent,
+                           String openMrsEntity, String openMrsEntityId) {
         try {
-            mJsonApi.writeValue(stepName, key, s);
+            mJsonApi.writeValue(stepName, key, s, openMrsEntityParent, openMrsEntity, openMrsEntityId);
         } catch (JSONException e) {
             // TODO - handle
             e.printStackTrace();
@@ -150,9 +151,12 @@ public class JsonFormFragment extends MvpFragment<JsonFormFragmentPresenter, Jso
     }
 
     @Override
-    public void writeValue(String stepName, String prentKey, String childObjectKey, String childKey, String value) {
+    public void writeValue(String stepName, String prentKey, String childObjectKey, String childKey,
+                           String value, String openMrsEntityParent, String openMrsEntity,
+                           String openMrsEntityId) {
         try {
-            mJsonApi.writeValue(stepName, prentKey, childObjectKey, childKey, value);
+            mJsonApi.writeValue(stepName, prentKey, childObjectKey, childKey, value,
+                    openMrsEntityParent, openMrsEntity, openMrsEntityId);
         } catch (JSONException e) {
             // TODO - handle
             e.printStackTrace();

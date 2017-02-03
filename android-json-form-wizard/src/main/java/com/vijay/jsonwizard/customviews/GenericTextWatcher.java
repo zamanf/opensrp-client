@@ -40,8 +40,11 @@ public class GenericTextWatcher implements TextWatcher {
         }
 
         String key = (String) mView.getTag(R.id.key);
+        String openMrsEntityParent = (String) mView.getTag(R.id.openmrs_entity_parent);
+        String openMrsEntity = (String) mView.getTag(R.id.openmrs_entity);
+        String openMrsEntityId = (String) mView.getTag(R.id.openmrs_entity_id);
         try {
-            api.writeValue(mStepName, key, text);
+            api.writeValue(mStepName, key, text, openMrsEntityParent, openMrsEntity, openMrsEntityId);
         } catch (JSONException e) {
             // TODO- handle
             e.printStackTrace();

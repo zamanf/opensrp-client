@@ -27,10 +27,14 @@ import static com.vijay.jsonwizard.utils.FormUtils.*;
 public class RadioButtonFactory implements FormWidgetFactory {
     @Override
     public List<View> getViewsFromJson(String stepName, Context context, JSONObject jsonObject, CommonListener listener) throws Exception {
+        String openMrsEntityParent = jsonObject.getString("openmrs_entity_parent");
+        String openMrsEntity = jsonObject.getString("openmrs_entity");
+        String openMrsEntityId = jsonObject.getString("openmrs_entity_id");
+
         List<View> views = new ArrayList<>(1);
         views.add(getTextViewWith(context, 16, jsonObject.getString("label"), jsonObject.getString("key"),
-                jsonObject.getString("type"), getLayoutParams(MATCH_PARENT, WRAP_CONTENT, 0, 0, 0, 0),
-                FONT_BOLD_PATH));
+                jsonObject.getString("type"), openMrsEntityParent, openMrsEntity, openMrsEntityId,
+                getLayoutParams(MATCH_PARENT, WRAP_CONTENT, 0, 0, 0, 0), FONT_BOLD_PATH));
         JSONArray options = jsonObject.getJSONArray(JsonFormConstants.OPTIONS_FIELD_NAME);
         for (int i = 0; i < options.length(); i++) {
             JSONObject item = options.getJSONObject(i);
@@ -38,6 +42,9 @@ public class RadioButtonFactory implements FormWidgetFactory {
                     null);
             radioButton.setText(item.getString("text"));
             radioButton.setTag(R.id.key, jsonObject.getString("key"));
+            radioButton.setTag(R.id.openmrs_entity_parent, openMrsEntityParent);
+            radioButton.setTag(R.id.openmrs_entity, openMrsEntity);
+            radioButton.setTag(R.id.openmrs_entity_id, openMrsEntityId);
             radioButton.setTag(R.id.type, jsonObject.getString("type"));
             radioButton.setTag(R.id.childKey, item.getString("key"));
             radioButton.setGravity(Gravity.CENTER_VERTICAL);

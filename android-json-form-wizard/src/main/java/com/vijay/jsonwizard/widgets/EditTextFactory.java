@@ -33,6 +33,10 @@ public class EditTextFactory implements FormWidgetFactory {
     public static final int MAX_LENGTH = 100;
     @Override
     public List<View> getViewsFromJson(String stepName, Context context, JSONObject jsonObject, CommonListener listener) throws Exception {
+        String openMrsEntityParent = jsonObject.getString("openmrs_entity_parent");
+        String openMrsEntity = jsonObject.getString("openmrs_entity");
+        String openMrsEntityId = jsonObject.getString("openmrs_entity_id");
+
         int minLength = MIN_LENGTH;
         int maxLength= MAX_LENGTH;
         List<View> views = new ArrayList<>(1);
@@ -42,6 +46,9 @@ public class EditTextFactory implements FormWidgetFactory {
         editText.setFloatingLabelText(jsonObject.getString("hint"));
         editText.setId(ViewUtil.generateViewId());
         editText.setTag(R.id.key, jsonObject.getString("key"));
+        editText.setTag(R.id.openmrs_entity_parent, openMrsEntityParent);
+        editText.setTag(R.id.openmrs_entity, openMrsEntity);
+        editText.setTag(R.id.openmrs_entity_id, openMrsEntityId);
         editText.setTag(R.id.type, jsonObject.getString("type"));
 
         if (!TextUtils.isEmpty(jsonObject.optString("value"))) {

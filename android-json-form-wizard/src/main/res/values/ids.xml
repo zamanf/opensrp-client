@@ -7,4 +7,7 @@
 
     <item type="id" name="v_required"/>
     <item type="id" name="error"/>
+    <item type='id' name="openmrs_entity_parent"/>
+    <item type='id' name="openmrs_entity"/>
+    <item type='id' name="openmrs_entity_id"/>
 </resources>

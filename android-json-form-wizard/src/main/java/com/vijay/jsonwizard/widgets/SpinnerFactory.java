@@ -27,6 +27,10 @@ public class SpinnerFactory implements FormWidgetFactory {
 
     @Override
     public List<View> getViewsFromJson(String stepName, Context context, JSONObject jsonObject, CommonListener listener) throws Exception {
+        String openMrsEntityParent = jsonObject.getString("openmrs_entity_parent");
+        String openMrsEntity = jsonObject.getString("openmrs_entity");
+        String openMrsEntityId = jsonObject.getString("openmrs_entity_id");
+
         List<View> views = new ArrayList<>(1);
         MaterialSpinner spinner = (MaterialSpinner) LayoutInflater.from(context).inflate(R.layout.item_spinner, null);
 
@@ -39,6 +43,9 @@ public class SpinnerFactory implements FormWidgetFactory {
         spinner.setId(ViewUtil.generateViewId());
 
         spinner.setTag(R.id.key, jsonObject.getString("key"));
+        spinner.setTag(R.id.openmrs_entity_parent, openMrsEntityParent);
+        spinner.setTag(R.id.openmrs_entity, openMrsEntity);
+        spinner.setTag(R.id.openmrs_entity_id, openMrsEntityId);
         spinner.setTag(R.id.type, jsonObject.getString("type"));
 
         JSONObject requiredObject = jsonObject.optJSONObject("v_required");

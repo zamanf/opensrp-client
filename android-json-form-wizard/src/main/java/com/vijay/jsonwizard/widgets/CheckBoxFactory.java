@@ -28,9 +28,12 @@ public class CheckBoxFactory implements FormWidgetFactory {
     @Override
     public List<View> getViewsFromJson(String stepName, Context context, JSONObject jsonObject, CommonListener listener) throws Exception {
         List<View> views = new ArrayList<>(1);
+        String openMrsEntityParent = jsonObject.getString("openmrs_entity_parent");
+        String openMrsEntity = jsonObject.getString("openmrs_entity");
+        String openMrsEntityId = jsonObject.getString("openmrs_entity_id");
         views.add(getTextViewWith(context, 16, jsonObject.getString("label"), jsonObject.getString("key"),
-                jsonObject.getString("type"), getLayoutParams(MATCH_PARENT, WRAP_CONTENT, 0, 0, 0, 0),
-                FONT_BOLD_PATH));
+                jsonObject.getString("type"), openMrsEntityParent, openMrsEntity, openMrsEntityId,
+                getLayoutParams(MATCH_PARENT, WRAP_CONTENT, 0, 0, 0, 0), FONT_BOLD_PATH));
         JSONArray options = jsonObject.getJSONArray(JsonFormConstants.OPTIONS_FIELD_NAME);
         for (int i = 0; i < options.length(); i++) {
             JSONObject item = options.getJSONObject(i);
@@ -38,6 +41,9 @@ public class CheckBoxFactory implements FormWidgetFactory {
             checkBox.setText(item.getString("text"));
             checkBox.setTag(R.id.key, jsonObject.getString("key"));
             checkBox.setTag(R.id.type, jsonObject.getString("type"));
+            checkBox.setTag(R.id.openmrs_entity_parent, openMrsEntityParent);
+            checkBox.setTag(R.id.openmrs_entity, openMrsEntity);
+            checkBox.setTag(R.id.openmrs_entity_id, openMrsEntityId);
             checkBox.setTag(R.id.childKey, item.getString("key"));
             checkBox.setGravity(Gravity.CENTER_VERTICAL);
             checkBox.setTextSize(16);
