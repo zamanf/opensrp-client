@@ -1,6 +1,7 @@
 package org.ei.opensrp.vaksinator.vaksinator;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -11,8 +12,12 @@ import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.AllCommonsRepository;
 import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
+import org.ei.opensrp.commonregistry.CommonRepository;
+import org.ei.opensrp.cursoradapter.SmartRegisterQueryBuilder;
+import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.vaksinator.R;
 import org.ei.opensrp.view.activity.ReportsActivity;
+import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
 
 import java.util.Date;
 import java.util.List;
@@ -21,7 +26,7 @@ import java.util.List;
 /**
  * Created by Iq on 09/06/16, modified by Marwan on 14/07/16
  */
-public class VaksinatorRecapitulationActivity extends ReportsActivity {
+public class VaksinatorRecapitulationActivity extends SecuredNativeSmartRegisterActivity {
 
     //image retrieving
     private static final String TAG = "ImageGridFragment";
@@ -30,6 +35,7 @@ public class VaksinatorRecapitulationActivity extends ReportsActivity {
     Context context;
     //image retrieving
 
+
     public static CommonPersonObjectClient controller;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,16 +43,45 @@ public class VaksinatorRecapitulationActivity extends ReportsActivity {
         context = Context.getInstance();
         setContentView(R.layout.smart_register_jurim_client_reporting);
 
-        AllCommonsRepository childRepository = org.ei.opensrp.Context.getInstance().allCommonsRepositoryobjects("ec_anak");
-        List <CommonPersonObject> childobject = childRepository.all();
-        System.out.println("ec anak size "+childobject.size());
-        for(int i=1;i<childobject.size();i++){
-            if(childobject.get(i).getCaseId()!=null)
-                System.out.println("detail size of "+i+": "+childobject.get(i).getDetails().size());
-            else
-                System.out.println("detail size of "+i+": ");
+//        AllCommonsRepository childRepository = org.ei.opensrp.Context.getInstance().allCommonsRepositoryobjects("ec_anak");
+//        List <CommonPersonObject> childobject = childRepository.all();
 
+        SmartRegisterQueryBuilder queryBuilder = new SmartRegisterQueryBuilder();
+        queryBuilder.SelectInitiateMainTableCounts("ec_anak");
+
+////        String tablename, String searchJoinTable, String mainCondition, String searchFilter, String sort, int limit, int offset
+//        String sql = queryBuilder.searchQueryFts("ec_anak", "", " is_closed = 0 ", " is_closed = 0 ");
+//        List<String> ids = context().commonrepository("ec_anak").findSearchIds(sql);
+//        String squery = queryBuilder.toStringFts(ids, "ec_anak" + "." + CommonRepository.ID_COLUMN);
+//        squery = queryBuilder.Endquery(squery);
+
+        String query = "SELECT * FROM ec_anak where ec_anak.is_closed = 0";
+        System.out.println("search query = " + query);
+        Cursor cursor = context().commonrepository("ec_anak").RawCustomQueryForAdapter(query);
+        cursor.moveToFirst();
+
+        System.out.println("ec anak size = " + cursor.getCount());
+        System.out.println("ec anak column size = "+cursor.getColumnCount());
+
+        //System.out.println(context().commonrepository("ec_anak").RawCustomQueryForAdapter("SHOW DATABASES").getString(0));
+        String [][] data = new String[cursor.getCount()][cursor.getColumnCount()];
+        cursor.moveToFirst();
+        for(int i=0;i<cursor.getCount();i++){
+            cursor.moveToPosition(i);
+            for(int j=0;j<cursor.getColumnCount();j++){
+                data[i][j]=cursor.getString(j);
+            }
         }
+
+        int a=0;
+        int b = a+22;
+//        for(int i=1;i<childobject.size();i++){
+//            CommonPersonObject object = childRepository.findByCaseID(childobject.get(i).getCaseId());
+//            if(object.getDetails() != null)
+//                System.out.println("detail size of "+i+": "+object.getDetails().toString());
+//            else
+//                System.out.println("detail size of "+i+": ");
+//        }
 
 //        Context otherContext = Context.getInstance().updateApplicationContext(this.getApplicationContext());
 //
@@ -185,6 +220,31 @@ public class VaksinatorRecapitulationActivity extends ReportsActivity {
         if(data!=null)
             return data.length()>6;
         return false;
+    }
+
+    @Override
+    protected DefaultOptionsProvider getDefaultOptionsProvider() {
+        return null;
+    }
+
+    @Override
+    protected NavBarOptionsProvider getNavBarOptionsProvider() {
+        return null;
+    }
+
+    @Override
+    protected SmartRegisterClientsProvider clientsProvider() {
+        return null;
+    }
+
+    @Override
+    protected void onInitialization() {
+
+    }
+
+    @Override
+    public void startRegistration() {
+
     }
 
     private class LocalVariable{
