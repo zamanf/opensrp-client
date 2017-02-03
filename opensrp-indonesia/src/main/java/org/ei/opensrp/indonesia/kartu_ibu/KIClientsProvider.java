@@ -167,8 +167,10 @@ public class KIClientsProvider implements SmartRegisterCLientsProviderForCursorA
             //check anc  status
             if (anc_isclosed == 0) {
                 detailsRepository.updateDetails(ibuparent);
-                checkMonth(pc.getDetails().get("htp"),viewHolder.edd_due);
-                checkLastVisit(pc.getDetails().get("ancDate"),context.getString(R.string.anc_ke) + ": "+pc.getDetails().get("ancKe"),context.getString(R.string.service_anc),
+                if(pc.getDetails().get("htp") == null) {
+                    checkMonth(pc.getDetails().get("htp"), viewHolder.edd_due);
+
+                }checkLastVisit(pc.getDetails().get("ancDate"),context.getString(R.string.anc_ke) + ": "+pc.getDetails().get("ancKe"),context.getString(R.string.service_anc),
                                viewHolder.anc_status_layout,viewHolder.date_status,viewHolder.visit_status);
             }
             //if anc is 1(closed) set status to pnc
@@ -178,7 +180,10 @@ public class KIClientsProvider implements SmartRegisterCLientsProviderForCursorA
                 short pnc_isclosed = pncparent.getClosed();
                 if (pnc_isclosed == 0) {
                     detailsRepository.updateDetails(pncparent);
-                    checkMonth("delivered",viewHolder.edd_due);
+                  /*  checkMonth("delivered",viewHolder.edd_due);*/
+                    viewHolder.edd_due.setTextColor(context.getResources().getColor(R.color.alert_complete_green));
+                    String deliver = context.getString(R.string.delivered);
+                    viewHolder.edd_due.setText(deliver);
                     checkLastVisit(pc.getDetails().get("PNCDate"),context.getString(R.string.pnc_ke) + " "+pc.getDetails().get("hariKeKF"),context.getString(R.string.service_pnc),
                             viewHolder.anc_status_layout,viewHolder.date_status,viewHolder.visit_status);
                 }
@@ -308,11 +313,11 @@ public class KIClientsProvider implements SmartRegisterCLientsProviderForCursorA
                 _dueEdd = context.getString(R.string.edd_passed);
             }
             TextMonth.setText(_dueEdd);
-        }else if(htp.equals("delivered")){
+        }/*else if(htp.equals("delivered")){
             TextMonth.setTextColor(context.getResources().getColor(R.color.alert_complete_green));
             _dueEdd = context.getString(R.string.delivered);
             TextMonth.setText(_dueEdd);
-        }
+        }*/
         else {
             TextMonth.setText("-");
         }

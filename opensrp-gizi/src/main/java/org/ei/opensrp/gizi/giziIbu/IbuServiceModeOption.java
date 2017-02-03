@@ -33,24 +33,24 @@ public class IbuServiceModeOption extends ServiceModeOption {
         return new ClientsHeaderProvider() {
             @Override
             public int count() {
-                return 5;
+                return 6;
             }
 
             @Override
             public int weightSum() {
-                return 100;
+                return 200;
             }
 
             @Override
             public int[] weights() {
-                return new int[]{30,25,23,15,7};
+                return new int[]{20,42,40,39,45,14};
             }
 
             @Override
             public int[] headerTextResourceIds() {
                 return new int[]{
-                        R.string.child_profile,R.string.anthopometri,R.string.status,R.string.visitSchedule,R.string.header_edit
-                        };
+                        R.string.header_edit,R.string.detail_ibu,R.string.anthopometri,R.string.hasil_lab,R.string.post_partum_care,R.string.header_edit
+                };
             }
         };
     }

@@ -71,10 +71,10 @@ public class GiziZScoreChartActivity extends Activity{
     }
 
     private void initializeGlobalVariable(){
-        System.out.println("data z score client = "+client.getDetails().toString());
-        historyUmur = client.getDetails().get("preload_umur");
+        ////System.out.println("data z score client = "+client.getDetails().toString());
+        historyUmur = split(client.getDetails().get("history_berat"))[0];
         historyUmurHari = client.getDetails().get("history_umur_tinggi");
-        historyBerat = client.getDetails().get("history_berat");
+        historyBerat = split(client.getDetails().get("history_berat"))[1];
         historyTinggi = cleanBlankValueOf(client.getDetails().get("history_tinggi"));
         historyTinggiUmurHari = cleanBlankValueOf(client.getDetails().get("history_tinggi_umur_hari"));
 
@@ -94,7 +94,6 @@ public class GiziZScoreChartActivity extends Activity{
                         else
                             generator.removeSeriesOfIndex(0);
 
-//                        refreshGraph();
                     }
                 }
         );
@@ -172,9 +171,9 @@ public class GiziZScoreChartActivity extends Activity{
         String axis3 = wfhChecked ? createWFHAxis() : "";
         String data3 = wfhChecked ? createWFHSeries() : "";
 
-        System.out.println("data 1 = "+axis1+"@"+data1);
-        System.out.println("data 2 = "+axis2+"@"+data2);
-        System.out.println("data 3 = "+axis3+"@"+data3);
+        ////System.out.println("data 1 = "+axis1+"@"+data1);
+        ////System.out.println("data 2 = "+axis2+"@"+data2);
+        ////System.out.println("data 3 = "+axis3+"@"+data3);
 
         return new String[]{axis1+"@"+axis2+"@"+axis3,data1+"@"+data2+"@"+data3};
     }
@@ -200,7 +199,7 @@ public class GiziZScoreChartActivity extends Activity{
         int ageLength = dayAge.length;
 
         for(int i=0;i<ageLength;i++){
-            System.out.println("age on day : "+dayAge[i]);
+            ////System.out.println("age on day : "+dayAge[i]);
         }
 
         for(int i=0;i<ageLength;i++){
@@ -245,7 +244,7 @@ public class GiziZScoreChartActivity extends Activity{
                 result = result+",";
             result = result + Double.toString(calc.countHFA(isMale,Integer.parseInt(historyUmur[i]),Double.parseDouble(temp[i+1].split(":")[1])));
         }
-        //System.out.println("hfa result = "+result);
+        //////System.out.println("hfa result = "+result);
         return result;
     }
 
@@ -265,11 +264,11 @@ public class GiziZScoreChartActivity extends Activity{
         String result = "";
         String uT = createWFHAxis();
         String u = historyUmur;
-        System.out.println("u = "+u);
+        ////System.out.println("u = "+u);
         String b = historyBerat;
-        System.out.println("b = "+b);
+        ////System.out.println("b = "+b);
         String t= historyTinggi;
-        System.out.println("t = "+t);
+        ////System.out.println("t = "+t);
         if(u==null || uT.equals("") || t==null)
             return "";
         String[]umurTinggi = uT.split(",");
@@ -282,8 +281,8 @@ public class GiziZScoreChartActivity extends Activity{
         for(int i=0;i<umurTinggi.length;i++){
             for(;j<umur.length;j++){
                 if(umurTinggi[i].equals(Integer.toString(Integer.parseInt(umur[j])/30))) {
-                    System.out.println("berat = "+berat[j]);
-                    System.out.println("tinggi = "+ tinggi[i].split(":")[1]);
+                    ////System.out.println("berat = "+berat[j]);
+                    ////System.out.println("tinggi = "+ tinggi[i].split(":")[1]);
                     result = result + "," + Double.toString(Integer.parseInt(umurTinggi[i])<24
                             ? calc.countWFL(isMale,Double.parseDouble(berat[j]),Double.parseDouble(tinggi[i+1].split(":")[1]))
                             : calc.countWFH(isMale, Double.parseDouble(berat[j]), Double.parseDouble(tinggi[i+1].split(":")[1])));
@@ -291,7 +290,7 @@ public class GiziZScoreChartActivity extends Activity{
                 }
             }
         }
-        System.out.println("z-score = "+result);
+        ////System.out.println("z-score = "+result);
         return result.length()>1 ? result.substring(1,result.length()):"";
     }
 
@@ -312,8 +311,8 @@ public class GiziZScoreChartActivity extends Activity{
     private String buildDayAgeArray(String huh,String hu){
         if(hu==null)
             return "";
-        //System.out.println("hu = "+hu);
-        //System.out.println("huh = " + huh);
+        //////System.out.println("hu = "+hu);
+        //////System.out.println("huh = " + huh);
         String [] huhLength = huh==null ? new String[1] : huh.split(",");
         String [] huLength = hu.split(",");
         String result = "";
@@ -358,7 +357,7 @@ public class GiziZScoreChartActivity extends Activity{
                 result = result + "," + huhLength[i];
             }
         }
-        //System.out.println("result = "+result);
+        //////System.out.println("result = "+result);
         return result;
     }
 
@@ -375,6 +374,20 @@ public class GiziZScoreChartActivity extends Activity{
                          + "~";
         }
         return tempString.substring(1,tempString.length()-1).replaceAll("~~", ",");
+    }
+
+    private String[]split(String data){
+        if(!data.contains(":"))
+            return new String[]{"0","0"};
+        String []temp = data.split(",");
+        String []result = {"",""};
+        for(int i=0;i<temp.length;i++){
+            result[0]=result[0]+","+temp[i].split(":")[0];
+            result[1]=result[1]+","+temp[i].split(":")[1];
+        }
+        result[0]=result[0].substring(1,result[0].length());
+        result[1]=result[1].substring(1,result[1].length());
+        return result;
     }
 
     GrowthChartGenerator generator;

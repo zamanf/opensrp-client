@@ -370,7 +370,7 @@
     <string name="forminputerror">Please check the form for any error/missing input marked in Red box</string>
     <string name="okforminputerror">ok</string>
     <string name="child_profile">Child Details</string>
-    <string name="anthopometri">Antropometri</string>
+    <string name="anthopometri">Anthropometry</string>
     <string name="status">Nutrition Status</string>
     <string name="unique_id">Unique ID: </string>
     <string name="tanggal">Visit Date: </string>
@@ -416,16 +416,21 @@
     <string name="lastVitA">Last Vitamin A given:</string>
     <string name="lastAnthelmintic">Last Anthelmintic given:</string>
 
-    <string name="kunjunganTerakhir">Last Visit</string>
-    <string name="usiaKandungan">Geostational Age</string>
-    <string name="lila">Arm Circumference</string>
-    <string name="sistolik">Systolic</string>
+    <!-- Mother Register String -->
+    <string name="detail_ibu">Mother Details</string>
     <string name="diastolik">Diastolic</string>
-
+    <string name="form_name_visit">Monthly Visit</string>
+    <string name="gizi_ibu">MOTHER NUTRITION</string>
+    <string name="hasil_lab">Lab Test Result</string>
+    <string name="hb_level">HB Level</string>
+    <string name="kunjunganTerakhir">Last Visit</string>
+    <string name="lila">MUAC</string>
+    <string name="post_partum_care">Post-Partum Care</string>
+    <string name="sistolik">Systolic</string>
+    <string name="usiaKandungan">Gestational Age</string>
     <string name="vitamin_a_pnc_2">Vitamin A after 2 hrs: </string>
     <string name="vitamin_a_pnc_24">Vitamin A after 24 hrs: </string>
 
-    <string name="form_name_visit">Monthly Visit</string>
 
     <string name="years_unit">yrs</string>
     <string name="hours_unit">hrs</string>

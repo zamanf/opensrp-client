@@ -24,7 +24,7 @@ import org.ei.opensrp.gizi.R;
 import org.ei.opensrp.gizi.gizi.ChildDetailActivity;
 import org.ei.opensrp.gizi.gizi.FlurryFacade;
 import org.ei.opensrp.gizi.gizi.GiziGrowthChartActivity;
-import org.ei.opensrp.gizi.gizi.GiziServiceModeOption;
+import org.ei.opensrp.gizi.giziIbu.IbuServiceModeOption;
 import org.ei.opensrp.gizi.gizi.GiziSmartClientsProvider;
 import org.ei.opensrp.gizi.gizi.GiziSmartRegisterActivity;
 import org.ei.opensrp.gizi.gizi.KICommonObjectFilterOption;
@@ -89,7 +89,7 @@ public class GiziIbuSmartRegisterFragment extends SecuredNativeSmartRegisterCurs
 
             @Override
             public ServiceModeOption serviceMode() {
-                return new GiziServiceModeOption(clientsProvider());
+                return new IbuServiceModeOption(clientsProvider());
             }
 
             @Override
@@ -105,7 +105,7 @@ public class GiziIbuSmartRegisterFragment extends SecuredNativeSmartRegisterCurs
 
             @Override
             public String nameInShortFormForTitle() {
-                return Context.getInstance().getStringResource(R.string.gizi);
+                return Context.getInstance().getStringResource(R.string.gizi_ibu);
             }
         };
     }
@@ -216,7 +216,7 @@ public class GiziIbuSmartRegisterFragment extends SecuredNativeSmartRegisterCurs
             SmartRegisterQueryBuilder countqueryBUilder = new SmartRegisterQueryBuilder();
             countqueryBUilder.SelectInitiateMainTableCounts("ec_ibu");
             countqueryBUilder.customJoin("LEFT JOIN ec_kartu_ibu on ec_kartu_ibu.id = ec_ibu.id");
-            mainCondition = " ec_ibu.is_closed = 0 and pptest ='Positive' ";
+            mainCondition = "ec_ibu.is_closed = 0 and pptest ='Positive' ";
             joinTable = "";
             countSelect = countqueryBUilder.mainCondition(mainCondition);
             super.CountExecute();
@@ -259,33 +259,33 @@ public class GiziIbuSmartRegisterFragment extends SecuredNativeSmartRegisterCurs
     private class ClientActionHandler implements View.OnClickListener {
         public void onClick(View view) {
             switch (view.getId()) {
-                case R.id.profile_info_layout:
-                    CharSequence selections[] = new CharSequence[] {"Detail View", "Charts"};
-                    ChildDetailActivity.childclient = (CommonPersonObjectClient) view.getTag();
-                    GiziGrowthChartActivity.client = (CommonPersonObjectClient)view.getTag();
-                    final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setTitle("");
-                    builder.setItems(selections, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            // the user clicked on colors[which]
-                            if(which == 0)
-                            {
-                                Intent intent = new Intent(getActivity(),ChildDetailActivity.class);
-                                startActivity(intent);
-                                getActivity().finish();
-                            }
-                            else if(which == 1){
-                                Intent intent = new Intent(getActivity(),GiziGrowthChartActivity.class);
-                                startActivity(intent);
-                                getActivity().finish();
-                            }
-                        }
-                    });
-                    builder.show();
-                  //  FlurryFacade.logEvent("click_detail_picture_vaksinator");
-
-                    break;
+//                case R.id.profile_info_layout:
+//                    CharSequence selections[] = new CharSequence[] {"Detail View", "Charts"};
+//                    ChildDetailActivity.childclient = (CommonPersonObjectClient) view.getTag();
+//                    GiziGrowthChartActivity.client = (CommonPersonObjectClient)view.getTag();
+//                    final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//                    builder.setTitle("");
+//                    builder.setItems(selections, new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            // the user clicked on colors[which]
+//                            if(which == 0)
+//                            {
+//                                Intent intent = new Intent(getActivity(),ChildDetailActivity.class);
+//                                startActivity(intent);
+//                                getActivity().finish();
+//                            }
+//                            else if(which == 1){
+//                                Intent intent = new Intent(getActivity(),GiziGrowthChartActivity.class);
+//                                startActivity(intent);
+//                                getActivity().finish();
+//                            }
+//                        }
+//                    });
+//                    builder.show();
+//                  //  FlurryFacade.logEvent("click_detail_picture_vaksinator");
+//
+//                    break;
                 //untuk follow up button
                 case R.id.btn_edit:
                   //  FlurryFacade.logEvent("click_button_edit_vaksinator");

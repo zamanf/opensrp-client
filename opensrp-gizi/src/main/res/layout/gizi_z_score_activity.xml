@@ -24,7 +24,8 @@
                 android:text="Weight for Age"
                 android:id="@+id/wfaCheckBox"
                 android:paddingRight="50dp"
-                android:layout_gravity="right" />
+                android:layout_gravity="right"
+                android:textColor="#0020ff" />
 
             <CheckBox
                 android:layout_width="wrap_content"
@@ -32,13 +33,15 @@
                 android:text="Length for Age"
                 android:id="@+id/hfaCheckBox"
                 android:paddingRight="50dp"
-                android:layout_gravity="right" />
+                android:layout_gravity="right"
+                android:textColor="#ef00ff" />
 
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Weight for Length"
-                android:id="@+id/wflCheckBox" />
+                android:id="@+id/wflCheckBox"
+                android:textColor="#ff6f00" />
         </LinearLayout>
 
         <com.jjoe64.graphview.GraphView
