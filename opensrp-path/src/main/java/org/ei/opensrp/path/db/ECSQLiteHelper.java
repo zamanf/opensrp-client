@@ -26,6 +26,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import util.Utils;
+
 public class ECSQLiteHelper extends SQLiteOpenHelper {
 
 
@@ -114,18 +116,91 @@ public class ECSQLiteHelper extends SQLiteOpenHelper {
         getDatabase().execSQL(sql);
     }
 
-    public void insert(Client client) throws NoSuchFieldException, IllegalAccessException, IllegalArgumentException {
-        insert(Client.class, Table.client, client_column.values(), client);
-        for (Address a : client.getAddresses()) {
-            insert(Address.class, Table.address, address_column.values(), address_column.baseEntityId.name(), client.getBaseEntityId(), a);
+    public void insert(Client client) {
+        try {
+            insert(Client.class, Table.client, client_column.values(), client);
+            for (Address a : client.getAddresses()) {
+                insert(Address.class, Table.address, address_column.values(), address_column.baseEntityId.name(), client.getBaseEntityId(), a);
+            }
+        } catch (Exception e) {
+            Log.e(getClass().getName(), "", e);
         }
     }
 
-    public void insert(Event event) throws NoSuchFieldException, IllegalAccessException, IllegalArgumentException {
-        insert(Event.class, Table.event, event_column.values(), event);
-        for (Obs o : event.getObs()) {
-            insert(Obs.class, Table.obs, obs_column.values(), obs_column.formSubmissionId.name(), event.getFormSubmissionId(), o);
+    public void insert(Event event) {
+        try {
+            insert(Event.class, Table.event, event_column.values(), event);
+            for (Obs o : event.getObs()) {
+                insert(Obs.class, Table.obs, obs_column.values(), obs_column.formSubmissionId.name(), event.getFormSubmissionId(), o);
+            }
+        } catch (Exception e) {
+            Log.e(getClass().getName(), "", e);
         }
+    }
+
+    public long batchInsertClients(JSONArray array) {
+        if (array == null || array.length() == 0) {
+            return 0l;
+        }
+
+        long lastServerVersion = 0l;
+
+        getDatabase().beginTransaction();
+
+        try {
+
+            for (int i = 0; i < array.length(); i++) {
+                JSONObject jo = array.getJSONObject(i);
+                Client c = Utils.getLongDateAwareGson().fromJson(jo.toString(), Client.class);
+                insert(c);
+                if (c.getServerVersion() > 01) {
+                    lastServerVersion = c.getServerVersion();
+                }
+
+            }
+
+            getDatabase().setTransactionSuccessful();
+
+        } catch (Exception e) {
+            Log.e(getClass().getName(), "", e);
+            e.printStackTrace();
+            lastServerVersion = 0l;
+        } finally {
+            getDatabase().endTransaction();
+        }
+        return lastServerVersion;
+    }
+
+    public long batchInsertEvents(JSONArray array) throws NoSuchFieldException, IllegalAccessException, IllegalArgumentException {
+        if (array == null || array.length() == 0) {
+            return 0l;
+        }
+
+        long lastServerVersion = 0l;
+
+        getDatabase().beginTransaction();
+
+        try {
+
+            for (int i = 0; i < array.length(); i++) {
+                JSONObject jo = array.getJSONObject(i);
+                Event e = Utils.getLongDateAwareGson().fromJson(jo.toString(), Event.class);
+                insert(e);
+                if (e.getServerVersion() > 01) {
+                    lastServerVersion = e.getServerVersion();
+                }
+            }
+
+            getDatabase().setTransactionSuccessful();
+
+        } catch (Exception e) {
+            Log.e(getClass().getName(), "", e);
+            lastServerVersion = 0l;
+
+        } finally {
+            getDatabase().endTransaction();
+        }
+        return lastServerVersion;
     }
 
     public List<JSONObject> getEvents(long serverVersion) throws JSONException, ParseException {
@@ -163,7 +238,7 @@ public class ECSQLiteHelper extends SQLiteOpenHelper {
                 Log.i(getClass().getName(), "Event Retrieved: " + ev.toString());
                 list.add(ev);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             Log.e(getClass().getName(), "Exception", e);
         }
         return list;
@@ -196,7 +271,7 @@ public class ECSQLiteHelper extends SQLiteOpenHelper {
 
                 return cl;
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             Log.e(getClass().getName(), "Exception", e);
         }
         return null;

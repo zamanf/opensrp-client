@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.ei.opensrp.AllConstants;
 import org.ei.opensrp.domain.DownloadStatus;
 import org.ei.opensrp.domain.FetchStatus;
 import org.ei.opensrp.repository.AllSharedPreferences;
@@ -98,8 +99,8 @@ public class PathUpdateActionsTask {
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
             AllSharedPreferences allSharedPreferences = new AllSharedPreferences(preferences);
 
-            ecUpdater.fetchAllEvents("providerId", allSharedPreferences.fetchRegisteredANM());
-            ecUpdater.fetchAllClients();
+            ecUpdater.fetchAllClients(AllConstants.SyncFilters.FILTER_PROVIDER, allSharedPreferences.fetchRegisteredANM());
+            ecUpdater.fetchAllEvents(AllConstants.SyncFilters.FILTER_PROVIDER, allSharedPreferences.fetchRegisteredANM());
             ClientProcessor.getInstance(context).processClient(ecUpdater.allEvents());
             return FetchStatus.fetched;
         } catch (Exception e) {
