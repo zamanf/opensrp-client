@@ -4,7 +4,6 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     app:ms_multiline="false"
-    app:ms_typeface="font/Roboto-Regular.ttf"
     app:ms_arrowColor="?colorPrimaryDark"
     app:ms_arrowSize="16dp"
     app:ms_alignLabels="true"

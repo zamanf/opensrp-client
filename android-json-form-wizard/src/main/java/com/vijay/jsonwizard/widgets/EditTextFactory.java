@@ -132,6 +132,8 @@ public class EditTextFactory implements FormWidgetFactory {
         if (!TextUtils.isEmpty(editType)) {
             if (editType.equals("number")) {
                 editText.setRawInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            } else if (editType.equals("name")) {
+                editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
             }
         }
 

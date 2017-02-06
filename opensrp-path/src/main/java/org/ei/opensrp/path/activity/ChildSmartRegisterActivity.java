@@ -45,6 +45,7 @@ public class ChildSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
     @Bind(R.id.view_pager)
     OpenSRPViewPager mPager;
     private FragmentPagerAdapter mPagerAdapter;
+    private static final int REQUEST_CODE_GET_JSON = 3432;
     private int currentPage;
 
     private String[] formNames = new String[]{};
@@ -159,12 +160,21 @@ public class ChildSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
             if(form != null) {
                 Intent intent = new Intent(getApplicationContext(), JsonFormActivity.class);
                 intent.putExtra("json", form.toString());
-                startActivityForResult(intent, 10);
+                startActivityForResult(intent, REQUEST_CODE_GET_JSON);
             }
         }catch (Exception e){
             e.printStackTrace();
         }
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE_GET_JSON) {
+            if(resultCode == RESULT_OK) {
+                Log.d("JSONResult", data.getStringExtra("json"));
+            }
+        }
     }
 
     @Override
