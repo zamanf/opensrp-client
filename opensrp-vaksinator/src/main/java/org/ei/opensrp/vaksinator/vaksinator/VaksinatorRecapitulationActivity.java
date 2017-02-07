@@ -1,5 +1,6 @@
 package org.ei.opensrp.vaksinator.vaksinator;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -18,23 +19,20 @@ import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.vaksinator.R;
 import org.ei.opensrp.view.activity.ReportsActivity;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
+import org.ei.opensrp.view.contract.SmartRegisterClient;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
  * Created by Iq on 09/06/16, modified by Marwan on 14/07/16
  */
-public class VaksinatorRecapitulationActivity extends SecuredNativeSmartRegisterActivity {
-
-    //image retrieving
-    private static final String TAG = "ImageGridFragment";
-    private static final String IMAGE_CACHE_DIR = "thumbs";
-    //  private static KmsCalc  kmsCalc;
+public class VaksinatorRecapitulationActivity extends Activity{
     Context context;
     //image retrieving
-
 
     public static CommonPersonObjectClient controller;
     @Override
@@ -49,32 +47,30 @@ public class VaksinatorRecapitulationActivity extends SecuredNativeSmartRegister
         SmartRegisterQueryBuilder queryBuilder = new SmartRegisterQueryBuilder();
         queryBuilder.SelectInitiateMainTableCounts("ec_anak");
 
-////        String tablename, String searchJoinTable, String mainCondition, String searchFilter, String sort, int limit, int offset
+//        String tablename, String searchJoinTable, String mainCondition, String searchFilter, String sort, int limit, int offset
 //        String sql = queryBuilder.searchQueryFts("ec_anak", "", " is_closed = 0 ", " is_closed = 0 ");
 //        List<String> ids = context().commonrepository("ec_anak").findSearchIds(sql);
 //        String squery = queryBuilder.toStringFts(ids, "ec_anak" + "." + CommonRepository.ID_COLUMN);
 //        squery = queryBuilder.Endquery(squery);
 
+        final org.ei.opensrp.commonregistry.CommonPersonObjectClients clients = new org.ei.opensrp.commonregistry.CommonPersonObjectClients();
         String query = "SELECT * FROM ec_anak where ec_anak.is_closed = 0";
         System.out.println("search query = " + query);
-        Cursor cursor = context().commonrepository("ec_anak").RawCustomQueryForAdapter(query);
+        Cursor cursor = context.commonrepository("ec_anak").RawCustomQueryForAdapter(query);
         cursor.moveToFirst();
-
-        System.out.println("ec anak size = " + cursor.getCount());
-        System.out.println("ec anak column size = "+cursor.getColumnCount());
-
-        //System.out.println(context().commonrepository("ec_anak").RawCustomQueryForAdapter("SHOW DATABASES").getString(0));
-        String [][] data = new String[cursor.getCount()][cursor.getColumnCount()];
+        Map <String,String> details;
         cursor.moveToFirst();
-        for(int i=0;i<cursor.getCount();i++){
+        for(int i=0;i<cursor.getCount();i++) {
             cursor.moveToPosition(i);
-            for(int j=0;j<cursor.getColumnCount();j++){
-                data[i][j]=cursor.getString(j);
-            }
-        }
+            String baseEntityId = cursor.getString(cursor.getColumnIndex("base_entity_id"));
+            System.out.println("base entity id: "+baseEntityId);
+            details = context.detailsRepository().getAllDetailsForClient(baseEntityId);
+            System.out.println(details);
 
-        int a=0;
-        int b = a+22;
+            clients.add(new CommonPersonObjectClient(baseEntityId,details,cursor.getString(cursor.getColumnIndex("namaBayi"))));
+        }
+        cursor.close();
+
 //        for(int i=1;i<childobject.size();i++){
 //            CommonPersonObject object = childRepository.findByCaseID(childobject.get(i).getCaseId());
 //            if(object.getDetails() != null)
@@ -91,41 +87,41 @@ public class VaksinatorRecapitulationActivity extends SecuredNativeSmartRegister
 //                org.ei.opensrp.commonregistry.CommonPersonObjectController.ByColumnAndByDetails.byDetails);
 //
 //        final org.ei.opensrp.commonregistry.CommonPersonObjectClients clients = data.getClients();
-//        final LocalVariable var = new LocalVariable();
-//
-//        var.setDefaultSpinnerDate();
-//        updateView(var, clients, var.monthSpinner.getSelectedItemPosition() + 1, Integer.parseInt(var.yearSpinner.getSelectedItem().toString()));
-//        var.setSubtitle(((org.ei.opensrp.commonregistry.CommonPersonObjectClient) clients.get(0)).getDetails().get("desa"));
-//
-//        var.monthSpinner.setOnItemSelectedListener(
-//                new AdapterView.OnItemSelectedListener() {
-//                    @Override
-//                    public void onItemSelected(AdapterView <?> parentView, View selectedItemView, int position, long id) {
-//                        updateView(var,clients,var.monthSpinner.getSelectedItemPosition()+1,Integer.parseInt(var.yearSpinner.getSelectedItem().toString()));
-//                        var.setSubtitle(((org.ei.opensrp.commonregistry.CommonPersonObjectClient) clients.get(0)).getDetails().get("desa"));
-//                    }
-//
-//                    @Override
-//                    public void onNothingSelected(AdapterView<?> parentView) {
-//
-//                    }
-//                }
-//        );
-//
-//        var.yearSpinner.setOnItemSelectedListener(
-//                new AdapterView.OnItemSelectedListener() {
-//                    @Override
-//                    public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-//                        updateView(var,clients,var.monthSpinner.getSelectedItemPosition()+1,Integer.parseInt(var.yearSpinner.getSelectedItem().toString()));
-//                        var.setSubtitle(((org.ei.opensrp.commonregistry.CommonPersonObjectClient)clients.get(0)).getDetails().get("desa"));
-//                    }
-//
-//                    @Override
-//                    public void onNothingSelected(AdapterView<?> parentView) {
-//
-//                    }
-//                }
-//        );
+        final LocalVariable var = new LocalVariable();
+
+        var.setDefaultSpinnerDate();
+        updateView(var, clients, var.monthSpinner.getSelectedItemPosition() + 1, Integer.parseInt(var.yearSpinner.getSelectedItem().toString()));
+        var.setSubtitle(((org.ei.opensrp.commonregistry.CommonPersonObjectClient) clients.get(0)).getDetails().get("desa"));
+
+        var.monthSpinner.setOnItemSelectedListener(
+                new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView <?> parentView, View selectedItemView, int position, long id) {
+                        updateView(var,clients,var.monthSpinner.getSelectedItemPosition()+1,Integer.parseInt(var.yearSpinner.getSelectedItem().toString()));
+                        var.setSubtitle(((org.ei.opensrp.commonregistry.CommonPersonObjectClient) clients.get(0)).getDetails().get("desa"));
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parentView) {
+
+                    }
+                }
+        );
+
+        var.yearSpinner.setOnItemSelectedListener(
+                new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                        updateView(var,clients,var.monthSpinner.getSelectedItemPosition()+1,Integer.parseInt(var.yearSpinner.getSelectedItem().toString()));
+                        var.setSubtitle(((org.ei.opensrp.commonregistry.CommonPersonObjectClient)clients.get(0)).getDetails().get("desa"));
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parentView) {
+
+                    }
+                }
+        );
 //
         ImageButton backButton = (ImageButton) findViewById(R.id.btn_back_to_home);
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -177,6 +173,8 @@ public class VaksinatorRecapitulationActivity extends SecuredNativeSmartRegister
     }
 
     private int duration(String dateFrom,String dateTo){
+        if (dateFrom==null || dateTo==null)
+            return -1;
         return (((Integer.parseInt(dateTo.substring(0,4)) - Integer.parseInt(dateFrom.substring(0,4)))*360)
                 +((Integer.parseInt(dateTo.substring(5,7)) - Integer.parseInt(dateFrom.substring(5,7)))*30)
                 +(Integer.parseInt(dateTo.substring(8,10)) - Integer.parseInt(dateFrom.substring(8,10)))
@@ -204,11 +202,11 @@ public class VaksinatorRecapitulationActivity extends SecuredNativeSmartRegister
         var.hbOver7.setText(Integer.toString(recapitulation(clients,"hb0",keyword,"over 7")));
         var.bcg.setText(Integer.toString(recapitulation(clients,"bcg",keyword)));
         var.pol1.setText(Integer.toString(recapitulation(clients,"polio1",keyword)));
-        var.hb1.setText(Integer.toString(recapitulation(clients,"dpt_hb1",keyword)));
+        var.hb1.setText(Integer.toString(recapitulation(clients,"dptHb1",keyword)));
         var.pol2.setText(Integer.toString(recapitulation(clients, "polio2", keyword)+counter));
-        var.hb2.setText(Integer.toString(recapitulation(clients,"dpt_hb2",keyword)));
+        var.hb2.setText(Integer.toString(recapitulation(clients,"dptHb2",keyword)));
         var.pol3.setText(Integer.toString(recapitulation(clients,"polio3",keyword)));
-        var.hb3.setText(Integer.toString(recapitulation(clients,"dpt_hb3",keyword)));
+        var.hb3.setText(Integer.toString(recapitulation(clients,"dptHb3",keyword)));
         var.pol4.setText(Integer.toString(recapitulation(clients,"polio4",keyword)));
         var.ipv.setText(Integer.toString(recapitulation(clients,"ipv",keyword)));
         var.measles.setText(Integer.toString(recapitulation(clients,"imunisasi_campak",keyword)));
@@ -220,31 +218,6 @@ public class VaksinatorRecapitulationActivity extends SecuredNativeSmartRegister
         if(data!=null)
             return data.length()>6;
         return false;
-    }
-
-    @Override
-    protected DefaultOptionsProvider getDefaultOptionsProvider() {
-        return null;
-    }
-
-    @Override
-    protected NavBarOptionsProvider getNavBarOptionsProvider() {
-        return null;
-    }
-
-    @Override
-    protected SmartRegisterClientsProvider clientsProvider() {
-        return null;
-    }
-
-    @Override
-    protected void onInitialization() {
-
-    }
-
-    @Override
-    public void startRegistration() {
-
     }
 
     private class LocalVariable{
