@@ -236,7 +236,7 @@ public class NativeKIPNCSmartRegisterFragment extends SecuredNativeSmartRegister
             SmartRegisterQueryBuilder countqueryBUilder = new SmartRegisterQueryBuilder();
             countqueryBUilder.SelectInitiateMainTableCounts("ec_pnc");
             countqueryBUilder.customJoin("LEFT JOIN ec_kartu_ibu on ec_kartu_ibu.id = ec_pnc.id");
-            mainCondition = " is_closed = 0 and keadaanIbu ='hidup' ";
+            mainCondition = "is_closed = 0 and keadaanIbu ='hidup' ";
             joinTable = "";
             countSelect = countqueryBUilder.mainCondition(mainCondition);
             super.CountExecute();
@@ -244,7 +244,7 @@ public class NativeKIPNCSmartRegisterFragment extends SecuredNativeSmartRegister
             SmartRegisterQueryBuilder queryBUilder = new SmartRegisterQueryBuilder();
             queryBUilder.SelectInitiateMainTable("ec_pnc", new String[]{"ec_pnc.relationalid", "ec_pnc.details",  "ec_kartu_ibu.namalengkap","ec_kartu_ibu.namaSuami"});
             queryBUilder.customJoin("LEFT JOIN ec_kartu_ibu on ec_kartu_ibu.id = ec_pnc.id");
-            mainSelect = queryBUilder.mainCondition(mainCondition);
+            mainSelect = queryBUilder.mainCondition(" ec_pnc.is_closed = 0 and keadaanIbu ='hidup'");
             Sortqueries = KiSortByNameAZ();
 
             currentlimit = 20;
@@ -364,7 +364,7 @@ public class NativeKIPNCSmartRegisterFragment extends SecuredNativeSmartRegister
 
                 filters = cs.toString();
                 joinTable = "";
-                mainCondition = " is_closed = 0 and keadaanIbu ='hidup' ";
+                mainCondition = " ec_pnc.is_closed = 0 and keadaanIbu ='hidup' ";
 
                 getSearchCancelView().setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
                 CountExecute();
@@ -392,7 +392,7 @@ public class NativeKIPNCSmartRegisterFragment extends SecuredNativeSmartRegister
 
                 filters = cs.toString();
                 joinTable = "";
-                mainCondition = " is_closed = 0 and keadaanIbu ='hidup' ";
+                mainCondition = " ec_pnc.is_closed = 0 and keadaanIbu ='hidup' ";
 
                 getSearchCancelView().setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
                 filterandSortExecute();
@@ -414,7 +414,7 @@ public class NativeKIPNCSmartRegisterFragment extends SecuredNativeSmartRegister
             }else{
                 StringUtil.humanize(entry.getValue().getLabel());
                 String name = StringUtil.humanize(entry.getValue().getLabel());
-                dialogOptionslist.add(new KICommonObjectFilterOption(name,"dusun", name));
+                dialogOptionslist.add(new KICommonObjectFilterOption(name, "location_name", name, "ec_kartu_ibu"));
 
             }
         }

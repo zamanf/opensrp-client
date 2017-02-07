@@ -212,7 +212,7 @@ public class NativeKBSmartRegisterFragment extends SecuredNativeSmartRegisterCur
             setTablename("ec_kartu_ibu");
             SmartRegisterQueryBuilder countqueryBUilder = new SmartRegisterQueryBuilder();
             countqueryBUilder.SelectInitiateMainTableCounts("ec_kartu_ibu");
-            countqueryBUilder.customJoin("LEFT JOIN ec_ibu on ec_kartu_ibu.id = ec_ibu.base_entity_id");
+         //   countqueryBUilder.customJoin("LEFT JOIN ec_ibu on ec_kartu_ibu.id = ec_ibu.base_entity_id");
             mainCondition = " is_closed = 0 and jenisKontrasepsi != '0' ";
             joinTable = "";
             countSelect = countqueryBUilder.mainCondition(mainCondition);
@@ -220,7 +220,7 @@ public class NativeKBSmartRegisterFragment extends SecuredNativeSmartRegisterCur
 
             SmartRegisterQueryBuilder queryBUilder = new SmartRegisterQueryBuilder();
             queryBUilder.SelectInitiateMainTable("ec_kartu_ibu", new String[]{"ec_kartu_ibu.relationalid","ec_kartu_ibu.is_closed", "ec_kartu_ibu.details", "ec_kartu_ibu.isOutOfArea", "namalengkap", "umur", "namaSuami"});
-            queryBUilder.customJoin("LEFT JOIN ec_ibu on ec_kartu_ibu.id = ec_ibu.base_entity_id");
+        //    queryBUilder.customJoin("LEFT JOIN ec_ibu on ec_kartu_ibu.id = ec_ibu.base_entity_id");
             mainSelect = queryBUilder.mainCondition(mainCondition);
             Sortqueries = KiSortByNameAZ();
 
@@ -342,7 +342,7 @@ public class NativeKBSmartRegisterFragment extends SecuredNativeSmartRegisterCur
 
                 filters = cs.toString();
                 joinTable = "";
-                mainCondition = " is_closed = 0 and jenisKontrasepsi != '0' ";
+                mainCondition = " ec_kartu_ibu.is_closed = 0 and jenisKontrasepsi != '0' ";
 
 
                 getSearchCancelView().setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
@@ -369,7 +369,7 @@ public class NativeKBSmartRegisterFragment extends SecuredNativeSmartRegisterCur
 
                 filters = cs.toString();
                 joinTable = "";
-                mainCondition = " is_closed = 0 and jenisKontrasepsi != '0' ";
+                mainCondition = " ec_kartu_ibu.is_closed = 0 and jenisKontrasepsi != '0' ";
 
                 getSearchCancelView().setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
                 filterandSortExecute();
@@ -391,11 +391,10 @@ public class NativeKBSmartRegisterFragment extends SecuredNativeSmartRegisterCur
             }else{
                 StringUtil.humanize(entry.getValue().getLabel());
                 String name = StringUtil.humanize(entry.getValue().getLabel());
-                dialogOptionslist.add(new KICommonObjectFilterOption(name,"dusun", name));
+                dialogOptionslist.add(new KICommonObjectFilterOption(name, "location_name", name, "ec_kartu_ibu"));
 
             }
         }
     }
-
 
 }

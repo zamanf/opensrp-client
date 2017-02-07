@@ -259,7 +259,7 @@ public class NativeKIANCSmartRegisterFragment extends SecuredNativeSmartRegister
             SmartRegisterQueryBuilder queryBUilder = new SmartRegisterQueryBuilder();
             queryBUilder.SelectInitiateMainTable("ec_ibu", new String[]{"ec_ibu.relationalid","ec_ibu.is_closed", "ec_ibu.details",  "ec_kartu_ibu.namalengkap","ec_kartu_ibu.namaSuami"});
             queryBUilder.customJoin("LEFT JOIN ec_kartu_ibu on ec_kartu_ibu.id = ec_ibu.id");
-            mainSelect = queryBUilder.mainCondition(mainCondition);
+            mainSelect = queryBUilder.mainCondition(" ec_ibu.is_closed = 0 and pptest ='Positive' ");
             Sortqueries = KiSortByNameAZ();
 
             currentlimit = 20;
@@ -379,7 +379,7 @@ public class NativeKIANCSmartRegisterFragment extends SecuredNativeSmartRegister
 
                 filters = cs.toString();
                 joinTable = "";
-                mainCondition = " is_closed = 0 and pptest ='Positive' ";
+                mainCondition = " ec_ibu.is_closed = 0 and pptest ='Positive' ";
 
 
                 getSearchCancelView().setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
@@ -407,7 +407,7 @@ public class NativeKIANCSmartRegisterFragment extends SecuredNativeSmartRegister
 
                 filters = cs.toString();
                 joinTable = "";
-                mainCondition = " is_closed = 0 and pptest ='Positive' ";
+                mainCondition = " ec_ibu.is_closed = 0 and pptest ='Positive' ";
 
                 getSearchCancelView().setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
                 filterandSortExecute();
@@ -429,7 +429,7 @@ public class NativeKIANCSmartRegisterFragment extends SecuredNativeSmartRegister
             }else{
                 StringUtil.humanize(entry.getValue().getLabel());
                 String name = StringUtil.humanize(entry.getValue().getLabel());
-                dialogOptionslist.add(new KICommonObjectFilterOption(name,"dusun", name));
+                dialogOptionslist.add(new KICommonObjectFilterOption(name, "location_name", name, "ec_kartu_ibu"));
 
             }
         }
