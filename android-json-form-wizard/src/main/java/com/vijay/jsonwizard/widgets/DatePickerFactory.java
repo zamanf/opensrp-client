@@ -70,6 +70,10 @@ public class DatePickerFactory implements FormWidgetFactory {
 
             if (!TextUtils.isEmpty(jsonObject.optString("value"))) {
                 editText.setText(jsonObject.optString("value"));
+                if (jsonObject.has("read_only")) {
+                    boolean readOnly = jsonObject.getBoolean("read_only");
+                    editText.setEnabled(!readOnly);
+                }
             } else if(jsonObject.has("default")) {
                 editText.setText(DATE_FORMAT.format(getDate(jsonObject.getString("default")).getTime()));
             }

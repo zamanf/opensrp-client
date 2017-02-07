@@ -61,6 +61,9 @@ public class SpinnerFactory implements FormWidgetFactory {
         int indexToSelect = -1;
         if (!TextUtils.isEmpty(jsonObject.optString("value"))) {
             valueToSelect = jsonObject.optString("value");
+            if (jsonObject.has("read_only")) {
+                spinner.setEnabled(!jsonObject.getBoolean("read_only"));
+            }
         }
 
         JSONArray valuesJson = jsonObject.optJSONArray("values");

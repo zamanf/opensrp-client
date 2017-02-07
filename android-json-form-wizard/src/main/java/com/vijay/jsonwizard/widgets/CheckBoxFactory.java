@@ -34,6 +34,12 @@ public class CheckBoxFactory implements FormWidgetFactory {
         views.add(getTextViewWith(context, 16, jsonObject.getString("label"), jsonObject.getString("key"),
                 jsonObject.getString("type"), openMrsEntityParent, openMrsEntity, openMrsEntityId,
                 getLayoutParams(MATCH_PARENT, WRAP_CONTENT, 0, 0, 0, 0), FONT_BOLD_PATH));
+
+        boolean readOnly = false;
+        if (jsonObject.has("read_only")) {
+            readOnly = jsonObject.getBoolean("read_only");
+        }
+
         JSONArray options = jsonObject.getJSONArray(JsonFormConstants.OPTIONS_FIELD_NAME);
         for (int i = 0; i < options.length(); i++) {
             JSONObject item = options.getJSONObject(i);
@@ -51,6 +57,7 @@ public class CheckBoxFactory implements FormWidgetFactory {
             if (!TextUtils.isEmpty(item.optString("value"))) {
                 checkBox.setChecked(Boolean.valueOf(item.optString("value")));
             }
+            checkBox.setEnabled(!readOnly);
             if (i == options.length() - 1) {
                 checkBox.setLayoutParams(getLayoutParams(MATCH_PARENT, WRAP_CONTENT, 0, 0, 0, (int) context
                         .getResources().getDimension(R.dimen.extra_bottom_margin)));

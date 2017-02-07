@@ -19,6 +19,8 @@
         "openmrs_entity_id": "ZEIR_ID",
         "type": "edit_text",
         "hint": "ZEIR Child ID",
+        "read_only": true,
+        "value": "0",
         "v_numeric": {
           "value": "true",
           "err": "Please enter a valid ID"

@@ -55,12 +55,17 @@ public class ImagePickerFactory implements FormWidgetFactory {
         imageView.setLayoutParams(getLayoutParams(MATCH_PARENT, dpToPixels(context, 200), 0, 0, 0, (int) context
                 .getResources().getDimension(R.dimen.default_bottom_margin)));
         String imagePath = jsonObject.optString("value");
+        Button uploadButton = new Button(context);
         if (!TextUtils.isEmpty(imagePath)) {
             imageView.setTag(R.id.imagePath, imagePath);
             imageView.setImageBitmap(ImageUtils.loadBitmapFromFile(imagePath, ImageUtils.getDeviceWidth(context), dpToPixels(context, 200)));
+            if (jsonObject.has("read_only")) {
+                boolean readOnly = jsonObject.getBoolean("read_only");
+                uploadButton.setEnabled(!readOnly);
+            }
         }
         views.add(imageView);
-        Button uploadButton = new Button(context);
+
         uploadButton.setText(jsonObject.getString("uploadButtonText"));
         uploadButton.setLayoutParams(getLayoutParams(WRAP_CONTENT, WRAP_CONTENT, 0, 0, 0, (int) context
                 .getResources().getDimension(R.dimen.default_bottom_margin)));
