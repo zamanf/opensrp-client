@@ -118,6 +118,10 @@ public class ECSQLiteHelper extends SQLiteOpenHelper {
 
     public void insert(Client client) {
         try {
+            JSONObject jsonClient = getClient(client.getBaseEntityId());
+            if (jsonClient != null) {
+                return;
+            }
             insert(Client.class, Table.client, client_column.values(), client);
             for (Address a : client.getAddresses()) {
                 insert(Address.class, Table.address, address_column.values(), address_column.baseEntityId.name(), client.getBaseEntityId(), a);
@@ -171,12 +175,12 @@ public class ECSQLiteHelper extends SQLiteOpenHelper {
         return lastServerVersion;
     }
 
-    public long batchInsertEvents(JSONArray array) throws NoSuchFieldException, IllegalAccessException, IllegalArgumentException {
+    public long batchInsertEvents(JSONArray array, long serverVersion) {
         if (array == null || array.length() == 0) {
             return 0l;
         }
 
-        long lastServerVersion = 0l;
+        long lastServerVersion = serverVersion;
 
         getDatabase().beginTransaction();
 
@@ -195,7 +199,7 @@ public class ECSQLiteHelper extends SQLiteOpenHelper {
 
         } catch (Exception e) {
             Log.e(getClass().getName(), "", e);
-            lastServerVersion = 0l;
+            lastServerVersion = serverVersion;
 
         } finally {
             getDatabase().endTransaction();
@@ -203,11 +207,12 @@ public class ECSQLiteHelper extends SQLiteOpenHelper {
         return lastServerVersion;
     }
 
-    public List<JSONObject> getEvents(long serverVersion) throws JSONException, ParseException {
+    public List<JSONObject> getEvents(long startServerVersion, long lastServerVersion) throws JSONException, ParseException {
         List<JSONObject> list = new ArrayList<JSONObject>();
         try {
             Cursor cursor = getDatabase().rawQuery("SELECT * FROM " + Table.event.name() +
-                    " WHERE " + event_column.serverVersion.name() + " >= " + serverVersion +
+                    " WHERE " + event_column.serverVersion.name() + " > " + startServerVersion +
+                    " AND " + event_column.serverVersion.name() + " <= " + lastServerVersion +
                     " ORDER BY " + event_column.serverVersion.name()
                     , null);
             while (cursor.moveToNext()) {

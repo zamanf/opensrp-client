@@ -24,12 +24,9 @@ import java.util.List;
 import util.Utils;
 
 public class ECSyncUpdater {
-    public static final String CLIENT_SEARCH_URL = "/rest/client";
-    public static final String EVENT_SEARCH_URL = "/rest/event";
     public static final String SEARCH_URL = "/rest/event/sync";
 
-    public static final String LAST_SYNC_DATETIME_CLIENT = "LAST_SYNC_DATETIME_CLIENT";
-    public static final String LAST_SYNC_DATETIME_EVENT = "LAST_SYNC_DATETIME_EVENT";
+    public static final String LAST_SYNC_TIMESTAMP = "LAST_SYNC_TIMESTAMP";
 
     private ECSQLiteHelper db;
     private Context context;
@@ -48,7 +45,8 @@ public class ECSyncUpdater {
         db = new ECSQLiteHelper(context);
     }
 
-    private JSONArray fetchAsJson(String lastSyncProperty, String serviceUrl, String filter, String filterValue) {
+
+    private JSONObject fetchAsJsonObject(String filter, String filterValue) {
         try {
             HTTPAgent httpAgent = org.ei.opensrp.Context.getInstance().getHttpAgent();
             String baseUrl = org.ei.opensrp.Context.getInstance().configuration().dristhiBaseURL();
@@ -56,44 +54,7 @@ public class ECSyncUpdater {
                 baseUrl = baseUrl.substring(0, baseUrl.lastIndexOf("/"));
             }
 
-            Long lastSyncDatetime = Long.parseLong(Utils.getPreference(context, lastSyncProperty, "0"));
-            Log.i(ECSyncUpdater.class.getName(), "LAST SYNC DT :" + new DateTime(lastSyncDatetime));
-
-            Query tq = new Query(FilterType.AND).between("lastEdited", new DateTime(lastSyncDatetime), DateTime.now());
-            if (StringUtils.isNotBlank(filter) && StringUtils.isNotBlank(filterValue)) {
-                tq.eq(filter, filterValue);
-            }
-
-            String url = baseUrl + serviceUrl + "?q=" + URLEncoder.encode(tq.query(), "UTF-8");
-            Log.i(ECSyncUpdater.class.getName(), "URL: " + url);
-
-            if (httpAgent == null) {
-                throw new Exception(serviceUrl + " http agent is null");
-            }
-
-            Response resp = httpAgent.fetch(url);
-            if (resp.isFailure()) {
-                throw new Exception(serviceUrl + " not returned data");
-            }
-
-            JSONArray jarr = new JSONArray((String) resp.payload());
-            Log.i(ECSyncUpdater.class.getName(), "FETCHED" + jarr.toString());
-            return jarr;
-        } catch (Exception e) {
-            Log.e(getClass().getName(), "", e);
-            return new JSONArray();
-        }
-    }
-
-    private JSONArray fetchAsJson2(String lastSyncProperty, String filter, String filterValue) {
-        try {
-            HTTPAgent httpAgent = org.ei.opensrp.Context.getInstance().getHttpAgent();
-            String baseUrl = org.ei.opensrp.Context.getInstance().configuration().dristhiBaseURL();
-            if (baseUrl.endsWith("/")) {
-                baseUrl = baseUrl.substring(0, baseUrl.lastIndexOf("/"));
-            }
-
-            Long lastSyncDatetime = Long.parseLong(Utils.getPreference(context, lastSyncProperty, "0"));
+            Long lastSyncDatetime = getLastSyncTimeStamp();
             Log.i(ECSyncUpdater.class.getName(), "LAST SYNC DT :" + new DateTime(lastSyncDatetime));
 
             String url = baseUrl + SEARCH_URL + "?" + filter + "=" + filterValue + "&serverVersion=" + lastSyncDatetime;
@@ -108,55 +69,62 @@ public class ECSyncUpdater {
                 throw new Exception(SEARCH_URL + " not returned data");
             }
 
-            JSONArray jarr = new JSONArray((String) resp.payload());
-            Log.i(ECSyncUpdater.class.getName(), "FETCHED" + jarr.toString());
-            return jarr;
+            JSONObject jsonObject = new JSONObject((String) resp.payload());
+            Log.i(ECSyncUpdater.class.getName(), "FETCHED" + jsonObject.toString());
+            return jsonObject;
         } catch (Exception e) {
             Log.e(getClass().getName(), "", e);
-            return new JSONArray();
+            return new JSONObject();
         }
     }
 
-    public void fetchAllClients(String filterName, String filterValue) {
+    public int fetchAllClientsAndEvents(String filterName, String filterValue) {
         try {
 
-            JSONArray jarr = fetchAsJson2(LAST_SYNC_DATETIME_CLIENT, filterName, filterValue);
+            JSONObject jsonObject = fetchAsJsonObject(filterName, filterValue);
 
-            if (jarr.length() > 0) {
-                long lastSyncDateTime = db.batchInsertClients(jarr);
-                if (lastSyncDateTime > 0l) {
-                    Utils.writePreference(context, LAST_SYNC_DATETIME_CLIENT, lastSyncDateTime + "");
-                    fetchAllClients(filterName, filterValue);
-                }
+            int eventsCount = jsonObject.has("no_of_events") ? jsonObject.getInt("no_of_events"): 0;
+            if(eventsCount == 0 ){
+                return eventsCount;
             }
+
+            JSONArray events = jsonObject.has("events") ? jsonObject.getJSONArray("events") : new JSONArray();
+            JSONArray clients = jsonObject.has("clients") ? jsonObject.getJSONArray("clients") : new JSONArray();
+
+            long lastSyncTimeStamp = batchSave(events, clients);
+            if (lastSyncTimeStamp > 0l) {
+               updateLastSyncTimeStamp(lastSyncTimeStamp);
+            }
+
+            return eventsCount;
+
         } catch (Exception e) {
             Log.e(getClass().getName(), "Exception", e);
+            return 0;
         }
     }
 
-    public void fetchAllEvents(String filterName, String filterValue) {
+    public List<JSONObject> allEvents(long startSyncTimeStamp, long lastSyncTimeStamp) {
         try {
-            JSONArray jarr = fetchAsJson2(LAST_SYNC_DATETIME_EVENT, filterName, filterValue);
-
-            if (jarr.length() > 0) {
-                long lastSyncDateTime = db.batchInsertEvents(jarr);
-                if (lastSyncDateTime > 0l) {
-                    Utils.writePreference(context, LAST_SYNC_DATETIME_EVENT, lastSyncDateTime + "");
-                    fetchAllEvents(filterName, filterValue);
-                }
-
-            }
-        } catch (Exception e) {
-            Log.e(getClass().getName(), "Exception", e);
-        }
-    }
-
-    public List<JSONObject> allEvents() {
-        try {
-            return db.getEvents(0);
+            return db.getEvents(startSyncTimeStamp, lastSyncTimeStamp);
         } catch (Exception e) {
             Log.e(getClass().getName(), "Exception", e);
         }
         return new ArrayList<>();
     }
+
+    public long getLastSyncTimeStamp(){
+        return Long.parseLong(Utils.getPreference(context, LAST_SYNC_TIMESTAMP, "0"));
+    }
+
+    public void updateLastSyncTimeStamp(long lastSyncTimeStamp){
+        Utils.writePreference(context, LAST_SYNC_TIMESTAMP, lastSyncTimeStamp + "");
+    }
+    private long batchSave(JSONArray events, JSONArray clients) {
+        db.batchInsertClients(clients);
+        return db.batchInsertEvents(events, getLastSyncTimeStamp());
+    }
+
+
+
 }

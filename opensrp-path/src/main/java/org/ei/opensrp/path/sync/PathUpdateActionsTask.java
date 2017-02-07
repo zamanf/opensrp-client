@@ -99,9 +99,20 @@ public class PathUpdateActionsTask {
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
             AllSharedPreferences allSharedPreferences = new AllSharedPreferences(preferences);
 
-            ecUpdater.fetchAllClients(AllConstants.SyncFilters.FILTER_PROVIDER, allSharedPreferences.fetchRegisteredANM());
-            ecUpdater.fetchAllEvents(AllConstants.SyncFilters.FILTER_PROVIDER, allSharedPreferences.fetchRegisteredANM());
-            ClientProcessor.getInstance(context).processClient(ecUpdater.allEvents());
+            while (true) {
+                long startSyncTimeStamp = ecUpdater.getLastSyncTimeStamp();
+
+                int eCount = ecUpdater.fetchAllClientsAndEvents(AllConstants.SyncFilters.FILTER_PROVIDER, allSharedPreferences.fetchRegisteredANM());
+
+                if (eCount == 0) {
+                    break;
+                }
+
+                long lastSyncTimeStamp = ecUpdater.getLastSyncTimeStamp();
+                ClientProcessor.getInstance(context).processClient(ecUpdater.allEvents(startSyncTimeStamp, lastSyncTimeStamp));
+                Log.i(getClass().getName(), "!!!!! Sync count:  " + eCount);
+            }
+
             return FetchStatus.fetched;
         } catch (Exception e) {
             Log.e(getClass().getName(), "", e);
