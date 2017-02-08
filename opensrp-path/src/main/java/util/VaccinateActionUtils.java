@@ -21,7 +21,7 @@ import org.ei.opensrp.domain.form.FormSubmission;
 import org.ei.opensrp.service.ZiggyService;
 import org.ei.opensrp.util.FormUtils;
 import org.ei.opensrp.path.R;
-import org.ei.opensrp.path.domain.FormSubmissionWrapper;
+import org.ei.opensrp.path.domain.VaccinateFormSubmissionWrapper;
 import org.ei.opensrp.path.domain.VaccineWrapper;
 import org.ei.opensrp.path.fragment.VaccinationDialogFragment;
 import org.json.JSONException;
@@ -156,7 +156,9 @@ public class VaccinateActionUtils {
     }
 
     public static void saveFormSubmission(Context appContext, final String formSubmission, String id, final String formName, JSONObject fieldOverrides) {
+
         Log.v("fieldoverride", fieldOverrides.toString());
+
         // save the form
         try {
             FormUtils formUtils = FormUtils.getInstance(appContext);
@@ -179,7 +181,7 @@ public class VaccinateActionUtils {
                 }
             }
         } catch (Exception e) {
-            Log.e(VaccinateActionUtils.class.getName(), "", e);
+            Log.e(VaccinateActionUtils.class.getName(), "", e);e.printStackTrace();
         }
     }
 
@@ -204,14 +206,14 @@ public class VaccinateActionUtils {
         } catch (Exception e) {
             Log.e(VaccinateActionUtils.class.getName(), "", e);
         }
-        return null;
+        return new JSONObject();
 
     }
 
-    public static String retrieveExistingAge(FormSubmissionWrapper formSubmissionWrapper) {
+    public static String retrieveExistingAge(VaccinateFormSubmissionWrapper vaccinateFormSubmissionWrapper) {
         try {
-            if (formSubmissionWrapper != null) {
-                JSONObject fieldOverrides = formSubmissionWrapper.getOverrides();
+            if (vaccinateFormSubmissionWrapper != null) {
+                JSONObject fieldOverrides = vaccinateFormSubmissionWrapper.getOverrides();
                 if (fieldOverrides.has("existing_age")) {
                     return fieldOverrides.getString("existing_age");
                 }

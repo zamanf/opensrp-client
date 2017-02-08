@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import org.ei.opensrp.path.activity.ChildDetailActivity;
-import org.ei.opensrp.path.domain.FormSubmissionWrapper;
+import org.ei.opensrp.path.domain.VaccinateFormSubmissionWrapper;
 import org.ei.opensrp.path.domain.VaccineWrapper;
 import org.ei.opensrp.path.activity.WomanDetailActivity;
 import org.ei.opensrp.path.R;
@@ -78,15 +78,15 @@ public class UndoVaccinationDialogFragment extends DialogFragment {
     }
 
     private void updateFormSubmission() {
-        FormSubmissionWrapper formSubmissionWrapper = null;
+        VaccinateFormSubmissionWrapper vaccinateFormSubmissionWrapper = null;
         if (tag.getVaccine().category().equals("child") && listener instanceof ChildDetailActivity) {
-            formSubmissionWrapper = ((ChildDetailActivity) listener).getFormSubmissionWrapper();
+            vaccinateFormSubmissionWrapper = ((ChildDetailActivity) listener).getVaccinateFormSubmissionWrapper();
         } else if (tag.getVaccine().category().equals("woman") && listener instanceof WomanDetailActivity) {
-            formSubmissionWrapper = ((WomanDetailActivity) listener).getFormSubmissionWrapper();
+            vaccinateFormSubmissionWrapper = ((WomanDetailActivity) listener).getVaccinateFormSubmissionWrapper();
         }
 
-        if(formSubmissionWrapper != null) {
-            formSubmissionWrapper.remove(tag);
+        if(vaccinateFormSubmissionWrapper != null) {
+            vaccinateFormSubmissionWrapper.remove(tag);
         }
 
     }

@@ -1,9 +1,24 @@
 package org.ei.opensrp.path.fragment;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
+import org.apache.commons.lang3.StringUtils;
 import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.cursoradapter.CursorCommonObjectFilterOption;
@@ -12,6 +27,7 @@ import org.ei.opensrp.cursoradapter.CursorSortOption;
 import org.ei.opensrp.cursoradapter.SecuredNativeSmartRegisterCursorAdapterFragment;
 import org.ei.opensrp.cursoradapter.SmartRegisterPaginatedCursorAdapter;
 import org.ei.opensrp.cursoradapter.SmartRegisterQueryBuilder;
+import org.ei.opensrp.event.Listener;
 import org.ei.opensrp.path.R;
 import org.ei.opensrp.path.activity.ChildDetailActivity;
 import org.ei.opensrp.path.activity.ChildSmartRegisterActivity;
@@ -33,9 +49,16 @@ import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import util.GlobalSearchUtils;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
@@ -141,6 +164,7 @@ public class ChildSmartRegisterFragment extends SecuredNativeSmartRegisterCursor
             initializeQueries();
         }
         updateSearchView();
+        updateGlobalSearchView();
         try {
             LoginActivity.setLanguage();
         } catch (Exception e) {
@@ -178,7 +202,7 @@ public class ChildSmartRegisterFragment extends SecuredNativeSmartRegisterCursor
         super.CountExecute();
 
         SmartRegisterQueryBuilder queryBUilder = new SmartRegisterQueryBuilder();
-        queryBUilder.SelectInitiateMainTable(tableName, new String[]{"relationalid", "details", "program_client_id", "first_name", "last_name", "gender", "mother_name", "father_name", "dob", "epi_card_number", "contact_phone_number", "provider_uc", "provider_town", "provider_id", "provider_location_id", "client_reg_date", "vaccines_2", "bcg", "opv0", "pcv1", "opv1", "penta1", "pcv2", "opv2", "penta2", "pcv3", "opv3", "penta3", "ipv", "measles1", "measles2", "bcg_retro", "opv0_retro", "pcv1_retro", "opv1_retro", "penta1_retro", "pcv2_retro", "opv2_retro", "penta2_retro", "pcv3_retro", "opv3_retro", "penta3_retro", "ipv_retro", "measles1_retro", "measles2_retro" });
+        queryBUilder.SelectInitiateMainTable(tableName, new String[]{"relationalid", "details", "program_client_id", "first_name", "last_name", "gender", "mother_name", "father_name", "dob", "epi_card_number", "contact_phone_number", "provider_uc", "provider_town", "provider_id", "provider_location_id", "client_reg_date", "vaccines_2", "bcg", "opv0", "pcv1", "opv1", "penta1", "pcv2", "opv2", "penta2", "pcv3", "opv3", "penta3", "ipv", "measles1", "measles2", "bcg_retro", "opv0_retro", "pcv1_retro", "opv1_retro", "penta1_retro", "pcv2_retro", "opv2_retro", "penta2_retro", "pcv3_retro", "opv3_retro", "penta3_retro", "ipv_retro", "measles1_retro", "measles2_retro"});
         mainSelect = queryBUilder.mainCondition("");
         Sortqueries = ((CursorSortOption) getDefaultOptionsProvider().sortOption()).sort();
 
@@ -200,10 +224,11 @@ public class ChildSmartRegisterFragment extends SecuredNativeSmartRegisterCursor
             map.putAll(providerDetails());
 
             String formName = "child_followup";
+            String registerFormName =  "child_enrollment";
 
             switch (view.getId()) {
                 case R.id.child_profile_info_layout:
-                    ChildDetailActivity.startDetailActivity(getActivity(), (CommonPersonObjectClient) view.getTag(), map, formName, ChildDetailActivity.class);
+                    ChildDetailActivity.startDetailActivity(getActivity(), (CommonPersonObjectClient) view.getTag(), map, formName, registerFormName, ChildDetailActivity.class);
                     getActivity().finish();
                     break;
                 case R.id.child_next_visit_holder:
@@ -395,4 +420,151 @@ public class ChildSmartRegisterFragment extends SecuredNativeSmartRegisterCursor
         } */
         return map;
     }
+
+    private void updateGlobalSearchView() {
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        View view = inflater.inflate(R.layout.global_search, null);
+
+        final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
+        final EditText txtSearch = (EditText) view.findViewById(R.id.text_search);
+        final ListView listView = (ListView) view.findViewById(R.id.list_view);
+        final TextView emptyView = (TextView) view.findViewById(R.id.empty);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setView(view).setPositiveButton(R.string.search, null).setNegativeButton(R.string.cancel, null);
+        final AlertDialog alertDialog = builder.create();
+
+        final Listener<JSONArray> listener = new Listener<JSONArray>() {
+            public void onEvent(final JSONArray jsonArray) {
+
+                if (jsonArray != null) {
+                    List<JSONObject> list = new ArrayList<JSONObject>();
+                    int len = jsonArray.length();
+                    for (int i = 0; i < len; i++) {
+                        list.add(getJsonObject(jsonArray, i));
+                    }
+
+                    ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_2, android.R.id.text1, list) {
+                        @Override
+                        public View getView(int position, View convertView, ViewGroup parent) {
+                            View view = super.getView(position, convertView, parent);
+                            TextView text1 = (TextView) view.findViewById(android.R.id.text1);
+                            TextView text2 = (TextView) view.findViewById(android.R.id.text2);
+
+                            JSONObject jsonObject = getJsonObject(jsonArray, position);
+
+                            String name = getJsonString(jsonObject, "firstName") + " " +
+                                    getJsonString(jsonObject, "middleName") + " " +
+                                    getJsonString(jsonObject, "lastName");
+
+                            String other = "Gender: " + getJsonString(jsonObject, "gender") + " Birthday: " +
+                                    getJsonString(jsonObject, "birthdate") + " Program Id: " +
+                                    getJsonString(getJsonObject(jsonObject, "identifiers"), "Program Client ID");
+
+
+                            text1.setText(name);
+                            text2.setText(other);
+                            return view;
+                        }
+                    };
+                    listView.setAdapter(adapter);
+                } else {
+                    listView.setAdapter(null);
+                }
+                listView.setEmptyView(emptyView);
+                listView.setVisibility(View.VISIBLE);
+            }
+        };
+
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+
+            @Override
+            public void onShow(DialogInterface dialog) {
+
+                final Button button = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
+                button.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View searchButton) {
+                        if (StringUtils.isNotBlank(txtSearch.getText().toString())) {
+                            search(txtSearch, listener, progressBar, button);
+
+                        }
+                    }
+                });
+
+                txtSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                        if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                            search(txtSearch, listener, progressBar, button);
+                            return true;
+                        }
+                        return false;
+                    }
+                });
+            }
+        });
+
+
+        Button globalSearchButton = ((Button) mView.findViewById(org.ei.opensrp.R.id.global_search));
+        globalSearchButton.setVisibility(VISIBLE);
+
+        globalSearchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.show();
+            }
+        });
+    }
+
+    private void search(EditText txtSearch, Listener<JSONArray> listener, ProgressBar progressBar, Button button) {
+        button.setEnabled(false);
+        // hide keyboard
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(txtSearch.getWindowToken(), 0);
+
+        GlobalSearchUtils.backgroundSearch(txtSearch.getText().toString(), listener, progressBar, button);
+    }
+
+    private String getJsonString(JSONObject jsonObject, String field) {
+        try {
+            if (jsonObject != null && jsonObject.has(field)) {
+                String string = jsonObject.getString(field);
+                if (string.equals("null")) {
+                    return "";
+                } else {
+                    return string;
+                }
+            }
+        } catch (JSONException e) {
+            Log.e(getClass().getName(), "", e);
+        }
+        return "";
+
+    }
+
+    private JSONObject getJsonObject(JSONObject jsonObject, String field) {
+        try {
+            if (jsonObject != null && jsonObject.has(field)) {
+                return jsonObject.getJSONObject(field);
+            }
+        } catch (JSONException e) {
+            Log.e(getClass().getName(), "", e);
+        }
+        return null;
+
+    }
+
+    private JSONObject getJsonObject(JSONArray jsonArray, int position) {
+        try {
+            if (jsonArray != null && jsonArray.length() > 0) {
+                return jsonArray.getJSONObject(position);
+            }
+        } catch (JSONException e) {
+            Log.e(getClass().getName(), "", e);
+        }
+        return null;
+
+    }
+
 }
