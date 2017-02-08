@@ -139,6 +139,7 @@ public class OpenSRPImageLoader extends ImageLoader {
      * @return ImageContainer that will contain either the specified default bitmap or the loaded bitmap. If the default was returned, the
      * {@link OpenSRPImageLoader} will be invoked when the request is fulfilled.
      */
+
     public void getImageByClientId(final String entityId, final OpenSRPImageListener opensrpImageListener) {
 
         try {
@@ -157,6 +158,7 @@ public class OpenSRPImageLoader extends ImageLoader {
                 ImageRepository imageRepo = (ImageRepository)org.ei.opensrp.Context.imageRepository();
                 ProfileImage imageRecord = imageRepo.findByEntityId(entityId);
                 if(imageRecord!=null) {
+
                     get(imageRecord, opensrpImageListener);
                 }else{
                     String url= FileUtilities.getImageUrl(entityId);

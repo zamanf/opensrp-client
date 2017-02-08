@@ -1,6 +1,6 @@
 package org.ei.opensrp.mcare;
 
-import android.content.Intent;
+
 import android.database.Cursor;
 import android.os.Handler;
 import android.util.Log;

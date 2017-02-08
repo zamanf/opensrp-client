@@ -242,9 +242,10 @@ public class NativeKIPNCSmartRegisterFragment extends SecuredNativeSmartRegister
             super.CountExecute();
 
             SmartRegisterQueryBuilder queryBUilder = new SmartRegisterQueryBuilder();
-            queryBUilder.SelectInitiateMainTable("ec_pnc", new String[]{"ec_pnc.relationalid", "ec_pnc.details",  "ec_kartu_ibu.namalengkap","ec_kartu_ibu.namaSuami"});
-            queryBUilder.customJoin("LEFT JOIN ec_kartu_ibu on ec_kartu_ibu.id = ec_pnc.id");
-            mainSelect = queryBUilder.mainCondition(" ec_pnc.is_closed = 0 and keadaanIbu ='hidup'");
+            queryBUilder.SelectInitiateMainTable("ec_pnc", new String[]{"ec_pnc.relationalid", "ec_pnc.details",  "ec_kartu_ibu.namalengkap","ec_kartu_ibu.namaSuami","imagelist.imageid"});
+            queryBUilder.customJoin("LEFT JOIN ec_kartu_ibu on ec_kartu_ibu.id = ec_pnc.id LEFT JOIN ImageList imagelist ON ec_pnc.id=imagelist.entityID");
+            mainSelect = queryBUilder.mainCondition(mainCondition);
+
             Sortqueries = KiSortByNameAZ();
 
             currentlimit = 20;

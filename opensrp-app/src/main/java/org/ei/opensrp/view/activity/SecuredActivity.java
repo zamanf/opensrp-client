@@ -18,7 +18,6 @@ import org.ei.opensrp.AllConstants;
 import org.ei.opensrp.Context;
 import org.ei.opensrp.R;
 import org.ei.opensrp.broadcastreceivers.OpenSRPClientBroadCastReceiver;
-import org.ei.opensrp.sync.CloudantSyncHandler;
 import org.ei.opensrp.event.Listener;
 import org.ei.opensrp.service.ZiggyService;
 import org.ei.opensrp.view.controller.ANMController;
@@ -28,7 +27,13 @@ import org.ei.opensrp.view.controller.NavigationController;
 import java.util.Map;
 
 import static android.widget.Toast.LENGTH_SHORT;
-import static org.ei.opensrp.AllConstants.*;
+import static org.ei.opensrp.AllConstants.ALERT_NAME_PARAM;
+import static org.ei.opensrp.AllConstants.CloudantSync;
+import static org.ei.opensrp.AllConstants.ENTITY_ID;
+import static org.ei.opensrp.AllConstants.ENTITY_ID_PARAM;
+import static org.ei.opensrp.AllConstants.FIELD_OVERRIDES_PARAM;
+import static org.ei.opensrp.AllConstants.FORM_NAME_PARAM;
+import static org.ei.opensrp.AllConstants.FORM_SUCCESSFULLY_SUBMITTED_RESULT_CODE;
 import static org.ei.opensrp.event.Event.ON_LOGOUT;
 import static org.ei.opensrp.util.Log.logInfo;
 

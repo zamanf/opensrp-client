@@ -63,4 +63,5 @@ public abstract class DrishtiApplication extends Application {
 
         return cachedImageLoader;
     }
+
 }

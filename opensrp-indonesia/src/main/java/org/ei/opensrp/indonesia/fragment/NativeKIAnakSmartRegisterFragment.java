@@ -215,9 +215,9 @@ public class NativeKIAnakSmartRegisterFragment extends SecuredNativeSmartRegiste
         super.CountExecute();
 
         SmartRegisterQueryBuilder queryBUilder = new SmartRegisterQueryBuilder();
-        queryBUilder.SelectInitiateMainTable("ec_anak", new String[]{"ec_anak.is_closed", "ec_anak.details", "namaBayi", "tanggalLahirAnak"});
-        queryBUilder.customJoin("LEFT JOIN ec_kartu_ibu ON ec_kartu_ibu.id =  ec_anak.relational_id");
-        mainSelect = queryBUilder.mainCondition("ec_anak.is_closed = 0  and relational_id != ''");
+        queryBUilder.SelectInitiateMainTable("ec_anak", new String[]{"ec_anak.is_closed", "ec_anak.details", "namaBayi", "tanggalLahirAnak","imagelist.imageid"});
+        queryBUilder.customJoin("LEFT JOIN ec_ibu ON ec_ibu.id =  ec_anak.relational_id LEFT JOIN ImageList imagelist ON ec_anak.id=imagelist.entityID");
+        mainSelect = queryBUilder.mainCondition(mainCondition);
         Sortqueries = AnakNameShort();
 
         currentlimit = 20;
