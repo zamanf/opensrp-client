@@ -158,6 +158,16 @@ public class Tools {
 //            detailsRepository.add(entityId, "profilepic", photoPath, tsLong);
             detailsRepository.add(entityId, "profilepic", thumbs_photo.toString(), tsLong);
 
+            String anmId = Context.getInstance().allSharedPreferences().fetchRegisteredANM();
+            ProfileImage profileImage = new ProfileImage(
+                    UUID.randomUUID().toString(),
+                    anmId,
+                    entityId,
+                    "Image",
+                    details.get("profilepic"),
+                    ImageRepository.TYPE_Unsynced,
+                    "dp");
+            ((ImageRepository) Context.getInstance().imageRepository()).add(profileImage);
             return true;
 
         } catch (FileNotFoundException e) {
