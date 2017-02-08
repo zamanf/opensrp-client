@@ -210,7 +210,7 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
     public void initializeQueries(){
         try {
         KIClientsProvider kiscp = new KIClientsProvider(getActivity(),clientActionHandler,context().alertService());
-        clientAdapter = new SmartRegisterPaginatedCursorAdapter(getActivity(), null, kiscp, new CommonRepository("ec_kartu_ibu",new String []{"ec_kartu_ibu.is_closed", "ec_kartu_ibu.namalengkap", "ec_kartu_ibu.umur","ec_kartu_ibu.namaSuami","noIbu","ec_kartu_ibu.isOutOfArea"}));
+        clientAdapter = new SmartRegisterPaginatedCursorAdapter(getActivity(), null, kiscp, new CommonRepository("ec_kartu_ibu",new String []{"ec_kartu_ibu.is_closed", "ec_kartu_ibu.namalengkap", "ec_kartu_ibu.umur","ec_kartu_ibu.namaSuami","noIbu"}));
         clientsView.setAdapter(clientAdapter);
 
         setTablename("ec_kartu_ibu");
@@ -429,7 +429,7 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
             }
         });
     }
-    public void addChildToList(ArrayList<DialogOption> dialogOptionslist,Map<String,TreeNode<String, Location>> locationMap){
+/*    public void addChildToList(ArrayList<DialogOption> dialogOptionslist,Map<String,TreeNode<String, Location>> locationMap){
         for(Map.Entry<String, TreeNode<String, Location>> entry : locationMap.entrySet()) {
 
             if(entry.getValue().getChildren() != null) {
@@ -439,6 +439,20 @@ public class NativeKISmartRegisterFragment extends SecuredNativeSmartRegisterCur
                 StringUtil.humanize(entry.getValue().getLabel());
                 String name = StringUtil.humanize(entry.getValue().getLabel());
                 dialogOptionslist.add(new KICommonObjectFilterOption(name,"desa", name));
+
+            }
+        }
+    }*/
+    public void addChildToList(ArrayList<DialogOption> dialogOptionslist,Map<String,TreeNode<String, Location>> locationMap){
+        for(Map.Entry<String, TreeNode<String, Location>> entry : locationMap.entrySet()) {
+
+            if(entry.getValue().getChildren() != null) {
+                addChildToList(dialogOptionslist,entry.getValue().getChildren());
+
+            }else{
+                StringUtil.humanize(entry.getValue().getLabel());
+                String name = StringUtil.humanize(entry.getValue().getLabel());
+                dialogOptionslist.add(new KICommonObjectFilterOption(name, "location_name", name, "ec_kartu_ibu"));
 
             }
         }

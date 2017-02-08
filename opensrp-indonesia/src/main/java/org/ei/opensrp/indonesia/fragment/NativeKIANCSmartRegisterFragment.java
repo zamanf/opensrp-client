@@ -379,7 +379,7 @@ public class NativeKIANCSmartRegisterFragment extends SecuredNativeSmartRegister
 
                 filters = cs.toString();
                 joinTable = "";
-                mainCondition = " is_closed = 0 and pptest ='Positive' ";
+                mainCondition = " ec_ibu.is_closed = 0 and pptest ='Positive' ";
 
 
                 getSearchCancelView().setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
@@ -407,7 +407,7 @@ public class NativeKIANCSmartRegisterFragment extends SecuredNativeSmartRegister
 
                 filters = cs.toString();
                 joinTable = "";
-                mainCondition = " is_closed = 0 and pptest ='Positive' ";
+                mainCondition = " ec_ibu.is_closed = 0 and pptest ='Positive' ";
 
                 getSearchCancelView().setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
                 filterandSortExecute();
@@ -429,7 +429,7 @@ public class NativeKIANCSmartRegisterFragment extends SecuredNativeSmartRegister
             }else{
                 StringUtil.humanize(entry.getValue().getLabel());
                 String name = StringUtil.humanize(entry.getValue().getLabel());
-                dialogOptionslist.add(new KICommonObjectFilterOption(name,"dusun", name));
+                dialogOptionslist.add(new KICommonObjectFilterOption(name, "location_name", name, "ec_kartu_ibu"));
 
             }
         }
