@@ -14,9 +14,9 @@ import org.ei.opensrp.Context;
 import org.ei.opensrp.event.Listener;
 import org.ei.opensrp.path.R;
 import org.ei.opensrp.path.controller.VaccinatorNavigationController;
+import org.ei.opensrp.path.sync.PathUpdateActionsTask;
 import org.ei.opensrp.sync.SyncAfterFetchListener;
 import org.ei.opensrp.sync.SyncProgressIndicator;
-import org.ei.opensrp.sync.UpdateActionsTask;
 import org.ei.opensrp.view.activity.SecuredActivity;
 import org.ei.opensrp.view.contract.HomeContext;
 import org.ei.opensrp.view.controller.NativeAfterANMDetailsFetchListener;
@@ -150,10 +150,10 @@ public class VaccinatorHomeActivity extends SecuredActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final String childCount = context().commonrepository("pkchild")
-                        .rawQuery("SELECT COUNT(*) c FROM pkchild").get(0).get("c");
-                final String womanCount = context().commonrepository("pkwoman")
-                        .rawQuery("SELECT COUNT(*) c FROM pkwoman").get(0).get("c");
+                final String childCount = context().commonrepository("ec_child")
+                        .rawQuery("SELECT COUNT(*) c FROM ec_child").get(0).get("c");
+                final String womanCount = context().commonrepository("ec_woman")
+                        .rawQuery("SELECT COUNT(*) c FROM ec_woman").get(0).get("c");
                 final String stockCountD = context().commonrepository("stock")
                         .rawQuery("SELECT COUNT(*) c FROM stock WHERE report='daily'").get(0).get("c");
                 final String stockCountM = context().commonrepository("stock")
@@ -209,10 +209,10 @@ public class VaccinatorHomeActivity extends SecuredActivity {
     }
 
     public void updateFromServer() {
-        UpdateActionsTask updateActionsTask = new UpdateActionsTask(
+        PathUpdateActionsTask pathUpdateActionsTask = new PathUpdateActionsTask(
                 this, context().actionService(), context().formSubmissionSyncService(),
                 new SyncProgressIndicator(), context().allFormVersionSyncService());
-        updateActionsTask.updateFromServer(new SyncAfterFetchListener());
+        pathUpdateActionsTask.updateFromServer(new SyncAfterFetchListener());
     }
 
     @Override
