@@ -18,9 +18,11 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.ei.opensrp.Context;
 import org.ei.opensrp.domain.ProfileImage;
+import org.ei.opensrp.indonesia.face.camera.ClientsList;
 import org.ei.opensrp.indonesia.face.camera.SmartShutterActivity;
 import org.ei.opensrp.repository.DetailsRepository;
 import org.ei.opensrp.repository.ImageRepository;
@@ -43,6 +45,8 @@ public class Tools {
     public static final int CONFIDENCE_VALUE = 58;
     private static String bindobject;
     private Canvas canvas = null;
+    SmartShutterActivity ss = new SmartShutterActivity();
+    ClientsList cl = new ClientsList();
 
     public static boolean SavePictureToFile(android.content.Context context, Bitmap bitmap, String entityId) {
         for (int i = 0; i < 2; i++) {
@@ -135,20 +139,24 @@ public class Tools {
             Log.e(TAG, "Wrote image to " + thumbs_photo);
 
 //            TODO
-//            saveimagereference(bindobject, entityId, details);
-//            HashMap<String,String> details = new HashMap<String,String>();
-//            details.put("profilepic",currentfile.getAbsolutePath());
+            bindobject = "kartu_ibu";
+
+            HashMap<String,String> details = new HashMap<>();
+
+            saveimagereference(bindobject, entityId, details);
+//            details.put("profilepic", photoPath);
+            details.put("profilepic", thumbs_photo.toString());
 
 
 //            KIDetailActivity.details = new HashMap<>();
 //            HashMap<String,String> details = new HashMap<>();
 //            KIDetailActivity.details.put("profilepic",photoPath);
 
-
 //            Database Stored
             DetailsRepository detailsRepository = Context.getInstance().detailsRepository();
             Long tsLong = System.currentTimeMillis()/1000;
-            detailsRepository.add(entityId, "profilepic_thumb", photoPath, tsLong);
+//            detailsRepository.add(entityId, "profilepic", photoPath, tsLong);
+            detailsRepository.add(entityId, "profilepic", thumbs_photo.toString(), tsLong);
 
             return true;
 
@@ -164,7 +172,7 @@ public class Tools {
         // Mode 0 = Original
         // Mode 1 = Thumbs
 
-
+        // Location use app_dir
         String imgFolder = (mode == 0) ? DrishtiApplication.getAppDir():
                 DrishtiApplication.getAppDir()+File.separator+".thumbs";
 //        String imgFolder = (mode == 0) ? "OPENSRP_SID":"OPENSRP_SID"+File.separator+".thumbs";
@@ -183,7 +191,7 @@ public class Tools {
         // Create a media file name
 //        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 //        String filename = entity);
-        return new File(String.format("%s%sOSRP_%s.jpg", mediaStorageDir.getPath(), File.separator, entityId));
+        return new File(String.format("%s%s%s.jpg", mediaStorageDir.getPath(), File.separator, entityId));
     }
 
     public static Bitmap getThumbnail(ContentResolver cr, String path) throws Exception {
@@ -369,7 +377,7 @@ public class Tools {
 //        return hash;
 //    }
 
-    public void saveimagereference(String bindobject,String entityid,Map<String,String> details){
+    public static void saveimagereference(String bindobject, String entityid, Map<String, String> details){
         Context.getInstance().allCommonsRepositoryobjects(bindobject).mergeDetails(entityid,details);
         String anmId = Context.getInstance().allSharedPreferences().fetchRegisteredANM();
         ProfileImage profileImage = new ProfileImage(UUID.randomUUID().toString(),anmId,entityid,"Image",details.get("profilepic"), ImageRepository.TYPE_Unsynced,"dp");
@@ -378,5 +386,25 @@ public class Tools {
 //        Toast.makeText(this,entityid,Toast.LENGTH_LONG).show();
     }
 
+    public void resetAlbum() {
+
+        Log.e(TAG, "resetAlbum: "+ "start" );
+        boolean result = SmartShutterActivity.faceProc.resetAlbum();
+
+        if (result){
+            // Clear data
+            // TODO: Null getApplication COntext
+            HashMap<String, String> hashMap = SmartShutterActivity.retrieveHash(new ClientsList().getApplicationContext());
+            hashMap.clear();
+            saveHash(hashMap, cl.getApplicationContext());
+            saveAlbum();
+
+            Toast.makeText(cl.getApplicationContext(), "Reset Succesfully done!", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(cl.getApplicationContext(), "Reset Failed!", Toast.LENGTH_LONG).show();
+
+        }
+        Log.e(TAG, "resetAlbum: "+ "finish" );
+    }
 
 }

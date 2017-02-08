@@ -29,9 +29,11 @@ import android.widget.Toast;
 import com.qualcomm.snapdragon.sdk.face.FaceData;
 import com.qualcomm.snapdragon.sdk.face.FacialProcessing;
 
+import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.AllCommonsRepository;
 import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
+import org.ei.opensrp.domain.ProfileImage;
 import org.ei.opensrp.indonesia.R;
 import org.ei.opensrp.indonesia.anc.NativeKIANCSmartRegisterActivity;
 import org.ei.opensrp.indonesia.child.NativeKIAnakSmartRegisterActivity;
@@ -46,11 +48,14 @@ import org.ei.opensrp.indonesia.kartu_ibu.KIDetailActivity;
 import org.ei.opensrp.indonesia.kartu_ibu.NativeKISmartRegisterActivity;
 import org.ei.opensrp.indonesia.kb.NativeKBSmartRegisterActivity;
 import org.ei.opensrp.indonesia.pnc.NativeKIPNCSmartRegisterActivity;
+import org.ei.opensrp.repository.ImageRepository;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.UUID;
 
 //import com.google.firebase.database.DatabaseReference;
 //import com.google.firebase.database.FirebaseDatabase;
@@ -358,8 +363,8 @@ public class ImageConfirmation extends Activity {
      */
     private void saveAndClose(String entityId) {
         Log.e(TAG, "saveAndClose: position"+ arrayPossition );
-        int res = objFace.addPerson(arrayPossition);
-        Log.e(TAG, "saveAndClose: " + res);
+//        int res = objFace.addPerson(arrayPossition);
+//        Log.e(TAG, "saveAndClose: " + res);
         Log.e(TAG, "saveAndClose: " + Arrays.toString(objFace.serializeRecogntionAlbum()));
 
 //        SmartShutterActivity.WritePictureToFile(ImageConfirmation.this, storedBitmap);
@@ -369,12 +374,24 @@ public class ImageConfirmation extends Activity {
         saveHash(clientList, getApplicationContext());
 
         Tools.WritePictureToFile(ImageConfirmation.this, storedBitmap, entityId);
+
+//        HashMap<String,String> details = new HashMap<>();
+//
+//        details.put("profilepic",currentfile.getAbsolutePath());
+//
+//        saveimagereference(bindobject,entityId, details);
+
+
 //        Tools.SavePictureToFile(ImageConfirmation.this, storedBitmap, entityId);
 //        resultIntent.putExtra("com.qualcomm.sdk.smartshutterappgit .SmartShutterActivity.thumbnail", thumbnail);
+
         ImageConfirmation.this.finish();
+
         Intent resultIntent = new Intent(this, KIDetailActivity.class);
         setResult(RESULT_OK, resultIntent);
         startActivityForResult(resultIntent, 1);
+
+        Log.e(TAG, "saveAndClose: "+"end" );
     }
 
     public void saveHash(HashMap<String, String> hashMap, android.content.Context context) {
@@ -411,6 +428,19 @@ public class ImageConfirmation extends Activity {
 //        ref.setValue(imageEncoded);
     }
 
-
+    public void saveimagereference(String bindobject,String entityid,Map<String,String> details){
+        Context.getInstance().allCommonsRepositoryobjects(bindobject).mergeDetails(entityid,details);
+        String anmId = Context.getInstance().allSharedPreferences().fetchRegisteredANM();
+        ProfileImage profileImage = new ProfileImage(
+                UUID.randomUUID().toString(),
+                anmId,
+                entityid,
+                "Image",
+                details.get("profilepic"),
+                ImageRepository.TYPE_Unsynced,"dp");
+        ((ImageRepository) Context.getInstance().imageRepository()).add(profileImage);
+//                kiclient.entityId();
+//        Toast.makeText(this,entityid,Toast.LENGTH_LONG).show();
+    }
 
 }

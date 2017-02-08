@@ -7,8 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import org.ei.opensrp.Context;
-import org.ei.opensrp.indonesia.LoginActivity;
-import org.ei.opensrp.indonesia.R;
+import org.ei.opensrp.vaksinator.LoginActivity;
+import org.ei.opensrp.vaksinator.R;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;

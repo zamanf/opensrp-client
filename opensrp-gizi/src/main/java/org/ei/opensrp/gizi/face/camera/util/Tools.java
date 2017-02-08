@@ -21,7 +21,7 @@ import android.util.Log;
 
 import org.ei.opensrp.Context;
 import org.ei.opensrp.domain.ProfileImage;
-import org.ei.opensrp.indonesia.face.camera.SmartShutterActivity;
+import org.ei.opensrp.gizi.face.camera.SmartShutterActivity;
 import org.ei.opensrp.repository.DetailsRepository;
 import org.ei.opensrp.repository.ImageRepository;
 import org.ei.opensrp.view.activity.DrishtiApplication;

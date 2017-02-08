@@ -34,6 +34,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.qualcomm.snapdragon.sdk.face.FaceData;
 import com.qualcomm.snapdragon.sdk.face.FacialProcessing;
@@ -59,6 +60,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -968,6 +970,7 @@ public class SmartShutterActivity extends Activity implements Camera.PreviewCall
      * Function to take the raw YUV byte array and do the necessary conversions to save it.
      */
     private void savePicture(byte[] data) {
+        Log.e(TAG, "savePicture: "+entityId );
         Intent intent = new Intent(this, ImageConfirmation.class);
         // This is when smart shutter feature is not ON. Take the photo generally.
         if (data != null) {

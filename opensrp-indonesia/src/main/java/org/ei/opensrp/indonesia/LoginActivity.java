@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -76,7 +77,7 @@ public class LoginActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         logVerbose("Initializing ...");
-        try{
+        try {
             AllSharedPreferences allSharedPreferences = new AllSharedPreferences(getDefaultSharedPreferences(this));
             String preferredLocale = allSharedPreferences.fetchLanguagePreference();
             Resources res = Context.getInstance().applicationContext().getResources();
@@ -85,11 +86,11 @@ public class LoginActivity extends Activity {
             android.content.res.Configuration conf = res.getConfiguration();
             conf.locale = new Locale(preferredLocale);
             res.updateConfiguration(conf, dm);
-        }catch(Exception e){
+        } catch (Exception e) {
 
         }
         setContentView(org.ei.opensrp.R.layout.login);
-        ImageView loginglogo = (ImageView)findViewById(R.id.login_logo);
+        ImageView loginglogo = (ImageView) findViewById(R.id.login_logo);
         loginglogo.setImageDrawable(getResources().getDrawable(R.mipmap.login_logo));
         context = Context.getInstance().updateApplicationContext(this.getApplicationContext());
         initializeLoginFields();
@@ -100,7 +101,6 @@ public class LoginActivity extends Activity {
         getActionBar().setIcon(getResources().getDrawable(org.ei.opensrp.indonesia.R.mipmap.logo));
         getActionBar().setBackgroundDrawable(getResources().getDrawable(org.ei.opensrp.indonesia.R.color.action_bar_background));
         setLanguage();
-
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu)

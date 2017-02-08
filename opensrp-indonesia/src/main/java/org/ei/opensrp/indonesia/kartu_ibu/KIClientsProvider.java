@@ -3,6 +3,7 @@ package org.ei.opensrp.indonesia.kartu_ibu;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
@@ -124,8 +125,6 @@ public class KIClientsProvider implements SmartRegisterCLientsProviderForCursorA
 
         DetailsRepository detailsRepository = org.ei.opensrp.Context.getInstance().detailsRepository();
         detailsRepository.updateDetails(pc);
-
-
 
         //set image
         final ImageView kiview = (ImageView)convertView.findViewById(R.id.img_profile);

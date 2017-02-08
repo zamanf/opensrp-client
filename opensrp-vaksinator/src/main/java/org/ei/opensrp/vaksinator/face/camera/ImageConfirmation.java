@@ -32,20 +32,15 @@ import com.qualcomm.snapdragon.sdk.face.FacialProcessing;
 import org.ei.opensrp.commonregistry.AllCommonsRepository;
 import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
-import org.ei.opensrp.indonesia.R;
-import org.ei.opensrp.indonesia.anc.NativeKIANCSmartRegisterActivity;
-import org.ei.opensrp.indonesia.child.NativeKIAnakSmartRegisterActivity;
-import org.ei.opensrp.indonesia.face.camera.util.FaceConstants;
-import org.ei.opensrp.indonesia.face.camera.util.Tools;
-import org.ei.opensrp.indonesia.fragment.NativeKBSmartRegisterFragment;
-import org.ei.opensrp.indonesia.fragment.NativeKIANCSmartRegisterFragment;
-import org.ei.opensrp.indonesia.fragment.NativeKIAnakSmartRegisterFragment;
-import org.ei.opensrp.indonesia.fragment.NativeKIPNCSmartRegisterFragment;
-import org.ei.opensrp.indonesia.fragment.NativeKISmartRegisterFragment;
-import org.ei.opensrp.indonesia.kartu_ibu.KIDetailActivity;
-import org.ei.opensrp.indonesia.kartu_ibu.NativeKISmartRegisterActivity;
-import org.ei.opensrp.indonesia.kb.NativeKBSmartRegisterActivity;
-import org.ei.opensrp.indonesia.pnc.NativeKIPNCSmartRegisterActivity;
+import org.ei.opensrp.vaksinator.R;
+
+import org.ei.opensrp.vaksinator.face.camera.util.FaceConstants;
+import org.ei.opensrp.vaksinator.face.camera.util.Tools;
+import org.ei.opensrp.vaksinator.fragment.TTSmartRegisterFragment;
+import org.ei.opensrp.vaksinator.fragment.VaksinatorSmartRegisterFragment;
+import org.ei.opensrp.vaksinator.imunisasiTT.TTSmartRegisterActivity;
+import org.ei.opensrp.vaksinator.vaksinator.VaksinatorDetailActivity;
+import org.ei.opensrp.vaksinator.vaksinator.VaksinatorSmartRegisterActivity;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
@@ -263,16 +258,10 @@ public class ImageConfirmation extends Activity {
         Log.e(TAG, "onPreviewFrame: init"+origin_class.getSimpleName() );
         Log.e(TAG, "onPreviewFrame: origin" + str_origin_class);
 
-        if(str_origin_class.equals(NativeKISmartRegisterFragment.class.getSimpleName())){
-            origin_class = NativeKISmartRegisterActivity.class;
-        } else if(str_origin_class.equals(NativeKBSmartRegisterFragment.class.getSimpleName())){
-            origin_class = NativeKBSmartRegisterActivity.class;
-        } else if(str_origin_class.equals(NativeKIAnakSmartRegisterFragment.class.getSimpleName())){
-            origin_class = NativeKIAnakSmartRegisterActivity.class;
-        } else if(str_origin_class.equals(NativeKIANCSmartRegisterFragment.class.getSimpleName())){
-            origin_class = NativeKIANCSmartRegisterActivity.class;
-        } else if(str_origin_class.equals(NativeKIPNCSmartRegisterFragment.class.getSimpleName())){
-            origin_class = NativeKIPNCSmartRegisterActivity.class;
+        if(str_origin_class.equals(VaksinatorSmartRegisterFragment.class.getSimpleName())){
+            origin_class = VaksinatorSmartRegisterActivity.class;
+        } else if(str_origin_class.equals(TTSmartRegisterFragment.class.getSimpleName())){
+            origin_class = TTSmartRegisterActivity.class;
         }
 
         Intent intent = new Intent(ImageConfirmation.this, origin_class);
@@ -299,8 +288,9 @@ public class ImageConfirmation extends Activity {
                 } else {
 //                    SmartRegisterQueryBuilder sqb = new SmartRegisterQueryBuilder();
 //                    Cursor cursor = getApplicationContext().
-                    KIDetailActivity.kiclient = (CommonPersonObjectClient) arg0.getTag();
-                    Log.e(TAG, "onClick: " + KIDetailActivity.kiclient);
+//                    TODO
+//                    KIDetailActivity.kiclient = (CommonPersonObjectClient) arg0.getTag();
+//                    Log.e(TAG, "onClick: " + KIDetailActivity.kiclient);
 //                    Intent intent = new Intent(ImageConfirmation.this,KIDetailActivity.class);
                     Log.e(TAG, "onClick: " + selectedPersonName);
 //                    startActivity(intent);
@@ -372,7 +362,7 @@ public class ImageConfirmation extends Activity {
 //        Tools.SavePictureToFile(ImageConfirmation.this, storedBitmap, entityId);
 //        resultIntent.putExtra("com.qualcomm.sdk.smartshutterappgit .SmartShutterActivity.thumbnail", thumbnail);
         ImageConfirmation.this.finish();
-        Intent resultIntent = new Intent(this, KIDetailActivity.class);
+        Intent resultIntent = new Intent(this, VaksinatorDetailActivity.class);
         setResult(RESULT_OK, resultIntent);
         startActivityForResult(resultIntent, 1);
     }

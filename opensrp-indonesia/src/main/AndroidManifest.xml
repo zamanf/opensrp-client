@@ -3,6 +3,7 @@
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
 
+
     <application android:allowBackup="true"
         android:label="@string/app_name"
         android:name=".application.BidanApplication"
@@ -77,7 +78,6 @@
             android:name=".child.AnakDetailActivity"
             android:screenOrientation="landscape"
             android:theme="@style/AppThemeNoTitle"/>
-
 
         <activity android:name=".face.camera.SmartShutterActivity" />
         <activity android:name=".face.camera.ImageConfirmation" />

@@ -14,9 +14,9 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
-import org.ei.opensrp.indonesia.R;
-import org.ei.opensrp.indonesia.face.camera.util.ClientAdapter;
-import org.ei.opensrp.indonesia.face.camera.util.FaceConstants;
+import org.ei.opensrp.vaksinator.R;
+import org.ei.opensrp.vaksinator.face.camera.util.ClientAdapter;
+import org.ei.opensrp.vaksinator.face.camera.util.FaceConstants;
 
 import java.util.Arrays;
 import java.util.HashMap;
