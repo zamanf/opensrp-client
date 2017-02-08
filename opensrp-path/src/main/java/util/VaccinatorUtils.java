@@ -109,7 +109,7 @@ public class VaccinatorUtils {
             map.put("provider_identifier", tm.getString("identifier"));
             map.put("provider_team", tm.getJSONObject("team").getString("teamName"));
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(VaccinateActionUtils.class.getName(), "", e);
         }
 
         return map;

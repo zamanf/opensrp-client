@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ei.opensrp.path.activity.ChildDetailActivity;
-import org.ei.opensrp.path.domain.FormSubmissionWrapper;
+import org.ei.opensrp.path.domain.VaccinateFormSubmissionWrapper;
 import org.ei.opensrp.path.domain.VaccineWrapper;
 import org.ei.opensrp.path.activity.WomanDetailActivity;
 import org.ei.opensrp.path.R;
@@ -128,15 +128,15 @@ public class VaccinationDialogFragment extends DialogFragment {
     }
 
     private void updateFormSubmission() {
-        FormSubmissionWrapper formSubmissionWrapper = null;
+        VaccinateFormSubmissionWrapper vaccinateFormSubmissionWrapper = null;
         if (tag.getVaccine().category().equals("child") && listener instanceof ChildDetailActivity) {
-            formSubmissionWrapper = ((ChildDetailActivity) listener).getFormSubmissionWrapper();
+            vaccinateFormSubmissionWrapper = ((ChildDetailActivity) listener).getVaccinateFormSubmissionWrapper();
         } else if (tag.getVaccine().category().equals("woman") && listener instanceof WomanDetailActivity) {
-            formSubmissionWrapper = ((WomanDetailActivity) listener).getFormSubmissionWrapper();
+            vaccinateFormSubmissionWrapper = ((WomanDetailActivity) listener).getVaccinateFormSubmissionWrapper();
         }
 
-        if(formSubmissionWrapper != null) {
-            formSubmissionWrapper.add(tag);
+        if(vaccinateFormSubmissionWrapper != null) {
+            vaccinateFormSubmissionWrapper.add(tag);
         }
     }
 
