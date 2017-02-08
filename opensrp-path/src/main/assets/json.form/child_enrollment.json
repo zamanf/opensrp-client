@@ -65,6 +65,21 @@
         }
       },
       {
+        "key": "Date_Birth",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "person",
+        "openmrs_entity_id": "birthdate",
+        "type": "date_picker",
+        "hint": "Date of Birth *",
+        "expanded": true,
+        "min_date": "01-01-2013",
+        "max_date": "today",
+        "v_required": {
+          "value": "true",
+          "err": "Please enter the date of birth"
+        }
+      },
+      {
         "key": "Child_Register_Card_Number",
         "openmrs_entity_parent": "",
         "openmrs_entity": "person_attribute",
@@ -79,21 +94,6 @@
         "openmrs_entity_id": "Child_Birth_Certificate",
         "type": "edit_text",
         "hint": "Birth certificate number"
-      },
-      {
-        "key": "Date_Birth",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "person",
-        "openmrs_entity_id": "birthdate",
-        "type": "date_picker",
-        "hint": "Date of Birth *",
-        "expanded": true,
-        "min_date": "01-01-2013",
-        "max_date": "today",
-        "v_required": {
-          "value": "true",
-          "err": "Please enter the date of birth"
-        }
       },
       {
         "key": "Mother_Guardian_Name",
@@ -173,6 +173,22 @@
         }
       },
       {
+        "key": "Birth_Weight",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "5916AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "type": "edit_text",
+        "hint": "Birth weight (KGs) *",
+        "v_numeric": {
+          "value": "true",
+          "err": "Enter a valid weight"
+        },
+        "v_required": {
+          "value": "true",
+          "err": "Enter the child's birth weight"
+        }
+      },
+      {
         "key": "Place_Birth",
         "openmrs_entity_parent": "",
         "openmrs_entity": "concept",
@@ -193,9 +209,38 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "concept",
         "openmrs_entity_id": "163531AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-        "type": "edit_text",
-        "hint": "Birth facility name *",
-        "edit_type": "name",
+        "type": "tree",
+        "hint": "Birth facility *",
+        "tree": [
+          {
+            "name": "Node 1",
+            "level": "Level 1"
+          },
+          {
+            "name": "Node 2",
+            "level": "Level 1",
+            "nodes": [
+              {
+                "name": "Node 3",
+                "level": "Level 2",
+                "nodes": [
+                  {
+                    "name": "Node 5",
+                    "level": "Level 3"
+                  },
+                  {
+                    "name": "Node 6",
+                    "level": "Level 3"
+                  }
+                ]
+              },
+              {
+                "name": "Node 4",
+                "level": "Level 2"
+              }
+            ]
+          }
+        ],
         "v_required": {
           "value": true,
           "err": "Please enter the birth facility name"
@@ -240,6 +285,31 @@
           "MSU": "",
           "CNE": ""
         }
+      },
+      {
+        "key": "CHW_Phone_Number",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "person_attribute",
+        "openmrs_entity_id": "CHW_Phone_Number",
+        "type": "edit_text",
+        "hint": "CHW's phone number",
+        "v_numeric": {
+          "value": "true",
+          "err": "Number must begin with 095, 096, or 097 and must be a total of 10 digits in length"
+        },
+        "v_regex": {
+          "value": "09[5-7][0-9]{7}",
+          "err": "Number must begin with 095, 096, or 097 and must be a total of 10 digits in length"
+        }
+      },
+      {
+        "key": "CHW_Name",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "person_attribute",
+        "openmrs_entity_id": "CHW_Name",
+        "type": "edit_text",
+        "hint": "CHW name",
+        "edit_type": "name"
       }
     ]
   }

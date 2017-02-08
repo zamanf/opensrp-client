@@ -23,6 +23,7 @@ import com.vijay.jsonwizard.widgets.ImagePickerFactory;
 import com.vijay.jsonwizard.widgets.LabelFactory;
 import com.vijay.jsonwizard.widgets.RadioButtonFactory;
 import com.vijay.jsonwizard.widgets.SpinnerFactory;
+import com.vijay.jsonwizard.widgets.TreeViewFactory;
 
 /**
  * Created by vijay on 5/19/15.
@@ -45,6 +46,7 @@ public class JsonFormInteractor {
         map.put(JsonFormConstants.CHOOSE_IMAGE, new ImagePickerFactory());
         map.put(JsonFormConstants.SPINNER, new SpinnerFactory());
         map.put(JsonFormConstants.DATE_PICKER, new DatePickerFactory());
+        map.put(JsonFormConstants.TREE, new TreeViewFactory());
     }
 
     public List<View> fetchFormElements(String stepName, Context context, JSONObject parentJson, CommonListener listener) {

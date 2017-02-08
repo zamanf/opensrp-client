@@ -1,7 +1,6 @@
 package com.vijay.jsonwizard.utils;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -12,8 +11,8 @@ import com.vijay.jsonwizard.R;
  * Created by vijay on 24-05-2015.
  */
 public class FormUtils {
-    public static final String FONT_BOLD_PATH = "font/Roboto-Bold.ttf";
-    public static final String FONT_REGULAR_PATH = "font/Roboto-Regular.ttf";
+    public static final String FONT_BOLD_PATH = "fonts/Roboto-Bold.ttf";
+    public static final String FONT_REGULAR_PATH = "fonts/Roboto-Regular.ttf";
     public static final int MATCH_PARENT = -1;
     public static final int WRAP_CONTENT = -2;
 
