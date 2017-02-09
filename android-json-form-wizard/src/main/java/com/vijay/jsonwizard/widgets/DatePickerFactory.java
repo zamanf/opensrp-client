@@ -39,7 +39,7 @@ import static android.view.inputmethod.InputMethodManager.HIDE_NOT_ALWAYS;
 public class DatePickerFactory implements FormWidgetFactory {
 
     public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy");
-    public static final String DATE_FORMAT_REGEX = "((([0-2][1-9])|(3[0,1]))-((0[1-9])|(1[0-2]))-[1,2][0-9]{3})|[\\s\\n]*";
+    public static final String DATE_FORMAT_REGEX = "(^(((0[1-9]|1[0-9]|2[0-8])[-](0[1-9]|1[012]))|((29|30|31)[-](0[13578]|1[02]))|((29|30)[-](0[4,6,9]|11)))[-](19|[2-9][0-9])\\d\\d$)|(^29[-]02[-](19|[2-9][0-9])(00|04|08|12|16|20|24|28|32|36|40|44|48|52|56|60|64|68|72|76|80|84|88|92|96)$)";
 
     @Override
     public List<View> getViewsFromJson(String stepName, final Context context, JSONObject jsonObject,
