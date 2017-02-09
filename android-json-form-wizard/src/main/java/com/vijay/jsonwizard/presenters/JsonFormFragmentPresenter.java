@@ -63,6 +63,7 @@ public class JsonFormFragmentPresenter extends MvpBasePresenter<JsonFormFragment
         List<View> views = mJsonFormInteractor.fetchFormElements(mStepName, getView().getContext(), mStepDetails,
                 getView().getCommonListener());
         getView().addFormElements(views);
+
     }
 
     @SuppressLint("ResourceAsColor")

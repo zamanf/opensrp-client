@@ -4,19 +4,31 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 
 import com.vijay.jsonwizard.R;
+import com.vijay.jsonwizard.comparers.Comparer;
+import com.vijay.jsonwizard.comparers.EqualToComparer;
+import com.vijay.jsonwizard.comparers.GreaterThanComparer;
+import com.vijay.jsonwizard.comparers.GreaterThanEqualToComparer;
+import com.vijay.jsonwizard.comparers.LessThanComparer;
+import com.vijay.jsonwizard.comparers.LessThanEqualToComparer;
+import com.vijay.jsonwizard.comparers.RegexComparer;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
 import com.vijay.jsonwizard.fragments.JsonFormFragment;
 import com.vijay.jsonwizard.interfaces.JsonApi;
 import com.vijay.jsonwizard.utils.FormUtils;
 import com.vijay.jsonwizard.utils.PropertyManager;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class JsonFormActivity extends AppCompatActivity implements JsonApi {
 
@@ -26,6 +38,9 @@ public class JsonFormActivity extends AppCompatActivity implements JsonApi {
 
     private JSONObject          mJSONObject;
     private PropertyManager propertyManager;
+    private ArrayList<View> watchedViews;
+    private String functionRegex;
+    private HashMap<String, Comparer> comparers;
 
     public void init(String json) {
         try {
@@ -45,6 +60,7 @@ public class JsonFormActivity extends AppCompatActivity implements JsonApi {
         setContentView(R.layout.activity_json_form);
         mToolbar = (Toolbar) findViewById(R.id.tb_top);
         setSupportActionBar(mToolbar);
+        watchedViews = new ArrayList<>();
         if (savedInstanceState == null) {
             init(getIntent().getStringExtra("json"));
             getSupportFragmentManager().beginTransaction()
@@ -114,6 +130,7 @@ public class JsonFormActivity extends AppCompatActivity implements JsonApi {
                     }
                 }
             }
+            refreshSkipLogic();
         }
     }
 
@@ -159,5 +176,92 @@ public class JsonFormActivity extends AppCompatActivity implements JsonApi {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void addWatchedView(View view) {
+        watchedViews.add(view);
+    }
+
+    @Override
+    public void refreshSkipLogic() {
+        initComparers();
+        for (View curView : watchedViews) {
+            if (curView.getTag(R.id.relevance) != null) {
+                try {
+                    JSONObject relevance = new JSONObject((String) curView.getTag(R.id.relevance));
+                    Iterator<String> keys = relevance.keys();
+                    boolean ok = true;
+                    while (keys.hasNext()) {
+                        String curKey = keys.next();
+                        String[] address = curKey.split(":");
+                        if (address.length == 2) {
+                            JSONObject curRelevance = relevance.getJSONObject(curKey);
+                            JSONObject curReferenceObject = mJSONObject.getJSONObject(address[0])
+                                    .getJSONObject(address[1]);
+
+                            String curValue = curReferenceObject.optString("value");
+                            try {
+                                boolean comparison = doComparison(curValue, curRelevance);
+                                ok = ok && comparison;
+                                if(!comparison ) break;
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                    curView.setEnabled(ok);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private void initComparers() {
+        if (functionRegex == null || comparers == null) {
+            functionRegex = "";
+            comparers = new HashMap<>();
+
+            LessThanComparer lessThanComparison = new LessThanComparer();
+            functionRegex += lessThanComparison.getFunctionName();
+            comparers.put(lessThanComparison.getFunctionName(), lessThanComparison);
+
+            LessThanEqualToComparer lessThanEqualToComparison = new LessThanEqualToComparer();
+            functionRegex += "|" + lessThanEqualToComparison.getFunctionName();
+            comparers.put(lessThanEqualToComparison.getFunctionName(), lessThanEqualToComparison);
+
+            EqualToComparer equalToComparison = new EqualToComparer();
+            functionRegex += "|" + equalToComparison.getFunctionName();
+            comparers.put(equalToComparison.getFunctionName(), equalToComparison);
+
+            GreaterThanComparer greaterThanComparison = new GreaterThanComparer();
+            functionRegex += "|" + greaterThanComparison.getFunctionName();
+            comparers.put(greaterThanComparison.getFunctionName(), greaterThanComparison);
+
+            GreaterThanEqualToComparer greaterThanEqualToComparison = new GreaterThanEqualToComparer();
+            functionRegex += "|" + greaterThanEqualToComparison.getFunctionName();
+            comparers.put(greaterThanEqualToComparison.getFunctionName(), greaterThanEqualToComparison);
+
+            RegexComparer regexComparison = new RegexComparer();
+            functionRegex += "|" + regexComparison.getFunctionName();
+            comparers.put(regexComparison.getFunctionName(), regexComparison);
+        }
+    }
+
+    private boolean doComparison(String value, JSONObject comparison) throws Exception {
+        String type = comparison.getString("type").toLowerCase();
+        String ex = comparison.getString("ex");
+
+        Pattern pattern = Pattern.compile("(" + functionRegex + ")\\((.*)\\)");
+        Matcher matcher = pattern.matcher(ex);
+        if (matcher.find()) {
+            String functionName = matcher.group(1);
+            String b = matcher.group(2);
+            return comparers.get(functionName).compare(value, type, b);
+        }
+
+        return false;
     }
 }

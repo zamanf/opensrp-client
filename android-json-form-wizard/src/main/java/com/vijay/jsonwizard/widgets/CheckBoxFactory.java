@@ -12,6 +12,7 @@ import com.vijay.jsonwizard.constants.JsonFormConstants;
 import com.vijay.jsonwizard.customviews.CheckBox;
 import com.vijay.jsonwizard.interfaces.CommonListener;
 import com.vijay.jsonwizard.interfaces.FormWidgetFactory;
+import com.vijay.jsonwizard.interfaces.JsonApi;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -31,6 +32,7 @@ public class CheckBoxFactory implements FormWidgetFactory {
         String openMrsEntityParent = jsonObject.getString("openmrs_entity_parent");
         String openMrsEntity = jsonObject.getString("openmrs_entity");
         String openMrsEntityId = jsonObject.getString("openmrs_entity_id");
+        String relevance = jsonObject.optString("relevance");
         views.add(getTextViewWith(context, 16, jsonObject.getString("label"), jsonObject.getString("key"),
                 jsonObject.getString("type"), openMrsEntityParent, openMrsEntity, openMrsEntityId,
                 getLayoutParams(MATCH_PARENT, WRAP_CONTENT, 0, 0, 0, 0), FONT_BOLD_PATH));
@@ -52,7 +54,7 @@ public class CheckBoxFactory implements FormWidgetFactory {
             checkBox.setTag(R.id.openmrs_entity_id, openMrsEntityId);
             checkBox.setTag(R.id.childKey, item.getString("key"));
             checkBox.setGravity(Gravity.CENTER_VERTICAL);
-            checkBox.setTextSize(16);
+            checkBox.setTextSize(context.getResources().getDimension(R.dimen.default_text_size));
             checkBox.setOnCheckedChangeListener(listener);
             if (!TextUtils.isEmpty(item.optString("value"))) {
                 checkBox.setChecked(Boolean.valueOf(item.optString("value")));
@@ -63,6 +65,10 @@ public class CheckBoxFactory implements FormWidgetFactory {
                         .getResources().getDimension(R.dimen.extra_bottom_margin)));
             }
             views.add(checkBox);
+            if (relevance != null && context instanceof JsonApi) {
+                checkBox.setTag(R.id.relevance, relevance);
+                ((JsonApi) context).addWatchedView(checkBox);
+            }
         }
         return views;
     }

@@ -10,6 +10,7 @@ import com.rey.material.util.ViewUtil;
 import com.vijay.jsonwizard.R;
 import com.vijay.jsonwizard.interfaces.CommonListener;
 import com.vijay.jsonwizard.interfaces.FormWidgetFactory;
+import com.vijay.jsonwizard.interfaces.JsonApi;
 import com.vijay.jsonwizard.utils.ValidationStatus;
 
 import org.json.JSONArray;
@@ -30,6 +31,7 @@ public class SpinnerFactory implements FormWidgetFactory {
         String openMrsEntityParent = jsonObject.getString("openmrs_entity_parent");
         String openMrsEntity = jsonObject.getString("openmrs_entity");
         String openMrsEntityId = jsonObject.getString("openmrs_entity_id");
+        String relevance = jsonObject.optString("relevance");
 
         List<View> views = new ArrayList<>(1);
         MaterialSpinner spinner = (MaterialSpinner) LayoutInflater.from(context).inflate(R.layout.item_spinner, null);
@@ -84,6 +86,10 @@ public class SpinnerFactory implements FormWidgetFactory {
             spinner.setOnItemSelectedListener(listener);
         }
         views.add(spinner);
+        if (relevance != null && context instanceof JsonApi) {
+            spinner.setTag(R.id.relevance, relevance);
+            ((JsonApi) context).addWatchedView(spinner);
+        }
         return views;
     }
 

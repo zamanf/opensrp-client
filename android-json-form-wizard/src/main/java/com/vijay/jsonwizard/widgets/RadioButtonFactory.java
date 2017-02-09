@@ -12,6 +12,7 @@ import com.vijay.jsonwizard.constants.JsonFormConstants;
 import com.vijay.jsonwizard.customviews.RadioButton;
 import com.vijay.jsonwizard.interfaces.CommonListener;
 import com.vijay.jsonwizard.interfaces.FormWidgetFactory;
+import com.vijay.jsonwizard.interfaces.JsonApi;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -30,6 +31,7 @@ public class RadioButtonFactory implements FormWidgetFactory {
         String openMrsEntityParent = jsonObject.getString("openmrs_entity_parent");
         String openMrsEntity = jsonObject.getString("openmrs_entity");
         String openMrsEntityId = jsonObject.getString("openmrs_entity_id");
+        String relevance = jsonObject.optString("relevance");
 
         List<View> views = new ArrayList<>(1);
         views.add(getTextViewWith(context, 16, jsonObject.getString("label"), jsonObject.getString("key"),
@@ -52,7 +54,7 @@ public class RadioButtonFactory implements FormWidgetFactory {
             radioButton.setTag(R.id.type, jsonObject.getString("type"));
             radioButton.setTag(R.id.childKey, item.getString("key"));
             radioButton.setGravity(Gravity.CENTER_VERTICAL);
-            radioButton.setTextSize(16);
+            radioButton.setTextSize(context.getResources().getDimension(R.dimen.default_text_size));
             radioButton.setOnCheckedChangeListener(listener);
             if (!TextUtils.isEmpty(jsonObject.optString("value"))
                     && jsonObject.optString("value").equals(item.getString("key"))) {
@@ -64,6 +66,10 @@ public class RadioButtonFactory implements FormWidgetFactory {
                         .getResources().getDimension(R.dimen.extra_bottom_margin)));
             }
             views.add(radioButton);
+            if (relevance != null && context instanceof JsonApi) {
+                radioButton.setTag(R.id.relevance, relevance);
+                ((JsonApi) context).addWatchedView(radioButton);
+            }
         }
         return views;
     }

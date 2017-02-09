@@ -10,4 +10,5 @@
     <item type='id' name="openmrs_entity_parent"/>
     <item type='id' name="openmrs_entity"/>
     <item type='id' name="openmrs_entity_id"/>
+    <item type="id" name="relevance" />
 </resources>

@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import com.vijay.jsonwizard.R;
 import com.vijay.jsonwizard.interfaces.CommonListener;
 import com.vijay.jsonwizard.interfaces.FormWidgetFactory;
+import com.vijay.jsonwizard.interfaces.JsonApi;
 import com.vijay.jsonwizard.utils.ImageUtils;
 import com.vijay.jsonwizard.utils.ValidationStatus;
 
@@ -32,6 +33,7 @@ public class ImagePickerFactory implements FormWidgetFactory {
         String openMrsEntityParent = jsonObject.getString("openmrs_entity_parent");
         String openMrsEntity = jsonObject.getString("openmrs_entity");
         String openMrsEntityId = jsonObject.getString("openmrs_entity_id");
+        String relevance = jsonObject.optString("relevance");
 
         List<View> views = new ArrayList<>(1);
         ImageView imageView = new ImageView(context);
@@ -76,6 +78,10 @@ public class ImagePickerFactory implements FormWidgetFactory {
         uploadButton.setTag(R.id.openmrs_entity_id, openMrsEntityId);
         uploadButton.setTag(R.id.type, jsonObject.getString("type"));
         views.add(uploadButton);
+        if (relevance != null && context instanceof JsonApi) {
+            uploadButton.setTag(R.id.relevance, relevance);
+            ((JsonApi) context).addWatchedView(uploadButton);
+        }
         return views;
     }
 

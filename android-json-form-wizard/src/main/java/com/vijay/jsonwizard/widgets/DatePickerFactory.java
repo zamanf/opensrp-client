@@ -17,6 +17,7 @@ import com.vijay.jsonwizard.R;
 import com.vijay.jsonwizard.customviews.GenericTextWatcher;
 import com.vijay.jsonwizard.interfaces.CommonListener;
 import com.vijay.jsonwizard.interfaces.FormWidgetFactory;
+import com.vijay.jsonwizard.interfaces.JsonApi;
 import com.vijay.jsonwizard.validators.edittext.RequiredValidator;
 
 import org.json.JSONObject;
@@ -48,6 +49,7 @@ public class DatePickerFactory implements FormWidgetFactory {
             String openMrsEntityParent = jsonObject.getString("openmrs_entity_parent");
             String openMrsEntity = jsonObject.getString("openmrs_entity");
             String openMrsEntityId = jsonObject.getString("openmrs_entity_id");
+            String relevance = jsonObject.optString("relevance");
 
             final MaterialEditText editText = (MaterialEditText) LayoutInflater.from(context).inflate(
                     R.layout.item_edit_text, null);
@@ -164,6 +166,10 @@ public class DatePickerFactory implements FormWidgetFactory {
             editText.addTextChangedListener(new GenericTextWatcher(stepName, editText));
 
             views.add(editText);
+            if (relevance != null && context instanceof JsonApi) {
+                editText.setTag(R.id.relevance, relevance);
+                ((JsonApi) context).addWatchedView(editText);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

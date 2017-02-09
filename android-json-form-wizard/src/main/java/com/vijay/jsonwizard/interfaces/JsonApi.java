@@ -1,5 +1,7 @@
 package com.vijay.jsonwizard.interfaces;
 
+import android.view.View;
+
 import com.vijay.jsonwizard.interactors.JsonFormInteractor;
 
 import org.json.JSONException;
@@ -26,4 +28,8 @@ public interface JsonApi {
     void onFormStart();
 
     void onFormFinish();
+
+    void addWatchedView(View view);
+
+    void refreshSkipLogic();
 }
