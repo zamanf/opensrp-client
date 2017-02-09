@@ -24,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -41,6 +42,7 @@ public class JsonFormUtils {
     private static final String OPENMRS_DATA_TYPE = "openmrs_data_type";
 
     private static final String CONCEPT = "concept";
+    private static final String ENCOUNTER = "encounter";
     private static final String VALUE = "value";
     private static final String VALUES = "values";
     private static final String FIELDS = "fields";
@@ -48,7 +50,7 @@ public class JsonFormUtils {
     private static final String ENTITY_ID = "entity_id";
     private static final String ENCOUNTER_TYPE = "encounter_type";
     private static final String STEP1 = "step1";
-
+    private static final String METADATA = "metadata";
 
     public static final SimpleDateFormat FORM_DATE = new SimpleDateFormat("dd-MM-yyyy");
 
@@ -74,8 +76,10 @@ public class JsonFormUtils {
                 return;
             }
 
+            JSONObject metadata = getJSONObject(jsonForm, METADATA);
+
             Client c = JsonFormUtils.createBaseClient(fields, entityId);
-            Event e = JsonFormUtils.createEvent(fields, entityId, encounterType, providerId, bindType);
+            Event e = JsonFormUtils.createEvent(fields, metadata, entityId, encounterType, providerId, bindType);
 
             CloudantDataHandler cloudantDataHandler = CloudantDataHandler.getInstance(context.getApplicationContext());
 
@@ -148,14 +152,10 @@ public class JsonFormUtils {
 
     }
 
-    public static Event createEvent(JSONArray fields, String entityId, String encounterType, String providerId, String bindType) {
+    public static Event createEvent(JSONArray fields, JSONObject metadata, String entityId, String encounterType, String providerId, String bindType) {
 
         String encounterDateField = getFieldValue(fields, FormEntityConstants.Encounter.encounter_date.entity(), FormEntityConstants.Encounter.encounter_date.name());
         String encounterLocation = getFieldValue(fields, FormEntityConstants.Encounter.location_id.entity(), FormEntityConstants.Encounter.location_id.name());
-
-        //TODO
-        // String encounterStart = getFieldName(FormEntityConstants.Encounter.encounter_start, fs);
-        // String encounterEnd = getFieldName(FormEntityConstants.Encounter.encounter_end, fs);
 
         Date encounterDate = new Date();
         if (StringUtils.isNotBlank(encounterDateField)) {
@@ -177,48 +177,82 @@ public class JsonFormUtils {
         for (int i = 0; i < fields.length(); i++) {
             JSONObject jsonObject = getJSONObject(fields, i);
             String value = getString(jsonObject, VALUE);
-            String entity = CONCEPT;
             if (StringUtils.isNotBlank(value)) {
-                List<Object> vall = new ArrayList<>();
+                addObservation(e, jsonObject);
+            }
+        }
 
-                String formSubmissionField = getString(jsonObject, KEY);
+        if (metadata != null) {
+            Iterator<?> keys = metadata.keys();
 
-                String dataType = getString(jsonObject, OPENMRS_DATA_TYPE);
-                if (StringUtils.isBlank(dataType)) {
-                    dataType = "text";
-                }
-
-                String entityVal = getString(jsonObject, OPENMRS_ENTITY);
-
-                if (entityVal != null && entityVal.equals(entity)) {
-                    String entityIdVal = getString(jsonObject, OPENMRS_ENTITY_ID);
-                    String entityParentVal = getString(jsonObject, OPENMRS_ENTITY_PARENT);
-
-                    List<Object> humanReadableValues = new ArrayList<>();
-
-                    JSONArray values = getJSONArray(jsonObject, VALUES);
-                    if (values != null && values.length() > 0) {
-                        JSONObject choices = getJSONObject(jsonObject, OPENMRS_CHOICE_IDS);
-                        String chosenConcept = getString(choices, value);
-                        vall.add(chosenConcept);
-                        humanReadableValues.add(value);
-                    } else {
-                        vall.add(value);
+            while (keys.hasNext()) {
+                String key = (String) keys.next();
+                JSONObject jsonObject = getJSONObject(metadata, key);
+                String value = getString(jsonObject, VALUE);
+                if (StringUtils.isNotBlank(value)) {
+                    String entityVal = getString(jsonObject, OPENMRS_ENTITY);
+                    if (entityVal != null) {
+                        if (entityVal.equals(CONCEPT)) {
+                            addToJSONObject(jsonObject, KEY, key);
+                            addObservation(e, jsonObject);
+                        } else if (entityVal.equals(ENCOUNTER)) {
+                            String entityIdVal = getString(jsonObject, OPENMRS_ENTITY_ID);
+                            if (entityIdVal.equals(FormEntityConstants.Encounter.encounter_date.name())) {
+                                DateTime eDate = formatDate(value, false);
+                                if (eDate != null) {
+                                    e.setEventDate(eDate.toDate());
+                                }
+                            }
+                        }
                     }
-
-
-                    e.addObs(new Obs(CONCEPT, dataType, entityIdVal,
-                            entityParentVal, vall, humanReadableValues, null, formSubmissionField));
-                } else if (StringUtils.isBlank(entityVal)) {
-                    vall.add(value);
-
-                    e.addObs(new Obs("formsubmissionField", dataType, formSubmissionField,
-                            "", vall, new ArrayList<>(), null, formSubmissionField));
                 }
             }
         }
+
         return e;
 
+    }
+
+    private static void addObservation(Event e, JSONObject jsonObject) {
+        String value = getString(jsonObject, VALUE);
+        String entity = CONCEPT;
+        if (StringUtils.isNotBlank(value)) {
+            List<Object> vall = new ArrayList<>();
+
+            String formSubmissionField = getString(jsonObject, KEY);
+
+            String dataType = getString(jsonObject, OPENMRS_DATA_TYPE);
+            if (StringUtils.isBlank(dataType)) {
+                dataType = "text";
+            }
+
+            String entityVal = getString(jsonObject, OPENMRS_ENTITY);
+
+            if (entityVal != null && entityVal.equals(entity)) {
+                String entityIdVal = getString(jsonObject, OPENMRS_ENTITY_ID);
+                String entityParentVal = getString(jsonObject, OPENMRS_ENTITY_PARENT);
+
+                List<Object> humanReadableValues = new ArrayList<>();
+
+                JSONArray values = getJSONArray(jsonObject, VALUES);
+                if (values != null && values.length() > 0) {
+                    JSONObject choices = getJSONObject(jsonObject, OPENMRS_CHOICE_IDS);
+                    String chosenConcept = getString(choices, value);
+                    vall.add(chosenConcept);
+                    humanReadableValues.add(value);
+                } else {
+                    vall.add(value);
+                }
+
+                e.addObs(new Obs(CONCEPT, dataType, entityIdVal,
+                        entityParentVal, vall, humanReadableValues, null, formSubmissionField));
+            } else if (StringUtils.isBlank(entityVal)) {
+                vall.add(value);
+
+                e.addObs(new Obs("formsubmissionField", dataType, formSubmissionField,
+                        "", vall, new ArrayList<>(), null, formSubmissionField));
+            }
+        }
     }
 
 
@@ -444,6 +478,17 @@ public class JsonFormUtils {
         return UUID.randomUUID().toString();
     }
 
+    public static void addToJSONObject(JSONObject jsonObject, String key, String value) {
+        try {
+            if (jsonObject == null) {
+                return;
+            }
+
+            jsonObject.put(key, value);
+        } catch (JSONException e) {
+            Log.e(TAG, "", e);
+        }
+    }
 
 /*    // TODO ADD Subform
     public Client createSubformClient(SubformMap subf) throws ParseException {
