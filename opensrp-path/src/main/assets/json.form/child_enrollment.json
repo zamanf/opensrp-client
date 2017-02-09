@@ -1,6 +1,7 @@
 {
   "count": "1",
-  "encounter_type": "",
+  "encounter_type": "Birth Registration",
+  "entity_id": "",
   "metadata": {
     "start": {
       "openmrs_entity_parent": "",
@@ -178,6 +179,7 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "concept",
         "openmrs_entity_id": "1594AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "openmrs_data_type": "text",
         "type": "edit_text",
         "hint": "Father/guardian name",
         "edit_type": "name"
@@ -199,6 +201,7 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "concept",
         "openmrs_entity_id": "163260AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "openmrs_data_type": "text",
         "type": "date_picker",
         "hint": "Date first seen *",
         "expanded": true,
@@ -214,6 +217,7 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "concept",
         "openmrs_entity_id": "5916AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "openmrs_data_type": "text",
         "type": "edit_text",
         "hint": "Birth weight (KGs) *",
         "v_numeric": {
@@ -230,6 +234,7 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "concept",
         "openmrs_entity_id": "1572AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "openmrs_data_type": "select one",
         "type": "spinner",
         "hint": "Place of birth *",
         "values": [
@@ -246,6 +251,7 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "concept",
         "openmrs_entity_id": "163531AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "openmrs_data_type": "text",
         "type": "tree",
         "hint": "Birth facility *",
         "tree": [
@@ -287,7 +293,7 @@
         "key": "Residential_Address",
         "openmrs_entity_parent": "usual_residence",
         "openmrs_entity": "person_address",
-        "openmrs_entity_id": "",
+        "openmrs_entity_id": "address1",
         "type": "edit_text",
         "hint": "Residential address *",
         "edit_type": "name",
@@ -300,7 +306,7 @@
         "key": "Physical_Landmark",
         "openmrs_entity_parent": "usual_residence",
         "openmrs_entity": "person_address",
-        "openmrs_entity_id": "",
+        "openmrs_entity_id": "address2",
         "type": "edit_text",
         "hint": "Landmark",
         "edit_type": "name"

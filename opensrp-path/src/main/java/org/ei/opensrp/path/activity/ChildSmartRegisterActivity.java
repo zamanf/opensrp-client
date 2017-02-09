@@ -3,8 +3,10 @@ package org.ei.opensrp.path.activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -12,13 +14,17 @@ import android.util.Log;
 import com.vijay.jsonwizard.activities.JsonFormActivity;
 
 import org.ei.opensrp.adapter.SmartRegisterPaginatedAdapter;
+import org.ei.opensrp.clientandeventmodel.Client;
+import org.ei.opensrp.clientandeventmodel.Event;
 import org.ei.opensrp.domain.form.FormSubmission;
 import org.ei.opensrp.path.R;
 import org.ei.opensrp.path.adapter.BaseRegisterActivityPagerAdapter;
 import org.ei.opensrp.path.fragment.ChildSmartRegisterFragment;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
+import org.ei.opensrp.repository.AllSharedPreferences;
 import org.ei.opensrp.service.FormSubmissionService;
 import org.ei.opensrp.service.ZiggyService;
+import org.ei.opensrp.sync.CloudantDataHandler;
 import org.ei.opensrp.util.FormUtils;
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
 import org.ei.opensrp.view.dialog.DialogOption;
@@ -35,6 +41,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import util.JsonFormUtils;
 
 /**
  * Created by Ahmed on 13-Oct-15.
@@ -85,7 +92,7 @@ public class ChildSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
     }
 
 
-    public void onPageChanged(int page){
+    public void onPageChanged(int page) {
         setRequestedOrientation(page == 0 ? ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
@@ -93,39 +100,50 @@ public class ChildSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
     protected SmartRegisterPaginatedAdapter adapter() {
         return new SmartRegisterPaginatedAdapter(clientsProvider());
     }
-    @Override
-    protected DefaultOptionsProvider getDefaultOptionsProvider() {return null;}
 
     @Override
-    protected void setupViews() {}
+    protected DefaultOptionsProvider getDefaultOptionsProvider() {
+        return null;
+    }
 
     @Override
-    protected void onResumption(){}
+    protected void setupViews() {
+    }
 
     @Override
-    protected NavBarOptionsProvider getNavBarOptionsProvider() {return null;}
+    protected void onResumption() {
+    }
 
     @Override
-    protected SmartRegisterClientsProvider clientsProvider() {return null;}
+    protected NavBarOptionsProvider getNavBarOptionsProvider() {
+        return null;
+    }
 
     @Override
-    protected void onInitialization() {}
+    protected SmartRegisterClientsProvider clientsProvider() {
+        return null;
+    }
+
+    @Override
+    protected void onInitialization() {
+    }
 
     @Override
     public void startRegistration() {
     }
+
     @Override
     public void showFragmentDialog(DialogOptionModel dialogOptionModel, Object tag) {
         try {
             LoginActivity.setLanguage();
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
         super.showFragmentDialog(dialogOptionModel, tag);
     }
 
 
-    public DialogOption[] getEditOptions( HashMap<String,String> overridemap) {
+    public DialogOption[] getEditOptions(HashMap<String, String> overridemap) {
 
         return new DialogOption[]{
                 new OpenFormOption(getResources().getString(R.string.child_followup), "child_followup", formController, overridemap, OpenFormOption.ByColumnAndByDetails.bydefault)
@@ -157,12 +175,12 @@ public class ChildSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
             mPager.setCurrentItem(formIndex, false); //Don't animate the view on orientation
             change the view disapears*/
             JSONObject form = FormUtils.getInstance(getApplicationContext()).getFormJson(formName);
-            if(form != null) {
+            if (form != null) {
                 Intent intent = new Intent(getApplicationContext(), JsonFormActivity.class);
                 intent.putExtra("json", form.toString());
                 startActivityForResult(intent, REQUEST_CODE_GET_JSON);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -171,16 +189,23 @@ public class ChildSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_GET_JSON) {
-            if(resultCode == RESULT_OK) {
-                Log.d("JSONResult", data.getStringExtra("json"));
+            if (resultCode == RESULT_OK) {
+
+                String jsonString = data.getStringExtra("json");
+                Log.d("JSONResult", jsonString);
+
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+                AllSharedPreferences allSharedPreferences = new AllSharedPreferences(preferences);
+
+                JsonFormUtils.save(allSharedPreferences.fetchRegisteredANM(), "ec_child", jsonString, this);
             }
         }
     }
 
     @Override
-    public void saveFormSubmission(String formSubmission, String id, String formName, JSONObject fieldOverrides){
+    public void saveFormSubmission(String formSubmission, String id, String formName, JSONObject fieldOverrides) {
         // save the form
-        try{
+        try {
             FormUtils formUtils = FormUtils.getInstance(getApplicationContext());
             FormSubmission submission = formUtils.generateFormSubmisionFromXMLString(id, formSubmission, formName, fieldOverrides);
 
@@ -195,7 +220,7 @@ public class ChildSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
             //switch to forms list fragmentstregi
             switchToBaseFragment(formSubmission); // Unnecessary!! passing on data
 
-        }catch (Exception e){
+        } catch (Exception e) {
             DisplayFormFragment displayFormFragment = getDisplayFormFragmentAtIndex(currentPage);
             if (displayFormFragment != null) {
                 displayFormFragment.setFormPartialSaving(false);
@@ -205,8 +230,8 @@ public class ChildSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
         }
     }
 
-    public void switchToBaseFragment(final String data){
-        Log.v("we are here","switchtobasegragment");
+    public void switchToBaseFragment(final String data) {
+        Log.v("we are here", "switchtobasegragment");
         final int prevPageIndex = currentPage;
         runOnUiThread(new Runnable() {
             @Override
@@ -230,6 +255,7 @@ public class ChildSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
         });
 
     }
+
     @Override
     public void onBackPressed() {
         if (currentPage != 0) {
@@ -260,19 +286,20 @@ public class ChildSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
     }
 
     public DisplayFormFragment getDisplayFormFragmentAtIndex(int index) {
-        return  (DisplayFormFragment)findFragmentByPosition(index);
+        return (DisplayFormFragment) findFragmentByPosition(index);
     }
 
-    public void retrieveAndSaveUnsubmittedFormData(){
-        if (currentActivityIsShowingForm()){
+    public void retrieveAndSaveUnsubmittedFormData() {
+        if (currentActivityIsShowingForm()) {
             DisplayFormFragment formFragment = getDisplayFormFragmentAtIndex(currentPage);
             formFragment.saveCurrentFormData();
         }
     }
 
-    private boolean currentActivityIsShowingForm(){
+    private boolean currentActivityIsShowingForm() {
         return currentPage != 0;
     }
+
     @Override
     protected void onPause() {
         super.onPause();
