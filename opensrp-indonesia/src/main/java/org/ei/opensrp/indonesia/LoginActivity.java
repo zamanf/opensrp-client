@@ -103,7 +103,6 @@ public class LoginActivity extends Activity {
         setLanguage();
 
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {

@@ -135,21 +135,35 @@ public class Tools {
             Log.e(TAG, "Wrote image to " + thumbs_photo);
 
 //            TODO
-//            saveimagereference(bindobject, entityId, details);
-//            HashMap<String,String> details = new HashMap<String,String>();
-//            details.put("profilepic",currentfile.getAbsolutePath());
+            bindobject = "kartu_ibu";
+
+            HashMap<String,String> details = new HashMap<>();
+
+            saveimagereference(bindobject, entityId, details);
+//            details.put("profilepic", photoPath);
+            details.put("profilepic", thumbs_photo.toString());
 
 
 //            KIDetailActivity.details = new HashMap<>();
 //            HashMap<String,String> details = new HashMap<>();
 //            KIDetailActivity.details.put("profilepic",photoPath);
 
-
 //            Database Stored
             DetailsRepository detailsRepository = Context.getInstance().detailsRepository();
             Long tsLong = System.currentTimeMillis()/1000;
-            detailsRepository.add(entityId, "profilepic_thumb", photoPath, tsLong);
+//            detailsRepository.add(entityId, "profilepic", photoPath, tsLong);
+            detailsRepository.add(entityId, "profilepic", thumbs_photo.toString(), tsLong);
 
+            String anmId = Context.getInstance().allSharedPreferences().fetchRegisteredANM();
+            ProfileImage profileImage = new ProfileImage(
+                    UUID.randomUUID().toString(),
+                    anmId,
+                    entityId,
+                    "Image",
+                    details.get("profilepic"),
+                    ImageRepository.TYPE_Unsynced,
+                    "dp");
+            ((ImageRepository) Context.getInstance().imageRepository()).add(profileImage);
             return true;
 
         } catch (FileNotFoundException e) {
@@ -369,7 +383,7 @@ public class Tools {
 //        return hash;
 //    }
 
-    public void saveimagereference(String bindobject,String entityid,Map<String,String> details){
+    public static void saveimagereference(String bindobject,String entityid,Map<String,String> details){
         Context.getInstance().allCommonsRepositoryobjects(bindobject).mergeDetails(entityid,details);
         String anmId = Context.getInstance().allSharedPreferences().fetchRegisteredANM();
         ProfileImage profileImage = new ProfileImage(UUID.randomUUID().toString(),anmId,entityid,"Image",details.get("profilepic"), ImageRepository.TYPE_Unsynced,"dp");
