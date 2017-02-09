@@ -1,5 +1,7 @@
 package com.vijay.jsonwizard.interfaces;
 
+import com.vijay.jsonwizard.interactors.JsonFormInteractor;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -20,4 +22,8 @@ public interface JsonApi {
     String currentJsonState();
 
     String getCount();
+
+    void onFormStart();
+
+    void onFormFinish();
 }

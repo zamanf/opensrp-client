@@ -152,6 +152,7 @@ public class JsonFormFragmentPresenter extends MvpBasePresenter<JsonFormFragment
         ValidationStatus validationStatus = writeValuesAndValidate(mainView);
         if (validationStatus.isValid()) {
             Intent returnIntent = new Intent();
+            getView().onFormFinish();
             returnIntent.putExtra("json", getView().getCurrentJsonState());
             getView().finishWithResult(returnIntent);
         } else {

@@ -254,6 +254,16 @@ public class JsonFormFragment extends MvpFragment<JsonFormFragmentPresenter, Jso
     }
 
     @Override
+    public void onFormStart() {
+        mJsonApi.onFormStart();
+    }
+
+    @Override
+    public void onFormFinish() {
+        mJsonApi.onFormFinish();
+    }
+
+    @Override
     public void finishWithResult(Intent returnIntent) {
         getActivity().setResult(Activity.RESULT_OK, returnIntent);
         getActivity().finish();
