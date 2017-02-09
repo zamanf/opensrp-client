@@ -69,4 +69,8 @@ public interface JsonFormFragmentView<VS extends ViewState> extends MvpView {
     void unCheckAllExcept(String parentKey, String childKey);
 
     String getCount();
+
+    void onFormStart();
+
+    void onFormFinish();
 }
