@@ -24,6 +24,7 @@ import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.vijay.jsonwizard.R;
@@ -43,6 +44,7 @@ public class JsonFormFragment extends MvpFragment<JsonFormFragmentPresenter, Jso
         CommonListener, JsonFormFragmentView<JsonFormFragmentViewState> {
     private static final String TAG = "JsonFormFragment";
     private LinearLayout        mMainView;
+    private ScrollView          mScrollView;
     private Menu                mMenu;
     private JsonApi             mJsonApi;
 
@@ -62,6 +64,7 @@ public class JsonFormFragment extends MvpFragment<JsonFormFragmentPresenter, Jso
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_json_wizard, null);
         mMainView = (LinearLayout) rootView.findViewById(R.id.main_layout);
+        mScrollView = (ScrollView) rootView.findViewById(R.id.scroll_view);
         return rootView;
     }
 
@@ -263,6 +266,19 @@ public class JsonFormFragment extends MvpFragment<JsonFormFragmentPresenter, Jso
     @Override
     public void onFormFinish() {
         mJsonApi.onFormFinish();
+    }
+
+    @Override
+    public void scrollToView(final View view) {
+        mScrollView.post(new Runnable() {
+            @Override
+            public void run() {
+                int y = view.getBottom() - 200;
+                if (y < 0) y = 0;
+                mScrollView.scrollTo(0, y);
+                view.requestFocus();
+            }
+        });
     }
 
     @Override

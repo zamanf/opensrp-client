@@ -12,6 +12,7 @@ import com.vijay.jsonwizard.interfaces.FormWidgetFactory;
 import com.vijay.jsonwizard.interfaces.JsonApi;
 import com.vijay.jsonwizard.utils.ImageUtils;
 import com.vijay.jsonwizard.utils.ValidationStatus;
+import com.vijay.jsonwizard.views.JsonFormFragmentView;
 
 import org.json.JSONObject;
 
@@ -89,18 +90,19 @@ public class ImagePickerFactory implements FormWidgetFactory {
         return views;
     }
 
-    public static ValidationStatus validate(ImageView imageView) {
+    public static ValidationStatus validate(JsonFormFragmentView formFragmentView,
+                                            ImageView imageView) {
         if (!(imageView.getTag(R.id.v_required) instanceof String) || !(imageView.getTag(R.id.error) instanceof String)) {
-            return new ValidationStatus(true, null);
+            return new ValidationStatus(true, null, formFragmentView, imageView);
         }
         Boolean isRequired = Boolean.valueOf((String) imageView.getTag(R.id.v_required));
         if (!isRequired || !imageView.isEnabled()) {
-            return new ValidationStatus(true, null);
+            return new ValidationStatus(true, null, formFragmentView, imageView);
         }
         Object path = imageView.getTag(R.id.imagePath);
         if (path instanceof String && !TextUtils.isEmpty((String) path)) {
-            return new ValidationStatus(true, null);
+            return new ValidationStatus(true, null, formFragmentView, imageView);
         }
-        return new ValidationStatus(false, (String) imageView.getTag(R.id.error));
+        return new ValidationStatus(false, (String) imageView.getTag(R.id.error), formFragmentView, imageView);
     }
 }

@@ -3,6 +3,7 @@ package com.vijay.jsonwizard.interfaces;
 import android.view.View;
 
 import com.vijay.jsonwizard.interactors.JsonFormInteractor;
+import com.vijay.jsonwizard.views.JsonFormFragmentView;
 
 import org.json.JSONException;
 import org.json.JSONObject;

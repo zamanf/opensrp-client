@@ -73,4 +73,6 @@ public interface JsonFormFragmentView<VS extends ViewState> extends MvpView {
     void onFormStart();
 
     void onFormFinish();
+
+    void scrollToView(View view);
 }

@@ -12,6 +12,7 @@ import com.vijay.jsonwizard.interfaces.CommonListener;
 import com.vijay.jsonwizard.interfaces.FormWidgetFactory;
 import com.vijay.jsonwizard.interfaces.JsonApi;
 import com.vijay.jsonwizard.utils.ValidationStatus;
+import com.vijay.jsonwizard.views.JsonFormFragmentView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -93,18 +94,19 @@ public class SpinnerFactory implements FormWidgetFactory {
         return views;
     }
 
-    public static ValidationStatus validate(MaterialSpinner spinner) {
+    public static ValidationStatus validate(JsonFormFragmentView formFragmentView,
+                                            MaterialSpinner spinner) {
         if (!(spinner.getTag(R.id.v_required) instanceof String) || !(spinner.getTag(R.id.error) instanceof String)) {
-            return new ValidationStatus(true, null);
+            return new ValidationStatus(true, null, formFragmentView, spinner);
         }
         Boolean isRequired = Boolean.valueOf((String) spinner.getTag(R.id.v_required));
         if (!isRequired || !spinner.isEnabled()) {
-            return new ValidationStatus(true, null);
+            return new ValidationStatus(true, null, formFragmentView, spinner);
         }
         int selectedItemPosition = spinner.getSelectedItemPosition();
         if(selectedItemPosition > 0) {
-            return new ValidationStatus(true, null);
+            return new ValidationStatus(true, null, formFragmentView, spinner);
         }
-        return new ValidationStatus(false, (String) spinner.getTag(R.id.error));
+        return new ValidationStatus(false, (String) spinner.getTag(R.id.error), formFragmentView, spinner);
     }
 }

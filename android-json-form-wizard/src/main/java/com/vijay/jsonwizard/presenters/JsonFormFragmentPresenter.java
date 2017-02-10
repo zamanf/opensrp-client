@@ -92,6 +92,7 @@ public class JsonFormFragmentPresenter extends MvpBasePresenter<JsonFormFragment
             getView().hideKeyBoard();
             getView().transactThis(next);
         } else {
+            validationStatus.requestAttention();
             getView().showToast(validationStatus.getErrorMessage());
         }
     }
@@ -106,15 +107,18 @@ public class JsonFormFragmentPresenter extends MvpBasePresenter<JsonFormFragment
             String openMrsEntityId = (String) childAt.getTag(R.id.openmrs_entity_id);
             if (childAt instanceof MaterialEditText) {
                 MaterialEditText editText = (MaterialEditText) childAt;
-                ValidationStatus validationStatus = EditTextFactory.validate(editText);
+                ValidationStatus validationStatus = EditTextFactory.validate(getView(), editText);
                 if (!validationStatus.isValid()) {
+                    validationStatus.requestAttention();
                     return validationStatus;
                 }
                 getView().writeValue(mStepName, key, editText.getText().toString(),
                         openMrsEntityParent, openMrsEntity, openMrsEntityId);
             } else if (childAt instanceof ImageView) {
-                ValidationStatus validationStatus = ImagePickerFactory.validate((ImageView) childAt);
+                ValidationStatus validationStatus = ImagePickerFactory.validate(getView(),
+                        (ImageView) childAt);
                 if (!validationStatus.isValid()) {
+                    validationStatus.requestAttention();
                     return validationStatus;
                 }
                 Object path = childAt.getTag(R.id.imagePath);
@@ -137,8 +141,9 @@ public class JsonFormFragmentPresenter extends MvpBasePresenter<JsonFormFragment
                 }
             } else if (childAt instanceof MaterialSpinner) {
                 MaterialSpinner spinner = (MaterialSpinner) childAt;
-                ValidationStatus validationStatus = SpinnerFactory.validate(spinner);
+                ValidationStatus validationStatus = SpinnerFactory.validate(getView(), spinner);
                 if (!validationStatus.isValid()) {
+                    validationStatus.requestAttention();
                     spinner.setError(validationStatus.getErrorMessage());
                     return validationStatus;
                 } else {
@@ -146,7 +151,7 @@ public class JsonFormFragmentPresenter extends MvpBasePresenter<JsonFormFragment
                 }
             }
         }
-        return new ValidationStatus(true, null);
+        return new ValidationStatus(true, null, null, null);
     }
 
     public void onSaveClick(LinearLayout mainView) {
@@ -158,6 +163,7 @@ public class JsonFormFragmentPresenter extends MvpBasePresenter<JsonFormFragment
             getView().finishWithResult(returnIntent);
         } else {
             Toast.makeText(getView().getContext(), validationStatus.getErrorMessage(), Toast.LENGTH_LONG);
+            validationStatus.requestAttention();
         }
     }
 

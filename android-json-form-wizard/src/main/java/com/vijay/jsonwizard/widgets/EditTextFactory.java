@@ -20,6 +20,7 @@ import com.vijay.jsonwizard.utils.ValidationStatus;
 import com.vijay.jsonwizard.validators.edittext.MaxLengthValidator;
 import com.vijay.jsonwizard.validators.edittext.MinLengthValidator;
 import com.vijay.jsonwizard.validators.edittext.RequiredValidator;
+import com.vijay.jsonwizard.views.JsonFormFragmentView;
 
 import org.json.JSONObject;
 
@@ -153,14 +154,15 @@ public class EditTextFactory implements FormWidgetFactory {
         return views;
     }
 
-    public static ValidationStatus validate(MaterialEditText editText) {
+    public static ValidationStatus validate(JsonFormFragmentView formFragmentView,
+                                            MaterialEditText editText) {
         if(editText.isEnabled()) {
             boolean validate = editText.validate();
             if (!validate) {
-                return new ValidationStatus(false, editText.getError().toString());
+                return new ValidationStatus(false, editText.getError().toString(), formFragmentView, editText);
             }
         }
-        return new ValidationStatus(true, null);
+        return new ValidationStatus(true, null, formFragmentView, editText);
     }
 
 }
