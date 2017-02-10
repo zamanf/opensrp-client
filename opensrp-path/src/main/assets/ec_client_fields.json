@@ -309,7 +309,7 @@
           "column_name":"program_client_id",
           "type":"Client",
           "json_mapping":{
-            "field":"identifiers.Program Client ID"
+            "field":"identifiers.ZEIR_ID"
           }
         },
         {
@@ -338,14 +338,15 @@
           "type":"Event",
           "json_mapping":{
             "field":"obs.fieldCode",
-            "concept":"1593AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+            "formSubmissionField":"Mother_Guardian_Name"
           }
         },
         {
           "column_name":"father_name",
-          "type":"Client",
+          "type":"Event",
           "json_mapping":{
-            "field":"fatherName"
+            "field":"obs.fieldCode",
+            "concept":"1594AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
           }
         },
         {
@@ -359,7 +360,7 @@
           "column_name":"epi_card_number",
           "type":"Client",
           "json_mapping":{
-            "field":"attributes.EPI Card Number"
+            "field":"attributes.Child_Register_Card_Number"
           }
         },
         {
@@ -367,7 +368,7 @@
           "type":"Event",
           "json_mapping":{
             "field":"obs.fieldCode",
-            "concept":"159635AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+            "formSubmissionField":"Mother_Guardian_Number"
           }
         },
         {

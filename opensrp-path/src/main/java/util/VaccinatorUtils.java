@@ -41,7 +41,6 @@ import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.domain.Alert;
 import org.ei.opensrp.util.IntegerUtil;
 import org.ei.opensrp.path.R;
-import org.ei.opensrp.path.db.CESQLiteHelper;
 import org.ei.opensrp.path.db.Client;
 import org.ei.opensrp.path.db.Obs;
 import org.ei.opensrp.path.db.VaccineRepo;
@@ -113,14 +112,6 @@ public class VaccinatorUtils {
         }
 
         return map;
-    }
-
-    public static String getObsValue(CESQLiteHelper cedb, Client client, boolean humanize, String... fields) throws JSONException, ParseException {
-        List<Obs> ol = cedb.getObs(client.getBaseEntityId(), null, "eventDate DESC", fields);
-        if(ol == null || ol.size() == 0){
-            return "";
-        }
-        return formatValue(ol.get(0).getValue(), humanize);
     }
 
     public static ArrayList<HashMap<String, String>> getWasted(String startDate, String endDate, String type){

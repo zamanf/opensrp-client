@@ -2,6 +2,8 @@ package org.ei.opensrp.path.service.intent;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.os.Bundle;
+import android.os.ResultReceiver;
 import android.util.Log;
 
 import org.ei.opensrp.Context;
@@ -16,6 +18,9 @@ import java.util.concurrent.CountDownLatch;
 public class PathReplicationIntentService extends IntentService {
     private static final String TAG = PathReplicationIntentService.class.getCanonicalName();
 
+    public static final String RECEIVER_TAG = "ReceiverTag";
+    public static final String RESULT_TAG = "ResultTag";
+
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
      *
@@ -27,22 +32,32 @@ public class PathReplicationIntentService extends IntentService {
 
     public PathReplicationIntentService() {
 
-        super("ReplicationIntentService");
+        super("PathReplicationIntentService");
 
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        boolean status;
+        ResultReceiver rec = intent.getParcelableExtra(RECEIVER_TAG);
+
         try {
+
             CloudantSyncHandler mCloudantSyncHandler = CloudantSyncHandler.getInstance(Context.getInstance().applicationContext());
             CountDownLatch mCountDownLatch = new CountDownLatch(1);
             mCloudantSyncHandler.setCountDownLatch(mCountDownLatch);
             mCloudantSyncHandler.startPushReplication();
 
             mCountDownLatch.await();
+
+            status = true;
+
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
+            status = false;
         }
-
+        Bundle b= new Bundle();
+        b.putBoolean(RESULT_TAG, status);
+        rec.send(0, b);
     }
 }

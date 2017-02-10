@@ -2,6 +2,7 @@ package util;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.ResultReceiver;
 import android.util.Log;
 
 import org.apache.commons.lang3.StringUtils;
@@ -54,7 +55,7 @@ public class JsonFormUtils {
 
     public static final SimpleDateFormat FORM_DATE = new SimpleDateFormat("dd-MM-yyyy");
 
-    public static void save(String providerId, String bindType, String jsonString, Context context) {
+    public static void save(String providerId, String bindType, String jsonString, Context context, ResultReceiver receiver) {
         try {
 
             JSONObject jsonForm = new JSONObject(jsonString);
@@ -90,15 +91,16 @@ public class JsonFormUtils {
                 cloudantDataHandler.createClientDocument(client);
             }
 
-            startReplicationIntentService(context);
+            startReplicationIntentService(context, receiver);
 
         } catch (Exception e) {
             Log.e(TAG, "", e);
         }
     }
 
-    public static void startReplicationIntentService(Context context) {
+    public static void startReplicationIntentService(Context context, ResultReceiver receiver) {
         Intent serviceIntent = new Intent(context, PathReplicationIntentService.class);
+        serviceIntent.putExtra(PathReplicationIntentService.RECEIVER_TAG, receiver);
         context.startService(serviceIntent);
     }
 

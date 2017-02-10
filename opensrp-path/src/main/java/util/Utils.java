@@ -38,6 +38,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.squareup.picasso.Picasso;
 
@@ -67,7 +68,7 @@ import java.util.Map;
 
 /**
  * @author Maimoona
- * Class containing some static utility methods.
+ *         Class containing some static utility methods.
  */
 public class Utils {
     private static final SimpleDateFormat UI_DF = new SimpleDateFormat("dd-MM-yyyy");
@@ -76,89 +77,87 @@ public class Utils {
     private static final SimpleDateFormat DB_DF = new SimpleDateFormat("yyyy-MM-dd");
     private static final SimpleDateFormat DB_DTF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    private Utils() {};
+    private Utils() {
+    }
 
-    public static String convertDateFormat(String date, boolean suppressException){
-        try{
+    ;
+
+    public static String convertDateFormat(String date, boolean suppressException) {
+        try {
             return UI_DF.format(DB_DF.parse(date));
-        }
-        catch (ParseException e) {
-            if(!suppressException) throw new RuntimeException(e);
+        } catch (ParseException e) {
+            if (!suppressException) throw new RuntimeException(e);
         }
         return "";
     }
 
-    public static Date toDate(String date, boolean suppressException){
-        try{
+    public static Date toDate(String date, boolean suppressException) {
+        try {
             return DB_DF.parse(date);
-        }
-        catch (ParseException e) {
-            if(!suppressException) throw new RuntimeException(e);
+        } catch (ParseException e) {
+            if (!suppressException) throw new RuntimeException(e);
         }
         return null;
     }
 
-    public static String convertDateFormat(String date, String defaultV, boolean suppressException){
-        try{
+    public static String convertDateFormat(String date, String defaultV, boolean suppressException) {
+        try {
             return UI_DF.format(DB_DF.parse(date));
+        } catch (ParseException e) {
+            if (!suppressException) throw new RuntimeException(e);
         }
-        catch (ParseException e) {
-            if(!suppressException) throw new RuntimeException(e);
-        }
-        return StringUtils.isNotBlank(defaultV)?defaultV:"";
+        return StringUtils.isNotBlank(defaultV) ? defaultV : "";
     }
 
-    public static String convertDateFormat(DateTime date){
+    public static String convertDateFormat(DateTime date) {
         return UI_DF.format(date.toDate());
     }
 
-    public static String convertDateTimeFormat(String date, boolean suppressException){
-        try{
+    public static String convertDateTimeFormat(String date, boolean suppressException) {
+        try {
             return UI_DTF.format(DB_DTF.parse(date.replace("T", " ")));
-        }
-        catch (ParseException e) {
+        } catch (ParseException e) {
             e.printStackTrace();
-            if(!suppressException) throw new RuntimeException(e);
+            if (!suppressException) throw new RuntimeException(e);
         }
         return "";
     }
 
-    public static void fillValue(TextView v, Map<String, String> cm, String field, boolean humanize){
+    public static void fillValue(TextView v, Map<String, String> cm, String field, boolean humanize) {
         v.setText(getValue(cm, field, humanize));
     }
 
-    public static void fillValue(TextView v, Map<String, String> cm, String field, String defaultV, boolean humanize){
+    public static void fillValue(TextView v, Map<String, String> cm, String field, String defaultV, boolean humanize) {
         String val = getValue(cm, field, humanize);
-        if(StringUtils.isNotBlank(defaultV) && StringUtils.isBlank(val)){
+        if (StringUtils.isNotBlank(defaultV) && StringUtils.isBlank(val)) {
             val = defaultV;
         }
         v.setText(val);
     }
 
-    public static void fillValue(TextView v, CommonPersonObjectClient pc, String field, boolean humanize){
+    public static void fillValue(TextView v, CommonPersonObjectClient pc, String field, boolean humanize) {
         v.setText(getValue(pc, field, humanize));
     }
 
-    public static void fillValue(TextView v, CommonPersonObjectClient pc, String field, String defaultV, boolean humanize){
+    public static void fillValue(TextView v, CommonPersonObjectClient pc, String field, String defaultV, boolean humanize) {
         String val = getValue(pc, field, humanize);
-        if(StringUtils.isNotBlank(defaultV) && StringUtils.isBlank(val)){
+        if (StringUtils.isNotBlank(defaultV) && StringUtils.isBlank(val)) {
             val = defaultV;
         }
         v.setText(val);
     }
 
-    public static String getColorValue(Context cxt, AlertStatus alertStatus){
-        if(alertStatus.equals(AlertStatus.upcoming)){
-            return "#"+Integer.toHexString(cxt.getResources().getColor(org.ei.opensrp.path.R.color.alert_upcoming)).substring(2);
+    public static String getColorValue(Context cxt, AlertStatus alertStatus) {
+        if (alertStatus.equals(AlertStatus.upcoming)) {
+            return "#" + Integer.toHexString(cxt.getResources().getColor(org.ei.opensrp.path.R.color.alert_upcoming)).substring(2);
         }
-        if(alertStatus.equals(AlertStatus.normal)){
-            return "#"+Integer.toHexString(cxt.getResources().getColor(org.ei.opensrp.path.R.color.alert_normal)).substring(2);
+        if (alertStatus.equals(AlertStatus.normal)) {
+            return "#" + Integer.toHexString(cxt.getResources().getColor(org.ei.opensrp.path.R.color.alert_normal)).substring(2);
         }
-        if(alertStatus.equals(AlertStatus.urgent)){
-            return "#"+Integer.toHexString(cxt.getResources().getColor(org.ei.opensrp.path.R.color.alert_urgent)).substring(2);
-        }
-        else {
-            return "#"+Integer.toHexString(cxt.getResources().getColor(org.ei.opensrp.path.R.color.alert_na)).substring(2);
+        if (alertStatus.equals(AlertStatus.urgent)) {
+            return "#" + Integer.toHexString(cxt.getResources().getColor(org.ei.opensrp.path.R.color.alert_urgent)).substring(2);
+        } else {
+            return "#" + Integer.toHexString(cxt.getResources().getColor(org.ei.opensrp.path.R.color.alert_na)).substring(2);
         }
     }
 
@@ -168,7 +167,7 @@ public class Utils {
             if (entry.getValue() != null) {
                 Location l = entry.getValue().getNode();
 
-                if(l.getTags() != null){
+                if (l.getTags() != null) {
                     for (String s : l.getTags()) {
                         if (s.equalsIgnoreCase(locationTag)) {
                             locations.put(locationTag, l.getName());
@@ -185,38 +184,39 @@ public class Utils {
         }
     }
 
-    public static void fillValue(TextView v, String value){
+    public static void fillValue(TextView v, String value) {
         v.setText(value);
     }
 
-    public static String formatValue(String value, boolean humanize){
-        if(value == null){
+    public static String formatValue(String value, boolean humanize) {
+        if (value == null) {
             value = "";
         }
-        return humanize? WordUtils.capitalize(StringUtil.humanize(value)):value;
+        return humanize ? WordUtils.capitalize(StringUtil.humanize(value)) : value;
     }
 
-    public static String formatValue(Object value, boolean humanize){
-        if(value == null){
+    public static String formatValue(Object value, boolean humanize) {
+        if (value == null) {
             value = "";
         }
-        return humanize? WordUtils.capitalize(StringUtil.humanize(value.toString())):value.toString();
+        return humanize ? WordUtils.capitalize(StringUtil.humanize(value.toString())) : value.toString();
     }
-    public static String getValue(CommonPersonObjectClient pc, String field, boolean humanize){
+
+    public static String getValue(CommonPersonObjectClient pc, String field, boolean humanize) {
         return formatValue(pc.getDetails().get(field), humanize);
     }
 
-    public static String getValue(CommonPersonObjectClient pc, String field, String defaultV, boolean humanize){
+    public static String getValue(CommonPersonObjectClient pc, String field, String defaultV, boolean humanize) {
         String val = formatValue(pc.getDetails().get(field), humanize);
-        if(StringUtils.isNotBlank(defaultV) && StringUtils.isBlank(val)){
+        if (StringUtils.isNotBlank(defaultV) && StringUtils.isBlank(val)) {
             val = defaultV;
         }
         return val;
     }
 
-    public static String getValue(Map<String, String> cm, String field, String defaultV, boolean humanize){
+    public static String getValue(Map<String, String> cm, String field, String defaultV, boolean humanize) {
         String val = formatValue(cm.get(field), humanize);
-        if(StringUtils.isNotBlank(defaultV) && StringUtils.isBlank(val)){
+        if (StringUtils.isNotBlank(defaultV) && StringUtils.isBlank(val)) {
             val = defaultV;
         }
         return val;
@@ -226,9 +226,9 @@ public class Utils {
         return formatValue(cm.get(field), humanize);
     }
 
-    public static String nonEmptyValue(Map<String, String> cm, boolean asc, boolean humanize, String... fields){
+    public static String nonEmptyValue(Map<String, String> cm, boolean asc, boolean humanize, String... fields) {
         List<String> l = Arrays.asList(fields);
-        if(!asc){
+        if (!asc) {
             Collections.reverse(l);
         }
         for (String f : l) {
@@ -240,11 +240,11 @@ public class Utils {
         return "";
     }
 
-    public static boolean hasAnyEmptyValue(Map<String, String> cm, String postFix, String... fields){
+    public static boolean hasAnyEmptyValue(Map<String, String> cm, String postFix, String... fields) {
         List<String> l = Arrays.asList(fields);
         for (String f : l) {
             String v = getValue(cm, f, false);
-            if (v == "" && (StringUtils.isBlank(postFix) || StringUtils.isBlank(getValue(cm, f+postFix, false)))) {
+            if (v == "" && (StringUtils.isBlank(postFix) || StringUtils.isBlank(getValue(cm, f + postFix, false)))) {
                 return true;
             }
         }
@@ -273,9 +273,9 @@ public class Utils {
         return overridejsonobject.toString();
     } */
 
-    public static TableRow getDataRow(Context context, String label, String value, TableRow row){
+    public static TableRow getDataRow(Context context, String label, String value, TableRow row) {
         TableRow tr = row;
-        if(row == null){
+        if (row == null) {
             tr = new TableRow(context);
             TableRow.LayoutParams trlp = new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             tr.setLayoutParams(trlp);
@@ -301,9 +301,9 @@ public class Utils {
         return tr;
     }
 
-    public static TableRow getDataRow(Context context, String label, String value, String field, TableRow row){
+    public static TableRow getDataRow(Context context, String label, String value, String field, TableRow row) {
         TableRow tr = row;
-        if(row == null){
+        if (row == null) {
             tr = new TableRow(context);
             TableRow.LayoutParams trlp = new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             tr.setLayoutParams(trlp);
@@ -335,7 +335,7 @@ public class Utils {
         return tr;
     }
 
-    public static TableRow getDataRow(Context context){
+    public static TableRow getDataRow(Context context) {
         TableRow tr = new TableRow(context);
         TableRow.LayoutParams trlp = new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         tr.setLayoutParams(trlp);
@@ -344,37 +344,36 @@ public class Utils {
         return tr;
     }
 
-    public static int addAsInts(boolean ignoreEmpty, String... vals){
+    public static int addAsInts(boolean ignoreEmpty, String... vals) {
         int i = 0;
-        for (String v : vals){
-            i += ignoreEmpty&&StringUtils.isBlank(v)?0:Integer.parseInt(v);
+        for (String v : vals) {
+            i += ignoreEmpty && StringUtils.isBlank(v) ? 0 : Integer.parseInt(v);
         }
         return i;
     }
 
-    public static TableRow addToRow(Context context, String value, TableRow row){
+    public static TableRow addToRow(Context context, String value, TableRow row) {
         return addToRow(context, value, row, false, 1);
     }
 
-    public static TableRow addToRow(Context context, String value, TableRow row, int weight){
+    public static TableRow addToRow(Context context, String value, TableRow row, int weight) {
         return addToRow(context, value, row, false, weight);
     }
 
-    public static TableRow addToRow(Context context, String value, TableRow row, boolean compact){
+    public static TableRow addToRow(Context context, String value, TableRow row, boolean compact) {
         return addToRow(context, value, row, compact, 1);
     }
 
-    public static TableRow addToRow(Context context, String value, TableRow row, boolean compact, int weight){
+    public static TableRow addToRow(Context context, String value, TableRow row, boolean compact, int weight) {
         return addToRow(context, Html.fromHtml(value), row, compact, weight);
     }
 
-    public static TableRow addToRow(Context context, Spanned value, TableRow row, boolean compact, int weight){
+    public static TableRow addToRow(Context context, Spanned value, TableRow row, boolean compact, int weight) {
         TextView v = new TextView(context);
         v.setText(value);
-        if(compact){
+        if (compact) {
             v.setPadding(15, 4, 1, 1);
-        }
-        else {
+        } else {
             v.setPadding(2, 15, 2, 15);
         }
         TableRow.LayoutParams params = new TableRow.LayoutParams(
@@ -391,21 +390,30 @@ public class Utils {
         return row;
     }
 
-    public static String getPreference(Context context, String key, String defaultVal){
+    public static String getPreference(Context context, String key, String defaultVal) {
         return context.getSharedPreferences("preferences", Context.MODE_PRIVATE).getString(key, defaultVal);
     }
 
-    public static Gson getLongDateAwareGson(){
+    public static Gson getLongDateAwareGson() {
         Gson g = new GsonBuilder().registerTypeAdapter(DateTime.class, new JsonDeserializer<DateTime>() {
             @Override
             public DateTime deserialize(JsonElement e, Type t, JsonDeserializationContext jd) throws JsonParseException {
-                return new DateTime(e.getAsLong());
+                if (e.isJsonNull()) {
+                    return null;
+                } else if (e.isJsonObject()) {
+                    JsonObject je = e.getAsJsonObject();
+                    return new DateTime(je.get("iMillis").getAsLong());
+
+                } else if (e.isJsonPrimitive()) {
+                    return new DateTime(e.getAsLong());
+                } else return null;
             }
+
         }).create();
-        return  g;
+        return g;
     }
 
-    public static boolean writePreference(Context context, String name, String value){
+    public static boolean writePreference(Context context, String name, String value) {
         SharedPreferences pref = context.getSharedPreferences("preferences", Context.MODE_PRIVATE);
         SharedPreferences.Editor ed = pref.edit();
         ed.putString(name, value);
@@ -422,19 +430,18 @@ public class Utils {
         }
     }
 
-    public static void setProfiePic(Context context, ImageView mImageView, String entityId, Object watermark){
+    public static void setProfiePic(Context context, ImageView mImageView, String entityId, Object watermark) {
         ProfileImage photo = ((ImageRepository) org.ei.opensrp.Context.getInstance().imageRepository()).findByEntityId(entityId, "dp");
-        if(photo != null){
+        if (photo != null) {
             setProfiePicFromPath(context, mImageView, photo.getFilepath(), watermark);
         }
     }
 
-    public static void setProfiePicFromPath(Context context, ImageView mImageView, String photoPath, Object watermark){
+    public static void setProfiePicFromPath(Context context, ImageView mImageView, String photoPath, Object watermark) {
         mImageView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-        if(watermark == null){
+        if (watermark == null) {
             Picasso.with(context).load(new File(photoPath)).resize(mImageView.getMeasuredWidth(), mImageView.getMeasuredHeight()).into(mImageView);
-        }
-        else {
+        } else {
             Picasso.with(context).load(new File(photoPath))
                     .resize(mImageView.getMeasuredWidth(), mImageView.getMeasuredHeight())
                     .transform(new WatermarkTransformation(watermark))
@@ -442,12 +449,11 @@ public class Utils {
         }
     }
 
-    public static void setProfiePic(Context context, ImageView mImageView, int photoResId, Object watermark){
+    public static void setProfiePic(Context context, ImageView mImageView, int photoResId, Object watermark) {
         mImageView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-        if(watermark == null){
+        if (watermark == null) {
             Picasso.with(context).load(photoResId).resize(mImageView.getMeasuredWidth(), mImageView.getMeasuredHeight()).into(mImageView);
-        }
-        else {
+        } else {
             Picasso.with(context).load(photoResId)
                     .resize(mImageView.getMeasuredWidth(), mImageView.getMeasuredHeight())
                     .transform(new WatermarkTransformation(watermark))

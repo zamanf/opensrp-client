@@ -93,6 +93,7 @@ public class PathUpdateActionsTask {
 
     private FetchStatus sync() {
         try {
+            FetchStatus fetchStatus = FetchStatus.fetched;
             ECSyncUpdater ecUpdater = ECSyncUpdater.getInstance(context);
 
             // Retrieve database host from preferences
@@ -105,6 +106,10 @@ public class PathUpdateActionsTask {
                 int eCount = ecUpdater.fetchAllClientsAndEvents(AllConstants.SyncFilters.FILTER_PROVIDER, allSharedPreferences.fetchRegisteredANM());
 
                 if (eCount == 0) {
+                    fetchStatus = nothingFetched;
+                    break;
+                } else if (eCount < 0) {
+                    fetchStatus = fetchedFailed;
                     break;
                 }
 
@@ -113,7 +118,7 @@ public class PathUpdateActionsTask {
                 Log.i(getClass().getName(), "!!!!! Sync count:  " + eCount);
             }
 
-            return FetchStatus.fetched;
+            return fetchStatus;
         } catch (Exception e) {
             Log.e(getClass().getName(), "", e);
             return fetchedFailed;

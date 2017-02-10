@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -20,6 +22,8 @@ import org.ei.opensrp.domain.form.FormSubmission;
 import org.ei.opensrp.path.R;
 import org.ei.opensrp.path.adapter.BaseRegisterActivityPagerAdapter;
 import org.ei.opensrp.path.fragment.ChildSmartRegisterFragment;
+import org.ei.opensrp.path.receiver.ServiceReceiver;
+import org.ei.opensrp.path.service.intent.PathReplicationIntentService;
 import org.ei.opensrp.provider.SmartRegisterClientsProvider;
 import org.ei.opensrp.repository.AllSharedPreferences;
 import org.ei.opensrp.service.FormSubmissionService;
@@ -46,7 +50,7 @@ import util.JsonFormUtils;
 /**
  * Created by Ahmed on 13-Oct-15.
  */
-public class ChildSmartRegisterActivity extends SecuredNativeSmartRegisterActivity {
+public class ChildSmartRegisterActivity extends SecuredNativeSmartRegisterActivity implements ServiceReceiver.Receiver {
 
 
     @Bind(R.id.view_pager)
@@ -57,6 +61,9 @@ public class ChildSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
 
     private String[] formNames = new String[]{};
     private android.support.v4.app.Fragment mBaseFragment = null;
+
+    private ServiceReceiver receiver;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +87,9 @@ public class ChildSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
                 onPageChanged(position);
             }
         });
+
+        receiver = new ServiceReceiver(new Handler());
+        receiver.setReceiver(this);
     }
 
     private String[] buildFormNameList() {
@@ -197,7 +207,7 @@ public class ChildSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
                 AllSharedPreferences allSharedPreferences = new AllSharedPreferences(preferences);
 
-                JsonFormUtils.save(allSharedPreferences.fetchRegisteredANM(), "ec_child", jsonString, this);
+                JsonFormUtils.save(allSharedPreferences.fetchRegisteredANM(), "ec_child", jsonString, this, receiver);
             }
         }
     }
@@ -256,6 +266,14 @@ public class ChildSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
 
     }
 
+    public void refreshBaseFragment(final boolean result) {
+        SecuredNativeSmartRegisterFragment registerFragment = (SecuredNativeSmartRegisterFragment) findFragmentByPosition(0);
+        if (registerFragment != null && result) {
+            registerFragment.refreshListView();
+        }
+    }
+
+
     @Override
     public void onBackPressed() {
         if (currentPage != 0) {
@@ -304,5 +322,11 @@ public class ChildSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
     protected void onPause() {
         super.onPause();
         retrieveAndSaveUnsubmittedFormData();
+    }
+
+    @Override
+    public void onReceiveResult(int resultCode, Bundle resultData) {
+        boolean result = resultData.getBoolean(PathReplicationIntentService.RESULT_TAG);
+        refreshBaseFragment(result);
     }
 }
