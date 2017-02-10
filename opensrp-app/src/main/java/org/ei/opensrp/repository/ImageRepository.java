@@ -51,11 +51,10 @@ public class ImageRepository extends DrishtiRepository {
         return readAll(cursor).get(0);
     }
 
-    public ProfileImage findByEntityId(String entityId, String type) {
+    public List<ProfileImage> findAllUnSynced() {
         SQLiteDatabase database = masterRepository.getReadableDatabase();
-        Cursor cursor = database.query(Image_TABLE_NAME, Image_TABLE_COLUMNS, entityID_COLUMN + " = ? AND " + filecategory_COLUMN + " = ? ", new String[]{entityId, type}, null, null, ID_COLUMN, null);
-        List<ProfileImage> l = readAll(cursor);
-        return l.size() == 0?null :l.get(l.size()-1);
+        Cursor cursor = database.query(Image_TABLE_NAME, Image_TABLE_COLUMNS, syncStatus_COLUMN + " = ?", new String[]{TYPE_Unsynced}, null, null, null, null);
+        return readAll(cursor);
     }
 
     public void close(String caseId) {

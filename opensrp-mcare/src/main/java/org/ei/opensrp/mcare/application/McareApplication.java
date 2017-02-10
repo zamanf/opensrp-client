@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.util.Pair;
 
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
 import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
 import org.ei.opensrp.Context;
@@ -37,6 +39,7 @@ public class McareApplication extends DrishtiApplication {
     public void onCreate() {
         DrishtiSyncScheduler.setReceiverClass(SyncBroadcastReceiver.class);
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
 //        ACRA.init(this);
 
         DrishtiSyncScheduler.setReceiverClass(SyncBroadcastReceiver.class);
@@ -199,6 +202,12 @@ public class McareApplication extends DrishtiApplication {
         commonFtsObject.updateAlertFilterVisitCodes(getAlertFilterVisitCodes());
         return commonFtsObject;
     }
+    public static void setCrashlyticsUser(Context context) {
+                if(context != null && context.userService() != null
+                                && context.allSharedPreferences() != null) {
+                       Crashlytics.setUserName(context.allSharedPreferences().fetchRegisteredANM());
+                   }
+           }
 
     /**
      * Map linking generated Concepts with human readable values
