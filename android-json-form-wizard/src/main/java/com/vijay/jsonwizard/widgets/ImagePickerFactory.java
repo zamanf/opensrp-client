@@ -43,6 +43,10 @@ public class ImagePickerFactory implements FormWidgetFactory {
         imageView.setTag(R.id.openmrs_entity, openMrsEntity);
         imageView.setTag(R.id.openmrs_entity_id, openMrsEntityId);
         imageView.setTag(R.id.type, jsonObject.getString("type"));
+        if (relevance != null && context instanceof JsonApi) {
+            imageView.setTag(R.id.relevance, relevance);
+            ((JsonApi) context).addWatchedView(imageView);
+        }
 
         JSONObject requiredObject = jsonObject.optJSONObject("v_required");
         if (requiredObject != null) {
@@ -90,7 +94,7 @@ public class ImagePickerFactory implements FormWidgetFactory {
             return new ValidationStatus(true, null);
         }
         Boolean isRequired = Boolean.valueOf((String) imageView.getTag(R.id.v_required));
-        if (!isRequired) {
+        if (!isRequired || !imageView.isEnabled()) {
             return new ValidationStatus(true, null);
         }
         Object path = imageView.getTag(R.id.imagePath);

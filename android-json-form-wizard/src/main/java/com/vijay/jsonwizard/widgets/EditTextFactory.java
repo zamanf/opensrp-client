@@ -145,18 +145,20 @@ public class EditTextFactory implements FormWidgetFactory {
         }
 
         editText.addTextChangedListener(new GenericTextWatcher(stepName, editText));
-        views.add(editText);
         if (relevance != null && context instanceof JsonApi) {
             editText.setTag(R.id.relevance, relevance);
             ((JsonApi) context).addWatchedView(editText);
         }
+        views.add(editText);
         return views;
     }
 
     public static ValidationStatus validate(MaterialEditText editText) {
-        boolean validate = editText.validate();
-        if(!validate) {
-            return new ValidationStatus(false, editText.getError().toString());
+        if(editText.isEnabled()) {
+            boolean validate = editText.validate();
+            if (!validate) {
+                return new ValidationStatus(false, editText.getError().toString());
+            }
         }
         return new ValidationStatus(true, null);
     }

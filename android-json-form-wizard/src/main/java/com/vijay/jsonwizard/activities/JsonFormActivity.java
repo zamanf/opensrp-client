@@ -17,6 +17,7 @@ import com.vijay.jsonwizard.comparers.GreaterThanComparer;
 import com.vijay.jsonwizard.comparers.GreaterThanEqualToComparer;
 import com.vijay.jsonwizard.comparers.LessThanComparer;
 import com.vijay.jsonwizard.comparers.LessThanEqualToComparer;
+import com.vijay.jsonwizard.comparers.NotEqualToComparer;
 import com.vijay.jsonwizard.comparers.RegexComparer;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
 import com.vijay.jsonwizard.fragments.JsonFormFragment;
@@ -101,6 +102,7 @@ public class JsonFormActivity extends AppCompatActivity implements JsonApi {
                     item.put("openmrs_entity_parent", openMrsEntityParent);
                     item.put("openmrs_entity", openMrsEntity);
                     item.put("openmrs_entity_id", openMrsEntityId);
+                    refreshSkipLogic();
                     return;
                 }
             }
@@ -125,12 +127,12 @@ public class JsonFormActivity extends AppCompatActivity implements JsonApi {
                         String anotherKeyAtIndex = innerItem.getString("key");
                         if (childKey.equals(anotherKeyAtIndex)) {
                             innerItem.put("value", value);
+                            refreshSkipLogic();
                             return;
                         }
                     }
                 }
             }
-            refreshSkipLogic();
         }
     }
 
@@ -179,6 +181,11 @@ public class JsonFormActivity extends AppCompatActivity implements JsonApi {
     }
 
     @Override
+    public void clearWatchedViews() {
+        watchedViews = new ArrayList<>();
+    }
+
+    @Override
     public void addWatchedView(View view) {
         watchedViews.add(view);
     }
@@ -187,9 +194,10 @@ public class JsonFormActivity extends AppCompatActivity implements JsonApi {
     public void refreshSkipLogic() {
         initComparers();
         for (View curView : watchedViews) {
-            if (curView.getTag(R.id.relevance) != null) {
+            String relevanceTag = (String) curView.getTag(R.id.relevance);
+            if (relevanceTag != null && relevanceTag.length() > 0) {
                 try {
-                    JSONObject relevance = new JSONObject((String) curView.getTag(R.id.relevance));
+                    JSONObject relevance = new JSONObject(relevanceTag);
                     Iterator<String> keys = relevance.keys();
                     boolean ok = true;
                     while (keys.hasNext()) {
@@ -197,26 +205,43 @@ public class JsonFormActivity extends AppCompatActivity implements JsonApi {
                         String[] address = curKey.split(":");
                         if (address.length == 2) {
                             JSONObject curRelevance = relevance.getJSONObject(curKey);
-                            JSONObject curReferenceObject = mJSONObject.getJSONObject(address[0])
-                                    .getJSONObject(address[1]);
-
-                            String curValue = curReferenceObject.optString("value");
+                            String curValue = getValueFromAddress(address);
                             try {
                                 boolean comparison = doComparison(curValue, curRelevance);
                                 ok = ok && comparison;
-                                if(!comparison ) break;
+                                if (!ok) break;
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
                     }
 
-                    curView.setEnabled(ok);
-                } catch (JSONException e) {
+                    if (ok) {
+                        curView.setEnabled(true);
+                        curView.setVisibility(View.VISIBLE);
+                    } else {
+                        curView.setEnabled(false);
+                        curView.setVisibility(View.GONE);
+                    }
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }
+    }
+
+    private String getValueFromAddress(String[] address) throws Exception {
+        String result = null;
+        if(address != null && address.length == 2) {
+            JSONArray fields = mJSONObject.getJSONObject(address[0]).getJSONArray("fields");
+            for(int i = 0; i < fields.length(); i++) {
+                if(fields.getJSONObject(i).getString("key").equals(address[1])) {
+                    result = fields.getJSONObject(i).optString("value");
+                }
+            }
+        }
+
+        return result;
     }
 
     private void initComparers() {
@@ -235,6 +260,10 @@ public class JsonFormActivity extends AppCompatActivity implements JsonApi {
             EqualToComparer equalToComparison = new EqualToComparer();
             functionRegex += "|" + equalToComparison.getFunctionName();
             comparers.put(equalToComparison.getFunctionName(), equalToComparison);
+
+            NotEqualToComparer notEqualToComparer = new NotEqualToComparer();
+            functionRegex += "|" + notEqualToComparer.getFunctionName();
+            comparers.put(notEqualToComparer.getFunctionName(), notEqualToComparer);
 
             GreaterThanComparer greaterThanComparison = new GreaterThanComparer();
             functionRegex += "|" + greaterThanComparison.getFunctionName();

@@ -35,6 +35,7 @@ public class CheckBoxFactory implements FormWidgetFactory {
         String relevance = jsonObject.optString("relevance");
         views.add(getTextViewWith(context, 16, jsonObject.getString("label"), jsonObject.getString("key"),
                 jsonObject.getString("type"), openMrsEntityParent, openMrsEntity, openMrsEntityId,
+                relevance,
                 getLayoutParams(MATCH_PARENT, WRAP_CONTENT, 0, 0, 0, 0), FONT_BOLD_PATH));
 
         boolean readOnly = false;

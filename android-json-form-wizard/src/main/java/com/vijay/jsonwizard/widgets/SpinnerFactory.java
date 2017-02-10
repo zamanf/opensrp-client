@@ -98,7 +98,7 @@ public class SpinnerFactory implements FormWidgetFactory {
             return new ValidationStatus(true, null);
         }
         Boolean isRequired = Boolean.valueOf((String) spinner.getTag(R.id.v_required));
-        if (!isRequired) {
+        if (!isRequired || !spinner.isEnabled()) {
             return new ValidationStatus(true, null);
         }
         int selectedItemPosition = spinner.getSelectedItemPosition();

@@ -29,6 +29,8 @@ public interface JsonApi {
 
     void onFormFinish();
 
+    void clearWatchedViews();
+
     void addWatchedView(View view);
 
     void refreshSkipLogic();

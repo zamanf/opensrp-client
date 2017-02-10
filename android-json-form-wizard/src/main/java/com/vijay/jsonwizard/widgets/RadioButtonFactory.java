@@ -36,6 +36,7 @@ public class RadioButtonFactory implements FormWidgetFactory {
         List<View> views = new ArrayList<>(1);
         views.add(getTextViewWith(context, 16, jsonObject.getString("label"), jsonObject.getString("key"),
                 jsonObject.getString("type"), openMrsEntityParent, openMrsEntity, openMrsEntityId,
+                relevance,
                 getLayoutParams(MATCH_PARENT, WRAP_CONTENT, 0, 0, 0, 0), FONT_BOLD_PATH));
         boolean readOnly = false;
         if (jsonObject.has("read_only")) {

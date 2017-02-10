@@ -293,6 +293,9 @@
         "v_required": {
           "value": true,
           "err": "Please enter the birth facility name"
+        },
+        "relevance":{
+          "step1:Place_Birth":{"type":"string","ex":"equalTo(Health facility)"}
         }
       },
       {

@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.rey.material.util.ViewUtil;
 import com.vijay.jsonwizard.R;
+import com.vijay.jsonwizard.interfaces.JsonApi;
 
 import org.json.JSONObject;
 
@@ -40,6 +41,7 @@ public class FormUtils {
     public static TextView getTextViewWith(Context context, int textSizeInSp, String text,
                                            String key, String type, String openMrsEntityParent,
                                            String openMrsEntity, String openMrsEntityId,
+                                           String relevance,
                                            LinearLayout.LayoutParams layoutParams, String fontPath) {
         TextView textView = new TextView(context);
         textView.setText(text);
@@ -51,6 +53,10 @@ public class FormUtils {
         textView.setId(ViewUtil.generateViewId());
         textView.setTextSize(textSizeInSp);
         textView.setLayoutParams(layoutParams);
+        if (relevance != null && context instanceof JsonApi) {
+            textView.setTag(R.id.relevance, relevance);
+            ((JsonApi) context).addWatchedView(textView);
+        }
         return textView;
     }
 
