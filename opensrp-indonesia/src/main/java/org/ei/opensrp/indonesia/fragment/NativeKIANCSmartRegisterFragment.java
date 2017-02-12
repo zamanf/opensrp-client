@@ -251,7 +251,7 @@ public class NativeKIANCSmartRegisterFragment extends SecuredNativeSmartRegister
             SmartRegisterQueryBuilder countqueryBUilder = new SmartRegisterQueryBuilder();
             countqueryBUilder.SelectInitiateMainTableCounts("ec_ibu");
             countqueryBUilder.customJoin("LEFT JOIN ec_kartu_ibu on ec_kartu_ibu.id = ec_ibu.id");
-            mainCondition = " is_closed = 0 and pptest ='Positive' ";
+            mainCondition = " is_closed = 0 ";
             joinTable = "";
             countSelect = countqueryBUilder.mainCondition(mainCondition);
             super.CountExecute();
@@ -379,7 +379,7 @@ public class NativeKIANCSmartRegisterFragment extends SecuredNativeSmartRegister
 
                 filters = cs.toString();
                 joinTable = "";
-                mainCondition = " ec_ibu.is_closed = 0 and pptest ='Positive' ";
+                mainCondition = " ec_ibu.is_closed = 0 ";
 
 
                 getSearchCancelView().setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
@@ -407,7 +407,7 @@ public class NativeKIANCSmartRegisterFragment extends SecuredNativeSmartRegister
 
                 filters = cs.toString();
                 joinTable = "";
-                mainCondition = " ec_ibu.is_closed = 0 and pptest ='Positive' ";
+                mainCondition = " ec_ibu.is_closed = 0 ";
 
                 getSearchCancelView().setVisibility(isEmpty(cs) ? INVISIBLE : VISIBLE);
                 filterandSortExecute();
