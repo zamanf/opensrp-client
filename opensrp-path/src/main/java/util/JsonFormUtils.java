@@ -1,8 +1,7 @@
 package util;
 
 import android.content.Context;
-import android.content.Intent;
-import android.os.ResultReceiver;
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import org.apache.commons.lang3.StringUtils;
@@ -13,13 +12,21 @@ import org.ei.opensrp.clientandeventmodel.DateUtil;
 import org.ei.opensrp.clientandeventmodel.Event;
 import org.ei.opensrp.clientandeventmodel.FormEntityConstants;
 import org.ei.opensrp.clientandeventmodel.Obs;
-import org.ei.opensrp.path.service.intent.PathReplicationIntentService;
+import org.ei.opensrp.domain.ProfileImage;
+import org.ei.opensrp.repository.ImageRepository;
+import org.ei.opensrp.sync.ClientProcessor;
 import org.ei.opensrp.sync.CloudantDataHandler;
+import org.ei.opensrp.view.activity.DrishtiApplication;
 import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,6 +36,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import id.zelory.compressor.Compressor;
 
 /**
  * Created by keyman on 08/02/2017.
@@ -41,6 +50,10 @@ public class JsonFormUtils {
     private static final String OPENMRS_ENTITY_PARENT = "openmrs_entity_parent";
     private static final String OPENMRS_CHOICE_IDS = "openmrs_choice_ids";
     private static final String OPENMRS_DATA_TYPE = "openmrs_data_type";
+
+    private static final String PERSON_ATTRIBUTE = "person_attribute";
+    private static final String PERSON_INDENTIFIER = "person_identifier";
+    private static final String PERSON_ADDRESS = "person_address";
 
     private static final String CONCEPT = "concept";
     private static final String ENCOUNTER = "encounter";
@@ -55,7 +68,11 @@ public class JsonFormUtils {
 
     public static final SimpleDateFormat FORM_DATE = new SimpleDateFormat("dd-MM-yyyy");
 
-    public static void save(String providerId, String bindType, String jsonString, Context context, ResultReceiver receiver) {
+    public static void save(Context context, String jsonString, String providerId, String bindType, String imageKey) {
+        if (context == null || StringUtils.isBlank(providerId) || StringUtils.isBlank(jsonString)) {
+            return;
+        }
+
         try {
 
             JSONObject jsonForm = new JSONObject(jsonString);
@@ -65,17 +82,12 @@ public class JsonFormUtils {
                 entityId = generateRandomUUIDString();
             }
 
-            String encounterType = getString(jsonForm, ENCOUNTER_TYPE);
-
-            JSONObject step1 = jsonForm.has(STEP1) ? jsonForm.getJSONObject(STEP1) : null;
-            if (step1 == null) {
-                return;
-            }
-
-            JSONArray fields = step1.has(FIELDS) ? step1.getJSONArray(FIELDS) : null;
+            JSONArray fields = fields(jsonForm);
             if (fields == null) {
                 return;
             }
+
+            String encounterType = getString(jsonForm, ENCOUNTER_TYPE);
 
             JSONObject metadata = getJSONObject(jsonForm, METADATA);
 
@@ -91,17 +103,76 @@ public class JsonFormUtils {
                 cloudantDataHandler.createClientDocument(client);
             }
 
-            startReplicationIntentService(context, receiver);
+            String imageLocation = getFieldValue(fields, PERSON_INDENTIFIER, imageKey);
+            saveImage(context, providerId, entityId, imageLocation);
+
+            ClientProcessor.getInstance(context).processClient();
 
         } catch (Exception e) {
             Log.e(TAG, "", e);
         }
     }
 
-    public static void startReplicationIntentService(Context context, ResultReceiver receiver) {
-        Intent serviceIntent = new Intent(context, PathReplicationIntentService.class);
-        serviceIntent.putExtra(PathReplicationIntentService.RECEIVER_TAG, receiver);
-        context.startService(serviceIntent);
+    public static void saveImage(Context context, String providerId, String entityId, String imageLocation) {
+        if (StringUtils.isBlank(imageLocation)) {
+            return;
+        }
+
+
+        File file = new File(imageLocation);
+
+        if (!file.exists()) {
+            return;
+        }
+
+        Bitmap compressedImageFile = Compressor.getDefault(context).compressToBitmap(file);
+        saveStaticImageToDisk(compressedImageFile, providerId, entityId);
+
+    }
+
+    public static void saveStaticImageToDisk(Bitmap image, String providerId, String entityId) {
+        if (image == null || StringUtils.isBlank(providerId) || StringUtils.isBlank(entityId)) {
+            return;
+        }
+        OutputStream os = null;
+        try {
+
+            if (entityId != null && !entityId.isEmpty()) {
+                final String absoluteFileName = DrishtiApplication.getAppDir() + File.separator + entityId + ".JPEG";
+
+                File outputFile = new File(absoluteFileName);
+                os = new FileOutputStream(outputFile);
+                Bitmap.CompressFormat compressFormat = Bitmap.CompressFormat.JPEG;
+                if (compressFormat != null) {
+                    image.compress(compressFormat, 100, os);
+                } else {
+                    throw new IllegalArgumentException("Failed to save static image, could not retrieve image compression format from name "
+                            + absoluteFileName);
+                }
+                // insert into the db
+                ProfileImage profileImage = new ProfileImage();
+                profileImage.setImageid(UUID.randomUUID().toString());
+                profileImage.setAnmId(providerId);
+                profileImage.setEntityID(entityId);
+                profileImage.setFilepath(absoluteFileName);
+                profileImage.setFilecategory("profilepic");
+                profileImage.setSyncStatus(ImageRepository.TYPE_Unsynced);
+                ImageRepository imageRepo = (ImageRepository) org.ei.opensrp.Context.imageRepository();
+                imageRepo.add(profileImage);
+            }
+
+        } catch (FileNotFoundException e) {
+            Log.e(TAG, "Failed to save static image to disk");
+        } finally {
+            if (os != null) {
+                try {
+                    os.close();
+                } catch (IOException e) {
+                    Log.e(TAG, "Failed to close static images output stream after attempting to write image");
+                }
+            }
+        }
+
     }
 
     public static Client createBaseClient(JSONArray fields, String entityId) {
@@ -258,7 +329,7 @@ public class JsonFormUtils {
     }
 
 
-    static Map<String, String> extractIdentifiers(JSONArray fields) {
+    private static Map<String, String> extractIdentifiers(JSONArray fields) {
         Map<String, String> pids = new HashMap<>();
         for (int i = 0; i < fields.length(); i++) {
             JSONObject jsonObject = getJSONObject(fields, i);
@@ -267,7 +338,7 @@ public class JsonFormUtils {
         return pids;
     }
 
-    static Map<String, Object> extractAttributes(JSONArray fields) {
+    private static Map<String, Object> extractAttributes(JSONArray fields) {
         Map<String, Object> pattributes = new HashMap<>();
         for (int i = 0; i < fields.length(); i++) {
             JSONObject jsonObject = getJSONObject(fields, i);
@@ -277,7 +348,7 @@ public class JsonFormUtils {
         return pattributes;
     }
 
-    static Map<String, Address> extractAddresses(JSONArray fields) {
+    private static Map<String, Address> extractAddresses(JSONArray fields) {
         Map<String, Address> paddr = new HashMap<>();
         for (int i = 0; i < fields.length(); i++) {
             JSONObject jsonObject = getJSONObject(fields, i);
@@ -287,13 +358,13 @@ public class JsonFormUtils {
     }
 
 
-    static void fillIdentifiers(Map<String, String> pids, JSONObject jsonObject) {
+    private static void fillIdentifiers(Map<String, String> pids, JSONObject jsonObject) {
 
         String value = getString(jsonObject, VALUE);
         if (StringUtils.isBlank(value)) {
             return;
         }
-        String entity = "person_identifier";
+        String entity = PERSON_INDENTIFIER;
         String entityVal = getString(jsonObject, OPENMRS_ENTITY);
 
         if (entityVal != null && entityVal.equals(entity)) {
@@ -305,13 +376,13 @@ public class JsonFormUtils {
     }
 
 
-    static void fillAttributes(Map<String, Object> pattributes, JSONObject jsonObject) {
+    private static void fillAttributes(Map<String, Object> pattributes, JSONObject jsonObject) {
 
         String value = getString(jsonObject, VALUE);
         if (StringUtils.isBlank(value)) {
             return;
         }
-        String entity = "person_attribute";
+        String entity = PERSON_ATTRIBUTE;
         String entityVal = getString(jsonObject, OPENMRS_ENTITY);
 
         if (entityVal != null && entityVal.equals(entity)) {
@@ -321,7 +392,7 @@ public class JsonFormUtils {
     }
 
 
-    static void fillAddressFields(JSONObject jsonObject, Map<String, Address> addresses) {
+    private static void fillAddressFields(JSONObject jsonObject, Map<String, Address> addresses) {
 
         if (jsonObject == null) {
             return;
@@ -334,7 +405,7 @@ public class JsonFormUtils {
                 return;
             }
 
-            String entity = "person_address";
+            String entity = PERSON_ADDRESS;
             String entityVal = getString(jsonObject, OPENMRS_ENTITY);
 
             if (entityVal != null && entityVal.equalsIgnoreCase(entity)) {
@@ -391,8 +462,25 @@ public class JsonFormUtils {
         }
     }
 
+    // Helper functions
 
-    public static String getFieldValue(JSONArray jsonArray, String entity, String field) {
+    private static JSONArray fields(JSONObject jsonForm) {
+        try {
+
+            JSONObject step1 = jsonForm.has(STEP1) ? jsonForm.getJSONObject(STEP1) : null;
+            if (step1 == null) {
+                return null;
+            }
+
+            return step1.has(FIELDS) ? step1.getJSONArray(FIELDS) : null;
+
+        } catch (JSONException e) {
+            Log.e(TAG, "", e);
+        }
+        return null;
+    }
+
+    private static String getFieldValue(JSONArray jsonArray, String entity, String entityId) {
         if (jsonArray == null || jsonArray.length() == 0) {
             return null;
         }
@@ -401,7 +489,7 @@ public class JsonFormUtils {
             JSONObject jsonObject = getJSONObject(jsonArray, i);
             String entityVal = getString(jsonObject, OPENMRS_ENTITY);
             String entityIdVal = getString(jsonObject, OPENMRS_ENTITY_ID);
-            if (entityVal != null && entityVal.equals(entity) && entityIdVal != null && entityIdVal.equals(field)) {
+            if (entityVal != null && entityVal.equals(entity) && entityIdVal != null && entityIdVal.equals(entityId)) {
                 return getString(jsonObject, VALUE);
             }
         }

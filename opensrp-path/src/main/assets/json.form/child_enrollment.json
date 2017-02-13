@@ -52,7 +52,7 @@
         "key": "Child_Photo",
         "openmrs_entity_parent": "",
         "openmrs_entity": "person_identifier",
-        "openmrs_entity_id": "ZEIR_ID",
+        "openmrs_entity_id": "Child_Photo",
         "type": "choose_image",
         "uploadButtonText": "Select a Photo of the Child"
       },

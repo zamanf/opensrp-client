@@ -68,7 +68,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
 
-        <receiver android:name=".receiver.CESyncReceiver" />
+        <receiver android:name=".receiver.PathSyncBroadcastReceiver" />
 
         <activity android:name=".activity.ProviderProfileActivity"></activity>
         <meta-data
