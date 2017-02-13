@@ -10,6 +10,10 @@
         "shouldLoadValue": true
       },
       {
+        "name": "noIbu",
+        "bind": "/model/instance/Registrasi_Gizi-NewStructure-map/no_ibu"
+      },
+      {
         "name": "existing_location",
         "bind": "/model/instance/Registrasi_Gizi-NewStructure-map/existing_location",
         "shouldLoadValue": true

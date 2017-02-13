@@ -10,6 +10,10 @@
         "shouldLoadValue": true
       },
       {
+        "name": "noIbu",
+        "bind": "/model/instance/registrasi_vaksinator/no_ibu"
+      },
+      {
         "name": "existing_location",
         "bind": "/model/instance/registrasi_vaksinator/existing_location",
         "shouldLoadValue": true
