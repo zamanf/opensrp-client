@@ -47,7 +47,6 @@ import org.apache.commons.lang3.text.WordUtils;
 import org.ei.drishti.dto.AlertStatus;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.domain.ProfileImage;
-import org.ei.opensrp.path.R;
 import org.ei.opensrp.path.domain.EditWrapper;
 import org.ei.opensrp.repository.ImageRepository;
 import org.ei.opensrp.util.StringUtil;
@@ -403,7 +402,6 @@ public class Utils {
                 } else if (e.isJsonObject()) {
                     JsonObject je = e.getAsJsonObject();
                     return new DateTime(je.get("iMillis").getAsLong());
-
                 } else if (e.isJsonPrimitive()) {
                     return new DateTime(e.getAsLong());
                 } else return null;
@@ -430,9 +428,9 @@ public class Utils {
         }
     }
 
-    public static void setProfiePic(Context context, ImageView mImageView, String entityId, Object watermark) {
-        ProfileImage photo = ((ImageRepository) org.ei.opensrp.Context.getInstance().imageRepository()).findByEntityId(entityId, "dp");
-        if (photo != null) {
+    public static void setProfiePic(Context context, ImageView mImageView, String entityId, Object watermark){
+        ProfileImage photo = ((ImageRepository) org.ei.opensrp.Context.getInstance().imageRepository()).findByEntityId(entityId);
+        if(photo != null){
             setProfiePicFromPath(context, mImageView, photo.getFilepath(), watermark);
         }
     }

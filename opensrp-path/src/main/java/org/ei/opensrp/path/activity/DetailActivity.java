@@ -133,7 +133,7 @@ public abstract class DetailActivity extends Activity {
             });
 
 
-            ProfileImage photo = ((ImageRepository) org.ei.opensrp.Context.getInstance().imageRepository()).findByEntityId(client.entityId(), "dp");
+            ProfileImage photo = ((ImageRepository) org.ei.opensrp.Context.getInstance().imageRepository()).findByEntityId(client.entityId());
 
             if (photo != null) {
                 setProfiePicFromPath(this, mImageView, photo.getFilepath(), org.ei.opensrp.R.drawable.ic_pencil);

@@ -2,6 +2,7 @@ package org.ei.opensrp.repository;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.util.Log;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ImageRepository extends DrishtiRepository {
+    private static final String TAG=ImageRepository.class.getCanonicalName();
     private static final String Image_SQL = "CREATE TABLE ImageList(imageid VARCHAR PRIMARY KEY, anmId VARCHAR, entityID VARCHAR, contenttype VARCHAR, filepath VARCHAR, syncStatus VARCHAR, filecategory VARCHAR)";
      public static final String Image_TABLE_NAME = "ImageList";
     public static final String ID_COLUMN = "imageid";
@@ -46,16 +48,20 @@ public class ImageRepository extends DrishtiRepository {
     }
 
     public ProfileImage findByEntityId(String entityId) {
-        SQLiteDatabase database = masterRepository.getReadableDatabase();
-        Cursor cursor = database.query(Image_TABLE_NAME, Image_TABLE_COLUMNS, entityID_COLUMN + " = ?", new String[]{entityId}, null, null, null, null);
-        return readAll(cursor).get(0);
+       try {
+           SQLiteDatabase database = masterRepository.getReadableDatabase();
+           Cursor cursor = database.query(Image_TABLE_NAME, Image_TABLE_COLUMNS, entityID_COLUMN + " = ?", new String[]{entityId}, null, null, null, null);
+           return readAll(cursor).get(0);
+       }catch(Exception e){
+           Log.e(TAG,e.getMessage());
+          return null;
+       }
     }
 
-    public ProfileImage findByEntityId(String entityId, String type) {
+    public List<ProfileImage> findAllUnSynced() {
         SQLiteDatabase database = masterRepository.getReadableDatabase();
-        Cursor cursor = database.query(Image_TABLE_NAME, Image_TABLE_COLUMNS, entityID_COLUMN + " = ? AND " + filecategory_COLUMN + " = ? ", new String[]{entityId, type}, null, null, ID_COLUMN, null);
-        List<ProfileImage> l = readAll(cursor);
-        return l.size() == 0?null :l.get(l.size()-1);
+        Cursor cursor = database.query(Image_TABLE_NAME, Image_TABLE_COLUMNS, syncStatus_COLUMN + " = ?", new String[]{TYPE_Unsynced}, null, null, null, null);
+        return readAll(cursor);
     }
 
     public void close(String caseId) {
