@@ -35,6 +35,7 @@ public class VaksinatorRecapitulationActivity extends Activity{
     //image retrieving
 
     public static CommonPersonObjectClient controller;
+    public static String staticVillageName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,14 +92,14 @@ public class VaksinatorRecapitulationActivity extends Activity{
 
         var.setDefaultSpinnerDate();
         updateView(var, clients, var.monthSpinner.getSelectedItemPosition() + 1, Integer.parseInt(var.yearSpinner.getSelectedItem().toString()));
-        var.setSubtitle(((org.ei.opensrp.commonregistry.CommonPersonObjectClient) clients.get(0)).getDetails().get("desa"));
+        var.setSubtitle(staticVillageName);
 
         var.monthSpinner.setOnItemSelectedListener(
                 new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView <?> parentView, View selectedItemView, int position, long id) {
                         updateView(var,clients,var.monthSpinner.getSelectedItemPosition()+1,Integer.parseInt(var.yearSpinner.getSelectedItem().toString()));
-                        var.setSubtitle(((org.ei.opensrp.commonregistry.CommonPersonObjectClient) clients.get(0)).getDetails().get("desa"));
+                        var.setSubtitle(staticVillageName);
                     }
 
                     @Override
@@ -113,7 +114,7 @@ public class VaksinatorRecapitulationActivity extends Activity{
                     @Override
                     public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                         updateView(var,clients,var.monthSpinner.getSelectedItemPosition()+1,Integer.parseInt(var.yearSpinner.getSelectedItem().toString()));
-                        var.setSubtitle(((org.ei.opensrp.commonregistry.CommonPersonObjectClient)clients.get(0)).getDetails().get("desa"));
+                        var.setSubtitle(staticVillageName);
                     }
 
                     @Override

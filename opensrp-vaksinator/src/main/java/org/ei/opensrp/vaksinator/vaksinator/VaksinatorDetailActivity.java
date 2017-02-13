@@ -59,6 +59,15 @@ public class VaksinatorDetailActivity extends Activity {
         Context context = Context.getInstance();
         setContentView(R.layout.smart_register_jurim_detail_client);
 
+        DetailsRepository detailsRepository = org.ei.opensrp.Context.getInstance().detailsRepository();
+        detailsRepository.updateDetails(controller);
+
+        AllCommonsRepository childRepository = org.ei.opensrp.Context.getInstance().allCommonsRepositoryobjects("ec_anak");
+        CommonPersonObject childobject = childRepository.findByCaseID(controller.entityId());
+
+        AllCommonsRepository kirep = org.ei.opensrp.Context.getInstance().allCommonsRepositoryobjects("ec_kartu_ibu");
+        final CommonPersonObject kiparent = kirep.findByCaseID(childobject.getColumnmaps().get("relational_id"));
+
         String DetailStart = timer.format(new Date());
         Map<String, String> Detail = new HashMap<String, String>();
         Detail.put("start", DetailStart);
@@ -81,6 +90,7 @@ public class VaksinatorDetailActivity extends Activity {
         TextView additionalMeaslesLabel = (TextView) findViewById(R.id.additionalMeaslesLabel);
 
         //profile
+        TextView uid = (TextView) findViewById(R.id.uidValue);
         TextView nama = (TextView) findViewById(R.id.childName);
         TextView motherName = (TextView) findViewById(R.id.motherName);
         TextView fatherName = (TextView) findViewById(R.id.fatherName);
@@ -128,7 +138,8 @@ public class VaksinatorDetailActivity extends Activity {
             @Override
             public void onClick(View v) {
                 finish();
-                startActivity(new Intent(VaksinatorDetailActivity.this, VaksinatorRecapitulationActivity.class));
+                VaksinatorRecapitulationActivity.staticVillageName = (kiparent.getDetails().get("cityVillage") != null ? ": " + kiparent.getDetails().get("cityVillage") : "null");
+                        startActivity(new Intent(VaksinatorDetailActivity.this, VaksinatorRecapitulationActivity.class));
                 overridePendingTransition(0, 0);
                 FlurryFacade.logEvent("click_recapitulation_button");
             }
@@ -150,17 +161,10 @@ public class VaksinatorDetailActivity extends Activity {
         completeLabel.setText(getString(R.string.imunisasiLengkap));
         additionalDPTLabel.setText(getString(R.string.dptTambahan));
         additionalMeaslesLabel.setText(getString(R.string.campakTambahan));
-        DetailsRepository detailsRepository = org.ei.opensrp.Context.getInstance().detailsRepository();
-        detailsRepository.updateDetails(controller);
 
+
+        uid.setText(": "+(controller.getDetails().get("UniqueId")!=null ? controller.getDetails().get("UniqueId") : "-"));
         nama.setText(": " + (controller.getColumnmaps().get("namaBayi") != null ? controller.getColumnmaps().get("namaBayi") : "-"));
-
-
-        AllCommonsRepository childRepository = org.ei.opensrp.Context.getInstance().allCommonsRepositoryobjects("ec_anak");
-        CommonPersonObject childobject = childRepository.findByCaseID(controller.entityId());
-
-        AllCommonsRepository kirep = org.ei.opensrp.Context.getInstance().allCommonsRepositoryobjects("ec_kartu_ibu");
-        final CommonPersonObject kiparent = kirep.findByCaseID(childobject.getColumnmaps().get("relational_id"));
 
         System.out.println("details: "+controller.getDetails().toString());
 
