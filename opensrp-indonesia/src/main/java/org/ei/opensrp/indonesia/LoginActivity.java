@@ -91,7 +91,7 @@ public class LoginActivity extends Activity {
         }
         setContentView(org.ei.opensrp.R.layout.login);
         ImageView loginglogo = (ImageView) findViewById(R.id.login_logo);
-        loginglogo.setImageDrawable(getResources().getDrawable(R.mipmap.login_logo));
+        loginglogo.setImageDrawable(getResources().getDrawable(R.drawable.login_logo_bidan));
         context = Context.getInstance().updateApplicationContext(this.getApplicationContext());
         initializeLoginFields();
         initializeBuildDetails();
@@ -102,7 +102,6 @@ public class LoginActivity extends Activity {
         getActionBar().setBackgroundDrawable(getResources().getDrawable(org.ei.opensrp.indonesia.R.color.action_bar_background));
         setLanguage();
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
