@@ -145,7 +145,7 @@ public class ElcoSmartClientsProvider implements SmartRegisterCLientsProviderFor
         CommonPersonObject elcoobject = allelcoRepository.findByCaseID(pc.entityId());
 
         AllCommonsRepository householdrep = org.ei.opensrp.Context.getInstance().allCommonsRepositoryobjects("household");
-        final CommonPersonObject householdparent = householdrep.findByCaseID(elcoobject.getRelationalId());
+        final CommonPersonObject householdparent = householdrep.findByCaseID(elcoobject.getColumnmaps().get("relational_id"));
 
 //            if(householdparent.getDetails().get("existing_Mauzapara") != null) {
 //                location = householdparent.getDetails().get("existing_Mauzapara");
@@ -196,9 +196,19 @@ public class ElcoSmartClientsProvider implements SmartRegisterCLientsProviderFor
                 }
 
             }
+        }
+        if(pc.getDetails().get("FWPSRDATE")!=null ){
+            if(pc.getDetails().get("FWPSRPREGSTS")==null){
+                try {
+                    Date regdate = format.parse(pc.getDetails().get("FWPSRDATE"));
 
+                    lastdate = regdate;
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    Log.e(getClass().getName(), "Exception", e);
+                }
 
-
+            }
         }
 
         //psrf_schedule_logic == 1 || FWPSRSTS ==2

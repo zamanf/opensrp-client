@@ -10,6 +10,7 @@ import org.ei.opensrp.commonregistry.CommonFtsObject;
 import org.ei.opensrp.path.activity.LoginActivity;
 import org.ei.opensrp.path.receiver.CESyncReceiver;
 import org.ei.opensrp.path.receiver.ConfigSyncReceiver;
+import org.ei.opensrp.path.receiver.PathSyncBroadcastReceiver;
 import org.ei.opensrp.sync.DrishtiSyncScheduler;
 import org.ei.opensrp.view.activity.DrishtiApplication;
 import org.ei.opensrp.view.receiver.SyncBroadcastReceiver;
@@ -29,14 +30,14 @@ public class VaccinatorApplication extends DrishtiApplication{
     public void onCreate() {
         super.onCreate();
         Fabric.with(this, new Crashlytics());
-        DrishtiSyncScheduler.setReceiverClass(SyncBroadcastReceiver.class);
+        DrishtiSyncScheduler.setReceiverClass(PathSyncBroadcastReceiver.class);
 
         context = Context.getInstance();
         context.updateApplicationContext(getApplicationContext());
         context.updateCommonFtsObject(createCommonFtsObject());
         applyUserLanguagePreference();
         cleanUpSyncState();
-        startCESyncService(getApplicationContext());
+        //startCESyncService(getApplicationContext());
         ConfigSyncReceiver.scheduleFirstSync(getApplicationContext());
         setCrashlyticsUser(context);
     }
@@ -83,10 +84,10 @@ public class VaccinatorApplication extends DrishtiApplication{
     }
 
     private String[] getFtsSearchFields(String tableName){
-        if(tableName.equals("pkchild")){
+        if(tableName.equals("ec_child")){
             String[] ftsSearchFileds =  { "program_client_id", "epi_card_number", "first_name", "last_name", "father_name", "mother_name", "contact_phone_number" };
             return ftsSearchFileds;
-        }else if(tableName.equals("pkwoman")){
+        }else if(tableName.equals("ec_woman")){
             String[] ftsSearchFileds =  { "program_client_id", "epi_card_number", "first_name", "last_name", "father_name", "husband_name", "contact_phone_number" };
             return ftsSearchFileds;
         }
@@ -94,7 +95,7 @@ public class VaccinatorApplication extends DrishtiApplication{
     }
 
     private String[] getFtsSortFields(String tableName){
-        if(tableName.equals("pkchild") || tableName.equals("pkwoman")) {
+        if(tableName.equals("ec_child") || tableName.equals("ec_woman")) {
             String[] sortFields = {"first_name", "dob", "program_client_id"};
             return sortFields;
         }
@@ -102,7 +103,7 @@ public class VaccinatorApplication extends DrishtiApplication{
     }
 
     private String[] getFtsTables(){
-        String[] ftsTables = { "pkchild", "pkwoman" };
+        String[] ftsTables = { "ec_child", "ec_woman" };
         return ftsTables;
     }
 

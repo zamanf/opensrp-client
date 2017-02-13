@@ -29,7 +29,9 @@ import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.domain.ProfileImage;
 import org.ei.opensrp.path.R;
-import org.ei.opensrp.path.domain.FormSubmissionWrapper;
+import org.ei.opensrp.path.domain.EditFormSubmissionWrapper;
+import org.ei.opensrp.path.domain.EditWrapper;
+import org.ei.opensrp.path.domain.VaccinateFormSubmissionWrapper;
 import org.ei.opensrp.repository.ImageRepository;
 import org.ei.opensrp.view.activity.DrishtiApplication;
 
@@ -37,6 +39,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -54,7 +57,8 @@ public abstract class DetailActivity extends Activity {
     static String mCurrentPhotoPath;
     static File currentPhoto;
     static ImageView mImageView;
-    public static final String EXTRA_OBJECT = "extraObject";
+    public static final String EXTRA_VACCINATE_OBJECT = "extraVaccinateObject";
+    public static final String EXTRA_EDIT_OBJECT = "extraEditObject";
     public static final String EXTRA_CLIENT = "extraClient";
 
 
@@ -129,7 +133,7 @@ public abstract class DetailActivity extends Activity {
             });
 
 
-            ProfileImage photo = ((ImageRepository) org.ei.opensrp.Context.getInstance().imageRepository()).findByEntityId(client.entityId(), "dp");
+            ProfileImage photo = ((ImageRepository) org.ei.opensrp.Context.getInstance().imageRepository()).findByEntityId(client.entityId());
 
             if (photo != null) {
                 setProfiePicFromPath(this, mImageView, photo.getFilepath(), org.ei.opensrp.R.drawable.ic_pencil);
@@ -253,25 +257,36 @@ public abstract class DetailActivity extends Activity {
     }
 
     // Custom form submission
-    protected FormSubmissionWrapper retrieveFormSubmissionWrapper() {
+    protected VaccinateFormSubmissionWrapper retrieveFormSubmissionWrapper() {
         Bundle extras = this.getIntent().getExtras();
         if (extras != null) {
-            Serializable serializable = extras.getSerializable(EXTRA_OBJECT);
-            if (serializable != null && serializable instanceof FormSubmissionWrapper) {
-                return (FormSubmissionWrapper) serializable;
+            Serializable serializable = extras.getSerializable(EXTRA_VACCINATE_OBJECT);
+            if (serializable != null && serializable instanceof VaccinateFormSubmissionWrapper) {
+                return (VaccinateFormSubmissionWrapper) serializable;
             }
         }
         return null;
     }
 
-    protected void saveFormSubmission(FormSubmissionWrapper formSubmissionWrapper){
-        if (formSubmissionWrapper != null && formSubmissionWrapper.updates() > 0) {
+    protected void saveFormSubmission(VaccinateFormSubmissionWrapper vaccinateFormSubmissionWrapper){
+        if (vaccinateFormSubmissionWrapper != null && vaccinateFormSubmissionWrapper.updates() > 0) {
             final android.content.Context context = this;
-            String data = formSubmissionWrapper.updateFormSubmission();
+            String data = vaccinateFormSubmissionWrapper.updateFormSubmission();
             if (data != null) {
-                VaccinateActionUtils.saveFormSubmission(context, data, formSubmissionWrapper.getEntityId(), formSubmissionWrapper.getFormName(), formSubmissionWrapper.getOverrides());
+                VaccinateActionUtils.saveFormSubmission(context, data, vaccinateFormSubmissionWrapper.getEntityId(), vaccinateFormSubmissionWrapper.getFormName(), vaccinateFormSubmissionWrapper.getOverrides());
             }
         }
+    }
+
+    protected EditFormSubmissionWrapper retrieveEditFormSubmissionWrapper() {
+        Bundle extras = this.getIntent().getExtras();
+        if (extras != null) {
+            Serializable serializable = extras.getSerializable(EXTRA_EDIT_OBJECT);
+            if (serializable != null && serializable instanceof EditFormSubmissionWrapper) {
+                return (EditFormSubmissionWrapper) serializable;
+            }
+        }
+        return null;
     }
 
     // Retrieve common person object client
@@ -288,6 +303,43 @@ public abstract class DetailActivity extends Activity {
 
 
     // Demographics edits
+    protected void updateEditView(View view, List<TableLayout> tableLayouts, EditFormSubmissionWrapper editFormSubmissionWrapper) {
+        final android.content.Context context = this;
+
+        Button button = (Button) view;
+        if (view.getTag() != null && view.getTag() instanceof String) {
+            if (view.getTag().equals(getString(R.string.edit))) {
+                updateEditViews(tableLayouts, true);
+
+                button.setText(getString(R.string.save));
+                button.setTag(getString(R.string.save));
+            } else if (view.getTag().equals(getString(R.string.save))) {
+                List<EditWrapper> editWrappers = edited(tableLayouts);
+                if(!editWrappers.isEmpty()){
+                    // Save
+                    editFormSubmissionWrapper.addAll(editWrappers);
+                    String data = editFormSubmissionWrapper.updateFormSubmission();
+                    if (data != null) {
+                        VaccinateActionUtils.saveFormSubmission(context, data, editFormSubmissionWrapper.getEntityId(), editFormSubmissionWrapper.getFormName(), editFormSubmissionWrapper.getOverrides());
+                        editFormSubmissionWrapper.removeAll(editWrappers);
+                    }
+                }
+                updateEditViews(tableLayouts, false);
+
+                button.setText(getString(R.string.edit));
+                button.setTag(getString(R.string.edit));
+            }
+        }
+    }
+
+    private void updateEditViews(List<TableLayout> tableLayouts, boolean toEdit) {
+        if(tableLayouts != null && !tableLayouts.isEmpty()){
+            for (TableLayout layout : tableLayouts) {
+                updateEditViews(layout, toEdit);
+            }
+        }
+    }
+
     private void updateEditViews(TableLayout table, boolean toEdit) {
         for (int i = 0; i < table.getChildCount(); i++) {
             View view = table.getChildAt(i);
@@ -310,29 +362,42 @@ public abstract class DetailActivity extends Activity {
         }
     }
 
-    private void updateEditViews(List<TableLayout> tableLayouts, boolean toEdit) {
+    private List<EditWrapper> edited(List<TableLayout> tableLayouts) {
+        List<EditWrapper> edits = new ArrayList<>();
         if(tableLayouts != null && !tableLayouts.isEmpty()){
             for (TableLayout layout : tableLayouts) {
-                updateEditViews(layout, toEdit);
+                for (int i = 0; i < layout.getChildCount(); i++) {
+                    View view = layout.getChildAt(i);
+                    if (view instanceof TableRow) {
+                        TableRow row = (TableRow) view;
+                        for (int j = 0; j < row.getChildCount(); j++) {
+                            View childView = row.getChildAt(j);
+                            if (childView instanceof EditText) {
+                                EditText editText = (EditText) childView;
+                                EditWrapper editWrapper = edited(editText);
+                                if(editWrapper != null){
+                                    edits.add(editWrapper);
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
+        return edits;
     }
 
-    protected void updateEditView(View view, List<TableLayout> tableLayouts) {
-        Button button = (Button) view;
-        if (view.getTag() != null && view.getTag() instanceof String) {
-            if (view.getTag().equals(getString(R.string.edit))) {
-                updateEditViews(tableLayouts, true);
-
-                button.setText(getString(R.string.save));
-                button.setTag(getString(R.string.save));
-            } else if (view.getTag().equals(getString(R.string.save))) {
-                updateEditViews(tableLayouts, false);
-
-                button.setText(getString(R.string.edit));
-                button.setTag(getString(R.string.edit));
+    private EditWrapper edited(EditText editText){
+        if(editText.getTag() instanceof EditWrapper){
+            EditWrapper editWrapper = (EditWrapper)editText.getTag();
+            String currentValue = editWrapper.getCurrentValue();
+            String newValue = editText.getText().toString();
+            if(!currentValue.equals(newValue)){
+                editWrapper.setNewValue(newValue);
+                return editWrapper;
             }
         }
+        return null;
     }
 
     protected Context context() {

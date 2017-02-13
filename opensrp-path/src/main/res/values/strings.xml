@@ -104,4 +104,9 @@
     <string name="edit">Edit</string>
     <string name="save">Save</string>
 
+    <string name="search">Search</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="global_search_hint">Search Globally</string>
+    <string name="global_search">Global Search</string>
 </resources>

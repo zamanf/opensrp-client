@@ -25,6 +25,7 @@
             android:icon="@drawable/opensrp_logo"
             android:clearTaskOnLaunch="true"
             android:largeHeap="true">
+        <service android:enabled="true" android:name=".service.ImageUploadSyncService"></service>
 
         <activity
                 android:name=".view.activity.HomeActivity"
@@ -137,5 +138,6 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
             </intent-filter>
         </receiver>
+        <service android:name=".service.intentservices.ReplicationIntentService"/>
     </application>
 </manifest>

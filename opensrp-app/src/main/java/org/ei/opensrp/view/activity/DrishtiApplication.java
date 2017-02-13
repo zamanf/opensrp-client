@@ -2,6 +2,7 @@ package org.ei.opensrp.view.activity;
 
 import android.app.Application;
 import android.os.Build;
+import android.support.multidex.MultiDex;
 import android.util.Log;
 
 import org.ei.opensrp.AllConstants;
@@ -33,6 +34,14 @@ public abstract class DrishtiApplication extends Application {
     }
 
     public abstract void logoutCurrentUser();
+
+
+    @Override
+    protected void attachBaseContext(android.content.Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
+
 
     public static BitmapImageCache getMemoryCacheInstance() {
         if (memoryImageCache == null) {

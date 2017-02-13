@@ -32,7 +32,6 @@ public class StringUtil {
 
         return res;
     }
-
     public static String getValue(String value) {
         return isBlank(value)? "" : value;
     }
