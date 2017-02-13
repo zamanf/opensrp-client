@@ -8,8 +8,7 @@ import java.util.Map;
 /**
  * Created by Raihan Ahmed on 2/12/15.
  */
-public class CommonPersonObjectClient implements SmartRegisterClient, Serializable {
-
+public class CommonPersonObjectClient implements SmartRegisterClient,Serializable {
     private String caseId;
     private Map<String, String> details;
     public String name = "";

@@ -117,7 +117,6 @@
 
     <string name="str_reporting">Reporting</string>
     <string name="str_videos">Videos</string>
-    <string name="str_provider_profile">Profile</string>
 
     <string name="child_register_title_in_short">Child:</string>
     <string name="child_service_mode_overview">Overview</string>
@@ -311,5 +310,7 @@
     <string name="event_fields_extractor">{       \"obs\": [         {\"name\":\"father_name\"}       ],       \"attributes\" : [         {\"name\":\"voided\"},{\"name\":\"providerId\"}       ]     }</string>
     <string name="client_fields_extractor">{       \"property\": [         {\"name\":\"father_name\"}       ],       \"attributes\" : [        ]     }</string>
     <string name="string_global">Global</string>
+    <string name="str_provider_profile">Profile</string>
+
 
 </resources>
