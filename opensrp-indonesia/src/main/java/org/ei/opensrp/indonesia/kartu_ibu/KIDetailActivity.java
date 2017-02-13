@@ -353,7 +353,9 @@ public class KIDetailActivity extends Activity {
                 entityid,
                 "Image",
                 details.get("profilepic"),
-                ImageRepository.TYPE_Unsynced,"dp");
+                ImageRepository.TYPE_Unsynced,
+                "dp",
+                "facedata array");
         ((ImageRepository) Context.getInstance().imageRepository()).add(profileImage);
 //                kiclient.entityId();
 //        Toast.makeText(this,entityid,Toast.LENGTH_LONG).show();

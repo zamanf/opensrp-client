@@ -537,6 +537,8 @@ public class OpenSRPImageLoader extends ImageLoader {
                     profileImage.setFilepath(absoluteFileName);
                     profileImage.setFilecategory("profilepic");
                     profileImage.setSyncStatus(ImageRepository.TYPE_Synced);
+                    // TODO : fetch vector from imagebitmap
+                    profileImage.setFilevector("0,1,2,3,4,5,6,7,8,9,9,0");
                     ImageRepository imageRepo = (ImageRepository) org.ei.opensrp.Context.imageRepository();
                     imageRepo.add(profileImage);
                 }

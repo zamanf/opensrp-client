@@ -13,8 +13,9 @@ public class ProfileImage {
     private String filepath;
     private String syncStatus;
     private String filecategory;
+    private String filevector;
 
-    public ProfileImage(String imageid, String anmId, String entityID, String contenttype, String filepath, String syncStatus, String filecategory) {
+    public ProfileImage(String imageid, String anmId, String entityID, String contenttype, String filepath, String syncStatus, String filecategory, String filevector) {
         this.imageid = imageid;
         this.entityID = entityID;
         this.anmId = anmId;
@@ -22,6 +23,7 @@ public class ProfileImage {
         this.filepath = filepath;
         this.syncStatus = syncStatus;
         this.filecategory = filecategory;
+        this.filevector = filevector;
     }
     public ProfileImage(){}
 
@@ -86,5 +88,14 @@ public class ProfileImage {
                 Context.getInstance().allSharedPreferences().fetchBaseURL(""),
                 AllConstants.PROFILE_IMAGES_DOWNLOAD_PATH, entityID);
         return url;
+    }
+
+
+    public String getFilevector() {
+        return filevector;
+    }
+
+    public void setFilevector(String filevector) {
+        this.filevector = filevector;
     }
 }

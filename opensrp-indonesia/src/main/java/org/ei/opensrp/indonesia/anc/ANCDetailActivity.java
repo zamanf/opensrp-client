@@ -399,7 +399,8 @@ public class ANCDetailActivity extends Activity {
     public void saveimagereference(String bindobject,String entityid,Map<String,String> details){
         Context.getInstance().allCommonsRepositoryobjects(bindobject).mergeDetails(entityid,details);
         String anmId = Context.getInstance().allSharedPreferences().fetchRegisteredANM();
-        ProfileImage profileImage = new ProfileImage(UUID.randomUUID().toString(),anmId,entityid,"Image",details.get("profilepic"), ImageRepository.TYPE_Unsynced,"dp");
+        // TODO : vector fill
+        ProfileImage profileImage = new ProfileImage(UUID.randomUUID().toString(),anmId,entityid,"Image",details.get("profilepic"), ImageRepository.TYPE_Unsynced,"dp", "facedata array");
         ((ImageRepository) Context.getInstance().imageRepository()).add(profileImage);
 //                ancclient.entityId();
 //        Toast.makeText(this,entityid,Toast.LENGTH_LONG).show();

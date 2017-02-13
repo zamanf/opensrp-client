@@ -2,6 +2,7 @@ package org.ei.opensrp.repository;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.util.Log;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
@@ -20,7 +21,8 @@ public class ImageRepository extends DrishtiRepository {
     public static final String filepath_COLUMN = "filepath";
     public static final String syncStatus_COLUMN = "syncStatus";
     public static final String filecategory_COLUMN = "filecategory";
-    public static final String[] Image_TABLE_COLUMNS = {ID_COLUMN, anm_ID_COLUMN, entityID_COLUMN, contenttype_COLUMN, filepath_COLUMN, syncStatus_COLUMN,filecategory_COLUMN};
+    public static final String filevector_COLUMN = "filevector";
+    public static final String[] Image_TABLE_COLUMNS = {ID_COLUMN, anm_ID_COLUMN, entityID_COLUMN, contenttype_COLUMN, filepath_COLUMN, syncStatus_COLUMN,filecategory_COLUMN, filevector_COLUMN};
 
     public static final String TYPE_ANC = "ANC";
     public static final String TYPE_PNC = "PNC";
@@ -48,7 +50,10 @@ public class ImageRepository extends DrishtiRepository {
     public ProfileImage findByEntityId(String entityId) {
         SQLiteDatabase database = masterRepository.getReadableDatabase();
         Cursor cursor = database.query(Image_TABLE_NAME, Image_TABLE_COLUMNS, entityID_COLUMN + " = ?", new String[]{entityId}, null, null, null, null);
-        return readAll(cursor).get(0);
+//        return readAll(cursor).get(0);
+        return (readAll(cursor).size() != 0)? readAll(cursor).get(0) :
+                new ProfileImage("a", "b", "c", "d", "e", "f", "g", "h")
+            ;
     }
 
     public List<ProfileImage> findAllUnSynced() {
@@ -72,6 +77,7 @@ public class ImageRepository extends DrishtiRepository {
         values.put(filepath_COLUMN, image.getFilepath());
         values.put(syncStatus_COLUMN, image.getSyncStatus());
         values.put(filecategory_COLUMN, image.getFilecategory());
+        values.put(filevector_COLUMN, image.getFilevector());
         return values;
     }
 
@@ -80,7 +86,7 @@ public class ImageRepository extends DrishtiRepository {
         List<ProfileImage> ProfileImages = new ArrayList<ProfileImage>();
         while (!cursor.isAfterLast()) {
 
-            ProfileImages.add(new ProfileImage(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3),cursor.getString(4),cursor.getString(5),cursor.getString(6)));
+            ProfileImages.add(new ProfileImage(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3),cursor.getString(4),cursor.getString(5),cursor.getString(6), cursor.getString(7)));
 
             cursor.moveToNext();
         }
