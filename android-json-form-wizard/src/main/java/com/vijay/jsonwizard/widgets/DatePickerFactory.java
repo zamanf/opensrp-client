@@ -4,11 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Build;
+import android.support.v4.util.TimeUtils;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.rengwuxian.materialedittext.validation.RegexpValidator;
@@ -27,6 +30,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,6 +42,7 @@ import static android.view.inputmethod.InputMethodManager.HIDE_NOT_ALWAYS;
  */
 public class DatePickerFactory implements FormWidgetFactory {
 
+    private static final long DAY_MILLSECONDS = 86400000;
     public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy");
     public static final String DATE_FORMAT_REGEX = "(^(((0[1-9]|1[0-9]|2[0-8])[-](0[1-9]|1[012]))|((29|30|31)[-](0[13578]|1[02]))|((29|30)[-](0[4,6,9]|11)))[-](19|[2-9][0-9])\\d\\d$)|(^29[-]02[-](19|[2-9][0-9])(00|04|08|12|16|20|24|28|32|36|40|44|48|52|56|60|64|68|72|76|80|84|88|92|96)$)";
 
@@ -51,8 +56,19 @@ public class DatePickerFactory implements FormWidgetFactory {
             String openMrsEntityId = jsonObject.getString("openmrs_entity_id");
             String relevance = jsonObject.optString("relevance");
 
-            final MaterialEditText editText = (MaterialEditText) LayoutInflater.from(context).inflate(
-                    R.layout.item_edit_text, null);
+            final RelativeLayout dateViewRelativeLayout = (RelativeLayout) LayoutInflater
+                    .from(context).inflate(R.layout.item_date_picker, null);
+
+            final TextView duration = (TextView) dateViewRelativeLayout.findViewById(R.id.duration);
+            duration.setTag(R.id.key, jsonObject.getString("key"));
+            duration.setTag(R.id.openmrs_entity_parent, openMrsEntityParent);
+            duration.setTag(R.id.openmrs_entity, openMrsEntity);
+            duration.setTag(R.id.openmrs_entity_id, openMrsEntityId);
+            if(jsonObject.has("duration")) {
+                duration.setTag(R.id.label, jsonObject.getJSONObject("duration").getString("label"));
+            }
+
+            final MaterialEditText editText = (MaterialEditText) dateViewRelativeLayout.findViewById(R.id.edit_text);
             editText.setHint(jsonObject.getString("hint"));
             editText.setFloatingLabelText(jsonObject.getString("hint"));
             editText.setId(ViewUtil.generateViewId());
@@ -71,13 +87,14 @@ public class DatePickerFactory implements FormWidgetFactory {
             }
 
             if (!TextUtils.isEmpty(jsonObject.optString("value"))) {
-                editText.setText(jsonObject.optString("value"));
+                updateDateText(editText, duration, jsonObject.optString("value"));
                 if (jsonObject.has("read_only")) {
                     boolean readOnly = jsonObject.getBoolean("read_only");
                     editText.setEnabled(!readOnly);
                 }
             } else if(jsonObject.has("default")) {
-                editText.setText(DATE_FORMAT.format(getDate(jsonObject.getString("default")).getTime()));
+                updateDateText(editText, duration,
+                        DATE_FORMAT.format(getDate(jsonObject.getString("default")).getTime()));
             }
 
             editText.addValidator(new RegexpValidator(
@@ -96,9 +113,10 @@ public class DatePickerFactory implements FormWidgetFactory {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB
                                     && calendarDate.getTimeInMillis() >= view.getMinDate()
                                     && calendarDate.getTimeInMillis() <= view.getMaxDate()) {
-                                editText.setText(DATE_FORMAT.format(calendarDate.getTime()));
+                                updateDateText(editText, duration,
+                                        DATE_FORMAT.format(calendarDate.getTime()));
                             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                                editText.setText("");
+                                updateDateText(editText, duration, "");
                             }
                         }
                     }, date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get
@@ -158,23 +176,97 @@ public class DatePickerFactory implements FormWidgetFactory {
             editText.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    editText.setText("");
+                    updateDateText(editText, duration, "");
                     return true;
                 }
             });
 
             editText.addTextChangedListener(new GenericTextWatcher(stepName, editText));
 
-            views.add(editText);
+            views.add(dateViewRelativeLayout);
             if (relevance != null && context instanceof JsonApi) {
                 editText.setTag(R.id.relevance, relevance);
                 ((JsonApi) context).addWatchedView(editText);
+
+                duration.setTag(R.id.relevance, relevance);
+                ((JsonApi) context).addWatchedView(duration);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         return views;
+    }
+
+    private static void updateDateText(MaterialEditText editText, TextView duration, String date) {
+        editText.setText(date);
+        String durationLabel = (String) duration.getTag(R.id.label);
+        if (!TextUtils.isEmpty(durationLabel)) {
+            String durationText = getDuration(date);
+            if (!TextUtils.isEmpty(durationText)) {
+                durationText = String.format("(%s: %s)", durationLabel, durationText);
+            }
+            duration.setText(durationText);
+        }
+    }
+
+    private static String getDuration(String date) {
+        if (!TextUtils.isEmpty(date)) {
+            Calendar calendar = getDate(date);
+            Calendar now = Calendar.getInstance();
+
+            long timeDiff = Math.abs(now.getTimeInMillis() - calendar.getTimeInMillis());
+            StringBuilder builder = new StringBuilder();
+            TimeUtils.formatDuration(timeDiff, builder);
+            String duration = "";
+            if (timeDiff >= 0
+                    && timeDiff <= TimeUnit.MILLISECONDS.convert(13, TimeUnit.DAYS)) {
+                // Represent in days
+                long days = TimeUnit.DAYS.convert(timeDiff, TimeUnit.MILLISECONDS);
+                duration = days + "d";
+            } else if (timeDiff > TimeUnit.MILLISECONDS.convert(13, TimeUnit.DAYS)
+                    && timeDiff <= TimeUnit.MILLISECONDS.convert(97, TimeUnit.DAYS)) {
+                // Represent in weeks and days
+                int weeks = (int) Math.floor((float) timeDiff /
+                        TimeUnit.MILLISECONDS.convert(7, TimeUnit.DAYS));
+                int days = Math.round((float) (timeDiff -
+                        TimeUnit.MILLISECONDS.convert(weeks * 7, TimeUnit.DAYS)) /
+                            TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
+
+                duration = weeks + "w";
+                if (days > 0) {
+                    duration += " " + days + "d";
+                }
+            } else if (timeDiff > TimeUnit.MILLISECONDS.convert(97, TimeUnit.DAYS)
+                    && timeDiff <= TimeUnit.MILLISECONDS.convert(363, TimeUnit.DAYS)) {
+                // Represent in months and weeks
+                int months = (int) Math.floor((float) timeDiff /
+                        TimeUnit.MILLISECONDS.convert(30, TimeUnit.DAYS));
+                int weeks = Math.round((float) (timeDiff - TimeUnit.MILLISECONDS.convert(
+                        months * 30, TimeUnit.DAYS)) /
+                            TimeUnit.MILLISECONDS.convert(7, TimeUnit.DAYS));
+
+                duration = months + "m";
+                if (weeks > 0) {
+                    duration += " " + weeks + "w";
+                }
+            } else {
+                // Represent in years and months
+                int years = (int) Math.floor((float) timeDiff
+                        / TimeUnit.MILLISECONDS.convert(365, TimeUnit.DAYS));
+                int months = Math.round((float) (timeDiff -
+                        TimeUnit.MILLISECONDS.convert(years * 365, TimeUnit.DAYS)) /
+                            TimeUnit.MILLISECONDS.convert(30, TimeUnit.DAYS));
+
+                duration = years + "y";
+                if (months > 0) {
+                    duration += " " + months + "m";
+                }
+            }
+
+            return duration;
+        }
+        return null;
     }
 
     private static void showDatePickerDialog(Context context,

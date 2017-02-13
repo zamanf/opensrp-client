@@ -116,6 +116,9 @@
         "type": "date_picker",
         "hint": "Date of Birth *",
         "expanded": true,
+        "duration":{
+          "label": "Age"
+        },
         "min_date": "01-01-2013",
         "max_date": "today",
         "v_required": {
