@@ -245,6 +245,7 @@ public class JsonFormUtils {
                 .withLocationId(encounterLocation)
                 .withProviderId(providerId)
                 .withEntityType(bindType)
+                .withFormSubmissionId(generateRandomUUIDString())
                 .withDateCreated(new Date());
 
         for (int i = 0; i < fields.length(); i++) {

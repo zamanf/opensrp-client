@@ -203,11 +203,11 @@ public class HTTPAgent {
             File filetoupload = new File(image.getFilepath());
             Log.v("file to upload",""+filetoupload.length());
             MultipartEntity entity = new MultipartEntity();
-            entity.addPart("anm-id", new StringBody(image.getAnmId()));
-            entity.addPart("entity-id", new StringBody(image.getEntityID()));
-            entity.addPart("content-type", new StringBody(image.getContenttype()));
-            entity.addPart("file-category", new StringBody(image.getFilecategory()));
-            entity.addPart("file", new FileBody(new File(image.getFilepath())));
+            entity.addPart("anm-id", new StringBody(nullToLiteral(image.getAnmId())));
+            entity.addPart("entity-id", new StringBody(nullToLiteral(image.getEntityID())));
+            entity.addPart("content-type", new StringBody(nullToLiteral(image.getContenttype())));
+            entity.addPart("file-category", new StringBody(nullToLiteral(image.getFilecategory())));
+            entity.addPart("file", new FileBody(new File(image.getFilepath()), "image/jpeg"));
             httpost.setEntity(entity);
             String authToken = null;
             HttpResponse response = httpClient.postContent(httpost);
@@ -220,8 +220,15 @@ public class HTTPAgent {
             }
 
         }catch (Exception e){
-
+            Log.e(getClass().getName(), "", e);
         }
         return responseString;
+    }
+
+    private String nullToLiteral(String s){
+        if(s == null)
+            return "";
+        return s;
+
     }
 }
