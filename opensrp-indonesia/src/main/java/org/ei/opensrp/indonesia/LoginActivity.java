@@ -101,8 +101,8 @@ public class LoginActivity extends Activity {
         getActionBar().setIcon(getResources().getDrawable(org.ei.opensrp.indonesia.R.mipmap.logo));
         getActionBar().setBackgroundDrawable(getResources().getDrawable(org.ei.opensrp.indonesia.R.color.action_bar_background));
         setLanguage();
-
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
