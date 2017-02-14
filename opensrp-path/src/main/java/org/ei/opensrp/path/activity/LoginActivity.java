@@ -131,11 +131,13 @@ public class LoginActivity extends Activity {
         if (!context.IsUserLoggedOut()) {
             goToHome();
         }
-
-        fillUserIfExists();
     }
 
     public void login(final View view) {
+        login(view, true);
+    }
+
+    public void login(final View view, boolean localLogin) {
         android.util.Log.i(getClass().getName(), "Hiding Keyboard " + DateTime.now().toString());
         hideKeyboard();
         view.setClickable(false);
@@ -143,7 +145,7 @@ public class LoginActivity extends Activity {
         final String userName = userNameEditText.getText().toString();
         final String password = passwordEditText.getText().toString();
 
-        if (context.userService().hasARegisteredUser()) {
+        if (localLogin) {
             localLogin(view, userName, password);
         } else {
             remoteLogin(view, userName, password);
@@ -176,11 +178,10 @@ public class LoginActivity extends Activity {
     }
 
     private void localLogin(View view, String userName, String password) {
-        if (context.userService().isValidLocalLogin(userName, password)) {
+        if (context.userService().isUserInValidGroup(userName, password)) {
             localLoginWith(userName, password);
         } else {
-            showErrorDialog(getString(org.ei.opensrp.R.string.login_failed_dialog_message));
-            view.setClickable(true);
+            login(findViewById(org.ei.opensrp.R.id.login_loginButton), false);
         }
     }
 
@@ -188,7 +189,12 @@ public class LoginActivity extends Activity {
         tryRemoteLogin(userName, password, new Listener<LoginResponse>() {
             public void onEvent(LoginResponse loginResponse) {
                 if (loginResponse == SUCCESS) {
-                    remoteLoginWith(userName, password, loginResponse.payload());
+                    if(context.userService().isUserInPioneerGroup(userName)) {
+                        remoteLoginWith(userName, password, loginResponse.payload());
+                    } else {// Valid user from wrong group trying to log in
+                        showErrorDialog(getResources().getString(R.string.unauthorized_group));
+                        view.setClickable(true);
+                    }
                 } else {
                     if (loginResponse == null) {
                         showErrorDialog("Login failed. Unknown reason. Try Again");

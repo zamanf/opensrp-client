@@ -30,6 +30,40 @@ public class AllSharedPreferences {
         return preferences.getString(ANM_IDENTIFIER_PREFERENCE_KEY, "").trim();
     }
 
+    public String fetchEncryptedPassword(String username) {
+        if (username != null) {
+            return preferences.getString(ENCRYPTED_PASSWORD_PREFIX + username, null);
+        }
+        return null;
+    }
+
+    public void saveEncryptedPassword(String username, String password) {
+        if (username != null) {
+            preferences.edit().putString(ENCRYPTED_PASSWORD_PREFIX + username, password).commit();
+        }
+    }
+
+    public String fetchPioneerUser() {
+        return preferences.getString(PIONEER_USER, null);
+    }
+
+    public void savePioneerUser(String username) {
+        preferences.edit().putString(PIONEER_USER, username).commit();
+    }
+
+    public String fetchEncryptedGroupId(String username) {
+        if (username != null) {
+            return preferences.getString(ENCRYPTED_GROUP_ID_PREFIX + username, null);
+        }
+        return null;
+    }
+
+    public void saveEncryptedGroupId(String username, String groupId) {
+        if (username != null) {
+            preferences.edit().putString(ENCRYPTED_GROUP_ID_PREFIX + username, groupId).commit();
+        }
+    }
+
     public String fetchLanguagePreference() {
         return preferences.getString(LANGUAGE_PREFERENCE_KEY, DEFAULT_LOCALE).trim();
     }
