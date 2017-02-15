@@ -71,7 +71,7 @@ public class ChildSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         formNames = this.buildFormNameList();
         mBaseFragment = new ChildSmartRegisterFragment();
@@ -100,8 +100,8 @@ public class ChildSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
     }
 
 
-    public void onPageChanged(int page) {
-        setRequestedOrientation(page == 0 ? ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    public void onPageChanged(int page){
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
     @Override

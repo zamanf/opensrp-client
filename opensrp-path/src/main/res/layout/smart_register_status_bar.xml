@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight="2"
+    android:background="@color/status_bar_background_dark_grey"
+    android:orientation="horizontal">
+
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_weight="1"
+        android:background="@drawable/search_edit_text_bg"
+        android:orientation="horizontal"
+        android:paddingLeft="15dp">
+
+        <EditText
+            android:id="@+id/edt_search"
+            android:layout_width="@dimen/ec_main_header_search_box_width"
+            android:layout_height="fill_parent"
+            android:background="@android:color/transparent"
+            android:ellipsize="end"
+            android:hint="@string/str_search_hint"
+            android:singleLine="true"
+            android:textSize="17sp" />
+
+        <ImageButton
+            android:id="@+id/btn_search_cancel"
+            android:layout_width="@dimen/ec_main_header_search_cancel_button_width"
+            android:layout_height="fill_parent"
+            android:background="@android:color/transparent"
+            android:paddingLeft="15dp"
+            android:paddingRight="40dp"
+            android:src="@drawable/ic_cross"
+            android:visibility="invisible" />
+    </LinearLayout>
+
+
+    <Button
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:layout_weight="1"
+        android:background="@drawable/scan_qr_code_bg"
+        android:text="Record&#10;weight"
+        android:textAllCaps="false"
+        android:textColor="@color/record_weight_grey"
+        android:textSize="16sp" />
+
+</LinearLayout>
