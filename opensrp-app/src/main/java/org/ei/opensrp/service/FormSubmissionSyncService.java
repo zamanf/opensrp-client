@@ -6,10 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.ei.drishti.dto.form.FormSubmissionDTO;
-<<<<<<< HEAD
 import org.ei.opensrp.Context;
-=======
->>>>>>> master
 import org.ei.opensrp.DristhiConfiguration;
 import org.ei.opensrp.sync.CloudantSyncHandler;
 import org.ei.opensrp.domain.FetchStatus;

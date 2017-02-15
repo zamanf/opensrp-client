@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ImageRepository extends DrishtiRepository {
-    private static final String Image_SQL = "CREATE TABLE ImageList(imageid VARCHAR PRIMARY KEY, anmId VARCHAR, entityID VARCHAR, contenttype VARCHAR, filepath VARCHAR, syncStatus VARCHAR, filecategory VARCHAR)";
+    private static final String Image_SQL = "CREATE TABLE ImageList(imageid VARCHAR PRIMARY KEY, anmId VARCHAR, entityID VARCHAR, contenttype VARCHAR, filepath VARCHAR, syncStatus VARCHAR, filecategory VARCHAR, filevector TEXT)";
      public static final String Image_TABLE_NAME = "ImageList";
     public static final String ID_COLUMN = "imageid";
     public static final String anm_ID_COLUMN = "anmId";
@@ -85,7 +85,16 @@ public class ImageRepository extends DrishtiRepository {
             cursor.moveToFirst();
             while (cursor.getCount() > 0 && !cursor.isAfterLast()) {
 
-                ProfileImages.add(new ProfileImage(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6)));
+                ProfileImages.add(new ProfileImage(
+                        cursor.getString(0),
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        cursor.getString(3),
+                        cursor.getString(4),
+                        cursor.getString(5),
+                        cursor.getString(6),
+                        cursor.getString(7)
+                ));
 
                 cursor.moveToNext();
             }
