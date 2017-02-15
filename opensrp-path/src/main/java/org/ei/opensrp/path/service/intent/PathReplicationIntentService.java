@@ -39,7 +39,7 @@ public class PathReplicationIntentService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         boolean status;
-        ResultReceiver rec = intent.getParcelableExtra(RECEIVER_TAG);
+
 
         try {
 
@@ -56,8 +56,12 @@ public class PathReplicationIntentService extends IntentService {
             Log.e(TAG, e.getMessage());
             status = false;
         }
-        Bundle b= new Bundle();
-        b.putBoolean(RESULT_TAG, status);
-        rec.send(0, b);
+
+        ResultReceiver rec = intent.getParcelableExtra(RECEIVER_TAG);
+        if(rec != null) {
+            Bundle b = new Bundle();
+            b.putBoolean(RESULT_TAG, status);
+            rec.send(0, b);
+        }
     }
 }

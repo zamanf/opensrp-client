@@ -50,7 +50,7 @@ import util.JsonFormUtils;
 /**
  * Created by Ahmed on 13-Oct-15.
  */
-public class ChildSmartRegisterActivity extends SecuredNativeSmartRegisterActivity implements ServiceReceiver.Receiver {
+public class ChildSmartRegisterActivity extends SecuredNativeSmartRegisterActivity {
 
 
     @Bind(R.id.view_pager)
@@ -88,8 +88,6 @@ public class ChildSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
             }
         });
 
-        receiver = new ServiceReceiver(new Handler());
-        receiver.setReceiver(this);
     }
 
     private String[] buildFormNameList() {
@@ -207,7 +205,8 @@ public class ChildSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
                 AllSharedPreferences allSharedPreferences = new AllSharedPreferences(preferences);
 
-                JsonFormUtils.save(allSharedPreferences.fetchRegisteredANM(), "ec_child", jsonString, this, receiver);
+                JsonFormUtils.save(this, jsonString, allSharedPreferences.fetchRegisteredANM(), "ec_child", "Child_Photo");
+                refreshBaseFragment(true);
             }
         }
     }
@@ -324,9 +323,4 @@ public class ChildSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
         retrieveAndSaveUnsubmittedFormData();
     }
 
-    @Override
-    public void onReceiveResult(int resultCode, Bundle resultData) {
-        boolean result = resultData.getBoolean(PathReplicationIntentService.RESULT_TAG);
-        refreshBaseFragment(result);
-    }
 }

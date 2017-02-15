@@ -25,6 +25,7 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
         transitive = true;
     }
+    compile 'id.zelory:compressor:1.0.4'
 }
 
 android {

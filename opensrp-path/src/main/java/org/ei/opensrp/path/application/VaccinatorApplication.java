@@ -37,7 +37,6 @@ public class VaccinatorApplication extends DrishtiApplication{
         context.updateCommonFtsObject(createCommonFtsObject());
         applyUserLanguagePreference();
         cleanUpSyncState();
-        //startCESyncService(getApplicationContext());
         ConfigSyncReceiver.scheduleFirstSync(getApplicationContext());
         setCrashlyticsUser(context);
     }
