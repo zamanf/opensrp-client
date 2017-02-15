@@ -143,16 +143,29 @@
         "hint": "Birth certificate number"
       },
       {
-        "key": "Mother_Guardian_Name",
+        "key": "Mother_Guardian_First_Name",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Mother/guardian name *",
+        "hint": "Mother/guardian first name *",
         "edit_type": "name",
         "v_required": {
           "value": "true",
-          "err": "Please enter the mother/guardian's name"
+          "err": "Please enter the mother/guardian's first name"
+        }
+      },
+      {
+        "key": "Mother_Guardian_Last_Name",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Mother/guardian last name *",
+        "edit_type": "name",
+        "v_required": {
+          "value": "true",
+          "err": "Please enter the mother/guardian's last name"
         }
       },
       {
