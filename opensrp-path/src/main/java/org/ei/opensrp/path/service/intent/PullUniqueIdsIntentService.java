@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import org.ei.opensrp.Context;
+import org.ei.opensrp.path.db.UniqueIdRepository;
 import org.ei.opensrp.util.FileUtilities;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -17,6 +18,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.List;
 
 import util.PathConstants;
 
@@ -133,9 +136,11 @@ public class PullUniqueIdsIntentService extends IntentService {
         JSONObject responseJson= new JSONObject(response);
         JSONArray jsonArray= responseJson.getJSONArray("identifiers");
         if(jsonArray!=null && jsonArray.length()>0){
+            List<String> ids= new ArrayList<String>();
             for(int i=0;i<jsonArray.length();i++){
-                String uniqueId=jsonArray.getString(i);
+                ids.add(jsonArray.getString(i));
             }
+            UniqueIdRepository.getInstance().bulkInserOpenmrsIds(ids);
         }
     }
 }
