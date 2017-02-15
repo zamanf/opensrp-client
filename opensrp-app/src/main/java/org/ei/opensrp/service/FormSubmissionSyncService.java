@@ -6,15 +6,18 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.ei.drishti.dto.form.FormSubmissionDTO;
+<<<<<<< HEAD
 import org.ei.opensrp.Context;
+=======
+>>>>>>> master
 import org.ei.opensrp.DristhiConfiguration;
+import org.ei.opensrp.sync.CloudantSyncHandler;
 import org.ei.opensrp.domain.FetchStatus;
 import org.ei.opensrp.domain.Response;
 import org.ei.opensrp.domain.form.FormSubmission;
 import org.ei.opensrp.repository.AllSettings;
 import org.ei.opensrp.repository.AllSharedPreferences;
 import org.ei.opensrp.repository.FormDataRepository;
-import org.ei.opensrp.sync.CloudantSyncHandler;
 import org.ei.opensrp.view.activity.DrishtiApplication;
 
 import java.util.ArrayList;
@@ -58,11 +61,9 @@ public class FormSubmissionSyncService {
             mCloudantSyncHandler.startPushReplication();
 
             mCountDownLatch.await();
-            pushToServer();
+            //pushToServer();
             Intent intent = new Intent(DrishtiApplication.getInstance().getApplicationContext(),ImageUploadSyncService.class);
             DrishtiApplication.getInstance().getApplicationContext().startService(intent);
-
-
             return FetchStatus.fetched;
         }catch (Exception e) {
             return FetchStatus.fetchedFailed;
