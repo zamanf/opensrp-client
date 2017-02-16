@@ -67,6 +67,8 @@
         <receiver android:name=".receiver.CESyncReceiver" />
 
         <activity android:name=".activity.ProviderProfileActivity"></activity>
+        <activity android:name="org.ei.opensrp.view.activity.SettingsActivity"
+            android:screenOrientation="portrait" />
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="3f94f9c3caeff331b3a2bd8c2182b663ad6a955a" />
