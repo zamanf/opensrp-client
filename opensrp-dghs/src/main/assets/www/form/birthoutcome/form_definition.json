@@ -5,8 +5,7 @@
     "bind_type": "household",
     "fields": [
       {
-        "name": "id",
-        "shouldLoadValue": true
+        "name": "id"
       },
       {
         "name": "today",
@@ -111,6 +110,10 @@
           },
           {
             "name": "relationalid"
+          },
+          {
+            "name": "mother_relational_id",
+            "bind": "/model/instance/BirthOutcome/Child_Registration/mother_relational_id"
           },
           {
             "name": "Member_COUNTRY",

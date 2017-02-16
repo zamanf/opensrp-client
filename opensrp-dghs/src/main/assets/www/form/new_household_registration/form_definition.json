@@ -5,8 +5,7 @@
     "bind_type": "household",
     "fields": [
       {
-        "name": "id",
-        "shouldLoadValue": true
+        "name": "id"
       },
       {
         "name": "existing_location",
