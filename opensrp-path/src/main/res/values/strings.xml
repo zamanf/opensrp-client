@@ -112,4 +112,8 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="child_siblings">%s siblings</string>
+    <string name="neutral_sex_id">zer</string>
+    <string name="female_sex_id">her</string>
+    <string name="male_sex_id">his</string>
 </resources>

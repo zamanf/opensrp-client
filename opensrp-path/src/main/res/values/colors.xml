@@ -4,6 +4,12 @@
     <color name="black">#000000</color>
     <color name="silver">#A9A9A9</color>
 
+    <!-- Gender identity colors -->
+    <color name="male_blue">#3298de</color>
+    <color name="male_light_blue">#a3daf4</color>
+    <color name="female_pink">#de47dc</color>
+    <color name="female_light_pink">#f7dbf7</color>
+
     <color name="alert_na">#ECECEC</color>
     <color name="alert_upcoming">#D3EAF4</color>
     <color name="alert_normal">#389CCA</color>
