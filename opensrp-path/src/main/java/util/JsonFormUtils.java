@@ -103,7 +103,7 @@ public class JsonFormUtils {
                 cloudantDataHandler.createClientDocument(client);
             }
 
-            String imageLocation = getFieldValue(fields, PERSON_INDENTIFIER, imageKey);
+            String imageLocation = getFieldValue(fields, imageKey);
             saveImage(context, providerId, entityId, imageLocation);
 
             ClientProcessor.getInstance(context).processClient();
@@ -245,6 +245,7 @@ public class JsonFormUtils {
                 .withLocationId(encounterLocation)
                 .withProviderId(providerId)
                 .withEntityType(bindType)
+                .withFormSubmissionId(generateRandomUUIDString())
                 .withDateCreated(new Date());
 
         for (int i = 0; i < fields.length(); i++) {
@@ -369,6 +370,12 @@ public class JsonFormUtils {
 
         if (entityVal != null && entityVal.equals(entity)) {
             String entityIdVal = getString(jsonObject, OPENMRS_ENTITY_ID);
+
+            //FIXME hack unique identifiers
+            if(entityIdVal.equals("ZEIR_ID") && value.equals("0")){
+                value = generateRandomUUIDString();
+            }
+
             pids.put(entityIdVal, value);
         }
 
@@ -490,6 +497,21 @@ public class JsonFormUtils {
             String entityVal = getString(jsonObject, OPENMRS_ENTITY);
             String entityIdVal = getString(jsonObject, OPENMRS_ENTITY_ID);
             if (entityVal != null && entityVal.equals(entity) && entityIdVal != null && entityIdVal.equals(entityId)) {
+                return getString(jsonObject, VALUE);
+            }
+        }
+        return null;
+    }
+
+    private static String getFieldValue(JSONArray jsonArray, String key) {
+        if (jsonArray == null || jsonArray.length() == 0) {
+            return null;
+        }
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject jsonObject = getJSONObject(jsonArray, i);
+            String keyVal = getString(jsonObject, KEY);
+            if (keyVal != null && keyVal.equals(key)) {
                 return getString(jsonObject, VALUE);
             }
         }
