@@ -1,4 +1,4 @@
-package org.ei.opensrp.path.db;
+package org.ei.opensrp.repository;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -8,8 +8,7 @@ import android.util.Log;
 import net.sqlcipher.database.SQLiteDatabase;
 
 import org.ei.opensrp.Context;
-import org.ei.opensrp.path.domain.UniqueId;
-import org.ei.opensrp.repository.DrishtiRepository;
+import org.ei.opensrp.domain.UniqueId;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ import java.util.List;
 
 public class UniqueIdRepository extends DrishtiRepository {
     private static final String TAG = UniqueIdRepository.class.getCanonicalName();
-    private static final String UniqueIds_SQL = "CREATE TABLE unique_ids(_id INTEGER AUTOINCREMENT,openmrs_id VARCHAR NOT NULL,status VARCHAR NULL, used_by VARCHAR NULL,synced_by VARCHAR NULL,created_at DATETIME NULL,updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP )";
+    private static final String UniqueIds_SQL = "CREATE TABLE unique_ids(_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,openmrs_id VARCHAR NOT NULL,status VARCHAR NULL, used_by VARCHAR NULL,synced_by VARCHAR NULL,created_at DATETIME NULL,updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP )";
     public static final String UniqueIds_TABLE_NAME = "unique_ids";
     public static final String ID_COLUMN = "_id";
     public static final String OPENMRS_ID_COLUMN = "openmrs_id";
@@ -27,7 +26,7 @@ public class UniqueIdRepository extends DrishtiRepository {
     private static final String SYNCED_BY_COLUMN = "synced_by";
     public static final String CREATED_AT_COLUMN = "created_at";
     public static final String UPDATED_AT_COLUMN = "updated_at";
-    public static final String[] UniqueIds_TABLE_COLUMNS = {ID_COLUMN, OPENMRS_ID_COLUMN, STATUS_COLUMN, USED_BY_COLUMN,SYNCED_BY_COLUMN,CREATED_AT_COLUMN, UPDATED_AT_COLUMN};
+    public static final String[] UniqueIds_TABLE_COLUMNS = {ID_COLUMN, OPENMRS_ID_COLUMN, STATUS_COLUMN, USED_BY_COLUMN, SYNCED_BY_COLUMN, CREATED_AT_COLUMN, UPDATED_AT_COLUMN};
 
     public static String STATUS_USED = "used";
     public static String STATUS_NOT_USED = "not_used";
@@ -44,12 +43,14 @@ public class UniqueIdRepository extends DrishtiRepository {
         database.insert(UniqueIds_TABLE_NAME, null, createValuesFor(uniqueId));
         database.close();
     }
+
     public static UniqueIdRepository getInstance() {
         if (instance == null) {
             instance = new UniqueIdRepository();
         }
         return instance;
     }
+
     /**
      * inserts ids in bulk to the db in a transaction since normally, each time db.insert() is used, SQLite creates a transaction (and resulting journal file in the filesystem), which slows things down.
      *
@@ -66,16 +67,35 @@ public class UniqueIdRepository extends DrishtiRepository {
                 ContentValues values = new ContentValues();
                 values.put(OPENMRS_ID_COLUMN, id);
                 values.put(STATUS_COLUMN, STATUS_NOT_USED);
-                values.put(SYNCED_BY_COLUMN,userName );
+                values.put(SYNCED_BY_COLUMN, userName);
                 values.put(CREATED_AT_COLUMN, dateFormat.format(new Date()));
                 database.insert(UniqueIds_TABLE_NAME, null, values);
             }
-
+            database.setTransactionSuccessful();
         } catch (SQLException e) {
             Log.e(TAG, e.getMessage());
         } finally {
             database.endTransaction();
         }
+    }
+
+    public Long countUnUsedIds() {
+        long count = 0;
+        try {
+            SQLiteDatabase database = masterRepository.getWritableDatabase();
+
+            Cursor cursor = database.rawQuery("SELECT COUNT (*) FROM " + UniqueIds_TABLE_NAME + " WHERE " + STATUS_COLUMN + "=?",
+                    new String[]{String.valueOf(STATUS_NOT_USED)});
+            if (null != cursor)
+                if (cursor.getCount() > 0) {
+                    cursor.moveToFirst();
+                    count = cursor.getInt(0);
+                }
+            cursor.close();
+        } catch (SQLException e) {
+            Log.e(TAG, e.getMessage());
+        }
+        return count;
     }
 
     /**
@@ -95,8 +115,11 @@ public class UniqueIdRepository extends DrishtiRepository {
      * @param openmrsId
      */
     public void close(String openmrsId) {
+        String userName = Context.getInstance().allSharedPreferences().fetchRegisteredANM();
+
         ContentValues values = new ContentValues();
         values.put(STATUS_COLUMN, STATUS_USED);
+        values.put(USED_BY_COLUMN, userName);
         masterRepository.getWritableDatabase().update(UniqueIds_TABLE_NAME, values, OPENMRS_ID_COLUMN + " = ?", new String[]{openmrsId});
     }
 
@@ -123,7 +146,7 @@ public class UniqueIdRepository extends DrishtiRepository {
             }
             cursor.close();
         } catch (Exception e) {
-
+            Log.e(TAG, e.getMessage());
         }
         return UniqueIds;
     }

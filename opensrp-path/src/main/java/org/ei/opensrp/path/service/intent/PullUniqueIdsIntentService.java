@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import org.ei.opensrp.Context;
-import org.ei.opensrp.path.db.UniqueIdRepository;
+import org.ei.opensrp.repository.UniqueIdRepository;
 import org.ei.opensrp.util.FileUtilities;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -29,11 +29,13 @@ import util.PathConstants;
  */
 public class PullUniqueIdsIntentService extends IntentService {
     private static final String TAG = PullUniqueIdsIntentService.class.getCanonicalName();
+    private final UniqueIdRepository uniqueIdRepo;
 
 
     public PullUniqueIdsIntentService() {
 
         super("PullUniqueOpenMRSUniqueIdsService");
+        uniqueIdRepo=org.ei.opensrp.Context.uniqueIdRepository();
 
     }
 
@@ -41,12 +43,22 @@ public class PullUniqueIdsIntentService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         URL localURL;
         try {
-            String userName = Context.getInstance().allSharedPreferences().fetchRegisteredANM();
+            int numberToGenerate = 0;
+
+            if(uniqueIdRepo.countUnUsedIds()==0){// first time pull no ids at all
+                numberToGenerate=PathConstants.OPENMRS_UNIQUE_ID_INITIAL_BATCH_SIZE;
+            }
+            else if(uniqueIdRepo.countUnUsedIds()<=250){ //maintain a minimum of 250 else skip this pull
+                numberToGenerate=PathConstants.OPENMRS_UNIQUE_ID_BATCH_SIZE;
+            }else{
+                return;
+            }
+
+                String userName = Context.getInstance().allSharedPreferences().fetchRegisteredANM();
             String password = Context.getInstance().allSettings().fetchANMPassword();
 
-            int numberToGenerate = 0;
-            String localUrlString = PathConstants.OPENMRS_URL + PathConstants.OPENMRS_IDGEN_URL + "?source="+PathConstants.OPENMRS_UNIQUE_ID_SOURCE+"&numberToGenerate=" + numberToGenerate + "&username=" + userName + "&password=" + password;
-// Convert the incoming data string to a URL.
+            String localUrlString = PathConstants.openmrsUrl() + PathConstants.OPENMRS_IDGEN_URL + "?source="+PathConstants.OPENMRS_UNIQUE_ID_SOURCE+"&numberToGenerate=" + numberToGenerate + "&username=" + userName + "&password=" + password;
+           // Convert the incoming data string to a URL.
             localURL = new URL(localUrlString);
              /*
              * Tries to open a connection to the URL. If an IO error occurs, this throws an
@@ -140,7 +152,7 @@ public class PullUniqueIdsIntentService extends IntentService {
             for(int i=0;i<jsonArray.length();i++){
                 ids.add(jsonArray.getString(i));
             }
-            UniqueIdRepository.getInstance().bulkInserOpenmrsIds(ids);
+            uniqueIdRepo.bulkInserOpenmrsIds(ids);
         }
     }
 }

@@ -1,4 +1,4 @@
-package org.ei.opensrp.path.domain;
+package org.ei.opensrp.domain;
 
 import java.util.Date;
 
@@ -15,7 +15,7 @@ public class UniqueId {
 
     public UniqueId(){}
 
-    public UniqueId(String id, String openmrsId,String status, String usedBy, Date createdAt){
+    public UniqueId(String id, String openmrsId, String status, String usedBy, Date createdAt){
         this.id=id;
         this.openmrsId=openmrsId;
         this.status=status;
