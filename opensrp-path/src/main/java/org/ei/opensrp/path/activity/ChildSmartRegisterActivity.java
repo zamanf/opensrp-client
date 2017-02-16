@@ -183,13 +183,14 @@ public class ChildSmartRegisterActivity extends SecuredNativeSmartRegisterActivi
             UniqueIdRepository uniqueIdRepo = Context.getInstance().uniqueIdRepository();
             if (form != null) {
                 Intent intent = new Intent(getApplicationContext(), JsonFormActivity.class);
-                JSONObject stepOne = form.getJSONObject("step1");
-                JSONArray jsonArray = stepOne.getJSONArray("fields");
+                //inject zeir id into the form
+                JSONObject stepOne = form.getJSONObject(JsonFormUtils.STEP1);
+                JSONArray jsonArray = stepOne.getJSONArray(JsonFormUtils.FIELDS);
                 for(int i=0;i<jsonArray.length();i++){
                     JSONObject jsonObject=jsonArray.getJSONObject(i);
-                    if(jsonObject.getString("key").equalsIgnoreCase("ZEIR_ID")){
-                        jsonObject.remove("value");
-                        jsonObject.put("value", uniqueIdRepo.getNextUniqueId()!=null?uniqueIdRepo.getNextUniqueId().getOpenmrsId().replace("-",""):0);
+                    if(jsonObject.getString(JsonFormUtils.KEY).equalsIgnoreCase(JsonFormUtils.ZEIRD)){
+                        jsonObject.remove(JsonFormUtils.VALUE);
+                        jsonObject.put(JsonFormUtils.VALUE, uniqueIdRepo.getNextUniqueId()!=null?uniqueIdRepo.getNextUniqueId().getOpenmrsId().replace("-",""):0);
                         continue;
                     }
                 }
