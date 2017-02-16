@@ -22,8 +22,8 @@
       "name" : "existing_first_name",
       "bind" : "/model/instance/Child_Vaccination_Followup/existing_first_name"
     }, {
-      "name" : "existing_last_name",
-      "bind" : "/model/instance/Child_Vaccination_Followup/existing_last_name"
+      "name" : "existing_father_name",
+      "bind" : "/model/instance/Child_Vaccination_Followup/existing_father_name"
     }, {
       "name" : "existing_mother_name",
       "bind" : "/model/instance/Child_Vaccination_Followup/existing_mother_name"
@@ -130,8 +130,8 @@
       "name" : "first_name_note",
       "bind" : "/model/instance/Child_Vaccination_Followup/first_name_note"
     }, {
-      "name" : "last_name_note",
-      "bind" : "/model/instance/Child_Vaccination_Followup/last_name_note"
+      "name" : "father_name_note",
+      "bind" : "/model/instance/Child_Vaccination_Followup/father_name_note"
     }, {
       "name" : "calc_age_months",
       "bind" : "/model/instance/Child_Vaccination_Followup/calc_age_months"
@@ -144,6 +144,18 @@
     }, {
       "name" : "mother_name_note",
       "bind" : "/model/instance/Child_Vaccination_Followup/mother_name_note"
+    }, {
+      "name" : "child_not_named_previous",
+      "bind" : "/model/instance/Child_Vaccination_Followup/child_not_named_previous"
+    }, {
+      "name" : "child_not_named",
+      "bind" : "/model/instance/Child_Vaccination_Followup/child_not_named"
+    }, {
+      "name" : "first_name_yes",
+      "bind" : "/model/instance/Child_Vaccination_Followup/first_name_yes"
+    }, {
+      "name" : "first_name",
+      "bind" : "/model/instance/Child_Vaccination_Followup/first_name"
     }, {
       "name" : "address_note",
       "bind" : "/model/instance/Child_Vaccination_Followup/address_note"

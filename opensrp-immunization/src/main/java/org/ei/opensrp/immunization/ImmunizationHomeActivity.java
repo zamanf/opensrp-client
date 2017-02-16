@@ -2,17 +2,26 @@ package org.ei.opensrp.immunization;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import org.ei.opensrp.Context;
+import org.ei.opensrp.core.db.repository.CESQLiteHelper;
+import org.ei.opensrp.core.db.repository.RegisterRepository;
+import org.ei.opensrp.core.utils.Utils;
+import org.ei.opensrp.immunization.application.CESyncReceiver;
 import org.ei.opensrp.immunization.child.ChildSmartRegisterActivity;
 import org.ei.opensrp.immunization.field.FieldMonitorSmartRegisterActivity;
 import org.ei.opensrp.immunization.household.HouseholdSmartRegisterActivity;
 import org.ei.opensrp.immunization.report.VaccineReport;
 import org.ei.opensrp.immunization.woman.WomanSmartRegisterActivity;
+import org.ei.opensrp.immunization.zm.ZMSmartRegisterActivity;
 import org.ei.opensrp.view.contract.HomeContext;
 import org.ei.opensrp.core.template.HomeActivity;
+import org.w3c.dom.Text;
 
 public class ImmunizationHomeActivity extends HomeActivity {
     Activity activity=this;
@@ -33,7 +42,7 @@ public class ImmunizationHomeActivity extends HomeActivity {
     }
 
     public void setupViewsAndListeners() {
-        Log.v(getClass().getName(), "Setting up views and listeners");
+        Log.v(getClass().getName(), "Setting up register views and listeners");
         setupRegister("View Woman Register", R.id.womanImmunizationContainer, R.id.btn_woman_register, onRegisterStartListener,
                 new RegisterCountView[]{new RegisterCountView(R.id.txt_woman_register_client_count, "pkwoman", "", "")});
 
@@ -56,8 +65,60 @@ public class ImmunizationHomeActivity extends HomeActivity {
                         }),
                 });
 
+        // // TODO: 1/25/2017  something for CE
+        setupRegister("View ZM Register", R.id.zmContainer, R.id.btn_zm_register, onRegisterStartListener,
+                new RegisterCountView[]{
+                        new RegisterCountView(R.id.txt_zm_register_client_count, "", "", "",
+                                CountMethod.MANUAL, new CustomCounterHandler() {
+                            @Override
+                            public int executeCounter() {
+                                ((TextView)findViewById(R.id.zm_location_filtered)).setText(CESyncReceiver.SYNC_LOCATION(activity));
+                                return Integer.parseInt(CESQLiteHelper.getClientEventDb(activity).rawQuery("SELECT COUNT(1) c FROM client").get(0).get("c"));
+                            }
+                        }),
+                        new RegisterCountView(R.id.zm_register_male_count, "", "", "M",
+                                CountMethod.MANUAL, new CustomCounterHandler() {
+                            @Override
+                            public int executeCounter() {
+                                return Integer.parseInt(CESQLiteHelper.getClientEventDb(activity).rawQuery("SELECT COUNT(1) c FROM client WHERE gender LIKE 'M%'").get(0).get("c"));
+                            }
+                        }),
+                        new RegisterCountView(R.id.zm_register_female_count, "", "", "F",
+                                CountMethod.MANUAL, new CustomCounterHandler() {
+                            @Override
+                            public int executeCounter() {
+                                return Integer.parseInt(CESQLiteHelper.getClientEventDb(activity).rawQuery("SELECT COUNT(1) c FROM client WHERE gender LIKE 'F%'").get(0).get("c"));
+                            }
+                        }),
+                        new RegisterCountView(R.id.zm_register_intersex_count, "", "", "T",
+                                CountMethod.MANUAL, new CustomCounterHandler() {
+                            @Override
+                            public int executeCounter() {
+                                return Integer.parseInt(CESQLiteHelper.getClientEventDb(activity).rawQuery("SELECT COUNT(1) c FROM client WHERE gender LIKE 'T%'").get(0).get("c"));
+                            }
+                        }),
+                        new RegisterCountView(R.id.txt_zm_register_woman_count, "", "", "W",
+                                CountMethod.MANUAL, new CustomCounterHandler() {
+                            @Override
+                            public int executeCounter() {
+                                return Integer.parseInt(CESQLiteHelper.getClientEventDb(activity).rawQuery("SELECT COUNT(1) c FROM client WHERE gender LIKE 'F%' AND julianday(DATETIME('now'))-julianday(birthdate) BETWEEN 15*365 AND 49*365 ").get(0).get("c"));
+                            }
+                        }),
+                        new RegisterCountView(R.id.txt_zm_register_child_count, "", "", "C",
+                                CountMethod.MANUAL, new CustomCounterHandler() {
+                            @Override
+                            public int executeCounter() {
+                                return Integer.parseInt(CESQLiteHelper.getClientEventDb(activity).rawQuery("SELECT COUNT(1) c FROM client WHERE julianday(DATETIME('now'))-julianday(birthdate) BETWEEN 0 AND 5*365 ").get(0).get("c"));
+                            }
+                        })
+                });
+
         findViewById(R.id.btn_reporting).setOnClickListener(onButtonsClickListener);
         findViewById(R.id.btn_provider_profile).setOnClickListener(onButtonsClickListener);
+        findViewById(R.id.btn_learning).setOnClickListener(onButtonsClickListener);
+        findViewById(R.id.btn_why).setOnClickListener(onButtonsClickListener);
+        findViewById(R.id.btn_how).setOnClickListener(onButtonsClickListener);
+
     }
 
     @Override
@@ -89,6 +150,9 @@ public class ImmunizationHomeActivity extends HomeActivity {
                 case R.id.btn_woman_register:
                     activity.startActivity(new Intent(activity, WomanSmartRegisterActivity.class));
                     break;
+                case R.id.btn_zm_register:
+                    activity.startActivity(new Intent(activity, ZMSmartRegisterActivity.class));
+                    break;
             }
         }
     };
@@ -99,12 +163,34 @@ public class ImmunizationHomeActivity extends HomeActivity {
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.btn_reporting:
+                    Boolean isSyncInProgress = Context.getInstance().allSharedPreferences().fetchIsSyncInProgress();
+
+                    if (isSyncInProgress != null && isSyncInProgress){
+                        Toast.makeText(activity, "Forms Sync is in progress at the moment... Try visiting reports later when sync has been completed", Toast.LENGTH_LONG).show();
+                        return;
+                    }
                     activity.startActivity(new Intent(activity, VaccineReport.class));
                     break;
 
                 case R.id.btn_provider_profile:
                     activity.startActivity(new Intent(activity, ProviderProfileActivity.class));
                     break;
+
+                /*case R.id.btn_learning:
+                    Uri uri = Uri.parse("http://demo.oppia-mobile.org/view?digest=005a54d3b873e19020b7b0458a484fc714496"); // missing 'http://' will cause crashed
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    startActivity(intent);
+                    break;
+                case R.id.btn_why:
+                    uri = Uri.parse("http://demo.oppia-mobile.org/view?digest=e69aaabbb5460b4a145fb00c11fdf8a412952"); // missing 'http://' will cause crashed
+                    intent = new Intent(Intent.ACTION_VIEW, uri);
+                    startActivity(intent);
+                    break;
+                case R.id.btn_how:
+                    uri = Uri.parse("http://demo.oppia-mobile.org/view?digest=bd7ae89a5393e9d9eb196d516945a31712971"); // missing 'http://' will cause crashed
+                    intent = new Intent(Intent.ACTION_VIEW, uri);
+                    startActivity(intent);
+                    break;*/
             }
         }
     };

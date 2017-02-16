@@ -32,7 +32,7 @@ import java.util.Map;
 
 import static org.ei.opensrp.core.utils.Utils.*;
 
-public class FieldMonitorSmartClientsProvider implements RegisterClientsProvider {
+public class FieldMonitorSmartClientsProvider implements RegisterClientsProvider <CommonPersonObjectClient>{
 
     private final LayoutInflater inflater;
     private final Context context;
@@ -125,7 +125,7 @@ public class FieldMonitorSmartClientsProvider implements RegisterClientsProvider
     }
 
     @Override
-    public View getView(SmartRegisterClient client, View parentView, ViewGroup viewGroup) {
+    public View getView(CommonPersonObjectClient client, View parentView, ViewGroup viewGroup) {
         CommonPersonObjectClient pc = (CommonPersonObjectClient) client;
 
         String dateentered = pc.getColumnmaps().get("date");
@@ -224,23 +224,13 @@ public class FieldMonitorSmartClientsProvider implements RegisterClientsProvider
 
 
     @Override
-    public SmartRegisterClients getClients() {
+    public List<CommonPersonObjectClient> getClients() {
         throw new UnsupportedOperationException("Operation not supported");
-    }
-
-    @Override
-    public SmartRegisterClients updateClients(FilterOption villageFilter, ServiceModeOption serviceModeOption, SearchFilterOption searchFilter, SortOption sortOption) {
-        return null;
     }
 
     @Override
     public void onServiceModeSelected(org.ei.opensrp.core.template.ServiceModeOption serviceModeOption) {
 
-    }
-
-    @Override
-    public OnClickFormLauncher newFormLauncher(String formName, String entityId, String metaData) {
-        throw new UnsupportedOperationException("Operation not supported");
     }
 
     @Override

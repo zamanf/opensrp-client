@@ -33,8 +33,8 @@ import static org.ei.opensrp.domain.LoginResponse.SUCCESS;
 
 public class ProviderProfileActivity extends Activity {
     Context ctx = Context.getInstance();
-    @Override
 
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
@@ -53,11 +53,7 @@ public class ProviderProfileActivity extends Activity {
             @Override
             public void onClick(View v) {
                 try {
-                    Log.v(getClass().getName(), "Checking user info remotely");
-                    Log.v(getClass().getName(), "Copying DB");
-
-//                    new DBExport().exportDatabase(Environment.getExternalStorageDirectory().toString() +"/drishti.db");
-
+                    
                     new AsyncCallWS().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
                 catch (Exception e) {
@@ -128,6 +124,9 @@ public class ProviderProfileActivity extends Activity {
         @Override
         protected void onPostExecute(LoginResponse r) {
             Log.v(getClass().getName(), r.toString() + r.payload());
+            if(isFinishing()) {
+                return;
+            }
 
             if (r == SUCCESS) {
                 UserService usr = ctx.userService();
@@ -167,7 +166,10 @@ public class ProviderProfileActivity extends Activity {
 
         @Override
         protected void onPreExecute() {
-            progressDialog.show();
+
+            if(!isFinishing()) {
+                progressDialog.show();
+            }
         }
 
         @Override

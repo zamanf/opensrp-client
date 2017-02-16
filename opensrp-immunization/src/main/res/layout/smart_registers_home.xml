@@ -23,6 +23,121 @@
             <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
+                android:layout_weight="1" android:id="@+id/zmContainer">
+
+                <ImageButton
+                    android:id="@+id/btn_zm_register"
+                    style="@style/ImageButton.Home.Register"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/register_zm" />
+
+                <TextView
+                    style="@style/CustomFontTextViewStyle.Home.RegisterName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:text="Program" />
+
+                <TextView
+                    style="@style/CustomFontTextViewStyle.Home.RegisterLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:text="@string/register_label" />
+
+                <TextView
+                    android:text="Location Filtered"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/zm_location_filtered"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center_horizontal"
+                    android:layout_marginRight="12dp"
+                    android:layout_marginLeft="11dp"
+                    android:background="@color/dull_red_dark"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:text="0000 M"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/zm_register_male_count"
+                    android:layout_gravity="bottom|right"
+                    android:textColor="@android:color/white"
+                    android:background="@color/maroon"
+                    android:textStyle="bold"
+                    android:layout_marginRight="12dp"
+                    android:layout_marginBottom="25dp"
+                    android:textSize="13sp"
+                    android:layout_width="55dp"
+                    android:paddingLeft="5dp" />
+
+                <TextView
+                    android:text="0000 F"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/zm_register_female_count"
+                    android:layout_gravity="bottom|right"
+                    android:textColor="@android:color/white"
+                    android:background="@color/maroon"
+                    android:textStyle="bold"
+                    android:layout_marginRight="12dp"
+                    android:layout_marginBottom="45dp"
+                    android:textSize="13sp"
+                    android:layout_width="55dp"
+                    android:paddingLeft="5dp" />
+
+                <TextView
+                    android:text="0000 T"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/zm_register_intersex_count"
+                    android:layout_gravity="bottom|right"
+                    android:textColor="@android:color/white"
+                    android:background="@color/maroon"
+                    android:textStyle="bold"
+                    android:layout_marginRight="12dp"
+                    android:layout_marginBottom="65dp"
+                    android:textSize="13sp"
+                    android:layout_width="55dp"
+                    android:paddingLeft="5dp" />
+
+                <TextView
+                    android:id="@+id/txt_zm_register_client_count"
+                    style="@style/CustomFontTextViewStyle.Badge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:text="000000M" />
+
+                <TextView
+                    android:id="@+id/txt_zm_register_woman_count"
+                    style="@style/CustomFontTextViewStyle.Badge.Inverted.Light"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:gravity="center"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:text="0000W" />
+
+                <TextView
+                    android:id="@+id/txt_zm_register_child_count"
+                    style="@style/CustomFontTextViewStyle.Badge.Inverted.Light"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="75dp"
+                    android:gravity="center"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:text="0000C" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
                 android:layout_weight="1" android:id="@+id/householdContainer">
 
                 <ImageButton
@@ -198,33 +313,77 @@
             android:layout_marginBottom="5dp"
             android:orientation="horizontal">
 
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:visibility="gone">
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/btn_learning"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:text="Learning"
+                android:textStyle="bold"
+                style="@style/CustomFontTextViewStyle.Home.Buttons"
+                android:gravity="center_vertical"/>
+
+            <TextView
+                android:id="@+id/btn_why"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:text="Why"
+                android:textStyle="bold"
+                style="@style/CustomFontTextViewStyle.Home.Buttons"
+                android:gravity="center_vertical" />
+            <TextView
+                android:id="@+id/btn_how"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:text="How"
+                android:textStyle="bold"
+                style="@style/CustomFontTextViewStyle.Home.Buttons"
+                android:gravity="center_vertical" />
+        </LinearLayout>
+
+
         <TextView
             android:id="@+id/btn_reporting"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_weight="1"
             android:drawableLeft="@drawable/ic_reporting"
-            android:drawablePadding="40dp"
-            android:paddingLeft="150dp"
-            android:paddingRight="150dp"
             android:text="@string/str_reporting"
             android:textStyle="bold"
             style="@style/CustomFontTextViewStyle.Home.Buttons"
-            android:gravity="center_vertical" />
-
+            android:paddingLeft="130dp"
+            android:gravity="center_vertical"
+            android:drawablePadding="50dp" />
 
         <TextView
-                android:id="@+id/btn_provider_profile"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:drawableLeft="@drawable/profile_provider"
-                android:drawablePadding="15dp"
-                android:paddingLeft="150dp"
-                android:paddingRight="150dp"
-                android:text="@string/str_provider_profile"
-            android:textStyle="bold"
-                style="@style/CustomFontTextViewStyle.Home.Buttons" />
+            android:id="@+id/btn_provider_profile"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:drawableLeft="@drawable/profile_provider"
+            android:paddingLeft="130dp"
+            android:paddingRight="70dp"
+            android:text="@string/str_provider_profile"
+        android:textStyle="bold"
+            style="@style/CustomFontTextViewStyle.Home.Buttons"
+            android:gravity="center_vertical"
+            android:drawablePadding="50dp" />
 
     </LinearLayout>
 

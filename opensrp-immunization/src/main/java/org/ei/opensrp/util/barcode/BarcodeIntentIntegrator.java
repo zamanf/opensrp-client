@@ -137,14 +137,12 @@ import java.util.Map;
  * @author Brad Drehmer
  * @author gcstang
  */
+@SuppressWarnings("JavadocReference")
 public class BarcodeIntentIntegrator
 {
 
 	public static final int					REQUEST_CODE				= 0x0000c0de;																	// Only
-																																						// use
-																																						// bottom
-																																						// 16
-																																						// bits
+
 	private static final String				TAG							= BarcodeIntentIntegrator.class.getSimpleName ();
 
 	public static final String				DEFAULT_TITLE				= "Install Barcode Scanner?";
@@ -178,6 +176,12 @@ public class BarcodeIntentIntegrator
 
 	private final SecuredFragment fragment;
 	private final SecuredActivity activity;
+
+	public ScanType getScanType() {
+		return scanType;
+	}
+
+	private ScanType scanType;
 	private String							title;
 	private String							message;
 	private String							buttonYes;
@@ -185,7 +189,7 @@ public class BarcodeIntentIntegrator
 	private List<String>					targetApplications;
 	private final Map<String, Object>		moreExtras;
 
-	public BarcodeIntentIntegrator (SecuredFragment fragment)
+	private BarcodeIntentIntegrator (SecuredFragment fragment)
 	{
 		this.fragment = fragment;
 		this.activity = null;
@@ -197,7 +201,7 @@ public class BarcodeIntentIntegrator
 		moreExtras = new HashMap<String, Object> (3);
 	}
 
-	public BarcodeIntentIntegrator (SecuredActivity activity)
+	private BarcodeIntentIntegrator (SecuredActivity activity)
 	{
 		this.activity = activity;
 		this.fragment = null;
@@ -207,6 +211,14 @@ public class BarcodeIntentIntegrator
 		buttonNo = DEFAULT_NO;
 		targetApplications = TARGET_ALL_KNOWN;
 		moreExtras = new HashMap<String, Object> (3);
+	}
+
+	public static BarcodeIntentIntegrator initBarcodeScanner(SecuredFragment fragment){
+		return new BarcodeIntentIntegrator(fragment);
+	}
+
+	public static BarcodeIntentIntegrator initBarcodeScanner(SecuredActivity activity){
+		return new BarcodeIntentIntegrator(activity);
 	}
 
 	public Collection<String> getTargetApplications ()
@@ -260,6 +272,16 @@ public class BarcodeIntentIntegrator
 		return initiateScan (ALL_CODE_TYPES);
 	}
 
+	public AlertDialog initiateScan (ScanType scanType)
+	{
+		return initiateScan (ALL_CODE_TYPES, scanType);
+	}
+
+	public AlertDialog initiateScan (Collection<String> desiredBarcodeFormats)
+	{
+		return initiateScan (desiredBarcodeFormats, null);
+	}
+
 	/**
 	 * Initiates a scan only for a certain set of barcode types, given as strings corresponding to their names in
 	 * ZXing's {@code BarcodeFormat} class like "UPC_A". You can supply constants like {@link #PRODUCT_CODE_TYPES} for
@@ -268,8 +290,10 @@ public class BarcodeIntentIntegrator
 	 * @return the {@link AlertDialog} that was shown to the user prompting them to download the app if a prompt was
 	 *         needed, or null otherwise
 	 */
-	public AlertDialog initiateScan (Collection<String> desiredBarcodeFormats)
+	public AlertDialog initiateScan (Collection<String> desiredBarcodeFormats, ScanType scanType)
 	{
+		this.scanType = scanType;
+
 		Intent intentScan = new Intent (BS_PACKAGE + ".SCAN");
 		intentScan.addCategory (Intent.CATEGORY_DEFAULT);
 
@@ -386,7 +410,7 @@ public class BarcodeIntentIntegrator
 	 * @return null if the event handled here was not related to this class, or else an {@link BarcodeIntentResult} containing
 	 *         the result of the scan. If the user cancelled scanning, the fields will be null.
 	 */
-	public static BarcodeIntentResult parseActivityResult (int requestCode, int resultCode, Intent intent)
+	public BarcodeIntentResult parseActivityResult (int requestCode, int resultCode, Intent intent)
 	{
 		if (requestCode == REQUEST_CODE)
 		{
@@ -398,7 +422,7 @@ public class BarcodeIntentIntegrator
 				int intentOrientation = intent.getIntExtra ("SCAN_RESULT_ORIENTATION", Integer.MIN_VALUE);
 				Integer orientation = intentOrientation == Integer.MIN_VALUE ? null : intentOrientation;
 				String errorCorrectionLevel = intent.getStringExtra ("SCAN_RESULT_ERROR_CORRECTION_LEVEL");
-				return new BarcodeIntentResult (contents, formatName, rawBytes, orientation, errorCorrectionLevel);
+				return new BarcodeIntentResult (contents, formatName, rawBytes, orientation, errorCorrectionLevel, scanType);
 			}
 			return new BarcodeIntentResult ();
 		}

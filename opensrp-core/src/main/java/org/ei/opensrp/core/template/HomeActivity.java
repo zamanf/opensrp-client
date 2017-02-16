@@ -1,6 +1,7 @@
 package org.ei.opensrp.core.template;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
@@ -18,6 +19,7 @@ import org.ei.opensrp.sync.SyncAfterFetchListener;
 import org.ei.opensrp.sync.SyncProgressIndicator;
 import org.ei.opensrp.sync.UpdateActionsTask;
 import org.ei.opensrp.core.utils.Utils;
+import org.ei.opensrp.view.LockingBackgroundTask;
 import org.ei.opensrp.view.activity.SecuredActivity;
 import org.json.JSONException;
 import org.ei.opensrp.core.db.handler.RegisterCountLoaderHandler;
@@ -111,6 +113,8 @@ public abstract class HomeActivity extends SecuredActivity {
 
         getSupportActionBar().setDisplayUseLogoEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        Log.i(getClass().getName(), "Screen initialization complete");
     }
 
     @Override
@@ -208,17 +212,15 @@ public abstract class HomeActivity extends SecuredActivity {
         if (remainingFormsToSyncMenuItem == null || pendingFormSubmissionService == null) {
             return;
         }
-        new Handler(getMainLooper()).post(new Runnable() {
+
+        remainingFormsToSyncMenuItem.setTitle("Loading counts ...");
+        Log.v(getClass().getName(), "Updating updateRemainingFormsToSyncCount");
+        new FormSubmissionUpdater(new Listener() {
             @Override
-            public void run() {
-                long size = pendingFormSubmissionService.pendingFormSubmissionCount();
-                if (size > 0) {
-                    remainingFormsToSyncMenuItem.setTitle(valueOf(size) + " " + getString(R.string.unsynced_forms_count_message));
-                } else {
-                    remainingFormsToSyncMenuItem.setTitle("0 " + getString(R.string.unsynced_forms_count_message));
-                }
+            public void onEvent(Object data) {
+                remainingFormsToSyncMenuItem.setTitle(data +" "+ getString(R.string.unsynced_forms_count_message));
             }
-        });
+        }).execute();
     }
 
     protected Register setupRegister(String authority, int containerId, int registerButtonId, View.OnClickListener registerClickListener,
@@ -329,6 +331,7 @@ public abstract class HomeActivity extends SecuredActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    Log.i(getClass().getName(), "Loading count for "+getTable());
                     if (countMethod.equals(CountMethod.AUTO)){
                         getContainerView().setText("0000");
                         int c = customCounterHandler.executeCounter();
@@ -339,6 +342,7 @@ public abstract class HomeActivity extends SecuredActivity {
                         int c = customCounterHandler.executeCounter();
                         overrideCount(c);
                     }
+                    Log.i(getClass().getName(), "Loaded count for "+getTable());
                 }
             });
         }
@@ -392,4 +396,24 @@ public abstract class HomeActivity extends SecuredActivity {
             return countViews.get(viewId);
         }
     }
+
+    public class FormSubmissionUpdater extends AsyncTask<Void, Void, Long> {
+        private Listener listener;
+
+        FormSubmissionUpdater(Listener listener){
+            this.listener = listener;
+        }
+
+        @Override
+        protected Long doInBackground(Void... params) {
+            return pendingFormSubmissionService.pendingFormSubmissionCount();
+        }
+
+        @Override
+        protected void onPostExecute(Long v) {
+            Log.v(getClass().getName(), "Got result ("+v+") and calling listener");
+            listener.onEvent(v);
+        }
+    }
+
 }

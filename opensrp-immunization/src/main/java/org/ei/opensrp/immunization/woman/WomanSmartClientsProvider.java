@@ -39,7 +39,7 @@ import static org.ei.opensrp.core.utils.Utils.*;
  * Created by Ahmed on 19-Oct-15.
  * @author Maimoona
  */
-public class WomanSmartClientsProvider implements RegisterClientsProvider {
+public class WomanSmartClientsProvider implements RegisterClientsProvider <CommonPersonObjectClient>{
 
 
     private final LayoutInflater inflater;
@@ -60,10 +60,8 @@ public class WomanSmartClientsProvider implements RegisterClientsProvider {
 
 
     @Override
-    public View getView(SmartRegisterClient client, View convertView, ViewGroup viewGroup) {
+    public View getView(CommonPersonObjectClient pc, View convertView, ViewGroup viewGroup) {
         convertView.setLayoutParams(clientViewLayoutParams);
-
-        CommonPersonObjectClient pc = (CommonPersonObjectClient) client;
 
         fillValue((TextView)convertView.findViewById(R.id.woman_id), pc.getColumnmaps(), "program_client_id", false);
 
@@ -110,22 +108,22 @@ public class WomanSmartClientsProvider implements RegisterClientsProvider {
             deactivateNextVaccine("Partially Immunized", "", R.color.alert_na, convertView);
         }
         else {
-            List<Map<String, Object>> sch = generateSchedule("woman", null, pc.getColumnmaps(), alertlist_for_client);
+            List<Map<String, Object>> sch = generateSchedule(pc, "woman", null, pc.getColumnmaps(), alertlist_for_client);
             Map<String, Object> nv = nextVaccineDue(sch, toDate(lastVaccine, true));
             if(nv != null){
                 DateTime dueDate = (DateTime)nv.get("date");
                 VaccineRepo.Vaccine vaccine = (VaccineRepo.Vaccine) nv.get("vaccine");
                 if(nv.get("alert") == null){
-                    activateNextVaccine(dueDate, (VaccineRepo.Vaccine)nv.get("vaccine"), Color.BLACK, R.color.alert_na, onClickListener, client, convertView);
+                    activateNextVaccine(dueDate, (VaccineRepo.Vaccine)nv.get("vaccine"), Color.BLACK, R.color.alert_na, onClickListener, pc, convertView);
                 }
                 else if (((Alert)nv.get("alert")).status().value().equalsIgnoreCase("normal")) {
-                    activateNextVaccine(dueDate, vaccine, Color.WHITE, R.color.alert_normal, onClickListener, client, convertView);
+                    activateNextVaccine(dueDate, vaccine, Color.WHITE, R.color.alert_normal, onClickListener, pc, convertView);
                 }
                 else if (((Alert)nv.get("alert")).status().value().equalsIgnoreCase("upcoming")) {
-                    activateNextVaccine(dueDate, vaccine, Color.BLACK, R.color.alert_upcoming, onClickListener, client, convertView);
+                    activateNextVaccine(dueDate, vaccine, Color.BLACK, R.color.alert_upcoming, onClickListener, pc, convertView);
                 }
                 else if (((Alert)nv.get("alert")).status().value().equalsIgnoreCase("urgent")) {
-                    activateNextVaccine(dueDate, vaccine, Color.WHITE, R.color.alert_urgent, onClickListener, client, convertView);
+                    activateNextVaccine(dueDate, vaccine, Color.WHITE, R.color.alert_urgent, onClickListener, pc, convertView);
                 }
                 else if (((Alert)nv.get("alert")).status().value().equalsIgnoreCase("expired")) {
                     deactivateNextVaccine(vaccine + " Expired", "", R.color.alert_expired, convertView);
@@ -137,11 +135,11 @@ public class WomanSmartClientsProvider implements RegisterClientsProvider {
             }
         }
 
-        setProfiePic(convertView.getContext(), (ImageView) convertView.findViewById(R.id.woman_profilepic), "pkwoman", client.entityId(), null);
+        setProfiePic(convertView.getContext(), (ImageView) convertView.findViewById(R.id.woman_profilepic), "pkwoman", pc.entityId(), null);
 
-        convertView.findViewById(R.id.woman_profile_info_layout).setTag(client);
+        convertView.findViewById(R.id.woman_profile_info_layout).setTag(pc);
         convertView.findViewById(R.id.woman_profile_info_layout).setOnClickListener(onClickListener);
-        convertView.findViewById(R.id.woman_profile_info_layout1).setTag(client);
+        convertView.findViewById(R.id.woman_profile_info_layout1).setTag(pc);
         convertView.findViewById(R.id.woman_profile_info_layout1).setOnClickListener(onClickListener);
 
         return convertView;
@@ -176,23 +174,13 @@ public class WomanSmartClientsProvider implements RegisterClientsProvider {
     }
 
     @Override
-    public SmartRegisterClients getClients() {
-        throw new UnsupportedOperationException("Operation not supported");
-    }
-
-    @Override
-    public SmartRegisterClients updateClients(FilterOption villageFilter, ServiceModeOption serviceModeOption, SearchFilterOption searchFilter, SortOption sortOption) {
+    public List<CommonPersonObjectClient> getClients() {
         throw new UnsupportedOperationException("Operation not supported");
     }
 
     @Override
     public void onServiceModeSelected(ServiceModeOption serviceModeOption) {
 
-    }
-
-    @Override
-    public OnClickFormLauncher newFormLauncher(String formName, String entityId, String metaData) {
-        throw new UnsupportedOperationException("Operation not supported");
     }
 
     @Override

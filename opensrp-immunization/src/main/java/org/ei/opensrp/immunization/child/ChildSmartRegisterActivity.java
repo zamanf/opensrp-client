@@ -41,6 +41,7 @@ public class ChildSmartRegisterActivity extends RegisterActivity {
         if(registerFragment != null && registerFragment.loaderHandler().fullyLoaded()){
             registerFragment.getSearchView().setText(id);
             registerFragment.onFilterManual(id);
+            id = "";
         }
         else {
             new Handler(getMainLooper()).postDelayed(new Runnable() {
@@ -71,7 +72,7 @@ public class ChildSmartRegisterActivity extends RegisterActivity {
         List<String> formNames = new ArrayList<String>();
         formNames.add("child_enrollment");
         formNames.add("child_followup");
-        formNames.add("offsite_child_followup");
+        formNames.add("child_offsite_followup");
 
         return formNames.toArray(new String[formNames.size()]);
     }

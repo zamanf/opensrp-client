@@ -24,7 +24,7 @@ public class ReportFilterOption implements SearchFilterOption {
     @Override
     public String getCriteria() {
         if(StringUtils.isNotBlank(filter)){
-            return " date LIKE '%"+filter+"%' OR MONTH";
+            return " date LIKE '"+filter+"%' ";
         }
         return "";
     }

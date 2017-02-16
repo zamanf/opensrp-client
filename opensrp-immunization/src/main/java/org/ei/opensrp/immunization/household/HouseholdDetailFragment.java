@@ -9,14 +9,21 @@ import android.widget.TextView;
 import org.apache.commons.lang3.StringUtils;
 import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.CommonPersonObject;
+import org.ei.opensrp.core.db.domain.Obs;
+import org.ei.opensrp.core.db.repository.CESQLiteHelper;
+import org.ei.opensrp.core.db.repository.RegisterRepository;
 import org.ei.opensrp.core.template.DetailFragment;
 import org.ei.opensrp.core.utils.ByColumnAndByDetails;
 import org.ei.opensrp.immunization.R;
 import org.ei.opensrp.util.StringUtil;
 import org.ei.opensrp.util.VaccinatorUtils;
+import org.json.JSONException;
 
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import static org.ei.opensrp.core.utils.Utils.*;
 
@@ -90,8 +97,7 @@ public class HouseholdDetailFragment extends DetailFragment {
         android.content.Context context = getActivity().getApplicationContext();
 
         //setting value in Household basic information textviews
-        String sql = "select * from pkindividual where relationalid = '" + client.getCaseId() + "'";
-        List<CommonPersonObject> individualList = Context.getInstance().allCommonsRepositoryobjects("pkindividual").customQueryForCompleteRow(sql, new String[]{}, "pkindividual");
+        List<CommonPersonObject> individualList = RegisterRepository.queryData("pkindividual", null, "relationalid = '" + client.getCaseId() + "'", null, "dob DESC");
 
         addRow(getActivity(), dt, "Household Member ID", getValue(client.getColumnmaps(), "household_member_id", true)+" ("+individualList.size()+" dependents)", Size.MEDIUM);
         addRow(getActivity(), dt, "Program Client ID", getValue(client.getColumnmaps(), "program_client_id", true), Size.MEDIUM);
@@ -173,18 +179,34 @@ public class HouseholdDetailFragment extends DetailFragment {
                 member.setCantBeEnrolled(false);
             }
 
-            List<CommonPersonObject> l = Context.getInstance().commonrepository("pkwoman").customQueryForCompleteRow("SELECT * FROM pkwoman WHERE id='"+individual.getCaseId()+"' OR program_client_id='" + programId + "'", null, "pkwoman");
-            l.addAll(Context.getInstance().commonrepository("pkchild").customQueryForCompleteRow("SELECT * FROM pkchild WHERE id='"+individual.getCaseId()+"' OR  program_client_id='" + programId + "'", null, "pkchild"));
+            List<CommonPersonObject> l = RegisterRepository.queryData("pkwoman", null, "id='"+individual.getCaseId()+"' OR program_client_id='" + programId + "'", null, null);
+            l.addAll(RegisterRepository.queryData("pkchild", null, "id='"+individual.getCaseId()+"' OR  program_client_id='" + programId + "'", null, null));
 
             if (l.size() > 0) {
                 if (StringUtils.isBlank(programId)){
                     member.setProgramId(l.get(0).getColumnmaps().get("program_client_id"));
                 }
+
+                for(Map.Entry<String, String> e : l.get(0).getColumnmaps().entrySet()){
+                    if(!member.getClient().getColumnmaps().containsKey(e.getKey())
+                            && StringUtils.isNotBlank(e.getValue())) {
+                        member.getClient().getColumnmaps().put(e.getKey(), e.getValue());
+                    }
+                }
                 member.setMemberExists(true);
                 member.setCantBeEnrolled(true);
-                //member.getClient().getColumnmaps().putAll(l.get(0).getColumnmaps());
                //todo member.getClient().getDetails().putAll(l.get(0).getDetails());
             }
+            /* todo handle from CE else if (StringUtils.isNotBlank(member.getProgramId())){
+                try {
+                    CESQLiteHelper.getClientEventDb(getActivity()).getClient(member.getProgramId());
+                    List<Obs> cl = CESQLiteHelper.getClientEventDb(getActivity()).getObs(individual.getCaseId(), null, "eventId DESC", "vaccines_2");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }*/
             memberDetails.add(member);
         }
         list.setAdapter(new HouseholdMemberAdapter(this, context, memberDetails));

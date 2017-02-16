@@ -4,9 +4,6 @@ import android.content.UriMatcher;
 import android.net.Uri;
 
 import org.ei.opensrp.core.db.repository.RegisterContentProvider;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
 
 import static org.junit.Assert.assertEquals;
 

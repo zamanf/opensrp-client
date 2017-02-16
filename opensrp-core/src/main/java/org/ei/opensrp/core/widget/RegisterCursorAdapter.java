@@ -11,14 +11,15 @@ import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.core.db.repository.RegisterRepository;
 import org.ei.opensrp.core.template.RegisterClientsProvider;
+import org.ei.opensrp.view.contract.SmartRegisterClient;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RegisterCursorAdapter extends CursorAdapter {
-    private final RegisterClientsProvider listItemProvider;
+public class RegisterCursorAdapter <T> extends CursorAdapter {
+    protected final RegisterClientsProvider listItemProvider;
     private Context context;
-    private List<CommonPersonObjectClient> currentPage;
+    protected List<T> currentPage;
 
     public RegisterCursorAdapter(Context context, RegisterClientsProvider listItemProvider) {
         super(context, null, false);
@@ -26,13 +27,18 @@ public class RegisterCursorAdapter extends CursorAdapter {
         this.context = context;
     }
 
-    public List<CommonPersonObjectClient> getCurrentPage(){
+    public List<T> getCurrentPage(){
         return currentPage;
     }
 
     @Override
-    public View newView(Context context, Cursor cursor, ViewGroup parent) {
+    public void notifyDataSetChanged() {
+        super.notifyDataSetChanged();
         currentPage = new ArrayList<>();
+    }
+
+    @Override
+    public View newView(Context context, Cursor cursor, ViewGroup parent) {
         Log.i(getClass().getName(), "New view of cursor adapter");
         return listItemProvider.inflateLayoutForAdapter();
     }
@@ -45,7 +51,7 @@ public class RegisterCursorAdapter extends CursorAdapter {
         CommonPersonObjectClient pClient = new CommonPersonObjectClient(personinlist.getCaseId(), personinlist.getDetails(), null);
         pClient.setColumnmaps(personinlist.getColumnmaps());
 
-        currentPage.add(pClient);
+        currentPage.add((T) pClient);
 
         listItemProvider.getView(pClient, view, null/*todo*/);
     }

@@ -9,18 +9,15 @@ import org.ei.opensrp.view.dialog.FilterOption;
 import org.ei.opensrp.view.dialog.SortOption;
 import org.ei.opensrp.view.viewHolder.OnClickFormLauncher;
 
-public interface RegisterClientsProvider {
+import java.util.List;
 
-    public View getView(SmartRegisterClient client, View parentView, ViewGroup viewGroup);
+public interface RegisterClientsProvider <T>{
 
-    public SmartRegisterClients getClients();
+    public View getView(T client, View parentView, ViewGroup viewGroup);
 
-    SmartRegisterClients updateClients(FilterOption villageFilter, ServiceModeOption serviceModeOption,
-                                       SearchFilterOption searchFilter, SortOption sortOption);
+    public List<T> getClients();
 
     void onServiceModeSelected(ServiceModeOption serviceModeOption);
-
-    public OnClickFormLauncher newFormLauncher(String formName, String entityId, String metaData);
 
     public View inflateLayoutForAdapter();
 }

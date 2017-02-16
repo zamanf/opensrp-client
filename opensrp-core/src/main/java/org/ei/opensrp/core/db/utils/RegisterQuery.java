@@ -9,14 +9,20 @@ import java.util.List;
  * Created by Maimoona on 1/5/2017.
  */
 public class RegisterQuery {
-    private List<String> additionalColumns;
-    private String idColumn;
-    private String mainFilter;
-    private String selection;
-    private String table;
-    private String referenceTable;
-    private String referenceColumn;
-    private String group;
+    public enum DB{
+        DRISHTI, CEDB
+    }
+    protected List<String> additionalColumns;
+    protected String idColumn;
+    protected String mainFilter;
+    protected String selection;
+    protected String table;
+    protected String referenceTable;
+    protected String referenceColumn;
+    protected String group;
+    protected String order;
+    protected int pageSize = 20;
+    protected int offset = 0;
 
     public String referenceTable() {
         return referenceTable;
@@ -29,10 +35,6 @@ public class RegisterQuery {
     public String group() {
         return group;
     }
-
-    private String order;
-    private int pageSize = 20;
-    private int offset = 0;
 
     public RegisterQuery(String table, String idColumn, List<String> additionalColumns, String mainFilter) {
         this.additionalColumns = additionalColumns;

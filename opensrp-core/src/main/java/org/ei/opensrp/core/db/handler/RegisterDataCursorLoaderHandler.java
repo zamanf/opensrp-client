@@ -10,8 +10,10 @@ import android.util.Log;
 import android.widget.BaseAdapter;
 
 import org.apache.commons.lang3.StringUtils;
+import org.ei.opensrp.core.db.repository.CEContentProvider;
 import org.ei.opensrp.core.db.repository.RegisterContentProvider;
 import org.ei.opensrp.core.db.repository.RegisterRepository;
+import org.ei.opensrp.core.db.utils.CERegisterQuery;
 import org.ei.opensrp.core.db.utils.RegisterQuery;
 import org.ei.opensrp.core.template.SearchFilterOption;
 import org.ei.opensrp.core.widget.RegisterCursorAdapter;
@@ -79,14 +81,23 @@ public class RegisterDataCursorLoaderHandler implements RegisterDataLoaderHandle
 
         if (pageSize != null && pageSize > 0) registerQuery.resetLimit(pageSize);
 
-        totalRecords = RegisterRepository.count(registerQuery.table(), registerQuery.selection(), null);
+        Uri uri = null;
+
+        if (registerQuery instanceof CERegisterQuery){// todo dynamic address type
+            totalRecords = RegisterRepository.countCE("usual_residence", registerQuery.selection(), registerQuery.idColumn());
+
+            uri = CEContentProvider.CONTENT_URI("usual_residence", registerQuery.idColumn());
+        }
+        else {
+            totalRecords = RegisterRepository.count(registerQuery.table(), registerQuery.selection(), null);
+
+            uri = RegisterContentProvider.CONTENT_URI(registerQuery.table());
+            if (StringUtils.isNotBlank(registerQuery.referenceTable())){//todo what happens to count when joined
+                uri = RegisterContentProvider.CONTENT_JOIN_URI(registerQuery.table(), registerQuery.idColumn(), registerQuery.referenceTable(), registerQuery.referenceColumn(), registerQuery.group());
+            }
+        }
 
         Log.v(getClass().getName(), "Fetching a repo of "+totalRecords+" records");
-
-        Uri uri = RegisterContentProvider.CONTENT_URI(registerQuery.table());
-        if (StringUtils.isNotBlank(registerQuery.referenceTable())){
-            uri = RegisterContentProvider.CONTENT_JOIN_URI(registerQuery.table(), registerQuery.idColumn(), registerQuery.referenceTable(), registerQuery.referenceColumn(), registerQuery.group());
-        }
 
         return new CursorLoader(context, uri,
             registerQuery.makeProjection(true), registerQuery.selection(), null, registerQuery.order(true));

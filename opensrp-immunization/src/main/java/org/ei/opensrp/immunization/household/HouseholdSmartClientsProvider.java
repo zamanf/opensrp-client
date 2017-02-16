@@ -36,7 +36,7 @@ import static org.ei.opensrp.util.VaccinatorUtils.totalHHMembers;
 /**
  * Created by Safwan on 4/22/2016.
  */
-public class HouseholdSmartClientsProvider implements RegisterClientsProvider {
+public class HouseholdSmartClientsProvider implements RegisterClientsProvider <CommonPersonObjectClient>{
 
     private final LayoutInflater inflater;
     private final Context context;
@@ -59,7 +59,7 @@ public class HouseholdSmartClientsProvider implements RegisterClientsProvider {
     }
 
     @Override
-    public View getView(SmartRegisterClient client, View parentView, ViewGroup viewGroup) {
+    public View getView(CommonPersonObjectClient client, View parentView, ViewGroup viewGroup) {
         CommonPersonObjectClient pc = (CommonPersonObjectClient) client;
 
         //if (VaccinatorUtils.providerRolesList().toLowerCase().contains("vaccinator")) {
@@ -93,22 +93,13 @@ public class HouseholdSmartClientsProvider implements RegisterClientsProvider {
     }
 
     @Override
-    public SmartRegisterClients getClients() {
-        return controller.getClients();
-    }
-
-    @Override
-    public SmartRegisterClients updateClients(FilterOption villageFilter, ServiceModeOption serviceModeOption, SearchFilterOption searchFilter, SortOption sortOption) {
+    public List<CommonPersonObjectClient> getClients() {
         throw new UnsupportedOperationException("Operation not supported");
     }
 
-    @Override
-    public void onServiceModeSelected(ServiceModeOption serviceModeOption) {
-    }
 
     @Override
-    public OnClickFormLauncher newFormLauncher(String formName, String entityId, String metaData) {
-        return null;
+    public void onServiceModeSelected(ServiceModeOption serviceModeOption) {
     }
 
     @Override

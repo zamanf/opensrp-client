@@ -85,6 +85,9 @@ public class Address{
 	}
 	
 	public String getAddressField(String addressField) {
+		if (addressFields == null){
+			return null;
+		}
 		return addressFields.get(addressField);
 	}
 
@@ -277,7 +280,7 @@ public class Address{
 
 	/**
 	 * The date when address was started or owned
-	 * @param endDate
+	 * @param startDate
 	 * @return
 	 */
 	public Address withStartDate(DateTime startDate) {

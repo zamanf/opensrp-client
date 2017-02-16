@@ -49,6 +49,13 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="landscape"
             android:theme="@style/AppThemeNoTitle" />
+
+        <activity
+            android:name=".zm.ZMSmartRegisterActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppThemeNoTitle" />
+
         <activity
             android:name=".report.VaccineReport"
             android:screenOrientation="landscape"
@@ -61,6 +68,13 @@
         <provider
             android:name="org.ei.opensrp.core.db.repository.RegisterContentProvider"
             android:authorities="org.ei.opensrp.provider.registers"
+            android:readPermission="android.permission.permRead"
+            android:enabled="true"
+            android:exported="true" android:syncable="true">
+        </provider>
+        <provider
+            android:name="org.ei.opensrp.core.db.repository.CEContentProvider"
+            android:authorities="org.ei.opensrp.provider.cedb"
             android:readPermission="android.permission.permRead"
             android:enabled="true"
             android:exported="true" android:syncable="true">

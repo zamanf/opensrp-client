@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model>
   <instance>
-    <woman_tt_offsite_followup_form encounter_type="Woman Off Site Follow Up" id="woman_tt_offsite_followup_form" version="201611280835">
+    <woman_tt_offsite_followup_form encounter_type="Woman Off Site Follow Up" id="woman_tt_offsite_followup_form" version="201701190443">
       <formhub>
         <uuid/>
       </formhub>
@@ -40,8 +40,8 @@
       <first_name_note/>
       <birth_date_note/>
       <father_name_note/>
-      <province openmrs_entity="person_address" openmrs_entity_id="stateProvince" openmrs_entity_parent="usual_residence">sindh</province>
-      <city_village openmrs_entity="person_address" openmrs_entity_id="cityVillage" openmrs_entity_parent="usual_residence">shikarpur</city_village>
+      <province openmrs_entity="person_address" openmrs_entity_id="stateProvince" openmrs_entity_parent="usual_residence"></province>
+      <city_village openmrs_entity="person_address" openmrs_entity_id="cityVillage" openmrs_entity_parent="usual_residence"></city_village>
       <town openmrs_entity="person_address" openmrs_entity_id="town" openmrs_entity_parent="usual_residence"/>
       <union_council openmrs_entity="person_address" openmrs_entity_id="subTown" openmrs_entity_parent="usual_residence"/>
       <address1 openmrs_entity="person_address" openmrs_entity_id="address1" openmrs_entity_parent="usual_residence"/>

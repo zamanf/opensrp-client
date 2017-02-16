@@ -36,7 +36,11 @@ import android.widget.TextView;
 import org.apache.commons.lang3.StringUtils;
 import org.ei.drishti.dto.AlertStatus;
 import org.ei.opensrp.commonregistry.CommonPersonObject;
+import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
+import org.ei.opensrp.core.db.domain.Address;
 import org.ei.opensrp.core.db.domain.Client;
+import org.ei.opensrp.core.db.domain.ClientEvent;
+import org.ei.opensrp.core.db.domain.Event;
 import org.ei.opensrp.core.db.domain.Obs;
 import org.ei.opensrp.core.db.repository.CESQLiteHelper;
 import org.ei.opensrp.core.widget.PromptView;
@@ -45,7 +49,13 @@ import org.ei.opensrp.immunization.R;
 import org.ei.opensrp.immunization.application.VaccineRepo;
 
 import static org.ei.opensrp.immunization.application.VaccineRepo.*;
+
+import org.ei.opensrp.immunization.household.HouseholdSmartRegisterFragment;
+import org.ei.opensrp.util.barcode.Barcode;
+import org.ei.opensrp.util.barcode.BarcodeIntentIntegrator;
 import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.Months;
 import org.joda.time.Years;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -76,7 +86,7 @@ public class VaccinatorUtils {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return null;
+        return "";
     }
 
     public static int totalHHMembers(Map<String, String> household, List<CommonPersonObject> members){
@@ -209,14 +219,241 @@ public class VaccinatorUtils {
         map.put("provider_id", context.anmService().fetchDetails().name());
 
         JSONObject tm = new JSONObject(getPreference(context.applicationContext(), "team", "{}"));
-        map.put("provider_name", tm.getJSONObject("person").getString("display"));
-        map.put("provider_identifier", tm.getString("identifier"));
-        map.put("provider_team", tm.getJSONObject("team").getString("teamName"));
+        if(tm.has("person"))    map.put("provider_name", tm.getJSONObject("person").getString("display"));
+        if(tm.has("identifier"))    map.put("provider_identifier", tm.getString("identifier"));
+        if(tm.has("team"))    map.put("provider_team", tm.getJSONObject("team").getString("teamName"));
 
         map.put("anm", new JSONObject(context.anmController().get()));
 
         String userStr = context.allSettings().fetchUserInformation();
         map.put("user", new JSONObject(userStr));
+
+        return map;
+    }
+
+    public static boolean isEligibleWoman(Client client){
+        if(StringUtils.isNotBlank(client.getGender()) && client.getGender().toLowerCase().startsWith("f")
+                && client.getBirthdate().plusYears(15).isBeforeNow() && client.getBirthdate().plusYears(49).isAfterNow()){
+            return true;
+        }
+        return false;
+    }
+
+    public static int profilePicIcon(int ageYears, String gender){
+        int profilePic = -1;
+        if (StringUtils.isBlank(gender) || ageYears < 0){
+            return profilePic;
+        }
+
+        gender = gender.toLowerCase();
+
+        if (ageYears < 7 && gender.startsWith("m"))
+            profilePic = R.drawable.infant_male;
+        else if (ageYears < 7 && gender.startsWith("f"))
+            profilePic = R.drawable.infant_female;
+        else if (ageYears < 7 && (gender.startsWith("t") || gender.startsWith("i")))
+            profilePic = R.drawable.infant_intersex;
+        else if (ageYears >= 7 && gender.startsWith("m")) {
+            profilePic = R.drawable.household_profile;
+        }
+        else if (ageYears >= 7 && (gender.startsWith("t") || gender.startsWith("i"))) {
+            profilePic = R.drawable.general_intersex;
+        }
+        else if (ageYears >= 7 && gender.startsWith("f"))
+            profilePic = R.drawable.pk_woman_icon;
+
+        return profilePic;
+    }
+
+    public static void fillWomanTTEnrollmentOverrides(Map<String, String> map, ClientEvent data){
+        Client client = data.getClient();
+        String birthdate = client.getBirthdate().toString("yyyy-MM-dd");
+
+        map.put("first_name", client.getFirstName());
+        map.put("father_name", data.findObsValue(null, true, "father_name", "1594AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
+        map.put("birth_date", birthdate);
+        map.put("gender", "female");
+        map.put("ethnicity", data.findObsValue(null, true, "ethnicity", "163153AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
+        map.put("contact_phone_number", data.findObsValue(null, true, "contact_phone_number", "159635AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
+
+        Address ad = client.getAddress("usual_residence");
+
+        map.put("province", ad.getStateProvince());
+        map.put("city_village", ad.getCityVillage());
+        map.put("town", ad.getTown());
+        map.put("union_council", ad.getSubTown());
+        map.put("address1", ad.getAddressField("address1"));
+
+        String husb = data.findObsValue(null, true, "husband_name", "5617AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+
+        map.put("husband_name", husb);
+        map.put("marriage", StringUtils.isNotBlank(husb)?"yes":"no");
+    }
+
+    public static void fillChildVaccineEnrollmentOverrides(Map<String, String> map, ClientEvent data){
+        Client client = data.getClient();
+        String birthdate = client.getBirthdate().toString("yyyy-MM-dd");
+
+        map.put("first_name", client.getFirstName());
+        map.put("mother_name", data.findObsValue(null, true, "father_name", "1594AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
+        map.put("father_name", data.findObsValue(null, true, "father_name", "1594AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
+        map.put("birth_date", birthdate);
+        map.put("gender", StringUtils.isNotBlank(client.getGender())?client.getGender().toLowerCase():"");
+        map.put("ethnicity", data.findObsValue(null, true, "ethnicity", "163153AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
+        map.put("contact_phone_number", data.findObsValue(null, true, "contact_phone_number", "159635AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
+
+        Address ad = client.getAddress("usual_residence");
+
+        map.put("province", ad.getStateProvince());
+        map.put("city_village", ad.getCityVillage());
+        map.put("town", ad.getTown());
+        map.put("union_council", ad.getSubTown());
+        map.put("address1", ad.getAddressField("address1"));
+    }
+
+    private static HashMap<String, String> getPreloadTTVaccineData(ClientEvent data) throws JSONException, ParseException {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("e_tt1", data.findObsValue(null, true, "tt1", "tt1_retro"));
+        map.put("e_tt2", data.findObsValue(null, true, "tt2", "tt2_retro"));
+        map.put("e_tt3", data.findObsValue(null, true, "tt3", "tt3_retro"));
+        map.put("e_tt4", data.findObsValue(null, true, "tt4", "tt4_retro"));
+        map.put("e_tt5", data.findObsValue(null, true, "tt5", "tt5_retro"));
+
+        return map;
+    }
+
+    public static void fillWomanTTOffsiteOverrides(Map<String, String> map, ClientEvent data){
+        Client client = data.getClient();
+        map.put("existing_full_address", client.getAddress("usual_residence").getAddressField("address1")+
+                ", UC: "+client.getAddress("usual_residence").getSubTown()+
+                ", Town: "+client.getAddress("usual_residence").getTown()+
+                ", City: "+client.getAddress("usual_residence").getCityVillage()+
+                " - "+client.getAddress("usual_residence").getAddressField("landmark"));
+
+        map.put("existing_program_client_id", client.getIdentifier("Program Client ID"));
+        map.put("program_client_id", client.getIdentifier("Program Client ID"));
+
+        String birthdate = client.getBirthdate().toString("yyyy-MM-dd");
+        map.put("existing_first_name", client.getFirstName());
+        map.put("existing_birth_date", birthdate);
+        int years = 0;
+        try{
+            years = Years.yearsBetween(client.getBirthdate(), DateTime.now()).getYears();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        map.put("existing_age", years+"");
+        Object epi = client.getAttribute("EPI Card Number");
+        map.put("existing_epi_card_number", epi == null ? "" : epi.toString());
+
+        try{
+            String fatherName = data.findObsValue(null, true, "father_name", "1594AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+            map.put("first_name", client.getFirstName());
+            map.put("father_name", fatherName);
+            map.put("birth_date", birthdate);
+            map.put("gender", "female");
+
+            String ethnicity = data.findObsValue(null, true, "ethnicity", "163153AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+            map.put("ethnicity", ethnicity);
+
+            Address ad = client.getAddress("usual_residence");
+
+            map.put("province", ad.getStateProvince());
+            map.put("city_village", ad.getCityVillage());
+            map.put("town", ad.getTown());
+            map.put("union_council", ad.getSubTown());
+            map.put("address1", ad.getAddressField("address1"));
+
+            String husb = data.findObsValue(null, true, "husband_name", "5617AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+
+            map.put("husband_name", husb);
+            map.put("marriage", StringUtils.isNotBlank(husb)?"yes":"no");
+            map.put("reminders_approval", data.findObsValue(null, true, "reminders_approval", "163089AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
+            map.put("contact_phone_number", data.findObsValue(null, true, "contact_phone_number", "159635AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
+
+            map.putAll(getPreloadTTVaccineData(data));
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void fillChildVaccineOffsiteOverrides(Map<String, String> map, ClientEvent data){
+        Client client = data.getClient();
+        map.put("existing_full_address", client.getAddress("usual_residence").getAddressField("address1")+
+                ", UC: "+client.getAddress("usual_residence").getSubTown()+
+                ", Town: "+client.getAddress("usual_residence").getTown()+
+                ", City: "+client.getAddress("usual_residence").getCityVillage()+
+                " - "+client.getAddress("usual_residence").getAddressField("landmark"));
+
+        map.put("existing_program_client_id", client.getIdentifier("Program Client ID"));
+        map.put("program_client_id", client.getIdentifier("Program Client ID"));
+
+        String birthdate = client.getBirthdate().toString("yyyy-MM-dd");
+        map.put("existing_first_name", client.getFirstName());
+        map.put("existing_birth_date", birthdate);
+        int days = 0;
+        try{
+            days = Days.daysBetween(client.getBirthdate(), DateTime.now()).getDays();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        map.put("existing_age", days+"");
+        Object epi = client.getAttribute("EPI Card Number");
+        map.put("existing_epi_card_number", epi == null ? "" : epi.toString());
+
+        try{
+            String fatherName = data.findObsValue(null, true, "father_name", "1594AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+            map.put("first_name", client.getFirstName());
+            map.put("existing_first_name", client.getFirstName());
+            map.put("father_name", fatherName);
+            map.put("mother_name", data.findObsValue(null, true, "mother_name", "1593AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
+            map.put("birth_date", birthdate);
+            map.put("dob", birthdate);
+
+            if (client.getGender() != null) {
+                map.put("gender", client.getGender().toLowerCase());
+            }
+
+            String ethnicity = data.findObsValue(null, true, "ethnicity", "163153AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+            map.put("ethnicity", ethnicity);
+
+            Address ad = client.getAddress("usual_residence");
+
+            map.put("province", ad.getStateProvince());
+            map.put("city_village", ad.getCityVillage());
+            map.put("town", ad.getTown());
+            map.put("union_council", ad.getSubTown());
+            map.put("address1", ad.getAddressField("address1"));
+
+            map.put("reminders_approval", data.findObsValue(null, true, "reminders_approval", "163089AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
+            map.put("contact_phone_number", data.findObsValue(null, true, "contact_phone_number", "159635AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
+
+            map.putAll(getPreloadChildVaccineData(data));
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private static Map<? extends String,? extends String> getPreloadChildVaccineData(ClientEvent data) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("e_bcg", data.findObsValue(null, true, "bcg", "bcg_retro"));
+        map.put("e_opv0", data.findObsValue(null, true, "opv0", "opv0_retro"));
+        map.put("e_penta1", data.findObsValue(null, true, "penta1", "penta1_retro"));
+        map.put("e_opv1", data.findObsValue(null, true, "opv1", "opv1_retro"));
+        map.put("e_pcv1", data.findObsValue(null, true, "pcv1", "pcv1_retro"));
+        map.put("e_penta2", data.findObsValue(null, true, "penta2", "penta2_retro"));
+        map.put("e_opv2", data.findObsValue(null, true, "opv2", "opv2_retro"));
+        map.put("e_pcv2", data.findObsValue(null, true, "pcv2", "pcv2_retro"));
+        map.put("e_penta3", data.findObsValue(null, true, "penta3", "penta3_retro"));
+        map.put("e_opv3", data.findObsValue(null, true, "opv3", "opv3_retro"));
+        map.put("e_pcv3", data.findObsValue(null, true, "pcv3", "pcv3_retro"));
+        map.put("e_ipv", data.findObsValue(null, true, "ipv", "ipv_retro"));
+        map.put("e_measles1", data.findObsValue(null, true, "measles1", "measles1_retro"));
+        map.put("e_measles2", data.findObsValue(null, true, "measles2", "measles2_retro"));
 
         return map;
     }
@@ -383,15 +620,19 @@ public class VaccinatorUtils {
         else if(received.get(v.name()+"_retro") != null){
             return new DateTime(received.get(v.name()+"_retro"));
         }
+
         return null;
     }
 
-    public static List<Map<String, Object>> generateSchedule(String category, DateTime milestoneDate, Map<String, String> received, List<Alert> alerts){
+    public static List<Map<String, Object>> generateSchedule(CommonPersonObjectClient client, String category, DateTime milestoneDate, Map<String, String> received, List<Alert> alerts){
         ArrayList<Vaccine> vl = VaccineRepo.getVaccines(category);
         List<Map<String, Object>> schedule = new ArrayList();
         for (Vaccine v: vl) {
             Map<String, Object> m = new HashMap<>();
             DateTime recDate = getReceivedDate(received, v);
+            if(recDate == null){
+                recDate = getOAVaccineDate(client, v);
+            }
             if (recDate != null) {
                 m = createVaccineMap("done", null, recDate, v);
             }
@@ -429,6 +670,17 @@ public class VaccinatorUtils {
         }
 
         return schedule;
+    }
+
+    private static DateTime getOAVaccineDate(CommonPersonObjectClient client, Vaccine v) {
+        if (StringUtils.isNotBlank(client.getColumnmaps().get("e_"+v.name()))){
+            return new DateTime(client.getColumnmaps().get("e_"+v.name()));
+        }
+        else if(StringUtils.isNotBlank(client.getDetails().get("e_"+v.name()))){
+            return new DateTime(client.getDetails().get("e_"+v.name()));
+        }
+
+        return null;
     }
 
     public static final Comparator<Map<String, ?>> VACCINE_SCHEDULE_COMPARATOR = new Comparator<Map<String, ?>>() {

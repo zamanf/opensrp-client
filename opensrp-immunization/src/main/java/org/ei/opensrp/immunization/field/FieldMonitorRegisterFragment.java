@@ -14,6 +14,7 @@ import org.ei.opensrp.core.db.handler.RegisterDataLoaderHandler;
 import org.ei.opensrp.core.db.utils.RegisterQuery;
 import org.ei.opensrp.core.template.CommonSortingOption;
 import org.ei.opensrp.core.template.DefaultOptionsProvider;
+import org.ei.opensrp.core.template.FilterOption;
 import org.ei.opensrp.core.template.NavBarOptionsProvider;
 import org.ei.opensrp.core.template.RegisterActivity;
 import org.ei.opensrp.core.template.RegisterClientsProvider;
@@ -30,7 +31,6 @@ import org.ei.opensrp.util.VaccinatorUtils;
 import org.ei.opensrp.view.controller.FormController;
 import org.ei.opensrp.view.customControls.CustomFontTextView;
 import org.ei.opensrp.view.dialog.DialogOption;
-import org.ei.opensrp.view.dialog.FilterOption;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -74,7 +74,7 @@ public class FieldMonitorRegisterFragment extends RegisterDataGridFragment {
 
             @Override
             public FilterOption villageFilter() {
-                return new CursorCommonObjectFilterOption("no village filter", "");
+                return null;
             }
 
             @Override
@@ -176,6 +176,7 @@ public class FieldMonitorRegisterFragment extends RegisterDataGridFragment {
         mView.findViewById(org.ei.opensrp.core.R.id.village).setVisibility(View.GONE);
 
         mView.findViewById(org.ei.opensrp.core.R.id.sort_selection).setVisibility(View.GONE);
+        mView.findViewById(org.ei.opensrp.core.R.id.service_mode_selection).setVisibility(View.GONE);
 
         mView.findViewById(org.ei.opensrp.core.R.id.sorted_by).setVisibility(View.GONE);
 

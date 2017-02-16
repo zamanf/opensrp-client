@@ -64,6 +64,12 @@
       "name" : "epi_card_number",
       "bind" : "/model/instance/Child_Vaccination_Enrollment/epi_card_number"
     }, {
+      "name" : "child_not_named",
+      "bind" : "/model/instance/Child_Vaccination_Enrollment/child_not_named"
+    }, {
+      "name" : "first_name_yes",
+      "bind" : "/model/instance/Child_Vaccination_Enrollment/first_name_yes"
+    }, {
       "name" : "first_name",
       "bind" : "/model/instance/Child_Vaccination_Enrollment/first_name"
     }, {

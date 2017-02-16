@@ -58,7 +58,7 @@
       "name" : "father_name",
       "bind" : "/model/instance/woman_tt_offsite_followup_form/father_name"
     }, {
-      "name" : "birth_date",
+      "name" : "dob",
       "bind" : "/model/instance/woman_tt_offsite_followup_form/birth_date"
     }, {
       "name" : "ethnicity",

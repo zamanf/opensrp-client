@@ -60,11 +60,7 @@ public class FormUtils {
 
     public FormSubmission generateFormSubmisionFromXMLString(String entity_id, String formData, String formName, JSONObject overrides) throws Exception{
         JSONObject formSubmission = XML.toJSONObject(formData);
-
-        FileUtilities fu = new FileUtilities();
-        fu.write("xmlform.txt", formData);
-        fu.write("xmlformsubmission.txt", formSubmission.toString());
-        System.out.println(formSubmission);
+        android.util.Log.d(getClass().getName(), "FS : "+formSubmission.toString());
 
         // use the form_definition.json to iterate through fields
         String formDefinitionJson = readFileFromAssetsFolder("www/form/" + formName + "/form_definition.json");
@@ -156,6 +152,11 @@ public class FormUtils {
             JSONObject entityJson = new JSONObject();
             if (dbEntity != null && !dbEntity.isEmpty()){
                 entityJson = new JSONObject(dbEntity);
+            }
+
+            // should allow to override entityId incase provided
+            if (entityId != null && entityId.isEmpty() == false && entityJson.length() == 0){
+                entityJson.put("id", entityId);
             }
 
             //read the xml form model, the expected form model that is passed to the form mirrors it
@@ -486,6 +487,11 @@ public class FormUtils {
         JSONObject entityJson = new JSONObject();
         if (dbEntity != null && !dbEntity.isEmpty()){
             entityJson = new JSONObject(dbEntity);
+        }
+
+        // should allow to override the entityId if provided
+        if (entityId != null && entityId.isEmpty() == false && entityJson.length() == 0){
+            entityJson.put("id", entityId);
         }
 
         JSONArray fieldsArray = fieldsDefinition.getJSONArray("fields");

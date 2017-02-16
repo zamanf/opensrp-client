@@ -31,19 +31,25 @@ public final class BarcodeIntentResult
 	private final byte[]	rawBytes;
 	private final Integer	orientation;
 	private final String	errorCorrectionLevel;
+	private final ScanType<?> scanType;
 
 	BarcodeIntentResult ()
 	{
-		this (null, null, null, null, null);
+		this (null, null, null, null, null, null);
 	}
 
-	BarcodeIntentResult (String contents, String formatName, byte[] rawBytes, Integer orientation, String errorCorrectionLevel)
+	BarcodeIntentResult (String contents, String formatName, byte[] rawBytes, Integer orientation, String errorCorrectionLevel, ScanType scanType)
 	{
+		this.scanType = scanType;
 		this.contents = contents;
 		this.formatName = formatName;
 		this.rawBytes = rawBytes;
 		this.orientation = orientation;
 		this.errorCorrectionLevel = errorCorrectionLevel;
+	}
+
+	public ScanType getScanType() {
+		return scanType;
 	}
 
 	/**

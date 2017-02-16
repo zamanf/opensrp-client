@@ -234,7 +234,8 @@ public class Event extends BaseDataObject{
 					continue;
 				}
 
-				if(o.getFieldCode().equalsIgnoreCase(f) || o.getFormSubmissionField().equalsIgnoreCase(f)){
+				if((o.getFieldCode() != null && o.getFieldCode().equalsIgnoreCase(f))
+						|| (o.getFormSubmissionField() != null && o.getFormSubmissionField().equalsIgnoreCase(f))){
 					// obs is found and first  one.. should throw exception if multiple obs found with same names/ids
 					if(nonEmpty && (o.getValues().isEmpty())){
 						continue;
@@ -242,7 +243,7 @@ public class Event extends BaseDataObject{
 					if(res == null){
 						res = o;
 					}
-					else throw new RuntimeException("Multiple obs found with name or ids specified ");
+					// todo else throw new RuntimeException("Multiple obs found with name or ids specified ");
 				}
 			}
 		}

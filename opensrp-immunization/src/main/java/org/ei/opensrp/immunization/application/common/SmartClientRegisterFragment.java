@@ -39,6 +39,7 @@ import java.util.Map;
 
 public abstract class SmartClientRegisterFragment extends RegisterDataGridFragment {
 
+    private final BarcodeIntentIntegrator integ;
     private PromptView prompt;
 
     public CESQLiteHelper getClientEventDb() {
@@ -49,6 +50,7 @@ public abstract class SmartClientRegisterFragment extends RegisterDataGridFragme
 
     public SmartClientRegisterFragment(FormController formController) {
         super(formController);
+        integ = BarcodeIntentIntegrator.initBarcodeScanner(this);
     }
 
     @Override
@@ -79,7 +81,8 @@ public abstract class SmartClientRegisterFragment extends RegisterDataGridFragme
             public DialogOption[] sortingOptions() {
                 return new DialogOption[]{
                         new CommonSortingOption(getResources().getString(R.string.woman_alphabetical_sort), "first_name"),
-                        new CommonSortingOption("Age", "dob"),
+                        new CommonSortingOption("Age (DESC)", "dob"),
+                        new CommonSortingOption("Age (ASC)", "dob DESC"),
                         new CommonSortingOption(getResources().getString(R.string.id_sort), "program_client_id")
                 };
             }
@@ -99,7 +102,6 @@ public abstract class SmartClientRegisterFragment extends RegisterDataGridFragme
 
     @Override
     protected void startRegistration() {
-        BarcodeIntentIntegrator integ = new BarcodeIntentIntegrator(this);
         integ.addExtra(Barcode.SCAN_MODE, Barcode.QR_MODE);
         integ.initiateScan();
     }
@@ -141,7 +143,7 @@ public abstract class SmartClientRegisterFragment extends RegisterDataGridFragme
         Log.i("", "REQUEST COODE " + requestCode);
         Log.i("", "Result Coode " + resultCode);
         if(requestCode == BarcodeIntentIntegrator.REQUEST_CODE) {
-            BarcodeIntentResult res = BarcodeIntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+            BarcodeIntentResult res = integ.parseActivityResult(requestCode, resultCode, data);
             if(StringUtils.isNotBlank(res.getContents())) {
                 onQRCodeSucessfullyScanned(res.getContents());
             }
@@ -203,6 +205,12 @@ public abstract class SmartClientRegisterFragment extends RegisterDataGridFragme
             HashMap<String,String> map = new HashMap<>();
             map.put("existing_program_client_id", qrCode);
             map.put("program_client_id", qrCode);
+
+            HashMap<String, String> pd = VaccinatorUtils.providerDetails();
+            map.put("province", pd.get("provider_province").toLowerCase().replace(" ", "_"));
+            map.put("city_village", pd.get("provider_city").toLowerCase().replace(" ", "_"));
+            map.put("town", pd.get("provider_town").toLowerCase().replace(" ", "_"));
+
             Map<String, String> m = customFieldOverrides();
             if(m != null){
                 map.putAll(m);

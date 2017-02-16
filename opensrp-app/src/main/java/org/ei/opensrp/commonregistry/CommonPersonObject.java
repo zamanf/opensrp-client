@@ -29,6 +29,8 @@ public class CommonPersonObject {
         this.relationalid = relationalid;
     }
 
+    public String type(){return type;};
+
     public String getCaseId() {
         return caseId;
     }

@@ -1,7 +1,12 @@
 package org.ei.opensrp.core.db.utils;
 
+import com.google.common.base.Joiner;
+
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Query{
 		private String query = "";
@@ -24,6 +29,10 @@ public class Query{
 			addToQuery(name+":"+value+" ");
 			return this;
 		}
+		public Query in(String name, List<String> values){
+			addToQuery(name+":("+ Joiner.on(" OR ").join(values)+") ");
+			return this;
+		}
 		public Query like(String name, String value) {
 			addToQuery(name+":["+value+" TO "+value+"zz] ");
 			return this;
@@ -36,6 +45,11 @@ public class Query{
 			addToQuery(name+"<date>:["+from.toString("yyyy-MM-dd'T'HH:mm:ss")+" TO "+to.toString("yyyy-MM-dd'T'HH:mm:ss")+"] ");
 			return this;
 		}
+
+	public Query between(String name, long from, long to){
+		addToQuery(name+"<long>:["+from+" TO "+to+"] ");
+		return this;
+	}
 		private void addToQuery(String q){
 			if(!StringUtils.isBlank(query)){
 				query += filterType.name()+" "+q;

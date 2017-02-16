@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import org.apache.commons.lang3.StringUtils;
 import org.ei.opensrp.Context;
 import org.ei.opensrp.core.BuildConfig;
 import org.ei.opensrp.core.R;
@@ -287,6 +288,11 @@ public abstract class LoginActivity extends Activity {
             e.printStackTrace();
         }
 
+        while(StringUtils.isBlank(context.allSettings().fetchUserInformation())){
+            // stay hanged until app saves login info in background
+            // todo ugly way of handling it.
+            // change the original service to allow post execute task in master
+        }
         goToHome();
 
         DrishtiSyncScheduler.startOnlyIfConnectedToNetwork(getApplicationContext());

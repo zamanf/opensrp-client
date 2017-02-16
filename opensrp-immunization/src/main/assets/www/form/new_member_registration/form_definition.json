@@ -89,8 +89,7 @@
       "bind" : "/model/instance/new_member_registration_form/phonenumber"
     }, {
       "name" : "num_household_members",
-      "bind" : "/model/instance/new_member_registration_form/num_household_members",
-      "source": "pkhousehold.num_household_members"
+      "bind" : "/model/instance/new_member_registration_form/num_household_members"
     }, {
       "name" : "client_reg_date",
       "bind" : "/model/instance/new_member_registration_form/client_reg_date"

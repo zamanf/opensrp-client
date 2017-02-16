@@ -40,8 +40,8 @@
       <last_name openmrs_entity="person" openmrs_entity_id="last_name"/>
       <ethnicity openmrs_entity="concept" openmrs_entity_id="163153AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
       <ethnicity_other openmrs_entity="concept" openmrs_entity_id="160632AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" openmrs_entity_parent="163330AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
-      <province openmrs_entity="person_address" openmrs_entity_id="stateProvince" openmrs_entity_parent="usual_residence">sindh</province>
-      <city_village openmrs_entity="person_address" openmrs_entity_id="cityVillage" openmrs_entity_parent="usual_residence">shikarpur</city_village>
+      <province openmrs_entity="person_address" openmrs_entity_id="stateProvince" openmrs_entity_parent="usual_residence"></province>
+      <city_village openmrs_entity="person_address" openmrs_entity_id="cityVillage" openmrs_entity_parent="usual_residence"></city_village>
       <town openmrs_entity="person_address" openmrs_entity_id="town" openmrs_entity_parent="usual_residence"/>
       <union_council openmrs_entity="person_address" openmrs_entity_id="subTown" openmrs_entity_parent="usual_residence"/>
       <address1 openmrs_entity="person_address" openmrs_entity_id="address1" openmrs_entity_parent="usual_residence"/>

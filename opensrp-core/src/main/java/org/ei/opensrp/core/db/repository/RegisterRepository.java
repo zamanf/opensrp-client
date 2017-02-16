@@ -9,12 +9,17 @@ import com.google.gson.reflect.TypeToken;
 import net.sqlcipher.database.SQLiteDatabase;
 import net.sqlcipher.database.SQLiteQueryBuilder;
 
+import org.apache.commons.lang3.StringUtils;
 import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.CommonPersonObject;
+import org.ei.opensrp.core.db.domain.ClientEvent;
+import org.ei.opensrp.core.utils.Utils;
 import org.ei.opensrp.domain.ProfileImage;
 import org.ei.opensrp.repository.ImageRepository;
 import org.ei.opensrp.repository.ReportRepository;
+import org.json.JSONException;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,6 +35,36 @@ import static org.ei.opensrp.commonregistry.CommonRepository.Relational_ID;
 public class RegisterRepository {
     public static Cursor query(String table, String[] projection, String selection, String[] selectionArgs, String sortOrder){
         return Context.getInstance().commonrepository(table).getMasterRepository().getReadableDatabase().query(table, projection, selection, selectionArgs, null, null, sortOrder);
+    }
+
+    public static Cursor queryCE(String table, String[] projection, String selection, String[] selectionArgs, String sortOrder){
+        return getDatabase().query(table, projection, selection, selectionArgs, null, null, sortOrder);
+    }
+
+    public static Cursor queryCE(String addressType, String selection, String group, String sortOrder) {
+        return CESQLiteHelper.getClientEventDb(Context.getInstance().applicationContext()).getClientEventCursor(true, selection, addressType, group, sortOrder);
+    }
+
+    public static int countCE(String addressType, String selection, String group) {
+        try {
+            return CESQLiteHelper.getClientEventDb(Context.getInstance().applicationContext()).getClientEventCount(true, selection, addressType, group);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static Cursor queryCELeftJoin(String table, String id, String referenceTable, String referenceColumn,
+                                       String[] projection, String selection, String groupBy, String sortOrder){
+        String sql = SQLiteQueryBuilder.buildQueryString(false, table, projection, selection, groupBy, null, sortOrder, null);
+        // left join pkindividual on pkhousehold.id=pkindividual.relationalid
+        String[] sl = sql.split("(?i)from[\\s]+"+table);
+        Log.v(ReportRepository.class.getName(), "SQL:"+sql+"::SL:"+sl);
+        String join = " LEFT JOIN "+referenceTable+" ON "+referenceTable+"."+referenceColumn+"="+table+"."+id;
+
+        String finalSql = sl[0]+" FROM "+table+" "+join+" "+sl[1];
+
+        return getDatabase().rawQuery(finalSql, null);
     }
 
     public static Cursor queryLeftJoin(String table, String id, String referenceTable, String referenceColumn,
@@ -61,8 +96,15 @@ public class RegisterRepository {
     }
 
     public static int count(String table, String selection, String[] selectionArgs){
-        SQLiteDatabase database = getDatabase(table);
-        Cursor cursor = database.query(table, new String[]{"COUNT(1) c"}, selection, selectionArgs, null, null, null);
+        Cursor cursor = getDatabase(table).query(table, new String[]{"COUNT(1) c"}, selection, selectionArgs, null, null, null);
+        cursor.moveToFirst();
+        int count = cursor.getInt(0);
+        cursor.close();
+        return count;
+    }
+
+    public static int countCE(String table, String selection){
+        Cursor cursor = getDatabase().query(table, new String[]{"COUNT(1) c"}, selection, null, null, null, null);
         cursor.moveToFirst();
         int count = cursor.getInt(0);
         cursor.close();
@@ -80,6 +122,10 @@ public class RegisterRepository {
 
     private static SQLiteDatabase getDatabase(String bindType){
         return Context.getInstance().commonrepository(bindType).getMasterRepository().getReadableDatabase();
+    }
+
+    private static android.database.sqlite.SQLiteDatabase getDatabase(){
+        return CESQLiteHelper.getClientEventDb(Context.getInstance().applicationContext()).getReadableDatabase();
     }
 
     private static List<ProfileImage> readAllImages(Cursor cursor) {
@@ -105,17 +151,29 @@ public class RegisterRepository {
             }
         }
 
-        CommonPersonObject common = new CommonPersonObject(columns.get(ID_COLUMN), columns.get(Relational_ID),
-                new Gson().<Map<String, String>>fromJson(cursor.getString(cursor.getColumnIndex(DETAILS_COLUMN)), new TypeToken<Map<String, String>>() {
+        String id = Utils.nonEmptyValue(columns, true, false, "_id", "_ID", "_Id", "baseEntityId");
+        String relationalid = Utils.nonEmptyValue(columns, true, false, "relationalid", "_relationalid", "relationalId", "RELATIONAL_ID");
+        String details = cursor.getColumnIndex(DETAILS_COLUMN)!= -1?cursor.getString(cursor.getColumnIndex(DETAILS_COLUMN)):"{}";
+        CommonPersonObject common = new CommonPersonObject(id, relationalid,
+                new Gson().<Map<String, String>>fromJson(details, new TypeToken<Map<String, String>>() {
                 }.getType()), null);
 
         common.setColumnmaps(columns);
         return common;
     }
 
+    public static ClientEvent convertToClientEvent(Cursor res) {
+        try {
+            return CESQLiteHelper.convertToClientEvent(res);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
     public static List<CommonPersonObject> readList(Cursor cursor) {
         cursor.moveToFirst();
-        List<CommonPersonObject> commons = new ArrayList<CommonPersonObject>();
+        List<CommonPersonObject> commons = new ArrayList<>();
         while (!cursor.isAfterLast()) {
             commons.add(convertToCommonObject(cursor));
             cursor.moveToNext();

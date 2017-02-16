@@ -19,6 +19,7 @@ import org.ei.opensrp.core.utils.ByColumnAndByDetails;
 import org.ei.opensrp.immunization.R;
 import org.ei.opensrp.immunization.child.ChildSmartRegisterActivity;
 import org.ei.opensrp.immunization.woman.WomanSmartRegisterActivity;
+import org.ei.opensrp.util.VaccinatorUtils;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -64,6 +65,7 @@ public class HouseholdMemberAdapter extends ArrayAdapter<HouseholdMemberDetails>
         ((TextView) row.findViewById(R.id.hh_member_contact_number)).setText(list.get(position).contact);
 
         ImageView btnAction = (ImageView) row.findViewById(R.id.other_register_action);
+        TextView lv = (TextView) convertView.findViewById(R.id.last_vaccine);
 
         Log.v(getClass().getName(), "programId "+list.get(position).programId+
                 "; hhmemberId "+list.get(position).client.getColumnmaps().get("household_member_id")+
@@ -72,10 +74,16 @@ public class HouseholdMemberAdapter extends ArrayAdapter<HouseholdMemberDetails>
 
         if(list.get(position).isMemberExists()) {
             btnAction.setVisibility(View.VISIBLE);
+            lv.setVisibility(View.VISIBLE);
+            Log.v(getClass().getName(), "MAPP:"+list.get(position).getClient().getColumnmaps());
+            lv.setText(getValue(list.get(position).getClient().getColumnmaps(), "vaccines_2", true));
         } else {
             btnAction.setVisibility(View.GONE);
+            lv.setVisibility(View.GONE);
             if(list.get(position).isCantBeEnrolled() == false){
                 btnAction.setVisibility(View.VISIBLE);
+                lv.setVisibility(View.VISIBLE);
+                lv.setText(getValue(list.get(position).getClient().getColumnmaps(), "vaccines_2", true));
             }
         }
 

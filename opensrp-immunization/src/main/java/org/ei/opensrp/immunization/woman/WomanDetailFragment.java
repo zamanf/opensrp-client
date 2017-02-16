@@ -111,7 +111,7 @@ public class WomanDetailFragment extends DetailFragment {
         TableLayout table = (TableLayout) currentView.findViewById(R.id.woman_vaccine_table);
         table.addView(vaccineHeader);
         List<Alert> al = Context.getInstance().alertService().findByEntityIdAndAlertNames(client.entityId(), "TT 1", "TT 2", "TT 3", "TT 4", "TT 5", "tt1", "tt2", "tt3", "tt4", "tt5");
-        List<Map<String, Object>> sch = generateSchedule("woman", null, client.getColumnmaps(), al);
+        List<Map<String, Object>> sch = generateSchedule(client, "woman", null, client.getColumnmaps(), al);
         for (Map<String, Object> m : sch){
             addVaccineDetail(getActivity(), table, m.get("status").toString(), (VaccineRepo.Vaccine) m.get("vaccine"), (DateTime) m.get("date"), (Alert) m.get("alert"), false);
         }

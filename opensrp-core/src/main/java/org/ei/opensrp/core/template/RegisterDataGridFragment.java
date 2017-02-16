@@ -28,6 +28,7 @@ import org.ei.opensrp.Context;
 import org.ei.opensrp.core.R;
 import org.ei.opensrp.commonregistry.CommonObjectFilterOption;
 import org.ei.opensrp.core.utils.Utils;
+import org.ei.opensrp.cursoradapter.CursorFilterOption;
 import org.ei.opensrp.domain.form.FieldOverrides;
 import org.ei.opensrp.util.StringUtil;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
@@ -36,8 +37,6 @@ import org.ei.opensrp.view.customControls.FontVariant;
 import org.ei.opensrp.view.dialog.DialogOption;
 import org.ei.opensrp.view.dialog.DialogOptionModel;
 import org.ei.opensrp.view.dialog.EditOption;
-import org.ei.opensrp.view.dialog.FilterOption;
-import org.ei.opensrp.view.dialog.SortOption;
 import org.ei.opensrp.view.fragment.SecuredFragment;
 import org.joda.time.DateTime;
 import org.json.JSONException;
@@ -153,7 +152,7 @@ public abstract class RegisterDataGridFragment extends SecuredFragment {
     }
 
     private void setupLoader() {
-        getActivity().getSupportLoaderManager().initLoader(REGISTER_DATA_LOADER_ID, null, loaderHandler());
+        getActivity().getSupportLoaderManager().initLoader(REGISTER_DATA_LOADER_ID, createQueryBundle(0), loaderHandler());
 
         loaderHandler().setLoadListener(new RegisterDataLoaderHandler.LoadListener() {
             @Override
@@ -273,7 +272,7 @@ public abstract class RegisterDataGridFragment extends SecuredFragment {
         currentSortOption = getDefaultOptionsProvider().sortOption();
 
         appliedSortView.setText(currentSortOption.name());
-        appliedVillageFilterView.setText(currentVillageFilter.name());
+        appliedVillageFilterView.setText(currentVillageFilter==null?"":currentVillageFilter.name());
         serviceModeView.setText(currentServiceModeOption.name());
         titleLabelView.setText(getDefaultOptionsProvider().nameInShortFormForTitle());
     }
@@ -517,11 +516,15 @@ public abstract class RegisterDataGridFragment extends SecuredFragment {
     }
 
     private void refreshDataList(int offset){
+        getActivity().getSupportLoaderManager().restartLoader(REGISTER_DATA_LOADER_ID, createQueryBundle(offset), loaderHandler());
+    }
+
+    private Bundle createQueryBundle(int offset){
         Bundle b = new Bundle();
         JSONObject map = new JSONObject();
         try {// todo change the way it is sent to loader
-           // map.put("village", currentVillageFilter==null?null:Utils.getLongDateAwareGson().toJson(currentVillageFilter));
-           // map.put("service", currentServiceModeOption == null?null:Utils.getLongDateAwareGson().toJson(currentServiceModeOption));
+            map.put("village", currentVillageFilter==null?null:currentVillageFilter.getCriteria());
+            // map.put("service", currentServiceModeOption == null?null:Utils.getLongDateAwareGson().toJson(currentServiceModeOption));
             map.put("search", currentSearchFilter == null||StringUtils.isBlank(currentSearchFilter.getFilter())?null:currentSearchFilter.getCriteria());
             map.put("sort", currentSortOption==null?null:currentSortOption.sort());
         } catch (JSONException e) {
@@ -529,7 +532,7 @@ public abstract class RegisterDataGridFragment extends SecuredFragment {
         }
         b.putString("params", map.toString());
         b.putInt("offset", offset);
-        getActivity().getSupportLoaderManager().restartLoader(REGISTER_DATA_LOADER_ID, b, loaderHandler());
+        return b;
     }
 
     protected void startForm(String formName, String entityId, HashMap<String, String> overrideStringmap) {

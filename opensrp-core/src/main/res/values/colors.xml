@@ -33,5 +33,6 @@
     <color name="transparent">#00000000</color>
     <color name="error_color">#00ec3939</color>
     <color name="opensrp_blue">#358db4</color>
+    <color name="dull_red_dark">#ee6e74</color>
 
 </resources>

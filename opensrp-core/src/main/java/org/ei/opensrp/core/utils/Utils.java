@@ -146,6 +146,9 @@ public class Utils {
 
     public static Date toDate(String date, boolean suppressException){
         try{
+            if (date.length() > 10){
+                return DB_DTF.parse(date);
+            }
             return DB_DF.parse(date);
         }
         catch (ParseException e) {
@@ -385,11 +388,26 @@ public class Utils {
 
             table.addView(v);
         }
+        else if(size.equals(Size.SMALL)){
+            View v = activity.getLayoutInflater().inflate(R.layout.tablerow_small_compact, null);
+            ((TextView)v.findViewById(R.id.c1)).setText(label);
+            ((TextView)v.findViewById(R.id.c2)).setText(value);
+
+            table.addView(v);
+        }
     }
 
     public static void addRow(Activity activity, TableLayout table, String label, View value, Size size){
         if(size.equals(Size.MEDIUM)){
             TableRow v = (TableRow) activity.getLayoutInflater().inflate(R.layout.tablerow_medium, null);
+            ((TextView)v.findViewById(R.id.c1)).setText(label);
+            v.removeView(v.findViewById(R.id.c2));
+            v.addView(value);
+
+            table.addView(v);
+        }
+        else if(size.equals(Size.SMALL)){
+            TableRow v = (TableRow) activity.getLayoutInflater().inflate(R.layout.tablerow_small_compact, null);
             ((TextView)v.findViewById(R.id.c1)).setText(label);
             v.removeView(v.findViewById(R.id.c2));
             v.addView(value);
@@ -550,8 +568,16 @@ public class Utils {
         return addToRow(context, value, row, compact, 1);
     }
 
+    public static TableRow addToRow(Context context, Spanned value, TableRow row, boolean compact){
+        return addToRow(context, value, row, compact, 1, Size.MEDIUM);
+    }
+
     public static TableRow addToRow(Context context, String value, TableRow row, boolean compact, int weight){
         return addToRow(context, Html.fromHtml(value), row, compact, weight, Size.MEDIUM);
+    }
+
+    public static TableRow addToRow(Context context, Spanned value, TableRow row, boolean compact, int weight){
+        return addToRow(context, value, row, compact, weight, Size.MEDIUM);
     }
 
     public static TableRow addToRow(Context context, Spanned value, TableRow row, boolean compact, int weight, Size size){
@@ -571,7 +597,7 @@ public class Utils {
             params.setMargins(0, 0, 1, 1);
             v.setLayoutParams(params);
             v.setTextColor(Color.BLACK);
-            v.setTextSize(compact?15:16);
+            v.setTextSize(compact?14:16);
             v.setBackgroundColor(Color.WHITE);
         }
 
@@ -591,6 +617,16 @@ public class Utils {
             }
         }).create();
         return  g;
+    }
+
+    public static Gson getStringDateAwareGson(){
+        Gson g = new GsonBuilder().registerTypeAdapter(DateTime.class, new JsonDeserializer<DateTime>() {
+            @Override
+            public DateTime deserialize(JsonElement e, java.lang.reflect.Type t, JsonDeserializationContext jd) throws JsonParseException {
+                return new DateTime(e.getAsString());
+            }
+        }).create();
+        return g;
     }
 
     public static boolean writePreference(Context context, String name, String value){

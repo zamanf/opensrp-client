@@ -15,6 +15,7 @@ import android.widget.ImageButton;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.ei.opensrp.Context;
 import org.ei.opensrp.core.db.repository.RegisterRepository;
@@ -201,16 +202,22 @@ public class VaccineReport extends Activity implements View.OnClickListener{
 
     private void reloadData(final View view){
         final VaccineReport ac = this;
+
         LockingBackgroundTask task = new LockingBackgroundTask(new ProgressIndicator() {
             @Override
             public void setVisible() {
-                pd.setTitle("Wait");
-                pd.setMessage("Building report...");
-                pd.show();
+                if(!isFinishing()) {
+                    pd.setTitle("Wait");
+                    pd.setMessage("Building report...");
+                    pd.show();
+                }
             }
             @Override
             public void setInvisible() {
-                pd.dismiss();
+
+                if(!isFinishing()) {
+                    pd.dismiss();
+                }
             }
         });
 

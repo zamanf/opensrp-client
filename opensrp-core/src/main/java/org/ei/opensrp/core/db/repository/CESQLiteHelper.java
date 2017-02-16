@@ -1,5 +1,6 @@
 package org.ei.opensrp.core.db.repository;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -13,8 +14,13 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 
+import net.sqlcipher.database.SQLiteQueryBuilder;
+
 import static org.ei.opensrp.core.db.utils.ColumnAttribute.*;
 import org.apache.commons.lang3.StringUtils;
+import org.ei.opensrp.core.db.domain.ClientEvent;
+import org.ei.opensrp.core.utils.Utils;
+import org.ei.opensrp.util.StringUtil;
 import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,6 +41,8 @@ import java.util.List;
 import java.util.Map;
 
 public class CESQLiteHelper extends SQLiteOpenHelper {
+
+	private static CESQLiteHelper instance;
 
 	public enum client_column implements Column {
 		creator (Type.text, false, false),
@@ -66,6 +74,10 @@ public class CESQLiteHelper extends SQLiteOpenHelper {
 		public ColumnAttribute column() {
 			return column;
 		}
+		@Override
+		public String toString() {
+			return name();
+		}
 	}
 	public enum address_column implements Column{
 		baseEntityId (Type.text, false, true), 
@@ -91,6 +103,10 @@ public class CESQLiteHelper extends SQLiteOpenHelper {
 		private ColumnAttribute column;
 		public ColumnAttribute column() {
 			return column;
+		}
+		@Override
+		public String toString() {
+			return name();
 		}
 	}
 	public enum event_column implements Column{
@@ -122,6 +138,10 @@ public class CESQLiteHelper extends SQLiteOpenHelper {
 		public ColumnAttribute column() {
 			return column;
 		}
+		@Override
+		public String toString() {
+			return name();
+		}
 	}
 	public enum obs_column implements Column{
 		eventId (Type.text, false, true),
@@ -141,6 +161,10 @@ public class CESQLiteHelper extends SQLiteOpenHelper {
 		public ColumnAttribute column() {
 			return column;
 		}
+		@Override
+		public String toString() {
+			return name();
+		}
 	}
 
 	public enum Table{
@@ -152,6 +176,10 @@ public class CESQLiteHelper extends SQLiteOpenHelper {
 		}
 		Table(Column[] columns) {
 			this.columns = columns;
+		}
+		@Override
+		public String toString() {
+			return name();
 		}
 	}
 
@@ -236,7 +264,10 @@ public class CESQLiteHelper extends SQLiteOpenHelper {
 	}
 
 	public static CESQLiteHelper getClientEventDb(Context context){
-		return new CESQLiteHelper(context);
+		if (instance == null){
+			instance = new CESQLiteHelper(context);
+		}
+		return instance;
 	}
 
 	private void insert(Class<?> cls, Table table, Column[] cols, Object o) throws IllegalAccessException, IllegalArgumentException, NoSuchFieldException{
@@ -244,8 +275,26 @@ public class CESQLiteHelper extends SQLiteOpenHelper {
 	}
 	
 	private void insert(Class<?> cls, Table table, Column[] cols, String referenceColumn, String referenceValue, Object o) throws IllegalAccessException, IllegalArgumentException, NoSuchFieldException{
-		Map<Column, Object> fm = new HashMap<>();
+		Map<Column, Object> fm = toColumnValue(cls, cols, referenceColumn, o);
 		
+		String columns = referenceColumn==null?"":("`"+referenceColumn+"`,");
+		String values = referenceColumn==null?"":("'"+referenceValue+"',");
+		for (Column c : fm.keySet()) {
+			columns += "`"+c.name()+"`,";
+			values += formatValue(fm.get(c), c.column())+",";
+		}
+		
+		columns = removeEndingComma(columns);
+		values = removeEndingComma(values);
+		
+		String sql = "INSERT INTO "+table.name()+" ("+columns+") VALUES ("+values+")";
+		Log.v(getClass().getName(), sql);
+		getDatabase().execSQL(sql);
+	}
+
+	private Map<Column, Object> toColumnValue(Class cls, Column[] cols, String referenceColumn, Object o) throws NoSuchFieldException, IllegalAccessException {
+		Map<Column, Object> fm = new HashMap<>();
+
 		for (Column c : cols) {
 			if(c.name().equalsIgnoreCase(referenceColumn)){
 				continue;//skip reference column as it is already appended
@@ -262,29 +311,39 @@ public class CESQLiteHelper extends SQLiteOpenHelper {
 					f = cls.getSuperclass().getSuperclass().getDeclaredField(c.name()); // 3rd level
 				}
 			}
-			
+
 			f.setAccessible(true);
 			Object v = f.get(o);
 			fm.put(c, v);
 		}
-		
-		String columns = referenceColumn==null?"":("`"+referenceColumn+"`,");
-		String values = referenceColumn==null?"":("'"+referenceValue+"',");
+		return fm;
+	}
+
+	private void update(Class<?> cls, Table table, Column[] cols, Column pk, String rowFilter, String referenceColumn, Object o) throws IllegalAccessException, IllegalArgumentException, NoSuchFieldException{
+		Map<Column, Object> fm = toColumnValue(cls, cols, referenceColumn, o);
+		fm.remove(pk);
+
+		ContentValues contentValues = new ContentValues();
+
 		for (Column c : fm.keySet()) {
-			columns += "`"+c.name()+"`,";
-			values += formatValue(fm.get(c), c.column())+",";
+			contentValues.put(c.name(), formatValueUnquoted(fm.get(c), c.column()));
 		}
-		
-		columns = removeEndingComma(columns);
-		values = removeEndingComma(values);
-		
-		String sql = "INSERT INTO "+table.name()+" ("+columns+") VALUES ("+values+")";
-		Log.i("", sql);
-		getDatabase().execSQL(sql);
+
+		getDatabase().update(table.name(), contentValues, rowFilter, null);
 	}
 	
 	public void insert(Client client) throws NoSuchFieldException, IllegalAccessException, IllegalArgumentException {
 		insert(Client.class, Table.client, client_column.values(), client);
+		for (Address a : client.getAddresses()) {
+			insert(Address.class, Table.address, address_column.values(), address_column.baseEntityId.name(), client.getBaseEntityId(), a);
+		}
+	}
+
+	public void update(Client client) throws NoSuchFieldException, IllegalAccessException {
+		update(Client.class, Table.client, client_column.values(), client_column.baseEntityId, client_column.baseEntityId.name()+"='"+client.getBaseEntityId()+"'", null, client);
+
+		// delete and re-insert all addresses as Client is a consolidated JSON
+		getDatabase().delete(Table.address.name(), address_column.baseEntityId.name()+"='"+client.getBaseEntityId()+"'", null);
 		for (Address a : client.getAddresses()) {
 			insert(Address.class, Table.address, address_column.values(), address_column.baseEntityId.name(), client.getBaseEntityId(), a);
 		}
@@ -317,17 +376,15 @@ public class CESQLiteHelper extends SQLiteOpenHelper {
 				}
 				alist.put(a);
 			}
-			
+
+			ares.close();
+
 			cl.put("addresses", alist);
-			Log.i("mytag", "HHHHHHHHHHHHHHHHH"+cl.toString());
-			Gson g = new GsonBuilder().registerTypeAdapter(DateTime.class, new JsonDeserializer<DateTime>() {
-				@Override
-				public DateTime deserialize(JsonElement e, java.lang.reflect.Type t, JsonDeserializationContext jd) throws JsonParseException {
-					return new DateTime(e.getAsString());
-				}
-			}).create();
-			clist.add(g.fromJson(cl.toString(), Client.class));
+			Log.v(getClass().getName(), "HHHHHHHHHHHHHHHHH"+cl.toString());
+
+			clist.add(Utils.getStringDateAwareGson().fromJson(cl.toString(), Client.class));
 		}
+		cres.close();
 		return clist;
 	}
 
@@ -354,16 +411,12 @@ public class CESQLiteHelper extends SQLiteOpenHelper {
 			}
 
 			cl.put("addresses", alist);
-			Log.i("mytag", "HHHHHHHHHHHHHHHHH" + cl.toString());
-			Gson g = new GsonBuilder().registerTypeAdapter(DateTime.class, new JsonDeserializer<DateTime>() {
-				@Override
-				public DateTime deserialize(JsonElement e, java.lang.reflect.Type t, JsonDeserializationContext jd) throws JsonParseException {
-					return new DateTime(e.getAsString());
-				}
-			}).create();
+			Log.v(getClass().getName(), "HHHHHHHHHHHHHHHHH" + cl.toString());
 
-			return g.fromJson(cl.toString(), Client.class);
+			ares.close();
+			return Utils.getStringDateAwareGson().fromJson(cl.toString(), Client.class);
 		}
+		cres.close();
 		return null;
 	}
 
@@ -375,35 +428,183 @@ public class CESQLiteHelper extends SQLiteOpenHelper {
 				(StringUtils.isBlank(order)?"":" ORDER BY "+order+"' ")
 				, null);
 		while (eres.moveToNext()) {
-			JSONObject ev = new JSONObject();
-			for (Column ec : Table.event.columns()) {
-				ev.put(ec.name(), getValue(eres, ec));
-			}
+			JSONObject ev = readEvent(eres, null, null);
 
 			JSONArray olist = new JSONArray();
 			Cursor ores = getDatabase().rawQuery("SELECT * FROM "+Table.obs.name()+" WHERE "+obs_column.eventId.name()+"='"+ev.getString(event_column._id.name())+"'", null);
 			while (ores.moveToNext()) {
-				JSONObject o = new JSONObject();
-				for (Column oc : Table.obs.columns()) {
-					if(!oc.name().equalsIgnoreCase(event_column._id.name())){//skip reference column
-						o.put(oc.name(), getValue(eres, oc));
-					}
-				}
+				JSONObject o = readObs(ores, null, null);
 				olist.put(o);
 			}
 
 			ev.put("obs", olist);
-			Log.i("mytag", "HHHHHHHHHHHHHHHHH"+ev.toString());
-			Gson g = new GsonBuilder().registerTypeAdapter(DateTime.class, new JsonDeserializer<DateTime>() {
-				@Override
-				public DateTime deserialize(JsonElement e, java.lang.reflect.Type t, JsonDeserializationContext jd) throws JsonParseException {
-					return new DateTime(e.getAsString());
-				}
-			}).create();
-			elist.add(g.fromJson(ev.toString(), Event.class));
+			Log.v(getClass().getName(), "HHHHHHHHHHHHHHHHH"+ev.toString());
+
+			elist.add(Utils.getStringDateAwareGson().fromJson(ev.toString(), Event.class));
 			ores.close();
 		}
+
+		eres.close();
 		return elist;
+	}
+
+	public Cursor getClientEventCursor(boolean distinctClients, String filter, String addressType, String group, String order) {
+		// Get clients participating in filter
+		String sql = "SELECT "+(distinctClients?"DISTINCT":"")+" client." + client_column.baseEntityId +", client.*, address.*, event._id, event.eventType, event.entityType, event.locationId, obs.* FROM " + Table.client.name() + " client " +
+				" LEFT JOIN " + Table.address + " address ON " +
+				"		address."+ address_column.baseEntityId + " = client." + client_column.baseEntityId + " AND address.addressType = '" + addressType + "' " +
+				" LEFT JOIN " + Table.event + " event ON event." + event_column.baseEntityId + " = client." + client_column.baseEntityId +
+				" LEFT JOIN " + Table.obs + " obs ON obs." + obs_column.eventId + " = event." + event_column._id + " AND obs.`" + obs_column.values + "` NOT IN('', '[]') ";
+
+		if (StringUtils.isNotBlank(filter)){
+			sql += " WHERE "+filter ;
+		}
+		if (StringUtils.isNotBlank(group)){
+			sql += " GROUP BY "+group;
+		}
+		if (StringUtils.isNotBlank(order)){
+			sql += " ORDER BY " + order ;
+		}
+
+		Log.v(getClass().getName(), "CE SQL : " + sql);
+
+		return getDatabase().rawQuery(sql, null);
+	}
+
+	public List<ClientEvent> getClientEvent(String filter, String addressType, String order) throws JSONException, ParseException {
+		Cursor res = getClientEventCursor(true, filter, addressType, client_column.baseEntityId.name(), order);
+		List<ClientEvent> ce = convertToClientEventList(res);
+		res.close();
+		return ce;
+	}
+
+	/**
+	 * MUST have been queried with distinctClients flag
+	 * @param res
+	 * @return
+	 * @throws JSONException
+	 * @throws ParseException
+	 */
+	public static List<ClientEvent> convertToClientEventList(Cursor res) throws JSONException, ParseException {
+		List<ClientEvent> CE_LIST = new ArrayList<>();
+
+		while (res.moveToNext()){
+			CE_LIST.add(convertToClientEvent(res));
+		}
+
+		return CE_LIST;
+	}
+
+	public static ClientEvent convertToClientEvent(Cursor mainCursor) throws JSONException, ParseException {
+		JSONObject c = readClient(mainCursor, null, null);
+		Client client = Utils.getStringDateAwareGson().fromJson(c.toString(), Client.class);
+
+		ClientEvent clientEvent = new ClientEvent(client, null);
+
+		Log.v(CESQLiteHelper.class.getName(), "READING Events and Obs for CLIENT: "+c.toString());
+
+		String sql = "SELECT e.*, obs.* FROM event e "+
+				" LEFT JOIN " + Table.obs + " obs ON obs." + obs_column.eventId + " = e." + event_column._id + " AND obs.`" + obs_column.values + "` NOT IN('', '[]') "+
+				" WHERE e." + event_column.baseEntityId + " = '"+ client.getBaseEntityId() +"' ";
+
+		Log.v(CESQLiteHelper.class.getName(), "EO SQL : " + sql);
+
+		Cursor eventCursor = instance.getDatabase().rawQuery(sql, null);
+
+		Map<String, JSONObject> eventMap = new HashMap<>();
+		while (eventCursor.moveToNext()){
+			JSONObject o = null;
+			if (!eventCursor.isNull(eventCursor.getColumnIndex(obs_column.eventId.name()))){// if obs is not null for given record
+				o = readObs(eventCursor, null, null);
+			}
+
+			if (o == null){ // no obs just read client and go as it means no event exists and here must exists a client record
+				JSONObject e = readEvent(eventCursor, null, null);
+				eventMap.put(e.getString(event_column._id.name()), e);
+			}
+			else {
+				String eid = getValue(eventCursor, event_column._id).toString();
+				if(!eventMap.containsKey(eid)){ // if not read already then read and put obs later
+					eventMap.put(eid, readEvent(eventCursor, null, null));
+				}// otherwise read and put
+
+				if(eventMap.get(eid).has("obs")) {
+					eventMap.get(eid).getJSONArray("obs").put(o);
+				}
+				else {
+					eventMap.get(eid).put("obs", new JSONArray().put(o));
+				}
+			}
+		}
+		eventCursor.close();
+
+		Log.v(CESQLiteHelper.class.getName(), "EVENTS:"+eventMap);
+
+		for (JSONObject jo: eventMap.values()) {
+			clientEvent.addEvent(Utils.getStringDateAwareGson().fromJson(jo.toString(), Event.class));
+		}
+
+		// donot close res as it should be closed by manager service
+		return clientEvent;
+	}
+
+	public int getClientEventCount(boolean distinctClients, String filter, String addressType, String group) throws JSONException, ParseException {
+		String sql = "SELECT COUNT("+(distinctClients?"DISTINCT":"")+" "+group+") c FROM "+Table.client.name()+" client "+
+				" LEFT JOIN "+Table.address+" address ON " +
+				"		address."+address_column.baseEntityId+" = client."+client_column.baseEntityId+" AND address.addressType = '"+addressType+"' "+
+				" LEFT JOIN "+Table.event+" event ON event."+event_column.baseEntityId+" = client."+client_column.baseEntityId+
+				" LEFT JOIN "+Table.obs+" obs ON obs."+obs_column.eventId+" = event."+event_column._id+" AND obs.`"+obs_column.values+"` NOT IN('', '[]') ";
+
+		if (StringUtils.isNotBlank(filter)){
+			sql += " WHERE "+filter ;
+		}
+
+		Log.v(getClass().getName(), "CE COUNT SQL : "+sql);
+
+		Cursor res = getDatabase().rawQuery(sql, null);
+
+		int c = -1;
+		if (res.moveToNext()) {
+			c = res.getInt(0);
+		}
+
+		res.close();
+
+		return c;
+	}
+
+	private static JSONObject readObs(Cursor res, Integer startColumnIndex, Integer endColumnIndex) throws JSONException, ParseException {
+		JSONObject o = new JSONObject();
+		for (Column oc : Table.obs.columns()) {
+			if(!oc.name().equalsIgnoreCase(event_column._id.name())){//skip reference column
+				o.put(oc.name(), getValue(res, oc, startColumnIndex, endColumnIndex));
+			}
+		}
+		return o;
+	}
+
+	private static JSONObject readEvent(Cursor res, Integer startColumnIndex, Integer endColumnIndex) throws JSONException, ParseException {
+		JSONObject ev = new JSONObject();
+		for (Column ec : Table.event.columns()) {
+			ev.put(ec.name(), getValue(res, ec, startColumnIndex, endColumnIndex));
+		}
+		return ev;
+	}
+
+	private static JSONObject readClient(Cursor res, Integer startColumnIndex, Integer endColumnIndex) throws JSONException, ParseException {
+		JSONObject cl = new JSONObject();
+		for (Column cc : Table.client.columns()) {
+			cl.put(cc.name(), getValue(res, cc, startColumnIndex, endColumnIndex));
+		}
+
+		JSONObject a = new JSONObject();
+		for (Column cc : Table.address.columns()) {
+			if (!cc.name().equalsIgnoreCase(client_column.baseEntityId.name())) {//skip reference column
+				a.put(cc.name(), getValue(res, cc, startColumnIndex, endColumnIndex));
+			}
+		}
+		cl.put("addresses", new JSONArray().put(a));
+		return cl;
 	}
 
 	public List<Obs> getObs(String baseEntityId, String eventType, String order, String... fields) throws JSONException, ParseException {
@@ -411,34 +612,45 @@ public class CESQLiteHelper extends SQLiteOpenHelper {
 		Cursor ores = getDatabase().rawQuery("SELECT * FROM " + Table.obs.name() +" obs "+
 				" JOIN "+Table.event.name()+" e ON e."+event_column._id.name()+"= obs."+obs_column.eventId.name()+
 				" WHERE e." + event_column.baseEntityId.name() + "='" + baseEntityId + "' " +
-				" AND obs."+obs_column.values.name()+" IS NOT NULL " +
-				" AND obs."+obs_column.values.name()+" <> '' " +
-				" AND obs."+obs_column.values.name()+" <> '[]' " +
+				" AND obs.`"+obs_column.values.name()+"` IS NOT NULL " +
+				" AND obs.`"+obs_column.values.name()+"` <> '' " +
+				" AND obs.`"+obs_column.values.name()+"` <> '[]' " +
 				(StringUtils.isBlank(eventType)?"":" AND e."+event_column.eventType.name()+"='"+eventType+"' ")+
-				(fields != null && fields.length > 0? (" AND (obs."+obs_column.fieldCode.name()+" IN ("+StringUtils.join(fields)+") " +
-						" OR obs."+obs_column.formSubmissionField.name()+" IN ("+StringUtils.join(fields)+") )"):"")+
-				(StringUtils.isBlank(order)?"":" ORDER BY "+order+"' ")
+				(fields != null && fields.length > 0? (" AND (obs."+obs_column.fieldCode.name()+" IN ('"+StringUtils.join(fields, "','")+"') " +
+						" OR obs."+obs_column.formSubmissionField.name()+" IN ('"+StringUtils.join(fields, "','")+"') )"):"")+
+				(StringUtils.isBlank(order)?"":" ORDER BY "+order+" ")
 				, null);
 		while (ores.moveToNext()) {
-			JSONObject ov = new JSONObject();
-			for (Column oc : Table.obs.columns()) {
-				ov.put(oc.name(), getValue(ores, oc));
-			}
+			JSONObject ov = readObs(ores, null, null);
 
-			Log.i("mytag", "HHHHHHHHHHHHHHHHH"+ov.toString());
-			Gson g = new GsonBuilder().registerTypeAdapter(DateTime.class, new JsonDeserializer<DateTime>() {
-				@Override
-				public DateTime deserialize(JsonElement e, java.lang.reflect.Type t, JsonDeserializationContext jd) throws JsonParseException {
-					return new DateTime(e.getAsString());
-				}
-			}).create();
-			olist.add(g.fromJson(ov.toString(), Obs.class));
+			olist.add(Utils.getStringDateAwareGson().fromJson(ov.toString(), Obs.class));
 		}
+		ores.close();
 		return olist;
 	}
-	
-	private Object getValue(Cursor cur, Column c) throws JSONException, ParseException {
-		int ind = cur.getColumnIndex(c.name());
+
+	private static Object getValue(Cursor cur, Column c) throws JSONException, ParseException {
+		return getValue(cur, c, null, null);
+	}
+
+	private static Object getValue(Cursor cur, Column c, Integer startColumn, Integer endColumn) throws JSONException, ParseException {
+		Integer ind = null;
+		if(startColumn == null || endColumn == null){// no range specified use regular method
+			ind = cur.getColumnIndex(c.name());
+		}
+		else {// in specified range go through columns to find desired one
+			String[] cnl = cur.getColumnNames();
+			for (int i = startColumn; i <= endColumn; i++){
+				if(cnl[i].equalsIgnoreCase(c.name())){
+					ind = i;
+					break;
+				}
+			}
+			if (ind == null){ // not found in given range then use regular method
+				ind = cur.getColumnIndex(c.name());
+			}
+		}
+
 		if(cur.isNull(ind)){
 			return null;
 		}
@@ -485,6 +697,30 @@ public class CESQLiteHelper extends SQLiteOpenHelper {
 		}
 		return null;
 	}
+
+	private String formatValueUnquoted(Object v, ColumnAttribute c){
+		if(v == null || v.toString().trim().equalsIgnoreCase("")){
+			return null;
+		}
+
+		Type type = c.type();
+		if(type.name().equalsIgnoreCase(Type.text.name())){
+			return v.toString();
+		}
+		if(type.name().equalsIgnoreCase(Type.bool.name())){
+			return (Boolean.valueOf(v.toString())?1:0)+"";
+		}
+		if(type.name().equalsIgnoreCase(Type.date.name())){
+			return getSQLDate((DateTime) v);
+		}
+		if(type.name().equalsIgnoreCase(Type.list.name())){
+			return new Gson().toJson(v);
+		}
+		if(type.name().equalsIgnoreCase(Type.map.name())){
+			return new Gson().toJson(v);
+		}
+		return null;
+	}
 	
 	private String getSQLDate(DateTime date){
 		try{
@@ -510,7 +746,7 @@ public class CESQLiteHelper extends SQLiteOpenHelper {
 				maplist.add(map);
 			} while (cursor.moveToNext());
 		}
-		getDatabase().close();
+		cursor.close();
 		return maplist;
 	}
 

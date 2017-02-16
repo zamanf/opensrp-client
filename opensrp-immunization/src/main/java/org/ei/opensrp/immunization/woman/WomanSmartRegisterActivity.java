@@ -41,6 +41,7 @@ public class WomanSmartRegisterActivity extends RegisterActivity {
         if(registerFragment != null && registerFragment.loaderHandler().fullyLoaded()){
             registerFragment.getSearchView().setText(id);
             registerFragment.onFilterManual(id);
+            id = "";
         }
         else {
             new Handler(getMainLooper()).postDelayed(new Runnable() {

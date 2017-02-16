@@ -5,12 +5,14 @@ import android.view.View;
 
 import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
+import org.ei.opensrp.core.db.domain.Address;
 import org.ei.opensrp.core.db.handler.RegisterDataCursorLoaderHandler;
 import org.ei.opensrp.core.db.handler.RegisterDataLoaderHandler;
 import org.ei.opensrp.core.db.domain.Client;
 import org.ei.opensrp.core.db.utils.RegisterQuery;
 import org.ei.opensrp.core.template.CommonSortingOption;
 import org.ei.opensrp.core.template.DefaultOptionsProvider;
+import org.ei.opensrp.core.template.FilterOption;
 import org.ei.opensrp.core.template.RegisterActivity;
 import org.ei.opensrp.core.template.RegisterClientsProvider;
 import org.ei.opensrp.core.template.RegisterDataGridFragment;
@@ -27,7 +29,6 @@ import org.ei.opensrp.immunization.application.common.SmartClientRegisterFragmen
 import org.ei.opensrp.immunization.application.common.VaccinationServiceModeOption;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.controller.FormController;
-import org.ei.opensrp.view.dialog.FilterOption;
 import org.ei.opensrp.view.dialog.SortOption;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -84,7 +85,7 @@ public class ChildSmartRegisterFragment extends SmartClientRegisterFragment {
 
             @Override
             public FilterOption villageFilter() {
-                return new CursorCommonObjectFilterOption("no village filter", "");
+                return null;
             }
 
             @Override
@@ -111,7 +112,7 @@ public class ChildSmartRegisterFragment extends SmartClientRegisterFragment {
 
     @Override
     protected void onInitialization() {
-        //   context.formSubmissionRouter().getHandlerMap().put("child_followup", new ChildFollowupHandler(new ChildService(context.allBeneficiaries(), context.allTimelineEvents(), context.allCommonsRepositoryobjects("pkchild"), context.alertService())));
+
     }
 
     @Override
@@ -184,7 +185,7 @@ public class ChildSmartRegisterFragment extends SmartClientRegisterFragment {
     @Override
     protected String getOAFollowupForm(Client client, HashMap<String, String> overridemap) {
         overridemap.putAll(followupOverrides(client));
-        return "offsite_child_followup";
+        return "child_offsite_followup";
     }
 
     @Override
@@ -239,8 +240,10 @@ public class ChildSmartRegisterFragment extends SmartClientRegisterFragment {
         map.put("program_client_id", client.getIdentifier("Program Client ID"));
 
         map.put("existing_first_name", client.getFirstName());
-        map.put("existing_last_name", client.getLastName());
-        map.put("existing_gender", client.getGender());
+        map.put("first_name", client.getFirstName());
+        map.put("gender", client.getGender());
+        map.put("dob", client.getBirthdate().toString("yyyy-MM-dd"));
+
         map.put("existing_birth_date", client.getBirthdate().toString("yyyy-MM-dd"));
         int days = 0;
         try{
@@ -250,14 +253,23 @@ public class ChildSmartRegisterFragment extends SmartClientRegisterFragment {
             e.printStackTrace();
         }
         map.put("existing_age", days+"");
-        Object epi = client.getAttribute("EPI Card Number");
-        map.put("existing_epi_card_number", epi == null ? "" : epi.toString());
 
         try{
-            map.put("existing_father_name", getObsValue(getClientEventDb(), client, true, "father_name", "1594AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
-            map.put("existing_mother_name", getObsValue(getClientEventDb(), client, true, "mother_name", "1593AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
+            String ethnicity = getObsValue(getClientEventDb(), client, false, "ethnicity", "163153AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+            map.put("ethnicity", ethnicity);
 
-            map.put("reminders_approval", getObsValue(getClientEventDb(), client, true, "reminders_approval", "163089AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
+            Address ad = client.getAddress("usual_residence");
+
+            map.put("province", ad.getStateProvince());
+            map.put("city_village", ad.getCityVillage());
+            map.put("town", ad.getTown());
+            map.put("union_council", ad.getSubTown());
+            map.put("address1", ad.getAddressField("address1"));
+
+            map.put("father_name", getObsValue(getClientEventDb(), client, true, "father_name", "1594AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
+            map.put("mother_name", getObsValue(getClientEventDb(), client, true, "mother_name", "1593AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
+
+            map.put("reminders_approval", getObsValue(getClientEventDb(), client, false, "reminders_approval", "163089AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
             map.put("contact_phone_number", getObsValue(getClientEventDb(), client, true, "contact_phone_number", "159635AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
 
             map.putAll(getPreloadVaccineData(client));

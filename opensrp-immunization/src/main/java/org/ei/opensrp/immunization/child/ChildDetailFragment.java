@@ -121,7 +121,7 @@ public class ChildDetailFragment extends DetailFragment {
                 "bcg", "opv0", "penta1", "opv1", "pcv1", "penta2", "opv2", "pcv2",
                 "penta3", "opv3", "pcv3", "ipv", "measles1", "measles2");
 
-        List<Map<String, Object>> sch = generateSchedule("child", months < 0 ? null:new DateTime(client.getColumnmaps().get("dob")), client.getColumnmaps(), al);
+        List<Map<String, Object>> sch = generateSchedule(client, "child", months < 0 ? null:new DateTime(client.getColumnmaps().get("dob")), client.getColumnmaps(), al);
 
         Collections.sort(sch, VACCINE_SCHEDULE_COMPARATOR);
 

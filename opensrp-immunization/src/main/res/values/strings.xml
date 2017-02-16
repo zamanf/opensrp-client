@@ -40,6 +40,17 @@
 
     <string name="marital_status">Marital Status</string>
 
+    <string name="zm_register_title">ZM Register</string>
+    <string name="zm_profile">DEMOGRAPHIC INFORMATION</string>
+    <string name="zm_contact_number">CONTACT</string>
+    <string name="zm_address">ADDRESS</string>
+    <string name="zm_last_events">LAST EVENTS</string>
+    <string name="zm_obs_list">DETAILS</string>
+    <string name="zm_attributes">ATTRIBUTES</string>
+    <string name="zm_action">REGISTERS</string>
+
+    <string name="zm_alphabetical_sort">Alphabetical (Name)</string>
+
 
     <string name="woman_entries"></string>
     <string name="woman_register_title">Woman Register</string>
@@ -83,7 +94,7 @@
 
     <string name="field_entries">Stock Register</string>
     <string name="field_title">Stock Register</string>
-    <string name="str_field_search_hint">Search Register</string>
+    <string name="str_field_search_hint">Enter Year (YYYY)</string>
     <string name="pick_report">Report</string>
     <string name="field_details_title">Stock Position</string>
     <string name="title_activity_vaccine_report">VaccineReport</string>
@@ -119,6 +130,7 @@
     <string name="household_latrine">Latrine System</string>
     <string name="household_relationship">Relationship:</string>
     <string name="household_alphabetical_sort">Alphabetical (Head Name)</string>
+
     <string name="sql_woman_vaccine_report">
         SELECT 0 i, (CASE pregnant WHEN \'yes\' THEN \'yes\' ELSE \'no\' END) preg,
 SUM(CASE WHEN tt1 BETWEEN :datefrom AND :dateto THEN 1 ELSE 0 END) tt1,
@@ -157,6 +169,39 @@ SELECT 8 i,  \'measles2\' vaccine, SUM(CASE WHEN ag.name=\'0-11\' THEN 1 ELSE 0 
 	SELECT 0 start, 365 end, \'0-11\' name UNION
 	SELECT 366 start, 730 end, \'12-23\' name UNION
 	SELECT 731 start, 1830 end, \'2+\' name) e
+    </string>
+
+    <string name="sql_daily_report">
+        SELECT SUBSTR(t.date,1,7) || \'-\' || dts.dom AS dom,
+       (select count(id) c from pkwoman where date(tt1) = SUBSTR(t.date,1,7) || \'-\' || dts.dom) tt1,
+       (select count(id) c from pkwoman where date(tt2) = SUBSTR(t.date,1,7) || \'-\' || dts.dom) tt2,
+       (select count(id) c from pkwoman where date(tt3) = SUBSTR(t.date,1,7) || \'-\' || dts.dom) tt3,
+       (select count(id) c from pkwoman where date(tt4) = SUBSTR(t.date,1,7) || \'-\' || dts.dom) tt4,
+       (select count(id) c from pkwoman where date(tt5) = SUBSTR(t.date,1,7) || \'-\' || dts.dom) tt5,
+       (select count(id) c from pkchild where date(bcg) = SUBSTR(t.date,1,7) || \'-\' || dts.dom) bcg,
+       (select count(id) c from pkchild where date(opv0) = SUBSTR(t.date,1,7) || \'-\' || dts.dom) opv0,
+       (select count(id) c from pkchild where date(opv1) = SUBSTR(t.date,1,7) || \'-\' || dts.dom) opv1,
+       (select count(id) c from pkchild where date(opv2) = SUBSTR(t.date,1,7) || \'-\' || dts.dom) opv2,
+       (select count(id) c from pkchild where date(opv3) = SUBSTR(t.date,1,7) || \'-\' || dts.dom) opv3,
+       (select count(id) c from pkchild where date(ipv) = SUBSTR(t.date,1,7) || \'-\' || dts.dom) ipv,
+       (select count(id) c from pkchild where date(pcv1) = SUBSTR(t.date,1,7) || \'-\' || dts.dom) pcv1,
+       (select count(id) c from pkchild where date(pcv2) = SUBSTR(t.date,1,7) || \'-\' || dts.dom) pcv2,
+       (select count(id) c from pkchild where date(pcv3) = SUBSTR(t.date,1,7) || \'-\' || dts.dom) pcv3,
+       (select count(id) c from pkchild where date(measles1) = SUBSTR(t.date,1,7) || \'-\' || dts.dom) measles1,
+       (select count(id) c from pkchild where date(measles2) = SUBSTR(t.date,1,7) || \'-\' || dts.dom) measles2,
+       (select count(id) c from pkchild where date(penta1) = SUBSTR(t.date,1,7) || \'-\' || dts.dom) penta1,
+       (select count(id) c from pkchild where date(penta2) = SUBSTR(t.date,1,7) || \'-\' || dts.dom) penta2,
+       (select count(id) c from pkchild where date(penta3) = SUBSTR(t.date,1,7) || \'-\' || dts.dom) penta3, t.*
+    FROM stock t
+    JOIN (SELECT \'01\' dom UNION SELECT \'02\' UNION SELECT \'03\' UNION SELECT \'04\'
+ UNION SELECT \'05\' UNION SELECT \'06\' UNION SELECT \'07\' UNION SELECT \'08\'
+ UNION SELECT \'09\' UNION SELECT \'10\' UNION SELECT \'11\' UNION SELECT \'12\'
+ UNION SELECT \'13\' UNION SELECT \'14\' UNION SELECT \'15\' UNION SELECT \'16\'
+ UNION SELECT \'17\' UNION SELECT \'18\' UNION SELECT \'19\' UNION SELECT \'20\'
+ UNION SELECT \'21\' UNION SELECT \'22\' UNION SELECT \'23\' UNION SELECT \'24\'
+ UNION SELECT \'25\' UNION SELECT \'26\' UNION SELECT \'27\' UNION SELECT \'28\'
+ UNION SELECT \'29\' UNION SELECT \'30\' UNION SELECT \'31\') dts ON dts.dom &lt;= strftime(\'%d\', date(t.date,\'start of month\',\'+1 month\',\'-1 day\'))
+ WHERE t.report=\'monthly\' AND t.date LIKE :reportingDate
     </string>
 
 </resources>

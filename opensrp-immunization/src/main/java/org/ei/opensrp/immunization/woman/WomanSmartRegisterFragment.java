@@ -3,15 +3,18 @@ package org.ei.opensrp.immunization.woman;
 import android.annotation.SuppressLint;
 import android.view.View;
 
+import org.apache.commons.lang3.StringUtils;
 import org.ei.opensrp.Context;
 import org.ei.opensrp.adapter.SmartRegisterPaginatedAdapter;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
+import org.ei.opensrp.core.db.domain.Address;
 import org.ei.opensrp.core.db.domain.Client;
 import org.ei.opensrp.core.db.handler.RegisterDataCursorLoaderHandler;
 import org.ei.opensrp.core.db.handler.RegisterDataLoaderHandler;
 import org.ei.opensrp.core.db.utils.RegisterQuery;
 import org.ei.opensrp.core.template.CommonSortingOption;
 import org.ei.opensrp.core.template.DefaultOptionsProvider;
+import org.ei.opensrp.core.template.FilterOption;
 import org.ei.opensrp.core.template.RegisterActivity;
 import org.ei.opensrp.core.template.RegisterClientsProvider;
 import org.ei.opensrp.core.template.RegisterDataGridFragment;
@@ -31,7 +34,6 @@ import org.ei.opensrp.immunization.application.common.VaccinationServiceModeOpti
 import org.ei.opensrp.view.activity.SecuredNativeSmartRegisterActivity;
 import org.ei.opensrp.view.contract.SmartRegisterClient;
 import org.ei.opensrp.view.controller.FormController;
-import org.ei.opensrp.view.dialog.FilterOption;
 import org.ei.opensrp.view.dialog.SortOption;
 import org.joda.time.DateTime;
 import org.joda.time.Years;
@@ -92,7 +94,7 @@ public class WomanSmartRegisterFragment extends SmartClientRegisterFragment {
 
             @Override
             public FilterOption villageFilter() {
-                return new CursorCommonObjectFilterOption("no village filter", "");
+                return null;
             }
 
             @Override
@@ -119,7 +121,7 @@ public class WomanSmartRegisterFragment extends SmartClientRegisterFragment {
 
     @Override
     protected void onInitialization() {
-        //   context.formSubmissionRouter().getHandlerMap().put("woman_followup", new WomanFollowupHandler(new WomanService(context.allTimelineEvents(), context.allCommonsRepositoryobjects("pkwoman"), context.alertService())));
+
     }
 
     @Override
@@ -174,7 +176,7 @@ public class WomanSmartRegisterFragment extends SmartClientRegisterFragment {
     @Override
     protected String getOAFollowupForm(Client client, HashMap<String, String> overridemap) {
         overridemap.putAll(followupOverrides(client));
-        return "offsite_woman_followup";
+        return "woman_offsite_followup";
     }
 
     @Override
@@ -227,8 +229,9 @@ public class WomanSmartRegisterFragment extends SmartClientRegisterFragment {
         map.put("existing_program_client_id", client.getIdentifier("Program Client ID"));
         map.put("program_client_id", client.getIdentifier("Program Client ID"));
 
+        String birthdate = client.getBirthdate().toString("yyyy-MM-dd");
         map.put("existing_first_name", client.getFirstName());
-        map.put("existing_birth_date", client.getBirthdate().toString("yyyy-MM-dd"));
+        map.put("existing_birth_date", birthdate);
         int years = 0;
         try{
             years = Years.yearsBetween(client.getBirthdate(), DateTime.now()).getYears();
@@ -241,10 +244,27 @@ public class WomanSmartRegisterFragment extends SmartClientRegisterFragment {
         map.put("existing_epi_card_number", epi == null ? "" : epi.toString());
 
         try{
-            map.put("existing_father_name", getObsValue(getClientEventDb(), client, true, "father_name", "1594AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
-            map.put("existing_husband_name", getObsValue(getClientEventDb(), client, true, "husband_name", "5617AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
-            map.put("husband_name", getObsValue(getClientEventDb(), client, true, "husband_name", "5617AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
-            map.put("marriage", getObsValue(getClientEventDb(), client, false, "marriage"));
+            String fatherName = getObsValue(getClientEventDb(), client, true, "father_name", "1594AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+            map.put("first_name", client.getFirstName());
+            map.put("father_name", fatherName);
+            map.put("birth_date", birthdate);
+            map.put("gender", "FEMALE");
+
+            String ethnicity = getObsValue(getClientEventDb(), client, false, "ethnicity", "163153AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+            map.put("ethnicity", ethnicity);
+
+            Address ad = client.getAddress("usual_residence");
+
+            map.put("province", ad.getStateProvince());
+            map.put("city_village", ad.getCityVillage());
+            map.put("town", ad.getTown());
+            map.put("union_council", ad.getSubTown());
+            map.put("address1", ad.getAddressField("address1"));
+
+            String husb = getObsValue(getClientEventDb(), client, true, "husband_name", "5617AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+
+            map.put("husband_name", husb);
+            map.put("marriage", StringUtils.isNotBlank(husb)?"yes":"no");
             map.put("reminders_approval", getObsValue(getClientEventDb(), client, false, "reminders_approval", "163089AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
             map.put("contact_phone_number", getObsValue(getClientEventDb(), client, true, "contact_phone_number", "159635AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
 

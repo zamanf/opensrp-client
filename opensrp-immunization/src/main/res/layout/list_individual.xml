@@ -54,74 +54,48 @@
     android:layout_marginTop="1dp"
     android:layout_marginRight="1dp"
     android:layout_marginBottom="1dp"
-    android:layout_weight="5">
+    android:layout_weight="4">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <TextView
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:text="HHM ID"
-            android:textSize="17sp"
-            android:textColor="@color/text_black"
-            android:textStyle="bold"
-            android:layout_marginRight="10dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/hhmemberId"
-            android:text="1234567891234567"
-            android:textSize="17sp"
-            android:textColor="@color/text_black"/>
-
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Program ID"
-            android:textSize="17sp"
-            android:textColor="@color/text_black"
-            android:textStyle="bold"
-            android:layout_marginRight="10dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/programId"
-            android:text="12345678912345"
-            android:textSize="17sp"
-            android:textColor="@color/text_black"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:text="Full Name"
-            android:textSize="17sp"
-            android:textColor="@color/text_black"
-            android:textStyle="bold"
-            android:layout_marginRight="10dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/memberName"
             android:text="My full name"
             android:textSize="17sp"
-            android:textColor="@color/text_black"/>
+            android:textColor="@color/text_black"
+            android:layout_weight="1" />
 
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/memberDate"
+            android:text="22-12-2016 (29 yr)"
+            android:textSize="17sp"
+            android:textColor="@color/text_black"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/relationship"
+            android:text="Daughter in law (Son)"
+            android:textSize="17sp"
+            android:textColor="@color/text_black"
+            android:layout_weight="1" />
     </LinearLayout>
 
 
@@ -142,25 +116,50 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:text="@string/household_member_dob"
-            android:textSize="17sp"
-            android:textColor="@color/text_black"
-            android:textStyle="bold"
-            android:layout_marginRight="5dp" />
+        android:layout_height="wrap_content" android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/memberDate"
-            android:text="22-12-2016 (29 yr)"
+            android:text="HHM ID"
             android:textSize="17sp"
-            android:textColor="@color/text_black"/>
+            android:textColor="@color/text_black"
+            android:textStyle="bold"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/hhmemberId"
+            android:text="1234567891234567"
+            android:textSize="17sp"
+            android:textColor="@color/text_black"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Program ID"
+            android:textSize="17sp"
+            android:textColor="@color/text_black"
+            android:textStyle="bold"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/programId"
+            android:text="12345678912345"
+            android:textSize="17sp"
+            android:textColor="@color/text_black"
+            android:layout_weight="1" />
     </LinearLayout>
 
     <LinearLayout
@@ -184,27 +183,6 @@
             android:textSize="17sp"
             android:textColor="@color/text_black"/>
     </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/relationship"
-            android:text="Daughter in law (Son)"
-            android:textSize="17sp"
-            android:textColor="@color/text_black"
-            android:textStyle="bold"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/relationship_with"
-            android:text=" of HH Head"
-            android:textSize="17sp"
-            android:textColor="@color/text_black"/>
-    </LinearLayout>
 
 </LinearLayout>
 
@@ -215,19 +193,36 @@
         android:background="#ffffff"
         android:layout_marginTop="1dp"
         android:layout_marginBottom="1dp"
-        android:layout_weight="1">
+        android:layout_weight="2"
+        android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
             android:id="@+id/other_register_action"
             android:background="@drawable/syringe"
             android:scaleType="fitXY"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="15dp"
-            android:layout_marginRight="5dp"
             android:alpha="0.75"
-            android:layout_margin="5dp" />
+            android:layout_gravity="right|center_vertical"
+            android:layout_marginLeft="10dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical">
+
+            <TextView
+                android:text="TT"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/last_vaccine"
+                android:textColor="@color/alert_complete_green"
+                android:textStyle="normal|bold"
+                android:textSize="18sp"
+                android:layout_marginLeft="10dp" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

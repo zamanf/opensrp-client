@@ -45,7 +45,7 @@ import static org.ei.opensrp.util.VaccinatorUtils.nextVaccineDue;
 /**
  * Created by Ahmed on 13-Oct-15.
  */
-public class ChildSmartClientsProvider implements RegisterClientsProvider {
+public class ChildSmartClientsProvider implements RegisterClientsProvider <CommonPersonObjectClient>{
     private final LayoutInflater inflater;
     private final Context context;
     private final View.OnClickListener onClickListener;
@@ -63,7 +63,7 @@ public class ChildSmartClientsProvider implements RegisterClientsProvider {
     }
 
     @Override
-    public View getView(SmartRegisterClient client, View convertView, ViewGroup viewGroup) {
+    public View getView(CommonPersonObjectClient client, View convertView, ViewGroup viewGroup) {
         CommonPersonObjectClient pc = (CommonPersonObjectClient) client;
 
         fillValue((TextView) convertView.findViewById(R.id.child_id), pc.getColumnmaps(), "program_client_id", false);
@@ -127,7 +127,7 @@ public class ChildSmartClientsProvider implements RegisterClientsProvider {
             deactivateNextVaccine("Partially Immunized", "", R.color.alert_na, convertView);
         }
         else {
-            List<Map<String, Object>> sch = generateSchedule("child", new DateTime(pc.getColumnmaps().get("dob")), pc.getColumnmaps(), alertlist_for_client);
+            List<Map<String, Object>> sch = generateSchedule(pc, "child", new DateTime(pc.getColumnmaps().get("dob")), pc.getColumnmaps(), alertlist_for_client);
             Map<String, Object> nv = nextVaccineDue(sch, toDate(lastVaccine, true));
             if(nv != null){
                 DateTime dueDate = (DateTime)nv.get("date");
@@ -192,24 +192,13 @@ public class ChildSmartClientsProvider implements RegisterClientsProvider {
     }
 
     @Override
-    public SmartRegisterClients getClients() {
-
+    public List<CommonPersonObjectClient> getClients() {
         throw new UnsupportedOperationException("Operation not supported");
-    }
-
-    @Override
-    public SmartRegisterClients updateClients(FilterOption villageFilter, ServiceModeOption serviceModeOption, SearchFilterOption searchFilter, SortOption sortOption) {
-        return null;
     }
 
     @Override
     public void onServiceModeSelected(org.ei.opensrp.core.template.ServiceModeOption serviceModeOption) {
 
-    }
-
-    @Override
-    public OnClickFormLauncher newFormLauncher(String formName, String entityId, String metaData) {
-        throw new UnsupportedOperationException("Operation not supported");
     }
 
     @Override

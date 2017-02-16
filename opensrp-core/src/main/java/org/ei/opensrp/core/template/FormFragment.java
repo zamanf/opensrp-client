@@ -29,6 +29,7 @@ import android.widget.TextView;
 
 import org.ei.opensrp.core.R;
 import org.ei.opensrp.util.FormUtils;
+import org.ei.opensrp.view.customControls.OpenSRPWebView;
 import org.json.JSONObject;
 import org.ei.opensrp.core.utils.Utils;
 
@@ -139,53 +140,33 @@ public class FormFragment extends Fragment {
 
         if (webView != null){
             hideTranslucentProgressDialog();
-            webView.getSettings().setRenderPriority(WebSettings.RenderPriority.LOW);
-            webView.getSettings().setJavaScriptEnabled(false);
-            webView.getSettings().setGeolocationEnabled(false);
-            webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(false);
-            webView.destroy();
-            webView = null;
+            // webView.getSettings().setRenderPriority(WebSettings.RenderPriority.LOW);
+            // webView.getSettings().setJavaScriptEnabled(false);
+            // webView.getSettings().setGeolocationEnabled(false);
+            // webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(false);
+            //webView.destroy();
+            //webView = null;
         }
         if (progressDialog != null){
             progressDialog.dismiss();
         }
-        if (formView != null){
-            formView.removeAllViews();
-        }
+//        if (formView != null){
+//            formView.removeAllViews();
+//        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.v(getClass().getName(), "Creating view for FormFragment");
         // Inflate the layout for this fragment
         formView = (ViewGroup) inflater.inflate(R.layout.form_fragment, container, false);
-        webView = (WebView)formView.findViewById(R.id.webview);
-        webView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                return true;
-            }
-        });
-        webView.setLongClickable(false);
-        webView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                if (b){
-                    webView.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            webView.loadUrl("javascript:refreshDateFields()");
-                            Log.d("OpenSRPWebView", "date widgets reloaded");
-                        }
-                    });
-                }
-            }
-        });
+        webView = (OpenSRPWebView)formView.findViewById(R.id.webview);
 
         // Enable/disable hardware acceleration:
         if (Build.VERSION.SDK_INT >= 19) {
             // chromium, enable hardware acceleration
-           /* webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
-        } else {*/
+            webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+        } else {
             // older android version, disable hardware acceleration
             webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
@@ -219,6 +200,8 @@ public class FormFragment extends Fragment {
 
         final MyJavaScriptInterface myJavaScriptInterface = new MyJavaScriptInterface(getActivity());
         webView.addJavascriptInterface(myJavaScriptInterface, "Android");
+
+        Log.v(getClass().getName(), "Web View Settings inited");
     }
 
     /**

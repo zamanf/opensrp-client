@@ -25,6 +25,7 @@ import org.ei.opensrp.core.db.repository.RegisterRepository;
 import org.ei.opensrp.core.db.utils.RegisterQuery;
 import org.ei.opensrp.core.template.CommonSortingOption;
 import org.ei.opensrp.core.template.DefaultOptionsProvider;
+import org.ei.opensrp.core.template.FilterOption;
 import org.ei.opensrp.core.template.NavBarOptionsProvider;
 import org.ei.opensrp.core.template.RegisterActivity;
 import org.ei.opensrp.core.template.RegisterClientsProvider;
@@ -45,9 +46,9 @@ import org.ei.opensrp.util.VaccinatorUtils;
 import org.ei.opensrp.util.barcode.Barcode;
 import org.ei.opensrp.util.barcode.BarcodeIntentIntegrator;
 import org.ei.opensrp.util.barcode.BarcodeIntentResult;
+import org.ei.opensrp.util.barcode.ScanType;
 import org.ei.opensrp.view.controller.FormController;
 import org.ei.opensrp.view.dialog.DialogOption;
-import org.ei.opensrp.view.dialog.FilterOption;
 import org.ei.opensrp.view.dialog.SortOption;
 
 import java.util.ArrayList;
@@ -60,27 +61,10 @@ import static org.ei.opensrp.core.utils.Utils.*;
 
 public class HouseholdSmartRegisterFragment extends RegisterDataGridFragment {
     private final ClientActionHandler clientActionHandler = new ClientActionHandler();
-    private ScanType currentScanType;
     private RegisterDataLoaderHandler loaderHandler;
     private PromptView promptHH;
     private PromptView promptMember;
-
-    private class ScanType{
-        final String type;
-        final String id;
-        final CommonPersonObject data;
-
-        public ScanType(String type, String id, CommonPersonObject data){
-            this.type = type;
-            this.id = id;
-            this.data = data;
-        }
-
-        @Override
-        public String toString() {
-            return type+":"+id+"::"+data;
-        }
-    }
+    private BarcodeIntentIntegrator integ;
 
     public HouseholdSmartRegisterFragment() {
         super(null);
@@ -89,6 +73,7 @@ public class HouseholdSmartRegisterFragment extends RegisterDataGridFragment {
     @SuppressLint("ValidFragment")
     public HouseholdSmartRegisterFragment(FormController householdFormController) {
         super(householdFormController);
+        integ = BarcodeIntentIntegrator.initBarcodeScanner(this);
     }
 
     @Override
@@ -113,7 +98,7 @@ public class HouseholdSmartRegisterFragment extends RegisterDataGridFragment {
             }
             @Override
             public FilterOption villageFilter() {
-                return new CursorCommonObjectFilterOption("no village filter", "");
+                return null;
             }
             @Override
             public SortingOption sortOption() {
@@ -173,39 +158,38 @@ public class HouseholdSmartRegisterFragment extends RegisterDataGridFragment {
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        context.formSubmissionRouter().getHandlerMap().remove("woman_enrollment");
+        context.formSubmissionRouter().getHandlerMap().remove("child_enrollment");
+    }
+
+    @Override
     protected void onCreation() {}
 
     @Override
     protected void startRegistration() {
-        BarcodeIntentIntegrator integ = new BarcodeIntentIntegrator(this);
         integ.addExtra(Barcode.SCAN_MODE, Barcode.QR_MODE);
 
-        currentScanType = new ScanType("GROUP", "", null);
-        integ.initiateScan();
+        integ.initiateScan(new ScanType("GROUP", "", null));
     }//end of method
 
     public void startMemberRegistration(String groupEntityId, CommonPersonObject data) {
-        BarcodeIntentIntegrator integ = new BarcodeIntentIntegrator(this);
         integ.addExtra(Barcode.SCAN_MODE, Barcode.QR_MODE);
 
-        currentScanType = new ScanType("MEMBER", groupEntityId, data);
-        integ.initiateScan();
+        integ.initiateScan(new ScanType<>("MEMBER", groupEntityId, data));
     }
 
     public void startWomanRegistration(String entityId, CommonPersonObject data) {
-        BarcodeIntentIntegrator integ = new BarcodeIntentIntegrator(this);
         integ.addExtra(Barcode.SCAN_MODE, Barcode.QR_MODE);
 
-        currentScanType = new ScanType("WOMAN", entityId, data);
-        integ.initiateScan();
+        integ.initiateScan(new ScanType("WOMAN", entityId, data));
     }
 
     public void startChildRegistration(String entityId, CommonPersonObject data) {
-        BarcodeIntentIntegrator integ = new BarcodeIntentIntegrator(this);
         integ.addExtra(Barcode.SCAN_MODE, Barcode.QR_MODE);
 
-        currentScanType = new ScanType("CHILD", entityId, data);
-        integ.initiateScan();
+        integ.initiateScan(new ScanType("CHILD", entityId, data));
     }
 
     @Override
@@ -244,12 +228,11 @@ public class HouseholdSmartRegisterFragment extends RegisterDataGridFragment {
         super.onActivityResult(requestCode, resultCode, data);
         Log.i(getClass().getName(), "REQUEST COODE " + requestCode);
         Log.i(getClass().getName(), "Result Code " + resultCode);
-        Log.i(getClass().getName(), "currentScanType " + currentScanType);
 
         if(requestCode == BarcodeIntentIntegrator.REQUEST_CODE) {
-            BarcodeIntentResult res = BarcodeIntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+            BarcodeIntentResult res = integ.parseActivityResult(requestCode, resultCode, data);
             if(StringUtils.isNotBlank(res.getContents())) {
-                onQRCodeSucessfullyScanned(res.getContents(), currentScanType.type, currentScanType.id, currentScanType.data);
+                onQRCodeSucessfullyScanned(res.getContents(), res.getScanType().getType(), res.getScanType().getId(), (CommonPersonObject) res.getScanType().getData());
             }
             else Log.i("", "NO RESULT FOR QR CODE");
         }
@@ -326,7 +309,10 @@ public class HouseholdSmartRegisterFragment extends RegisterDataGridFragment {
             map.put("gender", "female");
 
             CommonPersonObject memberData = data;
-            CommonPersonObject hhData = filterHousehold(memberData.getColumnmaps().get("household_id")).get(0);
+
+            Log.v(getClass().getName(), "Going to Filter HH "+data.getColumnmaps());
+
+            CommonPersonObject hhData = filterHousehold(memberData.getRelationalId()).get(0);
             map.put("first_name", getValue(memberData.getColumnmaps(), "first_name", false));
             map.put("birth_date", getValue(memberData.getColumnmaps(), "dob", false));
             map.put("contact_phone_number", getValue(memberData.getColumnmaps(), "contact_phone_number", false));
@@ -354,7 +340,7 @@ public class HouseholdSmartRegisterFragment extends RegisterDataGridFragment {
             map.put("program_client_id", qrCode);
 
             CommonPersonObject memberData = data;
-            CommonPersonObject hhData = filterHousehold(memberData.getColumnmaps().get("household_id")).get(0);
+            CommonPersonObject hhData = filterHousehold(memberData.getRelationalId()).get(0);
             map.put("first_name", getValue(memberData.getColumnmaps(), "first_name", false));
             map.put("gender", memberData.getColumnmaps().get("gender"));
             map.put("birth_date", getValue(memberData.getColumnmaps(), "dob", false));
@@ -400,6 +386,7 @@ public class HouseholdSmartRegisterFragment extends RegisterDataGridFragment {
     }
 
     private List<CommonPersonObject> filterHousehold(String filterString) {
+        Log.v(getClass().getName(), "Filtering HH "+filterString);
         return RegisterRepository.queryData(bindType(), null, new HouseholdIDSearchOption(filterString).getCriteria(), null, null);
     }
 

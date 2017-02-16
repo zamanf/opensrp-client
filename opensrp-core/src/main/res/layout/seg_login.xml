@@ -24,7 +24,7 @@
 
     <EditText
         android:id="@+id/password_input"
-        android:inputType="textNoSuggestions|textFilter|textVisiblePassword"
+        android:inputType="textPassword"
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:hint="@string/label_password"

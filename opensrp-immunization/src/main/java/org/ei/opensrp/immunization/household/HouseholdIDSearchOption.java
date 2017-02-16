@@ -28,7 +28,7 @@ public class HouseholdIDSearchOption implements SearchFilterOption {
 
         @Override
         public String getCriteria() {
-            return " id = '"+filter+"' OR household_id = '" + filter + "' OR program_client_id = '"+filter+"' OR household_member_id = '"+filter+"'";
+            return " pkhousehold.id = '"+filter+"' OR pkhousehold.household_id = '" + filter + "' OR pkhousehold.program_client_id = '"+filter+"' OR pkhousehold.household_member_id = '"+filter+"'";
         }
 
         @Override

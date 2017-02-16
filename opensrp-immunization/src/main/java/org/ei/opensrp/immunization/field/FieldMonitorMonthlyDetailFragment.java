@@ -2,17 +2,21 @@ package org.ei.opensrp.immunization.field;
 
 import android.app.ProgressDialog;
 import android.graphics.Color;
+import android.os.AsyncTask;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.core.db.repository.RegisterRepository;
 import org.ei.opensrp.core.template.DetailFragment;
+import org.ei.opensrp.event.Listener;
 import org.ei.opensrp.immunization.R;
 import org.ei.opensrp.util.IntegerUtil;
 import org.ei.opensrp.core.utils.Utils;
@@ -79,6 +83,14 @@ public class FieldMonitorMonthlyDetailFragment extends DetailFragment {
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if(pd != null && pd.isShowing()){
+            pd.dismiss();
+        }
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
 
@@ -86,6 +98,7 @@ public class FieldMonitorMonthlyDetailFragment extends DetailFragment {
         pd.setMessage("Building Report....");
         pd.setTitle("Wait");
         pd.setIndeterminate(true);
+        pd.setCancelable(false);
 
         ((RadioGroup)currentView.findViewById(R.id.radioReportType)).setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -109,17 +122,17 @@ public class FieldMonitorMonthlyDetailFragment extends DetailFragment {
     @Override
     protected void generateView() {
 
-        HashMap provider =  providerDetails();
+        HashMap provider = providerDetails();
 
         final String reportType = client.getDetails().get("reportType");
-        Log.v(getClass().getName(), "REPORT TYPE::"+reportType);
+        Log.v(getClass().getName(), "REPORT TYPE::" + reportType);
 
         currentView.findViewById(R.id.statuts_bar_container).setVisibility(View.GONE);
 
         TableLayout dt = (TableLayout) currentView.findViewById(R.id.field_detail_info_table1);
         dt.removeAllViews();
 
-        Log.i("ANM", "DETIALS ANM :"+Context.getInstance().anmController().get());
+        Log.i("ANM", "DETIALS ANM :" + Context.getInstance().anmController().get());
 
         addRow(getActivity(), dt, "Center", getValue(provider, "provider_location_id", true), Utils.Size.MEDIUM);
         addRow(getActivity(), dt, "UC", getValue(provider, "provider_uc", true), Utils.Size.MEDIUM);
@@ -139,59 +152,48 @@ public class FieldMonitorMonthlyDetailFragment extends DetailFragment {
             e.printStackTrace();
         }
 
-        ((TextView)currentView.findViewById(R.id.reporting_period)).setText(new DateTime(date.getTime()).toString("MMMM (yyyy)"));
-        ((TextView)currentView.findViewById(R.id.reporting_period_d)).setText(new DateTime(date.getTime()).toString("MMMM (yyyy)"));
-
-        LockingBackgroundTask task = new LockingBackgroundTask(new ProgressIndicator() {
-            @Override
-            public void setVisible() {
-                pd.show();
-            }
-            @Override
-            public void setInvisible() {
-                pd.dismiss();
-            }
-        });
+        ((TextView) currentView.findViewById(R.id.reporting_period)).setText(new DateTime(date.getTime()).toString("MMMM (yyyy)"));
+        ((TextView) currentView.findViewById(R.id.reporting_period_d)).setText(new DateTime(date.getTime()).toString("MMMM (yyyy)"));
 
         final Date finalDate = date;
-        task.doActionInBackground(new BackgroundAction<List<CommonPersonObject>>() {
-            public List<CommonPersonObject> actionToDoInBackgroundThread() {
-                Log.v(getClass().getName(), "Loading report query");
 
-                String sql = getQuery(finalDate, reportType);
+        Boolean isSyncInProgress = Context.getInstance().allSharedPreferences().fetchIsSyncInProgress();
 
-                Log.v(getClass().getName(), sql);
+        if (isSyncInProgress != null && isSyncInProgress){
+            Toast.makeText(getActivity(), "Forms Sync is in progress at the moment... Wait until sync has been completed...", Toast.LENGTH_LONG).show();
+        }
 
-                List<CommonPersonObject> dl = RegisterRepository.rawQueryData("stock", sql);
+        new ReportLoader(new Listener() {
+            @Override
+            public void onEvent(Object result) {
+                if (getActivity().isFinishing()){
+                    return;
+                }
 
-                Log.v(getClass().getName(), "RESULTSET:"+dl.toString());
-                return dl;
-            }
-
-            public void postExecuteInUIThread(List<CommonPersonObject> result) {
                 if (reportType == null || reportType.equalsIgnoreCase(FieldMonitorSmartClientsProvider.ByMonthByDay.ByMonth.name())) {
                     currentView.findViewById(R.id.stock_vaccine_table).setVisibility(View.VISIBLE);
                     currentView.findViewById(R.id.stock_vaccine_table_daily).setVisibility(View.GONE);
 
-                    showMonthlyReport(finalDate, result);
+                    showMonthlyReport(finalDate, (List<CommonPersonObject>) result);
                 } else {
                     currentView.findViewById(R.id.stock_vaccine_table).setVisibility(View.GONE);
                     currentView.findViewById(R.id.stock_vaccine_table_daily).setVisibility(View.VISIBLE);
 
-                    showDailyReport(finalDate, result);
+                    showDailyReport(finalDate, (List<CommonPersonObject>) result);
                 }
             }
-        });
+        }, finalDate, reportType).execute();
     }
 
-    private void addMonthlyRow(TableLayout table, String item, String startingBalance, String used, String wasted, String endingBalance){
+    private void addMonthlyRow(TableLayout table, String item, String startingBalance, String used, String inhandCurrentMonth, String wasted, String endingBalance){
         TableRow tr = getDataRow(getActivity(), 1, 1);
         tr.setBackgroundColor(Color.LTGRAY);
-        addToRow(getActivity(), item, tr, false, 2);
-        addToRow(getActivity(), startingBalance, tr, false, 2);
-        addToRow(getActivity(), used, tr, false, 1);
-        addToRow(getActivity(), wasted, tr, false, 2);
-        addToRow(getActivity(), endingBalance, tr, false, 2);
+        addToRow(getActivity(), Html.fromHtml("<small>"+item+"</small>"), tr, false, 3);
+        addToRow(getActivity(), startingBalance, tr, false, 4);
+        addToRow(getActivity(), used, tr, false, 2);
+        addToRow(getActivity(), inhandCurrentMonth, tr, false, 2);
+        addToRow(getActivity(), wasted, tr, false, 4);
+        addToRow(getActivity(), endingBalance, tr, false, 4);
         table.addView(tr);
     }
 
@@ -236,36 +238,36 @@ public class FieldMonitorMonthlyDetailFragment extends DetailFragment {
                 m.get("pcv1"), m.get("pcv2"), m.get("pcv3"),
                 m.get("tt1"), m.get("tt2"), m.get("tt3"), m.get("tt4"), m.get("tt5"));
 
-        addMonthlyRow(tb, "BCG", calculateStartingBalance(bcgBalanceInHand, bcgReceived), m.get("bcg"),
+        addMonthlyRow(tb, "BCG", calculateStartingBalance(bcgBalanceInHand, bcgReceived), m.get("bcg"), bcgBalanceInHand+"",
                 calculateWasted(bcgBalanceInHand, bcgReceived, IntegerUtil.tryParse(m.get("bcg"),0), nextMonthRpt, "bcg"),
                 calculateEndingBalance(bcgBalanceInHand, bcgReceived, IntegerUtil.tryParse(m.get("bcg"),0)));
 
         addMonthlyRow(tb, "OPV", calculateStartingBalance(opv_balance_in_hand, opv_received),
-                addAsInts(true, m, "opv0","opv1","opv2","opv3")+"",
+                addAsInts(true, m, "opv0","opv1","opv2","opv3")+"", opv_balance_in_hand+"",
                 calculateWasted(opv_balance_in_hand, opv_received, addAsInts(true, m, "opv0","opv1","opv2","opv3"), nextMonthRpt, "opv"),
                 calculateEndingBalance(opv_balance_in_hand, opv_received, addAsInts(true, m, "opv0","opv1","opv2","opv3")));
 
-        addMonthlyRow(tb, "IPV", calculateStartingBalance(ipv_balance_in_hand, ipv_received), m.get("ipv"),
+        addMonthlyRow(tb, "IPV", calculateStartingBalance(ipv_balance_in_hand, ipv_received), m.get("ipv"), ipv_balance_in_hand+"",
                 calculateWasted(ipv_balance_in_hand, ipv_received, addAsInts(true, m, "ipv"), nextMonthRpt, "ipv"),
                 calculateEndingBalance(ipv_balance_in_hand, ipv_received, addAsInts(true, m, "ipv")));
 
         addMonthlyRow(tb, "PCV", calculateStartingBalance(pcv_balance_in_hand, pcv_received),
-                addAsInts(true, m, "pcv1","pcv2","pcv3")+"",
+                addAsInts(true, m, "pcv1","pcv2","pcv3")+"", pcv_balance_in_hand+"",
                 calculateWasted(pcv_balance_in_hand, pcv_received, addAsInts(true, m, "pcv1","pcv2","pcv3"), nextMonthRpt, "pcv"),
                 calculateEndingBalance(pcv_balance_in_hand, pcv_received, addAsInts(true, m, "pcv1","pcv2","pcv3")));
 
-        addMonthlyRow(tb, "PENTAVALENT", calculateStartingBalance(penta_balance_in_hand, penta_received),
-                addAsInts(true, m, "penta1","penta2","penta3")+"",
+        addMonthlyRow(tb, "PENTA", calculateStartingBalance(penta_balance_in_hand, penta_received),
+                addAsInts(true, m, "penta1","penta2","penta3")+"", penta_balance_in_hand+"",
                 calculateWasted(penta_balance_in_hand, penta_received, addAsInts(true, m, "penta1","penta2","penta3"), nextMonthRpt, "penta"),
                 calculateEndingBalance(penta_balance_in_hand, penta_received, addAsInts(true, m, "penta1","penta2","penta3")));
 
         addMonthlyRow(tb, "MEASLES", calculateStartingBalance(measles_balance_in_hand, measles_received),
-                addAsInts(true, m, "measles1","measles2")+"",
+                addAsInts(true, m, "measles1","measles2")+"", measles_balance_in_hand+"",
                 calculateWasted(measles_balance_in_hand, measles_received, addAsInts(true, m, "measles1","measles2"), nextMonthRpt, "measles"),
                 calculateEndingBalance(measles_balance_in_hand, measles_received, addAsInts(true, m, "measles1","measles2")));
 
         addMonthlyRow(tb, "TETNUS", calculateStartingBalance(tt_balance_in_hand, tt_received),
-                addAsInts(true, m, "tt1","tt2","tt3","tt4","tt5")+"",
+                addAsInts(true, m, "tt1","tt2","tt3","tt4","tt5")+"", tt_balance_in_hand+"",
                 calculateWasted(tt_balance_in_hand, tt_received, addAsInts(true, m, "tt1","tt2","tt3","tt4","tt5"), nextMonthRpt, "tt"),
                 calculateEndingBalance(tt_balance_in_hand, tt_received, addAsInts(true, m, "tt1","tt2","tt3","tt4","tt5")));
 
@@ -273,6 +275,7 @@ public class FieldMonitorMonthlyDetailFragment extends DetailFragment {
                 "<font color='gray'>"+getValue(client.getColumnmaps(), "dilutants_received", "0" , false)
                         +"+"+getValue(client.getColumnmaps(), "dilutants_balance_in_hand", "0" , false),
                 "<font color='gray'>"+"N/A",
+                getValue(client.getColumnmaps(), "dilutants_balance_in_hand", "0" , false),
                 "<font color='gray'>"+"N/A",
                 "<font color='gray'>"+"N/A");
 
@@ -280,15 +283,18 @@ public class FieldMonitorMonthlyDetailFragment extends DetailFragment {
                 "<font color='gray'>"+getValue(client.getColumnmaps(), "syringes_received", "0" , false)
                         +"+"+getValue(client.getColumnmaps(), "syringes_balance_in_hand", "0" , false),
                 "<font color='gray'>"+"N/A",
+                getValue(client.getColumnmaps(), "syringes_balance_in_hand", "0" , false),
                 "<font color='gray'>"+"N/A",
                 "<font color='gray'>"+"N/A");
 
         addMonthlyRow(tb, "SAFETY BOXES",
                 "<font color='gray'>"+getValue(client.getColumnmaps(), "safety_boxes_received", "0" , false)
                         +"+"+getValue(client.getColumnmaps(), "safety_boxes_balance_in_hand", "0" , false),
-                "<font color='gray'>"+"N/A", "<font color='gray'>"+"N/A", "<font color='gray'>"+"N/A");
+                "<font color='gray'>"+"N/A",
+                getValue(client.getColumnmaps(), "safety_boxes_balance_in_hand", "0" , false),
+                "<font color='gray'>"+"N/A", "<font color='gray'>"+"N/A");
 
-        addMonthlyRow(tb, "TOTAL", calculateStartingBalance(totalBalanceInHand, totalReceived), totalUsed+"",
+        addMonthlyRow(tb, "TOTAL", calculateStartingBalance(totalBalanceInHand, totalReceived), totalUsed+"", totalBalanceInHand+"",
                 calculateWasted(totalBalanceInHand, totalReceived, totalUsed, nextMonthRpt, "bcg", "opv", "ipv", "pcv", "penta", "measles", "tt"),
                 calculateEndingBalance(totalBalanceInHand, totalReceived, totalUsed));
     }
@@ -339,37 +345,46 @@ public class FieldMonitorMonthlyDetailFragment extends DetailFragment {
     private String getQuery(Date finalDate, String reportType){
         String sql = reportType==null||reportType.equalsIgnoreCase(FieldMonitorSmartClientsProvider.ByMonthByDay.ByMonth.name())?
                 ("SELECT * FROM stock WHERE report='monthly' AND date LIKE '" + new DateTime(finalDate.getTime()).plusMonths(1).toString("yyyy-MM") + "%' "):
-                ("SELECT t.*, SUBSTR(t.date,1,7) || '-' || dts.dom AS dom, " +
-                "       (select count(id) c from pkwoman where date(tt1) = SUBSTR(t.date,1,7) || '-' || dts.dom) tt1, " +
-                "       (select count(id) c from pkwoman where date(tt2) = SUBSTR(t.date,1,7) || '-' || dts.dom) tt2, " +
-                "       (select count(id) c from pkwoman where date(tt3) = SUBSTR(t.date,1,7) || '-' || dts.dom) tt3, " +
-                "       (select count(id) c from pkwoman where date(tt4) = SUBSTR(t.date,1,7) || '-' || dts.dom) tt4, " +
-                "       (select count(id) c from pkwoman where date(tt5) = SUBSTR(t.date,1,7) || '-' || dts.dom) tt5, " +
-                "       (select count(id) c from pkchild where date(bcg) = SUBSTR(t.date,1,7) || '-' || dts.dom) bcg, " +
-                "       (select count(id) c from pkchild where date(opv0) = SUBSTR(t.date,1,7) || '-' || dts.dom) opv0, " +
-                "       (select count(id) c from pkchild where date(opv1) = SUBSTR(t.date,1,7) || '-' || dts.dom) opv1, " +
-                "       (select count(id) c from pkchild where date(opv2) = SUBSTR(t.date,1,7) || '-' || dts.dom) opv2, " +
-                "       (select count(id) c from pkchild where date(opv3) = SUBSTR(t.date,1,7) || '-' || dts.dom) opv3, " +
-                "       (select count(id) c from pkchild where date(ipv) = SUBSTR(t.date,1,7) || '-' || dts.dom) ipv, " +
-                "       (select count(id) c from pkchild where date(pcv1) = SUBSTR(t.date,1,7) || '-' || dts.dom) pcv1, " +
-                "       (select count(id) c from pkchild where date(pcv2) = SUBSTR(t.date,1,7) || '-' || dts.dom) pcv2, " +
-                "       (select count(id) c from pkchild where date(pcv3) = SUBSTR(t.date,1,7) || '-' || dts.dom) pcv3, " +
-                "       (select count(id) c from pkchild where date(measles1) = SUBSTR(t.date,1,7) || '-' || dts.dom) measles1, " +
-                "       (select count(id) c from pkchild where date(measles2) = SUBSTR(t.date,1,7) || '-' || dts.dom) measles2, " +
-                "       (select count(id) c from pkchild where date(penta1) = SUBSTR(t.date,1,7) || '-' || dts.dom) penta1, " +
-                "       (select count(id) c from pkchild where date(penta2) = SUBSTR(t.date,1,7) || '-' || dts.dom) penta2, " +
-                "       (select count(id) c from pkchild where date(penta3) = SUBSTR(t.date,1,7) || '-' || dts.dom) penta3 " +
-                "    FROM stock t " +
-                "    JOIN (SELECT '01' dom UNION SELECT '02' UNION SELECT '03' UNION SELECT '04' " +
-                " UNION SELECT '05' UNION SELECT '06' UNION SELECT '07' UNION SELECT '08' " +
-                " UNION SELECT '09' UNION SELECT '10' UNION SELECT '11' UNION SELECT '12' " +
-                " UNION SELECT '13' UNION SELECT '14' UNION SELECT '15' UNION SELECT '16' " +
-                " UNION SELECT '17' UNION SELECT '18' UNION SELECT '19' UNION SELECT '20' " +
-                " UNION SELECT '21' UNION SELECT '22' UNION SELECT '23' UNION SELECT '24' " +
-                " UNION SELECT '25' UNION SELECT '26' UNION SELECT '27' UNION SELECT '28' " +
-                " UNION SELECT '29' UNION SELECT '30' UNION SELECT '31') dts ON dts.dom <= strftime('%d', date(t.date,'start of month','+1 month','-1 day'))" +
-                " WHERE t.report='monthly' AND t.date LIKE '" + new DateTime(finalDate.getTime()).toString("yyyy-MM") + "%' ");
+                (getString(R.string.sql_daily_report).replace(":reportingDate", " '"+new DateTime(finalDate.getTime()).toString("yyyy-MM") + "%' "));
 
         return sql;
+    }
+
+    private class ReportLoader extends AsyncTask<Void, Void, List<CommonPersonObject>> {
+        private Listener listener;
+        private Date finalDate;
+        private String reportType;
+
+        ReportLoader(Listener listener, Date finalDate, String reportType){
+            this.listener = listener;
+            this.finalDate = finalDate;
+            this.reportType = reportType;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            pd.show();
+        }
+
+        @Override
+        protected List<CommonPersonObject> doInBackground(Void... voids) {
+            Log.v(getClass().getName(), "Loading report query");
+
+            String sql = getQuery(finalDate, reportType);
+
+            Log.v(getClass().getName(), sql);
+
+            return RegisterRepository.rawQueryData("stock", sql);
+        }
+
+        @Override
+        protected void onPostExecute(List<CommonPersonObject> data) {
+            Log.v(getClass().getName(), "Loaded report data. Now returing result");
+
+            if(pd != null && pd.isShowing()){
+                pd.dismiss();
+            }
+            listener.onEvent(data);
+        }
     }
 }
