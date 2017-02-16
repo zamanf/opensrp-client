@@ -103,6 +103,10 @@ public class JsonFormUtils {
                 cloudantDataHandler.createClientDocument(client);
             }
 
+            String zeirId=c.getIdentifier("ZEIR_ID");
+            //mark zeir id as used
+            org.ei.opensrp.Context.uniqueIdRepository().close(zeirId);
+
             String imageLocation = getFieldValue(fields, imageKey);
             saveImage(context, providerId, entityId, imageLocation);
 

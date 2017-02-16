@@ -103,10 +103,11 @@ public class UniqueIdRepository extends DrishtiRepository {
      *
      * @return
      */
-    public List<UniqueId> getNextUniqueId() {
+    public UniqueId getNextUniqueId() {
         SQLiteDatabase database = masterRepository.getReadableDatabase();
         Cursor cursor = database.query(UniqueIds_TABLE_NAME, UniqueIds_TABLE_COLUMNS, STATUS_COLUMN + " = ?", new String[]{STATUS_NOT_USED}, null, null, CREATED_AT_COLUMN + " ASC", "1");
-        return readAll(cursor);
+        List<UniqueId> ids = readAll(cursor);
+        return ids.isEmpty()?null:ids.get(0);
     }
 
     /**
@@ -116,13 +117,19 @@ public class UniqueIdRepository extends DrishtiRepository {
      */
     public void close(String openmrsId) {
         String userName = Context.getInstance().allSharedPreferences().fetchRegisteredANM();
-
+        if(!openmrsId.contains("-")){
+            openmrsId = formatId(openmrsId);
+        }
         ContentValues values = new ContentValues();
         values.put(STATUS_COLUMN, STATUS_USED);
         values.put(USED_BY_COLUMN, userName);
         masterRepository.getWritableDatabase().update(UniqueIds_TABLE_NAME, values, OPENMRS_ID_COLUMN + " = ?", new String[]{openmrsId});
     }
-
+    private String formatId(String openmrsId) {
+        int lastIndex=openmrsId.length()-1;
+        String tail = openmrsId.substring(lastIndex);
+        return openmrsId.substring(0, lastIndex) + "-"+tail;
+    }
     private ContentValues createValuesFor(UniqueId uniqueId) {
         ContentValues values = new ContentValues();
         values.put(ID_COLUMN, uniqueId.getId());
