@@ -3,6 +3,7 @@ package org.ei.opensrp.path.fragment;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
+import android.media.Image;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -17,6 +18,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -62,6 +64,8 @@ import java.util.List;
 import java.util.Map;
 
 import util.GlobalSearchUtils;
+import util.barcode.Barcode;
+import util.barcode.BarcodeIntentIntegrator;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
@@ -85,10 +89,10 @@ public class ChildSmartRegisterFragment extends SecuredNativeSmartRegisterCursor
 
             @Override
             public ServiceModeOption serviceMode() {
-                return new VaccinationServiceModeOption(null, "Vaccine", new int[]{
+                return new VaccinationServiceModeOption(null, "Linda Clinic", new int[]{
                         R.string.child_profile, R.string.birthdate_age, R.string.epi_number, R.string.child_contact_number,
                         R.string.child_next_vaccine
-                }, new int[]{4, 2, 3, 3, 3});
+                }, new int[]{5, 1, 3, 3, 3});
             }
 
             @Override
@@ -103,7 +107,7 @@ public class ChildSmartRegisterFragment extends SecuredNativeSmartRegisterCursor
 
             @Override
             public String nameInShortFormForTitle() {
-                return Context.getInstance().getStringResource(R.string.child_register_title);
+                return Context.getInstance().getStringResource(R.string.zeir);
             }
         };
     }
@@ -182,7 +186,7 @@ public class ChildSmartRegisterFragment extends SecuredNativeSmartRegisterCursor
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        View view = inflater.inflate(org.ei.opensrp.R.layout.smart_register_activity, container, false);
+        View view = inflater.inflate(R.layout.smart_register_activity_customized, container, false);
         mView = view;
         onInitialization();
         setupViews(view);
@@ -201,6 +205,19 @@ public class ChildSmartRegisterFragment extends SecuredNativeSmartRegisterCursor
         setServiceModeViewDrawableRight(null);
         initializeQueries();
         updateSearchView();
+
+        View viewParent = (View) appliedSortView.getParent();
+        viewParent.setVisibility(View.GONE);
+
+        View qrCode = view.findViewById(R.id.scan_qr_code);
+        qrCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startQrCodeScanner();
+            }
+        });
+
+
     }
 
     public void initializeQueries() {
@@ -524,9 +541,7 @@ public class ChildSmartRegisterFragment extends SecuredNativeSmartRegisterCursor
         });
 
 
-        Button globalSearchButton = ((Button) mView.findViewById(org.ei.opensrp.R.id.global_search));
-        globalSearchButton.setVisibility(VISIBLE);
-
+        ImageButton globalSearchButton = ((ImageButton) mView.findViewById(R.id.global_search));
         globalSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -583,6 +598,10 @@ public class ChildSmartRegisterFragment extends SecuredNativeSmartRegisterCursor
         }
         return null;
 
+    }
+
+    private void startQrCodeScanner() {
+        ((ChildSmartRegisterActivity) getActivity()).startQrCodeScanner();
     }
 
 }

@@ -110,4 +110,8 @@
     <string name="global_search">Global Search</string>
 
     <string name="str_search_hint">Search name or ID</string>
+
+    <string name="scan_qr_code">Scan QR code</string>
+
+    <string name="zeir">ZEIR</string>
 </resources>

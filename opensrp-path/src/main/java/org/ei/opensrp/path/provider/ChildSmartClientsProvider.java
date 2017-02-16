@@ -24,6 +24,7 @@ import org.ei.opensrp.view.dialog.ServiceModeOption;
 import org.ei.opensrp.view.dialog.SortOption;
 import org.ei.opensrp.view.viewHolder.OnClickFormLauncher;
 import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.joda.time.Months;
 import org.joda.time.Years;
 
@@ -73,7 +74,7 @@ public class ChildSmartClientsProvider implements SmartRegisterCLientsProviderFo
         }
         fillValue((TextView) convertView.findViewById(R.id.child_name), childName);
 
-        String motherName = getValue(pc.getColumnmaps(), "mother_first_name", true) + " " + getValue(pc, "mother_first_name", true);
+        String motherName = getValue(pc.getColumnmaps(), "mother_first_name", true) + " " + getValue(pc, "mother_last_name", true);
         if (!motherName.trim().isEmpty()) {
             motherName = "M/G: " + motherName;
         }
@@ -100,6 +101,7 @@ public class ChildSmartClientsProvider implements SmartRegisterCLientsProviderFo
         } catch (Exception e) {
             Log.e(getClass().getName(), "", e);
         }
+        Days.daysBetween(new DateTime(getValue(pc.getColumnmaps(), "dob", false)), DateTime.now()).getDays();
         fillValue((TextView) convertView.findViewById(R.id.child_age), (months < 0 ? "" : (months + " months")));
 
         fillValue((TextView) convertView.findViewById(R.id.child_card_number), pc.getColumnmaps(), "epi_card_number", false);
