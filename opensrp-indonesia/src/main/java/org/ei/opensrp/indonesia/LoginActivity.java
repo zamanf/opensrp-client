@@ -115,7 +115,6 @@ public class LoginActivity extends Activity {
             remoteLogin(view, "user28", "1Sampai8");
         }
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {

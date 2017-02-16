@@ -95,24 +95,42 @@ public class ImageRepository extends DrishtiRepository {
     }
 
     private List<ProfileImage> readAll(Cursor cursor) {
-        cursor.moveToFirst();
         List<ProfileImage> ProfileImages = new ArrayList<ProfileImage>();
-        while (!cursor.isAfterLast()) {
 
-            ProfileImages.add(
-                    new ProfileImage(
-                            cursor.getString(0),
-                            cursor.getString(1),
-                            cursor.getString(2),
-                            cursor.getString(3),
-                            cursor.getString(4),
-                            cursor.getString(5),
-                            cursor.getString(6),
-                            cursor.getString(7)));
+//<<<<<<< HEAD
+//            ProfileImages.add(
+//                    new ProfileImage(
+//                            cursor.getString(0),
+//                            cursor.getString(1),
+//                            cursor.getString(2),
+//                            cursor.getString(3),
+//                            cursor.getString(4),
+//                            cursor.getString(5),
+//                            cursor.getString(6),
+//                            cursor.getString(7)));
+//=======
+        try {
+            cursor.moveToFirst();
+            while (cursor.getCount() > 0 && !cursor.isAfterLast()) {
 
-            cursor.moveToNext();
+                ProfileImages.add(new ProfileImage(
+                        cursor.getString(0),
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        cursor.getString(3),
+                        cursor.getString(4),
+                        cursor.getString(5),
+                        cursor.getString(6),
+                        cursor.getString(7)
+                ));
+
+                cursor.moveToNext();
+            }
+            cursor.close();
+        }catch(Exception e){
+//>>>>>>> ebb7da7181928c36b787e5a31462aa8c0e570e09
+
         }
-        cursor.close();
         return ProfileImages;
     }
 
