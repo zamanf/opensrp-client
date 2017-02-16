@@ -2,17 +2,21 @@ package org.ei.opensrp.repository;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.os.Environment;
 import android.util.Log;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
+import org.ei.opensrp.R;
 import org.ei.opensrp.domain.ProfileImage;
+import org.ei.opensrp.view.activity.DrishtiApplication;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ImageRepository extends DrishtiRepository {
-    private static final String Image_SQL = "CREATE TABLE ImageList(imageid VARCHAR PRIMARY KEY, anmId VARCHAR, entityID VARCHAR, contenttype VARCHAR, filepath VARCHAR, syncStatus VARCHAR, filecategory VARCHAR)";
+    private static final String Image_SQL = "CREATE TABLE ImageList(imageid VARCHAR PRIMARY KEY, anmId VARCHAR, entityID VARCHAR, contenttype VARCHAR, filepath VARCHAR, syncStatus VARCHAR, filecategory VARCHAR, filevector TEXT)";
      public static final String Image_TABLE_NAME = "ImageList";
     public static final String ID_COLUMN = "imageid";
     public static final String anm_ID_COLUMN = "anmId";
@@ -51,9 +55,18 @@ public class ImageRepository extends DrishtiRepository {
         SQLiteDatabase database = masterRepository.getReadableDatabase();
         Cursor cursor = database.query(Image_TABLE_NAME, Image_TABLE_COLUMNS, entityID_COLUMN + " = ?", new String[]{entityId}, null, null, null, null);
 //        return readAll(cursor).get(0);
-        return (readAll(cursor).size() != 0)? readAll(cursor).get(0) :
-                new ProfileImage("a", "b", "c", "d", "e", "f", "g", "h")
+        List<ProfileImage> allcursor = readAll(cursor);
+        return (!allcursor.isEmpty()) ? allcursor.get(0) : null
+//                new ProfileImage("", "", "", "",
+//                        R.drawable.woman_placeholder,
+//                        "", "", "")
             ;
+//        return (!allcursor.isEmpty()) ? allcursor.get(0) :
+//                new ProfileImage("", "", "", "",
+//                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)+
+//                                File.separator+"data"+ File.separator+"404.jpg",
+//                        "", "", "")
+//            ;
     }
 
     public List<ProfileImage> findAllUnSynced() {
@@ -86,7 +99,16 @@ public class ImageRepository extends DrishtiRepository {
         List<ProfileImage> ProfileImages = new ArrayList<ProfileImage>();
         while (!cursor.isAfterLast()) {
 
-            ProfileImages.add(new ProfileImage(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3),cursor.getString(4),cursor.getString(5),cursor.getString(6), cursor.getString(7)));
+            ProfileImages.add(
+                    new ProfileImage(
+                            cursor.getString(0),
+                            cursor.getString(1),
+                            cursor.getString(2),
+                            cursor.getString(3),
+                            cursor.getString(4),
+                            cursor.getString(5),
+                            cursor.getString(6),
+                            cursor.getString(7)));
 
             cursor.moveToNext();
         }

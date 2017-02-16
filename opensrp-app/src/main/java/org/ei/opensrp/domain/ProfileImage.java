@@ -27,6 +27,17 @@ public class ProfileImage {
     }
     public ProfileImage(){}
 
+//    public ProfileImage(String imageid, String anmId, String entityID, String contenttype, int filepath, String syncStatus, String filecategory, String filevector) {
+//        this.imageid = imageid;
+//        this.entityID = entityID;
+//        this.anmId = anmId;
+//        this.contenttype = contenttype;
+//        this.filepath = filepath;
+//        this.syncStatus = syncStatus;
+//        this.filecategory = filecategory;
+//        this.filevector = filevector;
+//    }
+
     public String getFilecategory() {
         return filecategory;
     }

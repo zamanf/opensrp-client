@@ -136,17 +136,17 @@ public class Tools {
                     THUMBSIZE, THUMBSIZE);
             ThumbImage.compress(Bitmap.CompressFormat.PNG, 100, tfos);
             tfos.close();
-            Log.e(TAG, "Wrote image to " + thumbs_photo);
+            Log.e(TAG, "Wrote Thumbs image to " + thumbs_photo);
 
 //            TODO
             bindobject = "kartu_ibu";
 
             HashMap<String,String> details = new HashMap<>();
 
-            saveimagereference(bindobject, entityId, details);
+            // SAVE DATA VECTOR ON DB
+//            saveimagereference(bindobject, entityId, details);
 //            details.put("profilepic", photoPath);
             details.put("profilepic", thumbs_photo.toString());
-
 
 //            KIDetailActivity.details = new HashMap<>();
 //            HashMap<String,String> details = new HashMap<>();
@@ -159,16 +159,18 @@ public class Tools {
             detailsRepository.add(entityId, "profilepic", thumbs_photo.toString(), tsLong);
 
             String anmId = Context.getInstance().allSharedPreferences().fetchRegisteredANM();
+            // SAVE DATA VECTOR ON DB
             ProfileImage profileImage = new ProfileImage(
                     UUID.randomUUID().toString(),
                     anmId,
                     entityId,
                     "Image",
-                    details.get("profilepic"),
+                    thumbs_photo.toString(),
                     ImageRepository.TYPE_Unsynced,
                     "dp",
                     "facedata array");
             ((ImageRepository) Context.getInstance().imageRepository()).add(profileImage);
+
             return true;
 
         } catch (FileNotFoundException e) {
@@ -187,14 +189,15 @@ public class Tools {
         String imgFolder = (mode == 0) ? DrishtiApplication.getAppDir():
                 DrishtiApplication.getAppDir()+File.separator+".thumbs";
 //        String imgFolder = (mode == 0) ? "OPENSRP_SID":"OPENSRP_SID"+File.separator+".thumbs";
-        File mediaStorageDir = new File(
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), imgFolder);
+//        File mediaStorageDir = new File(
+//                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), imgFolder);
+        File mediaStorageDir = new File(imgFolder);
 
         // Create the storage directory if it does not exist
         if (!mediaStorageDir.exists()) {
             Log.e(TAG, "failed to find directory " + mediaStorageDir.getAbsolutePath());
             if (!mediaStorageDir.mkdirs()) {
-                Log.e(TAG, "failed to create directory " + mediaStorageDir.getAbsolutePath());
+                Log.e(TAG, "Created new directory " + mediaStorageDir.getAbsolutePath());
                 return null;
             }
         }

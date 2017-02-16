@@ -139,6 +139,7 @@ public class KIDetailActivity extends Activity {
         detailsRepository.updateDetails(kiclient);
 
         //set profile image by passing the client id.If the image doesn't exist in the image repository then download and save locally
+        Log.e(TAG, "onCreate: " );
         BidanApplication.getInstance().getCachedImageLoaderInstance().getImageByClientId(kiclient.getCaseId(), OpenSRPImageLoader.getStaticImageListener(kiview, R.mipmap.woman_placeholder, R.mipmap.woman_placeholder));
 
 
@@ -308,11 +309,9 @@ public class KIDetailActivity extends Activity {
 //            String imageBitmap = (String) extras.get(MediaStore.EXTRA_OUTPUT);
 //            Toast.makeText(this,imageBitmap,Toast.LENGTH_LONG).show();
 
-/*
-            HashMap<String,String> details = new HashMap<String,String>();
-            details.put("profilepic",currentfile.getAbsolutePath());
-            saveimagereference(bindobject,entityid,details);
-*/
+//            HashMap<String,String> details = new HashMap<String,String>();
+//            details.put("profilepic",currentfile.getAbsolutePath());
+//            saveimagereference(bindobject,entityid,details);
 
 //            Long tsLong = System.currentTimeMillis()/1000;
 //            DetailsRepository detailsRepository = org.ei.opensrp.Context.getInstance().detailsRepository();

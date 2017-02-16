@@ -368,17 +368,19 @@ public class ImageConfirmation extends Activity {
         Log.e(TAG, "saveAndClose: " + Arrays.toString(objFace.serializeRecogntionAlbum()));
 
 //        SmartShutterActivity.WritePictureToFile(ImageConfirmation.this, storedBitmap);
-        saveAlbum();
+//        saveAlbum();
+
         int result = objFace.addPerson(arrayPossition);
         clientList.put(entityId, Integer.toString(result));
-        saveHash(clientList, getApplicationContext());
+
+//        saveHash(clientList, getApplicationContext());
 
         Tools.WritePictureToFile(ImageConfirmation.this, storedBitmap, entityId);
 
-//        HashMap<String,String> details = new HashMap<>();
-//
+        HashMap<String,String> details = new HashMap<>();
+
 //        details.put("profilepic",currentfile.getAbsolutePath());
-//
+
 //        saveimagereference(bindobject,entityId, details);
 
 
@@ -428,21 +430,21 @@ public class ImageConfirmation extends Activity {
 //        ref.setValue(imageEncoded);
     }
 
-    public void saveimagereference(String bindobject,String entityid,Map<String,String> details){
-        Context.getInstance().allCommonsRepositoryobjects(bindobject).mergeDetails(entityid,details);
-        String anmId = Context.getInstance().allSharedPreferences().fetchRegisteredANM();
-        ProfileImage profileImage = new ProfileImage(
-                UUID.randomUUID().toString(),
-                anmId,
-                entityid,
-                "Image",
-                details.get("profilepic"),
-                ImageRepository.TYPE_Unsynced,
-                "dp",
-                "facedata array");
-        ((ImageRepository) Context.getInstance().imageRepository()).add(profileImage);
-//                kiclient.entityId();
-//        Toast.makeText(this,entityid,Toast.LENGTH_LONG).show();
-    }
+//    public void saveimagereference(String bindobject,String entityid,Map<String,String> details){
+//        Context.getInstance().allCommonsRepositoryobjects(bindobject).mergeDetails(entityid,details);
+//        String anmId = Context.getInstance().allSharedPreferences().fetchRegisteredANM();
+//        ProfileImage profileImage = new ProfileImage(
+//                UUID.randomUUID().toString(),
+//                anmId,
+//                entityid,
+//                "Image",
+//                details.get("profilepic"),
+//                ImageRepository.TYPE_Unsynced,
+//                "dp",
+//                "facedata array");
+//        ((ImageRepository) Context.getInstance().imageRepository()).add(profileImage);
+////                kiclient.entityId();
+////        Toast.makeText(this,entityid,Toast.LENGTH_LONG).show();
+//    }
 
 }
