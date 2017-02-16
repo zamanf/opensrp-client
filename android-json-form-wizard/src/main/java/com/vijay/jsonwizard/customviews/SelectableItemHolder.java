@@ -45,7 +45,7 @@ public class SelectableItemHolder extends TreeNode.BaseNodeViewHolder<String> {
         this.treeNode = node;
         tvValue = (TextView) view.findViewById(R.id.node_value);
         tvValue.setText(levelLabel + ": " + value);
-        tvValue.setTextSize(context.getResources().getDimension(R.dimen.default_text_size));
+        tvValue.setTextSize(context.getResources().getDimension(R.dimen.tree_widget_text_size));
         arrowView = (PrintView) view.findViewById(R.id.arrowview);
         arrowView.setIconFont("fonts/material/fonts/material-icon-font.ttf");
 

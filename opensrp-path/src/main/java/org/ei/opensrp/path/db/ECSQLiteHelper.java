@@ -13,6 +13,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,7 +26,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
+import util.JsonFormUtils;
 import util.Utils;
 
 public class ECSQLiteHelper extends SQLiteOpenHelper {
@@ -133,6 +136,9 @@ public class ECSQLiteHelper extends SQLiteOpenHelper {
 
     public void insert(Event event) {
         try {
+            if(StringUtils.isBlank(event.getFormSubmissionId())){
+                event.setFormSubmissionId(generateRandomUUIDString());
+            }
             insert(Event.class, Table.event, event_column.values(), event);
             for (Obs o : event.getObs()) {
                 insert(Obs.class, Table.obs, obs_column.values(), obs_column.formSubmissionId.name(), event.getFormSubmissionId(), o);
@@ -557,5 +563,9 @@ public class ECSQLiteHelper extends SQLiteOpenHelper {
             return "integer";
         }
         return null;
+    }
+
+    private String generateRandomUUIDString() {
+        return UUID.randomUUID().toString();
     }
 }
