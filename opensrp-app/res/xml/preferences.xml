@@ -9,6 +9,7 @@
             android:dialogTitle="OpenSRP base URL"
             android:dialogMessage="Enter Base Server Url"
             android:defaultValue="http://192.168.1.254:8080/opensrp"
+
             android:persistent="true"/>
 
     </PreferenceCategory>

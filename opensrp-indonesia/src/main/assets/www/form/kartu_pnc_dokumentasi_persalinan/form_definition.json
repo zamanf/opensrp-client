@@ -164,6 +164,14 @@
         "bind": "/model/instance/dok_persalinan_reviewed/high_risk_postPartum_Sectio_Caesaria"
       },
       {
+        "name": "treatment",
+        "bind": "/model/instance/dok_persalinan_reviewed/treatment"
+      },
+      {
+        "name": "treatmentText",
+        "bind": "/model/instance/dok_persalinan_reviewed/treatment_text"
+      },
+      {
         "name": "kepemilikanBukuKia",
         "bind": "/model/instance/dok_persalinan_reviewed/kepemilikan_buku_kia",
         "source": "ibu.anak.kepemilikan_buku_kia"

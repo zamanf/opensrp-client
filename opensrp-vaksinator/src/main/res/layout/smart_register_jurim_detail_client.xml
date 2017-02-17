@@ -80,6 +80,13 @@
                 <TextView
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="Unique ID"
+                    android:id="@+id/uidLabel" />
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
                     android:text="Nama Anak"
                     android:id="@+id/nameLabel"
                     android:textSize="14dp" />
@@ -148,6 +155,13 @@
                     android:layout_width="84dp"
                     android:layout_height="115dp"
                     android:paddingBottom="25dp"></FrameLayout>
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text=": "
+                    android:id="@+id/uidValue" />
 
                 <TextView
                     android:layout_width="fill_parent"

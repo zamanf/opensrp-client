@@ -58,7 +58,7 @@ public class FormSubmissionSyncService {
             mCloudantSyncHandler.startPushReplication();
 
             mCountDownLatch.await();
-            pushToServer();
+         //   pushToServer();
             Intent intent = new Intent(DrishtiApplication.getInstance().getApplicationContext(),ImageUploadSyncService.class);
             DrishtiApplication.getInstance().getApplicationContext().startService(intent);
 

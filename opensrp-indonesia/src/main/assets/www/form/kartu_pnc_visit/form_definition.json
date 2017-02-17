@@ -110,6 +110,14 @@
         "bind": "/model/instance/PNC_visit_reviewed/kondisipascatindakan"
       },
       {
+        "name": "treatment",
+        "bind": "/model/instance/PNC_visit_reviewed/treatment"
+      },
+      {
+        "name": "treatmentText",
+        "bind": "/model/instance/PNC_visit_reviewed/treatment_text"
+      },
+      {
         "name": "rujukan",
         "bind": "/model/instance/PNC_visit_reviewed/rujukan"
       },
