@@ -54,19 +54,8 @@ public class ImageRepository extends DrishtiRepository {
     public ProfileImage findByEntityId(String entityId) {
         SQLiteDatabase database = masterRepository.getReadableDatabase();
         Cursor cursor = database.query(Image_TABLE_NAME, Image_TABLE_COLUMNS, entityID_COLUMN + " = ?", new String[]{entityId}, null, null, null, null);
-//        return readAll(cursor).get(0);
         List<ProfileImage> allcursor = readAll(cursor);
-        return (!allcursor.isEmpty()) ? allcursor.get(0) : null
-//                new ProfileImage("", "", "", "",
-//                        R.drawable.woman_placeholder,
-//                        "", "", "")
-            ;
-//        return (!allcursor.isEmpty()) ? allcursor.get(0) :
-//                new ProfileImage("", "", "", "",
-//                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)+
-//                                File.separator+"data"+ File.separator+"404.jpg",
-//                        "", "", "")
-//            ;
+        return (!allcursor.isEmpty()) ? allcursor.get(0) : null;
     }
 
     public List<ProfileImage> findAllUnSynced() {

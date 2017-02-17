@@ -32,6 +32,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -101,7 +102,7 @@ public class Tools {
         return false;
     }
 
-    public static boolean WritePictureToFile(android.content.Context context, Bitmap bitmap, String entityId) {
+    public static boolean WritePictureToFile(android.content.Context context, Bitmap bitmap, String entityId, byte[] faceVector) {
 
         File pictureFile = getOutputMediaFile(0, entityId);
         File thumbs_photo = getOutputMediaFile(1, entityId);
@@ -138,11 +139,10 @@ public class Tools {
             tfos.close();
             Log.e(TAG, "Wrote Thumbs image to " + thumbs_photo);
 
-//            TODO
+//          PUT into DB
             bindobject = "kartu_ibu";
 
             HashMap<String,String> details = new HashMap<>();
-
             // SAVE DATA VECTOR ON DB
 //            saveimagereference(bindobject, entityId, details);
 //            details.put("profilepic", photoPath);
@@ -167,8 +167,8 @@ public class Tools {
                     "Image",
                     thumbs_photo.toString(),
                     ImageRepository.TYPE_Unsynced,
-                    "dp",
-                    "facedata array");
+                    "profilepic",
+                    Arrays.toString(faceVector));
             ((ImageRepository) Context.getInstance().imageRepository()).add(profileImage);
 
             return true;
@@ -223,14 +223,17 @@ public class Tools {
 
     }
 
+
     public static void drawInfo(Rect rect, Bitmap mutableBitmap, float pixelDensity, String personName) {
-        Log.e(TAG, "drawInfo: " );
+        Log.e(TAG, "drawInfo: rect "+rect );
+        Log.e(TAG, "drawInfo: bitmap"+mutableBitmap );
 //        Rect rect = faceDatas[i].rect;
         // Extra padding around the faeRects
         rect.set(rect.left -= 20, rect.top -= 20, rect.right += 20, rect.bottom += 20);
         Canvas canvas = new Canvas(mutableBitmap);
-        Paint paintForRectFill = new Paint(); // Draw rect
-        // fill
+        Paint paintForRectFill = new Paint();
+
+        // Draw rect fill
         paintForRectFill.setStyle(Paint.Style.FILL);
         paintForRectFill.setColor(Color.WHITE);
         paintForRectFill.setAlpha(80);
@@ -270,21 +273,27 @@ public class Tools {
     }
 
     public static void drawRectFace(Rect rect, Bitmap mutableBitmap, float pixelDensity) {
-        Log.e(TAG, "drawInfo: " );
-//        Rect rect = faceDatas[i].rect;
-        // Extra padding around the faeRects
+
+        Log.e(TAG, "drawRectFace: rect "+ rect );
+        Log.e(TAG, "drawRectFace: bitmap "+ mutableBitmap );
+        Log.e(TAG, "drawRectFace: pixelDensity "+ pixelDensity );
+
+        // Extra padding around the faceRects
         rect.set(rect.left -= 20, rect.top -= 20, rect.right += 20, rect.bottom += 20);
         Canvas canvas = new Canvas(mutableBitmap);
-        Paint paintForRectFill = new Paint();
+
         // Draw rect fill
+        Paint paintForRectFill = new Paint();
         paintForRectFill.setStyle(Paint.Style.FILL);
         paintForRectFill.setColor(Color.WHITE);
         paintForRectFill.setAlpha(80);
+
         // Draw rect strokes
         Paint paintForRectStroke = new Paint();
         paintForRectStroke.setStyle(Paint.Style.STROKE);
         paintForRectStroke.setColor(Color.GREEN);
         paintForRectStroke.setStrokeWidth(5);
+
         canvas.drawRect(rect, paintForRectFill);
         canvas.drawRect(rect, paintForRectStroke);
 

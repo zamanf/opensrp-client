@@ -534,12 +534,14 @@ public class OpenSRPImageLoader extends ImageLoader {
                     // insert into the db
                     ProfileImage profileImage= new ProfileImage();
                     profileImage.setImageid(UUID.randomUUID().toString());
+                    // TODO : get anmID from ?
+                    profileImage.setAnmId("anmID");
                     profileImage.setEntityID(entityId);
                     profileImage.setFilepath(absoluteFileName);
                     profileImage.setFilecategory("profilepic");
                     profileImage.setSyncStatus(ImageRepository.TYPE_Synced);
                     // TODO : fetch vector from imagebitmap
-                    profileImage.setFilevector("0,1,2,3,4,5,6,7,8,9,9,0");
+                    profileImage.setFilevector("[ve, ct, or]");
                     ImageRepository imageRepo = (ImageRepository) org.ei.opensrp.Context.imageRepository();
                     imageRepo.add(profileImage);
                 }

@@ -1,11 +1,3 @@
-/* ======================================================================
- *  Copyright � 2014 Qualcomm Technologies, Inc. All Rights Reserved.
- *  QTI Proprietary and Confidential.
- *  =====================================================================
- *  
- * @file:   ImageConfirmation.java
- *
- */
 package org.ei.opensrp.indonesia.face.camera;
 
 import android.app.Activity;
@@ -86,6 +78,7 @@ public class ImageConfirmation extends Activity {
     byte[] data;
     int angle;
     boolean switchCamera;
+    private byte[] faceVector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,9 +114,11 @@ public class ImageConfirmation extends Activity {
 //        int imageViewSurfaceWidth = confirmationView.getWidth();
 //        int imageViewSurfaceHeight = confirmationView.getHeight();
 
+        // Face Confirmation view purpose
         workingBitmap = Bitmap.createScaledBitmap(storedBitmap,
                 imageViewSurfaceWidth, imageViewSurfaceHeight, false);
 //        mutableBitmap = workingBitmap.copy(Bitmap.Config.ARGB_8888, true);
+
         mutableBitmap = storedBitmap.copy(Bitmap.Config.ARGB_8888, true);
 
         objFace.normalizeCoordinates(imageViewSurfaceWidth, imageViewSurfaceHeight);
@@ -134,12 +129,14 @@ public class ImageConfirmation extends Activity {
 
             // Face Data Exist
             if(faceDatas != null){
-//                Log.e(TAG, "onCreate: faceDatas "+"NotNull" );
+//                Log.e(TAG, "onCreate: faceDatas "+faceDatas.length );
                 rects = new Rect[faceDatas.length];
 
                 for (int i = 0; i < faceDatas.length; i++) {
                     Rect rect = faceDatas[i].rect;
                     rects[i] = rect;
+
+                    int matchRate = faceDatas[i].getRecognitionConfidence();
 
                     float pixelDensity = getResources().getDisplayMetrics().density;
 
@@ -160,13 +157,15 @@ public class ImageConfirmation extends Activity {
                         Toast.makeText(getApplicationContext(), selectedPersonName, Toast.LENGTH_SHORT).show();
 
 //                        Draw Info on Image
-//                        Tools.drawInfo(rect, mutableBitmap, pixelDensity, selectedPersonName);
+                        Tools.drawInfo(rect, mutableBitmap, pixelDensity, selectedPersonName);
 
                         showDetailUser(selectedPersonName);
 
                     } else {
-
+                        // Not Identifiying, do new record.
+//                        Draw Info on Image
                         Tools.drawRectFace(rect, mutableBitmap, pixelDensity);
+
                         Log.e(TAG, "onCreate: PersonId "+faceDatas[i].getPersonId() );
 
                         // Check Detected existing face
@@ -174,29 +173,26 @@ public class ImageConfirmation extends Activity {
 
                             arrayPossition = i;
 
-//                            TODO
+//                            TODO : wait Button Response
+//                            buttonJob();
 //                            int res = objFace.addPerson(arrayPossition);
 //                            clientList.put(entityId, Integer.toString(res));
 //                            saveHash(clientList, getApplicationContext());
 //                            saveAlbum();
 
                         } else {
-                            Log.e(TAG, "onCreate: Similar face found " +
-                                    Integer.toString(faceDatas[i].getRecognitionConfidence()));
 
-                            AlertDialog.Builder builder= new AlertDialog.Builder(this);
-
-                            builder.setTitle("Are you Sure?");
-                            builder.setMessage("Similar Face Found! : Confidence "+faceDatas[i].getRecognitionConfidence());
-                            builder.setNegativeButton("CANCEL", null);
-                            builder.show();
-                            confirmButton.setVisibility(View.INVISIBLE);
+                            showPersonInfo(matchRate);
 
                         }
 
 //                        TODO: asign selectedPersonName to search
 
-                        confirmationView.setImageBitmap(mutableBitmap);            // Setting the view with the bitmap image that came in.
+                        // Applied Image that came in to the view.
+                        // Face only
+//                        confirmationView.setImageBitmap(storedBitmap);
+                        // Face and Rect
+                        confirmationView.setImageBitmap(mutableBitmap);
 
                     } // end if-else mode Identify {True or False}
                 } // end for count ic_faces
@@ -215,6 +211,20 @@ public class ImageConfirmation extends Activity {
 //        confirmationView.setImageBitmap(mutableBitmap);            // Setting the view with the bitmap image that came in.
 
         buttonJob();
+    }
+
+    private void showPersonInfo(int recognitionConfidence) {
+        Log.e(TAG, "onCreate: Similar face found " +
+                Integer.toString(recognitionConfidence));
+
+        AlertDialog.Builder builder= new AlertDialog.Builder(this);
+
+        builder.setTitle("Are you Sure?");
+        builder.setMessage("Similar Face Found! : Confidence "+recognitionConfidence);
+        builder.setNegativeButton("CANCEL", null);
+        builder.show();
+        confirmButton.setVisibility(View.INVISIBLE);
+
     }
 
     @Override
@@ -241,7 +251,8 @@ public class ImageConfirmation extends Activity {
 
 
     private void init_gui() {
-        confirmationView = (ImageView) findViewById(R.id.iv_confirmationView);  // Display New Photo
+        // Display New Photo
+        confirmationView = (ImageView) findViewById(R.id.iv_confirmationView);
         trashButton = (ImageView) findViewById(R.id.iv_cancel);
         confirmButton = (ImageView) findViewById(R.id.iv_approve);
     }
@@ -365,7 +376,11 @@ public class ImageConfirmation extends Activity {
         Log.e(TAG, "saveAndClose: position"+ arrayPossition );
 //        int res = objFace.addPerson(arrayPossition);
 //        Log.e(TAG, "saveAndClose: " + res);
-        Log.e(TAG, "saveAndClose: " + Arrays.toString(objFace.serializeRecogntionAlbum()));
+//        Log.e(TAG, "saveAndClose: " );
+
+        faceVector = objFace.serializeRecogntionAlbum();
+
+        Log.e(TAG, "saveAndClose: " + Arrays.toString(faceVector));
 
 //        SmartShutterActivity.WritePictureToFile(ImageConfirmation.this, storedBitmap);
 //        saveAlbum();
@@ -375,7 +390,7 @@ public class ImageConfirmation extends Activity {
 
 //        saveHash(clientList, getApplicationContext());
 
-        Tools.WritePictureToFile(ImageConfirmation.this, storedBitmap, entityId);
+        Tools.WritePictureToFile(ImageConfirmation.this, storedBitmap, entityId, faceVector);
 
         HashMap<String,String> details = new HashMap<>();
 
