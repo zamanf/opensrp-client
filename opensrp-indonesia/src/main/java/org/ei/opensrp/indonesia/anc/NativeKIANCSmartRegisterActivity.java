@@ -137,7 +137,12 @@ public class NativeKIANCSmartRegisterActivity extends SecuredNativeSmartRegister
         try{
             FormUtils formUtils = FormUtils.getInstance(getApplicationContext());
             FormSubmission submission = formUtils.generateFormSubmisionFromXMLString(id, formSubmission, formName, fieldOverrides);
-            ziggyService.saveForm(getParams(submission), submission.instance());
+            if(formName.equalsIgnoreCase(KARTU_IBU_PNC_REGISTRATION)) {
+                //do nothing
+            }
+            else{
+                ziggyService.saveForm(getParams(submission), submission.instance());
+            }
             ClientProcessor.getInstance(getApplicationContext()).processClient();
 
             context().formSubmissionService().updateFTSsearch(submission);

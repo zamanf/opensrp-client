@@ -225,7 +225,7 @@ public class OpenSRPImageLoader extends ImageLoader {
                     ImageContainer imgContainer = new ImageContainer(result, null, null, opensrpImageListener);
                     if (opensrpImageListener != null) {
                         if (opensrpImageListener.getHasImageViewTag()) {
-                            String imageId = opensrpImageListener.getImageView().getTag().toString();
+                            String imageId = opensrpImageListener.getImageView().getTag(R.id.entity_id).toString();
                             if (imageRecord.getEntityID().equalsIgnoreCase(imageId))
                                 opensrpImageListener.onResponse(imgContainer, true);
                         } else

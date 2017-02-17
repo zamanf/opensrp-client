@@ -78,6 +78,10 @@
         "bind": "/model/instance/kunjungan_anc_reviewed_anc_visit/nomortelpon"
       },
       {
+        "name": "nomorHp",
+        "bind": "/model/instance/kunjungan_anc_reviewed_anc_visit/nomor_telpon_hp"
+      },
+      {
         "name": "Keterangan_k1k4",
         "bind": "/model/instance/kunjungan_anc_reviewed_anc_visit/Keterangan_k1k4"
       },
@@ -197,6 +201,14 @@
       {
         "name": "komplikasidalamKehamilan",
         "bind": "/model/instance/kunjungan_anc_reviewed_anc_visit/komplikasi_dalam_kehamilan"
+      },
+      {
+        "name": "treatment",
+        "bind": "/model/instance/kunjungan_anc_reviewed_anc_visit/treatment"
+      },
+      {
+        "name": "treatmentText",
+        "bind": "/model/instance/kunjungan_anc_reviewed_anc_visit/treatment_text"
       },
       {
         "name": "rujukan",

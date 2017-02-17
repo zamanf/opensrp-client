@@ -692,7 +692,7 @@ public class ClientProcessor {
         Map<String, String> addressMap = new HashMap<String, String>();
         try {
             String addressFieldsKey = "addressFields";
-            String adressesKey = "adresses";
+            String adressesKey = "addresses";
 
             if (client.has(adressesKey)) {
                 JSONArray addressJsonArray = client.getJSONArray(adressesKey);

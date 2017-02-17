@@ -53,7 +53,7 @@ public class KmsHandler  implements FormSubmissionHandler {
         DetailsRepository detailsRepository = org.ei.opensrp.Context.getInstance().detailsRepository();
 
         detailsRepository.add(entityID, "preload_umur", umurs, tsLong);
-        detailsRepository.add(entityID, "berat_preload", berats, tsLong);
+        detailsRepository.add(entityID, "berat_preload", submission.getFieldValue("history_berat")!= null ? submission.getFieldValue("history_berat") : "0:0", tsLong);
         detailsRepository.add(entityID, "history_umur", umurs, tsLong);
 
         // detailsRepository.add(entityID, "preload_history_tinggi", submission.getFieldValue("history_tinggi")!= null ? submission.getFieldValue("history_tinggi") :"0#0", tsLong);
