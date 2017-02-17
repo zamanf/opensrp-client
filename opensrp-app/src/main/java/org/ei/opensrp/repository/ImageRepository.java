@@ -86,18 +86,6 @@ public class ImageRepository extends DrishtiRepository {
     private List<ProfileImage> readAll(Cursor cursor) {
         List<ProfileImage> ProfileImages = new ArrayList<ProfileImage>();
 
-//<<<<<<< HEAD
-//            ProfileImages.add(
-//                    new ProfileImage(
-//                            cursor.getString(0),
-//                            cursor.getString(1),
-//                            cursor.getString(2),
-//                            cursor.getString(3),
-//                            cursor.getString(4),
-//                            cursor.getString(5),
-//                            cursor.getString(6),
-//                            cursor.getString(7)));
-//=======
         try {
             cursor.moveToFirst();
             while (cursor.getCount() > 0 && !cursor.isAfterLast()) {
@@ -109,15 +97,13 @@ public class ImageRepository extends DrishtiRepository {
                         cursor.getString(3),
                         cursor.getString(4),
                         cursor.getString(5),
-                        cursor.getString(6),
-                        cursor.getString(7)
+                        cursor.getString(6)
                 ));
 
                 cursor.moveToNext();
             }
             cursor.close();
         }catch(Exception e){
-//>>>>>>> ebb7da7181928c36b787e5a31462aa8c0e570e09
 
         }
         return ProfileImages;

@@ -164,11 +164,10 @@ public class Tools {
                     UUID.randomUUID().toString(),
                     anmId,
                     entityId,
-                    "Image",
+                    "jpeg",
                     thumbs_photo.toString(),
                     ImageRepository.TYPE_Unsynced,
-                    "profilepic",
-                    Arrays.toString(faceVector));
+                    "profilepic");
             ((ImageRepository) Context.getInstance().imageRepository()).add(profileImage);
 
             return true;
@@ -403,7 +402,7 @@ public class Tools {
     public static void saveimagereference(String bindobject, String entityid, Map<String, String> details){
         Context.getInstance().allCommonsRepositoryobjects(bindobject).mergeDetails(entityid,details);
         String anmId = Context.getInstance().allSharedPreferences().fetchRegisteredANM();
-        ProfileImage profileImage = new ProfileImage(UUID.randomUUID().toString(),anmId,entityid,"Image",details.get("profilepic"), ImageRepository.TYPE_Unsynced,"dp", "face");
+        ProfileImage profileImage = new ProfileImage(UUID.randomUUID().toString(),anmId,entityid,"jpeg",details.get("profilepic"), ImageRepository.TYPE_Unsynced,"dp");
         ((ImageRepository) Context.getInstance().imageRepository()).add(profileImage);
 //                kiclient.entityId();
 //        Toast.makeText(this,entityid,Toast.LENGTH_LONG).show();

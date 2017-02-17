@@ -213,7 +213,7 @@ public class HTTPAgent {
                 entity.addPart("file-category", new StringBody(image.getFilecategory() != null ? image.getFilecategory() : "profilepic"));
                 ContentBody cbFile = new FileBody(uploadFile,"image/jpeg");
                 entity.addPart("file", cbFile);
-                entity.addPart("filevector", new StringBody(image.getFilevector()));
+//                entity.addPart("filevector", new StringBody(image.getFilevector()));
                 httpost.setEntity(entity);
                 String authToken = null;
                 HttpResponse response = httpClient.postContent(httpost);
