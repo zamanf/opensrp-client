@@ -11,6 +11,8 @@ import org.ei.opensrp.sync.CloudantSyncHandler;
 
 import java.util.concurrent.CountDownLatch;
 
+import static org.ei.opensrp.util.Log.logInfo;
+
 
 /**
  * Created by onamacuser on 18/03/2016.
@@ -63,5 +65,11 @@ public class PathReplicationIntentService extends IntentService {
             b.putBoolean(RESULT_TAG, status);
             rec.send(0, b);
         }
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        logInfo("Started path replication service");
+        return super.onStartCommand(intent,flags,startId);
     }
 }
