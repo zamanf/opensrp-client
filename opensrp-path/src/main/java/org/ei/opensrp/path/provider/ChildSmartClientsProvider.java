@@ -31,6 +31,8 @@ import org.joda.time.Years;
 import java.util.List;
 import java.util.Map;
 
+import util.DateUtils;
+
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static util.Utils.convertDateFormat;
 import static util.Utils.fillValue;
@@ -89,20 +91,11 @@ public class ChildSmartClientsProvider implements SmartRegisterCLientsProviderFo
             ((ImageView) convertView.findViewById(R.id.child_profilepic)).setImageResource(R.drawable.child_transgender_inflant);
         }
 
-        int agey = -1;
-        try {
-            agey = Years.yearsBetween(new DateTime(getValue(pc.getColumnmaps(), "dob", false)), DateTime.now()).getYears();
-        } catch (Exception e) {
+        DateTime dateTime = new DateTime(getValue(pc.getColumnmaps(), "dob", false));
+        String duration = DateUtils.getDuration(dateTime);
+        if (duration != null) {
+            fillValue((TextView) convertView.findViewById(R.id.child_age), duration);
         }
-
-        int months = -1;
-        try {
-            months = Months.monthsBetween(new DateTime(getValue(pc.getColumnmaps(), "dob", false)), DateTime.now()).getMonths();
-        } catch (Exception e) {
-            Log.e(getClass().getName(), "", e);
-        }
-        Days.daysBetween(new DateTime(getValue(pc.getColumnmaps(), "dob", false)), DateTime.now()).getDays();
-        fillValue((TextView) convertView.findViewById(R.id.child_age), (months < 0 ? "" : (months + " months")));
 
         fillValue((TextView) convertView.findViewById(R.id.child_card_number), pc.getColumnmaps(), "epi_card_number", false);
 

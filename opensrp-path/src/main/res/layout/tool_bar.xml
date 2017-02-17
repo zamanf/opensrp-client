@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/register_nav_bar_container"
     android:layout_width="fill_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/actionbar"
     android:focusableInTouchMode="true">
 
@@ -39,7 +39,6 @@
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:layout_toRightOf="@id/btn_back_to_home"
-        android:layout_toLeftOf="@id/service_mode_selection"
         android:background="@drawable/transparent_gray_background"
         android:orientation="horizontal"
         android:paddingLeft="2.5dp"
@@ -85,7 +84,20 @@
         android:gravity="center"
         android:paddingLeft="22dp"
         android:paddingRight="22dp"
-        android:src="@drawable/ic_village_filter" />
+        android:src="@drawable/bell" />
+
+    <TextView
+        android:id="@+id/filter_count"
+        style="@style/CustomFontTextViewStyle.Badge"
+        android:layout_width="@dimen/client_profile_badge_width"
+        android:layout_height="@dimen/client_profile_badge_height"
+        android:layout_alignRight="@id/filter_selection"
+        android:layout_alignTop="@id/filter_selection"
+        android:layout_marginRight="2dp"
+        android:layout_marginTop="0dp"
+        android:gravity="center"
+        android:text="1"
+        android:textColor="@color/white" />
 
     <ImageView
         android:layout_width="@dimen/smart_register_nav_bar_separator"
@@ -133,13 +145,8 @@
         android:src="@drawable/separator"
         android:visibility="gone" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"></LinearLayout>
-
     <org.ei.opensrp.view.customControls.CustomFontTextView
-        android:id="@+id/service_mode_selection"
+        android:id="@+id/clinic_selection"
         style="@style/CustomFontTextViewStyle.NavBar.Bold"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
@@ -154,14 +161,44 @@
     <ImageView
         android:layout_width="@dimen/smart_register_nav_bar_separator"
         android:layout_height="fill_parent"
-        android:layout_toRightOf="@+id/service_mode_selection"
+        android:layout_toRightOf="@+id/clinic_selection"
         android:scaleType="fitXY"
         android:src="@drawable/separator" />
 
     <ImageView
         android:layout_width="@dimen/smart_register_nav_bar_separator"
         android:layout_height="fill_parent"
-        android:layout_toLeftOf="@+id/service_mode_selection"
+        android:layout_toLeftOf="@+id/clinic_selection"
         android:scaleType="fitXY"
         android:src="@drawable/separator" />
+
+    <org.ei.opensrp.view.customControls.CustomFontTextView
+        android:id="@+id/service_mode_selection"
+        style="@style/CustomFontTextViewStyle.NavBar.Bold"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@id/clinic_selection"
+        android:background="@drawable/transparent_gray_background"
+        android:gravity="center"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:text="Linda Clinic"
+        android:visibility="gone" />
+
+    <ImageView
+        android:layout_width="@dimen/smart_register_nav_bar_separator"
+        android:layout_height="fill_parent"
+        android:layout_toRightOf="@+id/service_mode_selection"
+        android:scaleType="fitXY"
+        android:src="@drawable/separator"
+        android:visibility="gone" />
+
+    <ImageView
+        android:layout_width="@dimen/smart_register_nav_bar_separator"
+        android:layout_height="fill_parent"
+        android:layout_toLeftOf="@+id/service_mode_selection"
+        android:scaleType="fitXY"
+        android:src="@drawable/separator"
+        android:visibility="gone" />
 </RelativeLayout>
