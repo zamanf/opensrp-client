@@ -10,4 +10,7 @@
     <color name="alert_urgent">#D13F3F</color>
     <color name="alert_completed">#4FB45B</color>
     <color name="alert_expired">#ECECEC</color>
+    <color name="primary">#358CB7</color>
+    <color name="primary_dark">#276C91</color>
+    <color name="accent">#358CB7</color>
 </resources>
