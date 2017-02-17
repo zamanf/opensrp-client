@@ -3,34 +3,33 @@ package org.ei.opensrp.indonesia.kartu_ibu;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.ei.opensrp.Context;
 import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
 import org.ei.opensrp.domain.ProfileImage;
 import org.ei.opensrp.indonesia.R;
 import org.ei.opensrp.indonesia.application.BidanApplication;
-import org.ei.opensrp.indonesia.face.camera.SmartShutterActivity;
 import org.ei.opensrp.indonesia.lib.FlurryFacade;
 import org.ei.opensrp.repository.DetailsRepository;
 import org.ei.opensrp.repository.ImageRepository;
 import org.ei.opensrp.util.OpenSRPImageLoader;
+import org.ei.opensrp.view.activity.DrishtiApplication;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -274,8 +273,9 @@ public class KIDetailActivity extends Activity {
     private void dispatchTakePictureIntent(ImageView imageView) {
         Log.e(TAG, "dispatchTakePictureIntent: "+"klik" );
         mImageView = imageView;
-        Intent takePictureIntent = new Intent(this,SmartShutterActivity.class);
-//        Intent takePictureIntent = new Intent("android.media.action.IMAGE_CAPTURE");
+      //  Intent takePictureIntent = new Intent(this,SmartShutterActivity.class);
+        //FIXME USE SmartShutterActivity INSTEAD
+     Intent takePictureIntent = new Intent("android.media.action.IMAGE_CAPTURE");
 //        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         Log.e(TAG, "dispatchTakePictureIntent: "+takePictureIntent.resolveActivity(getPackageManager()) );
@@ -301,10 +301,10 @@ public class KIDetailActivity extends Activity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         Log.e(TAG, "onActivityResult: "+requestCode );
         Log.e(TAG, "onActivityResult: "+resultCode );
-        Log.e(TAG, "onActivityResult: "+data );
+        Log.e(TAG, "onActivityResult: "+intent );
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
 //            Bundle extras = data.getExtras();
 //            String imageBitmap = (String) extras.get(MediaStore.EXTRA_OUTPUT);
@@ -318,13 +318,56 @@ public class KIDetailActivity extends Activity {
 //            DetailsRepository detailsRepository = org.ei.opensrp.Context.getInstance().detailsRepository();
 //            detailsRepository.add(entityid, "profilepic", currentfile.getAbsolutePath(), tsLong);
 //
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-            Bitmap bitmap = BitmapFactory.decodeFile(currentfile.getPath(), options);
-            mImageView.setImageBitmap(bitmap);
+            Bundle extras = intent.getExtras();
+            Bitmap mImageBitmap = (Bitmap) extras.get("data");
+            saveStaticImageToDisk(kiclient.getCaseId(),mImageBitmap);
+            mImageView.setImageBitmap(mImageBitmap);
         }
     }
+    public static void saveStaticImageToDisk(String entityId, Bitmap image) {
+        String anmId = Context.getInstance().allSharedPreferences().fetchRegisteredANM();
 
+        if (image != null) {
+            OutputStream os = null;
+            try {
+
+                if (entityId != null && !entityId.isEmpty()) {
+                    final String absoluteFileName = DrishtiApplication.getAppDir() + File.separator + entityId+".JPEG";
+
+                    File outputFile = new File(absoluteFileName);
+                    os = new FileOutputStream(outputFile);
+                    Bitmap.CompressFormat compressFormat =  Bitmap.CompressFormat.JPEG;
+                    if (compressFormat != null) {
+                        image.compress(compressFormat, 100, os);
+                    } else {
+                        throw new IllegalArgumentException("Failed to save static image, could not retrieve image compression format from name "
+                                + absoluteFileName);
+                    }
+                    // insert into the db
+                    ProfileImage profileImage= new ProfileImage();
+                    profileImage.setImageid(UUID.randomUUID().toString());
+                    profileImage.setAnmId(anmId);
+                    profileImage.setEntityID(entityId);
+                    profileImage.setFilepath(absoluteFileName);
+                    profileImage.setFilecategory("profilepic");
+                    profileImage.setSyncStatus(ImageRepository.TYPE_Unsynced);
+                    ImageRepository imageRepo = (ImageRepository) org.ei.opensrp.Context.imageRepository();
+                    imageRepo.add(profileImage);
+                }
+
+            } catch (FileNotFoundException e) {
+                Log.e(TAG, "Failed to save static image to disk");
+            } finally {
+                if (os != null) {
+                    try {
+                        os.close();
+                    } catch (IOException e) {
+                        Log.e(TAG, "Failed to close static images output stream after attempting to write image");
+                    }
+                }
+            }
+        }
+    }
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
