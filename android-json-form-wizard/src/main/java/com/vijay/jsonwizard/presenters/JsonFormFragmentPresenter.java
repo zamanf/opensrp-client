@@ -274,7 +274,7 @@ public class JsonFormFragmentPresenter extends MvpBasePresenter<JsonFormFragment
         String openMrsEntity = (String) parent.getTag(R.id.openmrs_entity);
         String openMrsEntityId = (String) parent.getTag(R.id.openmrs_entity_id);
         if (position >= 0) {
-            String value = (String) parent.getItemAtPosition(position + 1);
+            String value = (String) parent.getItemAtPosition(position);
             getView().writeValue(mStepName, parentKey, value, openMrsEntityParent, openMrsEntity,
                     openMrsEntityId);
         }
